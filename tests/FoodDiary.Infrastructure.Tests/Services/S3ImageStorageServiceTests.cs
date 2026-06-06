@@ -202,7 +202,8 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : FoodDiary.Application.Abstractions.Common.Interfaces.Services.IDateTimeProvider {
-        public DateTime UtcNow { get; } = new(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() =>
+            new(new DateTime(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc));
     }
 }

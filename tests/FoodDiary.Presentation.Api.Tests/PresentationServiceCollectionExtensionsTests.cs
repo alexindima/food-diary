@@ -1,5 +1,4 @@
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
@@ -71,7 +70,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         builder.Services.AddAuthorization();
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddScoped<IFastingTelemetryEventRepository, StubFastingTelemetryEventRepository>();
-        builder.Services.AddSingleton<IDateTimeProvider, StubDateTimeProvider>();
+        builder.Services.AddSingleton<TimeProvider, StubDateTimeProvider>();
         builder.Services.AddPresentationApi();
 
         WebApplication app = builder.Build();
@@ -97,7 +96,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc));
     }
 }

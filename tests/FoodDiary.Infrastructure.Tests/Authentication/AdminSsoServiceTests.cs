@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
 using Microsoft.Extensions.Caching.Distributed;
@@ -69,8 +68,8 @@ public sealed class AdminSsoServiceTests {
         new(cache ?? new InMemoryDistributedCache(), new StubDateTimeProvider());
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => FixedUtcNow;
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(FixedUtcNow);
     }
 
     [ExcludeFromCodeCoverage]

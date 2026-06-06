@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -11,7 +10,7 @@ namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
 public class DeleteUserCommandHandler(
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
     : ICommandHandler<DeleteUserCommand, Result> {
     public async Task<Result> Handle(DeleteUserCommand command, CancellationToken cancellationToken) {
@@ -28,7 +27,7 @@ public class DeleteUserCommandHandler(
 
         User currentUser = user!;
 
-        currentUser.DeleteAccount(dateTimeProvider.UtcNow);
+        currentUser.DeleteAccount(dateTimeProvider.GetUtcNow().UtcDateTime);
         await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log("user.delete", userId, "User", userId.Value.ToString());

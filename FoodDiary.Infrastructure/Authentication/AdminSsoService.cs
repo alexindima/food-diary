@@ -1,18 +1,17 @@
 using System.Security.Cryptography;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Caching.Distributed;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider dateTimeProvider) : IAdminSsoService {
+public sealed class AdminSsoService(IDistributedCache cache, TimeProvider dateTimeProvider) : IAdminSsoService {
     private const string CachePrefix = "admin-sso:";
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);
 
     public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
         string code = GenerateCode();
-        DateTime expiresAt = dateTimeProvider.UtcNow.Add(CodeTtl);
+        DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.Add(CodeTtl);
         string key = CachePrefix + code;
 
         await cache.SetStringAsync(

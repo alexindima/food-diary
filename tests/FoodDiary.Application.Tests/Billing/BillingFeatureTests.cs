@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.CreatePortalSession;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
@@ -2101,8 +2100,8 @@ public sealed class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow { get; } = utcNow;
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

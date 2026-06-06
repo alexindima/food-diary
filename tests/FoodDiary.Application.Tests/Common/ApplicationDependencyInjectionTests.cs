@@ -1,9 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Services;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Notifications.Services;
@@ -24,7 +22,10 @@ public sealed class ApplicationDependencyInjectionTests {
         Assert.Contains(services, ServiceDescriptorMatches<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>(ServiceLifetime.Scoped));
         Assert.Contains(services, ServiceDescriptorMatches<INotificationCleanupService, NotificationCleanupService>(ServiceLifetime.Scoped));
         Assert.Contains(services, ServiceDescriptorMatches<IAuthenticationTokenService, AuthenticationTokenService>(ServiceLifetime.Scoped));
-        Assert.Contains(services, ServiceDescriptorMatches<IDateTimeProvider, SystemDateTimeProvider>(ServiceLifetime.Singleton));
+        Assert.Contains(services, descriptor =>
+            descriptor.ServiceType == typeof(TimeProvider) &&
+            descriptor.Lifetime == ServiceLifetime.Singleton &&
+            ReferenceEquals(descriptor.ImplementationInstance, TimeProvider.System));
         Assert.Equal(2, services.Count(d => d.ServiceType == typeof(IProductSearchSuggestionProvider)));
         Assert.Contains(services, d => d.ServiceType.IsGenericType && string.Equals(d.ServiceType.GetGenericTypeDefinition().FullName, "FluentValidation.IValidator`1", StringComparison.Ordinal));
         Assert.Contains(services, d => d.ImplementationType == typeof(LoggingBehavior<,>));

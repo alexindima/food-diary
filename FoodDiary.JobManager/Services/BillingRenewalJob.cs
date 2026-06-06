@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Billing.Services;
 using Hangfire;
@@ -10,7 +9,7 @@ namespace FoodDiary.JobManager.Services;
 public sealed class BillingRenewalJob(
     BillingRenewalService billingRenewalService,
     IOptions<BillingRenewalOptions> options,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IJobExecutionStateTracker executionStateTracker,
     ILogger<BillingRenewalJob> logger) {
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
@@ -19,7 +18,7 @@ public sealed class BillingRenewalJob(
         var stopwatch = Stopwatch.StartNew();
         BillingRenewalOptions settings = options.Value;
         const string jobName = "billing.renewal";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
+        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         try {
             if (!settings.Enabled) {
@@ -27,7 +26,7 @@ public sealed class BillingRenewalJob(
                     1,
                     new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                     new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-                executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
+                executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
                 return;
             }
 
@@ -49,14 +48,14 @@ public sealed class BillingRenewalJob(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
         } catch (Exception ex) {
             logger.LogError(ex, "Billing renewal job failed.");
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
             throw;
         } finally {
             stopwatch.Stop();

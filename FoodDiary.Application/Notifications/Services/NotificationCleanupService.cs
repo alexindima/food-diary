@@ -1,17 +1,16 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 
 namespace FoodDiary.Application.Notifications.Services;
 
 public sealed class NotificationCleanupService(
     INotificationRepository notificationRepository,
-    IDateTimeProvider dateTimeProvider) : INotificationCleanupService {
+    TimeProvider dateTimeProvider) : INotificationCleanupService {
     public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) {
         if (policy.BatchSize <= 0) {
             return Task.FromResult(0);
         }
 
-        DateTime utcNow = dateTimeProvider.UtcNow;
+        DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
 
         return notificationRepository.DeleteExpiredBatchAsync(
             policy.TransientTypes,

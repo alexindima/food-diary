@@ -1,5 +1,4 @@
 using System.Diagnostics;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using Hangfire;
 using Microsoft.Extensions.Options;
@@ -9,7 +8,7 @@ namespace FoodDiary.JobManager.Services;
 public sealed class NotificationCleanupJob(
     INotificationCleanupService notificationCleanupService,
     IOptions<NotificationCleanupOptions> options,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IJobExecutionStateTracker executionStateTracker,
     ILogger<NotificationCleanupJob> logger) {
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
@@ -19,7 +18,7 @@ public sealed class NotificationCleanupJob(
         NotificationCleanupOptions settings = options.Value;
         int totalDeleted = 0;
         const string jobName = "notifications.cleanup";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
+        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         var policy = new NotificationCleanupPolicy(
             settings.TransientTypes,
@@ -56,14 +55,14 @@ public sealed class NotificationCleanupJob(
             JobManagerTelemetry.JobDeletedItemsCounter.Add(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
         } catch (Exception ex) {
             logger.LogError(ex, "Notification cleanup job failed after deleting {DeletedCount} notifications so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
             throw;
         } finally {
             stopwatch.Stop();

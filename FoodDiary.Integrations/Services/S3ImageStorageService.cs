@@ -1,6 +1,5 @@
 using System.Globalization;
 using System.Net.Mime;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Options;
@@ -11,7 +10,7 @@ namespace FoodDiary.Integrations.Services;
 public sealed class S3ImageStorageService(
     IObjectStorageClient storageClient,
     IOptions<S3Options> options,
-    IDateTimeProvider dateTimeProvider) : IImageStorageService {
+    TimeProvider dateTimeProvider) : IImageStorageService {
     private static readonly HashSet<string> AllowedContentTypes = new(StringComparer.OrdinalIgnoreCase) {
         MediaTypeNames.Image.Jpeg,
         "image/png",
@@ -46,7 +45,7 @@ public sealed class S3ImageStorageService(
             string normalizedName = NormalizeFileName(fileName);
             string key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
 
-            DateTime expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
+            DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(15);
             string uploadUrl = storageClient.GetPreSignedUploadUrl(_options.Bucket, key, contentType, expiresAt);
             string fileUrl = BuildPublicUrl(key);
 

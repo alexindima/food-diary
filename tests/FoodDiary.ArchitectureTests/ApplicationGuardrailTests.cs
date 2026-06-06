@@ -29,7 +29,7 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
 
-        string[] violations = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
                 .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))
@@ -56,11 +56,9 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         string root = GetRepositoryRoot();
         string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
-        string[] allowedFiles = new[] {
-            "IDateTimeProvider.cs",
-        };
+        string[] allowedFiles = [];
 
-        string?[] actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        string?[] actualFiles = GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -243,6 +241,9 @@ public sealed class ApplicationGuardrailTests {
 
         throw new InvalidOperationException("Repository root was not found.");
     }
+
+    private static string[] GetFilesIfDirectoryExists(string path, string searchPattern, SearchOption searchOption) =>
+        Directory.Exists(path) ? Directory.GetFiles(path, searchPattern, searchOption) : [];
 
     private static IEnumerable<string> GetAsyncMethodSignatures(string path) {
         return CSharpSyntaxReader.ReadMethods(path)

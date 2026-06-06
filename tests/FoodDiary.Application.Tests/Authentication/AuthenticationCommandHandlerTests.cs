@@ -17,7 +17,6 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -255,7 +254,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task RequestPasswordResetHandler_WhenRequestIsInCooldown_ReturnsSuccessWithoutSending() {
         var user = User.Create("cooldown-reset@example.com", "secret");
-        DateTime nowUtc = new StubDateTimeProvider().UtcNow;
+        DateTime nowUtc = new StubDateTimeProvider().GetUtcNow().UtcDateTime;
         user.SetPasswordResetToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddSeconds(-30)));
         var sender = new StubEmailSender();
         var handler = new RequestPasswordResetCommandHandler(
@@ -415,7 +414,7 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task VerifyEmailHandler_WithValidToken_CompletesVerification() {
         var user = User.Create("verify@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
-        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var notifier = new StubEmailVerificationNotifier();
         var handler = new VerifyEmailCommandHandler(
             new StubUserRepository(user),
@@ -436,7 +435,7 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task VerifyEmailHandler_WhenNotifierFails_StillReturnsSuccess() {
         var user = User.Create("verify-notifier-fails@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
-        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        user.SetEmailConfirmationToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var handler = new VerifyEmailCommandHandler(
             new StubUserRepository(user),
             new StubPasswordHasher(),
@@ -485,7 +484,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenSentRecently_ReturnsCooldownFailure() {
         var user = User.Create("cooldown@example.com", "secret");
-        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", DateTime.UtcNow.AddHours(1), new StubDateTimeProvider().UtcNow.AddSeconds(-30)));
+        user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", DateTime.UtcNow.AddHours(1), new StubDateTimeProvider().GetUtcNow().UtcDateTime.AddSeconds(-30)));
         ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, new StubEmailSender());
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
@@ -513,7 +512,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenPreviousSendIsOutsideCooldown_SendsMessage() {
         var user = User.Create("cooldown-expired@example.com", "secret");
-        DateTime nowUtc = new StubDateTimeProvider().UtcNow;
+        DateTime nowUtc = new StubDateTimeProvider().GetUtcNow().UtcDateTime;
         user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddMinutes(-5)));
         var sender = new StubEmailSender();
         ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, sender);
@@ -700,7 +699,7 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task ConfirmPasswordResetHandler_WithValidToken_ChangesPasswordAndIssuesTokens() {
         var user = User.Create("reset-valid@example.com", "old-password");
         var dateTimeProvider = new StubDateTimeProvider();
-        user.SetPasswordResetToken(new UserTokenIssue("token", dateTimeProvider.UtcNow.AddHours(1), dateTimeProvider.UtcNow));
+        user.SetPasswordResetToken(new UserTokenIssue("token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
         var tokenService = new StubAuthenticationTokenService();
         var handler = new ConfirmPasswordResetCommandHandler(
             new StubUserRepository(user),
@@ -1049,8 +1048,8 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc));
     }
 
     [ExcludeFromCodeCoverage]

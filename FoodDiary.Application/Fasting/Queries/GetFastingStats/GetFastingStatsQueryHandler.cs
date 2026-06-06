@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Users.Common;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Fasting.Queries.GetFastingStats;
 public class GetFastingStatsQueryHandler(
     IFastingAnalyticsService fastingAnalyticsService,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetFastingStatsQuery, Result<FastingStatsModel>> {
     public async Task<Result<FastingStatsModel>> Handle(
         GetFastingStatsQuery query, CancellationToken cancellationToken) {
@@ -26,6 +25,6 @@ public class GetFastingStatsQueryHandler(
             return Result.Failure<FastingStatsModel>(accessError);
         }
 
-        return Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.UtcNow, cancellationToken).ConfigureAwait(false));
+        return Result.Success(await fastingAnalyticsService.GetStatsAsync(userId, dateTimeProvider.GetUtcNow().UtcDateTime, cancellationToken).ConfigureAwait(false));
     }
 }

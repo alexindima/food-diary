@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -30,7 +29,7 @@ public class AuthenticationTokenServiceTests {
             $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
             Assert.Single(sessions.Items).RefreshTokenHash);
         Assert.True(repository.Updated);
-        Assert.Equal(new StubDateTimeProvider().UtcNow, user.LastLoginAtUtc);
+        Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, user.LastLoginAtUtc);
         Assert.Empty(loginEvents.Items);
     }
 
@@ -248,11 +247,11 @@ public class AuthenticationTokenServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
+    private sealed class StubDateTimeProvider(DateTime utcNow) : TimeProvider {
         public StubDateTimeProvider()
             : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {
         }
 
-        public DateTime UtcNow { get; } = utcNow;
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -23,7 +22,7 @@ public class GetWeeklyCheckInQueryHandler(
     IWaistEntryRepository waistEntryRepository,
     IHydrationEntryRepository hydrationEntryRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetWeeklyCheckInQuery, Result<WeeklyCheckInModel>> {
     public async Task<Result<WeeklyCheckInModel>> Handle(
         GetWeeklyCheckInQuery query,
@@ -40,7 +39,7 @@ public class GetWeeklyCheckInQueryHandler(
         }
 
         User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        DateTime today = dateTimeProvider.UtcNow.Date;
+        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime thisWeekStart = today.AddDays(-6);
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
         DateTime lastWeekEnd = thisWeekStart.AddDays(-1);

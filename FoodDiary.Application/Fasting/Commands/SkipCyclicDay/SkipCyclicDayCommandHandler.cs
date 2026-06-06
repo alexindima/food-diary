@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
@@ -17,7 +16,7 @@ public sealed class SkipCyclicDayCommandHandler(
     IFastingPlanRepository fastingPlanRepository,
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork)
     : ICommandHandler<SkipCyclicDayCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
@@ -47,7 +46,7 @@ public sealed class SkipCyclicDayCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be skipped."));
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         try {
             current.Skip(now);
             plan.ScheduleNextCyclicPhase(DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc));

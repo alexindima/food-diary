@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -25,7 +24,7 @@ public class UpdateConsumptionCommandHandler(
     IRecentItemRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
     private sealed record UpdateConsumptionValues(
@@ -237,7 +236,7 @@ public class UpdateConsumptionCommandHandler(
                     Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
         }
 
-        DateTime recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
+        DateTime recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.GetUtcNow().UtcDateTime;
         if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
             return Result.Failure(
                     Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));

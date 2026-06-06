@@ -3,7 +3,6 @@ using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
@@ -17,7 +16,7 @@ public sealed class GetBillingOverviewQueryHandler(
     IUserRepository userRepository,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetBillingOverviewQuery, Result<BillingOverviewModel>> {
     public async Task<Result<BillingOverviewModel>> Handle(
         GetBillingOverviewQuery query,
@@ -34,7 +33,7 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        DateTime nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         bool isTrialActive = user!.HasActivePremiumTrial(nowUtc);
         bool hasPaidPremium = user.HasRole(RoleNames.Premium);
         bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);

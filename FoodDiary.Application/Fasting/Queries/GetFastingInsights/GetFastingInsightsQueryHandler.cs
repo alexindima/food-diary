@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
@@ -15,7 +14,7 @@ public sealed class GetFastingInsightsQueryHandler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IFastingAnalyticsService fastingAnalyticsService,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetFastingInsightsQuery, Result<FastingInsightsModel>> {
     public async Task<Result<FastingInsightsModel>> Handle(
         GetFastingInsightsQuery query,
@@ -30,7 +29,7 @@ public sealed class GetFastingInsightsQueryHandler(
             return Result.Failure<FastingInsightsModel>(accessError);
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(await fastingAnalyticsService.GetInsightsAsync(userId, now, current, cancellationToken).ConfigureAwait(false));
     }

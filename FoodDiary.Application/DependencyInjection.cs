@@ -5,8 +5,6 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
-using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -50,7 +48,7 @@ public static class DependencyInjection {
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingRenewalService>();
-        services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
+        services.AddSingleton(TimeProvider.System);
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();

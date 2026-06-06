@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
@@ -14,7 +13,7 @@ public sealed class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
     IAiUsageRepository aiUsageRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider)
     : IOpenAiFoodService {
     public async Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
@@ -100,7 +99,7 @@ public sealed class OpenAiFoodService(
             return Result.Failure(accessError);
         }
 
-        DateTime nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime monthEndUtc = monthStartUtc.AddMonths(1);
         AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);

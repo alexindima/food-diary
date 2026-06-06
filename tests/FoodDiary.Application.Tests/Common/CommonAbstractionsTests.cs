@@ -10,7 +10,6 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
-using FoodDiary.Application.Common.Services;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -434,17 +433,6 @@ public class CommonAbstractionsTests {
         bool isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash!);
 
         Assert.False(isValid);
-    }
-
-    [Fact]
-    public void SystemDateTimeProvider_ReturnsUtcTime_FromTimeProviderSystem() {
-        var provider = new SystemDateTimeProvider();
-        DateTime before = TimeProvider.System.GetUtcNow().UtcDateTime;
-        DateTime now = provider.UtcNow;
-        DateTime after = TimeProvider.System.GetUtcNow().UtcDateTime;
-
-        Assert.Equal(DateTimeKind.Utc, now.Kind);
-        Assert.InRange(now, before, after);
     }
 
     [ExcludeFromCodeCoverage]

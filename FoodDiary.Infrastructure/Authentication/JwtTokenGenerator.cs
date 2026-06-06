@@ -2,7 +2,6 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -11,7 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 namespace FoodDiary.Infrastructure.Authentication;
 
 public class JwtTokenGenerator : IJwtTokenGenerator {
-    private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly TimeProvider _dateTimeProvider;
     private readonly string _issuer;
     private readonly string _audience;
     private readonly SymmetricSecurityKey _signingKey;
@@ -19,7 +18,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly int _refreshTokenExpirationMinutes;
     private readonly int _rememberMeRefreshTokenExpirationMinutes;
 
-    public JwtTokenGenerator(IOptions<JwtOptions> options, IDateTimeProvider dateTimeProvider) {
+    public JwtTokenGenerator(IOptions<JwtOptions> options, TimeProvider dateTimeProvider) {
         JwtOptions jwtOptions = options.Value;
         _dateTimeProvider = dateTimeProvider;
         string secretKey = jwtOptions.SecretKey;
@@ -148,7 +147,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
-        DateTime configuredExpiresAtUtc = _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes);
+        DateTime configuredExpiresAtUtc = _dateTimeProvider.GetUtcNow().UtcDateTime.AddMinutes(expirationMinutes);
         DateTime tokenExpiresAtUtc = expiresAtUtc.HasValue && expiresAtUtc.Value < configuredExpiresAtUtc
             ? expiresAtUtc.Value.ToUniversalTime()
             : configuredExpiresAtUtc;

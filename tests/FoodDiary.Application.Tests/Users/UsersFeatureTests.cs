@@ -1,7 +1,6 @@
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Admin.Mappings;
@@ -750,8 +749,8 @@ public class UsersFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow { get; } = utcNow;
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

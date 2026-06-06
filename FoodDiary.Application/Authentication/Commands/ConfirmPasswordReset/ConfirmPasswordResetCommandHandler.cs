@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -15,7 +14,7 @@ namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 public sealed class ConfirmPasswordResetCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService,
     IAuditLogger auditLogger)
     : ICommandHandler<ConfirmPasswordResetCommand, Result<AuthenticationModel>> {
@@ -33,7 +32,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
 
         if (string.IsNullOrWhiteSpace(user.PasswordResetTokenHash) ||
             !user.PasswordResetTokenExpiresAtUtc.HasValue ||
-            user.PasswordResetTokenExpiresAtUtc.Value < dateTimeProvider.UtcNow) {
+            user.PasswordResetTokenExpiresAtUtc.Value < dateTimeProvider.GetUtcNow().UtcDateTime) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 

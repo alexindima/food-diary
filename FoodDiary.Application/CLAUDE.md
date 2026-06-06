@@ -64,6 +64,6 @@ Each use case folder contains up to 3 files:
 
 - References only `FoodDiary.Domain`
 - No direct infrastructure access (DB, HTTP, file system)
-- Never use `DateTime.UtcNow` — use `IDateTimeProvider`
+- Never use `DateTime.UtcNow` — use `TimeProvider`
 - Never use `CancellationToken.None` — accept tokens from callers
 - No `IOptions<>` or `IConfiguration` — configuration belongs in Infrastructure/Web.Api

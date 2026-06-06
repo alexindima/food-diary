@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Admin;
@@ -18,7 +17,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     IUserRepository userRepository,
     IAdminImpersonationSessionRepository sessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
     : ICommandHandler<StartAdminImpersonationCommand, Result<AdminImpersonationStartModel>> {
     public async Task<Result<AdminImpersonationStartModel>> Handle(
@@ -120,7 +119,7 @@ public sealed class StartAdminImpersonationCommandHandler(
             reason,
             command.ActorIpAddress,
             command.ActorUserAgent,
-            dateTimeProvider.UtcNow);
+            dateTimeProvider.GetUtcNow().UtcDateTime);
         await sessionRepository.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 

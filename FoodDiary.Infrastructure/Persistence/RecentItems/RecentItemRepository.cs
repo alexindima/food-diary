@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.Recents;
 using FoodDiary.Domain.Enums;
@@ -7,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.RecentItems;
 
-public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider dateTimeProvider) : IRecentItemRepository {
+public class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateTimeProvider) : IRecentItemRepository {
     private const int MaxStoredPerType = 100;
 
     public async Task RegisterUsageAsync(
@@ -29,7 +28,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
             return;
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
 
         if (distinctProductIds.Count > 0) {
             await TouchItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);

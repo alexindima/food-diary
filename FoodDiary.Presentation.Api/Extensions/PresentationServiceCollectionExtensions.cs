@@ -55,7 +55,6 @@ public static class PresentationServiceCollectionExtensions {
         services.AddScoped<INotificationPusher, NotificationPusher>();
         services.AddSingleton<INotificationTestScheduler, NotificationTestScheduler>();
         services.AddScoped<IFastingTelemetrySummaryService, FastingTelemetrySummaryService>();
-        services.AddScoped<IPresentationClock, PresentationClock>();
         return services;
     }
 }

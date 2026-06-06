@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,7 @@ namespace FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 public sealed class GetUserAiUsageSummaryQueryHandler(
     IUserRepository userRepository,
     IAiUsageRepository aiUsageRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetUserAiUsageSummaryQuery, Result<UserAiUsageModel>> {
     public async Task<Result<UserAiUsageModel>> Handle(
         GetUserAiUsageSummaryQuery query,
@@ -31,7 +30,7 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
         }
 
         User currentUser = user!;
-        (DateTime monthStartUtc, DateTime monthEndUtc) = GetMonthBoundsUtc(dateTimeProvider.UtcNow);
+        (DateTime monthStartUtc, DateTime monthEndUtc) = GetMonthBoundsUtc(dateTimeProvider.GetUtcNow().UtcDateTime);
         AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(
             userId,
             monthStartUtc,

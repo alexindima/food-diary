@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
@@ -161,7 +160,7 @@ public class TdeeFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => Today;
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(Today);
     }
 }

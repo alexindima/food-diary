@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -14,7 +13,7 @@ public sealed class RequestPasswordResetCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     ILogger<RequestPasswordResetCommandHandler> logger)
     : ICommandHandler<RequestPasswordResetCommand, Result> {
     private static readonly TimeSpan Cooldown = TimeSpan.FromMinutes(1);
@@ -27,7 +26,7 @@ public sealed class RequestPasswordResetCommandHandler(
         }
 
         User currentUser = user!;
-        DateTime nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (currentUser.PasswordResetSentAtUtc.HasValue &&
             nowUtc - currentUser.PasswordResetSentAtUtc.Value < Cooldown) {
             logger.LogInformation("Password reset request throttled by cooldown.");

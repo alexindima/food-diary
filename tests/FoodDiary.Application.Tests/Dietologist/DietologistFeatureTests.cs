@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
@@ -114,7 +113,7 @@ public class DietologistFeatureTests {
         IDietologistEmailSender? emailSender = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IDateTimeProvider? dateTimeProvider = null) =>
+        TimeProvider? dateTimeProvider = null) =>
         new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             userRepository ?? new InMemoryUserRepository(),
@@ -2491,8 +2490,8 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => DateTime.UtcNow;
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(DateTime.UtcNow);
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
@@ -16,7 +15,7 @@ namespace FoodDiary.Application.Gamification.Queries.GetGamification;
 public class GetGamificationQueryHandler(
     IMealRepository mealRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetGamificationQuery, Result<GamificationModel>> {
     public async Task<Result<GamificationModel>> Handle(
         GetGamificationQuery query,
@@ -34,7 +33,7 @@ public class GetGamificationQueryHandler(
 
         User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
 
-        DateTime today = dateTimeProvider.UtcNow.Date;
+        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime streakFrom = today.AddDays(-365);
 
         IReadOnlyList<DateTime> mealDates = await mealRepository.GetDistinctMealDatesAsync(userId, streakFrom, today, cancellationToken).ConfigureAwait(false);

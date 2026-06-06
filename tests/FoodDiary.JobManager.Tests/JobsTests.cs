@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -623,8 +622,8 @@ public sealed class JobsTests {
             new FixedDateTimeProvider(utcNow));
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow { get; } = utcNow;
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     private static MeterListener CreateJobManagerListener(

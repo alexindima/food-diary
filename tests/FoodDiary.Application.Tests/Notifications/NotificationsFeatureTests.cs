@@ -13,7 +13,6 @@ using FoodDiary.Application.Notifications.Services;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -972,7 +971,7 @@ public class NotificationsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow => utcNow;
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

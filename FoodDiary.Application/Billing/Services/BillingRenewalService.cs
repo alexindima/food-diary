@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
@@ -18,7 +17,7 @@ public sealed class BillingRenewalService(
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
-    IDateTimeProvider dateTimeProvider) {
+    TimeProvider dateTimeProvider) {
     private static readonly TimeSpan FailedRenewalRetryDelay = TimeSpan.FromHours(1);
 
     private readonly Dictionary<string, IBillingRecurringProviderGateway> _recurringGateways = recurringProviderGateways
@@ -37,7 +36,7 @@ public sealed class BillingRenewalService(
             return new BillingRenewalRunResult(0, 0, 0);
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<BillingSubscription> subscriptions = await billingSubscriptionRepository.GetDueForRenewalAsync(
             recurringGateway.Provider,
             now,
@@ -238,7 +237,7 @@ public sealed class BillingRenewalService(
         BillingSubscription subscription,
         string reason,
         CancellationToken cancellationToken) {
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         await billingTransactionRunner.ExecuteAsync(async ct => {
             subscription.MarkRenewalFailed(
                 now.Add(FailedRenewalRetryDelay),

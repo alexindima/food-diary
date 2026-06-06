@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 public sealed class VerifyEmailCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IEmailVerificationNotifier emailVerificationNotifier)
     : ICommandHandler<VerifyEmailCommand, Result> {
     private readonly IEmailVerificationNotifier _emailVerificationNotifier = emailVerificationNotifier;
@@ -34,7 +33,7 @@ public sealed class VerifyEmailCommandHandler(
 
         if (string.IsNullOrWhiteSpace(user.EmailConfirmationTokenHash) ||
             !user.EmailConfirmationTokenExpiresAtUtc.HasValue ||
-            user.EmailConfirmationTokenExpiresAtUtc.Value < dateTimeProvider.UtcNow) {
+            user.EmailConfirmationTokenExpiresAtUtc.Value < dateTimeProvider.GetUtcNow().UtcDateTime) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 

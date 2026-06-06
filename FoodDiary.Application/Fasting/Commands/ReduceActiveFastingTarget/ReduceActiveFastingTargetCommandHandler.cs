@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
@@ -17,7 +16,7 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
     IFastingPlanRepository fastingPlanRepository,
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork)
     : ICommandHandler<ReduceActiveFastingTargetCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
@@ -57,7 +56,7 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (current.TargetHours.HasValue && now >= current.StartedAtUtc.AddHours(current.TargetHours.Value)) {
             current.Complete(now);
             plan.Stop(now);

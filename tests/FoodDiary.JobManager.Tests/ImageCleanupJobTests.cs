@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.JobManager.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -88,7 +87,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
+    private sealed class FixedDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc));
     }
 }

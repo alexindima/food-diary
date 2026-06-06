@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,13 +15,13 @@ public class ResendEmailVerificationCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     ILogger<ResendEmailVerificationCommandHandler> logger) : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
     private readonly IUserRepository _userRepository = userRepository;
     private readonly IPasswordHasher _passwordHasher = passwordHasher;
     private readonly IEmailSender _emailSender = emailSender;
-    private readonly IDateTimeProvider _dateTimeProvider = dateTimeProvider;
+    private readonly TimeProvider _dateTimeProvider = dateTimeProvider;
     private readonly ILogger<ResendEmailVerificationCommandHandler> _logger = logger;
 
     public async Task<Result> Handle(ResendEmailVerificationCommand command, CancellationToken cancellationToken) {
@@ -43,7 +42,7 @@ public class ResendEmailVerificationCommandHandler(
         }
 
         if (currentUser.EmailConfirmationSentAtUtc.HasValue) {
-            TimeSpan elapsed = _dateTimeProvider.UtcNow - currentUser.EmailConfirmationSentAtUtc.Value;
+            TimeSpan elapsed = _dateTimeProvider.GetUtcNow().UtcDateTime - currentUser.EmailConfirmationSentAtUtc.Value;
             if (elapsed < ResendCooldown) {
                 return Result.Failure(
                     Errors.Validation.Invalid(
@@ -56,8 +55,8 @@ public class ResendEmailVerificationCommandHandler(
         string emailTokenHash = _passwordHasher.Hash(emailToken);
         currentUser.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
-            ExpiresAtUtc: _dateTimeProvider.UtcNow.AddHours(24),
-            IssuedAtUtc: _dateTimeProvider.UtcNow));
+            ExpiresAtUtc: _dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
+            IssuedAtUtc: _dateTimeProvider.GetUtcNow().UtcDateTime));
         await _userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         try {

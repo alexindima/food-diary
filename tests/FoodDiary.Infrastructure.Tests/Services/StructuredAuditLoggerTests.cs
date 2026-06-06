@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Logging;
@@ -45,8 +44,8 @@ public sealed class StructuredAuditLoggerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => FixedUtcNow;
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(FixedUtcNow);
     }
 
     [ExcludeFromCodeCoverage]

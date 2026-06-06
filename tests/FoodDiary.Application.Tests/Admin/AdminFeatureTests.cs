@@ -24,7 +24,6 @@ using FoodDiary.Application.Admin.Queries.GetAdminUser;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Domain.Entities.Content;
@@ -1586,8 +1585,8 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow => utcNow;
+    private sealed class FixedDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

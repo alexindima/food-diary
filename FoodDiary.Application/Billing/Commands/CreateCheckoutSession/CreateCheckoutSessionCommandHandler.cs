@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
@@ -17,7 +16,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {
     public async Task<Result<BillingCheckoutSessionModel>> Handle(
         CreateCheckoutSessionCommand command,
@@ -34,7 +33,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.UtcNow)) {
+        if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 

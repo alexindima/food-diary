@@ -2,7 +2,6 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Notifications.Common;
@@ -26,7 +25,7 @@ public class InviteDietologistCommandHandler(
     IDietologistEmailSender emailSender,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     ILogger<InviteDietologistCommandHandler> logger)
     : ICommandHandler<InviteDietologistCommand, Result> {
     public async Task<Result> Handle(InviteDietologistCommand command, CancellationToken cancellationToken) {
@@ -60,7 +59,7 @@ public class InviteDietologistCommandHandler(
 
         string rawToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         string tokenHash = passwordHasher.Hash(rawToken);
-        DateTime expiresAt = dateTimeProvider.UtcNow.AddDays(7);
+        DateTime expiresAt = dateTimeProvider.GetUtcNow().UtcDateTime.AddDays(7);
         DietologistPermissions permissions = command.Permissions.ToPermissions();
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);

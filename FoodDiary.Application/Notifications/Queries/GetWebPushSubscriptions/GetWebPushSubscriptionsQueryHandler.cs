@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Mappings;
@@ -14,7 +13,7 @@ namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 public sealed class GetWebPushSubscriptionsQueryHandler(
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {
     public async Task<Result<IReadOnlyList<WebPushSubscriptionModel>>> Handle(
         GetWebPushSubscriptionsQuery query,
@@ -31,7 +30,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
 
         IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
         var expiredSubscriptions = subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= dateTimeProvider.UtcNow)
+            .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= dateTimeProvider.GetUtcNow().UtcDateTime)
             .ToList();
 
         if (expiredSubscriptions.Count > 0) {

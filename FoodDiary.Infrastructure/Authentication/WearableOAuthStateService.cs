@@ -2,7 +2,6 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,7 @@ namespace FoodDiary.Infrastructure.Authentication;
 
 public sealed class WearableOAuthStateService(
     IOptions<JwtOptions> options,
-    IDateTimeProvider dateTimeProvider) : IWearableOAuthStateService {
+    TimeProvider dateTimeProvider) : IWearableOAuthStateService {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly TimeSpan StateLifetime = TimeSpan.FromMinutes(10);
     private readonly JwtOptions _options = options.Value;
@@ -28,7 +27,7 @@ public sealed class WearableOAuthStateService(
             provider.ToString(),
             string.IsNullOrWhiteSpace(clientState) ? null : clientState.Trim(),
             Guid.NewGuid().ToString("N"),
-            dateTimeProvider.UtcNow.Add(StateLifetime));
+            dateTimeProvider.GetUtcNow().UtcDateTime.Add(StateLifetime));
         byte[] payloadBytes = JsonSerializer.SerializeToUtf8Bytes(payload, JsonOptions);
         string payloadSegment = Base64UrlEncode(payloadBytes);
         string signatureSegment = Base64UrlEncode(Sign(payloadSegment));
@@ -71,7 +70,7 @@ public sealed class WearableOAuthStateService(
         return payload is not null &&
                payload.UserId == userId.Value &&
                string.Equals(payload.Provider, provider.ToString(), StringComparison.OrdinalIgnoreCase) &&
-               payload.ExpiresAtUtc > dateTimeProvider.UtcNow;
+               payload.ExpiresAtUtc > dateTimeProvider.GetUtcNow().UtcDateTime;
     }
 
     private byte[] Sign(string payloadSegment) {

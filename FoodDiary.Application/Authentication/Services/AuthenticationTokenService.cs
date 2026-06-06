@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
@@ -16,7 +15,7 @@ public sealed class AuthenticationTokenService(
     IUserLoginEventRepository userLoginEventRepository,
     IRefreshTokenSessionRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IAuthenticationTokenService {
     public async Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
         User user,
@@ -28,7 +27,7 @@ public sealed class AuthenticationTokenService(
         string accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
         Guid resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
         string refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles, rememberMe, resolvedRefreshSessionId);
-        DateTime nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
 
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         user.RecordAuthenticationActivity(nowUtc);
@@ -78,7 +77,7 @@ public sealed class AuthenticationTokenService(
 
     private string[] GetRoles(User user) {
         var roles = user.GetRoleNames().ToList();
-        if (user.HasActivePremiumTrial(dateTimeProvider.UtcNow) &&
+        if (user.HasActivePremiumTrial(dateTimeProvider.GetUtcNow().UtcDateTime) &&
             !roles.Contains(RoleNames.Premium, StringComparer.Ordinal)) {
             roles.Add(RoleNames.Premium);
         }
@@ -88,7 +87,7 @@ public sealed class AuthenticationTokenService(
 
     private DateTime? ResolveAccessTokenCapUtc(User user) {
         if (user.HasRole(RoleNames.Premium) ||
-            !user.HasActivePremiumTrial(dateTimeProvider.UtcNow)) {
+            !user.HasActivePremiumTrial(dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return null;
         }
 

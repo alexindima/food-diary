@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
@@ -10,7 +9,7 @@ namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 
 public class MarkLessonReadCommandHandler(
     INutritionLessonRepository repository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<MarkLessonReadCommand, Result> {
     public async Task<Result> Handle(
         MarkLessonReadCommand command,
@@ -33,7 +32,7 @@ public class MarkLessonReadCommandHandler(
         }
 
         var progress = UserLessonProgress.Create(
-            userIdResult.Value, lessonId, dateTimeProvider.UtcNow);
+            userIdResult.Value, lessonId, dateTimeProvider.GetUtcNow().UtcDateTime);
         await repository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();

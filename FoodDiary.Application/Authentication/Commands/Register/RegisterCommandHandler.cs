@@ -4,7 +4,6 @@ using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
@@ -17,7 +16,7 @@ public class RegisterCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService,
     ILogger<RegisterCommandHandler> logger)
     : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
@@ -41,8 +40,8 @@ public class RegisterCommandHandler(
         string emailTokenHash = passwordHasher.Hash(emailToken);
         user.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
-            ExpiresAtUtc: dateTimeProvider.UtcNow.AddHours(24),
-            IssuedAtUtc: dateTimeProvider.UtcNow));
+            ExpiresAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
+            IssuedAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime));
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
 

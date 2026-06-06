@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 using FoodDiary.Application.Lessons.Mappings;
@@ -272,7 +271,7 @@ public class LessonsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
+    private sealed class FixedDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc));
     }
 }

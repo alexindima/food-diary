@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
@@ -17,7 +16,7 @@ public class StartFastingCommandHandler(
     IFastingPlanRepository fastingPlanRepository,
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork)
     : ICommandHandler<StartFastingCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
@@ -42,7 +41,7 @@ public class StartFastingCommandHandler(
             return Result.Failure<FastingSessionModel>(planTypeResult.Error);
         }
 
-        DateTime startedAtUtc = dateTimeProvider.UtcNow;
+        DateTime startedAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         FastingPlanType planType = planTypeResult.Value;
         Result<(FastingPlan Plan, FastingOccurrence Occurrence)> creation = CreatePlanAndOccurrence(command, userId, planType, startedAtUtc, command.Notes);
         if (creation.IsFailure) {

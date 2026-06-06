@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -16,7 +15,7 @@ namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 public sealed class UpdateAdminUserCommandHandler(
     IUserRepository userRepository,
     IAuditLogger auditLogger,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserModel>> {
     private const string RoleAuditSource = "AdminUserEditor";
 
@@ -117,7 +116,7 @@ public sealed class UpdateAdminUserCommandHandler(
             user,
             roleEntities,
             command.ActorUserId.HasValue ? new UserId(command.ActorUserId.Value) : null,
-            dateTimeProvider.UtcNow);
+            dateTimeProvider.GetUtcNow().UtcDateTime);
 
         return Result.Success<RoleUpdate?>(new RoleUpdate(roleEntities, roleAuditEvents));
     }

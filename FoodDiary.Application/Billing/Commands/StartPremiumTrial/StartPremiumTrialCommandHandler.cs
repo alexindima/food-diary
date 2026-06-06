@@ -2,7 +2,6 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Users.Common;
@@ -17,7 +16,7 @@ public sealed class StartPremiumTrialCommandHandler(
     IUserRepository userRepository,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<StartPremiumTrialCommand, Result<BillingOverviewModel>> {
     private static readonly TimeSpan TrialDuration = TimeSpan.FromDays(7);
 
@@ -44,7 +43,7 @@ public sealed class StartPremiumTrialCommandHandler(
             return Result.Failure<BillingOverviewModel>(Errors.Billing.TrialAlreadyUsed);
         }
 
-        DateTime nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         user.StartPremiumTrial(nowUtc, TrialDuration);
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
@@ -81,10 +80,10 @@ public sealed class StartPremiumTrialCommandHandler(
 
         return subscription.Status.Trim().ToLowerInvariant() switch {
             "trialing" => subscription.CurrentPeriodEndUtc.HasValue &&
-                subscription.CurrentPeriodEndUtc > dateTimeProvider.UtcNow,
+                subscription.CurrentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             "active" => true,
             "past_due" => !subscription.CurrentPeriodEndUtc.HasValue ||
-                subscription.CurrentPeriodEndUtc > dateTimeProvider.UtcNow,
+                subscription.CurrentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             _ => false,
         };
     }

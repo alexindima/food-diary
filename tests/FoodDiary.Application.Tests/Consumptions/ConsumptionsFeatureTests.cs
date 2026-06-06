@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -741,7 +740,7 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsSuccess);
         MealAiSession session = Assert.Single(repository.StoredMeal!.AiSessions);
         Assert.Equal(AiRecognitionSource.Text, session.Source);
-        Assert.Equal(new StubDateTimeProvider().UtcNow, session.RecognizedAtUtc);
+        Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, session.RecognizedAtUtc);
         Assert.Equal("recognized", session.Notes);
     }
 
@@ -2330,8 +2329,8 @@ public class ConsumptionsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => new(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc);
+    private sealed class StubDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(new(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc));
     }
 
     [Fact]

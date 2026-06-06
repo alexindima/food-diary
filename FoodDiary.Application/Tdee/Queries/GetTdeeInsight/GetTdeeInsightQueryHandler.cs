@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -21,7 +20,7 @@ public class GetTdeeInsightQueryHandler(
     IWeightEntryRepository weightEntryRepository,
     IMealRepository mealRepository,
     IExerciseEntryRepository exerciseEntryRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {
     private const int AnalysisPeriodDays = 28;
 
@@ -44,7 +43,7 @@ public class GetTdeeInsightQueryHandler(
             return Result.Failure<TdeeInsightModel>(Errors.User.NotFound());
         }
 
-        DateTime today = dateTimeProvider.UtcNow.Date;
+        DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
 
         IReadOnlyList<WeightEntry> weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);

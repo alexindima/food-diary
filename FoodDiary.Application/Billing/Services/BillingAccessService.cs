@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -10,7 +9,7 @@ namespace FoodDiary.Application.Billing.Services;
 public sealed class BillingAccessService(
     IUserRepository userRepository,
     IBillingSubscriptionRepository billingSubscriptionRepository,
-    IDateTimeProvider dateTimeProvider) {
+    TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
         User user,
         BillingSubscription subscription,
@@ -24,7 +23,7 @@ public sealed class BillingAccessService(
             }
 
             bool wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
-            subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.UtcNow);
+            subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.GetUtcNow().UtcDateTime);
             if (subscription.PremiumRoleManagedByBilling != wasManagedByBilling) {
                 await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
             }
@@ -34,14 +33,14 @@ public sealed class BillingAccessService(
 
         if (shouldHavePremium) {
             currentRoles.Add(RoleNames.Premium);
-            subscription.MarkPremiumRoleManagedByBilling(true, dateTimeProvider.UtcNow);
+            subscription.MarkPremiumRoleManagedByBilling(true, dateTimeProvider.GetUtcNow().UtcDateTime);
         } else {
             if (!subscription.PremiumRoleManagedByBilling) {
                 return;
             }
 
             currentRoles.RemoveAll(role => string.Equals(role, RoleNames.Premium, StringComparison.Ordinal));
-            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
+            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.GetUtcNow().UtcDateTime);
         }
 
         IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);
@@ -55,9 +54,9 @@ public sealed class BillingAccessService(
         }
 
         return status.Trim().ToLowerInvariant() switch {
-            "trialing" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.UtcNow,
+            "trialing" => currentPeriodEndUtc.HasValue && currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             "active" => true,
-            "past_due" => !currentPeriodEndUtc.HasValue || currentPeriodEndUtc > dateTimeProvider.UtcNow,
+            "past_due" => !currentPeriodEndUtc.HasValue || currentPeriodEndUtc > dateTimeProvider.GetUtcNow().UtcDateTime,
             _ => false,
         };
     }

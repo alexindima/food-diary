@@ -1,6 +1,5 @@
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.IdentityModel.Tokens.Jwt;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Infrastructure.Authentication;
 using FoodDiary.Infrastructure.Options;
 using Microsoft.Extensions.Options;
@@ -112,11 +111,11 @@ public sealed class JwtTokenGeneratorTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
+    private sealed class StubDateTimeProvider(DateTime utcNow) : TimeProvider {
         public StubDateTimeProvider()
             : this(new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)) {
         }
 
-        public DateTime UtcNow { get; } = utcNow;
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

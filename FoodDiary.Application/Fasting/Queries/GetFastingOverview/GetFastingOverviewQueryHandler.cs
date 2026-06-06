@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
@@ -18,7 +17,7 @@ public sealed class GetFastingOverviewQueryHandler(
     IFastingCheckInRepository fastingCheckInRepository,
     IFastingAnalyticsService fastingAnalyticsService,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetFastingOverviewQuery, Result<FastingOverviewModel>> {
     private const int HistoryPageSize = 10;
 
@@ -33,7 +32,7 @@ public sealed class GetFastingOverviewQueryHandler(
             return Result.Failure<FastingOverviewModel>(accessError);
         }
 
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyList<FastingCheckIn> currentCheckIns = current is null
             ? []

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using Hangfire;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -9,7 +8,7 @@ namespace FoodDiary.JobManager.Services;
 public sealed class UserCleanupJob(
     IUserCleanupService cleanupService,
     IOptions<UserCleanupOptions> options,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IJobExecutionStateTracker executionStateTracker,
     ILogger<UserCleanupJob> logger) {
     [AutomaticRetry(Attempts = RecurringJobExecutionPolicy.CleanupRetryAttempts, OnAttemptsExceeded = AttemptsExceededAction.Fail)]
@@ -19,10 +18,10 @@ public sealed class UserCleanupJob(
         UserCleanupOptions settings = options.Value;
         int retentionDays = settings.RetentionDays > 0 ? settings.RetentionDays : 30;
         int batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
-        DateTime olderThanUtc = dateTimeProvider.UtcNow.AddDays(-retentionDays);
+        DateTime olderThanUtc = dateTimeProvider.GetUtcNow().UtcDateTime.AddDays(-retentionDays);
         int totalDeleted = 0;
         const string jobName = "users.cleanup";
-        executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
+        executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         Guid? reassignUserId = null;
         if (!string.IsNullOrWhiteSpace(settings.ReassignUserId)
@@ -56,14 +55,14 @@ public sealed class UserCleanupJob(
             JobManagerTelemetry.JobDeletedItemsCounter.Add(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
-            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
         } catch (Exception ex) {
             logger.LogError(ex, "User cleanup job failed after processing {DeletedCount} users so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "failure"));
-            executionStateTracker.RecordFailure(jobName, dateTimeProvider.UtcNow);
+            executionStateTracker.RecordFailure(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
             throw;
         } finally {
             stopwatch.Stop();

@@ -3,7 +3,6 @@ using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using User = FoodDiary.Domain.Entities.Users.User;
@@ -20,7 +19,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
     IBillingTransactionRunner billingTransactionRunner,
     IUserRepository userRepository,
     BillingAccessService billingAccessService,
-    IDateTimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<ProcessBillingWebhookCommand, Result> {
     public async Task<Result> Handle(ProcessBillingWebhookCommand command, CancellationToken cancellationToken) {
         IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(command.Provider);
@@ -117,7 +116,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             webhookEvent.EventId,
             webhookEvent.EventType,
             webhookEvent.ExternalSubscriptionId ?? webhookEvent.ExternalPaymentMethodId,
-            dateTimeProvider.UtcNow,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
             payload);
 
     private async Task<BillingSubscription> UpsertSubscriptionAsync(
@@ -162,7 +161,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             webhookEvent.TrialStartUtc,
             webhookEvent.TrialEndUtc,
             webhookEvent.EventId,
-            dateTimeProvider.UtcNow,
+            dateTimeProvider.GetUtcNow().UtcDateTime,
             webhookEvent.ProviderMetadataJson);
     }
 
@@ -284,7 +283,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         if (subscription.PremiumRoleManagedByBilling) {
-            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
+            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.GetUtcNow().UtcDateTime);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
     }

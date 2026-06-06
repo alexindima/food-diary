@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
@@ -49,7 +48,7 @@ public sealed class WearableOAuthStateServiceTests {
             new StubDateTimeProvider(utcNow ?? new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc)));
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubDateTimeProvider(DateTime utcNow) : IDateTimeProvider {
-        public DateTime UtcNow => utcNow;
+    private sealed class StubDateTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 }

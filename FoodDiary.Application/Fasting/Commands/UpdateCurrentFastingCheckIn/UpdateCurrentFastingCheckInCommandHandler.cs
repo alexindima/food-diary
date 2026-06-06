@@ -2,7 +2,6 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
@@ -16,7 +15,7 @@ public class UpdateCurrentFastingCheckInCommandHandler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IFastingCheckInRepository fastingCheckInRepository,
     IUserRepository userRepository,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork)
     : ICommandHandler<UpdateCurrentFastingCheckInCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
@@ -38,7 +37,7 @@ public class UpdateCurrentFastingCheckInCommandHandler(
 
         FastingCheckIn checkIn;
         try {
-            DateTime checkedInAtUtc = dateTimeProvider.UtcNow;
+            DateTime checkedInAtUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
             checkIn = FastingCheckIn.Create(
                 current.Id,
                 userId,

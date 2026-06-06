@@ -1,5 +1,4 @@
 using System.Globalization;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -17,12 +16,12 @@ public sealed class FastingNotificationScheduler(
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
     IWebPushNotificationSender webPushNotificationSender,
-    IDateTimeProvider dateTimeProvider,
+    TimeProvider dateTimeProvider,
     ILogger<FastingNotificationScheduler> logger)
     : IFastingNotificationScheduler {
 
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
-        DateTime now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
         IReadOnlyList<FastingOccurrence> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
         FastingOccurrenceId[] activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
         IReadOnlyList<FastingCheckIn> checkIns = activeOccurrenceIds.Length == 0

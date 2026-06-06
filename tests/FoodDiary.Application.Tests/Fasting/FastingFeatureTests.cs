@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
@@ -1554,25 +1553,6 @@ public class FastingFeatureTests {
     }
 
     [Fact]
-    public async Task PostponeCyclicDay_WithUnspecifiedClock_ReturnsLaterDateRequired() {
-        var userId = UserId.New();
-        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
-        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
-        var handler = new PostponeCyclicDayCommandHandler(
-            new InMemoryFastingPlanRepository(active: plan),
-            new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new UnspecifiedDateTimeProvider(),
-            new StubUnitOfWork());
-
-        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
-
-        Assert.True(result.IsFailure);
-        Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
-        Assert.Contains("later date", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
     public async Task GetFastingInsights_WithCurrentAndHistory_ReturnsInsightsAndPrompt() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
@@ -2912,13 +2892,8 @@ public class FastingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => FixedNow;
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class UnspecifiedDateTimeProvider : IDateTimeProvider {
-        public DateTime UtcNow => DateTime.SpecifyKind(FixedNow, DateTimeKind.Unspecified);
+    private sealed class FixedDateTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(FixedNow);
     }
 
     private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {
