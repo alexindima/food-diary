@@ -24,17 +24,17 @@ public static class DiaryCsvGenerator {
             sb.Append(',');
             sb.Append(meal.MealType?.ToString() ?? "");
             sb.Append(',');
-            sb.Append(Math.Round(calories, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(calories, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(Math.Round(proteins, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(proteins, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(Math.Round(fats, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(fats, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(Math.Round(carbs, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(carbs, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(Math.Round(fiber, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(fiber, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
-            sb.Append(Math.Round(alcohol, 1).ToString(CultureInfo.InvariantCulture));
+            sb.Append(Math.Round(alcohol, 1, MidpointRounding.ToEven).ToString(CultureInfo.InvariantCulture));
             sb.Append(',');
             sb.AppendLine(EscapeCsv(meal.Comment));
         }

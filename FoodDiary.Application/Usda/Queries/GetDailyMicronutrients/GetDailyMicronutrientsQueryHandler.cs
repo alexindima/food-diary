@@ -92,13 +92,13 @@ public class GetDailyMicronutrientsQueryHandler(
             .Select(kvp => {
                 dailyValues.TryGetValue(kvp.Key, out DailyReferenceValue? drv);
                 double? dv = drv?.Value;
-                double? percentDv = dv is > 0 ? Math.Round(kvp.Value.Total / dv.Value * 100, 1) : (double?)null;
+                double? percentDv = dv is > 0 ? Math.Round(kvp.Value.Total / dv.Value * 100, 1, MidpointRounding.ToEven) : (double?)null;
 
                 return new DailyMicronutrientModel(
                     kvp.Key,
                     kvp.Value.Name,
                     kvp.Value.Unit,
-                    Math.Round(kvp.Value.Total, 2),
+                    Math.Round(kvp.Value.Total, 2, MidpointRounding.ToEven),
                     dv,
                     percentDv);
             })

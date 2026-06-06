@@ -75,8 +75,8 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
                     startedSessions,
                     completedSessions,
                     savedCheckIns,
-                    startedSessions > 0 ? Math.Round((double)completedSessions / startedSessions * 100, 1) : 0,
-                    startedSessions > 0 ? Math.Round((double)savedCheckIns / startedSessions * 100, 1) : 0);
+                    startedSessions > 0 ? Math.Round((double)completedSessions / startedSessions * 100, 1, MidpointRounding.ToEven) : 0,
+                    startedSessions > 0 ? Math.Round((double)savedCheckIns / startedSessions * 100, 1, MidpointRounding.ToEven) : 0);
             })
             .OrderByDescending(x => x.StartedSessions)
             .ThenByDescending(x => x.SelectionCount)
@@ -93,9 +93,9 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             reminderTimingSaves.Length,
             reminderTimingSaves.Count(x => string.Equals(x.ReminderSource, "preset", StringComparison.OrdinalIgnoreCase)),
             reminderTimingSaves.Count(x => string.Equals(x.ReminderSource, "manual", StringComparison.OrdinalIgnoreCase)),
-            startedEvents.Length > 0 ? Math.Round((double)completedEvents.Length / startedEvents.Length * 100, 1) : 0,
-            startedEvents.Length > 0 ? Math.Round((double)checkInEvents.Length / startedEvents.Length * 100, 1) : 0,
-            completedDurations.Length > 0 ? Math.Round(completedDurations.Average(), 1) : null,
+            startedEvents.Length > 0 ? Math.Round((double)completedEvents.Length / startedEvents.Length * 100, 1, MidpointRounding.ToEven) : 0,
+            startedEvents.Length > 0 ? Math.Round((double)checkInEvents.Length / startedEvents.Length * 100, 1, MidpointRounding.ToEven) : 0,
+            completedDurations.Length > 0 ? Math.Round(completedDurations.Average(), 1, MidpointRounding.ToEven) : null,
             checkInEvents.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
             events.MaxBy(x => x.OccurredAtUtc)?.OccurredAtUtc,
             topPresets);

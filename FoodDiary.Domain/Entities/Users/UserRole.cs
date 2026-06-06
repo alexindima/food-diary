@@ -29,11 +29,9 @@ public sealed class UserRole {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentNullException.ThrowIfNull(role);
 
-        var userRole = new UserRole(user.Id, role.Id) {
+        return new UserRole(user.Id, role.Id) {
             User = user,
             Role = role,
         };
-
-        return userRole;
     }
 }

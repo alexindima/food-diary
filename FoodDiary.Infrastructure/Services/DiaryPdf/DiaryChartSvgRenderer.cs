@@ -223,8 +223,8 @@ internal sealed partial class DiaryPdfGenerator {
 
         private static string FormatAxis(double value) =>
             value >= 1000
-                ? Math.Round(value).ToString("N0", CultureInfo.InvariantCulture)
-                : Math.Round(value, 1).ToString("0.#", CultureInfo.InvariantCulture);
+                ? Math.Round(value, MidpointRounding.ToEven).ToString("N0", CultureInfo.InvariantCulture)
+                : Math.Round(value, 1, MidpointRounding.ToEven).ToString("0.#", CultureInfo.InvariantCulture);
 
         private static string Escape(string value) => WebUtility.HtmlEncode(value);
 

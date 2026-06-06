@@ -53,7 +53,7 @@ public class GetMicronutrientsQueryHandler(
             .Select(n => {
                 dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
                 double? dailyValue = drv?.Value;
-                double? percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1) : (double?)null;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : (double?)null;
 
                 return new MicronutrientModel(
                     n.NutrientId,
@@ -95,7 +95,7 @@ public class GetMicronutrientsQueryHandler(
             .Select(n => {
                 dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
                 double? dailyValue = drv?.Value;
-                double? percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1) : (double?)null;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1, MidpointRounding.ToEven) : (double?)null;
 
                 return n with {
                     DailyValue = dailyValue,

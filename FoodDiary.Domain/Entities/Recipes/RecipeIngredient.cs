@@ -68,7 +68,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
             throw new ArgumentOutOfRangeException(paramName, "Amount must be a finite number.");
         }
 
-        if (amount <= 0 || amount > MaxAmount) {
+        if (amount is <= 0 or > MaxAmount) {
             throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Amount must be in range (0, {MaxAmount}]."));
         }
 

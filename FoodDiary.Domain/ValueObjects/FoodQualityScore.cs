@@ -57,7 +57,7 @@ public readonly record struct FoodQualityScore(int Score, FoodQualityGrade Grade
         // Product type modifier (max +/- 15 points)
         score += GetProductTypeModifier(productType);
 
-        int finalScore = (int)Math.Round(Math.Clamp(score, 0, 100));
+        int finalScore = (int)Math.Round(Math.Clamp(score, 0, 100), MidpointRounding.ToEven);
         FoodQualityGrade grade = finalScore switch {
             >= 67 => FoodQualityGrade.Green,
             >= 34 => FoodQualityGrade.Yellow,

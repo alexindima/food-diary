@@ -46,7 +46,7 @@ public class GenerateShoppingListCommandHandler(
             shoppingList.AddItem(
                 item.Name,
                 item.ProductId,
-                Math.Round(item.TotalAmount, 1),
+                Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven),
                 item.Unit,
                 item.Category,
                 isChecked: false,

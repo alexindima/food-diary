@@ -71,7 +71,7 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
         double adherenceScore = weeklyAdherence * 40;
         double activityScore = Math.Min(totalMeals, 100) / 100.0 * 20;
 
-        return (int)Math.Round(streakScore + adherenceScore + activityScore);
+        return (int)Math.Round(streakScore + adherenceScore + activityScore, MidpointRounding.ToEven);
     }
 
     public static double CalculateWeeklyAdherence(

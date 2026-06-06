@@ -100,46 +100,38 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
     }
 
     private static int? NormalizeHours(int? value, string paramName) {
-        if (!value.HasValue) {
-            return null;
+        switch (value) {
+            case null:
+                return null;
+            case < 1:
+            case > 168:
+                throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 168.");
+            default:
+                return value.Value;
         }
-
-        if (value.Value < 1 || value.Value > 168) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 168.");
-        }
-
-        return value.Value;
     }
 
     private static int? NormalizeScale(int? value, string paramName) {
-        if (!value.HasValue) {
-            return null;
+        switch (value) {
+            case null:
+                return null;
+            case < 1:
+            case > 5:
+                throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 5.");
+            default:
+                return value.Value;
         }
-
-        if (value.Value < 1 || value.Value > 5) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be between 1 and 5.");
-        }
-
-        return value.Value;
     }
 
     private static int? NormalizeNonNegative(int? value, string paramName) {
-        if (!value.HasValue) {
-            return null;
-        }
-
-        if (value.Value < 0) {
-            throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative.");
-        }
-
-        return value.Value;
+        return value switch {
+            null => null,
+            < 0 => throw new ArgumentOutOfRangeException(paramName, "Value must be non-negative."),
+            _ => value.Value,
+        };
     }
 
     private static DateTime NormalizeUtc(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 }

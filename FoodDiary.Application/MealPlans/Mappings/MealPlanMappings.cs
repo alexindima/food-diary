@@ -59,9 +59,9 @@ public static class MealPlanMappings {
             meal.RecipeId.Value,
             recipe?.Name,
             meal.Servings,
-            recipe?.TotalCalories.HasValue == true ? Math.Round(recipe.TotalCalories!.Value * multiplier, 1) : null,
-            recipe?.TotalProteins.HasValue == true ? Math.Round(recipe.TotalProteins!.Value * multiplier, 1) : null,
-            recipe?.TotalFats.HasValue == true ? Math.Round(recipe.TotalFats!.Value * multiplier, 1) : null,
-            recipe?.TotalCarbs.HasValue == true ? Math.Round(recipe.TotalCarbs!.Value * multiplier, 1) : null);
+            recipe?.TotalCalories.HasValue == true ? Math.Round(recipe.TotalCalories!.Value * multiplier, 1, MidpointRounding.ToEven) : null,
+            recipe?.TotalProteins.HasValue == true ? Math.Round(recipe.TotalProteins!.Value * multiplier, 1, MidpointRounding.ToEven) : null,
+            recipe?.TotalFats.HasValue == true ? Math.Round(recipe.TotalFats!.Value * multiplier, 1, MidpointRounding.ToEven) : null,
+            recipe?.TotalCarbs.HasValue == true ? Math.Round(recipe.TotalCarbs!.Value * multiplier, 1, MidpointRounding.ToEven) : null);
     }
 }

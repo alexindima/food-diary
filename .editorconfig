@@ -82,6 +82,7 @@ dotnet_diagnostic.MA0132.severity = warning
 dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = warning
 dotnet_diagnostic.MA0188.severity = error
+dotnet_diagnostic.MA0193.severity = error
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0028.severity = error
 dotnet_diagnostic.IDE0032.severity = error
@@ -94,6 +95,7 @@ dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 dotnet_diagnostic.IDE0305.severity = error
 dotnet_diagnostic.RCS1161.severity = error
+dotnet_diagnostic.RCS1170.severity = warning
 dotnet_diagnostic.RCS1189.severity = error
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
@@ -108,6 +110,9 @@ dotnet_diagnostic.MA0048.severity = warning
 # Domain value objects are not interop contracts; keep layout attributes out of business code.
 dotnet_diagnostic.MA0008.severity = suggestion
 
+[FoodDiary.Domain/Entities/**/*.cs]
+dotnet_diagnostic.RCS1170.severity = none
+
 [FoodDiary.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
@@ -119,6 +124,9 @@ dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.MailRelay.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = warning
+
+[FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
+dotnet_diagnostic.RCS1170.severity = none
 
 [FoodDiary.MailRelay.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none

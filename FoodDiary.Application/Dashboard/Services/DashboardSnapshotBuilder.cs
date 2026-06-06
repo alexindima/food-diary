@@ -121,7 +121,7 @@ public class DashboardSnapshotBuilder(
             body.WeightTrend,
             body.WaistTrend,
             layout,
-            Math.Round(caloriesBurned, 1),
+            Math.Round(caloriesBurned, 1, MidpointRounding.ToEven),
             tdeeInsightResult?.IsSuccess == true ? tdeeInsightResult.Value : null,
             currentCycleResult?.IsSuccess == true ? currentCycleResult.Value : null));
     }

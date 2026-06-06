@@ -83,6 +83,6 @@ public class GetWeightSummariesQueryHandler(
         }
 
         double avg = bucketEntries.Average(entry => entry.Weight);
-        return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2));
+        return new WeightEntrySummaryModel(start, end, Math.Round(avg, 2, MidpointRounding.ToEven));
     }
 }

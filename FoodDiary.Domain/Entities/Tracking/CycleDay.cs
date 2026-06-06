@@ -48,11 +48,9 @@ public sealed class CycleDay : Entity<CycleDayId> {
 
         EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
 
-        if (isPeriod.HasValue) {
-            if (IsPeriod != isPeriod.Value) {
-                IsPeriod = isPeriod.Value;
-                changed = true;
-            }
+        if (isPeriod.HasValue && IsPeriod != isPeriod.Value) {
+            IsPeriod = isPeriod.Value;
+            changed = true;
         }
 
         if (symptoms is not null) {

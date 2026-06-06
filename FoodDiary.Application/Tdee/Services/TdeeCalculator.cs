@@ -53,10 +53,10 @@ public static class TdeeCalculator {
         }
 
         TdeeConfidence confidence = DetermineConfidence(sortedWeights.Count, daysWithCalories, actualDays);
-        double weightTrendPerWeek = Math.Round(weightChangePerDay * 7, 2);
+        double weightTrendPerWeek = Math.Round(weightChangePerDay * 7, 2, MidpointRounding.ToEven);
 
         return new AdaptiveTdeeResult(
-            Math.Round(adaptiveTdee, 0),
+            Math.Round(adaptiveTdee, 0, MidpointRounding.ToEven),
             confidence,
             daysWithCalories,
             weightTrendPerWeek);
@@ -67,7 +67,7 @@ public static class TdeeCalculator {
         double? currentWeight,
         double? desiredWeight) {
         if (currentWeight is null || desiredWeight is null) {
-            return Math.Round(adaptiveTdee, 0);
+            return Math.Round(adaptiveTdee, 0, MidpointRounding.ToEven);
         }
 
         double deficit = currentWeight > desiredWeight
@@ -77,7 +77,7 @@ public static class TdeeCalculator {
                 : 0.0;    // maintain
 
         double target = adaptiveTdee + deficit;
-        return Math.Round(Math.Max(target, 1200.0), 0);
+        return Math.Round(Math.Max(target, 1200.0), 0, MidpointRounding.ToEven);
     }
 
     public static string? GetGoalAdjustmentHint(

@@ -124,19 +124,11 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private static string NormalizeRequiredPasswordHash(string value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            throw new ArgumentException("Password hash is required.", nameof(value));
-        }
-
-        return value;
+        return string.IsNullOrWhiteSpace(value) ? throw new ArgumentException("Password hash is required.", nameof(value)) : value;
     }
 
     private static string? NormalizeOptionalToken(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return null;
-        }
-
-        return value.Trim();
+        return string.IsNullOrWhiteSpace(value) ? null : value.Trim();
     }
 
     private static string NormalizeRequiredTokenHash(string value, string paramName) {
@@ -146,11 +138,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private static DateTime NormalizeUtcTimestamp(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 
     private static DateTime NormalizeOptionalAuditTimestamp(DateTime? value, string paramName) {
@@ -211,12 +199,12 @@ public sealed partial class User : AggregateRoot<UserId> {
         }
 
         return (MondayCalories ?? DailyCalorieTarget ?? 0)
-            + (TuesdayCalories ?? DailyCalorieTarget ?? 0)
-            + (WednesdayCalories ?? DailyCalorieTarget ?? 0)
-            + (ThursdayCalories ?? DailyCalorieTarget ?? 0)
-            + (FridayCalories ?? DailyCalorieTarget ?? 0)
-            + (SaturdayCalories ?? DailyCalorieTarget ?? 0)
-            + (SundayCalories ?? DailyCalorieTarget ?? 0);
+               + (TuesdayCalories ?? DailyCalorieTarget ?? 0)
+               + (WednesdayCalories ?? DailyCalorieTarget ?? 0)
+               + (ThursdayCalories ?? DailyCalorieTarget ?? 0)
+               + (FridayCalories ?? DailyCalorieTarget ?? 0)
+               + (SaturdayCalories ?? DailyCalorieTarget ?? 0)
+               + (SundayCalories ?? DailyCalorieTarget ?? 0);
     }
 
     private UserNutritionGoals GetNutritionGoals() {
@@ -468,11 +456,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private static string NormalizeRequiredGender(string value, string paramName) {
-        if (!GenderCode.TryParse(value, out GenderCode gender)) {
-            throw new ArgumentOutOfRangeException(paramName, "Gender must be one of the supported codes.");
-        }
-
-        return gender.Value;
+        return !GenderCode.TryParse(value, out GenderCode gender) ? throw new ArgumentOutOfRangeException(paramName, "Gender must be one of the supported codes.") : gender.Value;
     }
 
     private static string NormalizeOptionalLanguage(string value, string paramName) {
@@ -517,12 +501,16 @@ public sealed partial class User : AggregateRoot<UserId> {
         ArgumentNullException.ThrowIfNull(roles);
         EnsureNotDeleted();
 
-        RoleId[] requestedRoleIds = [.. roles
-            .Select(role => role.Id)
-            .OrderBy(id => id.Value)];
-        RoleId[] currentRoleIds = [.. _userRoles
-            .Select(role => role.RoleId)
-            .OrderBy(id => id.Value)];
+        RoleId[] requestedRoleIds = [
+            .. roles
+                .Select(role => role.Id)
+                .OrderBy(id => id.Value),
+        ];
+        RoleId[] currentRoleIds = [
+            .. _userRoles
+                .Select(role => role.RoleId)
+                .OrderBy(id => id.Value),
+        ];
 
         if (requestedRoleIds.SequenceEqual(currentRoleIds)) {
             return;
@@ -547,11 +535,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     public bool HasRole(string roleName) {
-        if (string.IsNullOrWhiteSpace(roleName)) {
-            return false;
-        }
-
-        return _userRoles.Any(userRole => string.Equals(userRole.Role.Name, roleName.Trim(), StringComparison.Ordinal));
+        return !string.IsNullOrWhiteSpace(roleName) && _userRoles.Exists(userRole => string.Equals(userRole.Role.Name, roleName.Trim(), StringComparison.Ordinal));
     }
 
     public bool HasUsedPremiumTrial() => PremiumTrialStartedAtUtc is not null;

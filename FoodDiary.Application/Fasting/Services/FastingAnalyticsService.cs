@@ -42,11 +42,9 @@ public sealed class FastingAnalyticsService(
             ? completedLast30Days.Average(occurrence => (occurrence.EndedAtUtc!.Value - occurrence.StartedAtUtc).TotalHours)
             : 0;
         double completionRate = last30Occurrences.Count > 0
-            ? Math.Round(completedLast30Days.Count / (double)last30Occurrences.Count * 100, 1)
-            : 0;
+            ? Math.Round(completedLast30Days.Count / (double)last30Occurrences.Count * 100, 1, MidpointRounding.ToEven) : 0;
         double checkInRate = last30Analyses.Count > 0
-            ? Math.Round(last30Analyses.Count(static analysis => analysis.LatestCheckIn is not null) / (double)last30Analyses.Count * 100, 1)
-            : 0;
+            ? Math.Round(last30Analyses.Count(static analysis => analysis.LatestCheckIn is not null) / (double)last30Analyses.Count * 100, 1, MidpointRounding.ToEven) : 0;
         DateTime? lastCheckInAtUtc = allAnalyses
             .Select(static analysis => analysis.LatestCheckIn?.CheckedInAtUtc)
             .Where(static checkedInAtUtc => checkedInAtUtc.HasValue)
@@ -55,7 +53,7 @@ public sealed class FastingAnalyticsService(
         return new FastingStatsModel(
             completedOccurrences.Count,
             CalculateCurrentStreak(completedOccurrences, nowUtc.Date),
-            Math.Round(averageDuration, 1),
+            Math.Round(averageDuration, 1, MidpointRounding.ToEven),
             completionRate,
             checkInRate,
             lastCheckInAtUtc,

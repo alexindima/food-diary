@@ -45,12 +45,12 @@ public static class RecipeNutritionCalculator {
         }
 
         return new RecipeNutritionSummary(
-            Math.Round(totalCalories, 2),
-            Math.Round(totalProteins, 2),
-            Math.Round(totalFats, 2),
-            Math.Round(totalCarbs, 2),
-            Math.Round(totalFiber, 2),
-            Math.Round(totalAlcohol, 2));
+            Math.Round(totalCalories, 2, MidpointRounding.ToEven),
+            Math.Round(totalProteins, 2, MidpointRounding.ToEven),
+            Math.Round(totalFats, 2, MidpointRounding.ToEven),
+            Math.Round(totalCarbs, 2, MidpointRounding.ToEven),
+            Math.Round(totalFiber, 2, MidpointRounding.ToEven),
+            Math.Round(totalAlcohol, 2, MidpointRounding.ToEven));
     }
 
     private static RecipeNutritionSummary FromStoredNutrition(Recipe recipe) =>

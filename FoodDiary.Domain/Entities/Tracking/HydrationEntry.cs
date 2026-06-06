@@ -61,11 +61,10 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     private static DateTime Normalize(DateTime value) {
-        DateTime utc = value.Kind switch {
+        return value.Kind switch {
             DateTimeKind.Utc => value,
             _ => value.ToUniversalTime(),
         };
-        return utc;
     }
 
     private static void EnsureUserId(UserId userId) {

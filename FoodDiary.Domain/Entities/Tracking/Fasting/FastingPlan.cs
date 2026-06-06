@@ -175,11 +175,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     }
 
     private static DateTime NormalizeTimestamp(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 
     private static DateTime NormalizeDate(DateTime value, string paramName) {
@@ -231,7 +227,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     }
 
     private static void EnsureExtendedTargetHours(int targetHours) {
-        if (targetHours < MinIntermittentHours || targetHours > MaxExtendedHours) {
+        if (targetHours is < MinIntermittentHours or > MaxExtendedHours) {
             throw new ArgumentOutOfRangeException(nameof(targetHours), $"Extended fasting target must be between {MinIntermittentHours} and {MaxExtendedHours} hours.");
         }
     }

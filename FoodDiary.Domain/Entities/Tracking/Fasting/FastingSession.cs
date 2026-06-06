@@ -108,8 +108,6 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
         FastingProtocol.F24_0 => 24,
         FastingProtocol.F36_0 => 36,
         FastingProtocol.F72_0 => 72,
-        FastingProtocol.CustomIntermittent => 16,
-        FastingProtocol.Custom => 16,
         _ => 16,
     };
 

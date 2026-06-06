@@ -24,7 +24,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     public DateTime? EndedAtUtc { get; private set; }
     public int? InitialTargetHours { get; private set; }
     public int AddedTargetHours { get; private set; }
-    public int? TargetHours => InitialTargetHours.HasValue ? InitialTargetHours.Value + AddedTargetHours : null;
+    public int? TargetHours => InitialTargetHours + AddedTargetHours;
     public string? Notes { get; private set; }
     public DateTime? CheckInAtUtc { get; private set; }
     public int? HungerLevel { get; private set; }
@@ -247,21 +247,16 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     }
 
     private static void EnsureTargetHours(int? targetHours) {
-        if (!targetHours.HasValue) {
-            return;
-        }
-
-        if (targetHours.Value <= 0 || targetHours.Value > MaxTargetHours) {
-            throw new ArgumentOutOfRangeException(nameof(targetHours), $"Target hours must be between 1 and {MaxTargetHours}.");
+        switch (targetHours) {
+            case null:
+                return;
+            case <= 0 or > MaxTargetHours:
+                throw new ArgumentOutOfRangeException(nameof(targetHours), $"Target hours must be between 1 and {MaxTargetHours}.");
         }
     }
 
     private static DateTime NormalizeTimestamp(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 
     private static string? NormalizeNotes(string? value) {
@@ -276,7 +271,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     }
 
     private static void EnsureCheckInScale(int value, string paramName) {
-        if (value < MinCheckInScale || value > MaxCheckInScale) {
+        if (value is < MinCheckInScale or > MaxCheckInScale) {
             throw new ArgumentOutOfRangeException(paramName, $"Check-in value must be between {MinCheckInScale} and {MaxCheckInScale}.");
         }
     }
@@ -291,18 +286,18 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             .Select(static value => value.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)];
 
-        if (normalized.Length == 0) {
-            return null;
+        switch (normalized.Length) {
+            case 0:
+                return null;
+            case > MaxSymptomsCount:
+                throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
+            default: {
+                    string csv = string.Join(',', normalized);
+                    return csv.Length > CheckInSymptomsMaxLength
+                        ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
+                        : csv;
+                }
         }
-
-        if (normalized.Length > MaxSymptomsCount) {
-            throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
-        }
-
-        string csv = string.Join(',', normalized);
-        return csv.Length > CheckInSymptomsMaxLength
-            ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
-            : csv;
     }
 
     private static string? NormalizeCheckInNotes(string? value) {

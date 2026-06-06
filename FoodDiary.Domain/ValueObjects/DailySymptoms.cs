@@ -1,13 +1,13 @@
 namespace FoodDiary.Domain.ValueObjects;
 
 public sealed class DailySymptoms : IEquatable<DailySymptoms> {
-    public int Pain { get; private set; }
-    public int Mood { get; private set; }
-    public int Edema { get; private set; }
-    public int Headache { get; private set; }
-    public int Energy { get; private set; }
-    public int SleepQuality { get; private set; }
-    public int Libido { get; private set; }
+    public int Pain { get; }
+    public int Mood { get; }
+    public int Edema { get; }
+    public int Headache { get; }
+    public int Energy { get; }
+    public int SleepQuality { get; }
+    public int Libido { get; }
 
     private DailySymptoms(int pain, int mood, int edema, int headache, int energy, int sleepQuality, int libido) {
         Pain = pain;

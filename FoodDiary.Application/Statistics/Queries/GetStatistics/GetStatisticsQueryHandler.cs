@@ -78,15 +78,15 @@ public class GetStatisticsQueryHandler(
         return new AggregatedStatisticsModel(
             bucketStart,
             bucketEnd,
-            Math.Round(totalCalories, 2),
-            Math.Round(totalProteins / effectiveDays, 2),
-            Math.Round(totalFats / effectiveDays, 2),
-            Math.Round(totalCarbs / effectiveDays, 2),
-            Math.Round(totalFiber / effectiveDays, 2),
-            Math.Round(totalProteins, 2),
-            Math.Round(totalFats, 2),
-            Math.Round(totalCarbs, 2),
-            Math.Round(totalFiber, 2));
+            Math.Round(totalCalories, 2, MidpointRounding.ToEven),
+            Math.Round(totalProteins / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalFats / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalCarbs / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalFiber / effectiveDays, 2, MidpointRounding.ToEven),
+            Math.Round(totalProteins, 2, MidpointRounding.ToEven),
+            Math.Round(totalFats, 2, MidpointRounding.ToEven),
+            Math.Round(totalCarbs, 2, MidpointRounding.ToEven),
+            Math.Round(totalFiber, 2, MidpointRounding.ToEven));
     }
 
     private static List<(DateTime Start, DateTime End)> BuildBuckets(

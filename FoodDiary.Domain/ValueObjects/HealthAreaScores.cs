@@ -68,7 +68,7 @@ public readonly record struct HealthAreaScores(
             }
         }
 
-        int score = (int)Math.Round(Math.Clamp(avgPercent, 0, 100));
+        int score = (int)Math.Round(Math.Clamp(avgPercent, 0, 100), MidpointRounding.ToEven);
         HealthAreaGrade grade = score switch {
             >= 75 => HealthAreaGrade.Excellent,
             >= 50 => HealthAreaGrade.Good,

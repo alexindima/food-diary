@@ -7,7 +7,6 @@ namespace FoodDiary.Domain.Entities.Social;
 
 public sealed class ContentReport : AggregateRoot<ContentReportId> {
     private const int ReasonMaxLength = 1000;
-    private const int AdminNoteMaxLength = 2000;
 
     public UserId UserId { get; private set; }
     public User User { get; private set; } = null!;

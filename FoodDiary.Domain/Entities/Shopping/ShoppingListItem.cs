@@ -103,7 +103,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
     }
 
     private static void EnsureProductId(ProductId? productId) {
-        if (productId.HasValue && productId.Value == global::FoodDiary.Domain.ValueObjects.Ids.ProductId.Empty) {
+        if (productId == global::FoodDiary.Domain.ValueObjects.Ids.ProductId.Empty) {
             throw new ArgumentException("ProductId cannot be empty.", nameof(productId));
         }
     }

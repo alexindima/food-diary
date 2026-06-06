@@ -24,7 +24,7 @@ internal sealed partial class DiaryPdfGenerator {
         FormatNumber(value, decimals, CultureInfo.InvariantCulture);
 
     private static string FormatNumber(double value, int decimals, CultureInfo culture) =>
-        Math.Round(value, decimals).ToString(string.Create(CultureInfo.InvariantCulture, $"N{decimals}"), culture);
+        Math.Round(value, decimals, MidpointRounding.ToEven).ToString(string.Create(CultureInfo.InvariantCulture, $"N{decimals}"), culture);
 
     private static string ApplyAlpha(string hex, double alpha) {
         string normalized = hex.TrimStart('#');
@@ -32,7 +32,7 @@ internal sealed partial class DiaryPdfGenerator {
             return hex;
         }
 
-        byte alphaByte = (byte)Math.Round(Math.Clamp(alpha, 0, 1) * 255);
+        byte alphaByte = (byte)Math.Round(Math.Clamp(alpha, 0, 1) * 255, MidpointRounding.ToEven);
         return $"#{alphaByte:X2}{normalized}";
     }
 

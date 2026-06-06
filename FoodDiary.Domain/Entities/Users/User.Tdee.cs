@@ -28,7 +28,7 @@ public sealed partial class User {
             _ => -161.0,
         };
 
-        return bmr > 0 ? Math.Round(bmr, 0) : null;
+        return bmr > 0 ? Math.Round(bmr, 0, MidpointRounding.ToEven) : null;
     }
 
     /// <summary>
@@ -42,7 +42,7 @@ public sealed partial class User {
         }
 
         double multiplier = GetActivityMultiplier(ActivityLevel);
-        return Math.Round(bmr.Value * multiplier, 0);
+        return Math.Round(bmr.Value * multiplier, 0, MidpointRounding.ToEven);
     }
 
     internal static double GetActivityMultiplier(ActivityLevel level) {

@@ -325,7 +325,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static double RoundNonNegative(double value, string paramName) {
-        return Math.Round(RequireNonNegative(value, paramName), 2);
+        return Math.Round(RequireNonNegative(value, paramName), 2, MidpointRounding.ToEven);
     }
 
     private static double? NormalizeManualNutrition(

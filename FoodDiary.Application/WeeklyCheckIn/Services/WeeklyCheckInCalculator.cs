@@ -31,11 +31,11 @@ public static class WeeklyCheckInCalculator {
         int avgHydration = daysInPeriod > 0 ? totalHydration / daysInPeriod : 0;
 
         return new WeekSummaryModel(
-            Math.Round(totalCalories, 1),
-            Math.Round(avgDaily, 1),
-            Math.Round(avgProteins, 1),
-            Math.Round(avgFats, 1),
-            Math.Round(avgCarbs, 1),
+            Math.Round(totalCalories, 1, MidpointRounding.ToEven),
+            Math.Round(avgDaily, 1, MidpointRounding.ToEven),
+            Math.Round(avgProteins, 1, MidpointRounding.ToEven),
+            Math.Round(avgFats, 1, MidpointRounding.ToEven),
+            Math.Round(avgCarbs, 1, MidpointRounding.ToEven),
             mealsLogged,
             daysLogged,
             weightStart,
@@ -48,14 +48,14 @@ public static class WeeklyCheckInCalculator {
 
     public static WeekTrendModel BuildTrends(WeekSummaryModel thisWeek, WeekSummaryModel lastWeek) {
         return new WeekTrendModel(
-            CalorieChange: Math.Round(thisWeek.AvgDailyCalories - lastWeek.AvgDailyCalories, 1),
-            ProteinChange: Math.Round(thisWeek.AvgProteins - lastWeek.AvgProteins, 1),
-            FatChange: Math.Round(thisWeek.AvgFats - lastWeek.AvgFats, 1),
-            CarbChange: Math.Round(thisWeek.AvgCarbs - lastWeek.AvgCarbs, 1),
+            CalorieChange: Math.Round(thisWeek.AvgDailyCalories - lastWeek.AvgDailyCalories, 1, MidpointRounding.ToEven),
+            ProteinChange: Math.Round(thisWeek.AvgProteins - lastWeek.AvgProteins, 1, MidpointRounding.ToEven),
+            FatChange: Math.Round(thisWeek.AvgFats - lastWeek.AvgFats, 1, MidpointRounding.ToEven),
+            CarbChange: Math.Round(thisWeek.AvgCarbs - lastWeek.AvgCarbs, 1, MidpointRounding.ToEven),
             WeightChange: thisWeek.WeightEnd.HasValue && lastWeek.WeightEnd.HasValue
-                ? Math.Round(thisWeek.WeightEnd.Value - lastWeek.WeightEnd.Value, 2) : null,
+                ? Math.Round(thisWeek.WeightEnd.Value - lastWeek.WeightEnd.Value, 2, MidpointRounding.ToEven) : null,
             WaistChange: thisWeek.WaistEnd.HasValue && lastWeek.WaistEnd.HasValue
-                ? Math.Round(thisWeek.WaistEnd.Value - lastWeek.WaistEnd.Value, 2) : null,
+                ? Math.Round(thisWeek.WaistEnd.Value - lastWeek.WaistEnd.Value, 2, MidpointRounding.ToEven) : null,
             HydrationChange: thisWeek.AvgDailyHydrationMl - lastWeek.AvgDailyHydrationMl,
             MealsLoggedChange: thisWeek.MealsLogged - lastWeek.MealsLogged);
     }
