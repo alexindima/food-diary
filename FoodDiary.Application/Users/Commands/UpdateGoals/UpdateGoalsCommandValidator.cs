@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentValidation;
 using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
 using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
@@ -91,7 +92,7 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
                 .GreaterThan(0)
                 .LessThanOrEqualTo(DesiredWeightValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]");
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]"));
         });
 
         When(x => x.DesiredWaist.HasValue, () => {
@@ -99,7 +100,7 @@ public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand>
                 .GreaterThan(0)
                 .LessThanOrEqualTo(DesiredWaistValueObject.MaxValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage($"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]");
+                .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWaist must be in range (0, {DesiredWaistValueObject.MaxValue}]"));
         });
     }
 

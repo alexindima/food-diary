@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
@@ -71,7 +72,7 @@ internal sealed class OpenFoodFactsService(
         try {
             string baseUrl = options.Value.BaseUrl.TrimEnd('/');
             string encodedQuery = Uri.EscapeDataString(query);
-            string url = $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={normalizedLimit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments";
+            string url = string.Create(CultureInfo.InvariantCulture, $"{baseUrl}/cgi/search.pl?search_terms={encodedQuery}&page_size={normalizedLimit}&json=1&fields=code,product_name,brands,categories,image_url,nutriments");
 
             HttpResponseMessage response = await httpClient.SendAsync(
                 new HttpRequestMessage(HttpMethod.Get, url),
@@ -114,7 +115,7 @@ internal sealed class OpenFoodFactsService(
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();
 
     private static string GetSearchCacheKey(string query, int limit) =>
-        $"{query.Trim().ToLowerInvariant()}:{limit}";
+        string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{limit}");
 
     private static bool TryGetCachedSearch(
         string cacheKey,

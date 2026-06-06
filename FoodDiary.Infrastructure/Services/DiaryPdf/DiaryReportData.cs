@@ -144,7 +144,7 @@ internal sealed partial class DiaryPdfGenerator {
         private static string FormatTimeZoneOffset(TimeSpan offset) {
             string sign = offset < TimeSpan.Zero ? "-" : "+";
             TimeSpan absolute = offset.Duration();
-            return $"UTC{sign}{(int)absolute.TotalHours:00}:{absolute.Minutes:00}";
+            return string.Create(CultureInfo.InvariantCulture, $"UTC{sign}{(int)absolute.TotalHours:00}:{absolute.Minutes:00}");
         }
     }
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -79,7 +80,7 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
         }
 
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 
@@ -89,7 +90,7 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
         }
 
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 

@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -54,7 +55,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.False(string.IsNullOrWhiteSpace(measuredPayload.AccessToken));
         Assert.True(
             stopwatch.Elapsed <= RefreshLatencyBudget,
-            $"Expected auth.refresh to stay within {RefreshLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected auth.refresh to stay within {RefreshLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -80,7 +81,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= ProductListLatencyBudget,
-            $"Expected GET /api/v1/products first owned page to stay within {ProductListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected GET /api/v1/products first owned page to stay within {ProductListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -106,7 +107,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= RecipeListLatencyBudget,
-            $"Expected GET /api/v1/recipes first owned page to stay within {RecipeListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected GET /api/v1/recipes first owned page to stay within {RecipeListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -134,7 +135,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.Equal(25, payload.Data.Count);
         Assert.True(
             stopwatch.Elapsed <= ConsumptionListLatencyBudget,
-            $"Expected GET /api/v1/consumptions first page within monthly range to stay within {ConsumptionListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected GET /api/v1/consumptions first page within monthly range to stay within {ConsumptionListLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -161,7 +162,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         Assert.NotEqual(Guid.Empty, payload.AssetId);
         Assert.True(
             stopwatch.Elapsed <= ImageUploadUrlLatencyBudget,
-            $"Expected POST /api/v1/images/upload-url to stay within {ImageUploadUrlLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected POST /api/v1/images/upload-url to stay within {ImageUploadUrlLatencyBudget.TotalMilliseconds} ms, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     private static async Task<AuthPayload> RegisterAsync(HttpClient client, string email) {
@@ -198,7 +199,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             Product[] products = Enumerable.Range(0, count)
                 .Select(index => Product.Create(
                     user.Id,
-                    $"Perf Product {index:D4}",
+                    string.Create(CultureInfo.InvariantCulture, $"Perf Product {index:D4}"),
                     MeasurementUnit.G,
                     100,
                     25,
@@ -225,9 +226,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             Recipe[] recipes = Enumerable.Range(0, count)
                 .Select(index => Recipe.Create(
                     user.Id,
-                    $"Perf Recipe {index:D4}",
+                    string.Create(CultureInfo.InvariantCulture, $"Perf Recipe {index:D4}"),
                     servings: 2,
-                    description: $"Description {index:D4}",
+                    description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}"),
                     visibility: Visibility.Private))
                 .ToArray();
 
@@ -272,7 +273,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                 new CreateConsumptionHttpRequest(
                     startDate.AddDays(index),
                     mealTypes[index % mealTypes.Length].ToString(),
-                    $"Perf Meal {index:D4}",
+                    string.Create(CultureInfo.InvariantCulture, $"Perf Meal {index:D4}"),
                     null,
                     null,
                     [new ConsumptionItemHttpRequest(product.Id, null, 100)],
@@ -288,7 +289,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(
-            $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
+            string.Create(CultureInfo.InvariantCulture, $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }
 
     [ExcludeFromCodeCoverage]

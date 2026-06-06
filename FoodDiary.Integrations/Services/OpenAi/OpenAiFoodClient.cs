@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
@@ -213,7 +214,7 @@ public sealed class OpenAiFoodClient(
             requestId ?? "n/a",
             summary);
 
-        RecordAiRequest(operation, model, $"http_{statusCode}");
+        RecordAiRequest(operation, model, string.Create(CultureInfo.InvariantCulture, $"http_{statusCode}"));
         return (false, Errors.Ai.OpenAiFailed($"OpenAI error {response.StatusCode}: {summary}"));
     }
 

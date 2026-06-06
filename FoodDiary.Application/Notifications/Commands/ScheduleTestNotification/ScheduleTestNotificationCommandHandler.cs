@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -38,7 +39,7 @@ public sealed class ScheduleTestNotificationCommandHandler(
             userId,
             "Notification",
             scheduled.Type,
-            $"delaySeconds={scheduled.DelaySeconds};scheduledAtUtc={scheduled.ScheduledAtUtc:O}");
+            string.Create(CultureInfo.InvariantCulture, $"delaySeconds={scheduled.DelaySeconds};scheduledAtUtc={scheduled.ScheduledAtUtc:O}"));
 
         return Result.Success(new ScheduledNotificationModel(
             scheduled.Type,

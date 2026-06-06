@@ -222,7 +222,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
-                $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
+                string.Create(CultureInfo.InvariantCulture, $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}").Trim()));
         }
 
         TResponse? result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);

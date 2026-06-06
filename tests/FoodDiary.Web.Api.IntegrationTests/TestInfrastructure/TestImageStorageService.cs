@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Options;
@@ -29,7 +30,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         }
 
         if (fileSizeBytes > _options.MaxUploadSizeBytes) {
-            throw new InvalidOperationException($"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
+            throw new InvalidOperationException(string.Create(CultureInfo.InvariantCulture, $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes."));
         }
 
         if (!AllowedContentTypes.Contains(contentType)) {

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Consumptions.Common;
 
@@ -20,7 +21,7 @@ public static class ConsumptionItemValidator {
         }
 
         return item.Amount <= 0 || item.Amount > MaxAmount
-            ? Result.Failure(Errors.Validation.Invalid("Amount", $"Amount must be in range (0, {MaxAmount}]."))
+            ? Result.Failure(Errors.Validation.Invalid("Amount", string.Create(CultureInfo.InvariantCulture, $"Amount must be in range (0, {MaxAmount}].")))
             : Result.Success();
     }
 }

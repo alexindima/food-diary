@@ -11,6 +11,7 @@ using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.DependencyInjection;
+using System.Globalization;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -216,7 +217,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
         }
 
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
+        Assert.Fail(string.Create(CultureInfo.InvariantCulture, $"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -49,6 +50,6 @@ public sealed class TestCoverageExclusionGuardrailTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record CoverageExclusionViolation(string Path, int Line, string TypeName) {
-        public string Format() => $"{Path}:{Line} {TypeName}";
+        public string Format() => string.Create(CultureInfo.InvariantCulture, $"{Path}:{Line} {TypeName}");
     }
 }

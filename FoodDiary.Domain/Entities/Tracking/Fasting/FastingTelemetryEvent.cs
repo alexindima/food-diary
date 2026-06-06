@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -92,7 +93,7 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
 
         string normalized = value.Trim();
         if (normalized.Length > maxLength) {
-            throw new ArgumentOutOfRangeException(nameof(value), $"Value must be at most {maxLength} characters.");
+            throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."));
         }
 
         return normalized;

@@ -16,6 +16,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Billing.Models;
 using System.Reflection;
+using System.Globalization;
 
 namespace FoodDiary.Application.Tests.Billing;
 
@@ -1409,18 +1410,18 @@ public sealed class BillingFeatureTests {
         int? periodEndOffsetDays,
         bool expectedPremium,
         bool expectedCanStartTrial) {
-        var user = User.Create($"overview-status-{status}-{periodEndOffsetDays ?? 0}@example.com", "hash");
+        var user = User.Create(string.Create(CultureInfo.InvariantCulture, $"overview-status-{status}-{periodEndOffsetDays ?? 0}@example.com"), "hash");
         DateTime periodEnd = periodEndOffsetDays.HasValue ? Now.AddDays(periodEndOffsetDays.Value) : Now.AddDays(1);
         BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
-            $"customer_overview_{status}_{periodEndOffsetDays ?? 0}",
-            $"sub_overview_{status}_{periodEndOffsetDays ?? 0}",
-            $"pm_overview_{status}_{periodEndOffsetDays ?? 0}",
+            string.Create(CultureInfo.InvariantCulture, $"customer_overview_{status}_{periodEndOffsetDays ?? 0}"),
+            string.Create(CultureInfo.InvariantCulture, $"sub_overview_{status}_{periodEndOffsetDays ?? 0}"),
+            string.Create(CultureInfo.InvariantCulture, $"pm_overview_{status}_{periodEndOffsetDays ?? 0}"),
             status,
             Now.AddDays(-1),
             periodEnd,
-            $"evt_overview_{status}_{periodEndOffsetDays ?? 0}",
+            string.Create(CultureInfo.InvariantCulture, $"evt_overview_{status}_{periodEndOffsetDays ?? 0}"),
             Now);
         if (!periodEndOffsetDays.HasValue) {
             SetPrivateProperty(subscription, nameof(BillingSubscription.CurrentPeriodEndUtc), (DateTime?)null);

@@ -1,6 +1,6 @@
 namespace FoodDiary.Domain.Enums;
 
 public enum ReportTargetType {
-    Recipe,
-    Comment,
+    Recipe = 0,
+    Comment = 1,
 }

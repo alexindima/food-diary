@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
 
@@ -18,6 +19,6 @@ public class CreateWeightEntryCommandValidator : AbstractValidator<CreateWeightE
             .GreaterThan(0)
             .LessThanOrEqualTo(DesiredWeight.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage($"Weight must be in range (0, {DesiredWeight.MaxValue}].");
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"Weight must be in range (0, {DesiredWeight.MaxValue}]."));
     }
 }

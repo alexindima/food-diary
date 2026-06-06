@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -65,7 +66,7 @@ internal sealed class UsdaFoodSearchService(
         }
 
         try {
-            HttpResponseMessage response = await httpClient.GetAsync($"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}", cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.GetAsync(string.Create(CultureInfo.InvariantCulture, $"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}"), cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
                 return null;
             }

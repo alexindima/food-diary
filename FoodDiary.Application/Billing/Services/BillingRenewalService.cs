@@ -25,8 +25,8 @@ public sealed class BillingRenewalService(
         .ToDictionary(gateway => gateway.Provider, StringComparer.OrdinalIgnoreCase);
 
     private enum RenewalOutcome {
-        Renewed,
-        Failed
+        Renewed = 0,
+        Failed = 1
     }
 
     public async Task<BillingRenewalRunResult> RenewDueSubscriptionsAsync(
@@ -229,10 +229,10 @@ public sealed class BillingRenewalService(
     }
 
     private static string BuildRenewalFailureEventId(BillingSubscription subscription, DateTime failedAtUtc) =>
-        $"billing-renewal-failed:{subscription.Id:N}:{failedAtUtc:yyyyMMddHHmmss}";
+        string.Create(CultureInfo.InvariantCulture, $"billing-renewal-failed:{subscription.Id:N}:{failedAtUtc:yyyyMMddHHmmss}");
 
     private static string BuildRenewalSkippedEventId(BillingSubscription subscription, DateTime skippedAtUtc) =>
-        $"billing-renewal-skipped-inaccessible-user:{subscription.Id:N}:{skippedAtUtc:yyyyMMddHHmmss}";
+        string.Create(CultureInfo.InvariantCulture, $"billing-renewal-skipped-inaccessible-user:{subscription.Id:N}:{skippedAtUtc:yyyyMMddHHmmss}");
 
     private async Task MarkRenewalFailedAsync(
         BillingSubscription subscription,

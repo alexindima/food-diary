@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 public static class Errors {
@@ -208,7 +210,7 @@ public static class Errors {
 
         public static Error AlreadyExists(DateTime date) => new(
             "WeightEntry.AlreadyExists",
-            $"Weight entry for {date:yyyy-MM-dd} already exists.",
+            string.Create(CultureInfo.InvariantCulture, $"Weight entry for {date:yyyy-MM-dd} already exists."),
             Kind: ErrorKind.Conflict);
     }
 
@@ -220,7 +222,7 @@ public static class Errors {
 
         public static Error AlreadyExists(DateTime date) => new(
             "WaistEntry.AlreadyExists",
-            $"Waist entry for {date:yyyy-MM-dd} already exists.",
+            string.Create(CultureInfo.InvariantCulture, $"Waist entry for {date:yyyy-MM-dd} already exists."),
             Kind: ErrorKind.Conflict);
     }
 
@@ -262,7 +264,7 @@ public static class Errors {
     public static class CycleDay {
         public static Error NotFound(DateTime date) => new(
             "CycleDay.NotFound",
-            $"Cycle day for {date:yyyy-MM-dd} was not found.",
+            $"Cycle day for {date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture)} was not found.",
             Kind: ErrorKind.NotFound);
     }
 
@@ -540,7 +542,7 @@ public static class Errors {
     public static class Usda {
         public static Error FoodNotFound(int fdcId) => new(
             "Usda.FoodNotFound",
-            $"USDA food with FDC ID {fdcId} was not found.",
+            $"USDA food with FDC ID {fdcId.ToString(CultureInfo.InvariantCulture)} was not found.",
             Kind: ErrorKind.NotFound);
     }
 

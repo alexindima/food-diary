@@ -28,6 +28,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using System.Globalization;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
@@ -2390,7 +2391,7 @@ public class FastingFeatureTests {
         Assert.Equal(user.Id.Value, notificationPusher.UnreadCountUsers[0]);
         Assert.Equal(user.Id.Value, notificationPusher.ChangedUsers[0]);
         Assert.Equal(NotificationTypes.FastingCheckInReminder, notificationRepo.Stored[0].Type);
-        Assert.Equal($"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}", notificationRepo.Stored[0].ReferenceId);
+        Assert.Equal(string.Create(CultureInfo.InvariantCulture, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}"), notificationRepo.Stored[0].ReferenceId);
     }
 
     [Fact]
@@ -2419,8 +2420,8 @@ public class FastingFeatureTests {
         Assert.Equal(0, secondCreated);
         Assert.Equal(2, notificationRepo.Stored.Count);
         Assert.Equal(2, webPushSender.Sent.Count);
-        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}", StringComparison.Ordinal));
-        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}", StringComparison.Ordinal));
+        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, string.Create(CultureInfo.InvariantCulture, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInReminderHours}"), StringComparison.Ordinal));
+        Assert.Contains(notificationRepo.Stored, x => string.Equals(x.ReferenceId, string.Create(CultureInfo.InvariantCulture, $"fasting-check-in-reminder:{occurrence.Id.Value}:{user.FastingCheckInFollowUpReminderHours}"), StringComparison.Ordinal));
     }
 
     [Fact]

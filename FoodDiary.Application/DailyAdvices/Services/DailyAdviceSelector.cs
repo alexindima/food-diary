@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using FoodDiary.Domain.Entities.Content;
@@ -44,7 +45,7 @@ internal static class DailyAdviceSelector {
         DateTime date,
         string locale) {
         int totalWeight = advices.Sum(advice => Math.Max(1, advice.Weight));
-        long hashValue = ComputeStableHash($"{locale}:{date:yyyy-MM-dd}");
+        long hashValue = ComputeStableHash(string.Create(CultureInfo.InvariantCulture, $"{locale}:{date:yyyy-MM-dd}"));
         int offset = (int)(hashValue % totalWeight);
 
         int cumulative = 0;

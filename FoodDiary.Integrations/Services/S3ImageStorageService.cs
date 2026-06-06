@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net.Mime;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
@@ -35,7 +36,7 @@ public sealed class S3ImageStorageService(
 
             if (fileSizeBytes > _options.MaxUploadSizeBytes) {
                 throw new InvalidOperationException(
-                    $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
+                    string.Create(CultureInfo.InvariantCulture, $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes."));
             }
 
             if (!AllowedContentTypes.Contains(contentType)) {
@@ -94,7 +95,7 @@ public sealed class S3ImageStorageService(
 
             if (info.SizeBytes > _options.MaxUploadSizeBytes) {
                 return new ImageObjectValidationResult(false, "too_large",
-                    $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes.");
+                    string.Create(CultureInfo.InvariantCulture, $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes."));
             }
 
             if (string.IsNullOrWhiteSpace(info.ContentType) || !AllowedContentTypes.Contains(info.ContentType)) {

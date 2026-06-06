@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -16,7 +18,7 @@ internal static class SourceScanner {
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line = StripLineComment(line) }))
             .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
-            .Select(entry => $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}")
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))
             .OrderBy(static value => value, StringComparer.Ordinal)
             .ToArray();
     }

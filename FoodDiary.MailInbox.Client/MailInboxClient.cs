@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
@@ -17,7 +18,8 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         EnsureBaseAddress();
 
         string path = limit.HasValue
-            ? $"/api/mail-inbox/messages?limit={limit.Value}"
+            ? string.Create(CultureInfo.InvariantCulture, $"/api/mail-inbox/messages?limit={limit.Value}"
+)
             : "/api/mail-inbox/messages";
         using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path);
         using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);

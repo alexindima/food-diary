@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -37,7 +38,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
             IsNutritionAutoCalculated: true));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse);
 
-        HttpResponseMessage dashboardResponse = await client.GetAsync($"/api/v1/dashboard?date={today:yyyy-MM-dd}");
+        HttpResponseMessage dashboardResponse = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/dashboard?date={today:yyyy-MM-dd}"));
         await AssertStatusCodeAsync(HttpStatusCode.OK, dashboardResponse);
         DashboardPayload? dashboard = await dashboardResponse.Content.ReadFromJsonAsync<DashboardPayload>(JsonOptions);
 
@@ -55,12 +56,12 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         await AssertStatusCodeAsync(HttpStatusCode.OK, response1);
         await AssertStatusCodeAsync(HttpStatusCode.OK, response2);
 
-        HttpResponseMessage totalResponse = await client.GetAsync($"/api/v1/hydrations/daily?date={now:yyyy-MM-dd}");
+        HttpResponseMessage totalResponse = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/hydrations/daily?date={now:yyyy-MM-dd}"));
         await AssertStatusCodeAsync(HttpStatusCode.OK, totalResponse);
         HydrationDailyTotalPayload? total = await totalResponse.Content.ReadFromJsonAsync<HydrationDailyTotalPayload>(JsonOptions);
 
         Assert.NotNull(total);
-        Assert.True(total.TotalMl >= 750, $"Expected at least 750ml, got {total.TotalMl}");
+        Assert.True(total.TotalMl >= 750, string.Create(CultureInfo.InvariantCulture, $"Expected at least 750ml, got {total.TotalMl}"));
     }
 
     [RequiresDockerFact]
@@ -99,16 +100,16 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         IdPayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(recipe);
 
-        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{recipe.Id}/duplicate", new { });
+        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{recipe.Id}/duplicate"), new { });
         await AssertStatusCodeAsync(HttpStatusCode.OK, duplicateResponse);
         IdPayload? duplicated = await duplicateResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(duplicated);
         Assert.NotEqual(recipe.Id, duplicated.Id);
 
-        HttpResponseMessage deleteOriginal = await client.DeleteAsync($"/api/v1/recipes/{recipe.Id}");
+        HttpResponseMessage deleteOriginal = await client.DeleteAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{recipe.Id}"));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteOriginal);
 
-        HttpResponseMessage getDuplicate = await client.GetAsync($"/api/v1/recipes/{duplicated.Id}");
+        HttpResponseMessage getDuplicate = await client.GetAsync(string.Create(CultureInfo.InvariantCulture, $"/api/v1/recipes/{duplicated.Id}"));
         await AssertStatusCodeAsync(HttpStatusCode.OK, getDuplicate);
     }
 
@@ -128,7 +129,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
         if (response.StatusCode == expected) return;
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-        Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
+        Assert.Fail(string.Create(CultureInfo.InvariantCulture, $"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }
 
     [ExcludeFromCodeCoverage]

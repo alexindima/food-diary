@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -120,7 +121,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
 
         string trimmed = value.Trim();
         return trimmed.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : trimmed;
     }
 
@@ -142,7 +143,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         }
 
         if (calories < 0 || calories > MaxCalories) {
-            throw new ArgumentOutOfRangeException(nameof(calories), $"Calories must be between 0 and {MaxCalories}.");
+            throw new ArgumentOutOfRangeException(nameof(calories), string.Create(CultureInfo.InvariantCulture, $"Calories must be between 0 and {MaxCalories}."));
         }
     }
 }

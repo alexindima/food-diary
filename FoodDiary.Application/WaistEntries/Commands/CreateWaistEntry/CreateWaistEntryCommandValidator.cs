@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentValidation;
 using FoodDiary.Domain.ValueObjects;
 
@@ -18,6 +19,6 @@ public class CreateWaistEntryCommandValidator : AbstractValidator<CreateWaistEnt
             .GreaterThan(0)
             .LessThanOrEqualTo(DesiredWaist.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage($"Circumference must be in range (0, {DesiredWaist.MaxValue}].");
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"Circumference must be in range (0, {DesiredWaist.MaxValue}]."));
     }
 }

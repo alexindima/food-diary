@@ -4,10 +4,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
 public enum UserAccountStatusFilter {
-    All,
-    Active,
-    Inactive,
-    Deleted
+    All = 0,
+    Active = 1,
+    Inactive = 2,
+    Deleted = 3,
 }
 
 public interface IUserRepository {

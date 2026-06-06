@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Globalization;
 using FoodDiary.Presentation.Api.Extensions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -59,7 +60,7 @@ public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsy
                 new KeyValuePair<string, object?>("fooddiary.presentation.feature", feature),
                 new KeyValuePair<string, object?>("fooddiary.presentation.controller", controllerName),
                 new KeyValuePair<string, object?>("fooddiary.presentation.operation", operationName),
-                new KeyValuePair<string, object?>("error.code", $"HttpStatus_{statusCode}"));
+                new KeyValuePair<string, object?>("error.code", string.Create(CultureInfo.InvariantCulture, $"HttpStatus_{statusCode}")));
         }
 
         activity?.Dispose();

@@ -75,12 +75,14 @@ dotnet_diagnostic.MA0049.severity = warning
 dotnet_diagnostic.MA0051.severity = suggestion
 dotnet_diagnostic.MA0061.severity = warning
 dotnet_diagnostic.MA0074.severity = warning
+dotnet_diagnostic.MA0076.severity = error
 dotnet_diagnostic.MA0132.severity = warning
 dotnet_diagnostic.MA0144.severity = warning
 dotnet_diagnostic.MA0150.severity = warning
 dotnet_diagnostic.IDE0005.severity = warning
 dotnet_diagnostic.IDE0090.severity = error
 dotnet_diagnostic.IDE0290.severity = error
+dotnet_diagnostic.RCS1161.severity = error
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
 dotnet_diagnostic.CA1707.severity = none

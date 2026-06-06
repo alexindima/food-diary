@@ -126,7 +126,7 @@ public sealed class TelegramBotWorker(
             }
 
             bool success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken).ConfigureAwait(false);
-            await AnswerCallbackAsync(callbackQuery, success ? $"Added {amountMl} ml." : "Failed to add water.", cancellationToken).ConfigureAwait(false);
+            await AnswerCallbackAsync(callbackQuery, success ? string.Create(CultureInfo.InvariantCulture, $"Added {amountMl} ml.") : "Failed to add water.", cancellationToken).ConfigureAwait(false);
         }
     }
 

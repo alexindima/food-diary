@@ -4,6 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -58,9 +59,9 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Recipe[] recipes = Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
-                $"Perf Recipe {index:D4}",
+                string.Create(CultureInfo.InvariantCulture, $"Perf Recipe {index:D4}"),
                 servings: 2,
-                description: $"Description {index:D4}"))
+                description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}")))
             .ToArray();
 
         context.Recipes.AddRange(recipes);
@@ -88,6 +89,6 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.Equal(25, items.Count);
         Assert.True(
             stopwatch.Elapsed <= FirstPageLatencyBudget,
-            $"Expected RecipeRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected RecipeRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 }

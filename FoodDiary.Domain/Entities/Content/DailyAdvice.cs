@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -101,7 +102,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
         string normalized = value.Trim();
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 
@@ -127,7 +128,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
 
         string normalized = value.Trim();
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 

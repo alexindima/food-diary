@@ -7,6 +7,7 @@ using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
 using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
+using System.Globalization;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -190,7 +191,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task ImportAdminLessons_WithTooManyLessons_HasError() {
         ImportAdminLessonItem[] lessons = Enumerable.Range(0, 101)
-            .Select(index => ValidLesson(title: $"Lesson {index}"))
+            .Select(index => ValidLesson(title: string.Create(CultureInfo.InvariantCulture, $"Lesson {index}")))
             .ToArray();
 
         TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(

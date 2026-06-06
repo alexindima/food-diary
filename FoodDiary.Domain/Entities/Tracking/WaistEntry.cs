@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -75,7 +76,7 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
         }
 
         return value is <= 0 or > MaxCircumference
-            ? throw new ArgumentOutOfRangeException(nameof(value), $"Circumference must be in range (0, {MaxCircumference}].")
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Circumference must be in range (0, {MaxCircumference}]."))
             : value;
     }
 

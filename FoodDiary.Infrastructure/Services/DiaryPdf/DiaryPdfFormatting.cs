@@ -24,7 +24,7 @@ internal sealed partial class DiaryPdfGenerator {
         FormatNumber(value, decimals, CultureInfo.InvariantCulture);
 
     private static string FormatNumber(double value, int decimals, CultureInfo culture) =>
-        Math.Round(value, decimals).ToString($"N{decimals}", culture);
+        Math.Round(value, decimals).ToString(string.Create(CultureInfo.InvariantCulture, $"N{decimals}"), culture);
 
     private static string ApplyAlpha(string hex, double alpha) {
         string normalized = hex.TrimStart('#');
@@ -56,7 +56,8 @@ internal sealed partial class DiaryPdfGenerator {
     private static string FormatHost(string host, int? port, bool isDefaultPort) {
         string unicodeHost = ToUnicodeHost(host.Trim().TrimEnd('.'));
         return port.HasValue && !isDefaultPort
-            ? $"{unicodeHost}:{port.Value}"
+            ? string.Create(CultureInfo.InvariantCulture, $"{unicodeHost}:{port.Value}"
+)
             : unicodeHost;
     }
 
@@ -97,7 +98,8 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         string suffix = compositionItems.Count > itemLabels.Length
-            ? $" +{compositionItems.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
+            ? string.Create(CultureInfo.InvariantCulture, $" +{compositionItems.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
+)
             : "";
 
         return suffix.Length == 0

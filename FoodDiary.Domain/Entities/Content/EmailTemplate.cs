@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.ValueObjects;
 
@@ -85,7 +86,7 @@ public sealed class EmailTemplate : Entity<Guid> {
 
         string normalized = value.Trim();
         if (maxLength.HasValue && normalized.Length > maxLength.Value) {
-            throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength.Value} characters.");
+            throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength.Value} characters."));
         }
 
         return normalized;

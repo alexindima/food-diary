@@ -1,3 +1,4 @@
+using System.Globalization;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -66,7 +67,7 @@ internal static class CSharpSyntaxReader {
     [ExcludeFromCodeCoverage]
     internal sealed record SourceLocation(string Path, int Line, string Text) {
         public string Format(string repositoryRoot) =>
-            $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {Text}";
+            string.Create(CultureInfo.InvariantCulture, $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {Text}");
     }
 
     [ExcludeFromCodeCoverage]
@@ -95,6 +96,6 @@ internal static class CSharpSyntaxReader {
         }
 
         public string Format(string repositoryRoot) =>
-            $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})";
+            string.Create(CultureInfo.InvariantCulture, $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})");
     }
 }

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -73,7 +74,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
 
     public MealPlanDay AddDay(int dayNumber) {
         if (_days.Any(d => d.DayNumber == dayNumber)) {
-            throw new InvalidOperationException($"Day {dayNumber} already exists in this plan.");
+            throw new InvalidOperationException(string.Create(CultureInfo.InvariantCulture, $"Day {dayNumber} already exists in this plan."));
         }
 
         var day = MealPlanDay.Create(Id, dayNumber);

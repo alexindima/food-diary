@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.Domain.ValueObjects;
 
 public readonly record struct DesiredWeight {
@@ -15,7 +17,7 @@ public readonly record struct DesiredWeight {
         }
 
         return value is <= 0 or > MaxValue
-            ? throw new ArgumentOutOfRangeException(nameof(value), $"Desired weight must be in range (0, {MaxValue}].")
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Desired weight must be in range (0, {MaxValue}]."))
             : new DesiredWeight(value);
     }
 }

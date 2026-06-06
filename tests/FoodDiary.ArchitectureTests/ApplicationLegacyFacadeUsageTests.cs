@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -12,7 +14,7 @@ public class ApplicationLegacyFacadeUsageTests {
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("recipe.Update(", StringComparison.Ordinal))
-            .Select(entry => $"{entry.file}:{entry.lineNumber}")
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))
             .ToArray();
 
         Assert.True(
@@ -32,7 +34,7 @@ public class ApplicationLegacyFacadeUsageTests {
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("product.UpdateIdentity(", StringComparison.Ordinal))
-            .Select(entry => $"{entry.file}:{entry.lineNumber}")
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.file}:{entry.lineNumber}"))
             .ToArray();
 
         Assert.True(
@@ -52,7 +54,7 @@ public class ApplicationLegacyFacadeUsageTests {
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
             .Where(entry => entry.line.Contains("user.UpdateProfile(", StringComparison.Ordinal))
-            .Select(entry => $"{entry.file}:{entry.lineNumber}")
+            .Select(entry => $"{entry.file}:{entry.lineNumber.ToString(CultureInfo.InvariantCulture)}")
             .ToArray();
 
         Assert.True(

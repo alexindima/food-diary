@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Text.Json;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
@@ -25,7 +26,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         Product[] products = Enumerable.Range(0, SeedCount)
             .Select(index => Product.Create(
                 user.Id,
-                $"Plan Product {index:D4}",
+                string.Create(CultureInfo.InvariantCulture, $"Plan Product {index:D4}"),
                 MeasurementUnit.G,
                 100,
                 25,
@@ -68,9 +69,9 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         Recipe[] recipes = Enumerable.Range(0, SeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
-                $"Plan Recipe {index:D4}",
+                string.Create(CultureInfo.InvariantCulture, $"Plan Recipe {index:D4}"),
                 servings: 2,
-                description: $"Description {index:D4}",
+                description: string.Create(CultureInfo.InvariantCulture, $"Description {index:D4}"),
                 visibility: Visibility.Private))
             .ToArray();
 
@@ -98,7 +99,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     public async Task ProductSearchQuery_UsesTrigramNameIndex() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         User[] users = Enumerable.Range(0, 12)
-            .Select(index => User.Create($"products-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
+            .Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"products-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))
             .ToArray();
 
         context.Users.AddRange(users);
@@ -110,7 +111,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                         user.Id,
                         userIndex == users.Length / 2 && index == SeedCount / 2
                             ? "Needle Cocoa Product"
-                            : $"Background Product {userIndex:D2}-{index:D4}",
+                            : string.Create(CultureInfo.InvariantCulture, $"Background Product {userIndex:D2}-{index:D4}"),
                         MeasurementUnit.G,
                         100,
                         25,
@@ -147,7 +148,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     public async Task RecipeSearchQuery_UsesTrigramNameIndex() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         User[] users = Enumerable.Range(0, 12)
-            .Select(index => User.Create($"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
+            .Select(index => User.Create(string.Create(CultureInfo.InvariantCulture, $"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com"), "hash"))
             .ToArray();
 
         context.Users.AddRange(users);
@@ -159,9 +160,9 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                         user.Id,
                         userIndex == users.Length / 2 && index == SeedCount / 2
                             ? "Needle Soup Recipe"
-                            : $"Background Recipe {userIndex:D2}-{index:D4}",
+                            : string.Create(CultureInfo.InvariantCulture, $"Background Recipe {userIndex:D2}-{index:D4}"),
                         servings: 2,
-                        description: $"Description {userIndex:D2}-{index:D4}",
+                        description: string.Create(CultureInfo.InvariantCulture, $"Description {userIndex:D2}-{index:D4}"),
                         visibility: Visibility.Private)))
             .ToArray();
 
@@ -199,7 +200,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
                 user.Id,
                 startDate.AddDays(index),
                 mealTypes[index % mealTypes.Length],
-                comment: $"Plan Meal {index:D4}"))
+                comment: string.Create(CultureInfo.InvariantCulture, $"Plan Meal {index:D4}")))
             .ToArray();
 
         context.Meals.AddRange(meals);
@@ -306,8 +307,8 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     }
 
     private enum QueryPlanTable {
-        Products,
-        Recipes,
-        Meals
+        Products = 0,
+        Recipes = 1,
+        Meals = 2
     }
 }

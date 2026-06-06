@@ -7,6 +7,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
+using System.Globalization;
 
 namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 
@@ -50,7 +51,7 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             currentUser.Id,
             "User",
             currentUser.Id.Value.ToString(),
-            $"push={currentUser.PushNotificationsEnabled};fasting={currentUser.FastingPushNotificationsEnabled};social={currentUser.SocialPushNotificationsEnabled};fastingReminder={currentUser.FastingCheckInReminderHours};fastingReminderFollowUp={currentUser.FastingCheckInFollowUpReminderHours}");
+            string.Create(CultureInfo.InvariantCulture, $"push={currentUser.PushNotificationsEnabled};fasting={currentUser.FastingPushNotificationsEnabled};social={currentUser.SocialPushNotificationsEnabled};fastingReminder={currentUser.FastingCheckInReminderHours};fastingReminderFollowUp={currentUser.FastingCheckInFollowUpReminderHours}"));
 
         return Result.Success(new NotificationPreferencesModel(
             currentUser.PushNotificationsEnabled,

@@ -1,12 +1,12 @@
 namespace FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 public enum ErrorKind {
-    Validation,
-    Unauthorized,
-    Forbidden,
-    NotFound,
-    Conflict,
-    RateLimited,
-    ExternalFailure,
-    Internal,
+    Validation = 0,
+    Unauthorized = 1,
+    Forbidden = 2,
+    NotFound = 3,
+    Conflict = 4,
+    RateLimited = 5,
+    ExternalFailure = 6,
+    Internal = 7,
 }

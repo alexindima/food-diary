@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
@@ -75,7 +76,7 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         }
 
         return value is <= 0 or > MaxWeight
-            ? throw new ArgumentOutOfRangeException(nameof(value), $"Weight must be in range (0, {MaxWeight}].")
+            ? throw new ArgumentOutOfRangeException(nameof(value), string.Create(CultureInfo.InvariantCulture, $"Weight must be in range (0, {MaxWeight}]."))
             : value;
     }
 

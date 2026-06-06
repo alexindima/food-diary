@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -101,7 +102,7 @@ public class FastingCheckInInvariantTests {
                 hungerLevel: 1,
                 energyLevel: 2,
                 moodLevel: 3,
-                symptoms: Enumerable.Range(1, 9).Select(index => $"symptom-{index}"),
+                symptoms: Enumerable.Range(1, 9).Select(index => string.Create(CultureInfo.InvariantCulture, $"symptom-{index}")),
                 notes: null,
                 DateTime.UtcNow));
     }

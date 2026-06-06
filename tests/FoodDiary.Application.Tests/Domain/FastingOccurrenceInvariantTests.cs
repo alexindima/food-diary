@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -306,7 +307,7 @@ public class FastingOccurrenceInvariantTests {
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(0, 2, 3, null, null, DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 6, 3, null, null, DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 6, null, null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, Enumerable.Range(0, 9).Select(i => $"s{i}"), null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, Enumerable.Range(0, 9).Select(i => string.Create(CultureInfo.InvariantCulture, $"s{i}")), null, DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, [new string('s', 201)], null, DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, null, new string('n', 501), DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, null, null, new DateTime(2026, 3, 27)));

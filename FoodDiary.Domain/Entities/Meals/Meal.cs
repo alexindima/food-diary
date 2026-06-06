@@ -4,6 +4,7 @@ using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Globalization;
 
 namespace FoodDiary.Domain.Entities.Meals;
 
@@ -356,7 +357,7 @@ public sealed class Meal : AggregateRoot<MealId> {
 
         string normalized = value.Trim();
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 

@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
@@ -77,7 +78,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
 
         string normalized = value.Trim();
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 
@@ -91,7 +92,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
         }
 
         return value.Value is <= 0 or > MaxAmount
-            ? throw new ArgumentOutOfRangeException(paramName, $"Amount must be in range (0, {MaxAmount}].")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Amount must be in range (0, {MaxAmount}]."))
             : value.Value;
     }
 

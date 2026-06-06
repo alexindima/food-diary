@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
@@ -430,7 +431,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(
-            $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
+            string.Create(CultureInfo.InvariantCulture, $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}"));
     }
 
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {

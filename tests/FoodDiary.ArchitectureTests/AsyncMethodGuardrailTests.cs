@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -155,6 +157,6 @@ public sealed class AsyncMethodGuardrailTests {
         bool IsControllerAction) {
 
         public string Format(string repositoryRoot) =>
-            $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})";
+            string.Create(CultureInfo.InvariantCulture, $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {ReturnType} {Name}({Parameters})");
     }
 }

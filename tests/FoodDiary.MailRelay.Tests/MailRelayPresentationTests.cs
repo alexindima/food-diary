@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.MailRelay.Application.Common.Result;
 using FoodDiary.MailRelay.Application.Options;
 using FoodDiary.MailRelay.Presentation.Extensions;
@@ -44,11 +45,11 @@ public sealed class MailRelayPresentationTests {
         IActionResult ok = Result<int>.Success(42).ToOkActionResult(controller, static value => new { Value = value });
         IActionResult created = Result<int>.Success(42).ToCreatedActionResult(
             controller,
-            static value => $"/messages/{value}",
+            static value => string.Create(CultureInfo.InvariantCulture, $"/messages/{value}"),
             static value => new { Value = value });
         IActionResult accepted = Result<int>.Success(42).ToAcceptedActionResult(
             controller,
-            static value => $"/messages/{value}",
+            static value => string.Create(CultureInfo.InvariantCulture, $"/messages/{value}"),
             static value => new { Value = value });
         IActionResult noContent = Result.Success().ToNoContentActionResult(controller);
         IActionResult okObject = Result.Success().ToOkActionResult(controller, new { Status = "ok" });
@@ -68,11 +69,11 @@ public sealed class MailRelayPresentationTests {
         IActionResult ok = Result<int>.Failure(error).ToOkActionResult(controller, static value => new { Value = value });
         IActionResult created = Result<int>.Failure(error).ToCreatedActionResult(
             controller,
-            static value => $"/messages/{value}",
+            static value => $"/messages/{value.ToString(CultureInfo.InvariantCulture)}",
             static value => new { Value = value });
         IActionResult accepted = Result<int>.Failure(error).ToAcceptedActionResult(
             controller,
-            static value => $"/messages/{value}",
+            static value => $"/messages/{value.ToString(CultureInfo.InvariantCulture)}",
             static value => new { Value = value });
         IActionResult noContent = Result.Failure(error).ToNoContentActionResult(controller);
         IActionResult okObject = Result.Failure(error).ToOkActionResult(controller, new { Status = "ok" });

@@ -22,23 +22,23 @@ internal static class UsdaDataSeeder {
 
             long existingCount = await CountRowsAsync(connection, "\"UsdaFoods\"").ConfigureAwait(false);
             if (existingCount > 0) {
-                Console.WriteLine($"UsdaFoods already has {existingCount} rows. Skipping seed. Use --force to re-seed.");
+                Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"UsdaFoods already has {existingCount} rows. Skipping seed. Use --force to re-seed."));
                 return;
             }
 
             Console.WriteLine("Seeding USDA reference data...");
 
             long foodCount = await ImportFoodsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  Foods: {foodCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Foods: {foodCount:N0} rows"));
 
             long nutrientCount = await ImportNutrientsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  Nutrients: {nutrientCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Nutrients: {nutrientCount:N0} rows"));
 
             long foodNutrientCount = await ImportFoodNutrientsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  FoodNutrients: {foodNutrientCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodNutrients: {foodNutrientCount:N0} rows"));
 
             long portionCount = await ImportFoodPortionsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  FoodPortions: {portionCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodPortions: {portionCount:N0} rows"));
 
             await SeedDailyReferenceValuesAsync(connection).ConfigureAwait(false);
 
@@ -66,16 +66,16 @@ internal static class UsdaDataSeeder {
             Console.WriteLine("Seeding USDA reference data...");
 
             long foodCount = await ImportFoodsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  Foods: {foodCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Foods: {foodCount:N0} rows"));
 
             long nutrientCount = await ImportNutrientsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  Nutrients: {nutrientCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  Nutrients: {nutrientCount:N0} rows"));
 
             long foodNutrientCount = await ImportFoodNutrientsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  FoodNutrients: {foodNutrientCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodNutrients: {foodNutrientCount:N0} rows"));
 
             long portionCount = await ImportFoodPortionsAsync(connection, csvDirectory).ConfigureAwait(false);
-            Console.WriteLine($"  FoodPortions: {portionCount:N0} rows");
+            Console.WriteLine(string.Create(CultureInfo.InvariantCulture, $"  FoodPortions: {portionCount:N0} rows"));
 
             await SeedDailyReferenceValuesAsync(connection).ConfigureAwait(false);
 

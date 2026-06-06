@@ -1,3 +1,4 @@
+using System.Globalization;
 using FluentValidation;
 using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 
@@ -17,10 +18,10 @@ public class UpdateDesiredWeightCommandValidator : AbstractValidator<UpdateDesir
         RuleFor(c => c.DesiredWeight)
             .GreaterThan(0)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]")
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]"))
             .LessThanOrEqualTo(DesiredWeightValueObject.MaxValue)
             .WithErrorCode("Validation.Invalid")
-            .WithMessage($"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]")
+            .WithMessage(string.Create(CultureInfo.InvariantCulture, $"DesiredWeight must be in range (0, {DesiredWeightValueObject.MaxValue}]"))
             .When(c => c.DesiredWeight.HasValue);
     }
 }

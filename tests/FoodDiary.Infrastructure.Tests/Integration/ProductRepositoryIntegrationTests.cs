@@ -5,6 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Products;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -73,7 +74,7 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         Product[] products = Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Product.Create(
                 user.Id,
-                $"Perf Product {index:D4}",
+                string.Create(CultureInfo.InvariantCulture, $"Perf Product {index:D4}"),
                 MeasurementUnit.G,
                 100,
                 25,
@@ -110,6 +111,6 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.Equal(25, items.Count);
         Assert.True(
             stopwatch.Elapsed <= FirstPageLatencyBudget,
-            $"Expected ProductRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms.");
+            string.Create(CultureInfo.InvariantCulture, $"Expected ProductRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 }

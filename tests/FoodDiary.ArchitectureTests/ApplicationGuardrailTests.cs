@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -257,7 +259,7 @@ public sealed class ApplicationGuardrailTests {
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
-            .Select(entry => $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}")
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))
             .ToArray();
     }
 }

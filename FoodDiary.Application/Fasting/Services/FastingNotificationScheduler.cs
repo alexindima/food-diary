@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Notifications.Common;
@@ -96,7 +97,7 @@ public sealed class FastingNotificationScheduler(
 
             createdCount += await TryCreateCheckInReminderAsync(
                 occurrence,
-                $"fasting-check-in-reminder:{occurrence.Id.Value}:{hour}",
+                string.Create(CultureInfo.InvariantCulture, $"fasting-check-in-reminder:{occurrence.Id.Value}:{hour}"),
                 usersToPush,
                 cancellationToken).ConfigureAwait(false);
         }
@@ -192,7 +193,7 @@ public sealed class FastingNotificationScheduler(
                     occurrence,
                     plan,
                     NotificationTypes.EatingWindowStarted,
-                    $"eating-window-started:{occurrence.Id.Value}:{cycleIndex + 1}",
+                    string.Create(CultureInfo.InvariantCulture, $"eating-window-started:{occurrence.Id.Value}:{cycleIndex + 1}"),
                     usersToPush,
                     cancellationToken).ConfigureAwait(false);
             }
@@ -203,7 +204,7 @@ public sealed class FastingNotificationScheduler(
                     occurrence,
                     plan,
                     NotificationTypes.FastingWindowStarted,
-                    $"fasting-window-started:{occurrence.Id.Value}:{cycleIndex + 2}",
+                    $"fasting-window-started:{occurrence.Id.Value}:{(cycleIndex + 2).ToString(CultureInfo.InvariantCulture)}",
                     usersToPush,
                     cancellationToken).ConfigureAwait(false);
             }

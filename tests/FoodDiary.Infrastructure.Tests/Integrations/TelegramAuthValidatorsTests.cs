@@ -51,7 +51,7 @@ public sealed class TelegramAuthValidatorsTests {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         TelegramAuthValidator validator = CreateInitDataValidator();
 
-        Result<TelegramInitData> result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}&hash=bad");
+        Result<TelegramInitData> result = validator.ValidateInitData(string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={{\"id\":42}}&hash=bad"));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -72,7 +72,7 @@ public sealed class TelegramAuthValidatorsTests {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         TelegramAuthValidator validator = CreateInitDataValidator();
 
-        Result<TelegramInitData> result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}");
+        Result<TelegramInitData> result = validator.ValidateInitData(string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={{\"id\":42}}"));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -181,7 +181,7 @@ public sealed class TelegramAuthValidatorsTests {
     public void ValidateLoginWidget_WithOptionalFieldsMissing_ReturnsUser() {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         string dataCheckString = string.Join("\n", [
-            $"auth_date={authDate}",
+            string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}"),
             "id=42"
         ]);
         byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
@@ -216,15 +216,15 @@ public sealed class TelegramAuthValidatorsTests {
             photo_url = "https://example.com/photo.jpg",
             language_code = "en"
         });
-        string dataCheckString = $"auth_date={authDate}\nuser={userJson}";
+        string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}\nuser={userJson}");
         byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
-        return $"auth_date={authDate}&user={Uri.EscapeDataString(userJson)}&hash={hash}";
+        return string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={Uri.EscapeDataString(userJson)}&hash={hash}");
     }
 
     private static TelegramLoginWidgetData CreateSignedWidgetData(long authDate) {
         string dataCheckString = string.Join("\n", [
-            $"auth_date={authDate}",
+            string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}"),
             "first_name=Alex",
             "id=42",
             "last_name=Doe",

@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
+using System.Globalization;
 
 namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 
@@ -19,12 +20,12 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
 
             if (!Enum.TryParse<LessonCategory>(item.Category, true, out LessonCategory category)) {
                 return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid($"lessons[{index}].category", "Invalid lesson category."));
+                    Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].category"), "Invalid lesson category."));
             }
 
             if (!Enum.TryParse<LessonDifficulty>(item.Difficulty, true, out LessonDifficulty difficulty)) {
                 return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid($"lessons[{index}].difficulty", "Invalid lesson difficulty."));
+                    Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].difficulty"), "Invalid lesson difficulty."));
             }
 
             try {
@@ -39,7 +40,7 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
                     item.SortOrder));
             } catch (ArgumentException exception) {
                 return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid($"lessons[{index}]", exception.Message));
+                    Errors.Validation.Invalid($"lessons[{index.ToString(CultureInfo.InvariantCulture)}]", exception.Message));
             }
         }
 

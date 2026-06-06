@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -14,7 +15,7 @@ public sealed class PagedHttpResponseMappingsTests {
             TotalPages: 4,
             TotalItems: 87);
 
-        var result = response.ToPagedHttpResponse(static value => $"item-{value}");
+        var result = response.ToPagedHttpResponse(static value => string.Create(CultureInfo.InvariantCulture, $"item-{value}"));
 
         Assert.Equal(["item-1", "item-2", "item-3"], result.Data);
         Assert.Equal(2, result.Page);
@@ -27,7 +28,7 @@ public sealed class PagedHttpResponseMappingsTests {
     public void ToHttpResponseList_MapsItemsToList() {
         int[] items = new[] { 2, 4, 6 };
 
-        IReadOnlyList<string> result = items.ToHttpResponseList(static value => $"value-{value}");
+        IReadOnlyList<string> result = items.ToHttpResponseList(static value => string.Create(CultureInfo.InvariantCulture, $"value-{value}"));
 
         Assert.Equal(["value-2", "value-4", "value-6"], result);
     }

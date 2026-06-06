@@ -4,6 +4,7 @@ using System.Text;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Email.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
+using System.Globalization;
 
 namespace FoodDiary.Application.Authentication.Services;
 
@@ -173,7 +174,7 @@ public sealed class EmailSender(
             return null;
         }
 
-        string port = uri.IsDefaultPort ? string.Empty : $":{uri.Port}";
+        string port = uri.IsDefaultPort ? string.Empty : string.Create(CultureInfo.InvariantCulture, $":{uri.Port}");
         return $"{uri.Scheme}://{uri.IdnHost.ToLowerInvariant()}{port}";
     }
 

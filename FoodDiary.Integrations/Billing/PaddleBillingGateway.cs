@@ -220,7 +220,7 @@ public sealed class PaddleBillingGateway(
             string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
-                $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
+                string.Create(CultureInfo.InvariantCulture, $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}").Trim()));
         }
 
         PaddleEnvelope<TResponse>? envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken).ConfigureAwait(false);

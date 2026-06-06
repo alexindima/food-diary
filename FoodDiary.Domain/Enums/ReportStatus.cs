@@ -1,7 +1,7 @@
 namespace FoodDiary.Domain.Enums;
 
 public enum ReportStatus {
-    Pending,
-    Reviewed,
-    Dismissed,
+    Pending = 0,
+    Reviewed = 1,
+    Dismissed = 2,
 }

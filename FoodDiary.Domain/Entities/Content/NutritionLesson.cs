@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -91,7 +92,7 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
 
         string trimmed = value.Trim();
         return trimmed.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Must be at most {maxLength} characters."))
             : trimmed;
     }
 

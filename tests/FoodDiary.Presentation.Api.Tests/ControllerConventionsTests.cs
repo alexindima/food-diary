@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Routing;
+using System.Globalization;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -43,7 +44,7 @@ public sealed class ControllerConventionsTests {
                 ActionCount = GetActionMethods(type).Length,
             })
             .Where(static entry => entry.ActionCount > 8)
-            .Select(entry => $"{entry.Type.FullName} ({entry.ActionCount} actions)")
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{entry.Type.FullName} ({entry.ActionCount} actions)"))
             .ToArray();
 
         Assert.Empty(violations);

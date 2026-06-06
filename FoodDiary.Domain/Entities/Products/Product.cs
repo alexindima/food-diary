@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Recipes;
@@ -371,7 +372,7 @@ public sealed class Product : AggregateRoot<ProductId> {
 
         string normalized = value.Trim();
         return normalized.Length > maxLength
-            ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Value must be at most {maxLength} characters."))
             : normalized;
     }
 
@@ -379,7 +380,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         RequirePositive(value, paramName);
         double canonicalAmount = GetCanonicalBaseAmount(unit);
         return !AreClose(value, canonicalAmount)
-            ? throw new ArgumentOutOfRangeException(paramName, $"Base amount for {unit} must be {canonicalAmount}.")
+            ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Base amount for {unit} must be {canonicalAmount}."))
             : canonicalAmount;
     }
 

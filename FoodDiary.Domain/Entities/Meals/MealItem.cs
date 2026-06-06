@@ -1,3 +1,4 @@
+using System.Globalization;
 using FoodDiary.Domain.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -70,7 +71,7 @@ public class MealItem : Entity<MealItemId> {
         }
 
         if (amount <= 0 || amount > MaxAmount) {
-            throw new ArgumentOutOfRangeException(paramName, $"Amount must be in range (0, {MaxAmount}].");
+            throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Amount must be in range (0, {MaxAmount}]."));
         }
 
         return amount;
