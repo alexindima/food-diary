@@ -5,7 +5,7 @@ public static class MailRelaySuppressionPolicy {
     public const string HardBounceReason = "hard-bounce";
 
     public static bool ShouldSuppress(string eventType, string? classification) {
-        if (!MailRelayDeliveryEventType.TryNormalize(eventType, out string? normalizedEventType)) {
+        if (!MailRelayDeliveryEventType.TryNormalize(eventType, out string normalizedEventType)) {
             return false;
         }
 
@@ -18,7 +18,7 @@ public static class MailRelaySuppressionPolicy {
     }
 
     public static string GetDefaultReason(string eventType) =>
-        MailRelayDeliveryEventType.TryNormalize(eventType, out string? normalizedEventType) &&
+        MailRelayDeliveryEventType.TryNormalize(eventType, out string normalizedEventType) &&
         string.Equals(normalizedEventType, MailRelayDeliveryEventType.Complaint, StringComparison.Ordinal)
             ? ComplaintReason
             : HardBounceReason;

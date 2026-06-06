@@ -42,6 +42,6 @@ public sealed class ApiForwardedHeadersOptions {
             ? 32
             : 128;
 
-        return prefixLength is >= 0 && prefixLength <= maxPrefixLength;
+        return prefixLength >= 0 && prefixLength <= maxPrefixLength;
     }
 }

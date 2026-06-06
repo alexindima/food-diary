@@ -24,7 +24,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
 
     public NotificationText RenderFromPayload(string type, string payloadJson, string? locale = null) {
         if (string.IsNullOrWhiteSpace(payloadJson)) {
-            throw new ArgumentException("Notification payload is required.", nameof(payloadJson));
+            throw new ArgumentException(@"Notification payload is required.", nameof(payloadJson));
         }
 
         return type switch {
@@ -61,7 +61,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
         arguments.Length == 0 ? template : string.Format(culture, template, arguments);
 
     private NotificationText RenderNewRecommendation(string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(payloadJson, out NewRecommendationNotificationPayload? payload);
+        NotificationPayloadSerializer.TryDeserialize(payloadJson, out NewRecommendationNotificationPayload? payload);
         string dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
             || string.Equals(payload.DietologistName, "Your dietologist", StringComparison.OrdinalIgnoreCase)
             ? string.Empty
@@ -71,7 +71,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     }
 
     private NotificationText RenderDietologistInvitationReceived(string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationReceivedNotificationPayload>(payloadJson, out DietologistInvitationReceivedNotificationPayload? payload);
+        NotificationPayloadSerializer.TryDeserialize(payloadJson, out DietologistInvitationReceivedNotificationPayload? payload);
         string clientName = string.IsNullOrWhiteSpace(payload?.ClientName)
             ? "A client"
             : payload.ClientName;
@@ -80,7 +80,7 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     }
 
     private NotificationText RenderDietologistInvitationDecision(string type, string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationDecisionNotificationPayload>(payloadJson, out DietologistInvitationDecisionNotificationPayload? payload);
+        NotificationPayloadSerializer.TryDeserialize(payloadJson, out DietologistInvitationDecisionNotificationPayload? payload);
         string dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
             ? "Your dietologist"
             : payload.DietologistName;

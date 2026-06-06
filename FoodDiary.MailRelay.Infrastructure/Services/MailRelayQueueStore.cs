@@ -179,11 +179,11 @@ public sealed class MailRelayQueueStore(
                                                 queue.attempt_count,
                                                 queue.max_attempts;
                                             """;
-    private readonly NpgsqlDataSource _dataSource = dataSource;
+
     private readonly MailRelayQueueOptions _queueOptions = queueOptions.Value;
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(EnsureSchemaSql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -199,7 +199,7 @@ public sealed class MailRelayQueueStore(
         var outboxId = Guid.NewGuid();
         DateTimeOffset now = DateTimeOffset.UtcNow;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             NpgsqlTransaction transaction = await connection.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
@@ -278,7 +278,7 @@ public sealed class MailRelayQueueStore(
 
     public async Task<IReadOnlyList<QueuedEmailMessage>> ClaimDueBatchAsync(CancellationToken cancellationToken) {
         var result = new List<QueuedEmailMessage>();
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(ClaimDueBatchSql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -321,7 +321,7 @@ public sealed class MailRelayQueueStore(
                                max_attempts;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -378,7 +378,7 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var result = new List<MailRelayOutboxMessage>();
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -425,7 +425,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -475,7 +475,7 @@ public sealed class MailRelayQueueStore(
                            returning id, status;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -521,7 +521,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -558,7 +558,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -586,7 +586,7 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var entries = new List<MailRelaySuppressionEntry>();
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -600,7 +600,7 @@ public sealed class MailRelayQueueStore(
                             reader.GetString(2),
                             GetDateTimeOffset(reader, 3),
                             GetDateTimeOffset(reader, 4),
-                            reader.IsDBNull(5) ? null : GetDateTimeOffset(reader, 5)));
+                            await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 5)));
                     }
 
                     return entries;
@@ -638,7 +638,7 @@ public sealed class MailRelayQueueStore(
                                expires_at_utc = excluded.expires_at_utc;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -685,7 +685,7 @@ public sealed class MailRelayQueueStore(
                            returning created_at_utc;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -734,7 +734,7 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var result = new List<MailRelayDeliveryEventEntry>();
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -747,9 +747,9 @@ public sealed class MailRelayQueueStore(
                             reader.GetString(1),
                             reader.GetString(2),
                             reader.GetString(3),
-                            reader.IsDBNull(4) ? null : reader.GetString(4),
-                            reader.IsDBNull(5) ? null : reader.GetString(5),
-                            reader.IsDBNull(6) ? null : reader.GetString(6),
+                            await reader.IsDBNullAsync(4, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(4),
+                            await reader.IsDBNullAsync(5, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(5),
+                            await reader.IsDBNullAsync(6, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(6),
                             GetDateTimeOffset(reader, 7),
                             GetDateTimeOffset(reader, 8)));
                     }
@@ -766,7 +766,7 @@ public sealed class MailRelayQueueStore(
         string normalizedEmail = NormalizeEmail(email)
                               ?? throw new InvalidOperationException("Suppression email must be provided.");
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -797,7 +797,7 @@ public sealed class MailRelayQueueStore(
                            """;
 
         var emails = new List<string>();
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -826,7 +826,7 @@ public sealed class MailRelayQueueStore(
                            from mailrelay_outbound_emails;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -867,7 +867,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -885,14 +885,14 @@ public sealed class MailRelayQueueStore(
                         reader.GetGuid(0),
                         reader.GetString(1),
                         reader.GetString(2),
-                        reader.IsDBNull(3) ? null : reader.GetString(3),
+                        await reader.IsDBNullAsync(3, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(3),
                         reader.GetInt32(4),
                         reader.GetInt32(5),
                         GetDateTimeOffset(reader, 6),
                         GetDateTimeOffset(reader, 7),
-                        reader.IsDBNull(8) ? null : GetDateTimeOffset(reader, 8),
-                        reader.IsDBNull(9) ? null : GetDateTimeOffset(reader, 9),
-                        reader.IsDBNull(10) ? null : reader.GetString(10),
+                        await reader.IsDBNullAsync(8, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 8),
+                        await reader.IsDBNullAsync(9, cancellationToken).ConfigureAwait(false) ? null : GetDateTimeOffset(reader, 9),
+                        await reader.IsDBNullAsync(10, cancellationToken).ConfigureAwait(false) ? null : reader.GetString(10),
                         suppressedRecipients);
                 }
             }
@@ -913,7 +913,7 @@ public sealed class MailRelayQueueStore(
                            where id = @id;
                            """;
 
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -927,7 +927,7 @@ public sealed class MailRelayQueueStore(
     }
 
     private async Task ExecuteStatusCommandAsync(string sql, Guid id, CancellationToken cancellationToken) {
-        NpgsqlConnection connection = await _dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {

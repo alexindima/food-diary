@@ -34,9 +34,9 @@ public class CommonAbstractionsTests {
         };
 
         string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(path => allowedFiles.Contains(path) is false)
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !allowedFiles.Contains(path))
             .Where(ContainsAdHocErrorConstruction)
             .Select(path => Path.GetRelativePath(applicationRoot, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];
@@ -69,11 +69,11 @@ public class CommonAbstractionsTests {
         HashSet<string> knownCodes = GetKnownErrorCodes();
 
         string[] violations = [.. Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(path => allowedFiles.Contains(path) is false)
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(path => !allowedFiles.Contains(path))
             .SelectMany(path => GetReferencedStringErrorCodes(path)
-                .Where(code => knownCodes.Contains(code) is false)
+                .Where(code => !knownCodes.Contains(code))
                 .Select(code => $"{Path.GetRelativePath(applicationRoot, path)}: {code}"))
             .OrderBy(static value => value, StringComparer.Ordinal)];
 

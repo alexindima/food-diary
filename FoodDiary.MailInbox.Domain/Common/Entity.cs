@@ -45,11 +45,7 @@ public abstract class Entity<TId> : IAuditableEntity, IEquatable<Entity<TId>>
     }
 
     private static DateTime NormalizeUtc(DateTime value, string paramName) {
-        if (value.Kind == DateTimeKind.Unspecified) {
-            throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.");
-        }
-
-        return value.ToUniversalTime();
+        return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
 
     public bool Equals(Entity<TId>? other) {

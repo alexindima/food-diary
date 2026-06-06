@@ -17,21 +17,18 @@ public class Result {
     public static Result Success() => new(isSuccess: true, error: null);
 
     public static Result Failure(MailInboxError error) => new(isSuccess: false, error);
+
+    public static Result<T> Success<T>(T value) => new(value, isSuccess: true, error: null);
+
+    public static Result<T> Failure<T>(MailInboxError error) => new(default, isSuccess: false, error);
 }
 
 public sealed class Result<T> : Result {
-    private Result(T value) : base(isSuccess: true, error: null) {
+    internal Result(T? value, bool isSuccess, MailInboxError? error) : base(isSuccess, error) {
         Value = value;
-    }
-
-    private Result(MailInboxError error) : base(isSuccess: false, error) {
     }
 
     public T Value => IsSuccess
         ? field!
         : throw new InvalidOperationException("Cannot access the value of a failed result.");
-
-    public static Result<T> Success(T value) => new(value);
-
-    public static new Result<T> Failure(MailInboxError error) => new(error);
 }

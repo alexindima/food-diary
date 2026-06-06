@@ -16,8 +16,6 @@ namespace FoodDiary.Presentation.Api.Features.Images;
 [ApiController]
 [Route("api/v{version:apiVersion}/images")]
 public sealed class ImagesController(ISender mediator, ILogger<ImagesController> logger) : AuthorizedController(mediator) {
-    private readonly ILogger<ImagesController> _logger = logger;
-
     [HttpPost("upload-url")]
     [EnableIdempotency]
     [ProducesResponseType<GetImageUploadUrlHttpResponse>(StatusCodes.Status200OK)]
@@ -26,7 +24,7 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     [ProducesApiErrorResponse(StatusCodes.Status429TooManyRequests)]
     [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
     public Task<IActionResult> GetUploadUrl([FromCurrentUser] Guid userId, [FromBody] GetImageUploadUrlHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), _logger, "images.upload-url", userId);
+        HandleObservedOk(request.ToCommand(userId), static value => value.ToHttpResponse(), logger, "images.upload-url", userId);
 
     [HttpDelete("{assetId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -34,5 +32,5 @@ public sealed class ImagesController(ISender mediator, ILogger<ImagesController>
     [ProducesApiErrorResponse(StatusCodes.Status409Conflict)]
     [ProducesApiErrorResponse(StatusCodes.Status502BadGateway)]
     public Task<IActionResult> Delete(Guid assetId, [FromCurrentUser] Guid userId) =>
-        HandleObservedNoContent(assetId.ToDeleteCommand(userId), _logger, "images.delete", userId);
+        HandleObservedNoContent(assetId.ToDeleteCommand(userId), logger, "images.delete", userId);
 }

@@ -19,7 +19,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
     private readonly ILogger<TelegramBotSecretAuthorizationFilter> _logger = logger;
 
     public Task OnAuthorizationAsync(AuthorizationFilterContext context) {
-        using Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity("auth.telegram.bot-secret", ActivityKind.Internal);
+        using Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity("auth.telegram.bot-secret");
         activity?.SetTag("fooddiary.presentation.feature", "Auth");
         activity?.SetTag("fooddiary.presentation.controller", "AuthTelegramController");
         activity?.SetTag("fooddiary.presentation.operation", "auth.telegram.bot-secret");
@@ -28,7 +28,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
             TrackFailure(activity, "Authentication.TelegramBotNotConfigured");
             context.Result = CreateErrorResult(
                 context,
-                FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotNotConfigured);
+                Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotNotConfigured);
             return Task.CompletedTask;
         }
 
@@ -48,13 +48,13 @@ public sealed class TelegramBotSecretAuthorizationFilter(
         TrackFailure(activity, "Authentication.TelegramBotInvalidSecret");
         context.Result = CreateErrorResult(
             context,
-            FoodDiary.Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotInvalidSecret);
+            Application.Abstractions.Common.Abstractions.Results.Errors.Authentication.TelegramBotInvalidSecret);
         return Task.CompletedTask;
     }
 
     private static ObjectResult CreateErrorResult(
         AuthorizationFilterContext context,
-        FoodDiary.Application.Abstractions.Common.Abstractions.Results.Error error) =>
+        Application.Abstractions.Common.Abstractions.Results.Error error) =>
         new(new ApiErrorHttpResponse(
             error.Code,
             error.Message,

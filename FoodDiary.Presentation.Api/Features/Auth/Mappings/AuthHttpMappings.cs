@@ -20,114 +20,121 @@ using Microsoft.AspNetCore.Http;
 namespace FoodDiary.Presentation.Api.Features.Auth.Mappings;
 
 public static class AuthHttpMappings {
-    public static RegisterCommand ToCommand(this RegisterHttpRequest request) {
-        return new RegisterCommand(
-            Email: request.Email,
-            Password: request.Password,
-            Language: request.Language,
-            ClientOrigin: request.ClientOrigin);
+    extension(RegisterHttpRequest request) {
+        public RegisterCommand ToCommand() {
+            return new RegisterCommand(
+                Email: request.Email,
+                Password: request.Password,
+                Language: request.Language,
+                ClientOrigin: request.ClientOrigin);
+        }
+        public RegisterCommand ToCommand(HttpContext httpContext) {
+            return new RegisterCommand(
+                Email: request.Email,
+                Password: request.Password,
+                Language: request.Language,
+                ClientOrigin: request.ClientOrigin,
+                ClientContext: httpContext.ToAuthenticationClientContext("password-register"));
+        }
     }
 
-    public static RegisterCommand ToCommand(this RegisterHttpRequest request, HttpContext httpContext) {
-        return new RegisterCommand(
-            Email: request.Email,
-            Password: request.Password,
-            Language: request.Language,
-            ClientOrigin: request.ClientOrigin,
-            ClientContext: httpContext.ToAuthenticationClientContext("password-register"));
+    extension(RestoreAccountHttpRequest request) {
+        public RestoreAccountCommand ToCommand() {
+            return new RestoreAccountCommand(
+                Email: request.Email,
+                Password: request.Password,
+                RememberMe: request.RememberMe);
+        }
+        public RestoreAccountCommand ToCommand(HttpContext httpContext) {
+            return new RestoreAccountCommand(
+                Email: request.Email,
+                Password: request.Password,
+                RememberMe: request.RememberMe,
+                ClientContext: httpContext.ToAuthenticationClientContext("password-restore"));
+        }
     }
 
-    public static RestoreAccountCommand ToCommand(this RestoreAccountHttpRequest request) {
-        return new RestoreAccountCommand(
-            Email: request.Email,
-            Password: request.Password,
-            RememberMe: request.RememberMe);
+    extension(LoginHttpRequest request) {
+        public LoginCommand ToCommand() {
+            return new LoginCommand(
+                Email: request.Email,
+                Password: request.Password,
+                RememberMe: request.RememberMe);
+        }
+        public LoginCommand ToCommand(HttpContext httpContext) {
+            return new LoginCommand(
+                Email: request.Email,
+                Password: request.Password,
+                RememberMe: request.RememberMe,
+                ClientContext: httpContext.ToAuthenticationClientContext("password"));
+        }
     }
 
-    public static RestoreAccountCommand ToCommand(this RestoreAccountHttpRequest request, HttpContext httpContext) {
-        return new RestoreAccountCommand(
-            Email: request.Email,
-            Password: request.Password,
-            RememberMe: request.RememberMe,
-            ClientContext: httpContext.ToAuthenticationClientContext("password-restore"));
-    }
-
-    public static LoginCommand ToCommand(this LoginHttpRequest request) {
-        return new LoginCommand(
-            Email: request.Email,
-            Password: request.Password,
-            RememberMe: request.RememberMe);
-    }
-
-    public static LoginCommand ToCommand(this LoginHttpRequest request, HttpContext httpContext) {
-        return new LoginCommand(
-            Email: request.Email,
-            Password: request.Password,
-            RememberMe: request.RememberMe,
-            ClientContext: httpContext.ToAuthenticationClientContext("password"));
-    }
-
-    public static GoogleLoginCommand ToCommand(this GoogleLoginHttpRequest request) {
-        return new GoogleLoginCommand(
-            Credential: request.Credential,
-            RememberMe: request.RememberMe);
-    }
-
-    public static GoogleLoginCommand ToCommand(this GoogleLoginHttpRequest request, HttpContext httpContext) {
-        return new GoogleLoginCommand(
-            Credential: request.Credential,
-            RememberMe: request.RememberMe,
-            ClientContext: httpContext.ToAuthenticationClientContext("google"));
+    extension(GoogleLoginHttpRequest request) {
+        public GoogleLoginCommand ToCommand() {
+            return new GoogleLoginCommand(
+                Credential: request.Credential,
+                RememberMe: request.RememberMe);
+        }
+        public GoogleLoginCommand ToCommand(HttpContext httpContext) {
+            return new GoogleLoginCommand(
+                Credential: request.Credential,
+                RememberMe: request.RememberMe,
+                ClientContext: httpContext.ToAuthenticationClientContext("google"));
+        }
     }
 
     public static RefreshTokenCommand ToCommand(this RefreshTokenHttpRequest request) {
         return new RefreshTokenCommand(RefreshToken: request.RefreshToken);
     }
 
-    public static TelegramVerifyCommand ToCommand(this TelegramAuthHttpRequest request) {
-        return new TelegramVerifyCommand(InitData: request.InitData);
+    extension(TelegramAuthHttpRequest request) {
+        public TelegramVerifyCommand ToCommand() {
+            return new TelegramVerifyCommand(InitData: request.InitData);
+        }
+        public TelegramVerifyCommand ToCommand(HttpContext httpContext) {
+            return new TelegramVerifyCommand(
+                InitData: request.InitData,
+                ClientContext: httpContext.ToAuthenticationClientContext("telegram-mini-app"));
+        }
+        public LinkTelegramCommand ToLinkCommand(Guid userId) {
+            return new LinkTelegramCommand(
+                UserId: userId,
+                InitData: request.InitData);
+        }
     }
 
-    public static TelegramVerifyCommand ToCommand(this TelegramAuthHttpRequest request, HttpContext httpContext) {
-        return new TelegramVerifyCommand(
-            InitData: request.InitData,
-            ClientContext: httpContext.ToAuthenticationClientContext("telegram-mini-app"));
+    extension(TelegramBotAuthHttpRequest request) {
+        public TelegramBotAuthCommand ToCommand() {
+            return new TelegramBotAuthCommand(TelegramUserId: request.TelegramUserId);
+        }
+        public TelegramBotAuthCommand ToCommand(HttpContext httpContext) {
+            return new TelegramBotAuthCommand(
+                TelegramUserId: request.TelegramUserId,
+                ClientContext: httpContext.ToAuthenticationClientContext("telegram-bot"));
+        }
     }
 
-    public static LinkTelegramCommand ToLinkCommand(this TelegramAuthHttpRequest request, Guid userId) {
-        return new LinkTelegramCommand(
-            UserId: userId,
-            InitData: request.InitData);
+    extension(AdminSsoExchangeHttpRequest request) {
+        public AdminSsoExchangeCommand ToCommand() {
+            return new AdminSsoExchangeCommand(Code: request.Code);
+        }
+        public AdminSsoExchangeCommand ToCommand(HttpContext httpContext) {
+            return new AdminSsoExchangeCommand(
+                Code: request.Code,
+                ClientContext: httpContext.ToAuthenticationClientContext("admin-sso"));
+        }
     }
 
-    public static TelegramBotAuthCommand ToCommand(this TelegramBotAuthHttpRequest request) {
-        return new TelegramBotAuthCommand(TelegramUserId: request.TelegramUserId);
-    }
-
-    public static TelegramBotAuthCommand ToCommand(this TelegramBotAuthHttpRequest request, HttpContext httpContext) {
-        return new TelegramBotAuthCommand(
-            TelegramUserId: request.TelegramUserId,
-            ClientContext: httpContext.ToAuthenticationClientContext("telegram-bot"));
-    }
-
-    public static AdminSsoExchangeCommand ToCommand(this AdminSsoExchangeHttpRequest request) {
-        return new AdminSsoExchangeCommand(Code: request.Code);
-    }
-
-    public static AdminSsoExchangeCommand ToCommand(this AdminSsoExchangeHttpRequest request, HttpContext httpContext) {
-        return new AdminSsoExchangeCommand(
-            Code: request.Code,
-            ClientContext: httpContext.ToAuthenticationClientContext("admin-sso"));
-    }
-
-    public static ResendEmailVerificationCommand ToResendVerificationCommand(this Guid userId, string? clientOrigin = null) {
-        return new ResendEmailVerificationCommand(
-            UserId: userId,
-            ClientOrigin: clientOrigin);
-    }
-
-    public static AdminSsoStartCommand ToAdminSsoStartCommand(this Guid userId) {
-        return new AdminSsoStartCommand(UserId: userId);
+    extension(Guid userId) {
+        public ResendEmailVerificationCommand ToResendVerificationCommand(string? clientOrigin = null) {
+            return new ResendEmailVerificationCommand(
+                UserId: userId,
+                ClientOrigin: clientOrigin);
+        }
+        public AdminSsoStartCommand ToAdminSsoStartCommand() {
+            return new AdminSsoStartCommand(UserId: userId);
+        }
     }
 
     public static VerifyEmailCommand ToCommand(this VerifyEmailHttpRequest request) {
@@ -149,33 +156,34 @@ public static class AuthHttpMappings {
             NewPassword: request.NewPassword);
     }
 
-    public static TelegramLoginWidgetCommand ToCommand(this TelegramLoginWidgetHttpRequest request) {
-        return new TelegramLoginWidgetCommand(
-            Id: request.Id,
-            AuthDate: request.AuthDate,
-            Hash: request.Hash,
-            Username: request.Username,
-            FirstName: request.FirstName,
-            LastName: request.LastName,
-            PhotoUrl: request.PhotoUrl);
-    }
-
-    public static TelegramLoginWidgetCommand ToCommand(this TelegramLoginWidgetHttpRequest request, HttpContext httpContext) {
-        return new TelegramLoginWidgetCommand(
-            Id: request.Id,
-            AuthDate: request.AuthDate,
-            Hash: request.Hash,
-            Username: request.Username,
-            FirstName: request.FirstName,
-            LastName: request.LastName,
-            PhotoUrl: request.PhotoUrl,
-            ClientContext: httpContext.ToAuthenticationClientContext("telegram-login-widget"));
+    extension(TelegramLoginWidgetHttpRequest request) {
+        public TelegramLoginWidgetCommand ToCommand() {
+            return new TelegramLoginWidgetCommand(
+                Id: request.Id,
+                AuthDate: request.AuthDate,
+                Hash: request.Hash,
+                Username: request.Username,
+                FirstName: request.FirstName,
+                LastName: request.LastName,
+                PhotoUrl: request.PhotoUrl);
+        }
+        public TelegramLoginWidgetCommand ToCommand(HttpContext httpContext) {
+            return new TelegramLoginWidgetCommand(
+                Id: request.Id,
+                AuthDate: request.AuthDate,
+                Hash: request.Hash,
+                Username: request.Username,
+                FirstName: request.FirstName,
+                LastName: request.LastName,
+                PhotoUrl: request.PhotoUrl,
+                ClientContext: httpContext.ToAuthenticationClientContext("telegram-login-widget"));
+        }
     }
 
     private static AuthenticationClientContext ToAuthenticationClientContext(this HttpContext httpContext, string authProvider) {
         return new AuthenticationClientContext(
             authProvider,
             httpContext.Connection.RemoteIpAddress?.ToString(),
-            httpContext.Request.Headers["User-Agent"].ToString());
+            httpContext.Request.Headers.UserAgent.ToString());
     }
 }

@@ -14,7 +14,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         var stopwatch = Stopwatch.StartNew();
         HttpRequest request = context.Request;
         RequestObservation observation = CreateObservation(context);
-        using Activity? activity = ApiTelemetry.ActivitySource.StartActivity("fooddiary.http.request", ActivityKind.Internal);
+        using Activity? activity = ApiTelemetry.ActivitySource.StartActivity("fooddiary.http.request");
         ConfigureActivity(activity, request.Method, observation);
         using IDisposable? scope = BeginRequestScope(context, observation);
 

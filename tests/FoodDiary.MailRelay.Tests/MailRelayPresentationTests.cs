@@ -42,12 +42,12 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ResultExtensions_WhenResultIsSuccessful_ReturnExpectedActionResults() {
         var controller = new TestController();
-        IActionResult ok = Result<int>.Success(42).ToOkActionResult(controller, static value => new { Value = value });
-        IActionResult created = Result<int>.Success(42).ToCreatedActionResult(
+        IActionResult ok = Result.Success(42).ToOkActionResult(controller, static value => new { Value = value });
+        IActionResult created = Result.Success(42).ToCreatedActionResult(
             controller,
             static value => string.Create(CultureInfo.InvariantCulture, $"/messages/{value}"),
             static value => new { Value = value });
-        IActionResult accepted = Result<int>.Success(42).ToAcceptedActionResult(
+        IActionResult accepted = Result.Success(42).ToAcceptedActionResult(
             controller,
             static value => string.Create(CultureInfo.InvariantCulture, $"/messages/{value}"),
             static value => new { Value = value });
@@ -66,12 +66,12 @@ public sealed class MailRelayPresentationTests {
         var controller = new TestController();
         var error = new MailRelayError("code", "message", ErrorKind.Conflict);
 
-        IActionResult ok = Result<int>.Failure(error).ToOkActionResult(controller, static value => new { Value = value });
-        IActionResult created = Result<int>.Failure(error).ToCreatedActionResult(
+        IActionResult ok = Result.Failure<int>(error).ToOkActionResult(controller, static value => new { Value = value });
+        IActionResult created = Result.Failure<int>(error).ToCreatedActionResult(
             controller,
             static value => $"/messages/{value.ToString(CultureInfo.InvariantCulture)}",
             static value => new { Value = value });
-        IActionResult accepted = Result<int>.Failure(error).ToAcceptedActionResult(
+        IActionResult accepted = Result.Failure<int>(error).ToAcceptedActionResult(
             controller,
             static value => $"/messages/{value.ToString(CultureInfo.InvariantCulture)}",
             static value => new { Value = value });

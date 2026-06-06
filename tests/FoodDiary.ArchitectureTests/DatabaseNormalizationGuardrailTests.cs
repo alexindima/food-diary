@@ -91,7 +91,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDocumentShapedColumn)
                 .Select(property => FormatProperty(entity, property)))
-            .Where(column => AllowedDocumentColumns.Contains(column) is false)
+            .Where(column => !AllowedDocumentColumns.Contains(column))
             .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
@@ -108,7 +108,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 ArchitectureTestPaths.FromRoot("FoodDiary.MailRelay.Infrastructure"),
             ])
             .SelectMany(ReadRawSqlJsonColumns)
-            .Where(column => AllowedRawSqlDocumentColumns.Contains(column) is false)
+            .Where(column => !AllowedRawSqlDocumentColumns.Contains(column))
             .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
@@ -126,7 +126,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 var keyProperties = entity.FindPrimaryKey()!.Properties.ToHashSet();
 
                 return entity.GetProperties()
-                    .Where(property => keyProperties.Contains(property) is false)
+                    .Where(property => !keyProperties.Contains(property))
                     .Where(IsPersistedApplicationColumn)
                     .Select(property => FormatProperty(entity, property));
             })
@@ -144,7 +144,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         string[] violations = [.. RelationalEntityTypes()
             .SelectMany(entity => FindSnapshotLikeColumns(entity)
                 .Select(property => FormatProperty(entity, property)))
-            .Where(column => AllowedSnapshotColumns.Contains(column) is false)
+            .Where(column => !AllowedSnapshotColumns.Contains(column))
             .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
@@ -161,7 +161,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDerivedColumn)
                 .Select(property => FormatProperty(entity, property)))
-            .Where(column => AllowedDerivedColumns.Contains(column) is false)
+            .Where(column => !AllowedDerivedColumns.Contains(column))
             .OrderBy(static column => column, StringComparer.Ordinal)];
 
         Assert.True(
@@ -177,7 +177,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
             .ToDictionary(static entity => entity.ClrType.Name, StringComparer.Ordinal);
 
         string[] violations = [.. ExpectedBusinessKeys
-            .Where(expectation => HasUniqueKey(entityTypes, expectation) is false)
+            .Where(expectation => !HasUniqueKey(entityTypes, expectation))
             .Select(expectation => $"{expectation.EntityName}({string.Join(", ", expectation.PropertyNames)})")
             .OrderBy(static value => value, StringComparer.Ordinal)];
 
@@ -197,15 +197,15 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
         return context.Model.GetEntityTypes()
             .Where(static entity => entity.ClrType.Namespace?.StartsWith("FoodDiary.Domain.Entities", StringComparison.Ordinal) == true)
-            .Where(static entity => entity.IsOwned() is false)
+            .Where(static entity => !entity.IsOwned())
             .OrderBy(static entity => entity.ClrType.FullName, StringComparer.Ordinal)
             .ToArray();
     }
 
     private static bool IsPersistedApplicationColumn(IProperty property) =>
-        property.IsShadowProperty() is false &&
-        property.IsIndexerProperty() is false &&
-        property.Name.Equals("xmin", StringComparison.Ordinal) is false &&
+        !property.IsShadowProperty() &&
+        !property.IsIndexerProperty() &&
+        !property.Name.Equals("xmin", StringComparison.Ordinal) &&
         property.DeclaringType is IEntityType declaringEntity &&
         property.GetColumnName(StoreObjectIdentifier.Table(declaringEntity.GetTableName()!, declaringEntity.GetSchema())) is not null;
 
@@ -252,7 +252,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
     private static bool HasUniqueKey(
         IReadOnlyDictionary<string, IEntityType> entityTypes,
         BusinessKeyExpectation expectation) {
-        if (entityTypes.TryGetValue(expectation.EntityName, out IEntityType? entity) is false) {
+        if (!entityTypes.TryGetValue(expectation.EntityName, out IEntityType? entity)) {
             return false;
         }
 
@@ -281,8 +281,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
         foreach (string line in File.ReadLines(path)) {
             string normalized = line.Trim();
-            if (normalized.Contains(" jsonb", StringComparison.OrdinalIgnoreCase) is false &&
-                normalized.Contains(" json ", StringComparison.OrdinalIgnoreCase) is false) {
+            if (!normalized.Contains(" jsonb", StringComparison.OrdinalIgnoreCase) &&
+                !normalized.Contains(" json ", StringComparison.OrdinalIgnoreCase)) {
                 continue;
             }
 

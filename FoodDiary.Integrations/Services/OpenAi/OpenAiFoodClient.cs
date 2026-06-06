@@ -489,29 +489,29 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
                     case JsonValue errorValue when errorValue.TryGetValue(out string? errorText):
                         return TrimSummary(errorText);
                     case JsonObject errorObject: {
-                        var parts = new List<string>();
-                        if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue(out string? errorType) &&
-                            !string.IsNullOrWhiteSpace(errorType)) {
-                            parts.Add(errorType.Trim());
-                        }
+                            var parts = new List<string>();
+                            if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue(out string? errorType) &&
+                                !string.IsNullOrWhiteSpace(errorType)) {
+                                parts.Add(errorType.Trim());
+                            }
 
-                        if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue(out string? errorCode) &&
-                            !string.IsNullOrWhiteSpace(errorCode)) {
-                            parts.Add(errorCode.Trim());
-                        }
+                            if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue(out string? errorCode) &&
+                                !string.IsNullOrWhiteSpace(errorCode)) {
+                                parts.Add(errorCode.Trim());
+                            }
 
-                        if (errorObject["message"] is JsonValue messageValue &&
-                            messageValue.TryGetValue(out string? errorMessage) &&
-                            !string.IsNullOrWhiteSpace(errorMessage)) {
-                            parts.Add(errorMessage.Trim());
-                        }
+                            if (errorObject["message"] is JsonValue messageValue &&
+                                messageValue.TryGetValue(out string? errorMessage) &&
+                                !string.IsNullOrWhiteSpace(errorMessage)) {
+                                parts.Add(errorMessage.Trim());
+                            }
 
-                        if (parts.Count > 0) {
-                            return TrimSummary(string.Join(": ", parts));
-                        }
+                            if (parts.Count > 0) {
+                                return TrimSummary(string.Join(": ", parts));
+                            }
 
-                        break;
-                    }
+                            break;
+                        }
                 }
             }
         } catch (JsonException) {

@@ -25,7 +25,7 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using IServiceScope scope = provider.CreateScope();
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
         FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Empty(dbContext.Users);
     }
@@ -33,7 +33,7 @@ public sealed class InitialAdminHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenUserAlreadyExists_DoesNotCreateDuplicate() {
         await using ServiceProvider provider = BuildServiceProvider();
-        using (IServiceScope seedScope = provider.CreateScope()) {
+        await using (AsyncServiceScope seedScope = provider.CreateAsyncScope()) {
             FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Users.Add(User.Create("owner@fooddiary.test", "existing-hash"));
             await seedContext.SaveChangesAsync();
@@ -47,7 +47,7 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using IServiceScope scope = provider.CreateScope();
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
         FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Single(dbContext.Users);
     }
@@ -55,7 +55,7 @@ public sealed class InitialAdminHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenConfigured_CreatesConfirmedAdminWithBootstrapRoles() {
         await using ServiceProvider provider = BuildServiceProvider();
-        using (IServiceScope seedScope = provider.CreateScope()) {
+        await using (AsyncServiceScope seedScope = provider.CreateAsyncScope()) {
             FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Roles.Add(Role.Create(RoleNames.Owner));
             await seedContext.SaveChangesAsync();
@@ -69,7 +69,7 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using IServiceScope scope = provider.CreateScope();
+        await using AsyncServiceScope scope = provider.CreateAsyncScope();
         FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         User admin = await dbContext.Users
             .Include(user => user.UserRoles)

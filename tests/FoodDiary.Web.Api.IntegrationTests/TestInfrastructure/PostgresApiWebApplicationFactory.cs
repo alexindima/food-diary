@@ -44,7 +44,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
 
     public new async Task DisposeAsync() {
         EmailSender.Clear();
-        base.Dispose();
+        await base.DisposeAsync().ConfigureAwait(false);
         if (_container is not null) {
             await _container.DisposeAsync().AsTask().ConfigureAwait(false);
         }

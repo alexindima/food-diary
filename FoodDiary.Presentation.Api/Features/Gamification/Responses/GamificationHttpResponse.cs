@@ -7,9 +7,3 @@ public sealed record GamificationHttpResponse(
     int HealthScore,
     double WeeklyAdherence,
     IReadOnlyList<BadgeHttpResponse> Badges);
-
-public sealed record BadgeHttpResponse(
-    string Key,
-    string Category,
-    int Threshold,
-    bool IsEarned);

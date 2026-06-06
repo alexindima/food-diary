@@ -16,13 +16,11 @@ namespace FoodDiary.Presentation.Api.Features.Auth;
 [Route("api/v{version:apiVersion}/auth/password-reset")]
 [EnableRateLimiting(PresentationPolicyNames.AuthRateLimitPolicyName)]
 public sealed class AuthPasswordController(ISender mediator, ILogger<AuthPasswordController> logger) : BaseApiController(mediator) {
-    private readonly ILogger<AuthPasswordController> _logger = logger;
-
     [HttpPost("request")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     public Task<IActionResult> RequestPasswordReset([FromBody] RequestPasswordResetHttpRequest request) =>
-        HandleObservedNoContent(request.ToCommand(), _logger, "auth.password-reset.request");
+        HandleObservedNoContent(request.ToCommand(), logger, "auth.password-reset.request");
 
     [HttpPost("confirm")]
     [ProducesResponseType<AuthenticationHttpResponse>(StatusCodes.Status200OK)]
@@ -30,5 +28,5 @@ public sealed class AuthPasswordController(ISender mediator, ILogger<AuthPasswor
     [ProducesApiErrorResponse(StatusCodes.Status401Unauthorized)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> ConfirmPasswordReset([FromBody] ConfirmPasswordResetHttpRequest request) =>
-        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), _logger, "auth.password-reset.confirm");
+        HandleObservedOk(request.ToCommand(), static value => value.ToHttpResponse(), logger, "auth.password-reset.confirm");
 }

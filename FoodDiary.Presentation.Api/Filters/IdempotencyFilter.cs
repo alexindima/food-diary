@@ -14,12 +14,7 @@ public sealed class IdempotencyFilter(
     private static readonly TimeSpan CacheDuration = TimeSpan.FromHours(24);
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-        if (!HttpMethods.IsPost(context.HttpContext.Request.Method)) {
-            await next();
-            return;
-        }
-
-        if (context.Filters.OfType<EnableIdempotencyAttribute>().Any() is false) {
+        if (!HttpMethods.IsPost(context.HttpContext.Request.Method) || !context.Filters.OfType<EnableIdempotencyAttribute>().Any()) {
             await next();
             return;
         }

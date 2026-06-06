@@ -54,11 +54,11 @@ public sealed class InitialAdminHostedService(
         FoodDiaryDbContext dbContext,
         CancellationToken cancellationToken) {
         List<Role> roles = await dbContext.Roles
-            .Where(role => BootstrapRoles.Contains(role.Name))
+            .Where(role => ((IEnumerable<string>)BootstrapRoles).Contains(role.Name))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var existingNames = roles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
-        foreach (string? roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
+        foreach (string roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
             var role = Role.Create(roleName);
             roles.Add(role);
             await dbContext.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);

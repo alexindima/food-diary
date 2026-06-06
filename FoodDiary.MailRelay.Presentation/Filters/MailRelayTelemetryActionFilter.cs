@@ -13,7 +13,7 @@ public sealed class MailRelayTelemetryActionFilter(ILogger<MailRelayTelemetryAct
         string route = endpoint?.DisplayName ?? context.ActionDescriptor.AttributeRouteInfo?.Template ?? "unknown";
         string controllerName = context.Controller.GetType().Name;
         string feature = ResolveFeatureName(context.Controller.GetType());
-        using Activity? activity = MailRelayTelemetry.ActivitySource.StartActivity("MailRelay.Presentation", ActivityKind.Internal);
+        using Activity? activity = MailRelayTelemetry.ActivitySource.StartActivity("MailRelay.Presentation");
 
         activity?.SetTag("fooddiary.mailrelay.presentation.feature", feature);
         activity?.SetTag("fooddiary.mailrelay.presentation.controller", controllerName);

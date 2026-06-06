@@ -11,11 +11,11 @@ public static class BillingHttpMappings {
     public static CreateCheckoutSessionCommand ToCommand(this CreateCheckoutSessionHttpRequest request, Guid userId) =>
         new(userId, request.Plan, request.Provider);
 
-    public static CreatePortalSessionCommand ToPortalSessionCommand(this Guid userId) => new(userId);
-
-    public static StartPremiumTrialCommand ToStartPremiumTrialCommand(this Guid userId) => new(userId);
-
-    public static GetBillingOverviewQuery ToBillingOverviewQuery(this Guid userId) => new(userId);
+    extension(Guid userId) {
+        public CreatePortalSessionCommand ToPortalSessionCommand() => new(userId);
+        public StartPremiumTrialCommand ToStartPremiumTrialCommand() => new(userId);
+        public GetBillingOverviewQuery ToBillingOverviewQuery() => new(userId);
+    }
 
     public static ProcessBillingWebhookCommand ToWebhookCommand(this string provider, string payload, string signatureHeader) =>
         new(provider, payload, signatureHeader);

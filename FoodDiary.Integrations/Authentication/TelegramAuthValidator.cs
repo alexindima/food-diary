@@ -13,6 +13,10 @@ using Microsoft.Extensions.Primitives;
 namespace FoodDiary.Integrations.Authentication;
 
 public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options, TimeProvider dateTimeProvider) : ITelegramAuthValidator {
+    private static readonly JsonSerializerOptions TelegramUserJsonOptions = new() {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private readonly TelegramAuthOptions _options = options.Value;
 
     public Result<TelegramInitData> ValidateInitData(string initData) {
@@ -55,8 +59,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
 
         TelegramWebAppUser? user;
         try {
-            user = JsonSerializer.Deserialize<TelegramWebAppUser>(userValues.ToString(),
-                new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            user = JsonSerializer.Deserialize<TelegramWebAppUser>(userValues.ToString(), TelegramUserJsonOptions);
         } catch {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
@@ -77,7 +80,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
         return Result.Success(telegramInitData);
     }
 
-    private string BuildDataCheckString(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> parsed) {
+    private static string BuildDataCheckString(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> parsed) {
         IEnumerable<string> pairs = parsed
             .Where(entry => !string.Equals(entry.Key, "hash", StringComparison.Ordinal))
             .OrderBy(entry => entry.Key, StringComparer.Ordinal)

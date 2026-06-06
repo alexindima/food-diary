@@ -31,8 +31,8 @@ internal static class ProjectReferenceReader {
 
     private static IEnumerable<string> ReadProductionProjectPaths() =>
         Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
-            .Where(static path => ArchitectureTestPaths.IsGeneratedOrBuildPath(path) is false)
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .OrderBy(static path => path, StringComparer.Ordinal);
 
     private static string GetProjectNameFromPath(string projectPath) =>

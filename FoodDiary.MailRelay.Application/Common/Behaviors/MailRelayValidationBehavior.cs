@@ -56,18 +56,27 @@ public sealed class MailRelayValidationBehavior<TRequest, TResponse>(IEnumerable
             details.Count > 0 ? details : null);
 
         if (typeof(TResponse) == typeof(MailRelayResult)) {
-            return (TResponse)(object)MailRelayResult.Failure(error);
+            return (TResponse)MailRelayResult.Failure(error);
         }
 
+        return CreateTypedFailure(error);
+    }
+
+    private static TResponse CreateTypedFailure(MailRelayError error) {
         Type resultType = typeof(TResponse);
         if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) {
             throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
         }
 
         Type valueType = resultType.GetGenericArguments()[0];
-        MethodInfo? failureMethod = typeof(Result<>)
-            .MakeGenericType(valueType)
-            .GetMethod(nameof(Result<object>.Failure), [typeof(MailRelayError)]);
+        MethodInfo? failureMethod = typeof(MailRelayResult)
+            .GetMethods(BindingFlags.Public | BindingFlags.Static)
+            .SingleOrDefault(method =>
+                string.Equals(method.Name, nameof(MailRelayResult.Failure), StringComparison.Ordinal) &&
+                method.IsGenericMethodDefinition &&
+                method.GetParameters() is [{ ParameterType: Type parameterType }] &&
+                parameterType == typeof(MailRelayError))
+            ?.MakeGenericMethod(valueType);
 
         return failureMethod is null
             ? throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.")

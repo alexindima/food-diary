@@ -10,11 +10,6 @@ public static class MailgunWebhookHttpMappings {
         deliveryEvent = null;
         error = null;
 
-        if (request.EventData is null) {
-            error = "Mailgun event-data is required.";
-            return false;
-        }
-
         string eventType = request.EventData.Event.Trim().ToLowerInvariant();
         deliveryEvent = eventType switch {
             "complained" => new IngestMailEventRequest(

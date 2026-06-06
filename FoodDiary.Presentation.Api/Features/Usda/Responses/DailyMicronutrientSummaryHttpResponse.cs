@@ -6,11 +6,3 @@ public sealed record DailyMicronutrientSummaryHttpResponse(
     int TotalProductCount,
     IReadOnlyList<DailyMicronutrientHttpResponse> Nutrients,
     HealthAreaScoresHttpResponse? HealthScores);
-
-public sealed record DailyMicronutrientHttpResponse(
-    int NutrientId,
-    string Name,
-    string Unit,
-    double TotalAmount,
-    double? DailyValue,
-    double? PercentDailyValue);

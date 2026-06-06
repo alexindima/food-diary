@@ -77,7 +77,7 @@ public sealed class DmarcReportParser {
             .Where(static entry => entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
             .Take(MaxZipXmlEntries);
 
-        foreach (ZipArchiveEntry? entry in xmlEntries) {
+        foreach (ZipArchiveEntry entry in xmlEntries) {
             if (entry.Length > MaxDmarcXmlCharacters) {
                 continue;
             }

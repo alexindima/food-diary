@@ -4,10 +4,10 @@ namespace FoodDiary.MailRelay.Application.Emails.Commands;
 
 public sealed class RemoveMailRelaySuppressionCommandHandler(MailRelayEmailUseCases useCases)
     : IRequestHandler<RemoveMailRelaySuppressionCommand, Result> {
-    public async Task<Result> Handle(RemoveMailRelaySuppressionCommand command, CancellationToken cancellationToken) {
-        bool removed = await useCases.RemoveSuppressionAsync(command.Email, cancellationToken).ConfigureAwait(false);
+    public async Task<Result> Handle(RemoveMailRelaySuppressionCommand request, CancellationToken cancellationToken) {
+        bool removed = await useCases.RemoveSuppressionAsync(request.Email, cancellationToken).ConfigureAwait(false);
         return removed
             ? Result.Success()
-            : Result.Failure(MailRelayErrors.SuppressionNotFound(command.Email));
+            : Result.Failure(MailRelayErrors.SuppressionNotFound(request.Email));
     }
 }

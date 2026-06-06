@@ -11,32 +11,33 @@ public sealed class ApiExceptionHandler(
         HttpContext httpContext,
         Exception exception,
         CancellationToken cancellationToken) {
-        if (exception is CurrentUserUnavailableException) {
-            httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        switch (exception) {
+            case CurrentUserUnavailableException: {
+                    httpContext.Response.StatusCode = StatusCodes.Status401Unauthorized;
 
-            var unauthorizedResponse = new ApiErrorHttpResponse(
-                "Authentication.Unauthorized",
-                "Authentication is required.",
-                httpContext.TraceIdentifier);
+                    var unauthorizedResponse = new ApiErrorHttpResponse(
+                        "Authentication.Unauthorized",
+                        "Authentication is required.",
+                        httpContext.TraceIdentifier);
 
-            await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken).ConfigureAwait(false);
-            return true;
-        }
+                    await httpContext.Response.WriteAsJsonAsync(unauthorizedResponse, cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
+            case DbUpdateConcurrencyException: {
+                    logger.LogWarning(exception, "Concurrency conflict while processing request {Method} {Path}.",
+                        httpContext.Request.Method,
+                        httpContext.Request.Path);
 
-        if (exception is DbUpdateConcurrencyException) {
-            logger.LogWarning(exception, "Concurrency conflict while processing request {Method} {Path}.",
-                httpContext.Request.Method,
-                httpContext.Request.Path);
+                    httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
 
-            httpContext.Response.StatusCode = StatusCodes.Status409Conflict;
+                    var conflictResponse = new ApiErrorHttpResponse(
+                        "Concurrency.Conflict",
+                        "The resource was modified by another request. Please retry.",
+                        httpContext.TraceIdentifier);
 
-            var conflictResponse = new ApiErrorHttpResponse(
-                "Concurrency.Conflict",
-                "The resource was modified by another request. Please retry.",
-                httpContext.TraceIdentifier);
-
-            await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
-            return true;
+                    await httpContext.Response.WriteAsJsonAsync(conflictResponse, cancellationToken).ConfigureAwait(false);
+                    return true;
+                }
         }
 
         logger.LogError(exception, "Unhandled exception while processing request {Method} {Path}.",

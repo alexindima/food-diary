@@ -164,11 +164,13 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
     }
 
     private async Task EnsureDietologistRoleAsync() {
-        using IServiceScope scope = factory.Services.CreateScope();
-        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        if (!dbContext.Roles.Any(role => role.Name == RoleNames.Dietologist)) {
-            dbContext.Roles.Add(Role.Create(RoleNames.Dietologist));
-            await dbContext.SaveChangesAsync().ConfigureAwait(false);
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
+        await using (scope.ConfigureAwait(false)) {
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            if (!dbContext.Roles.Any(role => role.Name == RoleNames.Dietologist)) {
+                dbContext.Roles.Add(Role.Create(RoleNames.Dietologist));
+                await dbContext.SaveChangesAsync().ConfigureAwait(false);
+            }
         }
     }
 

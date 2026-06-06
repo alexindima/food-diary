@@ -6,7 +6,3 @@ public sealed record UpsertWebPushSubscriptionHttpRequest(
     UpsertWebPushSubscriptionKeysHttpRequest Keys,
     string? Locale = null,
     string? UserAgent = null);
-
-public sealed record UpsertWebPushSubscriptionKeysHttpRequest(
-    string P256dh,
-    string Auth);

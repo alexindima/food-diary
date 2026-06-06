@@ -38,7 +38,6 @@ public static class MailInboxResultExtensions {
             ErrorKind.NotFound => StatusCodes.Status404NotFound,
             ErrorKind.Conflict => StatusCodes.Status409Conflict,
             ErrorKind.ExternalFailure => StatusCodes.Status502BadGateway,
-            ErrorKind.Internal => StatusCodes.Status500InternalServerError,
             _ => StatusCodes.Status500InternalServerError,
         };
 }

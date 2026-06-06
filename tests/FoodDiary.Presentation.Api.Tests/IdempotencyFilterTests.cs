@@ -153,9 +153,8 @@ public sealed class IdempotencyFilterTests {
             return _entries.TryGetValue(key, out byte[]? value) ? value : null;
         }
 
-        public Task<byte[]?> GetAsync(string key, CancellationToken token = default) {
-            return Task.FromResult(Get(key));
-        }
+        public Task<byte[]?> GetAsync(string key, CancellationToken token = default) =>
+            Task.FromResult(_entries.TryGetValue(key, out byte[]? value) ? value : null);
 
         public void Refresh(string key) {
         }
@@ -169,7 +168,7 @@ public sealed class IdempotencyFilterTests {
         }
 
         public Task RemoveAsync(string key, CancellationToken token = default) {
-            Remove(key);
+            _entries.Remove(key);
             return Task.CompletedTask;
         }
 
@@ -178,7 +177,7 @@ public sealed class IdempotencyFilterTests {
         }
 
         public Task SetAsync(string key, byte[] value, DistributedCacheEntryOptions options, CancellationToken token = default) {
-            Set(key, value, options);
+            _entries[key] = value;
             return Task.CompletedTask;
         }
     }

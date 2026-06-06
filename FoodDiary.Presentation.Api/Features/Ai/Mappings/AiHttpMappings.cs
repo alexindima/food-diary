@@ -25,7 +25,7 @@ public static class AiHttpMappings {
     public static CalculateFoodNutritionCommand ToCommand(this FoodNutritionHttpRequest request, Guid userId) {
         return new CalculateFoodNutritionCommand(
             UserId: userId,
-            Items: request.Items?.Select(ToModel).ToList() ?? []);
+            Items: request.Items.Select(ToModel).ToList());
     }
 
     private static FoodVisionItemModel ToModel(this FoodVisionItemHttpModel model) {

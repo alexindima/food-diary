@@ -1,5 +1,4 @@
 using FoodDiary.Web.Api.Extensions;
-using System.Diagnostics.CodeAnalysis;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -12,7 +11,4 @@ builder.Services.AddApiServices(builder.Configuration);
 WebApplication app = builder.Build();
 app.UseApiPipeline();
 
-app.Run();
-
-[ExcludeFromCodeCoverage]
-public partial class Program;
+await app.RunAsync().ConfigureAwait(false);

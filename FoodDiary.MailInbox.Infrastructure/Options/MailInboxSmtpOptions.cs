@@ -19,8 +19,7 @@ public sealed class MailInboxSmtpOptions {
     ];
 
     public static bool HasValidConfiguration(MailInboxSmtpOptions options) {
-        return options.Port > 0 &&
-               options.MaxMessageSizeBytes > 0 &&
+        return options is { Port: > 0, MaxMessageSizeBytes: > 0 } &&
                !string.IsNullOrWhiteSpace(options.ServerName) &&
                options.AllowedRecipients.Length > 0 &&
                options.AllowedRecipients.All(static value => !string.IsNullOrWhiteSpace(value) && value.Contains('@', StringComparison.Ordinal));

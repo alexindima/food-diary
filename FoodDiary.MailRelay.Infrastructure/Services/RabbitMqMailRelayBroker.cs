@@ -8,7 +8,6 @@ public sealed class RabbitMqMailRelayBroker(
     IOptions<MailRelayBrokerOptions> brokerOptions,
     ILogger<RabbitMqMailRelayBroker> logger) {
     private readonly MailRelayBrokerOptions _brokerOptions = brokerOptions.Value;
-    private readonly ILogger<RabbitMqMailRelayBroker> _logger = logger;
 
     public bool IsEnabled =>
         string.Equals(_brokerOptions.Backend, MailRelayBrokerOptions.RabbitMqBackend, StringComparison.Ordinal);
@@ -28,7 +27,7 @@ public sealed class RabbitMqMailRelayBroker(
                 await DeclareRetryQueueAsync(channel, cancellationToken).ConfigureAwait(false);
                 await DeclareDeadLetterQueueAsync(channel, cancellationToken).ConfigureAwait(false);
 
-                _logger.LogInformation(
+                logger.LogInformation(
                     "RabbitMQ MailRelay topology is ready. MainQueue={MainQueue}, RetryQueue={RetryQueue}, DeadLetterQueue={DeadLetterQueue}",
                     _brokerOptions.QueueName,
                     _brokerOptions.RetryQueueName,

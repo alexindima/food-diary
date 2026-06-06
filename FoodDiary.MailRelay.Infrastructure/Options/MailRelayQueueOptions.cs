@@ -11,10 +11,7 @@ public sealed class MailRelayQueueOptions {
     public int LockTimeoutSeconds { get; init; } = 120;
 
     public static bool HasValidConfiguration(MailRelayQueueOptions options) {
-        return options.PollIntervalSeconds > 0 &&
-               options.BatchSize > 0 &&
-               options.MaxAttempts > 0 &&
-               options.BaseRetryDelaySeconds > 0 &&
+        return options is { PollIntervalSeconds: > 0, BatchSize: > 0, MaxAttempts: > 0, BaseRetryDelaySeconds: > 0 } &&
                options.MaxRetryDelaySeconds >= options.BaseRetryDelaySeconds &&
                options.LockTimeoutSeconds > 0;
     }

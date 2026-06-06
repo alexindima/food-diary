@@ -8,11 +8,11 @@ namespace FoodDiary.MailInbox.Application.Messages.Queries;
 public sealed class GetInboundMailMessageDetailsQueryHandler(IInboundMailStore store)
     : IRequestHandler<GetInboundMailMessageDetailsQuery, Result<InboundMailMessageDetails>> {
     public async Task<Result<InboundMailMessageDetails>> Handle(
-        GetInboundMailMessageDetailsQuery query,
+        GetInboundMailMessageDetailsQuery request,
         CancellationToken cancellationToken) {
-        InboundMailMessageDetails? message = await store.GetMessageDetailsAsync(query.Id, cancellationToken).ConfigureAwait(false);
+        InboundMailMessageDetails? message = await store.GetMessageDetailsAsync(request.Id, cancellationToken).ConfigureAwait(false);
         return message is null
-            ? Result<InboundMailMessageDetails>.Failure(MailInboxErrors.MessageNotFound(query.Id))
-            : Result<InboundMailMessageDetails>.Success(message);
+            ? Result.Failure<InboundMailMessageDetails>(MailInboxErrors.MessageNotFound(request.Id))
+            : Result.Success(message);
     }
 }

@@ -47,9 +47,9 @@ public sealed class AsyncMethodGuardrailTests {
         string root = GetRepositoryRoot();
         string[] violations = [.. GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
-            .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal) is false)
-            .Where(method => AllowedNonAsyncSuffixNames.Contains(method.Name) is false)
-            .Where(method => IsControllerAction(method) is false)
+            .Where(method => !method.Name.EndsWith("Async", StringComparison.Ordinal))
+            .Where(method => !AllowedNonAsyncSuffixNames.Contains(method.Name))
+            .Where(method => !IsControllerAction(method))
             .Select(method => method.Format(root))
             .OrderBy(static value => value, StringComparer.Ordinal)];
 
@@ -64,9 +64,9 @@ public sealed class AsyncMethodGuardrailTests {
     public void BackendSynchronousMethods_DoNotUseAsyncSuffix() {
         string root = GetRepositoryRoot();
         string[] violations = [.. GetBackendMethods(root)
-            .Where(static method => method.IsAsyncLike is false)
+            .Where(static method => !method.IsAsyncLike)
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal))
-            .Where(method => IsFrameworkAsyncHook(method) is false)
+            .Where(method => !IsFrameworkAsyncHook(method))
             .Select(method => method.Format(root))
             .OrderBy(static value => value, StringComparer.Ordinal)];
 
@@ -82,8 +82,8 @@ public sealed class AsyncMethodGuardrailTests {
         string root = GetRepositoryRoot();
         string[] violations = [.. GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
-            .Where(static method => method.Parameters.Contains("CancellationToken", StringComparison.Ordinal) is false)
-            .Where(method => IsCancellationTokenProvidedByFramework(method) is false)
+            .Where(static method => !method.Parameters.Contains("CancellationToken", StringComparison.Ordinal))
+            .Where(method => !IsCancellationTokenProvidedByFramework(method))
             .Select(method => method.Format(root))
             .OrderBy(static value => value, StringComparer.Ordinal)];
 
@@ -99,7 +99,7 @@ public sealed class AsyncMethodGuardrailTests {
             .Select(folder => Path.Combine(repositoryRoot, folder))
             .Where(Directory.Exists)
             .SelectMany(SourceScanner.SourceFiles)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .SelectMany(CSharpSyntaxReader.ReadMethods)
             .Select(static method => new MethodDeclaration(
                 method.Path,

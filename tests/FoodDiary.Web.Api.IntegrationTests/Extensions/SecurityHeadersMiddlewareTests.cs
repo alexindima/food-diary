@@ -9,14 +9,14 @@ public sealed class SecurityHeadersMiddlewareTests {
     public async Task Middleware_SetsXContentTypeOptions() {
         (HttpContext _, IHeaderDictionary? headers) = await InvokeMiddleware();
 
-        Assert.Equal("nosniff", headers["X-Content-Type-Options"].ToString());
+        Assert.Equal("nosniff", headers.XContentTypeOptions.ToString());
     }
 
     [Fact]
     public async Task Middleware_SetsXFrameOptions() {
         (HttpContext _, IHeaderDictionary? headers) = await InvokeMiddleware();
 
-        Assert.Equal("DENY", headers["X-Frame-Options"].ToString());
+        Assert.Equal("DENY", headers.XFrameOptions.ToString());
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public sealed class SecurityHeadersMiddlewareTests {
     public async Task Middleware_SetsContentSecurityPolicy() {
         (HttpContext _, IHeaderDictionary? headers) = await InvokeMiddleware();
 
-        Assert.Equal("default-src 'none'; frame-ancestors 'none'", headers["Content-Security-Policy"].ToString());
+        Assert.Equal("default-src 'none'; frame-ancestors 'none'", headers.ContentSecurityPolicy.ToString());
     }
 
     [Fact]

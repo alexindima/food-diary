@@ -16,10 +16,6 @@ internal static class BotUriHelper {
     }
 
     internal static string? NormalizeWebAppUrl(string? rawWebAppUrl) {
-        if (string.IsNullOrWhiteSpace(rawWebAppUrl)) {
-            return null;
-        }
-
-        return rawWebAppUrl.TrimEnd('/');
+        return string.IsNullOrWhiteSpace(rawWebAppUrl) ? null : rawWebAppUrl.TrimEnd('/');
     }
 }

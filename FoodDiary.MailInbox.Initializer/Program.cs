@@ -52,16 +52,18 @@ builder.Services.AddSingleton<NpgsqlInboundMailStore>();
 builder.Services.AddSingleton<IMailInboxSchemaInitializer>(sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
 
 using IHost host = builder.Build();
-using IServiceScope scope = host.Services.CreateScope();
-NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
-IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
+AsyncServiceScope scope = host.Services.CreateAsyncScope();
+await using (scope.ConfigureAwait(false)) {
+    NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
+    IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
 
-try {
-    await ExecuteAsync(command, dataSource, schemaInitializer).ConfigureAwait(false);
-    return 0;
-} catch (Exception exception) {
-    Console.Error.WriteLine($"MailInbox initializer failed: {exception}");
-    return 1;
+    try {
+        await ExecuteAsync(command, dataSource, schemaInitializer).ConfigureAwait(false);
+        return 0;
+    } catch (Exception exception) {
+        Console.Error.WriteLine($"MailInbox initializer failed: {exception}");
+        return 1;
+    }
 }
 
 static async Task ExecuteAsync(
@@ -110,7 +112,7 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
                 Console.WriteLine($"Required tables:   {requiredTables.Length}");
                 Console.WriteLine($"Existing tables:   {existingTables.Count}");
 
-                foreach (string? table in requiredTables) {
+                foreach (string table in requiredTables) {
                     string state = existingTables.Contains(table) ? "present" : "missing";
                     Console.WriteLine($"{state,-8} {table}");
                 }
@@ -137,39 +139,3 @@ Examples:
 
 [ExcludeFromCodeCoverage]
 public partial class Program;
-
-namespace FoodDiary.MailInbox.Initializer {
-    internal sealed record InitializerCommand(string Name, string? ConnectionString) {
-        public static InitializerCommand? Parse(string[] args) {
-            if (args.Length == 0) {
-                return null;
-            }
-
-            string? name = null;
-            string? connectionString = null;
-
-            for (int index = 0; index < args.Length; index++) {
-                string argument = args[index];
-
-                if (argument is "--connection-string" or "-c") {
-                    index++;
-                    if (index >= args.Length) {
-                        throw new InvalidOperationException("Missing value for --connection-string.");
-                    }
-
-                    connectionString = args[index];
-                    continue;
-                }
-
-                if (name is null) {
-                    name = argument;
-                    continue;
-                }
-
-                throw new InvalidOperationException($"Unexpected argument '{argument}'.");
-            }
-
-            return name is null ? null : new InitializerCommand(name, connectionString);
-        }
-    }
-}

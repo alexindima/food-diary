@@ -73,9 +73,6 @@ public sealed class TelegramBotWorker(
             case "/start":
                 await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken).ConfigureAwait(false);
                 return;
-            case "/help":
-                await SendHelpAsync(message.Chat.Id, cancellationToken).ConfigureAwait(false);
-                return;
             default:
                 await SendHelpAsync(message.Chat.Id, cancellationToken).ConfigureAwait(false);
                 return;

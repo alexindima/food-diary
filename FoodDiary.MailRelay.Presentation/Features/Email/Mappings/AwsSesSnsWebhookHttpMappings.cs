@@ -23,9 +23,9 @@ public static class AwsSesSnsWebhookHttpMappings {
             return false;
         }
 
-        AwsSesNotificationHttpModel? notification;
+        AwsSesNotificationHttpRequest? notification;
         try {
-            notification = JsonSerializer.Deserialize<AwsSesNotificationHttpModel>(request.Message, JsonOptions);
+            notification = JsonSerializer.Deserialize<AwsSesNotificationHttpRequest>(request.Message, JsonOptions);
         } catch (JsonException ex) {
             error = $"Invalid SNS notification payload: {ex.Message}";
             return false;
@@ -49,7 +49,7 @@ public static class AwsSesSnsWebhookHttpMappings {
     }
 
     private static bool TryMapBounce(
-        AwsSesNotificationHttpModel notification,
+        AwsSesNotificationHttpRequest notification,
         out IReadOnlyList<IngestMailEventRequest> events,
         out string? error) {
         string classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
@@ -75,7 +75,7 @@ public static class AwsSesSnsWebhookHttpMappings {
     }
 
     private static bool TryMapComplaint(
-        AwsSesNotificationHttpModel notification,
+        AwsSesNotificationHttpRequest notification,
         out IReadOnlyList<IngestMailEventRequest> events,
         out string? error) {
         events = notification.Complaint?.ComplainedRecipients

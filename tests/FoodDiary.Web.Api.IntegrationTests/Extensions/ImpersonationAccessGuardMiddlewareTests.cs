@@ -11,6 +11,10 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class ImpersonationAccessGuardMiddlewareTests {
+    private static readonly JsonSerializerOptions CaseInsensitiveJsonOptions = new() {
+        PropertyNameCaseInsensitive = true,
+    };
+
     [Fact]
     public async Task InvokeAsync_WithProtectedEndpointAndImpersonatedUser_ReturnsForbiddenErrorContract() {
         DefaultHttpContext context = CreateContext(hasProtectedEndpoint: true, isImpersonated: true);
@@ -28,7 +32,7 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
         context.Response.Body.Position = 0;
         ApiErrorHttpResponse? payload = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            CaseInsensitiveJsonOptions);
         Assert.NotNull(payload);
         Assert.Equal("Authentication.ImpersonationActionForbidden", payload.Error);
         Assert.False(string.IsNullOrWhiteSpace(payload.TraceId));

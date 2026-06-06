@@ -31,7 +31,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [.. GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
-                .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
+                .Where(static signature => !signature.Contains("CancellationToken", StringComparison.Ordinal))
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
 
         Assert.Empty(violations);
@@ -44,7 +44,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
-                .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
+                .Where(static signature => !signature.Contains("CancellationToken", StringComparison.Ordinal))
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
 
         Assert.Empty(violations);
@@ -251,7 +251,7 @@ public sealed class ApplicationGuardrailTests {
         string typeName,
         IReadOnlyCollection<string> allowedDirectories) {
         return [.. SourceScanner.SourceFiles(applicationRoot)
-            .Where(path => allowedDirectories.Any(directory => path.StartsWith(directory, StringComparison.OrdinalIgnoreCase)) is false)
+            .Where(path => !allowedDirectories.Any(directory => path.StartsWith(directory, StringComparison.OrdinalIgnoreCase)))
             .SelectMany(path => File.ReadAllLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))

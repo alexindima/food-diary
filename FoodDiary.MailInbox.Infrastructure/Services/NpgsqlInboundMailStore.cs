@@ -111,7 +111,7 @@ public sealed class NpgsqlInboundMailStore(
                             subject,
                             GetCategory(recipients, subject),
                             reader.GetString(4),
-                            reader.GetFieldValue<DateTimeOffset>(5)));
+                            await reader.GetFieldValueAsync<DateTimeOffset>(5, cancellationToken).ConfigureAwait(false)));
                     }
 
                     return messages;
@@ -155,7 +155,7 @@ public sealed class NpgsqlInboundMailStore(
                         dmarcReport is null ? GetCategory(recipients, subject) : InboundMailMessageCategories.DmarcReport,
                         dmarcReport,
                         reader.GetString(8),
-                        reader.GetFieldValue<DateTimeOffset>(9));
+                        await reader.GetFieldValueAsync<DateTimeOffset>(9, cancellationToken).ConfigureAwait(false));
                 }
             }
         }

@@ -392,7 +392,7 @@ public sealed class MailInboxPresentationTests {
             "Received",
             DateTimeOffset.UtcNow);
         StubSender sender = new StubSender()
-            .Register(new GetInboundMailMessagesQuery(25), Result<IReadOnlyList<InboundMailMessageSummary>>.Success([summary]));
+            .Register(new GetInboundMailMessagesQuery(25), Result.Success<IReadOnlyList<InboundMailMessageSummary>>([summary]));
         MailInboxMessagesController controller = CreateMessagesController(sender);
 
         IActionResult result = await controller.Get(25);
@@ -406,7 +406,7 @@ public sealed class MailInboxPresentationTests {
     public async Task MailInboxMessagesController_GetById_WhenMissing_ReturnsNotFound() {
         var id = Guid.NewGuid();
         StubSender sender = new StubSender()
-            .Register(new GetInboundMailMessageDetailsQuery(id), Result<InboundMailMessageDetails>.Failure(MailInboxErrors.MessageNotFound(id)));
+            .Register(new GetInboundMailMessageDetailsQuery(id), Result.Failure<InboundMailMessageDetails>(MailInboxErrors.MessageNotFound(id)));
         MailInboxMessagesController controller = CreateMessagesController(sender);
 
         IActionResult result = await controller.GetById(id);
@@ -432,7 +432,7 @@ public sealed class MailInboxPresentationTests {
             "received",
             DateTimeOffset.UtcNow);
         StubSender sender = new StubSender()
-            .Register(new GetInboundMailMessageDetailsQuery(id), Result<InboundMailMessageDetails>.Success(details));
+            .Register(new GetInboundMailMessageDetailsQuery(id), Result.Success(details));
         MailInboxMessagesController controller = CreateMessagesController(sender);
 
         IActionResult result = await controller.GetById(id);

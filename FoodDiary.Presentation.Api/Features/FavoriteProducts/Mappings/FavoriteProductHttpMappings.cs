@@ -12,14 +12,14 @@ public static class FavoriteProductHttpMappings {
     public static AddFavoriteProductCommand ToCommand(this AddFavoriteProductHttpRequest request, Guid userId) =>
         new(userId, request.ProductId, request.Name);
 
-    public static RemoveFavoriteProductCommand ToDeleteCommand(this Guid id, Guid userId) =>
-        new(userId, id);
-
-    public static GetFavoriteProductsQuery ToQuery(this Guid userId) =>
-        new(userId);
-
-    public static IsProductFavoriteQuery ToIsFavoriteQuery(this Guid productId, Guid userId) =>
-        new(userId, productId);
+    extension(Guid id) {
+        public RemoveFavoriteProductCommand ToDeleteCommand(Guid userId) =>
+            new(userId, id);
+        public GetFavoriteProductsQuery ToQuery() =>
+            new(id);
+        public IsProductFavoriteQuery ToIsFavoriteQuery(Guid userId) =>
+            new(userId, id);
+    }
 
     public static FavoriteProductHttpResponse ToHttpResponse(this FavoriteProductModel model) =>
         new(

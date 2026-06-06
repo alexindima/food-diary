@@ -8,17 +8,16 @@ using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 namespace FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
 
 public static class MealPlanHttpMappings {
-    public static GetMealPlansQuery ToQuery(this Guid userId, string? dietType) =>
-        new(userId, dietType);
-
-    public static GetMealPlanByIdQuery ToGetByIdQuery(this Guid userId, Guid planId) =>
-        new(userId, planId);
-
-    public static AdoptMealPlanCommand ToAdoptCommand(this Guid userId, Guid planId) =>
-        new(userId, planId);
-
-    public static GenerateShoppingListCommand ToGenerateShoppingListCommand(this Guid userId, Guid planId) =>
-        new(userId, planId);
+    extension(Guid userId) {
+        public GetMealPlansQuery ToQuery(string? dietType) =>
+            new(userId, dietType);
+        public GetMealPlanByIdQuery ToGetByIdQuery(Guid planId) =>
+            new(userId, planId);
+        public AdoptMealPlanCommand ToAdoptCommand(Guid planId) =>
+            new(userId, planId);
+        public GenerateShoppingListCommand ToGenerateShoppingListCommand(Guid planId) =>
+            new(userId, planId);
+    }
 
     public static IReadOnlyList<MealPlanSummaryHttpResponse> ToHttpResponse(
         this IReadOnlyList<MealPlanSummaryModel> models) =>

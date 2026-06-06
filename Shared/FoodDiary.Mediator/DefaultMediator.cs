@@ -25,9 +25,9 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             .OfType<object>()
             .Reverse()];
 
-        foreach (object? behavior in behaviors) {
+        foreach (object behavior in behaviors) {
             RequestHandlerDelegate<TResponse> next = handlerDelegate;
-            handlerDelegate = token => InvokeBehavior<TResponse>(
+            handlerDelegate = token => InvokeBehavior(
                 behavior,
                 request,
                 next,
@@ -89,7 +89,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
         CancellationToken cancellationToken) {
         object? result = handler
             .GetType()
-            .GetMethod(nameof(IRequestHandler<IRequest<TResponse>, TResponse>.Handle))!
+            .GetMethod(nameof(IRequestHandler<,>.Handle))!
             .Invoke(handler, [request, cancellationToken]);
 
         return await ((Task<TResponse>)result!).ConfigureAwait(false);
@@ -102,7 +102,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
         CancellationToken cancellationToken) {
         object? result = behavior
             .GetType()
-            .GetMethod(nameof(IPipelineBehavior<object, TResponse>.Handle))!
+            .GetMethod(nameof(IPipelineBehavior<,>.Handle))!
             .Invoke(behavior, [request, next, cancellationToken]);
 
         return await ((Task<TResponse>)result!).ConfigureAwait(false);
@@ -133,7 +133,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
         var task = (Task)method.Invoke(this, [request, cancellationToken])!;
         await task.ConfigureAwait(false);
 
-        return task.GetType().GetProperty(nameof(Task<object>.Result))?.GetValue(task);
+        return task.GetType().GetProperty(nameof(Task<>.Result))?.GetValue(task);
     }
 
     private static Task PublishToHandlers<TNotification>(
@@ -152,7 +152,7 @@ internal sealed class DefaultMediator(IServiceProvider serviceProvider) : IMedia
             .OfType<object>()
             .Select(handler => (Task)handler
                 .GetType()
-                .GetMethod(nameof(INotificationHandler<INotification>.Handle))!
+                .GetMethod(nameof(INotificationHandler<>.Handle))!
                 .Invoke(handler, [notification, cancellationToken])!);
 
         return Task.WhenAll(tasks);

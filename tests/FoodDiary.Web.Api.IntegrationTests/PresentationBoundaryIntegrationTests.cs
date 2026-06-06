@@ -24,6 +24,14 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() {
+        WriteIndented = true,
+    };
+    private static readonly JsonSerializerOptions ErrorSnapshotJsonOptions = new() {
+        WriteIndented = true,
+        DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+    };
+
     private static readonly Guid MissingProductId = Guid.Parse("11111111-1111-1111-1111-111111111111");
 
     [Fact]
@@ -564,9 +572,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             root.GetProperty("openapi").GetString() ?? string.Empty,
             endpoints);
 
-        return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true,
-        });
+        return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
     private static string BuildAuthAdminOpenApiSnapshot(JsonElement root) {
@@ -609,9 +615,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             root.GetProperty("openapi").GetString() ?? string.Empty,
             endpoints);
 
-        return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true,
-        });
+        return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
     private static string BuildFullOpenApiSnapshot(JsonElement root) {
@@ -624,9 +628,7 @@ public sealed class PresentationBoundaryIntegrationTests(
             root.GetProperty("openapi").GetString() ?? string.Empty,
             endpoints);
 
-        return JsonSerializer.Serialize(snapshot, new JsonSerializerOptions {
-            WriteIndented = true,
-        });
+        return JsonSerializer.Serialize(snapshot, IndentedJsonOptions);
     }
 
     private static EndpointSnapshot CreateEndpointSnapshot(JsonElement paths, string path) {
@@ -648,14 +650,10 @@ public sealed class PresentationBoundaryIntegrationTests(
     private static async Task AssertErrorContractSnapshotAsync(string scenario, ErrorPayload payload) {
         string snapshotPath = SnapshotPathResolver.GetPath("error-contract-snapshots.json");
         JsonObject snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false))!.AsObject();
-        var serializerOptions = new JsonSerializerOptions {
-            WriteIndented = true,
-            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
-        };
-        string? expected = snapshotRoot[scenario]?.ToJsonString(serializerOptions);
+        string? expected = snapshotRoot[scenario]?.ToJsonString(ErrorSnapshotJsonOptions);
         string actual = JsonSerializer.Serialize(
             new ErrorContractSnapshot(payload.Error, payload.Message, payload.Errors),
-            serializerOptions);
+            ErrorSnapshotJsonOptions);
 
         Assert.NotNull(expected);
         Assert.Equal(

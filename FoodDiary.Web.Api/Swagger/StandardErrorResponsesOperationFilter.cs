@@ -11,8 +11,7 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     public void Apply(OpenApiOperation operation, OperationFilterContext context) {
         AddApiErrorResponse(operation, context, StatusCodes.Status500InternalServerError);
 
-        var controllerAction = context.ApiDescription.ActionDescriptor as ControllerActionDescriptor;
-        if (controllerAction is null) {
+        if (context.ApiDescription.ActionDescriptor is not ControllerActionDescriptor controllerAction) {
             return;
         }
 

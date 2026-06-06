@@ -45,10 +45,10 @@ public sealed class ClientPackageBoundaryTests {
         string[] violations = [.. SourceScanner.SourceFiles(clientRoot)
             .Where(path => {
                 string relative = Path.GetRelativePath(clientRoot, path);
-                return relative.StartsWith($"Models{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
-                       relative.StartsWith($"Options{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
-                       relative.StartsWith($"Extensions{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
-                       allowedRootFiles.Contains(relative) is false;
+                return !relative.StartsWith($"Models{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+                       !relative.StartsWith($"Options{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+                       !relative.StartsWith($"Extensions{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+                       !allowedRootFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];

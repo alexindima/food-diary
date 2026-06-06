@@ -74,8 +74,9 @@ dotnet_diagnostic.MA0009.severity = warning
 dotnet_diagnostic.MA0011.severity = warning
 dotnet_diagnostic.MA0015.severity = warning
 dotnet_diagnostic.MA0016.severity = warning
+dotnet_diagnostic.MA0042.severity = error
 dotnet_diagnostic.MA0047.severity = warning
-dotnet_diagnostic.MA0048.severity = suggestion
+dotnet_diagnostic.MA0048.severity = error
 dotnet_diagnostic.MA0049.severity = warning
 dotnet_diagnostic.MA0051.severity = suggestion
 dotnet_diagnostic.MA0061.severity = warning
@@ -98,7 +99,9 @@ dotnet_diagnostic.IDE0302.severity = error
 dotnet_diagnostic.IDE0303.severity = error
 dotnet_diagnostic.IDE0304.severity = error
 dotnet_diagnostic.IDE0305.severity = error
+dotnet_diagnostic.ASP0015.severity = error
 dotnet_diagnostic.RCS1077.severity = error
+dotnet_diagnostic.RCS1049.severity = warning
 dotnet_diagnostic.RCS1124.severity = warning
 dotnet_diagnostic.RCS1118.severity = error
 dotnet_diagnostic.RCS1123.severity = error
@@ -118,16 +121,19 @@ resharper_using_statement_resource_initialization_highlighting = warning
 resharper_using_statement_resource_initialization_expression_highlighting = warning
 
 # Keep analyzers strict without forcing noisy public API or logging migrations in one pass.
+dotnet_diagnostic.CA1000.severity = error
 dotnet_diagnostic.CA1707.severity = none
 dotnet_diagnostic.CA1711.severity = none
 dotnet_diagnostic.CA1716.severity = none
+dotnet_diagnostic.CA1822.severity = none
 dotnet_diagnostic.CA1826.severity = error
 dotnet_diagnostic.CA1847.severity = error
 dotnet_diagnostic.CA1848.severity = none
 dotnet_diagnostic.CA1859.severity = none
+dotnet_diagnostic.CA1869.severity = error
 
 [FoodDiary.Domain/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 # Domain value objects are not interop contracts; keep layout attributes out of business code.
 dotnet_diagnostic.MA0008.severity = suggestion
 
@@ -138,13 +144,13 @@ dotnet_diagnostic.RCS1170.severity = none
 dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.MailInbox.Domain/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.MailInbox.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.MailRelay.Domain/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
 dotnet_diagnostic.RCS1170.severity = none
@@ -156,34 +162,35 @@ dotnet_diagnostic.IDE0032.severity = none
 dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.Application/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.Integrations/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.Infrastructure/Persistence/Configurations/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 dotnet_diagnostic.RCS1168.severity = error
 
 [FoodDiary.MailInbox.Application/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.MailInbox.Initializer/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.MailInbox.Presentation/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [FoodDiary.MailRelay.Initializer/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [Shared/FoodDiary.Mediator/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [tests/**/*.cs]
-dotnet_diagnostic.MA0048.severity = warning
+dotnet_diagnostic.MA0048.severity = error
 
 [**/Migrations/**/*.cs]
+dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = suggestion
 
 [FoodDiary.Domain/**/*.cs]
@@ -232,6 +239,7 @@ dotnet_diagnostic.MA0051.severity = warning
 dotnet_diagnostic.MA0051.severity = warning
 
 [FoodDiary.Infrastructure/Migrations/*.cs]
+dotnet_diagnostic.MA0048.severity = none
 dotnet_diagnostic.MA0051.severity = suggestion
 
 [FoodDiary.MailInbox.Application/**/*.cs]

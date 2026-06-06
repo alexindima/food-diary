@@ -117,7 +117,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         return new PresentationOperationObservation(operationName, feature, controllerName, route, userId, stopwatch, activity);
     }
 
-    private void CompleteObservation(
+    private static void CompleteObservation(
         PresentationOperationObservation observation,
         ILogger logger,
         bool isSuccess,

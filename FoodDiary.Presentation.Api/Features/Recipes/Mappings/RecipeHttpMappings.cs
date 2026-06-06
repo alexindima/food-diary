@@ -8,11 +8,12 @@ using FoodDiary.Presentation.Api.Features.Recipes.Requests;
 namespace FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 
 public static class RecipeHttpMappings {
-    public static DeleteRecipeCommand ToDeleteCommand(this Guid recipeId, Guid userId) =>
-        new(userId, recipeId);
-
-    public static DuplicateRecipeCommand ToDuplicateCommand(this Guid recipeId, Guid userId) =>
-        new(userId, recipeId);
+    extension(Guid recipeId) {
+        public DeleteRecipeCommand ToDeleteCommand(Guid userId) =>
+            new(userId, recipeId);
+        public DuplicateRecipeCommand ToDuplicateCommand(Guid userId) =>
+            new(userId, recipeId);
+    }
 
     public static CreateRecipeCommand ToCommand(this CreateRecipeHttpRequest request, Guid userIdValue) {
         return new CreateRecipeCommand(

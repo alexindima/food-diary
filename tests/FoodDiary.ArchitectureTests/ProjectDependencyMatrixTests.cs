@@ -120,8 +120,8 @@ public sealed class ProjectDependencyMatrixTests {
     public void CoreProjects_ReferenceMailBoundedContextsOnlyThroughAllowedClientProjects() {
         IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
         string[] coreProjects = [.. actualReferencesByProject.Keys
-            .Where(static projectName => projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) is false)
-            .Where(static projectName => projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal) is false)];
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal))
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))];
 
         var allowedMailClientReferences = new HashSet<string>(StringComparer.Ordinal) {
             "FoodDiary.MailInbox.Client",
@@ -132,8 +132,8 @@ public sealed class ProjectDependencyMatrixTests {
             .SelectMany(projectName => actualReferencesByProject[projectName]
                 .Where(static reference => reference.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) ||
                                            reference.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))
-                .Where(reference => allowedMailClientReferences.Contains(reference) is false ||
-                                    string.Equals(projectName, "FoodDiary.Integrations", StringComparison.Ordinal) is false)
+                .Where(reference => !allowedMailClientReferences.Contains(reference) ||
+                                    !string.Equals(projectName, "FoodDiary.Integrations", StringComparison.Ordinal))
                 .Select(reference => $"{projectName} -> {reference}"))
             .OrderBy(static value => value, StringComparer.Ordinal)];
 

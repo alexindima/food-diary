@@ -56,16 +56,18 @@ builder.Services.AddSingleton<MailRelayQueueStore>();
 builder.Services.AddSingleton<IMailRelaySchemaInitializer>(sp => sp.GetRequiredService<MailRelayQueueStore>());
 
 using IHost host = builder.Build();
-using IServiceScope scope = host.Services.CreateScope();
-NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
-IMailRelaySchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
+AsyncServiceScope scope = host.Services.CreateAsyncScope();
+await using (scope.ConfigureAwait(false)) {
+    NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
+    IMailRelaySchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
 
-try {
-    await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None).ConfigureAwait(false);
-    return 0;
-} catch (Exception exception) {
-    Console.Error.WriteLine($"MailRelay initializer failed: {exception}");
-    return 1;
+    try {
+        await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None).ConfigureAwait(false);
+        return 0;
+    } catch (Exception exception) {
+        Console.Error.WriteLine($"MailRelay initializer failed: {exception}");
+        return 1;
+    }
 }
 
 static async Task ExecuteAsync(

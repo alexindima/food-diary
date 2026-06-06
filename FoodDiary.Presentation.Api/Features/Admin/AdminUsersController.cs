@@ -76,6 +76,6 @@ public sealed class AdminUsersController(ISender mediator) : BaseApiController(m
                 actorUserId,
                 id,
                 HttpContext.Connection.RemoteIpAddress?.ToString(),
-                Request.Headers["User-Agent"].ToString()),
+                Request.Headers.UserAgent.ToString()),
             static value => value.ToHttpResponse());
 }

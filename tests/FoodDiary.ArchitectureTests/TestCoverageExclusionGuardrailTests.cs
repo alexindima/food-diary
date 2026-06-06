@@ -12,7 +12,7 @@ public sealed class TestCoverageExclusionGuardrailTests {
     public void TestTypes_AreExcludedFromCodeCoverage() {
         string testRoot = ArchitectureTestPaths.FromRoot("tests");
         string[] violations = [.. Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => ArchitectureTestPaths.IsGeneratedOrBuildPath(path) is false)
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
             .SelectMany(FindTypesWithoutCoverageExclusion)
             .OrderBy(static violation => violation.Path, PathComparer)
             .ThenBy(static violation => violation.Line)
@@ -32,7 +32,7 @@ public sealed class TestCoverageExclusionGuardrailTests {
         return root.DescendantNodes()
             .OfType<TypeDeclarationSyntax>()
             .Where(static type => type is ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax)
-            .Where(static type => HasExcludeFromCodeCoverage(type) is false)
+            .Where(static type => !HasExcludeFromCodeCoverage(type))
             .Select(type => new CoverageExclusionViolation(
                 Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path),
                 type.GetLocation().GetLineSpan().StartLinePosition.Line + 1,

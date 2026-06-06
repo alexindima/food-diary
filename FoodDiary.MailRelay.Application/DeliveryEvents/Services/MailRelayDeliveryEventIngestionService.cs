@@ -5,7 +5,7 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
         IngestMailEventRequest request,
         CancellationToken cancellationToken) {
         if (!MailRelayDeliveryEventType.TryNormalize(request.EventType, out string? eventType)) {
-            return Result<MailRelayDeliveryEventEntry>.Failure(MailRelayErrors.InvalidDeliveryEventType());
+            return Result.Failure<MailRelayDeliveryEventEntry>(MailRelayErrors.InvalidDeliveryEventType());
         }
 
         IngestMailEventRequest normalizedRequest = request with { EventType = eventType };
@@ -20,7 +20,7 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
                 cancellationToken).ConfigureAwait(false);
         }
 
-        return Result<MailRelayDeliveryEventEntry>.Success(deliveryEvent);
+        return Result.Success(deliveryEvent);
     }
 
     public async Task<Result<IReadOnlyList<MailRelayDeliveryEventEntry>>> IngestManyAsync(
@@ -30,12 +30,12 @@ public sealed class MailRelayDeliveryEventIngestionService(IMailRelayQueueStore 
         foreach (IngestMailEventRequest request in requests) {
             Result<MailRelayDeliveryEventEntry> deliveryEvent = await IngestAsync(request, cancellationToken).ConfigureAwait(false);
             if (deliveryEvent.IsFailure) {
-                return Result<IReadOnlyList<MailRelayDeliveryEventEntry>>.Failure(deliveryEvent.Error!);
+                return Result.Failure<IReadOnlyList<MailRelayDeliveryEventEntry>>(deliveryEvent.Error!);
             }
 
             result.Add(deliveryEvent.Value);
         }
 
-        return Result<IReadOnlyList<MailRelayDeliveryEventEntry>>.Success(result);
+        return Result.Success<IReadOnlyList<MailRelayDeliveryEventEntry>>(result);
     }
 }

@@ -163,8 +163,8 @@ public sealed class MailRelayArchitectureTests {
         string emailFeatureRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation", "Features", "Email");
 
         string[] violations = [.. Directory.GetFiles(emailFeatureRoot, "*Controller.cs", SearchOption.AllDirectories)
-            .Where(static path => IsGeneratedPath(path) is false)
-            .Where(path => File.ReadAllText(path).Contains(": AuthorizedMailRelayController", StringComparison.Ordinal) is false)
+            .Where(static path => !IsGeneratedPath(path))
+            .Where(path => !File.ReadAllText(path).Contains(": AuthorizedMailRelayController", StringComparison.Ordinal))
             .Select(path => Path.GetRelativePath(root, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];
 
@@ -195,11 +195,11 @@ public sealed class MailRelayArchitectureTests {
         };
 
         string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
-            .Where(static path => IsGeneratedPath(path) is false)
+            .Where(static path => !IsGeneratedPath(path))
             .Where(path => {
                 string relative = Path.GetRelativePath(presentationRoot, path);
-                return relative.StartsWith($"Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
-                       allowedControllerFiles.Contains(relative) is false;
+                return !relative.StartsWith($"Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal) &&
+                       !allowedControllerFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];
@@ -220,12 +220,12 @@ public sealed class MailRelayArchitectureTests {
 
         string[] violations = [.. conventions
             .SelectMany(convention => Directory.GetFiles(presentationRoot, "*.cs", SearchOption.AllDirectories)
-                .Where(static path => IsGeneratedPath(path) is false)
+                .Where(static path => !IsGeneratedPath(path))
                 .Where(path => path.Contains(
                     $"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}",
                     StringComparison.Ordinal))
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
-                .Where(path => path.EndsWith(convention.Suffix, StringComparison.Ordinal) is false)
+                .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
                 .Select(path => Path.GetRelativePath(root, path)))
             .OrderBy(static path => path, StringComparer.Ordinal)];
 
@@ -271,9 +271,9 @@ public sealed class MailRelayArchitectureTests {
             .Select(rootName => Path.Combine(root, rootName))
             .Where(Directory.Exists)
             .SelectMany(directory => Directory.GetFiles(directory, "*Options.cs", SearchOption.AllDirectories))
-            .Where(path => IsGeneratedPath(path) is false)
-            .Where(path => path.StartsWith(Path.Combine(root, "FoodDiary.MailRelay.Infrastructure", "Options"), StringComparison.OrdinalIgnoreCase) is false)
-            .Where(path => allowedOptionFiles.Contains(Path.GetRelativePath(root, path)) is false)
+            .Where(path => !IsGeneratedPath(path))
+            .Where(path => !path.StartsWith(Path.Combine(root, "FoodDiary.MailRelay.Infrastructure", "Options"), StringComparison.OrdinalIgnoreCase))
+            .Where(path => !allowedOptionFiles.Contains(Path.GetRelativePath(root, path)))
             .Select(path => Path.GetRelativePath(root, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];
 
@@ -286,9 +286,9 @@ public sealed class MailRelayArchitectureTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.MailRelay.Application");
 
         string[] violations = [.. Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
-            .Where(static path => IsGeneratedPath(path) is false)
+            .Where(static path => !IsGeneratedPath(path))
             .SelectMany(path => GetAsyncMethodSignatures(path)
-                .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
+                .Where(static signature => !signature.Contains("CancellationToken", StringComparison.Ordinal))
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
 
         Assert.Empty(violations);

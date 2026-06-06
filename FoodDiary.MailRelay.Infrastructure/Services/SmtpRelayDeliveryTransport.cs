@@ -46,13 +46,8 @@ public sealed class SmtpRelayDeliveryTransport(
     private static MimeEntity CreateBody(RelayEmailMessageRequest request) {
         var bodyBuilder = new BodyBuilder {
             HtmlBody = request.HtmlBody,
+            TextBody = !string.IsNullOrWhiteSpace(request.TextBody) ? request.TextBody : HtmlToText(request.HtmlBody),
         };
-
-        if (!string.IsNullOrWhiteSpace(request.TextBody)) {
-            bodyBuilder.TextBody = request.TextBody;
-        } else {
-            bodyBuilder.TextBody = HtmlToText(request.HtmlBody);
-        }
 
         return bodyBuilder.ToMessageBody();
     }

@@ -54,15 +54,17 @@ builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNoti
 builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
 
 using IHost host = builder.Build();
-using IServiceScope scope = host.Services.CreateScope();
-FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+AsyncServiceScope scope = host.Services.CreateAsyncScope();
+await using (scope.ConfigureAwait(false)) {
+    FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
-try {
-    await ExecuteAsync(command, dbContext).ConfigureAwait(false);
-    return 0;
-} catch (Exception exception) {
-    Console.Error.WriteLine($"Initializer failed: {exception}");
-    return 1;
+    try {
+        await ExecuteAsync(command, dbContext).ConfigureAwait(false);
+        return 0;
+    } catch (Exception exception) {
+        Console.Error.WriteLine($"Initializer failed: {exception}");
+        return 1;
+    }
 }
 
 static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext dbContext) {
@@ -180,66 +182,6 @@ Examples:
   dotnet run --project FoodDiary.Initializer -- seed-usda ./usda-data
   dotnet run --project FoodDiary.Initializer -- seed-usda ./usda-data --force
 """);
-}
-
-namespace FoodDiary.Initializer {
-    internal sealed record InitializerCommand(string Name, string? TargetMigration, string? ConnectionString, bool Force = false) {
-        public static InitializerCommand? Parse(string[] args) {
-            if (args.Length == 0) {
-                return null;
-            }
-
-            string? name = null;
-            string? targetMigration = null;
-            string? connectionString = null;
-            bool force = false;
-
-            for (int index = 0; index < args.Length; index++) {
-                string argument = args[index];
-
-                if (argument is "--connection-string" or "-c") {
-                    index++;
-                    if (index >= args.Length) {
-                        throw new InvalidOperationException("Missing value for --connection-string.");
-                    }
-
-                    connectionString = args[index];
-                    continue;
-                }
-
-                if (argument is "--force" or "-f") {
-                    force = true;
-                    continue;
-                }
-
-                if (name is null) {
-                    name = argument;
-                    continue;
-                }
-
-                if (targetMigration is null) {
-                    targetMigration = argument;
-                    continue;
-                }
-
-                throw new InvalidOperationException($"Unexpected argument '{argument}'.");
-            }
-
-            return name is null ? null : new InitializerCommand(name, targetMigration, connectionString, force);
-        }
-    }
-
-    internal sealed class NoOpEmailVerificationNotifier : IEmailVerificationNotifier {
-        public Task NotifyEmailVerifiedAsync(Guid userId, CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
-    }
-
-    internal sealed class NoOpNotificationPusher : INotificationPusher {
-        public Task PushUnreadCountAsync(Guid userId, int count, CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
-        public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) =>
-            Task.CompletedTask;
-    }
 }
 
 [ExcludeFromCodeCoverage]

@@ -10,6 +10,8 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
 [ExcludeFromCodeCoverage]
 public sealed class ApiExceptionHandlerTests {
+    private static readonly JsonSerializerOptions WebJsonOptions = new(JsonSerializerDefaults.Web);
+
     [Fact]
     public async Task TryHandleAsync_ForCurrentUserUnavailable_ReturnsUnauthorizedApiError() {
         DefaultHttpContext context = CreateHttpContext();
@@ -69,7 +71,7 @@ public sealed class ApiExceptionHandlerTests {
         context.Response.Body.Position = 0;
         ApiErrorHttpResponse? response = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
-            new JsonSerializerOptions(JsonSerializerDefaults.Web)).ConfigureAwait(false);
+            WebJsonOptions).ConfigureAwait(false);
 
         Assert.NotNull(response);
         return response!;

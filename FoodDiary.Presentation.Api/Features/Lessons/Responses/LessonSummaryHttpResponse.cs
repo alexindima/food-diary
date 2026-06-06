@@ -8,13 +8,3 @@ public sealed record LessonSummaryHttpResponse(
     string Difficulty,
     int EstimatedReadMinutes,
     bool IsRead);
-
-public sealed record LessonDetailHttpResponse(
-    Guid Id,
-    string Title,
-    string Content,
-    string? Summary,
-    string Category,
-    string Difficulty,
-    int EstimatedReadMinutes,
-    bool IsRead);

@@ -14,8 +14,6 @@ namespace FoodDiary.Presentation.Api.Features.Logs;
 public sealed class LogsController(
     ILogger<LogsController> logger,
     IFastingTelemetrySummaryService fastingTelemetrySummaryService) : ControllerBase {
-    private readonly ILogger<LogsController> _logger = logger;
-
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
@@ -24,13 +22,13 @@ public sealed class LogsController(
         string? details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
             ? null
             : request.Details.Value.GetRawText();
-        LogLevel logLevel = request.Level?.ToLowerInvariant() switch {
+        LogLevel logLevel = request.Level.ToLowerInvariant() switch {
             "error" => LogLevel.Error,
             "warning" => LogLevel.Warning,
             _ => LogLevel.Information,
         };
 
-        using IDisposable? scope = _logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
+        using IDisposable? scope = logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["ClientTelemetryCategory"] = request.Category,
             ["ClientTelemetryName"] = request.Name,
             ["ClientTelemetryRoute"] = request.Route,
@@ -45,7 +43,7 @@ public sealed class LogsController(
             ["ClientTelemetryTimestamp"] = request.Timestamp,
         });
 
-        _logger.Log(
+        logger.Log(
             logLevel,
             "Client telemetry event {Category}/{Name}: {Message}. Outcome={Outcome}; StatusCode={StatusCode}; DurationMs={DurationMs}; Value={Value}; Unit={Unit}; Route={Route}; Location={Location}; Method={HttpMethod}; BuildVersion={BuildVersion}; Details={Details}; Stack={Stack}",
             request.Category,

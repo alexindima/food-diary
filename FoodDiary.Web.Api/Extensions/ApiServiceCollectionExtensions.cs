@@ -29,147 +29,143 @@ using Microsoft.Extensions.Primitives;
 namespace FoodDiary.Web.Api.Extensions;
 
 public static class ApiServiceCollectionExtensions {
-    public static IServiceCollection AddApiServices(this IServiceCollection services, IConfiguration configuration) {
-        services.AddApplicationModules(configuration);
-        services.AddApiOptions();
-        services.AddApiAuthentication();
-        services.AddApiHostServices();
-        services.AddApiSwagger();
-        services.AddConfiguredOpenTelemetry();
-        services.AddApiHealthChecks();
+    extension(IServiceCollection services) {
+        public IServiceCollection AddApiServices(IConfiguration configuration) {
+            services.AddApplicationModules(configuration);
+            services.AddApiOptions();
+            services.AddApiAuthentication();
+            services.AddApiHostServices();
+            services.AddApiSwagger();
+            services.AddConfiguredOpenTelemetry();
+            services.AddApiHealthChecks();
 
-        return services;
-    }
+            return services;
+        }
+        private IServiceCollection AddApplicationModules(IConfiguration configuration) {
+            services.AddApplication();
+            services.AddInfrastructure(configuration);
+            services.AddIntegrations(configuration);
+            services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
+            services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
+            services.AddDistributedMemoryCache();
+            services.AddPresentationApi();
+            services.AddEndpointsApiExplorer();
 
-    private static IServiceCollection AddApplicationModules(this IServiceCollection services, IConfiguration configuration) {
-        services.AddApplication();
-        services.AddInfrastructure(configuration);
-        services.AddIntegrations(configuration);
-        services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
-        services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
-        services.AddDistributedMemoryCache();
-        services.AddPresentationApi();
-        services.AddEndpointsApiExplorer();
+            return services;
+        }
+        private IServiceCollection AddApiOptions() {
+            services.AddHostBoundaryOptions();
+            services.AddTelemetryAndAuthOptions();
+            services.AddBackgroundJobOptions();
 
-        return services;
-    }
+            return services;
+        }
+        private IServiceCollection AddHostBoundaryOptions() {
+            services
+                .AddOptions<ApiCorsOptions>()
+                .BindConfiguration(ApiCorsOptions.SectionName)
+                .Validate(ApiCorsOptions.HasValidOrigins,
+                    "Cors:Origins must contain at least one absolute origin URL.")
+                .ValidateOnStart();
+            services
+                .AddOptions<ApiForwardedHeadersOptions>()
+                .BindConfiguration(ApiForwardedHeadersOptions.SectionName)
+                .Validate(ApiForwardedHeadersOptions.HasValidForwardLimit,
+                    "ForwardedHeaders:ForwardLimit must be greater than zero.")
+                .Validate(ApiForwardedHeadersOptions.HasValidKnownProxies,
+                    "ForwardedHeaders:KnownProxies must contain valid IP addresses.")
+                .Validate(ApiForwardedHeadersOptions.HasValidKnownNetworks,
+                    "ForwardedHeaders:KnownNetworks must contain valid CIDR entries.")
+                .ValidateOnStart();
+            services
+                .AddOptions<ApiRateLimitingOptions>()
+                .BindConfiguration(ApiRateLimitingOptions.SectionName)
+                .Validate(ApiRateLimitingOptions.HasValidAuth,
+                    "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .Validate(ApiRateLimitingOptions.HasValidAi,
+                    "RateLimiting:Ai requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
+                .ValidateOnStart();
+            services
+                .AddOptions<ApiOutputCacheOptions>()
+                .BindConfiguration(ApiOutputCacheOptions.SectionName)
+                .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
+                    "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
+                .Validate(ApiOutputCacheOptions.HasValidUserScoped,
+                    "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
+                .ValidateOnStart();
 
-    private static IServiceCollection AddApiOptions(this IServiceCollection services) {
-        services.AddHostBoundaryOptions();
-        services.AddTelemetryAndAuthOptions();
-        services.AddBackgroundJobOptions();
+            return services;
+        }
+        private IServiceCollection AddTelemetryAndAuthOptions() {
+            services
+                .AddOptions<OpenTelemetryOptions>()
+                .BindConfiguration(OpenTelemetryOptions.SectionName)
+                .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint,
+                    "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.")
+                .ValidateOnStart();
+            services
+                .AddOptions<TelegramBotAuthOptions>()
+                .BindConfiguration(TelegramBotAuthOptions.SectionName)
+                .Validate(TelegramBotAuthOptions.HasValidApiSecret,
+                    "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
+                .ValidateOnStart();
 
-        return services;
-    }
+            services
+                .AddOptions<ApiBuildInfoOptions>()
+                .BindConfiguration(ApiBuildInfoOptions.SectionName)
+                .Validate(ApiBuildInfoOptions.HasValidCommitSha,
+                    "BuildInfo:CommitSha must be empty or shorter than 129 characters.")
+                .Validate(ApiBuildInfoOptions.HasValidImageTag,
+                    "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
+                .ValidateOnStart();
 
-    private static IServiceCollection AddHostBoundaryOptions(this IServiceCollection services) {
-        services
-            .AddOptions<ApiCorsOptions>()
-            .BindConfiguration(ApiCorsOptions.SectionName)
-            .Validate(ApiCorsOptions.HasValidOrigins,
-                "Cors:Origins must contain at least one absolute origin URL.")
-            .ValidateOnStart();
-        services
-            .AddOptions<ApiForwardedHeadersOptions>()
-            .BindConfiguration(ApiForwardedHeadersOptions.SectionName)
-            .Validate(ApiForwardedHeadersOptions.HasValidForwardLimit,
-                "ForwardedHeaders:ForwardLimit must be greater than zero.")
-            .Validate(ApiForwardedHeadersOptions.HasValidKnownProxies,
-                "ForwardedHeaders:KnownProxies must contain valid IP addresses.")
-            .Validate(ApiForwardedHeadersOptions.HasValidKnownNetworks,
-                "ForwardedHeaders:KnownNetworks must contain valid CIDR entries.")
-            .ValidateOnStart();
-        services
-            .AddOptions<ApiRateLimitingOptions>()
-            .BindConfiguration(ApiRateLimitingOptions.SectionName)
-            .Validate(ApiRateLimitingOptions.HasValidAuth,
-                "RateLimiting:Auth requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
-            .Validate(ApiRateLimitingOptions.HasValidAi,
-                "RateLimiting:Ai requires positive PermitLimit/WindowSeconds and non-negative QueueLimit.")
-            .ValidateOnStart();
-        services
-            .AddOptions<ApiOutputCacheOptions>()
-            .BindConfiguration(ApiOutputCacheOptions.SectionName)
-            .Validate(ApiOutputCacheOptions.HasValidAdminAiUsage,
-                "OutputCache:AdminAiUsage:ExpirationSeconds must be greater than zero.")
-            .Validate(ApiOutputCacheOptions.HasValidUserScoped,
-                "OutputCache:UserScoped:ExpirationSeconds must be greater than zero.")
-            .ValidateOnStart();
+            services
+                .AddOptions<InitialAdminOptions>()
+                .BindConfiguration(InitialAdminOptions.SectionName)
+                .Validate(InitialAdminOptions.HasValidConfiguration,
+                    "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
+                .ValidateOnStart();
 
-        return services;
-    }
+            return services;
+        }
+        private IServiceCollection AddBackgroundJobOptions() {
+            services
+                .AddOptions<FastingNotificationOptions>()
+                .BindConfiguration(FastingNotificationOptions.SectionName)
+                .Validate(FastingNotificationOptions.HasValidConfiguration,
+                    "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
+                .ValidateOnStart();
+            services
+                .AddOptions<UserLoginEventCleanupOptions>()
+                .BindConfiguration(UserLoginEventCleanupOptions.SectionName)
+                .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
+                    "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
+                .ValidateOnStart();
 
-    private static IServiceCollection AddTelemetryAndAuthOptions(this IServiceCollection services) {
-        services
-            .AddOptions<OpenTelemetryOptions>()
-            .BindConfiguration(OpenTelemetryOptions.SectionName)
-            .Validate(OpenTelemetryOptions.HasValidOtlpEndpoint,
-                "OpenTelemetry:Otlp:Endpoint must be a valid absolute URI when provided.")
-            .ValidateOnStart();
-        services
-            .AddOptions<TelegramBotAuthOptions>()
-            .BindConfiguration(TelegramBotAuthOptions.SectionName)
-            .Validate(TelegramBotAuthOptions.HasValidApiSecret,
-                "TelegramBot:ApiSecret must be empty or at least 16 characters long.")
-            .ValidateOnStart();
+            return services;
+        }
+        private IServiceCollection AddApiAuthentication() {
+            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
+            services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
+            services.AddSingleton(static serviceProvider => {
+                ApiBuildInfoOptions options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
+                IHostEnvironment environment = serviceProvider.GetRequiredService<IHostEnvironment>();
+                return ApiBuildInfo.Create(options, environment.EnvironmentName);
+            });
+            services.AddCors(static _ => { });
 
-        services
-            .AddOptions<ApiBuildInfoOptions>()
-            .BindConfiguration(ApiBuildInfoOptions.SectionName)
-            .Validate(ApiBuildInfoOptions.HasValidCommitSha,
-                "BuildInfo:CommitSha must be empty or shorter than 129 characters.")
-            .Validate(ApiBuildInfoOptions.HasValidImageTag,
-                "BuildInfo:ImageTag must be empty or shorter than 257 characters.")
-            .ValidateOnStart();
+            services
+                .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer();
+            services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
+                .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions);
 
-        services
-            .AddOptions<InitialAdminOptions>()
-            .BindConfiguration(InitialAdminOptions.SectionName)
-            .Validate(InitialAdminOptions.HasValidConfiguration,
-                "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
-            .ValidateOnStart();
+            services.AddAuthorization();
 
-        return services;
-    }
-
-    private static IServiceCollection AddBackgroundJobOptions(this IServiceCollection services) {
-        services
-            .AddOptions<FastingNotificationOptions>()
-            .BindConfiguration(FastingNotificationOptions.SectionName)
-            .Validate(FastingNotificationOptions.HasValidConfiguration,
-                "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
-            .ValidateOnStart();
-        services
-            .AddOptions<UserLoginEventCleanupOptions>()
-            .BindConfiguration(UserLoginEventCleanupOptions.SectionName)
-            .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
-                "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
-            .ValidateOnStart();
-
-        return services;
-    }
-
-    private static IServiceCollection AddApiAuthentication(this IServiceCollection services) {
-        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.Cors.Infrastructure.CorsOptions>, CorsOptionsSetup>();
-        services.AddSingleton<IConfigureOptions<ForwardedHeadersOptions>, ForwardedHeadersOptionsSetup>();
-        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
-        services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
-        services.AddSingleton(static serviceProvider => {
-            ApiBuildInfoOptions options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
-            IHostEnvironment environment = serviceProvider.GetRequiredService<IHostEnvironment>();
-            return ApiBuildInfo.Create(options, environment.EnvironmentName);
-        });
-        services.AddCors(static _ => { });
-
-        services
-            .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer();
-        services.AddOptions<JwtBearerOptions>(JwtBearerDefaults.AuthenticationScheme)
-            .Configure<IOptions<JwtOptions>>(ConfigureJwtBearerOptions);
-
-        services.AddAuthorization();
-
-        return services;
+            return services;
+        }
     }
 
     private static void ConfigureJwtBearerOptions(JwtBearerOptions options, IOptions<JwtOptions> jwtOptionsAccessor) {
@@ -202,94 +198,93 @@ public static class ApiServiceCollectionExtensions {
         }
     }
 
-    private static IServiceCollection AddApiHostServices(this IServiceCollection services) {
-        services.AddHttpLogging(options => {
-            options.LoggingFields = HttpLoggingFields.RequestMethod |
-                                    HttpLoggingFields.RequestPath |
-                                    HttpLoggingFields.ResponseStatusCode |
-                                    HttpLoggingFields.Duration;
-            options.RequestHeaders.Add("X-Correlation-Id");
-            options.MediaTypeOptions.AddText("application/json");
-        });
-        services.AddProblemDetails();
-        services.AddExceptionHandler<ApiExceptionHandler>();
-        services.AddRateLimiter(static _ => { });
-        services.AddOutputCache(static _ => { });
-        services.AddHostedService<FastingNotificationHostedService>();
-        services.AddHostedService<InitialAdminHostedService>();
-        services.AddHostedService<UserLoginEventCleanupHostedService>();
-
-        return services;
-    }
-
-    private static IServiceCollection AddApiSwagger(this IServiceCollection services) {
-        services.AddSwaggerGen(options => {
-            options.SwaggerDoc("v1", new OpenApiInfo {
-                Title = "FoodDiary API",
-                Version = "v1",
+    extension(IServiceCollection services) {
+        private IServiceCollection AddApiHostServices() {
+            services.AddHttpLogging(options => {
+                options.LoggingFields = HttpLoggingFields.RequestMethod |
+                                        HttpLoggingFields.RequestPath |
+                                        HttpLoggingFields.ResponseStatusCode |
+                                        HttpLoggingFields.Duration;
+                options.RequestHeaders.Add("X-Correlation-Id");
+                options.MediaTypeOptions.AddText("application/json");
             });
-            options.OperationFilter<StandardErrorResponsesOperationFilter>();
-            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
-                Name = "Authorization",
-                Type = SecuritySchemeType.Http,
-                Scheme = "bearer",
-                BearerFormat = "JWT",
-                In = ParameterLocation.Header,
-                Description = "JWT Authorization header using the Bearer scheme.",
+            services.AddProblemDetails();
+            services.AddExceptionHandler<ApiExceptionHandler>();
+            services.AddRateLimiter(static _ => { });
+            services.AddOutputCache(static _ => { });
+            services.AddHostedService<FastingNotificationHostedService>();
+            services.AddHostedService<InitialAdminHostedService>();
+            services.AddHostedService<UserLoginEventCleanupHostedService>();
+
+            return services;
+        }
+        private IServiceCollection AddApiSwagger() {
+            services.AddSwaggerGen(options => {
+                options.SwaggerDoc("v1", new OpenApiInfo {
+                    Title = "FoodDiary API",
+                    Version = "v1",
+                });
+                options.OperationFilter<StandardErrorResponsesOperationFilter>();
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme {
+                    Name = "Authorization",
+                    Type = SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header using the Bearer scheme.",
+                });
+                options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
+                    [new OpenApiSecuritySchemeReference("Bearer", document, externalResource: null)] = [],
+                });
             });
-            options.AddSecurityRequirement(document => new OpenApiSecurityRequirement {
-                [new OpenApiSecuritySchemeReference("Bearer", document, externalResource: null)] = [],
+
+            return services;
+        }
+        private IServiceCollection AddApiHealthChecks() {
+            services
+                .AddHealthChecks()
+                .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
+                .AddCheck<S3HealthCheck>("s3", tags: ["ready"]);
+
+            return services;
+        }
+        private IServiceCollection AddConfiguredOpenTelemetry() {
+            services.AddSingleton<TracerProvider>(static serviceProvider => {
+                OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+                if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
+                    return null!;
+                }
+
+                var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
+
+                return Sdk.CreateTracerProviderBuilder()
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
+                    .AddSource(ApiTelemetry.TelemetryName)
+                    .AddSource(PresentationApiTelemetry.TelemetryName)
+                    .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
+                    .Build();
             });
-        });
+            services.AddSingleton<MeterProvider>(static serviceProvider => {
+                OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+                if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
+                    return null!;
+                }
 
-        return services;
-    }
+                var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
 
-    private static IServiceCollection AddApiHealthChecks(this IServiceCollection services) {
-        services
-            .AddHealthChecks()
-            .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
-            .AddCheck<S3HealthCheck>("s3", tags: ["ready"]);
+                return Sdk.CreateMeterProviderBuilder()
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
+                    .AddMeter(ApiTelemetry.TelemetryName)
+                    .AddMeter(PresentationApiTelemetry.TelemetryName)
+                    .AddMeter("FoodDiary.Application.Ai")
+                    .AddMeter("FoodDiary.Application.Email")
+                    .AddMeter("FoodDiary.Infrastructure")
+                    .AddMeter("FoodDiary.Integrations")
+                    .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
+                    .Build();
+            });
 
-        return services;
-    }
-
-    private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services) {
-        services.AddSingleton<TracerProvider>(static serviceProvider => {
-            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
-            if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
-                return null!;
-            }
-
-            var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
-
-            return Sdk.CreateTracerProviderBuilder()
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
-                .AddSource(ApiTelemetry.TelemetryName)
-                .AddSource(PresentationApiTelemetry.TelemetryName)
-                .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
-                .Build();
-        });
-        services.AddSingleton<MeterProvider>(static serviceProvider => {
-            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
-            if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
-                return null!;
-            }
-
-            var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
-
-            return Sdk.CreateMeterProviderBuilder()
-                .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.Web.Api"))
-                .AddMeter(ApiTelemetry.TelemetryName)
-                .AddMeter(PresentationApiTelemetry.TelemetryName)
-                .AddMeter("FoodDiary.Application.Ai")
-                .AddMeter("FoodDiary.Application.Email")
-                .AddMeter("FoodDiary.Infrastructure")
-                .AddMeter("FoodDiary.Integrations")
-                .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
-                .Build();
-        });
-
-        return services;
+            return services;
+        }
     }
 }

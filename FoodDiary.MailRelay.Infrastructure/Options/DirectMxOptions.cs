@@ -9,8 +9,7 @@ public sealed class DirectMxOptions {
     public string LocalDomain { get; init; } = string.Empty;
 
     public static bool HasValidConfiguration(DirectMxOptions options) {
-        return options.Port > 0 &&
-               options.ConnectTimeoutSeconds > 0 &&
+        return options is { Port: > 0, ConnectTimeoutSeconds: > 0 } &&
                HasValidLocalDomain(options.LocalDomain);
     }
 

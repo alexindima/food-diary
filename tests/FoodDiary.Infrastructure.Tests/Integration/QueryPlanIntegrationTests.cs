@@ -15,6 +15,9 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 [ExcludeFromCodeCoverage]
 public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     private const int SeedCount = 1500;
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() {
+        WriteIndented = true,
+    };
 
     [RequiresDockerFact]
     public async Task ProductPagingQuery_UsesCompositeOwnershipIndex() {
@@ -266,7 +269,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     }
 
     private static string FormatPlan(JsonDocument plan) {
-        return JsonSerializer.Serialize(plan.RootElement, new JsonSerializerOptions { WriteIndented = true });
+        return JsonSerializer.Serialize(plan.RootElement, IndentedJsonOptions);
     }
 
     private static bool ContainsIndexName(JsonElement element, string indexName) {

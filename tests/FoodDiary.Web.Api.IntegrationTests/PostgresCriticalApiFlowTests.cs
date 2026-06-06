@@ -147,7 +147,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         HttpResponseMessage deleteResponse = await client.DeleteAsync("/api/v1/users");
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
 
-        using (IServiceScope scope = factory.Services.CreateScope()) {
+        await using (AsyncServiceScope scope = factory.Services.CreateAsyncScope()) {
             FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             User deletedUser = dbContext.Users.Single(u => u.Email == email);
 
@@ -188,7 +188,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
 
         Assert.Equal(HttpStatusCode.NoContent, passwordResetResponse.StatusCode);
 
-        using IServiceScope scope = factory.Services.CreateScope();
+        await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         User user = dbContext.Users.Single(u => u.Email == email);
 
@@ -234,7 +234,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         HttpResponseMessage usersInfoResponse = await client.GetAsync("/api/v1/users/info");
         Assert.Equal(HttpStatusCode.OK, usersInfoResponse.StatusCode);
 
-        using IServiceScope scope = factory.Services.CreateScope();
+        await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         User user = dbContext.Users.Single(u => u.Email == email);
 

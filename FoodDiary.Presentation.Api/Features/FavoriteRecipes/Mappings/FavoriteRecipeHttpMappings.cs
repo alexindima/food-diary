@@ -12,14 +12,14 @@ public static class FavoriteRecipeHttpMappings {
     public static AddFavoriteRecipeCommand ToCommand(this AddFavoriteRecipeHttpRequest request, Guid userId) =>
         new(userId, request.RecipeId, request.Name);
 
-    public static RemoveFavoriteRecipeCommand ToDeleteCommand(this Guid id, Guid userId) =>
-        new(userId, id);
-
-    public static GetFavoriteRecipesQuery ToQuery(this Guid userId) =>
-        new(userId);
-
-    public static IsRecipeFavoriteQuery ToIsFavoriteQuery(this Guid recipeId, Guid userId) =>
-        new(userId, recipeId);
+    extension(Guid id) {
+        public RemoveFavoriteRecipeCommand ToDeleteCommand(Guid userId) =>
+            new(userId, id);
+        public GetFavoriteRecipesQuery ToQuery() =>
+            new(id);
+        public IsRecipeFavoriteQuery ToIsFavoriteQuery(Guid userId) =>
+            new(userId, id);
+    }
 
     public static FavoriteRecipeHttpResponse ToHttpResponse(this FavoriteRecipeModel model) =>
         new(

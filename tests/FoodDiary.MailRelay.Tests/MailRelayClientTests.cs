@@ -9,6 +9,9 @@ namespace FoodDiary.MailRelay.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayClientTests {
+    private static readonly System.Text.Json.JsonSerializerOptions WebJsonOptions =
+        new(System.Text.Json.JsonSerializerDefaults.Web);
+
     [Fact]
     public async Task EnqueueAsync_SendsExpectedRequestAndApiKeyHeader() {
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.Created) {
@@ -32,7 +35,7 @@ public sealed class MailRelayClientTests {
         Assert.Equal("secret", handler.Request?.Headers.GetValues("X-Relay-Api-Key").Single());
         EnqueueMailRelayEmailRequest? payload = System.Text.Json.JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
             handler.RequestBody!,
-            new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web));
+            WebJsonOptions);
         Assert.Equal("user@example.com", payload!.To.Single());
     }
 

@@ -38,10 +38,10 @@ public sealed class NotificationTestScheduler(
             INotificationRepository notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
             INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
             IWebPushNotificationSender webPushNotificationSender = scope.ServiceProvider.GetRequiredService<IWebPushNotificationSender>();
-            var domainUserId = new FoodDiary.Domain.ValueObjects.Ids.UserId(userId);
+            var domainUserId = new Domain.ValueObjects.Ids.UserId(userId);
             string referenceId = $"test-notification:{type}:{Guid.NewGuid():N}";
 
-            FoodDiary.Domain.Entities.Notifications.Notification notification = type switch {
+            Domain.Entities.Notifications.Notification notification = type switch {
                 NotificationTypes.FastingCompleted => NotificationFactory.CreateFastingCompleted(
                     domainUserId,
                     "Extended",

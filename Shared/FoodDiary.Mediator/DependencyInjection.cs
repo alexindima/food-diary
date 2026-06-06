@@ -14,7 +14,7 @@ public static class DependencyInjection {
         services.AddScoped<ISender>(static provider => provider.GetRequiredService<IMediator>());
         services.AddScoped<IPublisher>(static provider => provider.GetRequiredService<IMediator>());
 
-        foreach (Assembly? assembly in configuration.Assemblies.Distinct()) {
+        foreach (Assembly assembly in configuration.Assemblies.Distinct()) {
             services.RegisterMediatorHandlers(assembly);
         }
 
@@ -30,8 +30,8 @@ public static class DependencyInjection {
             .GetTypes()
             .Where(static type => type is { IsAbstract: false, IsInterface: false })];
 
-        foreach (Type? implementationType in implementationTypes) {
-            foreach (Type? serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
+        foreach (Type implementationType in implementationTypes) {
+            foreach (Type serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
                 services.AddTransient(serviceType, implementationType);
             }
         }

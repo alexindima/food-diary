@@ -7,9 +7,6 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Presentation.Api.Filters;
 
 public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsyncActionFilter {
-    private const string StopwatchKey = "__TelemetryStopwatch";
-    private const string ActivityKey = "__TelemetryActivity";
-
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         string controllerName = context.Controller.GetType().Name;
         string? actionName = context.ActionDescriptor.RouteValues.TryGetValue("action", out string? action) ? action : "Unknown";
@@ -17,7 +14,7 @@ public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsy
         string operationName = $"{controllerName}.{actionName}";
 
         var stopwatch = Stopwatch.StartNew();
-        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
+        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName);
         activity?.SetTag("fooddiary.presentation.feature", feature);
         activity?.SetTag("fooddiary.presentation.controller", controllerName);
         activity?.SetTag("fooddiary.presentation.operation", operationName);

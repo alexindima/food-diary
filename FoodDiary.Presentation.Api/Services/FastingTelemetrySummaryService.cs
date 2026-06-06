@@ -5,11 +5,6 @@ using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Services;
 
-public interface IFastingTelemetrySummaryService {
-    Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken);
-    Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken);
-}
-
 public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventRepository repository) : IFastingTelemetrySummaryService {
     public async Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken) {
         if (!string.Equals(request.Category, "user_action", StringComparison.OrdinalIgnoreCase) ||
@@ -114,11 +109,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
     }
 
     private static IReadOnlyDictionary<string, string> ReadDetails(JsonElement? details) {
-        if (details is null || details.Value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined) {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        if (details.Value.ValueKind != JsonValueKind.Object) {
+        if (details is null || details.Value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined || details.Value.ValueKind != JsonValueKind.Object) {
             return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         }
 
@@ -141,7 +132,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
     }
 
     private static string? ReadString(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out string? value) ? value : null;
+        details.GetValueOrDefault(key);
 
     private static int? ReadInt(IReadOnlyDictionary<string, string> details, string key) =>
         details.TryGetValue(key, out string? value) && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed)
@@ -158,32 +149,3 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             ? parsed
             : null;
 }
-
-public sealed record FastingTelemetrySummarySnapshot(
-    int WindowHours,
-    DateTime GeneratedAtUtc,
-    int StartedSessions,
-    int CompletedSessions,
-    int SavedCheckIns,
-    int ReminderPresetSelections,
-    int ReminderTimingSaves,
-    int PresetReminderTimingSaves,
-    int ManualReminderTimingSaves,
-    double CompletionRatePercent,
-    double CheckInRatePercent,
-    double? AverageCompletedDurationHours,
-    DateTime? LastCheckInAtUtc,
-    DateTime? LastEventAtUtc,
-    IReadOnlyList<FastingTelemetryPresetSnapshot> TopPresets);
-
-public sealed record FastingTelemetryPresetSnapshot(
-    string PresetId,
-    int SelectionCount,
-    int TimingSaveCount,
-    int? FirstReminderHours,
-    int? FollowUpReminderHours,
-    int StartedSessions,
-    int CompletedSessions,
-    int SavedCheckIns,
-    double CompletionRatePercent,
-    double CheckInRatePercent);

@@ -13,11 +13,12 @@ public static class ProductHttpMappings {
     public static SearchProductSuggestionsQuery ToSuggestionsQuery(string search, int limit) =>
         new(search, limit);
 
-    public static DeleteProductCommand ToDeleteCommand(this Guid productId, Guid userId) =>
-        new(userId, productId);
-
-    public static DuplicateProductCommand ToDuplicateCommand(this Guid productId, Guid userId) =>
-        new(userId, productId);
+    extension(Guid productId) {
+        public DeleteProductCommand ToDeleteCommand(Guid userId) =>
+            new(userId, productId);
+        public DuplicateProductCommand ToDuplicateCommand(Guid userId) =>
+            new(userId, productId);
+    }
 
     public static CreateProductCommand ToCommand(this CreateProductHttpRequest request, Guid userIdValue) {
         return new CreateProductCommand(

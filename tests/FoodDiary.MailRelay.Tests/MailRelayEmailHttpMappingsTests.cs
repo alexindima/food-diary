@@ -236,7 +236,7 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
     [Fact]
     public void MailgunWebhook_ToMappedCommand_WhenValidBounce_MapsSingleCommand() {
-        var request = new MailgunWebhookHttpRequest(new MailgunEventDataHttpModel(
+        var request = new MailgunWebhookHttpRequest(new MailgunEventDataHttpRequest(
             Event: "failed",
             Recipient: "a@example.com",
             Id: "mailgun-1",
@@ -255,7 +255,7 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
     [Fact]
     public void MailgunWebhook_ToMappedCommand_WhenUnsupported_ReturnsFailure() {
-        var request = new MailgunWebhookHttpRequest(new MailgunEventDataHttpModel(
+        var request = new MailgunWebhookHttpRequest(new MailgunEventDataHttpRequest(
             Event: "opened",
             Recipient: "a@example.com"));
 

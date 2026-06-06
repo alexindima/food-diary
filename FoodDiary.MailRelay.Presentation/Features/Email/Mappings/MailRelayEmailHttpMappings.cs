@@ -10,9 +10,10 @@ public static class MailRelayEmailHttpMappings {
 
     public static GetMailRelayMessageDetailsQuery ToMessageDetailsQuery(this Guid id) => new(id);
 
-    public static GetMailRelaySuppressionsQuery ToSuppressionsQuery(this string? email) => new(email);
-
-    public static GetMailRelayDeliveryEventsQuery ToDeliveryEventsQuery(this string? email) => new(email);
+    extension(string? email) {
+        public GetMailRelaySuppressionsQuery ToSuppressionsQuery() => new(email);
+        public GetMailRelayDeliveryEventsQuery ToDeliveryEventsQuery() => new(email);
+    }
 
     public static EnqueueMailRelayEmailCommand ToCommand(this EnqueueMailRelayEmailRequest request) =>
         new(request.ToApplicationRequest());
@@ -38,14 +39,14 @@ public static class MailRelayEmailHttpMappings {
     public static MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> ToMappedCommand(
         this AwsSesSnsWebhookHttpRequest request) =>
         request.TryMapToDeliveryEvents(out IReadOnlyList<IngestMailEventRequest>? events, out string? error)
-            ? MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>>.Success(events.ToCommand())
-            : MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>>.Failure(error);
+            ? MailRelayMappedRequest.Success<IReadOnlyList<MailRelayDeliveryEventEntry>>(events.ToCommand())
+            : MailRelayMappedRequest.Failure<IReadOnlyList<MailRelayDeliveryEventEntry>>(error);
 
     public static MailRelayMappedRequest<MailRelayDeliveryEventEntry> ToMappedCommand(
         this MailgunWebhookHttpRequest request) =>
         request.TryMapToDeliveryEvent(out IngestMailEventRequest? deliveryEvent, out string? error) && deliveryEvent is not null
-            ? MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Success(deliveryEvent.ToCommand())
-            : MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Failure(error);
+            ? MailRelayMappedRequest.Success(deliveryEvent.ToCommand())
+            : MailRelayMappedRequest.Failure<MailRelayDeliveryEventEntry>(error);
 
     public static RelayEmailMessageRequest ToApplicationRequest(this EnqueueMailRelayEmailRequest request) =>
         new(
@@ -123,11 +124,10 @@ public static class MailRelayEmailHttpMappings {
             deliveryEvent.OccurredAtUtc,
             deliveryEvent.CreatedAtUtc);
 
-    public static IReadOnlyList<MailRelayDeliveryEventHttpResponse> ToHttpResponse(
-        this IReadOnlyList<MailRelayDeliveryEventEntry> deliveryEvents) =>
-        deliveryEvents.Select(static deliveryEvent => deliveryEvent.ToHttpResponse()).ToList();
-
-    public static MailRelayProviderIngestionHttpResponse ToProviderIngestionHttpResponse(
-        this IReadOnlyList<MailRelayDeliveryEventEntry> deliveryEvents) =>
-        new(deliveryEvents.Count);
+    extension(IReadOnlyList<MailRelayDeliveryEventEntry> deliveryEvents) {
+        public IReadOnlyList<MailRelayDeliveryEventHttpResponse> ToHttpResponse() =>
+            deliveryEvents.Select(static deliveryEvent => deliveryEvent.ToHttpResponse()).ToList();
+        public MailRelayProviderIngestionHttpResponse ToProviderIngestionHttpResponse() =>
+            new(deliveryEvents.Count);
+    }
 }

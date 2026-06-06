@@ -10,15 +10,14 @@ using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
 namespace FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 
 public static class ShoppingListHttpMappings {
-    public static GetCurrentShoppingListQuery ToCurrentQuery(this Guid userId) => new(userId);
-
-    public static GetShoppingListsQuery ToListQuery(this Guid userId) => new(userId);
-
-    public static GetShoppingListByIdQuery ToGetByIdQuery(this Guid shoppingListId, Guid userId) =>
-        new(userId, shoppingListId);
-
-    public static DeleteShoppingListCommand ToDeleteCommand(this Guid shoppingListId, Guid userId) =>
-        new(userId, shoppingListId);
+    extension(Guid userId) {
+        public GetCurrentShoppingListQuery ToCurrentQuery() => new(userId);
+        public GetShoppingListsQuery ToListQuery() => new(userId);
+        public GetShoppingListByIdQuery ToGetByIdQuery(Guid userId1) =>
+            new(userId1, userId);
+        public DeleteShoppingListCommand ToDeleteCommand(Guid userId1) =>
+            new(userId1, userId);
+    }
 
     public static CreateShoppingListCommand ToCommand(this CreateShoppingListHttpRequest request, Guid userId) =>
         new(

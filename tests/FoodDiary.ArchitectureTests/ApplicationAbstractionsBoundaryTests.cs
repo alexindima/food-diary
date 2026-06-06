@@ -24,8 +24,8 @@ public sealed class ApplicationAbstractionsBoundaryTests {
                 }
 
                 return string.Equals(segments[0], "Common", StringComparison.Ordinal)
-                    ? allowedPurposeFolders.Contains(segments[1]) is false
-                    : allowedPurposeFolders.Contains(segments[^1]) is false;
+                    ? !allowedPurposeFolders.Contains(segments[1])
+                    : !allowedPurposeFolders.Contains(segments[^1]);
             })
             .Select(path => Path.GetRelativePath(root, path))
             .OrderBy(static path => path, StringComparer.Ordinal)];

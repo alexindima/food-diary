@@ -179,7 +179,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
 
     [Fact]
     public void MailgunEventMapper_WhenComplaintEvent_ReturnsComplaint() {
-        var payload = new MailgunWebhookHttpRequest(new MailgunEventDataHttpModel(
+        var payload = new MailgunWebhookHttpRequest(new MailgunEventDataHttpRequest(
             "complained",
             "user@example.com",
             "mailgun-1",

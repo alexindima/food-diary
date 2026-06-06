@@ -20,7 +20,7 @@ public sealed class CSharpStyleGuardrailTests {
     public void TargetTypedNew_IsNotUsedAsInvocationArgument() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string[] violations = [.. SourceScanner.SourceFiles(root)
-            .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
+            .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .SelectMany(CSharpSyntaxReader.ReadTargetTypedNewInvocationArguments)
             .Select(location => location.Format(root))
             .OrderBy(static value => value, StringComparer.Ordinal)];

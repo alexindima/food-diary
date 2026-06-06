@@ -24,6 +24,9 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNameCaseInsensitive = true,
     };
+    private static readonly JsonSerializerOptions IndentedJsonOptions = new() {
+        WriteIndented = true,
+    };
 
     [Fact]
     public async Task AdminUsers_WithAdminRole_MatchesNormalizedPayloadSnapshot() {
@@ -44,7 +47,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildAdminUsersSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("admin-users-list", actual);
@@ -124,7 +127,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var recipeJson = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildRecipeSnapshot(recipeJson.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, getResponse.StatusCode);
         await AssertPayloadSnapshotAsync("recipe-by-id", actual);
@@ -140,7 +143,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildStatisticsSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("statistics-empty-range", actual);
@@ -173,7 +176,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildShoppingListSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, currentResponse.StatusCode);
         await AssertPayloadSnapshotAsync("shopping-list-current", actual);
@@ -198,7 +201,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildCycleSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, currentResponse.StatusCode);
         await AssertPayloadSnapshotAsync("cycle-current", actual);
@@ -214,7 +217,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildDashboardSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("dashboard-snapshot", actual);
@@ -230,7 +233,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildUserInfoSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("user-info", actual);
@@ -246,7 +249,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildUserOverviewSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("user-overview", actual);
@@ -269,7 +272,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildHydrationDailySnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("hydration-daily", actual);
@@ -285,7 +288,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildAiUsageSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("ai-usage-me", actual);
@@ -306,7 +309,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildDesiredMetricSnapshot(json.RootElement, "desiredWeight"),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("desired-weight", actual);
@@ -327,7 +330,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildDesiredMetricSnapshot(json.RootElement, "desiredWaist"),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("desired-waist", actual);
@@ -345,7 +348,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
         string actual = JsonSerializer.Serialize(
             BuildImageUploadUrlSnapshot(json.RootElement),
-            new JsonSerializerOptions { WriteIndented = true });
+            IndentedJsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         await AssertPayloadSnapshotAsync("image-upload-url", actual);
@@ -532,10 +535,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
             snapshotRoot[scenario] = JsonNode.Parse(actual);
             await File.WriteAllTextAsync(
                 snapshotPath,
-                snapshotRoot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }).ReplaceLineEndings("\n")).ConfigureAwait(false);
+                snapshotRoot.ToJsonString(IndentedJsonOptions).ReplaceLineEndings("\n")).ConfigureAwait(false);
         }
 
-        string? expected = snapshotRoot[scenario]?.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        string? expected = snapshotRoot[scenario]?.ToJsonString(IndentedJsonOptions);
 
         Assert.NotNull(expected);
         Assert.Equal(

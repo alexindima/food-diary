@@ -9,5 +9,3 @@ public sealed record NotificationHttpResponse(
     string? ReferenceId,
     bool IsRead,
     DateTime CreatedAtUtc);
-
-public sealed record UnreadCountHttpResponse(int Count);

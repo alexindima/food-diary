@@ -25,7 +25,6 @@ public static class PresentationErrorHttpMapper {
             ErrorKind.Conflict => StatusCodes.Status409Conflict,
             ErrorKind.RateLimited => StatusCodes.Status429TooManyRequests,
             ErrorKind.ExternalFailure => StatusCodes.Status502BadGateway,
-            ErrorKind.Internal => StatusCodes.Status500InternalServerError,
             _ => StatusCodes.Status500InternalServerError,
         };
 }

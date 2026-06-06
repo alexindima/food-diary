@@ -16,15 +16,14 @@ using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 namespace FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 
 public static class NotificationHttpMappings {
-    public static GetNotificationsQuery ToNotificationsQuery(this Guid userId) => new(userId);
-
-    public static GetUnreadCountQuery ToUnreadCountQuery(this Guid userId) => new(userId);
-
-    public static MarkNotificationReadCommand ToMarkReadCommand(this Guid notificationId, Guid userId) => new(userId, notificationId);
-
-    public static MarkAllNotificationsReadCommand ToMarkAllReadCommand(this Guid userId) => new(userId);
-
-    public static GetNotificationPreferencesQuery ToNotificationPreferencesQuery(this Guid userId) => new(userId);
+    extension(Guid userId) {
+        public GetNotificationsQuery ToNotificationsQuery() => new(userId);
+        public GetUnreadCountQuery ToUnreadCountQuery() => new(userId);
+        public MarkNotificationReadCommand ToMarkReadCommand(Guid userId1) => new(userId1, userId);
+        public MarkAllNotificationsReadCommand ToMarkAllReadCommand() => new(userId);
+        public GetNotificationPreferencesQuery ToNotificationPreferencesQuery() => new(userId);
+        public GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery() => new(userId);
+    }
 
     public static UpdateNotificationPreferencesCommand ToCommand(this UpdateNotificationPreferencesHttpRequest request, Guid userId) =>
         new(
@@ -37,14 +36,12 @@ public static class NotificationHttpMappings {
 
     public static GetWebPushConfigurationQuery ToWebPushConfigurationQuery() => new();
 
-    public static GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery(this Guid userId) => new(userId);
-
     public static UpsertWebPushSubscriptionCommand ToCommand(this UpsertWebPushSubscriptionHttpRequest request, Guid userId) =>
         new(
             userId,
             request.Endpoint,
-            request.Keys?.P256dh ?? string.Empty,
-            request.Keys?.Auth ?? string.Empty,
+            request.Keys.P256dh,
+            request.Keys.Auth,
             request.ExpirationTime,
             request.Locale,
             request.UserAgent);

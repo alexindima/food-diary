@@ -13,7 +13,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class ControllerConventionsTests {
-    private static readonly Assembly PresentationAssembly = typeof(FoodDiary.Presentation.Api.Controllers.BaseApiController).Assembly;
+    private static readonly Assembly PresentationAssembly = typeof(Controllers.BaseApiController).Assembly;
 
     [Fact]
     public void FeatureControllers_HaveApiControllerAttribute() {
@@ -51,7 +51,7 @@ public sealed class ControllerConventionsTests {
     public void FeatureControllerActions_DeclareProducesResponseTypes() {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
-            .Where(method => method.GetCustomAttributes<ProducesResponseTypeAttribute>().Any() is false)
+            .Where(method => !method.GetCustomAttributes<ProducesResponseTypeAttribute>().Any())
             .Select(FormatMethodName)];
 
         Assert.Empty(violations);
@@ -133,7 +133,7 @@ public sealed class ControllerConventionsTests {
         string?[] violations = [.. GetFeatureControllerTypes()
             .Where(type => !string.Equals(type.Namespace, "FoodDiary.Presentation.Api.Features.Auth", StringComparison.Ordinal))
             .Where(type => !IsAnonymousInfrastructureController(type))
-            .Where(type => type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)) is false)
+            .Where(type => !type.IsAssignableTo(typeof(FoodDiary.Presentation.Api.Controllers.AuthorizedController)))
             .Where(type => type.GetCustomAttribute<AuthorizeAttribute>() is null)
             .Select(type => type.FullName)];
 
@@ -235,7 +235,7 @@ public sealed class ControllerConventionsTests {
     [Fact]
     public void FeatureControllers_DoNotReferenceApplicationTypesDirectly() {
         string[] violations = [.. GetControllerSyntaxTrees()
-            .Where(static tree => IsAllowedApplicationAbstractionReference(tree.FilePath) is false)
+            .Where(static tree => !IsAllowedApplicationAbstractionReference(tree.FilePath))
             .Where(static tree => ReferencesApplicationTypes(tree))
             .Select(static tree => Path.GetFileName(tree.FilePath))
             .OrderBy(static name => name, StringComparer.Ordinal)];
@@ -253,7 +253,7 @@ public sealed class ControllerConventionsTests {
     public void FeatureTransportFiles_LiveInExpectedFolders(string filePattern, string expectedFolderName) {
         string presentationRoot = GetPresentationRoot();
         string[] violations = [.. Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
-            .Where(path => string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal) is false)
+            .Where(path => !string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal))
             .Select(static path => Path.GetRelativePath(GetPresentationRoot(), path))
             .OrderBy(static path => path, StringComparer.Ordinal)];
 
@@ -274,9 +274,9 @@ public sealed class ControllerConventionsTests {
 
         string[] violations = [.. patterns
             .SelectMany(pattern => Directory.GetFiles(presentationRoot, pattern, SearchOption.AllDirectories))
-            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
-            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
-            .Where(path => path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false)
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
             .Where(path => Path.GetFileName(path) is not nameof(ApiErrorHttpResponse) + ".cs"
                 and not "PagedHttpResponse.cs"
                 and not "PagedHttpResponseMappings.cs"

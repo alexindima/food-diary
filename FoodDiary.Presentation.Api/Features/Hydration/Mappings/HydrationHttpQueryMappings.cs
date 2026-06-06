@@ -5,11 +5,12 @@ using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 namespace FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 
 public static class HydrationHttpQueryMappings {
-    public static GetHydrationEntriesQuery ToEntriesQuery(this GetHydrationEntriesHttpQuery query, Guid userId, DateTime utcNow) {
-        return new GetHydrationEntriesQuery(userId, query.DateUtc ?? utcNow);
-    }
-
-    public static GetHydrationDailyTotalQuery ToDailyQuery(this GetHydrationEntriesHttpQuery query, Guid userId, DateTime utcNow) {
-        return new GetHydrationDailyTotalQuery(userId, query.DateUtc ?? utcNow);
+    extension(GetHydrationEntriesHttpQuery query) {
+        public GetHydrationEntriesQuery ToEntriesQuery(Guid userId, DateTime utcNow) {
+            return new GetHydrationEntriesQuery(userId, query.DateUtc ?? utcNow);
+        }
+        public GetHydrationDailyTotalQuery ToDailyQuery(Guid userId, DateTime utcNow) {
+            return new GetHydrationDailyTotalQuery(userId, query.DateUtc ?? utcNow);
+        }
     }
 }

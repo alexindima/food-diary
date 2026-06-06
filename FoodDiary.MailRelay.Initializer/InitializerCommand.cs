@@ -22,12 +22,11 @@ internal sealed record InitializerCommand(string Name, string? ConnectionString)
                 continue;
             }
 
-            if (name is null) {
-                name = argument;
-                continue;
+            if (name is not null) {
+                throw new InvalidOperationException($"Unexpected argument '{argument}'.");
             }
 
-            throw new InvalidOperationException($"Unexpected argument '{argument}'.");
+            name = argument;
         }
 
         return name is null ? null : new InitializerCommand(name, connectionString);

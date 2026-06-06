@@ -127,7 +127,7 @@ internal sealed partial class DiaryPdfGenerator {
                     int read;
 
                     while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
-                        memory.Write(buffer, 0, read);
+                        await memory.WriteAsync(buffer.AsMemory(0, read), cancellationToken).ConfigureAwait(false);
                         if (memory.Length > MaxMealImageBytes) {
                             return null;
                         }

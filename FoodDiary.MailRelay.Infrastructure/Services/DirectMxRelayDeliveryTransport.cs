@@ -79,11 +79,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         IPAddress[] addresses = IPAddress.TryParse(mxHost, out IPAddress? literalAddress)
             ? [literalAddress]
             : await Dns.GetHostAddressesAsync(mxHost, cancellationToken).ConfigureAwait(false);
-        IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress);
-        if (publicAddress is null) {
-            throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
-        }
-
+        IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress) ?? throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
         var socket = new Socket(publicAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp) {
             NoDelay = true,
         };
@@ -110,27 +106,28 @@ public sealed class DirectMxRelayDeliveryTransport(
             address = address.MapToIPv4();
         }
 
-        if (address.AddressFamily == AddressFamily.InterNetwork) {
-            byte[] bytes = address.GetAddressBytes();
-            return bytes[0] != 10 &&
-                   bytes[0] != 127 &&
-                   !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
-                   !(bytes[0] == 192 && bytes[1] == 168) &&
-                   !(bytes[0] == 169 && bytes[1] == 254) &&
-                   !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
-                   bytes[0] != 0 &&
-                   bytes[0] < 224;
+        switch (address.AddressFamily) {
+            case AddressFamily.InterNetwork: {
+                    byte[] bytes = address.GetAddressBytes();
+                    return bytes[0] != 10 &&
+                           bytes[0] != 127 &&
+                           !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
+                           !(bytes[0] == 192 && bytes[1] == 168) &&
+                           !(bytes[0] == 169 && bytes[1] == 254) &&
+                           !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
+                           bytes[0] != 0 &&
+                           bytes[0] < 224;
+                }
+            case AddressFamily.InterNetworkV6: {
+                    byte[] bytes = address.GetAddressBytes();
+                    return !address.IsIPv6LinkLocal &&
+                           !address.IsIPv6SiteLocal &&
+                           !address.IsIPv6Multicast &&
+                           (bytes[0] & 0xfe) != 0xfc;
+                }
+            default:
+                return false;
         }
-
-        if (address.AddressFamily == AddressFamily.InterNetworkV6) {
-            byte[] bytes = address.GetAddressBytes();
-            return !address.IsIPv6LinkLocal &&
-                   !address.IsIPv6SiteLocal &&
-                   !address.IsIPv6Multicast &&
-                   (bytes[0] & 0xfe) != 0xfc;
-        }
-
-        return false;
     }
 
     private MimeMessage CreateMessage(RelayEmailMessageRequest request, IReadOnlyList<MailboxAddress> recipients) {
@@ -152,13 +149,8 @@ public sealed class DirectMxRelayDeliveryTransport(
     private static MimeEntity CreateBody(RelayEmailMessageRequest request) {
         var bodyBuilder = new BodyBuilder {
             HtmlBody = request.HtmlBody,
+            TextBody = !string.IsNullOrWhiteSpace(request.TextBody) ? request.TextBody : HtmlToText(request.HtmlBody),
         };
-
-        if (!string.IsNullOrWhiteSpace(request.TextBody)) {
-            bodyBuilder.TextBody = request.TextBody;
-        } else {
-            bodyBuilder.TextBody = HtmlToText(request.HtmlBody);
-        }
 
         return bodyBuilder.ToMessageBody();
     }

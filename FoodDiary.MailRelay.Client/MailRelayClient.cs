@@ -17,9 +17,8 @@ public sealed class MailRelayClient(HttpClient httpClient, IOptions<MailRelayCli
             throw new InvalidOperationException("Mail relay client base URL is not configured.");
         }
 
-        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/email/send") {
-            Content = JsonContent.Create(request, options: JsonOptions),
-        };
+        using var requestMessage = new HttpRequestMessage(HttpMethod.Post, "/api/email/send");
+        requestMessage.Content = JsonContent.Create(request, options: JsonOptions);
 
         if (!string.IsNullOrWhiteSpace(_options.ApiKey)) {
             requestMessage.Headers.TryAddWithoutValidation("X-Relay-Api-Key", _options.ApiKey);

@@ -6,7 +6,3 @@ public sealed record HealthAreaScoresHttpResponse(
     HealthAreaScoreHttpResponse Immune,
     HealthAreaScoreHttpResponse Energy,
     HealthAreaScoreHttpResponse Antioxidant);
-
-public sealed record HealthAreaScoreHttpResponse(
-    int Score,
-    string Grade);

@@ -21,6 +21,4 @@ WebApplication app = builder.Build();
 
 app.MapMailRelayPresentation();
 
-app.Run();
-
-public partial class Program;
+await app.RunAsync().ConfigureAwait(false);

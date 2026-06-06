@@ -144,7 +144,7 @@ public sealed class MailInboxApplicationTests {
             new GetInboundMailMessagesQuery(0),
             _ => {
                 nextCalled = true;
-                return Task.FromResult(Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]));
+                return Task.FromResult(Result.Success<IReadOnlyList<InboundMailMessageSummary>>([]));
             },
             CancellationToken.None);
 
@@ -201,7 +201,7 @@ public sealed class MailInboxApplicationTests {
     [Fact]
     public async Task MailInboxValidationBehavior_WhenNoValidators_InvokesNext() {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>([]);
-        var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
+        var response = Result.Success<IReadOnlyList<InboundMailMessageSummary>>([]);
 
         Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
@@ -215,7 +215,7 @@ public sealed class MailInboxApplicationTests {
     public async Task MailInboxValidationBehavior_WhenValidationSucceeds_InvokesNext() {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>(
             [new GetInboundMailMessagesQueryValidator()]);
-        var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
+        var response = Result.Success<IReadOnlyList<InboundMailMessageSummary>>([]);
 
         Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
@@ -229,7 +229,7 @@ public sealed class MailInboxApplicationTests {
     public async Task MailInboxLoggingBehavior_WhenNextSucceeds_ReturnsResponse() {
         var behavior = new MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>(
             NullLogger<MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>>.Instance);
-        var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
+        var response = Result.Success<IReadOnlyList<InboundMailMessageSummary>>([]);
 
         Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
@@ -243,7 +243,7 @@ public sealed class MailInboxApplicationTests {
     public async Task MailInboxLoggingBehavior_WhenNextFails_ReturnsFailure() {
         var behavior = new MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>(
             NullLogger<MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>>.Instance);
-        var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Failure(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
+        var response = Result.Failure<IReadOnlyList<InboundMailMessageSummary>>(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
 
         Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
@@ -302,7 +302,7 @@ public sealed class MailInboxApplicationTests {
 
     [Fact]
     public void ResultValue_WhenResultIsFailure_Throws() {
-        var result = Result<string>.Failure(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
+        var result = Result.Failure<string>(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
 
         Assert.Throws<InvalidOperationException>(() => result.Value);
     }
