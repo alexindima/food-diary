@@ -118,6 +118,7 @@
 
 .fd-ui-image-preview-dialog__collage--count-2 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-rows: minmax(0, 1fr);
 }
 
 .fd-ui-image-preview-dialog__collage--count-3,

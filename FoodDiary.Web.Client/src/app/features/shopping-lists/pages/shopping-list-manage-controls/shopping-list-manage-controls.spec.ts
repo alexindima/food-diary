@@ -1,6 +1,7 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
+import { provideRouter } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
@@ -18,61 +19,89 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
 }> {
     await TestBed.configureTestingModule({
         imports: [ShoppingListManageControlsComponent, TranslateModule.forRoot()],
+        providers: [provideRouter([])],
     }).compileComponents();
 
     const listSelectModel = signal({ id: 'list-1' });
-    const listNameModel = signal({ name: 'Groceries' });
     const listSelectForm = TestBed.runInInjectionContext(() => form(listSelectModel));
-    const listNameForm = TestBed.runInInjectionContext(() => form(listNameModel));
     const fixture = TestBed.createComponent(ShoppingListManageControlsComponent);
     fixture.componentRef.setInput('listSelectField', listSelectForm.id);
-    fixture.componentRef.setInput('listNameField', listNameForm.name);
     fixture.componentRef.setInput('lists', lists);
     fixture.componentRef.setInput('isLoading', false);
     fixture.componentRef.setInput('canDeleteList', true);
-    fixture.componentRef.setInput('canClearList', false);
     fixture.detectChanges();
 
     return { component: fixture.componentInstance, fixture };
 }
 
 describe('ShoppingListManageControlsComponent', () => {
-    it('maps list summaries into select options and count', async () => {
+    it('tracks list count and selected list card state', async () => {
         const { component } = await setupManageControlsAsync();
 
         expect(component['listsCount']()).toBe(2);
-        expect(component['listOptions']()).toEqual([
-            { label: 'Groceries (1)', value: 'list-1' },
-            { label: 'Weekend (0)', value: 'list-2' },
-        ]);
+        expect(component['selectedListId']()).toBe('list-1');
     });
 
-    it('emits create, delete, and clear actions', async () => {
+    it('updates selected list when a card is selected', async () => {
+        const { component } = await setupManageControlsAsync();
+
+        component['selectList']('list-2');
+
+        expect(component['selectedListId']()).toBe('list-2');
+    });
+
+    it('starts renaming the requested list after it appears in summaries', async () => {
+        const { component, fixture } = await setupManageControlsAsync();
+        const newList: ShoppingListSummary = {
+            id: 'list-3',
+            name: 'New shopping list',
+            createdAt: '2026-06-06T00:00:00Z',
+            itemsCount: 0,
+        };
+        const handledSpy = vi.fn();
+        component.renameRequestHandled.subscribe(handledSpy);
+
+        fixture.componentRef.setInput('renameRequestedListId', newList.id);
+        fixture.detectChanges();
+
+        expect(component['editingListId']()).toBeNull();
+
+        fixture.componentRef.setInput('lists', [...LISTS, newList]);
+        fixture.detectChanges();
+
+        expect(component['editingListId']()).toBe(newList.id);
+        expect(component['renameDraft']()).toBe(newList.name);
+        expect(handledSpy).toHaveBeenCalledWith(newList.id);
+    });
+
+    it('emits create, rename, delete by id, and clear actions', async () => {
         const { component } = await setupManageControlsAsync();
         const createSpy = vi.fn();
-        const deleteSpy = vi.fn();
+        const renameSpy = vi.fn();
+        const deleteByIdSpy = vi.fn();
         const clearSpy = vi.fn();
         component.createList.subscribe(createSpy);
-        component.deleteList.subscribe(deleteSpy);
-        component.clearList.subscribe(clearSpy);
+        component.renameListById.subscribe(renameSpy);
+        component.deleteListById.subscribe(deleteByIdSpy);
+        component.clearListById.subscribe(clearSpy);
 
         component.createList.emit();
-        component.deleteList.emit();
-        component.clearList.emit();
+        component.renameListById.emit({ listId: 'list-2', name: 'Weekend groceries' });
+        component.deleteListById.emit('list-2');
+        component.clearListById.emit('list-1');
 
         expect(createSpy).toHaveBeenCalledOnce();
-        expect(deleteSpy).toHaveBeenCalledOnce();
-        expect(clearSpy).toHaveBeenCalledOnce();
+        expect(renameSpy).toHaveBeenCalledWith({ listId: 'list-2', name: 'Weekend groceries' });
+        expect(deleteByIdSpy).toHaveBeenCalledWith('list-2');
+        expect(clearSpy).toHaveBeenCalledWith('list-1');
     });
 
-    it('supports single-list clear state', async () => {
+    it('supports single-list delete state', async () => {
         const { component, fixture } = await setupManageControlsAsync([LISTS[0]]);
         fixture.componentRef.setInput('canDeleteList', false);
-        fixture.componentRef.setInput('canClearList', true);
         fixture.detectChanges();
 
         expect(component['listsCount']()).toBe(1);
         expect(component.canDeleteList()).toBe(false);
-        expect(component.canClearList()).toBe(true);
     });
 });

@@ -2,9 +2,16 @@ import { expect, type Page, type Route, test } from '@playwright/test';
 
 const MS_PER_SECOND = 1000;
 const AUTH_TOKEN_TTL_SECONDS = 3600;
+const TEST_IMAGE_URLS = [
+    createSvgDataUrl('#f97316', '1'),
+    createSvgDataUrl('#22c55e', '2'),
+    createSvgDataUrl('#0ea5e9', '3'),
+    createSvgDataUrl('#a855f7', '4'),
+] as const;
 const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/users/info'), createResponse: createUser },
     { matches: pathname => pathname.endsWith('/dashboard'), createResponse: createDashboardSnapshot },
+    { matches: pathname => pathname.endsWith('/consumptions/overview'), createResponse: createMealsOverview },
     { matches: pathname => pathname.endsWith('/cycles/current'), createResponse: () => null },
     { matches: pathname => pathname.endsWith('/tdee/insight'), createResponse: createTdeeInsight },
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
@@ -72,7 +79,72 @@ test.describe('client smoke', () => {
         await expect(page.locator('.product-list__mobile-toolbar')).toBeVisible();
         await expect(page.getByRole('button', { name: 'Create' })).toBeVisible();
     });
+
+    test('keeps meal collage thumbnails inside the media slot', async ({ page }) => {
+        await page.setViewportSize({ width: 1280, height: 900 });
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
+
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/meals');
+
+        await expect(page).toHaveURL(/\/meals$/);
+        await expect(page.getByRole('heading', { name: 'Meals' })).toBeVisible();
+        await expect(page.locator('.entity-card__collage')).toHaveCount(2);
+
+        await expectCollageFitsMediaSlotAsync(page.locator('.entity-card__collage--count-4'));
+        await expectCollageFitsMediaSlotAsync(page.locator('.entity-card__collage--count-2'));
+    });
 });
+
+async function expectCollageFitsMediaSlotAsync(collage: ReturnType<Page['locator']>): Promise<void> {
+    await expect(collage).toBeVisible();
+
+    const dimensions = await collage.evaluate(element => {
+        const media = element.closest('.media-card__media');
+        const collageRect = element.getBoundingClientRect();
+        const mediaRect = media?.getBoundingClientRect();
+        const imageRects = Array.from(element.querySelectorAll('img')).map(image => {
+            const rect = image.getBoundingClientRect();
+            return {
+                bottom: rect.bottom - collageRect.top,
+                height: rect.height,
+                left: rect.left - collageRect.left,
+                right: rect.right - collageRect.left,
+                top: rect.top - collageRect.top,
+                width: rect.width,
+            };
+        });
+
+        return {
+            collageHeight: collageRect.height,
+            collageWidth: collageRect.width,
+            imageRects,
+            mediaHeight: mediaRect?.height ?? 0,
+            mediaWidth: mediaRect?.width ?? 0,
+        };
+    });
+
+    expect(dimensions.collageWidth).toBeGreaterThan(0);
+    expect(dimensions.collageHeight).toBeGreaterThan(0);
+    expect(Math.abs(dimensions.collageWidth - dimensions.mediaWidth)).toBeLessThanOrEqual(1);
+    expect(Math.abs(dimensions.collageHeight - dimensions.mediaHeight)).toBeLessThanOrEqual(1);
+    expect(Math.abs(dimensions.collageWidth - dimensions.collageHeight)).toBeLessThanOrEqual(1);
+
+    for (const imageRect of dimensions.imageRects) {
+        expect(imageRect.width).toBeGreaterThan(0);
+        expect(imageRect.height).toBeGreaterThan(0);
+        expect(imageRect.left).toBeGreaterThanOrEqual(0);
+        expect(imageRect.top).toBeGreaterThanOrEqual(0);
+        expect(imageRect.right).toBeLessThanOrEqual(dimensions.collageWidth + 1);
+        expect(imageRect.bottom).toBeLessThanOrEqual(dimensions.collageHeight + 1);
+    }
+}
 
 async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
     await page.route('**/hubs/notifications/**', async route => {
@@ -185,6 +257,87 @@ function createDailyMicronutrients(): Record<string, unknown> {
         nutrients: [],
         healthScores: null,
     };
+}
+
+function createMealsOverview(): Record<string, unknown> {
+    return {
+        allConsumptions: {
+            data: [
+                createMeal('meal-1', '2026-05-07T20:40:00.000Z', [
+                    createMealItem('meal-1-item-1', 'meal-1', 'Carrots', TEST_IMAGE_URLS[0]),
+                    createMealItem('meal-1-item-2', 'meal-1', 'Rice', TEST_IMAGE_URLS[1]),
+                    createMealItem('meal-1-item-3', 'meal-1', 'Salad', TEST_IMAGE_URLS[2]),
+                    createMealItem('meal-1-item-4', 'meal-1', 'Soup', TEST_IMAGE_URLS[3]),
+                ]),
+                createMeal('meal-2', '2026-05-07T15:38:00.000Z', [
+                    createMealItem('meal-2-item-1', 'meal-2', 'Rice', TEST_IMAGE_URLS[1]),
+                    createMealItem('meal-2-item-2', 'meal-2', 'Salad', TEST_IMAGE_URLS[2]),
+                ]),
+            ],
+            page: 1,
+            limit: 20,
+            totalPages: 1,
+            totalItems: 2,
+        },
+        favoriteItems: [],
+        favoriteTotalCount: 0,
+    };
+}
+
+function createMeal(id: string, date: string, items: unknown[]): Record<string, unknown> {
+    return {
+        id,
+        date,
+        mealType: 'Dinner',
+        comment: null,
+        imageUrl: null,
+        imageAssetId: null,
+        totalCalories: 905,
+        totalProteins: 58,
+        totalFats: 45,
+        totalCarbs: 66,
+        totalFiber: 5,
+        totalAlcohol: 0,
+        isNutritionAutoCalculated: true,
+        manualCalories: null,
+        manualProteins: null,
+        manualFats: null,
+        manualCarbs: null,
+        manualFiber: null,
+        manualAlcohol: null,
+        preMealSatietyLevel: null,
+        postMealSatietyLevel: null,
+        qualityScore: 34,
+        qualityGrade: 'yellow',
+        isFavorite: false,
+        favoriteMealId: null,
+        items,
+        aiSessions: [],
+    };
+}
+
+function createMealItem(id: string, consumptionId: string, productName: string, productImageUrl: string): Record<string, unknown> {
+    return {
+        id,
+        consumptionId,
+        amount: 100,
+        productId: `${id}-product`,
+        productName,
+        productImageUrl,
+        productBaseUnit: 'G',
+        productBaseAmount: 100,
+        productCaloriesPerBase: 100,
+        productProteinsPerBase: 10,
+        productFatsPerBase: 5,
+        productCarbsPerBase: 15,
+        productFiberPerBase: 2,
+        productAlcoholPerBase: 0,
+    };
+}
+
+function createSvgDataUrl(color: string, label: string): string {
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><rect width="160" height="160" fill="${color}"/><text x="80" y="94" text-anchor="middle" font-family="Arial" font-size="48" font-weight="700" fill="white">${label}</text></svg>`;
+    return `data:image/svg+xml;base64,${Buffer.from(svg, 'utf8').toString('base64')}`;
 }
 
 function createEmptyProductsPage(): Record<string, unknown> {

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { NEVER, of, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit } from '../../products/models/product.data';
@@ -42,15 +42,18 @@ describe('ShoppingListFacade loading and selection', () => {
         expect(facade.selectedListId()).toBe('list-1');
     });
 
-    it('should create default list when no lists exist', () => {
-        const { facade, list, shoppingListService } = setupShoppingListFacade();
+    it('should expose empty state when no lists exist', () => {
+        const { facade, shoppingListService } = setupShoppingListFacade();
         shoppingListService.getAll.mockReturnValueOnce(of([]));
 
         facade.initialize();
 
-        expect(shoppingListService.create).toHaveBeenCalledWith({ name: 'SHOPPING_LIST.DEFAULT_NAME' });
-        expect(facade.list()).toEqual(list);
-        expect(facade.selectedListId()).toBe('list-1');
+        expect(shoppingListService.create).not.toHaveBeenCalled();
+        expect(facade.lists()).toEqual([]);
+        expect(facade.list()).toBeNull();
+        expect(facade.items()).toEqual([]);
+        expect(facade.selectedListId()).toBeNull();
+        expect(facade.listName()).toBe('');
     });
 
     it('should ignore empty and already selected list selections', () => {
@@ -96,6 +99,40 @@ describe('ShoppingListFacade item persistence and errors', () => {
         expect(toastService.error).toHaveBeenCalledWith('SHOPPING_LIST.DELETE_ERROR');
     });
 
+    it('should delete inactive list without replacing the current list', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        shoppingListService.getAll.mockReturnValueOnce(
+            of([
+                { id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 },
+                { id: 'list-2', name: 'Weekend', createdAt: '', itemsCount: 0 },
+            ]),
+        );
+        facade.initialize();
+        await Promise.resolve();
+
+        facade.deleteListById('list-2');
+
+        expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-2');
+        expect(facade.list()).toEqual(list);
+        expect(facade.selectedListId()).toBe('list-1');
+    });
+
+    it('should delete the last selected list and keep empty state', async () => {
+        const { facade, shoppingListService } = setupShoppingListFacade();
+        shoppingListService.getAll.mockReturnValueOnce(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }]));
+        shoppingListService.getAll.mockReturnValueOnce(of([]));
+        facade.initialize();
+        await Promise.resolve();
+
+        facade.deleteCurrentList();
+        await Promise.resolve();
+
+        expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-1');
+        expect(facade.lists()).toEqual([]);
+        expect(facade.list()).toBeNull();
+        expect(facade.selectedListId()).toBeNull();
+    });
+
     it('should keep current items and show error when clearing list fails', () => {
         const { facade, shoppingListService, toastService } = setupShoppingListFacade();
         shoppingListService.update.mockReturnValueOnce(throwError(() => new Error('clear failed')));
@@ -121,6 +158,45 @@ describe('ShoppingListFacade autosave', () => {
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
 
         expect(shoppingListService.update).toHaveBeenCalledWith('list-1', expect.objectContaining({ name: 'Renamed list' }));
+    });
+
+    it('should rename list by id immediately', async () => {
+        const { facade, list, shoppingListService } = setupShoppingListFacade();
+        shoppingListService.update.mockReturnValueOnce(of({ ...list, name: 'Inline rename' }));
+        facade.initialize();
+        await Promise.resolve();
+
+        facade.renameListById('list-1', ' Inline rename ');
+
+        expect(shoppingListService.update).toHaveBeenCalledWith('list-1', { name: 'Inline rename' });
+        expect(facade.listName()).toBe('Inline rename');
+    });
+
+    it('should expose a newly created list summary before the list reload finishes', () => {
+        const { facade, shoppingListService } = setupShoppingListFacade();
+        const createdList: ShoppingList = {
+            id: 'list-2',
+            name: 'New list',
+            createdAt: '2026-06-06T00:00:00Z',
+            items: [],
+        };
+        shoppingListService.create.mockReturnValueOnce(of(createdList));
+        shoppingListService.getAll.mockReturnValueOnce(NEVER);
+
+        facade.createNewList();
+
+        expect(facade.selectedListId()).toBe(createdList.id);
+        expect(facade.renameRequestedListId()).toBe(createdList.id);
+        expect(facade.lists()[0]).toEqual({
+            id: createdList.id,
+            name: createdList.name,
+            createdAt: createdList.createdAt,
+            itemsCount: 0,
+        });
+
+        facade.clearRenameRequest(createdList.id);
+
+        expect(facade.renameRequestedListId()).toBeNull();
     });
 });
 

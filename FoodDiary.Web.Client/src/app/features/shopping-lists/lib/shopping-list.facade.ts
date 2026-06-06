@@ -42,6 +42,7 @@ export class ShoppingListFacade {
     public readonly lists = signal<ShoppingListSummary[]>([]);
     public readonly selectedListId = signal<string | null>(null);
     public readonly listName = signal('');
+    public readonly renameRequestedListId = signal<string | null>(null);
 
     public constructor() {}
 
@@ -62,6 +63,46 @@ export class ShoppingListFacade {
         this.scheduleSave();
     }
 
+    public renameListById(listId: string, name: string): void {
+        const trimmedName = name.trim();
+        if (listId.length === 0 || trimmedName.length === 0) {
+            return;
+        }
+
+        const current = this.list();
+        const previousList = current;
+        const previousItems = this.items();
+        const previousLists = this.lists();
+        const previousListName = this.listName();
+        this.lists.set(previousLists.map(entry => (entry.id === listId ? { ...entry, name: trimmedName } : entry)));
+        if (current?.id === listId) {
+            this.list.set({ ...current, name: trimmedName });
+            this.listName.set(trimmedName);
+        }
+
+        this.isSaving.set(true);
+        this.shoppingListService
+            .update(listId, { name: trimmedName })
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: list => {
+                    this.isSaving.set(false);
+                    if (this.selectedListId() === list.id) {
+                        this.applyList(list);
+                    }
+                    this.updateListSummary(list);
+                },
+                error: () => {
+                    this.isSaving.set(false);
+                    this.lists.set(previousLists);
+                    this.list.set(previousList);
+                    this.items.set(previousItems);
+                    this.listName.set(previousListName);
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.SAVE_ERROR'));
+                },
+            });
+    }
+
     public createNewList(): void {
         const name = this.buildNewListName();
         this.isLoading.set(true);
@@ -71,6 +112,8 @@ export class ShoppingListFacade {
             .subscribe({
                 next: list => {
                     this.isLoading.set(false);
+                    this.renameRequestedListId.set(list.id);
+                    this.upsertListSummary(list);
                     this.applyList(list);
                     this.loadLists();
                 },
@@ -82,6 +125,11 @@ export class ShoppingListFacade {
     }
 
     public addItem(draft: ShoppingListDraftItem): void {
+        const current = this.list();
+        if (current === null) {
+            return;
+        }
+
         const name = draft.name.trim();
         if (name.length === 0) {
             return;
@@ -91,7 +139,7 @@ export class ShoppingListFacade {
             ...this.items(),
             {
                 id: this.createTempId(),
-                shoppingListId: this.list()?.id ?? '',
+                shoppingListId: current.id,
                 name,
                 amount: normalizeShoppingListAmount(draft.amount),
                 unit: draft.unit ?? null,
@@ -104,6 +152,12 @@ export class ShoppingListFacade {
 
         this.items.set(nextItems);
         this.scheduleSave();
+    }
+
+    public clearRenameRequest(listId: string): void {
+        if (this.renameRequestedListId() === listId) {
+            this.renameRequestedListId.set(null);
+        }
     }
 
     public removeItem(itemId: string): void {
@@ -124,14 +178,27 @@ export class ShoppingListFacade {
             return;
         }
 
+        this.clearListById(current.id);
+    }
+
+    public clearListById(listId: string): void {
+        const current = this.list();
+        const summary = this.lists().find(entry => entry.id === listId);
+        const listName = current?.id === listId ? current.name : summary?.name;
+        if (listName === undefined) {
+            return;
+        }
+
         this.isSaving.set(true);
         this.shoppingListService
-            .update(current.id, { name: current.name, items: [] })
+            .update(listId, { name: listName, items: [] })
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe({
                 next: list => {
                     this.isSaving.set(false);
-                    this.applyList(list);
+                    if (this.selectedListId() === list.id) {
+                        this.applyList(list);
+                    }
                     this.updateListSummary(list);
                 },
                 error: () => {
@@ -147,6 +214,40 @@ export class ShoppingListFacade {
             return;
         }
 
+        this.deleteSelectedList(current);
+    }
+
+    public deleteListById(listId: string): void {
+        const current = this.list();
+        if (current?.id === listId) {
+            this.deleteSelectedList(current);
+            return;
+        }
+
+        const previousLists = this.lists();
+        if (!previousLists.some(list => list.id === listId)) {
+            return;
+        }
+
+        this.lists.set(previousLists.filter(list => list.id !== listId));
+        this.isSaving.set(true);
+        this.shoppingListService
+            .deleteById(listId)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    this.isSaving.set(false);
+                    this.loadLists();
+                },
+                error: () => {
+                    this.isSaving.set(false);
+                    this.lists.set(previousLists);
+                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.DELETE_ERROR'));
+                },
+            });
+    }
+
+    private deleteSelectedList(current: ShoppingList): void {
         const previousItems = this.items();
         const previousSelectedListId = this.selectedListId();
         const previousListName = this.listName();
@@ -190,7 +291,7 @@ export class ShoppingListFacade {
                 next: lists => {
                     this.isLoading.set(false);
                     if (lists.length === 0) {
-                        this.createDefaultList();
+                        this.applyEmptyListState();
                         return;
                     }
 
@@ -204,24 +305,6 @@ export class ShoppingListFacade {
                 error: () => {
                     this.isLoading.set(false);
                     this.toastService.error(this.translateService.instant('SHOPPING_LIST.LOAD_ERROR'));
-                },
-            });
-    }
-
-    private createDefaultList(): void {
-        const name = this.translateService.instant('SHOPPING_LIST.DEFAULT_NAME');
-        this.shoppingListService
-            .create({ name })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: list => {
-                    this.isLoading.set(false);
-                    this.applyList(list);
-                    this.loadLists();
-                },
-                error: () => {
-                    this.isLoading.set(false);
-                    this.toastService.error(this.translateService.instant('SHOPPING_LIST.CREATE_ERROR'));
                 },
             });
     }
@@ -248,6 +331,19 @@ export class ShoppingListFacade {
             });
     }
 
+    private applyEmptyListState(): void {
+        this.suppressAutosave = true;
+        this.lists.set([]);
+        this.list.set(null);
+        this.items.set([]);
+        this.listName.set('');
+        this.selectedListId.set(null);
+        this.lastLoadedListId.set(null);
+        queueMicrotask(() => {
+            this.suppressAutosave = false;
+        });
+    }
+
     private applyList(list: ShoppingList): void {
         this.suppressAutosave = true;
         this.list.set(list);
@@ -265,6 +361,17 @@ export class ShoppingListFacade {
             entry.id === list.id ? { ...entry, name: list.name, itemsCount: list.items.length } : entry,
         );
         this.lists.set(next);
+    }
+
+    private upsertListSummary(list: ShoppingList): void {
+        const nextSummary: ShoppingListSummary = {
+            id: list.id,
+            name: list.name,
+            createdAt: list.createdAt,
+            itemsCount: list.items.length,
+        };
+        const previousLists = this.lists().filter(entry => entry.id !== list.id);
+        this.lists.set([nextSummary, ...previousLists]);
     }
 
     private buildNewListName(): string {

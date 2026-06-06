@@ -5,6 +5,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 import { skip } from 'rxjs';
 
@@ -30,6 +31,7 @@ import { ShoppingListManageControlsComponent } from '../shopping-list-manage-con
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
+        FdUiIconComponent,
         FdUiLoaderComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -51,16 +53,18 @@ export class ShoppingListPageComponent {
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
     protected readonly lists = this.facade.lists;
+    protected readonly renameRequestedListId = this.facade.renameRequestedListId;
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly isMobileManageVisible = computed(() => this.isMobileManageOpen());
-    protected readonly canDeleteList = computed(
-        () => this.lists().length > 1 && this.list() !== null && !this.isSaving() && !this.isLoading(),
-    );
+    protected readonly checkedItemsCount = computed(() => this.items().filter(item => item.isChecked).length);
+    protected readonly totalItemsCount = computed(() => this.items().length);
+    protected readonly remainingItemsCount = computed(() => this.totalItemsCount() - this.checkedItemsCount());
+    protected readonly hasLists = computed(() => this.lists().length > 0);
+    protected readonly canDeleteList = computed(() => this.list() !== null && !this.isSaving() && !this.isLoading());
     protected readonly canClearList = computed(
-        () => this.lists().length === 1 && this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
+        () => this.items().length > 0 && this.list() !== null && !this.isSaving() && !this.isLoading(),
     );
     protected readonly listSelectModel = signal<{ id: string | null }>({ id: null });
-    protected readonly listNameModel = signal({ name: '' });
     protected readonly itemFormModel = signal<ShoppingListItemFormModel>({
         name: '',
         amount: null,
@@ -68,9 +72,6 @@ export class ShoppingListPageComponent {
         category: null,
     });
     protected readonly listSelectForm = form(this.listSelectModel);
-    protected readonly listNameForm = form(this.listNameModel, path => {
-        required(path.name);
-    });
     protected readonly itemForm = form(this.itemFormModel, path => {
         required(path.name);
     });
@@ -78,12 +79,6 @@ export class ShoppingListPageComponent {
     private readonly isMobileManageOpen = signal(false);
 
     public constructor() {
-        toObservable(computed(() => this.listNameModel().name))
-            .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
-            .subscribe(value => {
-                this.facade.setListName(value);
-            });
-
         toObservable(computed(() => this.listSelectModel().id))
             .pipe(skip(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(id => {
@@ -100,13 +95,6 @@ export class ShoppingListPageComponent {
         });
 
         effect(() => {
-            const name = this.facade.listName();
-            if (this.listNameModel().name !== name) {
-                this.listNameModel.set({ name });
-            }
-        });
-
-        effect(() => {
             if (!this.isMobileView()) {
                 this.isMobileManageOpen.set(false);
             }
@@ -116,6 +104,10 @@ export class ShoppingListPageComponent {
     }
 
     protected addItem(): void {
+        if (this.list() === null) {
+            return;
+        }
+
         this.itemForm().markAsTouched();
         if (this.itemForm().invalid()) {
             return;
@@ -160,12 +152,37 @@ export class ShoppingListPageComponent {
             return;
         }
 
+        this.confirmDeleteList(current.id, current.name);
+    }
+
+    protected deleteListById(listId: string): void {
+        if (!this.canDeleteList()) {
+            return;
+        }
+
+        const list = this.lists().find(entry => entry.id === listId);
+        if (list === undefined) {
+            return;
+        }
+
+        this.confirmDeleteList(list.id, list.name);
+    }
+
+    protected renameListById(listId: string, name: string): void {
+        this.facade.renameListById(listId, name);
+    }
+
+    protected clearRenameRequest(listId: string): void {
+        this.facade.clearRenameRequest(listId);
+    }
+
+    private confirmDeleteList(listId: string, listName: string): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('CONFIRM_DELETE.TITLE', {
                 type: this.translateService.instant('SHOPPING_LIST.ENTITY_NAME'),
             }),
             message: this.translateService.instant('CONFIRM_DELETE.MESSAGE', {
-                name: current.name,
+                name: listName,
             }),
         };
 
@@ -178,7 +195,7 @@ export class ShoppingListPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    this.facade.deleteCurrentList();
+                    this.facade.deleteListById(listId);
                 }
             });
     }
@@ -189,10 +206,23 @@ export class ShoppingListPageComponent {
             return;
         }
 
+        this.confirmClearList(current.id, current.name);
+    }
+
+    protected clearListById(listId: string): void {
+        const list = this.lists().find(entry => entry.id === listId);
+        if (list === undefined || list.itemsCount === 0 || this.isSaving() || this.isLoading()) {
+            return;
+        }
+
+        this.confirmClearList(list.id, list.name);
+    }
+
+    private confirmClearList(listId: string, listName: string): void {
         const data: ConfirmDeleteDialogData = {
             title: this.translateService.instant('SHOPPING_LIST.CLEAR_CONFIRM_TITLE'),
             message: this.translateService.instant('SHOPPING_LIST.CLEAR_CONFIRM_MESSAGE', {
-                name: current.name,
+                name: listName,
             }),
             confirmLabel: this.translateService.instant('SHOPPING_LIST.CLEAR_LIST_BUTTON'),
             cancelLabel: this.translateService.instant('CONFIRM_DELETE.CANCEL'),
@@ -207,7 +237,7 @@ export class ShoppingListPageComponent {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(confirmed => {
                 if (confirmed === true) {
-                    this.facade.clearCurrentList();
+                    this.facade.clearListById(listId);
                 }
             });
     }

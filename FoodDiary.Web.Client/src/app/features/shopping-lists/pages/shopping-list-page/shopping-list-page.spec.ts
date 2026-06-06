@@ -41,8 +41,11 @@ const SHOPPING_LISTS: ShoppingListSummary[] = [
 type ShoppingListFacadeMock = {
     addItem: ReturnType<typeof vi.fn>;
     clearCurrentList: ReturnType<typeof vi.fn>;
+    clearListById: ReturnType<typeof vi.fn>;
+    clearRenameRequest: ReturnType<typeof vi.fn>;
     createNewList: ReturnType<typeof vi.fn>;
     deleteCurrentList: ReturnType<typeof vi.fn>;
+    deleteListById: ReturnType<typeof vi.fn>;
     initialize: ReturnType<typeof vi.fn>;
     isLoading: ReturnType<typeof signal<boolean>>;
     isSaving: ReturnType<typeof signal<boolean>>;
@@ -51,9 +54,10 @@ type ShoppingListFacadeMock = {
     listName: ReturnType<typeof signal<string>>;
     lists: ReturnType<typeof signal<ShoppingListSummary[]>>;
     removeItem: ReturnType<typeof vi.fn>;
+    renameListById: ReturnType<typeof vi.fn>;
+    renameRequestedListId: ReturnType<typeof signal<string | null>>;
     selectList: ReturnType<typeof vi.fn>;
     selectedListId: ReturnType<typeof signal<string | null>>;
-    setListName: ReturnType<typeof vi.fn>;
     toggleItemChecked: ReturnType<typeof vi.fn>;
 };
 
@@ -74,15 +78,19 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
         lists: signal(SHOPPING_LISTS),
         selectedListId: signal(FIRST_LIST_ID),
         listName: signal(SHOPPING_LIST.name),
+        renameRequestedListId: signal(null),
         initialize: vi.fn(),
         selectList: vi.fn(),
-        setListName: vi.fn(),
         createNewList: vi.fn(),
+        clearRenameRequest: vi.fn(),
         addItem: vi.fn(),
         removeItem: vi.fn(),
         toggleItemChecked: vi.fn(),
         clearCurrentList: vi.fn(),
+        clearListById: vi.fn(),
         deleteCurrentList: vi.fn(),
+        deleteListById: vi.fn(),
+        renameListById: vi.fn(),
     };
     const isMobile = signal(false);
     const dialogService = { open: vi.fn().mockReturnValue({ afterClosed: () => of(true) }) };
@@ -115,21 +123,17 @@ describe('ShoppingListPageComponent form and item actions', () => {
 
         expect(facade.initialize).toHaveBeenCalledOnce();
         expect(component['listSelectModel']().id).toBe(FIRST_LIST_ID);
-        expect(component['listNameModel']().name).toBe(SHOPPING_LIST.name);
     });
 
-    it('delegates list select and name changes to facade', async () => {
+    it('delegates list select changes to facade', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
         await flushSignalEffectsAsync();
         facade.selectList.mockClear();
-        facade.setListName.mockClear();
 
         component['listSelectForm'].id().value.set(SECOND_LIST_ID);
-        component['listNameForm'].name().value.set('Weekend');
         await flushSignalEffectsAsync();
 
         expect(facade.selectList).toHaveBeenCalledWith(SECOND_LIST_ID);
-        expect(facade.setListName).toHaveBeenCalledWith('Weekend');
     });
 
     it('adds trimmed item draft and resets form', async () => {
@@ -178,10 +182,10 @@ describe('ShoppingListPageComponent list management', () => {
         const { component, facade } = await setupShoppingListPageAsync();
 
         expect(component['canDeleteList']()).toBe(true);
-        expect(component['canClearList']()).toBe(false);
+        expect(component['canClearList']()).toBe(true);
 
         facade.lists.set([SHOPPING_LISTS[0]]);
-        expect(component['canDeleteList']()).toBe(false);
+        expect(component['canDeleteList']()).toBe(true);
         expect(component['canClearList']()).toBe(true);
     });
 
@@ -191,7 +195,7 @@ describe('ShoppingListPageComponent list management', () => {
         component['deleteCurrentList']();
 
         expect(dialogService.open).toHaveBeenCalledOnce();
-        expect(facade.deleteCurrentList).toHaveBeenCalledOnce();
+        expect(facade.deleteListById).toHaveBeenCalledWith(FIRST_LIST_ID);
     });
 
     it('does not delete when confirmation is cancelled', async () => {
@@ -200,7 +204,7 @@ describe('ShoppingListPageComponent list management', () => {
 
         component['deleteCurrentList']();
 
-        expect(facade.deleteCurrentList).not.toHaveBeenCalled();
+        expect(facade.deleteListById).not.toHaveBeenCalled();
     });
 
     it('confirms before clearing the only current list', async () => {
@@ -210,7 +214,16 @@ describe('ShoppingListPageComponent list management', () => {
         component['clearCurrentList']();
 
         expect(dialogService.open).toHaveBeenCalledOnce();
-        expect(facade.clearCurrentList).toHaveBeenCalledOnce();
+        expect(facade.clearListById).toHaveBeenCalledWith(FIRST_LIST_ID);
+    });
+
+    it('confirms before clearing a list by id', async () => {
+        const { component, dialogService, facade } = await setupShoppingListPageAsync();
+
+        component['clearListById'](FIRST_LIST_ID);
+
+        expect(dialogService.open).toHaveBeenCalledOnce();
+        expect(facade.clearListById).toHaveBeenCalledWith(FIRST_LIST_ID);
     });
 
     it('closes mobile manage panel when viewport switches to desktop', async () => {
@@ -232,6 +245,14 @@ describe('ShoppingListPageComponent list management', () => {
         component['createNewList']();
 
         expect(facade.createNewList).toHaveBeenCalledOnce();
+    });
+
+    it('renames list through facade', async () => {
+        const { component, facade } = await setupShoppingListPageAsync();
+
+        component['renameListById'](SECOND_LIST_ID, 'Weekend groceries');
+
+        expect(facade.renameListById).toHaveBeenCalledWith(SECOND_LIST_ID, 'Weekend groceries');
     });
 });
 

@@ -691,6 +691,7 @@ $fd-theme-design-tokens: (
             toggle: fd-token(radius, pill),
             switch: fd-token(radius, pill),
             field-label: fd-token(radius, pill),
+            menu: fd-token(radius, lg),
             menu-item: 10px,
         ),
         modern: (
@@ -706,6 +707,7 @@ $fd-theme-design-tokens: (
             toggle: fd-token(radius, md),
             switch: fd-token(radius, pill),
             field-label: fd-token(radius, sm),
+            menu: fd-token(radius, md),
             menu-item: fd-token(radius, sm),
         ),
     );
@@ -1954,6 +1956,7 @@ $fd-theme-design-tokens: (
         --fd-radius-toggle: #{fd-ui-style-radius-token($style, toggle)};
         --fd-radius-switch: #{fd-ui-style-radius-token($style, switch)};
         --fd-radius-field-label: #{fd-ui-style-radius-token($style, field-label)};
+        --fd-radius-menu: #{fd-ui-style-radius-token($style, menu)};
         --fd-radius-menu-item: #{fd-ui-style-radius-token($style, menu-item)};
 
         --fd-space-control-gap: #{fd-ui-style-spacing-token($style, control-gap)};
