@@ -106,7 +106,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_UpdateCheckoutContext_NormalizesAndSetsModified() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.UpdateCheckoutContext(" yookassa ", " customer_2 ", " price_2 ", " annual ");
 
@@ -180,7 +180,7 @@ public sealed class BillingInvariantTests {
     [InlineData("trialing")]
     [InlineData("past_due")]
     public void BillingSubscription_Snapshot_WithRenewableStatuses_SchedulesNextBillingAttempt(string status) {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
@@ -209,7 +209,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_Snapshot_WithNonRenewableStatus_DoesNotScheduleNextBillingAttempt() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
@@ -233,7 +233,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_Snapshot_WithInvalidTimestamps_Throws() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         Assert.Throws<ArgumentOutOfRangeException>(() => subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
@@ -269,7 +269,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_MarkPremiumRoleManagedByBilling_IsIdempotent() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.MarkPremiumRoleManagedByBilling(false, Now);
         Assert.Null(subscription.ModifiedOnUtc);
@@ -281,7 +281,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_MarkPremiumRoleManagedByBilling_WithUnspecifiedTimestamp_Throws() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             subscription.MarkPremiumRoleManagedByBilling(true, new DateTime(2026, 4, 28)));
@@ -289,7 +289,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_MarkRenewalFailed_StoresPastDueState() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.MarkRenewalFailed(Now.AddDays(1), " evt_failed ", Now, " {\"retry\":true} ");
 
@@ -303,7 +303,7 @@ public sealed class BillingInvariantTests {
 
     [Fact]
     public void BillingSubscription_MarkRenewalSkippedForInaccessibleUser_StoresCanceledState() {
-        var subscription = CreatePendingSubscription();
+        BillingSubscription subscription = CreatePendingSubscription();
 
         subscription.MarkRenewalSkippedForInaccessibleUser(" evt_skipped ", Now, " {\"reason\":\"deleted\"} ");
 

@@ -14,14 +14,14 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        var requestName = typeof(TRequest).Name;
+        string requestName = typeof(TRequest).Name;
 
         logger.LogDebug("Handling {RequestName}", requestName);
 
         var stopwatch = Stopwatch.StartNew();
 
         try {
-            var response = await next(cancellationToken).ConfigureAwait(false);
+            TResponse response = await next(cancellationToken).ConfigureAwait(false);
             stopwatch.Stop();
 
             if (response.IsFailure) {

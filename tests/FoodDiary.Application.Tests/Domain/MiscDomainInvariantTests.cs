@@ -18,7 +18,7 @@ public class MiscDomainInvariantTests {
     [Fact]
     public void Role_UserRoles_AreExposedAsReadOnly() {
         var role = Role.Create("admin");
-        var userRoles = Assert.IsAssignableFrom<ICollection<UserRole>>(role.UserRoles);
+        ICollection<UserRole> userRoles = Assert.IsAssignableFrom<ICollection<UserRole>>(role.UserRoles);
 
         Assert.True(userRoles.IsReadOnly);
     }
@@ -64,7 +64,7 @@ public class MiscDomainInvariantTests {
     [Fact]
     public void RecentItem_Touch_IncrementsUsageCount() {
         var recentItem = RecentItem.Create(UserId.New(), RecentItemType.Product, Guid.NewGuid());
-        var previousUsage = recentItem.UsageCount;
+        int previousUsage = recentItem.UsageCount;
 
         recentItem.Touch();
 

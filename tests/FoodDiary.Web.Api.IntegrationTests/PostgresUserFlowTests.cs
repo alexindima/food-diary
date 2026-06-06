@@ -21,25 +21,25 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     [RequiresDockerFact]
     public async Task CreateProduct_ThenCreateConsumption_ThenGetDashboard_ReturnsNutritionData() {
-        var client = await CreateAuthenticatedClientAsync();
+        HttpClient client = await CreateAuthenticatedClientAsync();
 
-        var createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
+        HttpResponseMessage createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
             null, "Integration Apple", null, "Unknown", null, null, null, null, null,
             "G", 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, "Private"));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
-        var product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(product);
 
-        var today = DateTime.UtcNow.Date;
-        var createConsumptionResponse = await client.PostAsJsonAsync("/api/v1/consumptions", new CreateConsumptionHttpRequest(
+        DateTime today = DateTime.UtcNow.Date;
+        HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync("/api/v1/consumptions", new CreateConsumptionHttpRequest(
             today, "Lunch", null, null, null,
             [new ConsumptionItemHttpRequest(product.Id, null, 200)],
             IsNutritionAutoCalculated: true));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse);
 
-        var dashboardResponse = await client.GetAsync($"/api/v1/dashboard?date={today:yyyy-MM-dd}");
+        HttpResponseMessage dashboardResponse = await client.GetAsync($"/api/v1/dashboard?date={today:yyyy-MM-dd}");
         await AssertStatusCodeAsync(HttpStatusCode.OK, dashboardResponse);
-        var dashboard = await dashboardResponse.Content.ReadFromJsonAsync<DashboardPayload>(JsonOptions);
+        DashboardPayload? dashboard = await dashboardResponse.Content.ReadFromJsonAsync<DashboardPayload>(JsonOptions);
 
         Assert.NotNull(dashboard);
         Assert.True(dashboard.Statistics.TotalCalories > 0, "Dashboard should show calories from the consumption");
@@ -47,17 +47,17 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     [RequiresDockerFact]
     public async Task CreateHydrationEntries_ThenGetDailyTotal_ReturnsAggregatedAmount() {
-        var client = await CreateAuthenticatedClientAsync();
-        var now = DateTime.UtcNow.Date.AddHours(12);
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        DateTime now = DateTime.UtcNow.Date.AddHours(12);
 
-        var response1 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now, 250));
-        var response2 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
+        HttpResponseMessage response1 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now, 250));
+        HttpResponseMessage response2 = await client.PostAsJsonAsync("/api/v1/hydrations", new CreateHydrationEntryHttpRequest(now.AddMinutes(30), 500));
         await AssertStatusCodeAsync(HttpStatusCode.OK, response1);
         await AssertStatusCodeAsync(HttpStatusCode.OK, response2);
 
-        var totalResponse = await client.GetAsync($"/api/v1/hydrations/daily?date={now:yyyy-MM-dd}");
+        HttpResponseMessage totalResponse = await client.GetAsync($"/api/v1/hydrations/daily?date={now:yyyy-MM-dd}");
         await AssertStatusCodeAsync(HttpStatusCode.OK, totalResponse);
-        var total = await totalResponse.Content.ReadFromJsonAsync<HydrationDailyTotalPayload>(JsonOptions);
+        HydrationDailyTotalPayload? total = await totalResponse.Content.ReadFromJsonAsync<HydrationDailyTotalPayload>(JsonOptions);
 
         Assert.NotNull(total);
         Assert.True(total.TotalMl >= 750, $"Expected at least 750ml, got {total.TotalMl}");
@@ -65,13 +65,13 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     [RequiresDockerFact]
     public async Task CreateWaistEntry_WithDuplicateDate_ReturnsConflict() {
-        var client = await CreateAuthenticatedClientAsync();
+        HttpClient client = await CreateAuthenticatedClientAsync();
         var request = new CreateWaistEntryHttpRequest(
             new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), 80.0);
 
-        var first = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        var duplicate = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
-        var payload = await duplicate.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        HttpResponseMessage first = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
+        HttpResponseMessage duplicate = await client.PostAsJsonAsync("/api/v1/waist-entries", request);
+        ErrorPayload? payload = await duplicate.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
 
         await AssertStatusCodeAsync(HttpStatusCode.OK, first);
         Assert.Equal(HttpStatusCode.Conflict, duplicate.StatusCode);
@@ -81,45 +81,45 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     [RequiresDockerFact]
     public async Task CreateRecipe_ThenDuplicate_CreatesTwoIndependentRecipes() {
-        var client = await CreateAuthenticatedClientAsync();
+        HttpClient client = await CreateAuthenticatedClientAsync();
 
-        var createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
+        HttpResponseMessage createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
             null, "Recipe Ingredient", null, "Unknown", null, null, null, null, null,
             "G", 100, 100, 100, 5, 3, 15, 1, 0, "Private"));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
-        var product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(product);
 
-        var createRecipeResponse = await client.PostAsJsonAsync("/api/v1/recipes", new CreateRecipeHttpRequest(
+        HttpResponseMessage createRecipeResponse = await client.PostAsJsonAsync("/api/v1/recipes", new CreateRecipeHttpRequest(
             "Original Soup", "Test recipe", null, "Dinner", null, null,
             15, 30, 2, "private", true, null, null, null, null, null, null,
             [new RecipeStepHttpRequest("Boil", "Boil water",
                 [new RecipeIngredientHttpRequest(product.Id, null, 200)], null, null)]));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createRecipeResponse);
-        var recipe = await createRecipeResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(recipe);
 
-        var duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{recipe.Id}/duplicate", new { });
+        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{recipe.Id}/duplicate", new { });
         await AssertStatusCodeAsync(HttpStatusCode.OK, duplicateResponse);
-        var duplicated = await duplicateResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
+        IdPayload? duplicated = await duplicateResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(duplicated);
         Assert.NotEqual(recipe.Id, duplicated.Id);
 
-        var deleteOriginal = await client.DeleteAsync($"/api/v1/recipes/{recipe.Id}");
+        HttpResponseMessage deleteOriginal = await client.DeleteAsync($"/api/v1/recipes/{recipe.Id}");
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteOriginal);
 
-        var getDuplicate = await client.GetAsync($"/api/v1/recipes/{duplicated.Id}");
+        HttpResponseMessage getDuplicate = await client.GetAsync($"/api/v1/recipes/{duplicated.Id}");
         await AssertStatusCodeAsync(HttpStatusCode.OK, getDuplicate);
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync() {
-        var client = factory.CreateClient();
-        var email = $"flow-tests-{Guid.NewGuid():N}@example.com";
-        var response = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"flow-tests-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", payload.AccessToken);
         return client;
@@ -127,7 +127,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
     private static async Task AssertStatusCodeAsync(HttpStatusCode expected, HttpResponseMessage response) {
         if (response.StatusCode == expected) return;
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

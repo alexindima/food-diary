@@ -6,6 +6,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Fasting.Services;
 
@@ -20,25 +21,25 @@ public sealed class FastingNotificationScheduler(
     : IFastingNotificationScheduler {
 
     public async Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
-        var now = dateTimeProvider.UtcNow;
-        var activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
-        var activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
-        var checkIns = activeOccurrenceIds.Length == 0
+        DateTime now = dateTimeProvider.UtcNow;
+        IReadOnlyList<FastingOccurrence> activeOccurrences = await fastingOccurrenceRepository.GetActiveAsync(cancellationToken).ConfigureAwait(false);
+        FastingOccurrenceId[] activeOccurrenceIds = activeOccurrences.Select(static x => x.Id).ToArray();
+        IReadOnlyList<FastingCheckIn> checkIns = activeOccurrenceIds.Length == 0
             ? []
             : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
         var checkInLookup = checkIns
             .GroupBy(static x => x.OccurrenceId)
             .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)group.ToList());
         var usersToPush = new HashSet<Guid>();
-        var createdCount = 0;
+        int createdCount = 0;
 
-        foreach (var occurrence in activeOccurrences) {
-            var plan = occurrence.Plan;
+        foreach (FastingOccurrence occurrence in activeOccurrences) {
+            FastingPlan? plan = occurrence.Plan;
             if (plan is null || plan.Status != FastingPlanStatus.Active) {
                 continue;
             }
 
-            checkInLookup.TryGetValue(occurrence.Id, out var occurrenceCheckIns);
+            checkInLookup.TryGetValue(occurrence.Id, out IReadOnlyList<FastingCheckIn>? occurrenceCheckIns);
             createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, occurrenceCheckIns, now, usersToPush, cancellationToken).ConfigureAwait(false);
             createdCount += plan.Type switch {
                 FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken).ConfigureAwait(false),
@@ -47,9 +48,9 @@ public sealed class FastingNotificationScheduler(
             };
         }
 
-        foreach (var userGuid in usersToPush) {
+        foreach (Guid userGuid in usersToPush) {
             var userId = new UserId(userGuid);
-            var unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+            int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userGuid, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userGuid, cancellationToken).ConfigureAwait(false);
         }
@@ -74,13 +75,13 @@ public sealed class FastingNotificationScheduler(
             return 0;
         }
 
-        var elapsed = now - occurrence.StartedAtUtc;
+        TimeSpan elapsed = now - occurrence.StartedAtUtc;
         if (elapsed < TimeSpan.Zero) {
             return 0;
         }
 
-        var createdCount = 0;
-        var reminderHours = new[] {
+        int createdCount = 0;
+        int[] reminderHours = new[] {
             occurrence.User.FastingCheckInReminderHours,
             occurrence.User.FastingCheckInFollowUpReminderHours,
         }
@@ -88,7 +89,7 @@ public sealed class FastingNotificationScheduler(
             .OrderBy(static hour => hour)
             .ToArray();
 
-        foreach (var hour in reminderHours) {
+        foreach (int hour in reminderHours) {
             if (elapsed.TotalHours < hour) {
                 continue;
             }
@@ -121,17 +122,17 @@ public sealed class FastingNotificationScheduler(
             return 0;
         }
 
-        var completionAtUtc = occurrence.StartedAtUtc.AddHours(occurrence.TargetHours.Value);
+        DateTime completionAtUtc = occurrence.StartedAtUtc.AddHours(occurrence.TargetHours.Value);
         if (completionAtUtc > now) {
             return 0;
         }
 
-        var referenceId = $"fasting-completed:{occurrence.Id.Value}";
+        string referenceId = $"fasting-completed:{occurrence.Id.Value}";
         if (await notificationRepository.ExistsAsync(occurrence.UserId, NotificationTypes.FastingCompleted, referenceId, cancellationToken).ConfigureAwait(false)) {
             return 0;
         }
 
-        var notification = NotificationFactory.CreateFastingCompleted(
+        Notification notification = NotificationFactory.CreateFastingCompleted(
             occurrence.UserId,
             plan.Type.ToString(),
             occurrence.Kind.ToString(),
@@ -156,7 +157,7 @@ public sealed class FastingNotificationScheduler(
             return 0;
         }
 
-        var notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
+        Notification notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
 
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
         await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
@@ -170,22 +171,22 @@ public sealed class FastingNotificationScheduler(
         DateTime now,
         ISet<Guid> usersToPush,
         CancellationToken cancellationToken) {
-        var fastHours = plan.IntermittentFastHours ?? occurrence.TargetHours;
-        var eatingWindowHours = plan.IntermittentEatingWindowHours;
+        int? fastHours = plan.IntermittentFastHours ?? occurrence.TargetHours;
+        int? eatingWindowHours = plan.IntermittentEatingWindowHours;
         if (!fastHours.HasValue || !eatingWindowHours.HasValue) {
             return 0;
         }
 
-        var createdCount = 0;
-        var cycleLengthHours = fastHours.Value + eatingWindowHours.Value;
-        var elapsed = now - occurrence.StartedAtUtc;
+        int createdCount = 0;
+        int cycleLengthHours = fastHours.Value + eatingWindowHours.Value;
+        TimeSpan elapsed = now - occurrence.StartedAtUtc;
         if (elapsed < TimeSpan.Zero) {
             return 0;
         }
 
-        var completedCycles = (int)Math.Floor(elapsed.TotalHours / cycleLengthHours);
-        for (var cycleIndex = 0; cycleIndex <= completedCycles; cycleIndex++) {
-            var eatingWindowStartUtc = occurrence.StartedAtUtc.AddHours((cycleIndex * cycleLengthHours) + fastHours.Value);
+        int completedCycles = (int)Math.Floor(elapsed.TotalHours / cycleLengthHours);
+        for (int cycleIndex = 0; cycleIndex <= completedCycles; cycleIndex++) {
+            DateTime eatingWindowStartUtc = occurrence.StartedAtUtc.AddHours((cycleIndex * cycleLengthHours) + fastHours.Value);
             if (eatingWindowStartUtc <= now) {
                 createdCount += await TryCreateNotificationAsync(
                     occurrence,
@@ -196,7 +197,7 @@ public sealed class FastingNotificationScheduler(
                     cancellationToken).ConfigureAwait(false);
             }
 
-            var fastingWindowStartUtc = occurrence.StartedAtUtc.AddHours((cycleIndex + 1) * cycleLengthHours);
+            DateTime fastingWindowStartUtc = occurrence.StartedAtUtc.AddHours((cycleIndex + 1) * cycleLengthHours);
             if (fastingWindowStartUtc <= now) {
                 createdCount += await TryCreateNotificationAsync(
                     occurrence,
@@ -222,7 +223,7 @@ public sealed class FastingNotificationScheduler(
             return 0;
         }
 
-        var notification = notificationType switch {
+        Notification notification = notificationType switch {
             NotificationTypes.EatingWindowStarted => NotificationFactory.CreateEatingWindowStarted(
                 occurrence.UserId,
                 plan.Type.ToString(),

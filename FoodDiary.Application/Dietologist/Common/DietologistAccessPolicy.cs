@@ -1,6 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Domain.Entities.Dietologist;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Common;
@@ -11,14 +13,14 @@ public static class DietologistAccessPolicy {
         UserId dietologistUserId,
         UserId clientUserId,
         CancellationToken cancellationToken) {
-        var invitation = await repository.GetActiveByClientAndDietologistAsync(
+        DietologistInvitation? invitation = await repository.GetActiveByClientAndDietologistAsync(
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {
             return Result.Failure<DietologistPermissionsModel>(Errors.Dietologist.AccessDenied);
         }
 
-        var permissions = invitation.GetPermissions();
+        DietologistPermissions permissions = invitation.GetPermissions();
         return Result.Success(new DietologistPermissionsModel(
             permissions.ShareMeals,
             permissions.ShareStatistics,

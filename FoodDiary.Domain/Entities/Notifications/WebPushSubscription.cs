@@ -73,7 +73,7 @@ public sealed class WebPushSubscription : AggregateRoot<WebPushSubscriptionId> {
     }
 
     private static string NormalizeRequired(string value, int maxLength, string paramName) {
-        var normalized = value?.Trim();
+        string? normalized = value?.Trim();
         if (string.IsNullOrWhiteSpace(normalized)) {
             throw new ArgumentException("Value is required.", paramName);
         }

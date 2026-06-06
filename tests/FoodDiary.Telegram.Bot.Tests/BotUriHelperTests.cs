@@ -1,10 +1,11 @@
+
 namespace FoodDiary.Telegram.Bot.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BotUriHelperTests {
     [Fact]
     public void TryCreateApiBaseUri_WithValidUrl_ReturnsTrue() {
-        var ok = BotUriHelper.TryCreateApiBaseUri("https://api.example.com/", out var uri);
+        bool ok = BotUriHelper.TryCreateApiBaseUri("https://api.example.com/", out Uri? uri);
 
         Assert.True(ok);
         Assert.NotNull(uri);
@@ -16,7 +17,7 @@ public sealed class BotUriHelperTests {
     [InlineData("")]
     [InlineData("not-url")]
     public void TryCreateApiBaseUri_WithInvalidUrl_ReturnsFalse(string? input) {
-        var ok = BotUriHelper.TryCreateApiBaseUri(input, out var uri);
+        bool ok = BotUriHelper.TryCreateApiBaseUri(input, out Uri? uri);
 
         Assert.False(ok);
         Assert.Null(uri);
@@ -24,14 +25,14 @@ public sealed class BotUriHelperTests {
 
     [Fact]
     public void NormalizeWebAppUrl_RemovesTrailingSlash() {
-        var normalized = BotUriHelper.NormalizeWebAppUrl("https://app.example.com/");
+        string? normalized = BotUriHelper.NormalizeWebAppUrl("https://app.example.com/");
 
         Assert.Equal("https://app.example.com", normalized);
     }
 
     [Fact]
     public void NormalizeWebAppUrl_WithWhitespace_ReturnsNull() {
-        var normalized = BotUriHelper.NormalizeWebAppUrl("   ");
+        string? normalized = BotUriHelper.NormalizeWebAppUrl("   ");
 
         Assert.Null(normalized);
     }

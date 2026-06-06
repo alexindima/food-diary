@@ -35,7 +35,7 @@ internal sealed class S3ObjectStorageClient(IAmazonS3 s3Client) : IObjectStorage
         string key,
         CancellationToken cancellationToken) {
         try {
-            var response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
+            GetObjectMetadataResponse response = await s3Client.GetObjectMetadataAsync(new GetObjectMetadataRequest {
                 BucketName = bucketName,
                 Key = key
             }, cancellationToken).ConfigureAwait(false);

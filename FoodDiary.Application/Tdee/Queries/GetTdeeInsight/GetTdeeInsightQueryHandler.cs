@@ -9,6 +9,10 @@ using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
@@ -24,40 +28,40 @@ public class GetTdeeInsightQueryHandler(
     public async Task<Result<TdeeInsightModel>> Handle(
         GetTdeeInsightQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<TdeeInsightModel>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<TdeeInsightModel>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<TdeeInsightModel>(Errors.User.NotFound());
         }
 
-        var today = dateTimeProvider.UtcNow.Date;
-        var periodStart = today.AddDays(-AnalysisPeriodDays);
+        DateTime today = dateTimeProvider.UtcNow.Date;
+        DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
 
-        var weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
-        var meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
-        var exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WeightEntry> weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ExerciseEntry> exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
 
-        var bmr = user.CalculateBmr();
-        var estimatedTdee = user.CalculateEstimatedTdee();
+        double? bmr = user.CalculateBmr();
+        double? estimatedTdee = user.CalculateEstimatedTdee();
 
-        var adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays, exercises);
+        AdaptiveTdeeResult adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays, exercises);
 
-        var effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
-        var suggestedTarget = effectiveTdee.HasValue
+        double? effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
+        double? suggestedTarget = effectiveTdee.HasValue
             ? TdeeCalculator.SuggestCalorieTarget(effectiveTdee.Value, user.Weight, user.DesiredWeight)
             : null;
 
-        var hint = TdeeCalculator.GetGoalAdjustmentHint(
+        string? hint = TdeeCalculator.GetGoalAdjustmentHint(
             effectiveTdee, user.DailyCalorieTarget, user.Weight, user.DesiredWeight);
 
         return Result.Success(new TdeeInsightModel(

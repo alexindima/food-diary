@@ -18,12 +18,12 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        var result = await Send(request);
+        Result<TResponse> result = await Send(request);
         return result.ToOkActionResult(this, map);
     }
 
     protected async Task<IActionResult> HandleOk(IRequest<Result> request, object response) {
-        var result = await Send(request);
+        Result result = await Send(request);
         return result.ToOkActionResult(this, response);
     }
 }

@@ -14,7 +14,7 @@ public sealed class CorsOptionsSetupTests {
 
         setup.Configure(options);
 
-        var policy = options.GetPolicy(ApiCompositionConstants.CorsPolicyName);
+        CorsPolicy? policy = options.GetPolicy(ApiCompositionConstants.CorsPolicyName);
         Assert.NotNull(policy);
         Assert.Equal(["http://localhost:4200", "http://localhost:4300"], policy.Origins);
         Assert.True(policy.SupportsCredentials);
@@ -33,7 +33,7 @@ public sealed class CorsOptionsSetupTests {
 
         setup.Configure(options);
 
-        var policy = options.GetPolicy(ApiCompositionConstants.CorsPolicyName);
+        CorsPolicy? policy = options.GetPolicy(ApiCompositionConstants.CorsPolicyName);
         Assert.NotNull(policy);
         Assert.Equal(["https://app.example", "https://admin.example"], policy.Origins);
     }

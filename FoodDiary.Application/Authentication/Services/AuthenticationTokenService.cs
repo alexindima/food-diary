@@ -24,18 +24,18 @@ public sealed class AuthenticationTokenService(
         AuthenticationClientContext? clientContext = null,
         bool rememberMe = false,
         Guid? refreshSessionId = null) {
-        var roles = GetRoles(user);
-        var accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
-        var resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
-        var refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles, rememberMe, resolvedRefreshSessionId);
-        var nowUtc = dateTimeProvider.UtcNow;
+        string[] roles = GetRoles(user);
+        string accessToken = jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
+        Guid resolvedRefreshSessionId = refreshSessionId ?? Guid.NewGuid();
+        string refreshToken = jwtTokenGenerator.GenerateRefreshToken(user.Id, user.Email, roles, rememberMe, resolvedRefreshSessionId);
+        DateTime nowUtc = dateTimeProvider.UtcNow;
 
-        var hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
+        string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         user.RecordAuthenticationActivity(nowUtc);
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         if (refreshSessionId.HasValue) {
-            var session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
+            UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
             if (session is not null && session.UserId == user.Id && session.IsActive) {
                 session.Rotate(hashedRefreshToken, rememberMe, nowUtc);
                 await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
@@ -54,7 +54,7 @@ public sealed class AuthenticationTokenService(
         }
 
         if (clientContext is not null) {
-            var userAgent = UserAgentParser.Parse(clientContext.UserAgent);
+            ParsedUserAgent userAgent = UserAgentParser.Parse(clientContext.UserAgent);
             var loginEvent = UserLoginEvent.Create(
                 user.Id,
                 clientContext.AuthProvider,
@@ -72,7 +72,7 @@ public sealed class AuthenticationTokenService(
     }
 
     public string IssueAccessToken(User user) {
-        var roles = GetRoles(user);
+        string[] roles = GetRoles(user);
         return jwtTokenGenerator.GenerateAccessToken(user.Id, user.Email, roles, ResolveAccessTokenCapUtc(user));
     }
 

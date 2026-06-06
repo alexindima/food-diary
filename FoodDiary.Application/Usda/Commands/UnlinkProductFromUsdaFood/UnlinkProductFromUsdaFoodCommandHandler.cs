@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
 
@@ -11,13 +12,13 @@ public class UnlinkProductFromUsdaFoodCommandHandler(IProductRepository productR
     public async Task<Result> Handle(
         UnlinkProductFromUsdaFoodCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var productId = (ProductId)command.ProductId;
-        var product = await productRepository.GetByIdForUpdateAsync(
+        Product? product = await productRepository.GetByIdForUpdateAsync(
             productId, userIdResult.Value, includePublic: false, cancellationToken).ConfigureAwait(false);
 
         if (product is null) {

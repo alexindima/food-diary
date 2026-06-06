@@ -23,17 +23,17 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
         string? search,
         IReadOnlyCollection<ProductType>? productTypes = null,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Max(limit, 1);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Max(limit, 1);
 
-        var query = context.Products
+        IQueryable<Product> query = context.Products
             .AsNoTracking()
             .Where(includePublic
                 ? p => p.UserId == userId || p.Visibility == Visibility.Public
                 : p => p.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var normalizedSearch = $"%{EscapeLikePattern(search.Trim())}%";
+            string normalizedSearch = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(p =>
                 EF.Functions.ILike(p.Name, normalizedSearch, LikeEscapeCharacter) ||
                 EF.Functions.ILike(p.Brand ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
@@ -45,9 +45,9 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             query = query.Where(p => productTypes.Contains(p.ProductType));
         }
 
-        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);
-        var skip = (pageNumber - 1) * pageSize;
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        IOrderedQueryable<Product> orderedQuery = query.OrderByDescending(p => p.CreatedOnUtc);
+        int skip = (pageNumber - 1) * pageSize;
         var items = await orderedQuery
             .Skip(skip)
             .Take(pageSize)
@@ -104,12 +104,12 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
             return new Dictionary<ProductId, Product>();
         }
 
-        var query = context.Products.AsNoTracking();
+        IQueryable<Product> query = context.Products.AsNoTracking();
         query = query.Where(p => productIds.Contains(p.Id) && (includePublic
             ? p.UserId == userId || p.Visibility == Visibility.Public
             : p.UserId == userId));
 
-        var products = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+        List<Product> products = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         return products.ToDictionary(p => p.Id);
     }
 
@@ -143,7 +143,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
-        var tracked = await context.Products.FindAsync([product.Id], cancellationToken).ConfigureAwait(false);
+        Product? tracked = await context.Products.FindAsync([product.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Products.Remove(tracked);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

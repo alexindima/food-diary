@@ -7,6 +7,7 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 
@@ -22,7 +23,7 @@ public class GetRecommendationsForClientQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
-        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
             userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(currentUserAccessError);
@@ -30,14 +31,14 @@ public class GetRecommendationsForClientQueryHandler(
 
         var clientUserId = new UserId(query.ClientUserId);
 
-        var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessResult.Error);
         }
 
-        var recommendations = await recommendationRepository.GetByDietologistAndClientAsync(
+        IReadOnlyList<Recommendation> recommendations = await recommendationRepository.GetByDietologistAndClientAsync(
             dietologistUserId, clientUserId, cancellationToken: cancellationToken).ConfigureAwait(false);
         var models = recommendations.Select(r => r.ToModel()).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);

@@ -11,7 +11,7 @@ public class SearchByBarcodeQueryHandler(
     public async Task<Result<OpenFoodFactsProductModel?>> Handle(
         SearchByBarcodeQuery query,
         CancellationToken cancellationToken) {
-        var product = await openFoodFactsService.GetByBarcodeAsync(query.Barcode, cancellationToken).ConfigureAwait(false);
+        OpenFoodFactsProductModel? product = await openFoodFactsService.GetByBarcodeAsync(query.Barcode, cancellationToken).ConfigureAwait(false);
         return Result.Success(product);
     }
 }

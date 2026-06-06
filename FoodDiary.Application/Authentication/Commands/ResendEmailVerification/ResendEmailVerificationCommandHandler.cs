@@ -8,6 +8,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
@@ -38,19 +39,19 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        var user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var currentUser = user!;
+        User currentUser = user!;
         if (currentUser.IsEmailConfirmed) {
             return Result.Success();
         }
 
         if (currentUser.EmailConfirmationSentAtUtc.HasValue) {
-            var elapsed = _dateTimeProvider.UtcNow - currentUser.EmailConfirmationSentAtUtc.Value;
+            TimeSpan elapsed = _dateTimeProvider.UtcNow - currentUser.EmailConfirmationSentAtUtc.Value;
             if (elapsed < ResendCooldown) {
                 return Result.Failure(
                     Errors.Validation.Invalid(
@@ -59,8 +60,8 @@ public class ResendEmailVerificationCommandHandler : ICommandHandler<ResendEmail
             }
         }
 
-        var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
-        var emailTokenHash = _passwordHasher.Hash(emailToken);
+        string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
+        string emailTokenHash = _passwordHasher.Hash(emailToken);
         currentUser.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
             ExpiresAtUtc: _dateTimeProvider.UtcNow.AddHours(24),

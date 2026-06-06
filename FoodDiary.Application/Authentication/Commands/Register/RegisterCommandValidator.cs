@@ -1,6 +1,7 @@
 using FluentValidation;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FluentValidation.Results;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
@@ -29,7 +30,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
     }
 
     private async Task ValidateEmailAsync(string email, ValidationContext<RegisterCommand> context, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
+        User? user = await _userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return;
         }

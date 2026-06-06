@@ -12,7 +12,7 @@ public sealed class MailRelayWebApplicationFactory(
     MailRelayEnvironmentFixture fixture,
     RecordingRelayDeliveryTransport recordingTransport) : WebApplicationFactory<Program> {
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
-        var databaseConnectionString = fixture.CreateIsolatedDatabaseAsync().GetAwaiter().GetResult();
+        string databaseConnectionString = fixture.CreateIsolatedDatabaseAsync().GetAwaiter().GetResult();
 
         builder.UseEnvironment("Development");
         builder.ConfigureAppConfiguration((_, configBuilder) => {

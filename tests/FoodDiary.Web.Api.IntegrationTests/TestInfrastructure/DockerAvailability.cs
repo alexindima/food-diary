@@ -7,7 +7,7 @@ internal static class DockerAvailability {
     private static readonly Lazy<DockerAvailabilityResult> CachedResult = new(CheckAvailability);
 
     public static bool IsAvailable(out string? reason) {
-        var result = CachedResult.Value;
+        DockerAvailabilityResult result = CachedResult.Value;
         reason = result.Reason;
         return result.IsAvailable;
     }

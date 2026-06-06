@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
@@ -37,7 +38,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             return;
         }
 
-        var recipe = await _recipeRepository.GetByIdAsync(
+        Recipe? recipe = await _recipeRepository.GetByIdAsync(
             new RecipeId(command.RecipeId),
             new UserId(command.UserId.Value),
             includePublic: false,
@@ -52,7 +53,7 @@ public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeComman
             return;
         }
 
-        var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe is already used and cannot be deleted") {

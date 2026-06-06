@@ -10,46 +10,46 @@ public class UpdateConsumptionCommandValidatorTests {
 
     [Fact]
     public async Task Validate_WhenConsumptionIdIsEmpty_HasError() {
-        var command = CreateCommand(consumptionId: Guid.Empty);
-        var result = await _validator.TestValidateAsync(command);
+        UpdateConsumptionCommand command = CreateCommand(consumptionId: Guid.Empty);
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.ConsumptionId);
     }
 
     [Fact]
     public async Task Validate_WhenNoItemsAndNoAiSessions_HasError() {
-        var command = CreateCommand(items: [], aiSessions: []);
-        var result = await _validator.TestValidateAsync(command);
+        UpdateConsumptionCommand command = CreateCommand(items: [], aiSessions: []);
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenManualItemAmountIsTooLarge_HasError() {
-        var command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
-        var result = await _validator.TestValidateAsync(command);
+        UpdateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenAiItemAmountIsZero_HasError() {
-        var command = CreateCommand(
+        UpdateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
                 new ConsumptionAiItemInput("Apple", null, 0, "g", 100, 10, 5, 20, 3, 0)
             ])]);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenManualNutritionMissingFiber_HasError() {
-        var command = CreateCommand(
+        UpdateConsumptionCommand command = CreateCommand(
             isAutoCalculated: false,
             manualCalories: 100,
             manualProteins: 10,
             manualFats: 5,
             manualCarbs: 20,
             manualFiber: null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.ManualFiber);
     }
 

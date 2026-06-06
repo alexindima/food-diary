@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
 
@@ -16,28 +17,28 @@ public class SyncWearableDataCommandHandler(
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out var provider)) {
+        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out WearableProvider provider)) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.InvalidProvider(command.Provider));
         }
 
-        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
+        WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null || !connection.IsActive) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.NotConnected(command.Provider));
         }
 
-        var client = wearableClients.FirstOrDefault(c => c.Provider == provider);
+        IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.ProviderNotConfigured(command.Provider));
         }
 
         // Refresh token if expired
         if (connection.IsTokenExpired() && connection.RefreshToken is not null) {
-            var refreshResult = await client.RefreshTokenAsync(connection.RefreshToken, cancellationToken).ConfigureAwait(false);
+            WearableTokenResult? refreshResult = await client.RefreshTokenAsync(connection.RefreshToken, cancellationToken).ConfigureAwait(false);
             if (refreshResult is null) {
                 connection.Deactivate();
                 await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
@@ -47,10 +48,10 @@ public class SyncWearableDataCommandHandler(
             await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
         }
 
-        var dataPoints = await client.FetchDailyDataAsync(connection.AccessToken, command.Date, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WearableDataPoint> dataPoints = await client.FetchDailyDataAsync(connection.AccessToken, command.Date, cancellationToken).ConfigureAwait(false);
 
-        foreach (var point in dataPoints) {
-            var existing = await syncRepository.GetAsync(
+        foreach (WearableDataPoint point in dataPoints) {
+            WearableSyncEntry? existing = await syncRepository.GetAsync(
                 userIdResult.Value, provider, point.DataType, command.Date, cancellationToken).ConfigureAwait(false);
 
             if (existing is not null) {
@@ -66,7 +67,7 @@ public class SyncWearableDataCommandHandler(
         connection.MarkSynced();
         await connectionRepository.UpdateAsync(connection, cancellationToken).ConfigureAwait(false);
 
-        var summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
+        WearableDailySummaryModel summary = await BuildSummaryAsync(userIdResult.Value, command.Date, cancellationToken).ConfigureAwait(false);
         return Result.Success(summary);
     }
 
@@ -74,14 +75,14 @@ public class SyncWearableDataCommandHandler(
         Domain.ValueObjects.Ids.UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
-        var entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WearableSyncEntry> entries = await syncRepository.GetDailySummaryAsync(userId, date, cancellationToken).ConfigureAwait(false);
         return MapToSummary(date, entries);
     }
 
     internal static WearableDailySummaryModel MapToSummary(DateTime date, IReadOnlyList<WearableSyncEntry> entries) {
         double? steps = null, heartRate = null, calories = null, active = null, sleep = null;
 
-        foreach (var e in entries) {
+        foreach (WearableSyncEntry e in entries) {
             switch (e.DataType) {
                 case WearableDataType.Steps: steps = (steps ?? 0) + e.Value; break;
                 case WearableDataType.HeartRate: heartRate = e.Value; break;

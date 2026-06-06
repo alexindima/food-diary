@@ -35,8 +35,8 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
     }
 
     public void Update(string promptText, bool? isActive = null) {
-        var normalizedText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText));
-        var changed = false;
+        string normalizedText = NormalizeRequired(promptText, PromptTextMaxLength, nameof(promptText));
+        bool changed = false;
 
         if (!string.Equals(PromptText, normalizedText, StringComparison.Ordinal)) {
             PromptText = normalizedText;
@@ -59,7 +59,7 @@ public sealed class AiPromptTemplate : Entity<AiPromptTemplateId> {
             throw new ArgumentException($"{paramName} is required.", paramName);
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Must be at most {maxLength} characters.")
             : trimmed;

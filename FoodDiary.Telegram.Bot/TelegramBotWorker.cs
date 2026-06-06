@@ -24,7 +24,7 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        var me = await botClient.GetMe(stoppingToken).ConfigureAwait(false);
+        User me = await botClient.GetMe(stoppingToken).ConfigureAwait(false);
         logger.LogInformation("Telegram bot started as {Username}", me.Username ?? me.Id.ToString(CultureInfo.InvariantCulture));
 
         var receiverOptions = new ReceiverOptions {
@@ -47,7 +47,7 @@ public sealed class TelegramBotWorker(
         }
 
         var stopped = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-        using var registration = stoppingToken.Register(static state =>
+        using CancellationTokenRegistration registration = stoppingToken.Register(static state =>
             ((TaskCompletionSource)state!).TrySetResult(), stopped);
         await stopped.Task.ConfigureAwait(false);
     }
@@ -62,12 +62,12 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        var message = update.Message;
+        Message? message = update.Message;
         if (message?.Text is null) {
             return;
         }
 
-        var command = message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
+        string command = message.Text.Split(' ', StringSplitOptions.RemoveEmptyEntries)[0];
         switch (command) {
             case "/start":
                 await SendStartAsync(message.Chat.Id, message.From?.Id, cancellationToken).ConfigureAwait(false);
@@ -82,10 +82,10 @@ public sealed class TelegramBotWorker(
     }
 
     private async Task SendStartAsync(long chatId, long? telegramUserId, CancellationToken cancellationToken) {
-        var isLinked = await IsLinkedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
+        bool isLinked = await IsLinkedAsync(telegramUserId, cancellationToken).ConfigureAwait(false);
         if (!isLinked) {
-            var notLinkedText = "To use the bot, open the WebApp once and log in or register.";
-            var markup = BuildWebAppMarkup();
+            string notLinkedText = "To use the bot, open the WebApp once and log in or register.";
+            InlineKeyboardMarkup? markup = BuildWebAppMarkup();
             await botClient.SendMessage(
                 chatId,
                 notLinkedText,
@@ -94,8 +94,8 @@ public sealed class TelegramBotWorker(
             return;
         }
 
-        var text = "Quick actions:";
-        var keyboard = BuildQuickActionsMarkup();
+        string text = "Quick actions:";
+        InlineKeyboardMarkup keyboard = BuildQuickActionsMarkup();
         await botClient.SendMessage(
             chatId,
             text,
@@ -114,18 +114,18 @@ public sealed class TelegramBotWorker(
         }
 
         if (callbackQuery.Data.StartsWith("water:", StringComparison.Ordinal)) {
-            if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out var amountMl)) {
+            if (!BotInputParser.TryParseWaterAmount(callbackQuery.Data, out int amountMl)) {
                 await AnswerCallbackAsync(callbackQuery, "Invalid amount.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
-            var accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken).ConfigureAwait(false);
+            string? accessToken = await TryGetAccessTokenAsync(callbackQuery.From.Id, cancellationToken).ConfigureAwait(false);
             if (accessToken is null) {
                 await AnswerCallbackAsync(callbackQuery, "Please open the WebApp and log in once.", cancellationToken).ConfigureAwait(false);
                 return;
             }
 
-            var success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken).ConfigureAwait(false);
+            bool success = await CreateHydrationAsync(accessToken, amountMl, cancellationToken).ConfigureAwait(false);
             await AnswerCallbackAsync(callbackQuery, success ? $"Added {amountMl} ml." : "Failed to add water.", cancellationToken).ConfigureAwait(false);
         }
     }
@@ -146,7 +146,7 @@ public sealed class TelegramBotWorker(
         };
 
         var webAppButtons = new List<InlineKeyboardButton>();
-        var webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
+        string? webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
         if (!string.IsNullOrWhiteSpace(webAppUrl)) {
             webAppButtons.Add(InlineKeyboardButton.WithWebApp("Open diary", webAppUrl));
             webAppButtons.Add(InlineKeyboardButton.WithWebApp("Add meal", $"{webAppUrl}/consumptions/add"));
@@ -160,7 +160,7 @@ public sealed class TelegramBotWorker(
     }
 
     private InlineKeyboardMarkup? BuildWebAppMarkup() {
-        var webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
+        string? webAppUrl = BotUriHelper.NormalizeWebAppUrl(_options.WebAppUrl);
         if (string.IsNullOrWhiteSpace(webAppUrl)) {
             return null;
         }
@@ -174,22 +174,22 @@ public sealed class TelegramBotWorker(
             return false;
         }
 
-        var token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken).ConfigureAwait(false);
+        string? token = await TryGetAccessTokenAsync(telegramUserId.Value, cancellationToken).ConfigureAwait(false);
         return token is not null;
     }
 
     private async Task<string?> TryGetAccessTokenAsync(long telegramUserId, CancellationToken cancellationToken) {
-        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out var baseUri) ||
+        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out Uri? baseUri) ||
             string.IsNullOrWhiteSpace(_options.ApiSecret)) {
             logger.LogWarning("Telegram bot API settings are missing.");
             return null;
         }
 
-        var client = httpClientFactory.CreateClient();
+        HttpClient client = httpClientFactory.CreateClient();
         client.BaseAddress = baseUri;
         client.DefaultRequestHeaders.Add("X-Telegram-Bot-Secret", _options.ApiSecret);
 
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/auth/telegram/bot/auth",
             new TelegramBotAuthRequest(telegramUserId),
             cancellationToken).ConfigureAwait(false);
@@ -198,22 +198,22 @@ public sealed class TelegramBotWorker(
             return null;
         }
 
-        var authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+        AuthResponse? authResponse = await response.Content.ReadFromJsonAsync<AuthResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
         return authResponse?.AccessToken;
     }
 
     private async Task<bool> CreateHydrationAsync(string accessToken, int amountMl, CancellationToken cancellationToken) {
-        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out var baseUri)) {
+        if (!BotUriHelper.TryCreateApiBaseUri(_options.ApiBaseUrl, out Uri? baseUri)) {
             return false;
         }
 
-        var client = httpClientFactory.CreateClient();
+        HttpClient client = httpClientFactory.CreateClient();
         client.BaseAddress = baseUri;
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
         var request = new CreateHydrationRequest(DateTime.UtcNow, amountMl);
-        var response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }
 

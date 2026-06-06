@@ -11,7 +11,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     private string? _skipReason;
 
     public async Task InitializeAsync() {
-        if (!DockerAvailability.IsAvailable(out var reason)) {
+        if (!DockerAvailability.IsAvailable(out string? reason)) {
             _skipReason = reason;
             return;
         }
@@ -36,7 +36,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     }
 
     public async Task<FoodDiaryDbContext> CreateDbContextAsync() {
-        var context = CreateDbContext(await CreateIsolatedDatabaseAsync().ConfigureAwait(false));
+        FoodDiaryDbContext context = CreateDbContext(await CreateIsolatedDatabaseAsync().ConfigureAwait(false));
         await context.Database.MigrateAsync().ConfigureAwait(false);
         return context;
     }
@@ -44,7 +44,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     public async Task<string> CreateIsolatedDatabaseAsync() {
         EnsureAvailable();
 
-        var databaseName = $"fooddiary_test_{Guid.NewGuid():N}";
+        string databaseName = $"fooddiary_test_{Guid.NewGuid():N}";
         await CreateDatabaseAsync(databaseName).ConfigureAwait(false);
 
         var connectionStringBuilder = new NpgsqlConnectionStringBuilder(_container!.GetConnectionString()) {
@@ -55,7 +55,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
     }
 
     public FoodDiaryDbContext CreateDbContext(string connectionString) {
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(connectionString)
             .Options;
 
@@ -67,7 +67,7 @@ public sealed class PostgresDatabaseFixture : IAsyncLifetime {
         await using (connection.ConfigureAwait(false)) {
             await connection.OpenAsync().ConfigureAwait(false);
 
-            var command = connection.CreateCommand();
+            NpgsqlCommand command = connection.CreateCommand();
             await using (command.ConfigureAwait(false)) {
                 command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
                 await command.ExecuteNonQueryAsync().ConfigureAwait(false);

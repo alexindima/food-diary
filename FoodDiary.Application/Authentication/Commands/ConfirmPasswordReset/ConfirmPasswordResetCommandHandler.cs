@@ -8,6 +8,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 
@@ -25,7 +26,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
         }
@@ -36,15 +37,15 @@ public sealed class ConfirmPasswordResetCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var isValid = passwordHasher.Verify(command.Token, user.PasswordResetTokenHash);
+        bool isValid = passwordHasher.Verify(command.Token, user.PasswordResetTokenHash);
         if (!isValid) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        var hashedPassword = passwordHasher.Hash(command.NewPassword);
+        string hashedPassword = passwordHasher.Hash(command.NewPassword);
         user.CompletePasswordReset(hashedPassword);
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
+        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log("auth.password-reset.confirm", userId, "User", userId.Value.ToString());
 

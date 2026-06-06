@@ -16,23 +16,23 @@ public sealed class UserCleanupJob(
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
-        var settings = options.Value;
-        var retentionDays = settings.RetentionDays > 0 ? settings.RetentionDays : 30;
-        var batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
-        var olderThanUtc = dateTimeProvider.UtcNow.AddDays(-retentionDays);
-        var totalDeleted = 0;
+        UserCleanupOptions settings = options.Value;
+        int retentionDays = settings.RetentionDays > 0 ? settings.RetentionDays : 30;
+        int batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
+        DateTime olderThanUtc = dateTimeProvider.UtcNow.AddDays(-retentionDays);
+        int totalDeleted = 0;
         const string jobName = "users.cleanup";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
         Guid? reassignUserId = null;
         if (!string.IsNullOrWhiteSpace(settings.ReassignUserId)
-            && Guid.TryParse(settings.ReassignUserId, out var parsed)) {
+            && Guid.TryParse(settings.ReassignUserId, out Guid parsed)) {
             reassignUserId = parsed;
         }
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
-                var deleted = await cleanupService.CleanupDeletedUsersAsync(
+                int deleted = await cleanupService.CleanupDeletedUsersAsync(
                     olderThanUtc,
                     batchSize,
                     reassignUserId,

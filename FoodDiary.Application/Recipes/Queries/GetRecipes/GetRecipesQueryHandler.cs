@@ -18,15 +18,15 @@ public class GetRecipesQueryHandler(
             return Result.Failure<PagedResponse<RecipeModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var pageNumber = Math.Max(query.Page, 1);
-        var pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = Math.Max(query.Page, 1);
+        int pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<RecipeModel>>(accessError);
         }
 
-        var (items, totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)>? items, int totalItems) = await recipeRepository.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,
@@ -40,7 +40,7 @@ public class GetRecipesQueryHandler(
             IsOwner = item.Recipe.UserId == userId
         }).ToList();
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<RecipeModel>(
             recipes.Select(r => r.Recipe.ToModel(r.UsageCount, r.IsOwner)).ToList(),
             pageNumber,

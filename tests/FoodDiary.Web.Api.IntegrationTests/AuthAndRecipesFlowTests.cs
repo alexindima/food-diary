@@ -20,19 +20,19 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
 
     [Fact]
     public async Task RecipesController_RequiresAuthentication() {
-        var client = factory.CreateClient();
+        HttpClient client = factory.CreateClient();
 
-        var response = await client.GetAsync("/api/v1/recipes");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/recipes");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
     public async Task CreateRecipe_ReturnsCreatedAndLocationHeader() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Recipe Ingredient");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Recipe Ingredient");
 
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/recipes",
             new CreateRecipeHttpRequest(
                 "Created Recipe",
@@ -61,7 +61,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                         null)
                 ]));
 
-        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
+        RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(payload);
@@ -71,17 +71,17 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
 
     [Fact]
     public async Task RecipesOverview_AndRecent_ReturnFavoritePreviewRecentItemsAndFavoriteFlags() {
-        var client = await CreateAuthenticatedClientAsync();
-        var ingredientId = await CreateProductAsync(client, "Overview Ingredient");
-        var firstRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Salad");
-        var favoriteRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Soup");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid ingredientId = await CreateProductAsync(client, "Overview Ingredient");
+        Guid firstRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Salad");
+        Guid favoriteRecipeId = await CreateRecipeAsync(client, ingredientId, "Overview Soup");
 
-        var favoriteResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
             "/api/v1/favorite-recipes",
             new AddFavoriteRecipeHttpRequest(favoriteRecipeId, "Favorite soup"));
         favoriteResponse.EnsureSuccessStatusCode();
 
-        var consumptionResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage consumptionResponse = await client.PostAsJsonAsync(
             "/api/v1/consumptions",
             new CreateConsumptionHttpRequest(
                 DateTime.UtcNow.Date,
@@ -92,8 +92,8 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 [new ConsumptionItemHttpRequest(null, favoriteRecipeId, 250)]));
         consumptionResponse.EnsureSuccessStatusCode();
 
-        var overviewResponse = await client.GetAsync("/api/v1/recipes/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
-        var recentResponse = await client.GetAsync("/api/v1/recipes/recent?limit=10&includePublic=true");
+        HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/recipes/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
+        HttpResponseMessage recentResponse = await client.GetAsync("/api/v1/recipes/recent?limit=10&includePublic=true");
 
         overviewResponse.EnsureSuccessStatusCode();
         recentResponse.EnsureSuccessStatusCode();
@@ -101,19 +101,19 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
         using var recentJson = JsonDocument.Parse(await recentResponse.Content.ReadAsStringAsync());
 
-        var overviewRoot = overviewJson.RootElement;
-        var recentItems = recentJson.RootElement;
-        var favoriteItems = overviewRoot.GetProperty("favoriteItems");
-        var recentOverviewItems = overviewRoot.GetProperty("recentItems");
-        var allRecipes = overviewRoot.GetProperty("allRecipes").GetProperty("data");
+        JsonElement overviewRoot = overviewJson.RootElement;
+        JsonElement recentItems = recentJson.RootElement;
+        JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
+        JsonElement recentOverviewItems = overviewRoot.GetProperty("recentItems");
+        JsonElement allRecipes = overviewRoot.GetProperty("allRecipes").GetProperty("data");
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
         Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("recipeId").GetGuid() == favoriteRecipeId);
         Assert.Contains(recentOverviewItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
         Assert.Contains(recentItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
 
-        var favoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
-        var nonFavoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstRecipeId);
+        JsonElement favoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteRecipeId);
+        JsonElement nonFavoriteRecipe = allRecipes.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstRecipeId);
         Assert.True(favoriteRecipe.GetProperty("isFavorite").GetBoolean());
         Assert.NotEqual(Guid.Empty, favoriteRecipe.GetProperty("favoriteRecipeId").GetGuid());
         Assert.False(nonFavoriteRecipe.GetProperty("isFavorite").GetBoolean());
@@ -121,11 +121,11 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
 
     [Fact]
     public async Task UpdateRecipe_PersistsPatchedValues() {
-        var client = await CreateAuthenticatedClientAsync();
-        var ingredientId = await CreateProductAsync(client, "Update Ingredient");
-        var recipeId = await CreateRecipeAsync(client, ingredientId, "Patchable Recipe");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid ingredientId = await CreateProductAsync(client, "Update Ingredient");
+        Guid recipeId = await CreateRecipeAsync(client, ingredientId, "Patchable Recipe");
 
-        var updateResponse = await client.PatchAsJsonAsync(
+        HttpResponseMessage updateResponse = await client.PatchAsJsonAsync(
             $"/api/v1/recipes/{recipeId}",
             new UpdateRecipeHttpRequest(
                 Name: "Updated Recipe",
@@ -160,7 +160,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 ]));
         updateResponse.EnsureSuccessStatusCode();
 
-        var getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
         getResponse.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
 
@@ -172,18 +172,18 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
 
     [Fact]
     public async Task DuplicateRecipe_ReturnsIndependentCopy() {
-        var client = await CreateAuthenticatedClientAsync();
-        var ingredientId = await CreateProductAsync(client, "Duplicate Ingredient");
-        var originalId = await CreateRecipeAsync(client, ingredientId, "Original Recipe");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid ingredientId = await CreateProductAsync(client, "Duplicate Ingredient");
+        Guid originalId = await CreateRecipeAsync(client, ingredientId, "Original Recipe");
 
-        var duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{originalId}/duplicate", new { });
+        HttpResponseMessage duplicateResponse = await client.PostAsJsonAsync($"/api/v1/recipes/{originalId}/duplicate", new { });
         duplicateResponse.EnsureSuccessStatusCode();
-        var duplicate = await duplicateResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
+        RecipePayload? duplicate = await duplicateResponse.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
 
         Assert.NotNull(duplicate);
         Assert.NotEqual(originalId, duplicate.Id);
 
-        var duplicateGetResponse = await client.GetAsync($"/api/v1/recipes/{duplicate.Id}");
+        HttpResponseMessage duplicateGetResponse = await client.GetAsync($"/api/v1/recipes/{duplicate.Id}");
         duplicateGetResponse.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await duplicateGetResponse.Content.ReadAsStringAsync());
 
@@ -192,33 +192,33 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
 
     [Fact]
     public async Task DeleteRecipe_RemovesItFromSubsequentRead() {
-        var client = await CreateAuthenticatedClientAsync();
-        var ingredientId = await CreateProductAsync(client, "Delete Ingredient");
-        var recipeId = await CreateRecipeAsync(client, ingredientId, "Delete Recipe");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid ingredientId = await CreateProductAsync(client, "Delete Ingredient");
+        Guid recipeId = await CreateRecipeAsync(client, ingredientId, "Delete Recipe");
 
-        var deleteResponse = await client.DeleteAsync($"/api/v1/recipes/{recipeId}");
-        var getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
+        HttpResponseMessage deleteResponse = await client.DeleteAsync($"/api/v1/recipes/{recipeId}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync() {
-        var client = factory.CreateClient();
-        var email = $"api-recipe-tests-{Guid.NewGuid():N}@example.com";
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"api-recipe-tests-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
         return client;
     }
 
     private static async Task<Guid> CreateProductAsync(HttpClient client, string name) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
                 null,
@@ -242,13 +242,13 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 "Private")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
+        RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }
 
     private static async Task<Guid> CreateRecipeAsync(HttpClient client, Guid ingredientId, string name) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/recipes",
             new CreateRecipeHttpRequest(
                 name,
@@ -278,7 +278,7 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 ])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
+        RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }

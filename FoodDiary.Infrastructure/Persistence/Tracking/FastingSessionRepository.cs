@@ -32,7 +32,7 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
     }
 
     public async Task<int> GetCompletedCountAsync(UserId userId, CancellationToken cancellationToken = default) {
-        var endedSessions = await context.FastingSessions
+        List<FastingSession> endedSessions = await context.FastingSessions
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -41,7 +41,7 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
     }
 
     public async Task<int> GetCurrentStreakAsync(UserId userId, CancellationToken cancellationToken = default) {
-        var recentSessions = await context.FastingSessions
+        List<FastingSession> recentSessions = await context.FastingSessions
             .AsNoTracking()
             .Where(s => s.UserId == userId && s.IsCompleted && s.EndedAtUtc.HasValue)
             .OrderByDescending(s => s.StartedAtUtc)
@@ -56,11 +56,11 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
             return 0;
         }
 
-        var streak = 0;
-        var expectedDate = DateTime.UtcNow.Date;
+        int streak = 0;
+        DateTime expectedDate = DateTime.UtcNow.Date;
 
-        foreach (var session in recentSessions) {
-            var sessionDate = session.StartedAtUtc.Date;
+        foreach (FastingSession? session in recentSessions) {
+            DateTime sessionDate = session.StartedAtUtc.Date;
             if (sessionDate == expectedDate || sessionDate == expectedDate.AddDays(-1)) {
                 streak++;
                 expectedDate = sessionDate.AddDays(-1);

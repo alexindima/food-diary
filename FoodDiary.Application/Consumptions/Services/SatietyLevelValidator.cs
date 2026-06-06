@@ -9,12 +9,12 @@ public static class SatietyLevelValidator {
     private const string PostMealSatietyField = "PostMealSatietyLevel";
 
     public static Result Validate(int? preMealSatietyLevel, int? postMealSatietyLevel) {
-        var preResult = ValidateLevel(PreMealSatietyField, preMealSatietyLevel);
+        Result preResult = ValidateLevel(PreMealSatietyField, preMealSatietyLevel);
         if (preResult.IsFailure) {
             return preResult;
         }
 
-        var postResult = ValidateLevel(PostMealSatietyField, postMealSatietyLevel);
+        Result postResult = ValidateLevel(PostMealSatietyField, postMealSatietyLevel);
         return postResult.IsFailure ? postResult : Result.Success();
     }
 

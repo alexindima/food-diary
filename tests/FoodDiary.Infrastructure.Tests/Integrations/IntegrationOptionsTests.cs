@@ -91,7 +91,7 @@ public sealed class IntegrationOptionsTests {
             PrivateKey = "private",
             DefaultUrl = "/"
         };
-        var missingKey = invalid.WithPublicKey("");
+        WebPushOptions missingKey = invalid.WithPublicKey("");
 
         Assert.True(WebPushOptions.HasValidConfiguration(invalid));
         Assert.False(WebPushOptions.HasValidConfiguration(missingKey));

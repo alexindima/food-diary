@@ -9,7 +9,7 @@ internal static class SourceScanner {
             return [];
         }
 
-        var repositoryRoot = ArchitectureTestPaths.RepositoryRoot;
+        string repositoryRoot = ArchitectureTestPaths.RepositoryRoot;
 
         return Directory.GetFiles(sourceRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => ArchitectureTestPaths.IsGeneratedOrBuildPath(path) is false)
@@ -45,7 +45,7 @@ internal static class SourceScanner {
             .OrderBy(static path => path, StringComparer.Ordinal);
 
     private static string StripLineComment(string line) {
-        var commentIndex = line.IndexOf("//", StringComparison.Ordinal);
+        int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
         return commentIndex < 0 ? line : line[..commentIndex];
     }
 }

@@ -10,7 +10,7 @@ public sealed class GetInboundMailMessagesQueryHandler(IInboundMailStore store)
     public async Task<Result<IReadOnlyList<InboundMailMessageSummary>>> Handle(
         GetInboundMailMessagesQuery query,
         CancellationToken cancellationToken) {
-        var messages = await store.GetMessagesAsync(query.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<InboundMailMessageSummary> messages = await store.GetMessagesAsync(query.Limit, cancellationToken).ConfigureAwait(false);
         return Result<IReadOnlyList<InboundMailMessageSummary>>.Success(messages);
     }
 }

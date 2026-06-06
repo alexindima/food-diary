@@ -17,7 +17,7 @@ public static class RecipeMappings {
             .Select(ToStepModel)
             .ToList();
 
-        var nutrition = BuildNutrition(recipe);
+        RecipeNutritionSummary nutrition = BuildNutrition(recipe);
         var quality = FoodQualityScore.Calculate(
             nutrition.TotalCalories ?? 0,
             nutrition.TotalProteins ?? 0,

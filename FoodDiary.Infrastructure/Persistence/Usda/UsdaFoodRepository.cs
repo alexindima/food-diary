@@ -55,7 +55,7 @@ internal sealed class UsdaFoodRepository(FoodDiaryDbContext dbContext) : IUsdaFo
             return new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>();
         }
 
-        var nutrients = await dbContext.UsdaFoodNutrients
+        List<UsdaFoodNutrient> nutrients = await dbContext.UsdaFoodNutrients
             .AsNoTracking()
             .Include(n => n.Nutrient)
             .Where(n => fdcIdList.Contains(n.FdcId))

@@ -25,20 +25,20 @@ public sealed class ApiForwardedHeadersOptions {
             return false;
         }
 
-        var parts = cidr.Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+        string[] parts = cidr.Split('/', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length != 2) {
             return false;
         }
 
-        if (!IPAddress.TryParse(parts[0], out var address)) {
+        if (!IPAddress.TryParse(parts[0], out IPAddress? address)) {
             return false;
         }
 
-        if (!int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var prefixLength)) {
+        if (!int.TryParse(parts[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out int prefixLength)) {
             return false;
         }
 
-        var maxPrefixLength = address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
+        int maxPrefixLength = address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork
             ? 32
             : 128;
 

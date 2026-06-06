@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,9 +11,9 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task GetByEmailAsync_ReturnsActiveNonDeletedUserWithRoles() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
-        var supportRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Support);
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        Role supportRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Support);
         var activeUser = User.Create("active@example.com", "hash");
         context.Users.Add(activeUser);
         context.UserRoles.AddRange(
@@ -22,7 +23,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new UserRepository(context);
 
-        var loaded = await repository.GetByEmailAsync("active@example.com");
+        User? loaded = await repository.GetByEmailAsync("active@example.com");
 
         Assert.NotNull(loaded);
         Assert.Equal(activeUser.Id, loaded.Id);
@@ -33,7 +34,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_NormalizesPagingAndEscapesLikePattern() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create("100%real@example.com", "hash");
         matchingUser.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "special_user"));
         var otherUser = User.Create("1000real@example.com", "hash");
@@ -43,21 +44,21 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new UserRepository(context);
 
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<User>? items, int totalItems) = await repository.GetPagedAsync(
             search: "100%real",
             page: 0,
             limit: 0,
             includeDeleted: false);
 
-        var item = Assert.Single(items);
+        User item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Equal(matchingUser.Id, item.Id);
     }
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_ReturnsPagedUsersWithRolesLoaded() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
         var user = User.Create($"paged-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
@@ -67,13 +68,13 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new UserRepository(context);
 
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<User>? items, int totalItems) = await repository.GetPagedAsync(
             search: user.Email,
             page: 1,
             limit: 10,
             includeDeleted: false);
 
-        var item = Assert.Single(items);
+        User item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Single(item.UserRoles);
         Assert.Equal(RoleNames.Premium, item.UserRoles.Single().Role.Name);
@@ -81,8 +82,8 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
     [RequiresDockerFact]
     public async Task GetAdminDashboardSummaryAsync_CountsPremiumAndSkipsDeletedInRecentUsers() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
         var firstUser = User.Create("first@example.com", "hash");
         var premiumUser = User.Create("premium@example.com", "hash");
         var deletedUser = User.Create("deleted@example.com", "hash");
@@ -94,7 +95,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         var repository = new UserRepository(context);
 
-        var summary = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) summary = await repository.GetAdminDashboardSummaryAsync(recentLimit: 10);
 
         Assert.Equal(3, summary.TotalUsers);
         Assert.Equal(2, summary.ActiveUsers);

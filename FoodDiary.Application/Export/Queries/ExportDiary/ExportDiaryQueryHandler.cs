@@ -9,6 +9,8 @@ using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Export.Queries.ExportDiary;
 
@@ -22,19 +24,19 @@ public class ExportDiaryQueryHandler(
     public async Task<Result<FileExportResult>> Handle(
         ExportDiaryQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<FileExportResult>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FileExportResult>(accessError);
         }
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
+        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateFrom);
+        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(query.DateTo);
         if (normalizedFrom > normalizedTo) {
             return Result.Failure<FileExportResult>(
                 Errors.Validation.Invalid(nameof(query.DateFrom), "DateFrom must be less than or equal to DateTo."));
@@ -45,15 +47,15 @@ public class ExportDiaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
-        var meals = await mealRepository.GetByPeriodAsync(
+        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(
             userId, normalizedFrom, normalizedTo, cancellationToken).ConfigureAwait(false);
         var filteredMeals = meals
             .Where(meal => meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
             .ToList();
 
-        var displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
-        var fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
-        var toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
+        string fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
+        string toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
@@ -79,7 +81,7 @@ public class ExportDiaryQueryHandler(
             return null;
         }
 
-        return Uri.TryCreate(reportOrigin.Trim(), UriKind.Absolute, out var uri)
+        return Uri.TryCreate(reportOrigin.Trim(), UriKind.Absolute, out Uri? uri)
                && uri.Scheme is "http" or "https"
                && !string.IsNullOrWhiteSpace(uri.Host)
             ? uri.GetLeftPart(UriPartial.Authority)
@@ -91,7 +93,7 @@ public class ExportDiaryQueryHandler(
             return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
         }
 
-        var timeOfDay = dateFrom.TimeOfDay;
+        TimeSpan timeOfDay = dateFrom.TimeOfDay;
         return timeOfDay <= TimeSpan.FromHours(12)
             ? -timeOfDay
             : TimeSpan.FromDays(1) - timeOfDay;

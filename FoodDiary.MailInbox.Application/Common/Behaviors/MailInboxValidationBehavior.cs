@@ -1,4 +1,6 @@
+using System.Reflection;
 using FluentValidation;
+using FluentValidation.Results;
 using FoodDiary.MailInbox.Application.Common.Result;
 using FoodDiary.Mediator;
 using MailInboxResult = FoodDiary.MailInbox.Application.Common.Result.Result;
@@ -13,15 +15,15 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        var validatorList = validators.ToArray();
+        IValidator<TRequest>[] validatorList = validators.ToArray();
         if (validatorList.Length == 0) {
             return await next(cancellationToken).ConfigureAwait(false);
         }
 
         var context = new ValidationContext<TRequest>(request);
-        var validationResults = await Task.WhenAll(
+        ValidationResult[] validationResults = await Task.WhenAll(
             validatorList.Select(validator => validator.ValidateAsync(context, cancellationToken))).ConfigureAwait(false);
-        var errors = validationResults
+        ValidationFailure[] errors = validationResults
             .Where(static result => !result.IsValid)
             .SelectMany(static result => result.Errors)
             .ToArray();
@@ -42,11 +44,11 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
                     .ToArray(),
                 StringComparer.Ordinal);
 
-        var firstError = errors[0];
-        var errorCode = string.IsNullOrWhiteSpace(firstError.ErrorCode)
+        ValidationFailure firstError = errors[0];
+        string errorCode = string.IsNullOrWhiteSpace(firstError.ErrorCode)
             ? "Validation.Invalid"
             : firstError.ErrorCode;
-        var errorMessage = details.Count > 1 || details.Values.Any(static messages => messages.Length > 1)
+        string errorMessage = details.Count > 1 || details.Values.Any(static messages => messages.Length > 1)
             ? "One or more validation errors occurred."
             : firstError.ErrorMessage;
         var error = new MailInboxError(
@@ -59,13 +61,13 @@ public sealed class MailInboxValidationBehavior<TRequest, TResponse>(IEnumerable
             return (TResponse)(object)MailInboxResult.Failure(error);
         }
 
-        var resultType = typeof(TResponse);
+        Type resultType = typeof(TResponse);
         if (!resultType.IsGenericType || resultType.GetGenericTypeDefinition() != typeof(Result<>)) {
             throw new InvalidOperationException($"Unable to create failure result for type {typeof(TResponse).Name}.");
         }
 
-        var valueType = resultType.GetGenericArguments()[0];
-        var failureMethod = typeof(Result<>)
+        Type valueType = resultType.GetGenericArguments()[0];
+        MethodInfo? failureMethod = typeof(Result<>)
             .MakeGenericType(valueType)
             .GetMethod(nameof(Result<object>.Failure), [typeof(MailInboxError)]);
 

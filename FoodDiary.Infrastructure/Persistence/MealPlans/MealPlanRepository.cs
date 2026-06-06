@@ -17,7 +17,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
         MealPlanId id,
         bool includeDays = false,
         CancellationToken cancellationToken = default) {
-        var query = context.Set<MealPlan>().AsNoTracking();
+        IQueryable<MealPlan> query = context.Set<MealPlan>().AsNoTracking();
 
         if (includeDays) {
             query = query
@@ -36,7 +36,7 @@ internal sealed class MealPlanRepository(FoodDiaryDbContext context) : IMealPlan
     public async Task<IReadOnlyList<MealPlan>> GetCuratedAsync(
         DietType? dietType = null,
         CancellationToken cancellationToken = default) {
-        var query = context.Set<MealPlan>()
+        IQueryable<MealPlan> query = context.Set<MealPlan>()
             .AsNoTracking()
             .Include(p => p.Days)
                 .ThenInclude(d => d.Meals)

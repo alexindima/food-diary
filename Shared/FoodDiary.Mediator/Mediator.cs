@@ -9,25 +9,25 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(request);
 
-        var requestType = request.GetType();
-        var responseType = typeof(TResponse);
-        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, responseType);
-        var handler = serviceProvider.GetRequiredService(handlerType);
+        Type requestType = request.GetType();
+        Type responseType = typeof(TResponse);
+        Type handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, responseType);
+        object handler = serviceProvider.GetRequiredService(handlerType);
 
         RequestHandlerDelegate<TResponse> handlerDelegate = token => InvokeHandler<TResponse>(
             handler,
             request,
             cancellationToken: token);
 
-        var behaviorType = typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType);
-        var behaviors = serviceProvider
+        Type behaviorType = typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType);
+        object[] behaviors = serviceProvider
             .GetServices(behaviorType)
             .OfType<object>()
             .Reverse()
             .ToArray();
 
-        foreach (var behavior in behaviors) {
-            var next = handlerDelegate;
+        foreach (object? behavior in behaviors) {
+            RequestHandlerDelegate<TResponse> next = handlerDelegate;
             handlerDelegate = token => InvokeBehavior<TResponse>(
                 behavior,
                 request,
@@ -46,7 +46,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
     public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(request);
 
-        var responseType = GetRequestResponseType(request.GetType())
+        Type responseType = GetRequestResponseType(request.GetType())
             ?? throw new InvalidOperationException($"Request type {request.GetType().Name} does not implement IRequest<TResponse>.");
 
         return SendObject(request, responseType, cancellationToken);
@@ -68,7 +68,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         where TNotification : INotification {
         ArgumentNullException.ThrowIfNull(notification);
 
-        var handlers = serviceProvider.GetServices<INotificationHandler<TNotification>>();
+        IEnumerable<INotificationHandler<TNotification>> handlers = serviceProvider.GetServices<INotificationHandler<TNotification>>();
         return PublishToHandlers(handlers, notification, cancellationToken);
     }
 
@@ -79,8 +79,8 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
             throw new InvalidOperationException($"Notification type {notification.GetType().Name} does not implement INotification.");
         }
 
-        var handlerType = typeof(INotificationHandler<>).MakeGenericType(notification.GetType());
-        var handlers = serviceProvider.GetServices(handlerType);
+        Type handlerType = typeof(INotificationHandler<>).MakeGenericType(notification.GetType());
+        IEnumerable<object?> handlers = serviceProvider.GetServices(handlerType);
         return PublishObjectToHandlers(handlers, notification, cancellationToken);
     }
 
@@ -88,7 +88,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         object handler,
         object request,
         CancellationToken cancellationToken) {
-        var result = handler
+        object? result = handler
             .GetType()
             .GetMethod(nameof(IRequestHandler<IRequest<TResponse>, TResponse>.Handle))!
             .Invoke(handler, [request, cancellationToken]);
@@ -101,7 +101,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         object request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        var result = behavior
+        object? result = behavior
             .GetType()
             .GetMethod(nameof(IPipelineBehavior<object, TResponse>.Handle))!
             .Invoke(behavior, [request, next, cancellationToken]);
@@ -122,7 +122,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         object request,
         Type responseType,
         CancellationToken cancellationToken) {
-        var method = typeof(Mediator)
+        MethodInfo method = typeof(Mediator)
             .GetMethods(BindingFlags.Instance | BindingFlags.Public)
             .Single(static method =>
                 string.Equals(method.Name, nameof(Send), StringComparison.Ordinal) &&
@@ -149,7 +149,7 @@ internal sealed class Mediator(IServiceProvider serviceProvider) : IMediator {
         IEnumerable<object?> handlers,
         object notification,
         CancellationToken cancellationToken) {
-        var tasks = handlers
+        IEnumerable<Task> tasks = handlers
             .OfType<object>()
             .Select(handler => (Task)handler
                 .GetType()

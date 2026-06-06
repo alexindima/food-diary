@@ -18,10 +18,10 @@ public sealed class RabbitMqMailRelayBroker(
             return;
         }
 
-        var factory = CreateFactory();
-        var connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
+        ConnectionFactory factory = CreateFactory();
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             await using (channel.ConfigureAwait(false)) {
                 await DeclareExchangesAsync(channel, cancellationToken).ConfigureAwait(false);
                 await DeclareOutboundQueueAsync(channel, cancellationToken).ConfigureAwait(false);
@@ -111,10 +111,10 @@ public sealed class RabbitMqMailRelayBroker(
             return;
         }
 
-        var factory = CreateFactory();
-        var connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
+        ConnectionFactory factory = CreateFactory();
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            var channel = await connection.CreateChannelAsync(
+            IChannel channel = await connection.CreateChannelAsync(
                 new CreateChannelOptions(
                     publisherConfirmationsEnabled: true,
                     publisherConfirmationTrackingEnabled: true,
@@ -123,7 +123,7 @@ public sealed class RabbitMqMailRelayBroker(
                 cancellationToken).ConfigureAwait(false);
             await using (channel.ConfigureAwait(false)) {
 
-                var body = Encoding.UTF8.GetBytes(emailId.ToString("D"));
+                byte[] body = Encoding.UTF8.GetBytes(emailId.ToString("D"));
                 var properties = new BasicProperties {
                     Persistent = true,
                     ContentType = "text/plain",

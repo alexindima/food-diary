@@ -29,7 +29,7 @@ public readonly record struct RecipeStepContentState(
             throw new ArgumentException("Instruction is required", paramName);
         }
 
-        var normalized = instruction.Trim();
+        string normalized = instruction.Trim();
         return normalized.Length > InstructionMaxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Instruction must be at most {InstructionMaxLength} characters.")
             : normalized;
@@ -40,7 +40,7 @@ public readonly record struct RecipeStepContentState(
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

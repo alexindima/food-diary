@@ -1,3 +1,4 @@
+using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -11,7 +12,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
     [Fact]
     public void MigrationTypes_AreExcludedFromCodeCoverage() {
-        var migrationTypesMissingAttribute = typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly
+        string?[] migrationTypesMissingAttribute = typeof(global::FoodDiary.Infrastructure.Persistence.FoodDiaryDbContext).Assembly
             .GetTypes()
             .Where(static type => string.Equals(type.Namespace, "FoodDiary.Infrastructure.Migrations", StringComparison.Ordinal))
             .Where(static type => type.IsNested is false)
@@ -26,8 +27,8 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
     [RequiresDockerFact]
     public async Task CleanDatabase_MigrateToLatest_AppliesFullMigrationChain() {
-        var connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
-        await using var context = databaseFixture.CreateDbContext(connectionString);
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        await using FoodDiaryDbContext context = databaseFixture.CreateDbContext(connectionString);
 
         await context.Database.MigrateAsync();
 
@@ -42,17 +43,17 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
 
     [RequiresDockerFact]
     public async Task DatabaseAtInitialCreate_CanUpgradeToLatest() {
-        var connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
 
-        await using (var initialContext = databaseFixture.CreateDbContext(connectionString)) {
-            var migrator = initialContext.GetService<IMigrator>();
+        await using (FoodDiaryDbContext initialContext = databaseFixture.CreateDbContext(connectionString)) {
+            IMigrator migrator = initialContext.GetService<IMigrator>();
             await migrator.MigrateAsync(InitialMigration);
 
-            var appliedMigrations = await initialContext.Database.GetAppliedMigrationsAsync();
+            IEnumerable<string> appliedMigrations = await initialContext.Database.GetAppliedMigrationsAsync();
             Assert.Equal([InitialMigration], appliedMigrations);
         }
 
-        await using var upgradedContext = databaseFixture.CreateDbContext(connectionString);
+        await using FoodDiaryDbContext upgradedContext = databaseFixture.CreateDbContext(connectionString);
         await upgradedContext.Database.MigrateAsync();
 
         var allMigrations = upgradedContext.Database.GetMigrations().ToList();

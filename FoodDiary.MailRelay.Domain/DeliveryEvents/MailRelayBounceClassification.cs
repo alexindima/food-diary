@@ -9,7 +9,7 @@ public static class MailRelayBounceClassification {
             return true;
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         return normalized is Hard or Soft;
     }
 }

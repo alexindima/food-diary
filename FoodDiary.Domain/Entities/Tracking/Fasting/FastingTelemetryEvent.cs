@@ -81,7 +81,7 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
     }
 
     private static string NormalizeRequired(string value, int maxLength, string paramName) {
-        var normalized = NormalizeOptional(value, maxLength);
+        string? normalized = NormalizeOptional(value, maxLength);
         return normalized ?? throw new ArgumentException("Value is required.", paramName);
     }
 
@@ -90,7 +90,7 @@ public sealed class FastingTelemetryEvent : Entity<FastingTelemetryEventId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         if (normalized.Length > maxLength) {
             throw new ArgumentOutOfRangeException(nameof(value), $"Value must be at most {maxLength} characters.");
         }

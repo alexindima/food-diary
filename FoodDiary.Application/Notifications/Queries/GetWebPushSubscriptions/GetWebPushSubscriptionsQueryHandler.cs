@@ -6,6 +6,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
@@ -23,12 +24,12 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WebPushSubscriptionModel>>(accessError);
         }
 
-        var subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
         var expiredSubscriptions = subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= dateTimeProvider.UtcNow)
             .ToList();

@@ -22,7 +22,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = context.FavoriteRecipes
+        IQueryable<FavoriteRecipe> query = context.FavoriteRecipes
             .Include(f => f.Recipe)
             .ThenInclude(r => r.Steps)
             .ThenInclude(s => s.Ingredients)
@@ -69,7 +69,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
             return new Dictionary<RecipeId, FavoriteRecipe>();
         }
 
-        var favorites = await context.FavoriteRecipes
+        List<FavoriteRecipe> favorites = await context.FavoriteRecipes
             .AsNoTracking()
             .Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);

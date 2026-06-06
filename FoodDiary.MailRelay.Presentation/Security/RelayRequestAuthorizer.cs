@@ -1,10 +1,11 @@
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.MailRelay.Presentation.Security;
 
 internal static class RelayRequestAuthorizer {
     public static bool IsAuthorized(HttpRequest request, MailRelayOptions options) {
-        if (!request.Headers.TryGetValue("X-Relay-Api-Key", out var values)) {
+        if (!request.Headers.TryGetValue("X-Relay-Api-Key", out StringValues values)) {
             return false;
         }
 

@@ -38,13 +38,13 @@ public class UpdateConsumptionCommandHandler(
         ImageAssetId? OldAssetId);
 
     public async Task<Result<ConsumptionModel>> Handle(UpdateConsumptionCommand command, CancellationToken cancellationToken) {
-        var valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UpdateConsumptionValues> valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(valuesResult.Error);
         }
 
-        var values = valuesResult.Value;
-        var updateResult = await ApplyUpdatesAsync(values.Meal, command, values, cancellationToken).ConfigureAwait(false);
+        UpdateConsumptionValues values = valuesResult.Value;
+        Result updateResult = await ApplyUpdatesAsync(values.Meal, command, values, cancellationToken).ConfigureAwait(false);
         if (updateResult.IsFailure) return Result.Failure<ConsumptionModel>(updateResult.Error);
 
         await mealRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
@@ -61,16 +61,16 @@ public class UpdateConsumptionCommandHandler(
     private async Task<Result<UpdateConsumptionValues>> PrepareUpdateValuesAsync(
         UpdateConsumptionCommand command,
         CancellationToken cancellationToken) {
-        var commandValidation = ValidateCommand(command);
+        Result commandValidation = ValidateCommand(command);
         if (commandValidation.IsFailure) {
             return Result.Failure<UpdateConsumptionValues>(commandValidation.Error);
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var mealResult = await ResolveMealAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        Result<Meal> mealResult = await ResolveMealAsync(command, userId, cancellationToken).ConfigureAwait(false);
         if (mealResult.IsFailure) return Result.Failure<UpdateConsumptionValues>(mealResult.Error);
 
-        var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
+        Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType,
             nameof(command.MealType),
             "Unknown meal type value.");
@@ -78,14 +78,14 @@ public class UpdateConsumptionCommandHandler(
             return Result.Failure<UpdateConsumptionValues>(mealTypeResult.Error);
         }
 
-        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
+        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<UpdateConsumptionValues>(imageAssetIdResult.Error);
         }
 
-        var meal = mealResult.Value;
-        var oldAssetId = meal.ImageAssetId;
-        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Meal meal = mealResult.Value;
+        ImageAssetId? oldAssetId = meal.ImageAssetId;
+        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);
@@ -113,8 +113,8 @@ public class UpdateConsumptionCommandHandler(
                 Errors.Validation.Invalid(nameof(command.ConsumptionId), "Consumption id must not be empty."));
         }
 
-        var hasManualItems = command.Items is { Count: > 0 };
-        var hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
+        bool hasManualItems = command.Items is { Count: > 0 };
+        bool hasAiItems = command.AiSessions is { Count: > 0 } && command.AiSessions.Any(session => session.Items.Count > 0);
         return hasManualItems || hasAiItems
             ? Result.Success()
             : Result.Failure(Errors.Validation.Required("Items"));
@@ -124,13 +124,13 @@ public class UpdateConsumptionCommandHandler(
         UpdateConsumptionCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<Meal>(accessError);
         }
 
         var consumptionId = new MealId(command.ConsumptionId);
-        var meal = await mealRepository.GetByIdAsync(
+        Meal? meal = await mealRepository.GetByIdAsync(
             consumptionId,
             userId,
             includeItems: true,
@@ -151,7 +151,7 @@ public class UpdateConsumptionCommandHandler(
         meal.UpdateComment(command.Comment);
         meal.UpdateImage(values.ImageAsset?.Url ?? command.ImageUrl, values.ImageAssetId);
 
-        var satietyValidation = SatietyLevelValidator.Validate(
+        Result satietyValidation = SatietyLevelValidator.Validate(
             command.PreMealSatietyLevel,
             command.PostMealSatietyLevel);
 
@@ -163,23 +163,23 @@ public class UpdateConsumptionCommandHandler(
         meal.ClearItems();
         meal.ClearAiSessions();
 
-        var itemsResult = AddManualItems(meal, command.Items);
+        Result itemsResult = AddManualItems(meal, command.Items);
         if (itemsResult.IsFailure) return itemsResult;
 
-        var aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
         if (aiSessionsResult.IsFailure) return aiSessionsResult;
 
         return await ApplyNutritionAsync(meal, command, values.UserId, cancellationToken).ConfigureAwait(false);
     }
 
     private static Result AddManualItems(Meal meal, IEnumerable<ConsumptionItemInput> items) {
-        foreach (var item in items) {
-            var validation = ConsumptionItemValidator.Validate(item);
+        foreach (ConsumptionItemInput item in items) {
+            Result validation = ConsumptionItemValidator.Validate(item);
             if (validation.IsFailure) {
                 return validation;
             }
 
-            var itemIdValidation = ValidateItemIdentifiers(item);
+            Result itemIdValidation = ValidateItemIdentifiers(item);
             if (itemIdValidation.IsFailure) {
                 return itemIdValidation;
             }
@@ -199,8 +199,8 @@ public class UpdateConsumptionCommandHandler(
         IEnumerable<ConsumptionAiSessionInput> sessions,
         UserId userId,
         CancellationToken cancellationToken) {
-        foreach (var session in sessions) {
-            var sessionResult = await AddAiSessionAsync(meal, session, userId, cancellationToken).ConfigureAwait(false);
+        foreach (ConsumptionAiSessionInput session in sessions) {
+            Result sessionResult = await AddAiSessionAsync(meal, session, userId, cancellationToken).ConfigureAwait(false);
             if (sessionResult.IsFailure) {
                 return sessionResult;
             }
@@ -214,12 +214,12 @@ public class UpdateConsumptionCommandHandler(
         ConsumptionAiSessionInput session,
         UserId userId,
         CancellationToken cancellationToken) {
-        var sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
+        Result<ImageAssetId?> sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
         if (sessionImageAssetIdResult.IsFailure) {
             return sessionImageAssetIdResult;
         }
 
-        var sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<ImageAsset?> sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             sessionImageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);
@@ -227,17 +227,17 @@ public class UpdateConsumptionCommandHandler(
             return sessionImageAssetResult;
         }
 
-        var sessionItemsResult = CreateAiSessionItems(session);
+        Result<List<MealAiItemData>> sessionItemsResult = CreateAiSessionItems(session);
         if (sessionItemsResult.IsFailure) {
             return sessionItemsResult;
         }
 
-        if (!TryParseAiRecognitionSource(session.Source, out var sessionSource)) {
+        if (!TryParseAiRecognitionSource(session.Source, out AiRecognitionSource sessionSource)) {
             return Result.Failure(
                     Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
         }
 
-        var recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
+        DateTime recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.UtcNow;
         if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
             return Result.Failure(
                     Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
@@ -264,7 +264,7 @@ public class UpdateConsumptionCommandHandler(
         UserId userId,
         CancellationToken cancellationToken) {
         if (command.IsNutritionAutoCalculated) {
-            var nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
+            Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsFailure) {
                 return nutritionResult;
             }
@@ -284,7 +284,7 @@ public class UpdateConsumptionCommandHandler(
     }
 
     private static Result ApplyManualNutrition(Meal meal, UpdateConsumptionCommand command) {
-        var manualNutritionResult = ManualNutritionValidator.Validate(
+        Result<ManualNutritionInput> manualNutritionResult = ManualNutritionValidator.Validate(
             command.ManualCalories,
             command.ManualProteins,
             command.ManualFats,
@@ -295,7 +295,7 @@ public class UpdateConsumptionCommandHandler(
             return manualNutritionResult;
         }
 
-        var manual = manualNutritionResult.Value;
+        ManualNutritionInput manual = manualNutritionResult.Value;
         meal.ApplyNutrition(new MealNutritionUpdate(
             manual.Calories,
             manual.Proteins,
@@ -317,7 +317,7 @@ public class UpdateConsumptionCommandHandler(
         UpdateConsumptionCommand command,
         ImageAssetId? oldAssetId,
         CancellationToken cancellationToken) {
-        var imageAssetChanged = command.ImageAssetId.HasValue &&
+        bool imageAssetChanged = command.ImageAssetId.HasValue &&
                                 (!oldAssetId.HasValue || oldAssetId.Value.Value != command.ImageAssetId.Value);
 
         if (oldAssetId.HasValue && imageAssetChanged) {
@@ -329,7 +329,7 @@ public class UpdateConsumptionCommandHandler(
         MealId mealId,
         UserId userId,
         CancellationToken cancellationToken) {
-        var updated = await mealRepository.GetByIdAsync(
+        Meal? updated = await mealRepository.GetByIdAsync(
             mealId,
             userId,
             includeItems: true,
@@ -341,12 +341,12 @@ public class UpdateConsumptionCommandHandler(
     }
 
     private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {
-        var productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.ProductId, nameof(item.ProductId), "Product id");
+        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.ProductId, nameof(item.ProductId), "Product id");
         if (productIdResult.IsFailure) {
             return productIdResult;
         }
 
-        var recipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.RecipeId, nameof(item.RecipeId), "Recipe id");
+        Result recipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.RecipeId, nameof(item.RecipeId), "Recipe id");
         if (recipeIdResult.IsFailure) {
             return recipeIdResult;
         }
@@ -365,7 +365,7 @@ public class UpdateConsumptionCommandHandler(
 
     private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {
         var items = new List<MealAiItemData>(session.Items.Count);
-        foreach (var aiItem in session.Items) {
+        foreach (ConsumptionAiItemInput aiItem in session.Items) {
             if (!MealAiItemData.TryCreate(
                     aiItem.NameEn,
                     aiItem.NameLocal,
@@ -377,8 +377,8 @@ public class UpdateConsumptionCommandHandler(
                     aiItem.Carbs,
                     aiItem.Fiber,
                     aiItem.Alcohol,
-                    out var data,
-                    out var error)) {
+                    out MealAiItemData? data,
+                    out string? error)) {
                 return Result.Failure<List<MealAiItemData>>(
                     Errors.Validation.Invalid("AiSessions", error ?? "AI item is invalid."));
             }

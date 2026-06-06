@@ -16,7 +16,7 @@ public readonly record struct LanguageCode {
             return false;
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         if (normalized is En or Ru) {
             language = new LanguageCode(normalized);
             return true;
@@ -31,7 +31,7 @@ public readonly record struct LanguageCode {
             return new LanguageCode(En);
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         return normalized.StartsWith(Ru, StringComparison.Ordinal)
             ? new LanguageCode(Ru)
             : new LanguageCode(En);

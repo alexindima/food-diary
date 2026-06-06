@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 
@@ -13,13 +14,13 @@ public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
     public async Task<Result<MealPlanModel>> Handle(
         AdoptMealPlanCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<MealPlanModel>(userIdResult.Error);
         }
 
         var planId = new MealPlanId(command.PlanId);
-        var sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? sourcePlan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (sourcePlan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
@@ -28,11 +29,11 @@ public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotCurated);
         }
 
-        var adoptedPlan = sourcePlan.Adopt(userIdResult.Value);
+        MealPlan adoptedPlan = sourcePlan.Adopt(userIdResult.Value);
         await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken).ConfigureAwait(false);
 
         // Re-fetch with includes for full model
-        var saved = await mealPlanRepository.GetByIdAsync(adoptedPlan.Id, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? saved = await mealPlanRepository.GetByIdAsync(adoptedPlan.Id, includeDays: true, cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

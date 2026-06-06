@@ -165,11 +165,11 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealItem_CreateWithProduct_WithEmptyMealId_Throws() {
-        var createMethod = typeof(MealItem).GetMethod(
+        MethodInfo createMethod = typeof(MealItem).GetMethod(
             "CreateWithProduct",
             BindingFlags.Static | BindingFlags.NonPublic)!;
 
-        var ex = Assert.Throws<TargetInvocationException>(() =>
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
             createMethod.Invoke(null, [MealId.Empty, ProductId.New(), 100d]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
@@ -180,7 +180,7 @@ public class MealInvariantTests {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var recipeId = RecipeId.New();
 
-        var item = meal.AddRecipe(recipeId, 2);
+        MealItem item = meal.AddRecipe(recipeId, 2);
 
         Assert.Equal(meal.Id, item.MealId);
         Assert.Null(item.ProductId);
@@ -226,7 +226,7 @@ public class MealInvariantTests {
     public void RemoveItem_WhenItemNotInMeal_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var anotherMeal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        var foreignItem = anotherMeal.AddProduct(ProductId.New(), 100);
+        MealItem foreignItem = anotherMeal.AddProduct(ProductId.New(), 100);
 
         meal.RemoveItem(foreignItem);
 
@@ -236,7 +236,7 @@ public class MealInvariantTests {
     [Fact]
     public void RemoveItem_WhenItemExists_RemovesItemAndSetsModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        var item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
 
         meal.RemoveItem(item);
 
@@ -247,7 +247,7 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        var item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
 
         item.UpdateAmount(100);
 
@@ -257,7 +257,7 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithCloseValue_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        var item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
 
         item.UpdateAmount(100.0000005);
 
@@ -268,7 +268,7 @@ public class MealInvariantTests {
     [Fact]
     public void MealItem_UpdateAmount_WithBoundaryValue_UpdatesAmount() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        var item = meal.AddProduct(ProductId.New(), 100);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
 
         item.UpdateAmount(1000000d);
 
@@ -398,8 +398,8 @@ public class MealInvariantTests {
     public void ApplyNutrition_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
-        var eventCount = meal.DomainEvents.Count;
-        var modified = meal.ModifiedOnUtc;
+        int eventCount = meal.DomainEvents.Count;
+        DateTime? modified = meal.ModifiedOnUtc;
 
         meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
 
@@ -494,8 +494,8 @@ public class MealInvariantTests {
             TotalFiber: 8.004,
             TotalAlcohol: 0.004,
             IsAutoCalculated: true));
-        var eventCount = meal.DomainEvents.Count;
-        var modified = meal.ModifiedOnUtc;
+        int eventCount = meal.DomainEvents.Count;
+        DateTime? modified = meal.ModifiedOnUtc;
 
         meal.ApplyNutrition(new MealNutritionUpdate(
             TotalCalories: 100.003,
@@ -517,11 +517,11 @@ public class MealInvariantTests {
     [InlineData(10d, 10.0000005d, true)]
     [InlineData(10d, 10.01d, false)]
     public void NullableAreClose_ReturnsExpectedResult(double? left, double? right, bool expected) {
-        var method = typeof(Meal).GetMethod(
+        MethodInfo method = typeof(Meal).GetMethod(
             "NullableAreClose",
             BindingFlags.Static | BindingFlags.NonPublic)!;
 
-        var result = (bool)method.Invoke(null, [left, right])!;
+        bool result = (bool)method.Invoke(null, [left, right])!;
 
         Assert.Equal(expected, result);
     }
@@ -602,7 +602,7 @@ public class MealInvariantTests {
     public void AddAiSession_WithValidItem_NormalizesFieldsAndAttachesSession() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        var session = meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
@@ -621,7 +621,7 @@ public class MealInvariantTests {
                     alcohol: 0)
             ]);
 
-        var aiItem = Assert.Single(session.Items);
+        MealAiItem aiItem = Assert.Single(session.Items);
         Assert.Equal("Apple", aiItem.NameEn);
         Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", aiItem.NameLocal);
         Assert.Equal("g", aiItem.Unit);
@@ -632,7 +632,7 @@ public class MealInvariantTests {
     public void AddAiSession_WithWhitespaceNotes_NormalizesToNull() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        var session = meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
@@ -659,7 +659,7 @@ public class MealInvariantTests {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
         var localTime = DateTime.SpecifyKind(DateTime.Now, DateTimeKind.Local);
 
-        var session = meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             source: AiRecognitionSource.Text,
             recognizedAtUtc: localTime,
@@ -685,7 +685,7 @@ public class MealInvariantTests {
     public void AddAiSession_WithItems_SetsSessionModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        var session = meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             imageAssetId: null,
             source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
@@ -709,7 +709,7 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealAiItemData_TryCreate_WithInvalidData_ReturnsFalse() {
-        var success = MealAiItemData.TryCreate(
+        bool success = MealAiItemData.TryCreate(
             nameEn: "  ",
             nameLocal: null,
             amount: -1,
@@ -720,8 +720,8 @@ public class MealInvariantTests {
             carbs: 0,
             fiber: 0,
             alcohol: 0,
-            data: out var data,
-            error: out var error);
+            data: out MealAiItemData? data,
+            error: out string? error);
 
         Assert.False(success);
         Assert.Null(data);
@@ -750,7 +750,7 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealAiItemData_TryCreate_WithValidData_ReturnsTrue() {
-        var success = MealAiItemData.TryCreate(
+        bool success = MealAiItemData.TryCreate(
             nameEn: "  Apple  ",
             nameLocal: "  Ð¯Ð±Ð»Ð¾ÐºÐ¾  ",
             amount: 100,
@@ -761,8 +761,8 @@ public class MealInvariantTests {
             carbs: 14,
             fiber: 2.4,
             alcohol: 0,
-            data: out var data,
-            error: out var error);
+            data: out MealAiItemData? data,
+            error: out string? error);
 
         Assert.True(success);
         Assert.NotNull(data);
@@ -772,11 +772,11 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealAiSession_Create_WithEmptyMealId_Throws() {
-        var createMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
 
-        var ex = Assert.Throws<TargetInvocationException>(() =>
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() =>
             createMethod.Invoke(null, [MealId.Empty, null, AiRecognitionSource.Text, DateTime.UtcNow, null]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
@@ -784,16 +784,16 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealAiSession_AddItems_WithNullItem_Throws() {
-        var createMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var addItemsMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
             "AddItems",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
-        var itemCreateMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var attachMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
             "AttachToSession",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
@@ -805,23 +805,23 @@ public class MealInvariantTests {
 
         var listWithNull = new List<MealAiItem> { item, null! };
 
-        var ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [listWithNull]));
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [listWithNull]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
 
     [Fact]
     public void MealAiSession_AddItems_WithItemAttachedToDifferentSession_Throws() {
-        var createMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var addItemsMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
             "AddItems",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
-        var itemCreateMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var attachMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
             "AttachToSession",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
@@ -831,17 +831,17 @@ public class MealInvariantTests {
             ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
         attachMethod.Invoke(item, [MealAiSessionId.New()]);
 
-        var ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [new List<MealAiItem> { item }]));
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => addItemsMethod.Invoke(session, [new List<MealAiItem> { item }]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
 
     [Fact]
     public void MealAiSession_AddItems_WithEmptyList_DoesNotSetModifiedOnUtc() {
-        var createMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo createMethod = typeof(MealAiSession).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var addItemsMethod = typeof(MealAiSession).GetMethod(
+        MethodInfo addItemsMethod = typeof(MealAiSession).GetMethod(
             "AddItems",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
 
@@ -855,27 +855,27 @@ public class MealInvariantTests {
 
     [Fact]
     public void MealAiItem_AttachToSession_WithEmptySessionId_Throws() {
-        var itemCreateMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var attachMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
             "AttachToSession",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
         var item = (MealAiItem)itemCreateMethod.Invoke(
             null,
             ["Apple", null, 100d, "g", 52d, 0.3d, 0.2d, 14d, 2.4d, 0d])!;
 
-        var ex = Assert.Throws<TargetInvocationException>(() => attachMethod.Invoke(item, [MealAiSessionId.Empty]));
+        TargetInvocationException ex = Assert.Throws<TargetInvocationException>(() => attachMethod.Invoke(item, [MealAiSessionId.Empty]));
 
         Assert.IsType<ArgumentException>(ex.InnerException);
     }
 
     [Fact]
     public void MealAiItem_AttachToSession_WithSameSessionId_DoesNotChangeSessionId() {
-        var itemCreateMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo itemCreateMethod = typeof(MealAiItem).GetMethod(
             "Create",
             BindingFlags.Static | BindingFlags.NonPublic)!;
-        var attachMethod = typeof(MealAiItem).GetMethod(
+        MethodInfo attachMethod = typeof(MealAiItem).GetMethod(
             "AttachToSession",
             BindingFlags.Instance | BindingFlags.NonPublic)!;
         var item = (MealAiItem)itemCreateMethod.Invoke(

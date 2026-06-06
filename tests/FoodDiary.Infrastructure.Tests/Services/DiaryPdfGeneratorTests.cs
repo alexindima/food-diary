@@ -13,14 +13,14 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithMeals_ReturnsPdfDocument() {
         var userId = UserId.New();
-        var meals = new[] {
+        Meal[] meals = new[] {
             CreateMeal(userId, new DateTime(2026, 5, 2, 21, 4, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7),
             CreateMeal(userId, new DateTime(2026, 5, 3, 20, 41, 0, DateTimeKind.Utc), 905, 58, 45, 66, 5),
             CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3),
         };
         var generator = new DiaryPdfGenerator();
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             meals,
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -38,12 +38,12 @@ public sealed class DiaryPdfGeneratorTests {
         const string transparentPngDataUrl =
             "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=";
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
         meal.UpdateImage(transparentPngDataUrl);
         meal.UpdateSatietyLevels(2, 5);
         var generator = new DiaryPdfGenerator();
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -59,13 +59,13 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithIngredientImagesAndNoMealImage_DownloadsCollageSources() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
         AddProductItem(meal, CreateProduct(userId, "Rice", "https://93.184.216.34/rice.png"), 150);
         AddProductItem(meal, CreateProduct(userId, "Carrot", "https://93.184.216.34/carrot.png"), 80);
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -84,13 +84,13 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithAiSessionImagesAndNoMealImage_DownloadsCollageSources() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 410, 12, 10, 40, 6);
         AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-1.png");
         AddAiSessionWithImage(meal, userId, "https://93.184.216.34/ai-2.png");
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -109,10 +109,10 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithRussianLocaleTimeZoneAndUnicodeOrigin_ReturnsPdfDocument() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
         var generator = new DiaryPdfGenerator();
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -128,7 +128,7 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithRecognizedItemsOnly_ReturnsPdfDocument() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7);
         meal.AddAiSession(
             null,
             AiRecognitionSource.Text,
@@ -140,7 +140,7 @@ public sealed class DiaryPdfGeneratorTests {
             ]);
         var generator = new DiaryPdfGenerator();
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -156,13 +156,13 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithLongPeriod_DoesNotDownloadMealImages() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
         meal.UpdateImage("https://example.test/meal.jpg");
         AddProductItem(meal, CreateProduct(userId, "Rice", "https://example.test/rice.png"), 150);
         var imageHandler = new RecordingImageHandler();
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -179,12 +179,12 @@ public sealed class DiaryPdfGeneratorTests {
     [Fact]
     public async Task GenerateAsync_WithPrivateNetworkImageUrl_DoesNotRequestImage() {
         var userId = UserId.New();
-        var meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
         meal.UpdateImage("http://127.0.0.1/admin.png");
         var imageHandler = new RecordingImageHandler(successfulImageResponse: true);
         var generator = new DiaryPdfGenerator(new HttpClient(imageHandler));
 
-        var pdf = await generator.GenerateAsync(
+        byte[] pdf = await generator.GenerateAsync(
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
@@ -227,7 +227,7 @@ public sealed class DiaryPdfGeneratorTests {
             imageUrl: imageUrl);
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
-        var item = meal.AddProduct(product.Id, amount);
+        MealItem item = meal.AddProduct(product.Id, amount);
         typeof(MealItem)
             .GetProperty(nameof(MealItem.Product))!
             .SetValue(item, product);
@@ -235,7 +235,7 @@ public sealed class DiaryPdfGeneratorTests {
 
     private static void AddAiSessionWithImage(Meal meal, UserId userId, string imageUrl) {
         var asset = ImageAsset.Create(userId, $"meals/{Guid.NewGuid():N}.png", imageUrl);
-        var session = meal.AddAiSession(
+        MealAiSession session = meal.AddAiSession(
             asset.Id,
             AiRecognitionSource.Photo,
             DateTime.UtcNow,

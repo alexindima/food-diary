@@ -5,6 +5,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
@@ -22,13 +23,13 @@ public class GetRecipeByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RecipeModel>(accessError);
         }
         var recipeId = new RecipeId(query.RecipeId);
 
-        var recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: query.IncludePublic,
@@ -39,8 +40,8 @@ public class GetRecipeByIdQueryHandler(
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId));
         }
 
-        var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        var isOwner = recipe.UserId == userId;
+        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        bool isOwner = recipe.UserId == userId;
 
         return Result.Success(recipe.ToModel(usageCount, isOwner));
     }

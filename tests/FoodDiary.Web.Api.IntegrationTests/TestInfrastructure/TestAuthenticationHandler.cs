@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 
@@ -21,28 +22,28 @@ public sealed class TestAuthenticationHandler(
     public const string ImpersonationActorUserIdHeader = "X-Test-Impersonation-ActorUserId";
 
     protected override Task<AuthenticateResult> HandleAuthenticateAsync() {
-        if (!Request.Headers.TryGetValue(AuthenticateHeader, out var authenticate) ||
+        if (!Request.Headers.TryGetValue(AuthenticateHeader, out StringValues authenticate) ||
             !string.Equals(authenticate.ToString(), "true", StringComparison.OrdinalIgnoreCase)) {
             return Task.FromResult(AuthenticateResult.NoResult());
         }
 
         var claims = new List<Claim>();
 
-        if (Request.Headers.TryGetValue(UserIdHeader, out var userId) &&
+        if (Request.Headers.TryGetValue(UserIdHeader, out StringValues userId) &&
             !string.IsNullOrWhiteSpace(userId.ToString())) {
             claims.Add(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
         }
 
-        if (Request.Headers.TryGetValue(RoleHeader, out var role) &&
+        if (Request.Headers.TryGetValue(RoleHeader, out StringValues role) &&
             !string.IsNullOrWhiteSpace(role.ToString())) {
             claims.Add(new Claim(ClaimTypes.Role, role.ToString()));
         }
 
-        if (Request.Headers.TryGetValue(ImpersonationHeader, out var impersonation) &&
+        if (Request.Headers.TryGetValue(ImpersonationHeader, out StringValues impersonation) &&
             string.Equals(impersonation.ToString(), "true", StringComparison.OrdinalIgnoreCase)) {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
 
-            if (Request.Headers.TryGetValue(ImpersonationActorUserIdHeader, out var actorUserId) &&
+            if (Request.Headers.TryGetValue(ImpersonationActorUserIdHeader, out StringValues actorUserId) &&
                 !string.IsNullOrWhiteSpace(actorUserId.ToString())) {
                 claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, actorUserId.ToString()));
             }

@@ -17,23 +17,23 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
 
     [RequiresDockerFact]
     public async Task DietologistInvitationNotifications_CanBeMarkedReadInBulk() {
-        var firstClient = await CreateAuthenticatedClientAsync("client-a");
-        var secondClient = await CreateAuthenticatedClientAsync("client-b");
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser firstClient = await CreateAuthenticatedClientAsync("client-a");
+        AuthenticatedUser secondClient = await CreateAuthenticatedClientAsync("client-b");
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
         await InviteDietologistAsync(firstClient.Client, dietologistUser.Email);
         await InviteDietologistAsync(secondClient.Client, dietologistUser.Email);
 
-        var initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
+        List<NotificationPayload> initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
         var invitationNotifications = initialNotifications.Where(x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal)).ToList();
 
         Assert.Equal(2, invitationNotifications.Count);
         Assert.All(invitationNotifications, notification => Assert.False(notification.IsRead));
 
-        var readAllResponse = await dietologistUser.Client.PutAsJsonAsync("/api/v1/notifications/read-all", new { });
+        HttpResponseMessage readAllResponse = await dietologistUser.Client.PutAsJsonAsync("/api/v1/notifications/read-all", new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, readAllResponse);
 
-        var afterReadAll = await GetNotificationsAsync(dietologistUser.Client);
+        List<NotificationPayload> afterReadAll = await GetNotificationsAsync(dietologistUser.Client);
         var invitationNotificationsAfterReadAll = afterReadAll.Where(x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal)).ToList();
 
         Assert.Equal(2, invitationNotificationsAfterReadAll.Count);
@@ -41,14 +41,14 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
     }
 
     private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
-        var client = factory.CreateClient();
-        var email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
@@ -56,7 +56,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
     }
 
     private async Task InviteDietologistAsync(HttpClient client, string dietologistEmail) {
-        var inviteResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage inviteResponse = await client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistEmail,
@@ -65,9 +65,9 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
     }
 
     private async Task<List<NotificationPayload>> GetNotificationsAsync(HttpClient client) {
-        var notificationsResponse = await client.GetAsync("/api/v1/notifications").ConfigureAwait(false);
+        HttpResponseMessage notificationsResponse = await client.GetAsync("/api/v1/notifications").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, notificationsResponse).ConfigureAwait(false);
-        var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions).ConfigureAwait(false);
+        List<NotificationPayload>? notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(notifications);
         return notifications;
     }
@@ -77,7 +77,7 @@ public sealed class PostgresDietologistInvitationNotificationIntegrationTests(Po
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

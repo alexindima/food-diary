@@ -10,7 +10,7 @@ public sealed class GetAdminMailInboxMessagesQueryHandler(IAdminMailInboxReader 
     public async Task<Result<IReadOnlyList<AdminMailInboxMessageSummaryModel>>> Handle(
         GetAdminMailInboxMessagesQuery query,
         CancellationToken cancellationToken) {
-        var messages = await reader.GetMessagesAsync(query.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AdminMailInboxMessageSummaryModel> messages = await reader.GetMessagesAsync(query.Limit, cancellationToken).ConfigureAwait(false);
         return Result.Success(messages);
     }
 }

@@ -9,6 +9,7 @@ using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Recipe = FoodDiary.Domain.Entities.Recipes.Recipe;
+using FoodDiary.Domain.Entities.FavoriteRecipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
@@ -36,9 +37,9 @@ public sealed class GetRecipesOverviewQueryHandler(
             return Result.Failure<RecipeOverviewModel>(Errors.Authentication.InvalidToken);
         }
 
-        var options = CreateOptions(query);
+        RecipeOverviewOptions options = CreateOptions(query);
 
-        var (items, totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await recipeRepository.GetPagedAsync(
             options.UserId,
             query.IncludePublic,
             options.PageNumber,
@@ -49,15 +50,15 @@ public sealed class GetRecipesOverviewQueryHandler(
         var allRecipes = items
             .Select(item => ToListItem(item.Recipe, item.UsageCount, options.UserId))
             .ToList();
-        var allFavorites = await favoriteRecipeRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteRecipe> allFavorites = await favoriteRecipeRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
             .Select(favorite => favorite.ToModel())
             .ToList();
         var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.RecipeId);
 
-        var recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
-        var favoriteRecipeIds = allRecipes
+        IReadOnlyList<RecipeListItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
+        RecipeId[] favoriteRecipeIds = allRecipes
             .Select(x => x.Recipe.Id)
             .Concat(recentItems.Select(x => x.Recipe.Id))
             .Distinct()
@@ -66,12 +67,12 @@ public sealed class GetRecipesOverviewQueryHandler(
             .Where(pair => favoriteRecipeIds.Contains(pair.Key))
             .ToDictionary();
 
-        var allPaged = CreatePagedRecipes(
+        PagedResponse<RecipeModel> allPaged = CreatePagedRecipes(
             allRecipes,
             favoritesByRecipeId,
             options,
             totalItems);
-        var recentResponses = ToRecipeModels(recentItems, favoritesByRecipeId);
+        RecipeModel[] recentResponses = ToRecipeModels(recentItems, favoritesByRecipeId);
 
         return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
@@ -92,7 +93,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             return [];
         }
 
-        var recents = await recentItemRepository.GetRecentRecipesAsync(
+        IReadOnlyList<RecentRecipeUsage> recents = await recentItemRepository.GetRecentRecipesAsync(
             options.UserId,
             options.RecentLimit,
             cancellationToken).ConfigureAwait(false);
@@ -101,7 +102,7 @@ public sealed class GetRecipesOverviewQueryHandler(
         }
 
         var recentIds = recents.Select(x => x.RecipeId).ToList();
-        var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
+        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> recipesById = await recipeRepository.GetByIdsWithUsageAsync(
             recentIds,
             options.UserId,
             query.IncludePublic,
@@ -139,7 +140,7 @@ public sealed class GetRecipesOverviewQueryHandler(
     private static RecipeModel ToRecipeModel(
         RecipeListItem recipe,
         IReadOnlyDictionary<RecipeId, Domain.Entities.FavoriteRecipes.FavoriteRecipe> favoritesByRecipeId) {
-        var favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Recipe.Id);
+        FavoriteRecipe? favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Recipe.Id);
         return recipe.Recipe.ToModel(
             recipe.UsageCount,
             recipe.IsOwner,

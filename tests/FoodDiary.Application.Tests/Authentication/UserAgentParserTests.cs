@@ -9,7 +9,7 @@ public class UserAgentParserTests {
     [InlineData("")]
     [InlineData(" ")]
     public void Parse_WithBlankUserAgent_ReturnsEmptyParsedAgent(string? userAgent) {
-        var parsed = Parse(userAgent);
+        object parsed = Parse(userAgent);
 
         Assert.Null(GetProperty<string?>(parsed, "BrowserName"));
         Assert.Null(GetProperty<string?>(parsed, "BrowserVersion"));
@@ -54,7 +54,7 @@ public class UserAgentParserTests {
         string browserVersion,
         string operatingSystem,
         string deviceType) {
-        var parsed = Parse(userAgent);
+        object parsed = Parse(userAgent);
 
         Assert.Equal(browserName, GetProperty<string?>(parsed, "BrowserName"));
         Assert.Equal(browserVersion, GetProperty<string?>(parsed, "BrowserVersion"));
@@ -93,7 +93,7 @@ public class UserAgentParserTests {
         string browserVersion,
         string operatingSystem,
         string deviceType) {
-        var parsed = Parse(userAgent);
+        object parsed = Parse(userAgent);
 
         Assert.Equal(browserName, GetProperty<string?>(parsed, "BrowserName"));
         Assert.Equal(browserVersion, GetProperty<string?>(parsed, "BrowserVersion"));
@@ -103,7 +103,7 @@ public class UserAgentParserTests {
 
     [Fact]
     public void Parse_WithChromiumAndUnknownOperatingSystem_ReturnsOtherBrowserAndDesktop() {
-        var parsed = Parse("Mozilla/5.0 CustomAgent Chromium/126.0");
+        object parsed = Parse("Mozilla/5.0 CustomAgent Chromium/126.0");
 
         Assert.Equal("Other", GetProperty<string?>(parsed, "BrowserName"));
         Assert.Null(GetProperty<string?>(parsed, "BrowserVersion"));
@@ -113,7 +113,7 @@ public class UserAgentParserTests {
 
     [Fact]
     public void Parse_WithMarkerWithoutVersion_ReturnsNullVersion() {
-        var parsed = Parse("Mozilla/5.0 (Windows NT 10.0) Chrome/)");
+        object parsed = Parse("Mozilla/5.0 (Windows NT 10.0) Chrome/)");
 
         Assert.Equal("Chrome", GetProperty<string?>(parsed, "BrowserName"));
         Assert.Null(GetProperty<string?>(parsed, "BrowserVersion"));
@@ -121,18 +121,18 @@ public class UserAgentParserTests {
 
     [Fact]
     public void ExtractVersion_WithMissingMarker_ReturnsNull() {
-        var parserType = GetParserType();
-        var method = parserType.GetMethod("ExtractVersion", BindingFlags.Static | BindingFlags.NonPublic);
+        Type parserType = GetParserType();
+        MethodInfo? method = parserType.GetMethod("ExtractVersion", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.NotNull(method);
 
-        var version = method!.Invoke(null, ["Mozilla/5.0 CustomAgent", "Chrome/"]);
+        object? version = method!.Invoke(null, ["Mozilla/5.0 CustomAgent", "Chrome/"]);
 
         Assert.Null(version);
     }
 
     private static object Parse(string? userAgent) {
-        var parserType = GetParserType();
-        var method = parserType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
+        Type parserType = GetParserType();
+        MethodInfo? method = parserType.GetMethod("Parse", BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.NotNull(method);
         return method!.Invoke(null, [userAgent])!;
     }
@@ -144,7 +144,7 @@ public class UserAgentParserTests {
     }
 
     private static TValue GetProperty<TValue>(object instance, string propertyName) {
-        var property = instance.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
+        PropertyInfo? property = instance.GetType().GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public);
         Assert.NotNull(property);
         return (TValue)property!.GetValue(instance)!;
     }

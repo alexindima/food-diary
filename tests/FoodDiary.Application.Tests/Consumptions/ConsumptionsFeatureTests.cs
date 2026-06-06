@@ -28,6 +28,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Consumptions.Models;
+using FluentValidation.Results;
+using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
@@ -35,7 +38,7 @@ namespace FoodDiary.Application.Tests.Consumptions;
 public class ConsumptionsFeatureTests {
     [Fact]
     public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
-        var result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(null, null, 100));
+        Result result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(null, null, 100));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -43,7 +46,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero() {
-        var result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, null);
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, null);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Alcohol);
@@ -51,7 +54,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public void SatietyLevelValidator_WhenPreMealOutOfRange_UsesContractFieldName() {
-        var result = SatietyLevelValidator.Validate(-1, 5);
+        Result result = SatietyLevelValidator.Validate(-1, 5);
 
         Assert.True(result.IsFailure);
         Assert.Contains("PreMealSatietyLevel", result.Error.Message, StringComparison.Ordinal);
@@ -89,7 +92,7 @@ public class ConsumptionsFeatureTests {
                 MealAiItemData.Create("Banana", null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0)
             ]);
 
-        var result = MealNutritionCalculator.Calculate(
+        MealNutritionSummary result = MealNutritionCalculator.Calculate(
             meal,
             new Dictionary<ProductId, Product> { [product.Id] = product },
             new Dictionary<RecipeId, Recipe> { [recipe.Id] = recipe });
@@ -109,7 +112,7 @@ public class ConsumptionsFeatureTests {
 
         meal.AddRecipe(RecipeId.New(), 1);
 
-        var result = MealNutritionCalculator.Calculate(
+        MealNutritionSummary result = MealNutritionCalculator.Calculate(
             meal,
             new Dictionary<ProductId, Product>(),
             new Dictionary<RecipeId, Recipe>());
@@ -133,7 +136,7 @@ public class ConsumptionsFeatureTests {
             Items: null!,
             AiSessions: null);
 
-        var command = request.ToCommand(Guid.NewGuid());
+        CreateConsumptionCommand command = request.ToCommand(Guid.NewGuid());
 
         Assert.Empty(command.Items);
         Assert.Empty(command.AiSessions);
@@ -159,9 +162,9 @@ public class ConsumptionsFeatureTests {
                     Items: null!)
             ]);
 
-        var command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
+        UpdateConsumptionCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
 
-        var aiSession = Assert.Single(command.AiSessions);
+        ConsumptionAiSessionInput aiSession = Assert.Single(command.AiSessions);
         Assert.Empty(aiSession.Items);
     }
 
@@ -207,7 +210,7 @@ public class ConsumptionsFeatureTests {
             3,
             4);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<ConsumptionModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(mealRepository.UpdateCalled);
@@ -246,7 +249,7 @@ public class ConsumptionsFeatureTests {
             3,
             4);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<ConsumptionModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -266,9 +269,9 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var productId = ProductId.New().Value;
-        var recipeId = RecipeId.New().Value;
-        var result = await handler.Handle(
+        Guid productId = ProductId.New().Value;
+        Guid recipeId = RecipeId.New().Value;
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -311,7 +314,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(CreateConsumptionCommand(userId: null), CancellationToken.None);
+        Result<ConsumptionModel> result = await handler.Handle(CreateConsumptionCommand(userId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -329,7 +332,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(CreateConsumptionCommand(user.Id.Value), CancellationToken.None);
+        Result<ConsumptionModel> result = await handler.Handle(CreateConsumptionCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -338,7 +341,7 @@ public class ConsumptionsFeatureTests {
     [Fact]
     public async Task CreateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("create-image-failure@example.com", "hash");
-        var imageAccess = new RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
         var handler = new CreateConsumptionCommandHandler(
             new CreatingMealRepository(),
@@ -348,7 +351,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             imageAccess);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(user.Id.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
@@ -368,7 +371,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 userId.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -406,7 +409,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 userId.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -444,7 +447,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 userId.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -481,7 +484,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
             CancellationToken.None);
 
@@ -500,7 +503,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, Guid.Empty, 1)]),
             CancellationToken.None);
 
@@ -521,7 +524,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 userId.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -560,7 +563,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             new FailingNonNullImageAssetAccessService());
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(
                 user.Id.Value,
                 items: [],
@@ -583,7 +586,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(
                 user.Id.Value,
                 items: [],
@@ -606,7 +609,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             CreateConsumptionCommand(
                 user.Id.Value,
                 items: [],
@@ -630,7 +633,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -671,7 +674,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -712,7 +715,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -736,7 +739,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var session = Assert.Single(repository.StoredMeal!.AiSessions);
+        MealAiSession session = Assert.Single(repository.StoredMeal!.AiSessions);
         Assert.Equal(AiRecognitionSource.Text, session.Source);
         Assert.Equal(new StubDateTimeProvider().UtcNow, session.RecognizedAtUtc);
         Assert.Equal("recognized", session.Notes);
@@ -754,7 +757,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -792,7 +795,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new CreateConsumptionCommand(
                 user.Id.Value,
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
@@ -835,7 +838,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 userId.Value,
                 meal.Id.Value,
@@ -879,7 +882,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 userId.Value,
                 meal.Id.Value,
@@ -910,7 +913,7 @@ public class ConsumptionsFeatureTests {
     public async Task DeleteConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
         var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -923,7 +926,7 @@ public class ConsumptionsFeatureTests {
     public async Task DeleteConsumptionCommandHandler_WhenMealIsMissing_ReturnsNotFound() {
         var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -938,7 +941,7 @@ public class ConsumptionsFeatureTests {
         var repository = new SingleMealRepository(meal);
         var handler = new DeleteConsumptionCommandHandler(repository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteConsumptionCommand(user.Id.Value, meal.Id.Value),
             CancellationToken.None);
 
@@ -950,7 +953,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryValidator_WithNullUserId_HasInvalidTokenError() {
         var validator = new GetConsumptionsOverviewQueryValidator();
 
-        var result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(null, 1, 10, null, null));
+        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(null, 1, 10, null, null));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
@@ -960,7 +963,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryValidator_WithValidUserId_HasNoErrors() {
         var validator = new GetConsumptionsOverviewQueryValidator();
 
-        var result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(Guid.NewGuid(), 1, 10, null, null));
+        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(Guid.NewGuid(), 1, 10, null, null));
 
         Assert.True(result.IsValid);
     }
@@ -976,7 +979,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
@@ -1018,7 +1021,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1064,7 +1067,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1103,7 +1106,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1143,7 +1146,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1185,7 +1188,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1228,7 +1231,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1269,7 +1272,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1319,7 +1322,7 @@ public class ConsumptionsFeatureTests {
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1349,7 +1352,7 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(newAssetId, meal.ImageAssetId);
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
         Assert.Empty(recentItems.LastProductIds);
-        var session = Assert.Single(meal.AiSessions);
+        MealAiSession session = Assert.Single(meal.AiSessions);
         Assert.Equal(AiRecognitionSource.Text, session.Source);
         Assert.Equal(new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc), session.RecognizedAtUtc);
         Assert.Single(session.Items);
@@ -1365,7 +1368,7 @@ public class ConsumptionsFeatureTests {
 
         var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(userId.Value, Guid.Empty),
             CancellationToken.None);
 
@@ -1387,7 +1390,7 @@ public class ConsumptionsFeatureTests {
 
         var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
 
-        var result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
+        Result<ConsumptionModel> result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(meal.Id.Value, result.Value.Id);
@@ -1402,7 +1405,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(null, 1, 10, null, null),
             CancellationToken.None);
 
@@ -1421,7 +1424,7 @@ public class ConsumptionsFeatureTests {
         var from = new DateTime(2026, 4, 4, 20, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 4, 5, 19, 59, 59, 999, DateTimeKind.Utc);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(userId.Value, 1, 25, from, to),
             CancellationToken.None);
 
@@ -1446,14 +1449,14 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(user),
             new StubFavoriteMealRepository([favorite]));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Data.Count);
         Assert.False(result.Value.Data.Single(item => item.Id == lunch.Id.Value).IsFavorite);
-        var favoriteMeal = result.Value.Data.Single(item => item.Id == dinner.Id.Value);
+        ConsumptionModel favoriteMeal = result.Value.Data.Single(item => item.Id == dinner.Id.Value);
         Assert.True(favoriteMeal.IsFavorite);
         Assert.Equal(favorite.Id.Value, favoriteMeal.FavoriteMealId);
     }
@@ -1476,7 +1479,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(user),
             new StubFavoriteMealRepository([favorite]));
 
-        var result = await handler.Handle(
+        Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
             CancellationToken.None);
 
@@ -1501,7 +1504,7 @@ public class ConsumptionsFeatureTests {
             new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
             CancellationToken.None);
 
@@ -1553,7 +1556,7 @@ public class ConsumptionsFeatureTests {
             new FixedMealNutritionService(new MealNutritionSummary(0, 0, 0, 0, 0, 0)),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 19, 30, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
             CancellationToken.None);
 
@@ -1574,12 +1577,12 @@ public class ConsumptionsFeatureTests {
     public async Task UpdateConsumptionCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-image-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        var imageAccess = new RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user, imageAccess: imageAccess);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user, imageAccess: imageAccess);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
@@ -1593,9 +1596,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-missing-user@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(null, meal.Id.Value),
             CancellationToken.None);
 
@@ -1609,9 +1612,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-satiety-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, preMealSatietyLevel: -1),
             CancellationToken.None);
 
@@ -1625,9 +1628,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-missing-item-id@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
             CancellationToken.None);
 
@@ -1641,9 +1644,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-empty-product-id@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(Guid.Empty, null, 150)]),
             CancellationToken.None);
 
@@ -1659,10 +1662,10 @@ public class ConsumptionsFeatureTests {
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
         var recentItems = new RecordingRecentItemRepository();
-        var handler = CreateUpdateHandler(repository, user, recentItems: recentItems);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user, recentItems: recentItems);
         var recipeId = RecipeId.New();
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, recipeId.Value, 1)]),
             CancellationToken.None);
 
@@ -1676,9 +1679,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-empty-ai-image-id@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1696,9 +1699,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-session-image-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user, imageAccess: new FailingNonNullImageAssetAccessService());
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user, imageAccess: new FailingNonNullImageAssetAccessService());
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1716,9 +1719,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-long-ai-notes@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1736,9 +1739,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-manual-nutrition-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1756,9 +1759,9 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-invalid-ai-item@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = CreateUpdateHandler(repository, user);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             UpdateConsumptionCommand(
                 user.Id.Value,
                 meal.Id.Value,
@@ -1778,7 +1781,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
@@ -1795,7 +1798,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
@@ -1811,7 +1814,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
@@ -1823,7 +1826,7 @@ public class ConsumptionsFeatureTests {
     public async Task DeleteConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteConsumptionCommand(null, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -1835,7 +1838,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionByIdQueryHandler(new CreatingMealRepository());
 
-        var result = await handler.Handle(
+        Result<ConsumptionModel> result = await handler.Handle(
             new GetConsumptionByIdQuery(null, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -1850,7 +1853,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
 
-        var result = await handler.Handle(
+        Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(null, 1, 10, null, null, 10),
             CancellationToken.None);
 
@@ -1867,7 +1870,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(user),
             new StubFavoriteMealRepository());
 
-        var result = await handler.Handle(
+        Result<ConsumptionOverviewModel> result = await handler.Handle(
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
             CancellationToken.None);
 
@@ -2340,7 +2343,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(user),
             new StubFavoriteMealRepository());
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
             new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
             CancellationToken.None);
 

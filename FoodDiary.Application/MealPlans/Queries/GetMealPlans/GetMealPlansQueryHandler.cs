@@ -5,6 +5,8 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 
@@ -13,18 +15,18 @@ public class GetMealPlansQueryHandler(IMealPlanRepository mealPlanRepository)
     public async Task<Result<IReadOnlyList<MealPlanSummaryModel>>> Handle(
         GetMealPlansQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<MealPlanSummaryModel>>(userIdResult.Error);
         }
 
         DietType? dietTypeFilter = null;
-        if (!string.IsNullOrWhiteSpace(query.DietType) && Enum.TryParse<DietType>(query.DietType, true, out var parsed)) {
+        if (!string.IsNullOrWhiteSpace(query.DietType) && Enum.TryParse<DietType>(query.DietType, true, out DietType parsed)) {
             dietTypeFilter = parsed;
         }
 
-        var curatedPlans = await mealPlanRepository.GetCuratedAsync(dietTypeFilter, cancellationToken).ConfigureAwait(false);
-        var userPlans = await mealPlanRepository.GetByUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealPlan> curatedPlans = await mealPlanRepository.GetCuratedAsync(dietTypeFilter, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MealPlan> userPlans = await mealPlanRepository.GetByUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         var all = curatedPlans.Concat(userPlans)
             .Select(p => p.ToSummaryModel())

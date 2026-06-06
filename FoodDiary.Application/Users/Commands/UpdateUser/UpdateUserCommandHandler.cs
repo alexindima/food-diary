@@ -11,6 +11,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Text.Json;
+using FoodDiary.Domain.Entities.Assets;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
@@ -43,13 +44,13 @@ public class UpdateUserCommandHandler(
         string? Image);
 
     public async Task<Result<UserModel>> Handle(UpdateUserCommand command, CancellationToken cancellationToken) {
-        var valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UpdateUserValues> valuesResult = await PrepareUpdateValuesAsync(command, cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<UserModel>(valuesResult.Error);
         }
 
-        var values = valuesResult.Value;
-        var oldAssetId = values.User.ProfileImageAssetId;
+        UpdateUserValues values = valuesResult.Value;
+        ImageAssetId? oldAssetId = values.User.ProfileImageAssetId;
         ApplyUpdates(values.User, command, values);
 
         await userRepository.UpdateAsync(values.User, cancellationToken).ConfigureAwait(false);
@@ -66,28 +67,28 @@ public class UpdateUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UpdateUserValues>(accessError);
         }
 
-        var currentUser = user!;
-        var preferencesResult = ParsePreferences(command);
+        User currentUser = user!;
+        Result<ParsedUserPreferences> preferencesResult = ParsePreferences(command);
         if (preferencesResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(preferencesResult.Error);
         }
 
-        var profileImageResult = await ResolveProfileImageAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        Result<ProfileImageValues> profileImageResult = await ResolveProfileImageAsync(command, userId, cancellationToken).ConfigureAwait(false);
         if (profileImageResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(profileImageResult.Error);
         }
 
-        var dashboardLayoutJson = command.DashboardLayout is null
+        string? dashboardLayoutJson = command.DashboardLayout is null
             ? null
             : JsonSerializer.Serialize(command.DashboardLayout);
 
-        var preferences = preferencesResult.Value;
+        ParsedUserPreferences preferences = preferencesResult.Value;
         return Result.Success(new UpdateUserValues(
             currentUser,
             userId,
@@ -102,7 +103,7 @@ public class UpdateUserCommandHandler(
     }
 
     private static Result<ParsedUserPreferences> ParsePreferences(UpdateUserCommand command) {
-        var activityLevelResult = EnumValueParser.ParseOptional<ActivityLevel>(
+        Result<ActivityLevel?> activityLevelResult = EnumValueParser.ParseOptional<ActivityLevel>(
             command.ActivityLevel,
             nameof(UpdateUserCommand.ActivityLevel),
             "Invalid activity level value.");
@@ -110,7 +111,7 @@ public class UpdateUserCommandHandler(
             return Result.Failure<ParsedUserPreferences>(activityLevelResult.Error);
         }
 
-        var languageResult = StringCodeParser.ParseOptionalLanguage(
+        Result<string?> languageResult = StringCodeParser.ParseOptionalLanguage(
             command.Language,
             nameof(UpdateUserCommand.Language),
             "Invalid language value.");
@@ -118,7 +119,7 @@ public class UpdateUserCommandHandler(
             return Result.Failure<ParsedUserPreferences>(languageResult.Error);
         }
 
-        var themeResult = StringCodeParser.ParseOptionalTheme(
+        Result<string?> themeResult = StringCodeParser.ParseOptionalTheme(
             command.Theme,
             nameof(UpdateUserCommand.Theme),
             "Invalid theme value.");
@@ -126,7 +127,7 @@ public class UpdateUserCommandHandler(
             return Result.Failure<ParsedUserPreferences>(themeResult.Error);
         }
 
-        var uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
+        Result<string?> uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
             command.UiStyle,
             nameof(UpdateUserCommand.UiStyle),
             "Invalid UI style value.");
@@ -134,7 +135,7 @@ public class UpdateUserCommandHandler(
             return Result.Failure<ParsedUserPreferences>(uiStyleResult.Error);
         }
 
-        var genderResult = StringCodeParser.ParseOptionalGender(
+        Result<string?> genderResult = StringCodeParser.ParseOptionalGender(
             command.Gender,
             nameof(UpdateUserCommand.Gender),
             "Invalid gender value.");
@@ -154,13 +155,13 @@ public class UpdateUserCommandHandler(
         UpdateUserCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        var profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
+        Result<ImageAssetId?> profileImageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ProfileImageAssetId, nameof(command.ProfileImageAssetId));
         if (profileImageAssetIdResult.IsFailure) {
             return Result.Failure<ProfileImageValues>(profileImageAssetIdResult.Error);
         }
 
-        var newAssetId = profileImageAssetIdResult.Value;
-        var profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        ImageAssetId? newAssetId = profileImageAssetIdResult.Value;
+        Result<ImageAsset?> profileImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             newAssetId,
             userId,
             cancellationToken).ConfigureAwait(false);

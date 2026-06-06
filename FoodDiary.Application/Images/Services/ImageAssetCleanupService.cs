@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 
@@ -13,12 +14,12 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(false, "invalid");
         }
 
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return new DeleteImageAssetResult(false, "not_found");
         }
 
-        var inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken).ConfigureAwait(false);
+        bool inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (inUse) {
             return new DeleteImageAssetResult(false, "in_use");
         }
@@ -39,15 +40,15 @@ public sealed class ImageAssetCleanupService(
             return 0;
         }
 
-        var normalizedOlderThanUtc = olderThanUtc.Kind switch {
+        DateTime normalizedOlderThanUtc = olderThanUtc.Kind switch {
             DateTimeKind.Utc => olderThanUtc,
             _ => olderThanUtc.ToUniversalTime()
         };
 
-        var candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
-        var removed = 0;
+        IReadOnlyList<ImageAsset> candidates = await imageAssetRepository.GetUnusedOlderThanAsync(normalizedOlderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
+        int removed = 0;
 
-        foreach (var asset in candidates) {
+        foreach (ImageAsset asset in candidates) {
             try {
                 await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
                 await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);

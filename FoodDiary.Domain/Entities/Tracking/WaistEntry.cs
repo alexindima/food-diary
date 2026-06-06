@@ -22,8 +22,8 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
 
     public static WaistEntry Create(UserId userId, DateTime date, double circumference) {
         EnsureUserId(userId);
-        var normalizedDate = NormalizeDate(date);
-        var normalizedCircumference = NormalizeCircumference(circumference);
+        DateTime normalizedDate = NormalizeDate(date);
+        double normalizedCircumference = NormalizeCircumference(circumference);
 
         var entry = new WaistEntry(WaistEntryId.New()) {
             UserId = userId,
@@ -36,10 +36,10 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
     }
 
     public void Update(double? circumference = null, DateTime? date = null) {
-        var changed = false;
+        bool changed = false;
 
         if (circumference.HasValue) {
-            var normalizedCircumference = NormalizeCircumference(circumference.Value);
+            double normalizedCircumference = NormalizeCircumference(circumference.Value);
             if (!AreSame(Circumference, normalizedCircumference)) {
                 Circumference = normalizedCircumference;
                 changed = true;
@@ -47,7 +47,7 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
         }
 
         if (date.HasValue) {
-            var normalizedDate = NormalizeDate(date.Value);
+            DateTime normalizedDate = NormalizeDate(date.Value);
             if (Date != normalizedDate) {
                 Date = normalizedDate;
                 changed = true;
@@ -64,7 +64,7 @@ public sealed class WaistEntry : AggregateRoot<WaistEntryId> {
             return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
         }
 
-        var utc = value.ToUniversalTime();
+        DateTime utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }

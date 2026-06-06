@@ -17,12 +17,12 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     [RequiresDockerFact]
     public async Task ProductPagingQuery_UsesCompositeOwnershipIndex() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"products-plan-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var products = Enumerable.Range(0, SeedCount)
+        Product[] products = Enumerable.Range(0, SeedCount)
             .Select(index => Product.Create(
                 user.Id,
                 $"Plan Product {index:D4}",
@@ -42,7 +42,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
         await AnalyzeTableAsync(context, QueryPlanTable.Products);
 
-        var plan = await ExplainAnalyzeAsync(
+        JsonDocument plan = await ExplainAnalyzeAsync(
             context,
             """
             SELECT p."Id", p."CreatedOnUtc"
@@ -60,12 +60,12 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     [RequiresDockerFact]
     public async Task RecipePagingQuery_UsesCompositeOwnershipIndex() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipes-plan-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var recipes = Enumerable.Range(0, SeedCount)
+        Recipe[] recipes = Enumerable.Range(0, SeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
                 $"Plan Recipe {index:D4}",
@@ -78,7 +78,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
         await AnalyzeTableAsync(context, QueryPlanTable.Recipes);
 
-        var plan = await ExplainAnalyzeAsync(
+        JsonDocument plan = await ExplainAnalyzeAsync(
             context,
             """
             SELECT r."Id", r."CreatedOnUtc"
@@ -96,15 +96,15 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     [RequiresDockerFact]
     public async Task ProductSearchQuery_UsesTrigramNameIndex() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var users = Enumerable.Range(0, 12)
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        User[] users = Enumerable.Range(0, 12)
             .Select(index => User.Create($"products-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
             .ToArray();
 
         context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        var products = users.SelectMany((user, userIndex) =>
+        Product[] products = users.SelectMany((user, userIndex) =>
                 Enumerable.Range(0, SeedCount)
                     .Select(index => Product.Create(
                         user.Id,
@@ -127,7 +127,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
         await AnalyzeTableAsync(context, QueryPlanTable.Products);
 
-        var plan = await ExplainAnalyzeAsync(
+        JsonDocument plan = await ExplainAnalyzeAsync(
             context,
             """
             SELECT p."Id", p."CreatedOnUtc"
@@ -145,15 +145,15 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     [RequiresDockerFact]
     public async Task RecipeSearchQuery_UsesTrigramNameIndex() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var users = Enumerable.Range(0, 12)
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        User[] users = Enumerable.Range(0, 12)
             .Select(index => User.Create($"recipes-search-plan-{index}-{Guid.NewGuid():N}@example.com", "hash"))
             .ToArray();
 
         context.Users.AddRange(users);
         await context.SaveChangesAsync();
 
-        var recipes = users.SelectMany((user, userIndex) =>
+        Recipe[] recipes = users.SelectMany((user, userIndex) =>
                 Enumerable.Range(0, SeedCount)
                     .Select(index => Recipe.Create(
                         user.Id,
@@ -169,7 +169,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
         await AnalyzeTableAsync(context, QueryPlanTable.Recipes);
 
-        var plan = await ExplainAnalyzeAsync(
+        JsonDocument plan = await ExplainAnalyzeAsync(
             context,
             """
             SELECT r."Id", r."CreatedOnUtc"
@@ -187,14 +187,14 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
     [RequiresDockerFact]
     public async Task MealPagingQuery_WithDateRange_UsesCompositeOwnershipDateIndex() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"meals-plan-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
-        var meals = Enumerable.Range(0, SeedCount)
+        MealType[] mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
+        Meal[] meals = Enumerable.Range(0, SeedCount)
             .Select(index => Meal.Create(
                 user.Id,
                 startDate.AddDays(index),
@@ -206,7 +206,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
         await context.SaveChangesAsync();
         await AnalyzeTableAsync(context, QueryPlanTable.Meals);
 
-        var plan = await ExplainAnalyzeAsync(
+        JsonDocument plan = await ExplainAnalyzeAsync(
             context,
             """
             SELECT m."Id", m."Date", m."CreatedOnUtc"
@@ -243,7 +243,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
             await connection.OpenAsync().ConfigureAwait(false);
         }
 
-        var command = connection.CreateCommand();
+        NpgsqlCommand command = connection.CreateCommand();
         await using (command.ConfigureAwait(false)) {
             command.CommandText = $"EXPLAIN (ANALYZE, BUFFERS, FORMAT JSON) {sql}";
             if (disableSequentialScan) {
@@ -252,14 +252,14 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
             command.Parameters.AddRange(parameters);
 
-            var raw = Convert.ToString(await command.ExecuteScalarAsync().ConfigureAwait(false));
+            string? raw = Convert.ToString(await command.ExecuteScalarAsync().ConfigureAwait(false));
             Assert.False(string.IsNullOrWhiteSpace(raw));
             return JsonDocument.Parse(raw!);
         }
     }
 
     private static async Task AnalyzeTableAsync(FoodDiaryDbContext context, QueryPlanTable table) {
-        var sql = table switch {
+        string sql = table switch {
             QueryPlanTable.Products => "ANALYZE \"Products\"",
             QueryPlanTable.Recipes => "ANALYZE \"Recipes\"",
             QueryPlanTable.Meals => "ANALYZE \"Meals\"",
@@ -280,7 +280,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
     private static bool ContainsIndexName(JsonElement element, string indexName) {
         switch (element.ValueKind) {
             case JsonValueKind.Object:
-                foreach (var property in element.EnumerateObject()) {
+                foreach (JsonProperty property in element.EnumerateObject()) {
                     if (property.NameEquals("Index Name")
                         && string.Equals(property.Value.GetString(), indexName, StringComparison.Ordinal)) {
                         return true;
@@ -293,7 +293,7 @@ public sealed class QueryPlanIntegrationTests(PostgresDatabaseFixture databaseFi
 
                 return false;
             case JsonValueKind.Array:
-                foreach (var item in element.EnumerateArray()) {
+                foreach (JsonElement item in element.EnumerateArray()) {
                     if (ContainsIndexName(item, indexName)) {
                         return true;
                     }

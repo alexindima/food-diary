@@ -20,7 +20,7 @@ public sealed class StronglyTypedIdInvariantTests {
     [Theory]
     [MemberData(nameof(StronglyTypedGuidIdTypes))]
     public void StronglyTypedGuidId_Empty_ReturnsEmptyGuid(Type idType) {
-        var empty = idType.GetProperty("Empty", BindingFlags.Public | BindingFlags.Static)!.GetValue(null)!;
+        object empty = idType.GetProperty("Empty", BindingFlags.Public | BindingFlags.Static)!.GetValue(null)!;
         var value = (Guid)idType.GetProperty("Value")!.GetValue(empty)!;
 
         Assert.Equal(Guid.Empty, value);
@@ -29,7 +29,7 @@ public sealed class StronglyTypedIdInvariantTests {
     [Theory]
     [MemberData(nameof(StronglyTypedGuidIdTypes))]
     public void StronglyTypedGuidId_New_ReturnsNonEmptyGuid(Type idType) {
-        var id = idType.GetMethod("New", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [])!;
+        object id = idType.GetMethod("New", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [])!;
         var value = (Guid)idType.GetProperty("Value")!.GetValue(id)!;
 
         Assert.NotEqual(Guid.Empty, value);
@@ -39,7 +39,7 @@ public sealed class StronglyTypedIdInvariantTests {
     [MemberData(nameof(StronglyTypedGuidIdTypes))]
     public void StronglyTypedGuidId_Conversions_RoundTripGuid(Type idType) {
         var guid = Guid.NewGuid();
-        var id = idType.GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [guid])!;
+        object id = idType.GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [guid])!;
         var converted = (Guid)idType.GetMethod("op_Implicit", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [id])!;
 
         Assert.Equal(guid, converted);
@@ -49,7 +49,7 @@ public sealed class StronglyTypedIdInvariantTests {
     [MemberData(nameof(StronglyTypedGuidIdTypes))]
     public void StronglyTypedGuidId_ToString_IncludesGuid(Type idType) {
         var guid = Guid.NewGuid();
-        var id = idType.GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [guid])!;
+        object id = idType.GetMethod("op_Explicit", BindingFlags.Public | BindingFlags.Static)!.Invoke(null, [guid])!;
 
         Assert.Contains(guid.ToString(), id.ToString(), StringComparison.Ordinal);
     }

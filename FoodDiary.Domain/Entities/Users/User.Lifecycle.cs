@@ -9,7 +9,7 @@ public sealed partial class User {
 
     public void Deactivate(DateTime? changedAtUtc = null) {
         EnsureNotDeleted();
-        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
+        DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
         ApplyAccountState(GetAccountState().Deactivate());
         SetModified(effectiveChangedAtUtc);
     }
@@ -19,7 +19,7 @@ public sealed partial class User {
             throw new InvalidOperationException("Deleted user cannot be activated directly. Use Restore().");
         }
 
-        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
+        DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(changedAtUtc, nameof(changedAtUtc));
         ApplyAccountState(GetAccountState().Activate());
         SetModified(effectiveChangedAtUtc);
     }
@@ -29,7 +29,7 @@ public sealed partial class User {
             return;
         }
 
-        var normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
+        DateTime normalizedDeletedAtUtc = NormalizeUtcTimestamp(deletedAtUtc, nameof(deletedAtUtc));
 
         ApplySecurityState(GetSecurityState().WithoutTransientTokens());
         ApplyAccountState(GetAccountState().MarkDeleted(normalizedDeletedAtUtc));
@@ -42,7 +42,7 @@ public sealed partial class User {
             return;
         }
 
-        var normalizedRestoredAtUtc = NormalizeOptionalAuditTimestamp(restoredAtUtc, nameof(restoredAtUtc));
+        DateTime normalizedRestoredAtUtc = NormalizeOptionalAuditTimestamp(restoredAtUtc, nameof(restoredAtUtc));
         ApplyAccountState(GetAccountState().Restore());
         RaiseDomainEvent(new UserRestoredDomainEvent(Id, normalizedRestoredAtUtc));
         SetModified(normalizedRestoredAtUtc);

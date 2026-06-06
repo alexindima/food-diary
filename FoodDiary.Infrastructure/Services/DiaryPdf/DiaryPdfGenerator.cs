@@ -28,9 +28,9 @@ internal sealed partial class DiaryPdfGenerator(
         CancellationToken cancellationToken) {
         QuestPDF.Settings.License = LicenseType.Community;
 
-        var texts = textProvider.GetTexts(locale);
-        var useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
-        var mealImages = useCompactMealsMode
+        DiaryPdfReportTexts texts = textProvider.GetTexts(locale);
+        bool useCompactMealsMode = ShouldUseCompactMealsMode(dateFrom, dateTo);
+        IReadOnlyDictionary<MealId, byte[]> mealImages = useCompactMealsMode
             ? new Dictionary<MealId, byte[]>()
             : await LoadMealImagesAsync(meals, cancellationToken).ConfigureAwait(false);
         var report = DiaryReportData.Create(

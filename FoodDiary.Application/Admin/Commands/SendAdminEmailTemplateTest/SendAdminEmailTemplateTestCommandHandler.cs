@@ -13,13 +13,13 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
     IEmailTransport emailTransport)
     : ICommandHandler<SendAdminEmailTemplateTestCommand, Result> {
     public async Task<Result> Handle(SendAdminEmailTemplateTestCommand command, CancellationToken cancellationToken) {
-        var brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
-        var link = GetSampleLink(command.Key);
+        string brand = string.IsNullOrWhiteSpace(options.FromName) ? "FoodDiary" : options.FromName;
+        string link = GetSampleLink(command.Key);
         const string clientName = "Alex Johnson";
 
-        var subject = ApplyTemplateTokens(command.Subject, link, brand, clientName);
-        var htmlBody = ApplyTemplateTokens(command.HtmlBody, link, brand, clientName);
-        var textBody = ApplyTemplateTokens(command.TextBody, link, brand, clientName);
+        string subject = ApplyTemplateTokens(command.Subject, link, brand, clientName);
+        string htmlBody = ApplyTemplateTokens(command.HtmlBody, link, brand, clientName);
+        string textBody = ApplyTemplateTokens(command.TextBody, link, brand, clientName);
 
         using var message = new MailMessage {
             From = new MailAddress(options.FromAddress, options.FromName),

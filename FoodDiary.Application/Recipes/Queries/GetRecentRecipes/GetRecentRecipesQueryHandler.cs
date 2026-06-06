@@ -5,6 +5,7 @@ using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
@@ -20,15 +21,15 @@ public sealed class GetRecentRecipesQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var recentLimit = Math.Clamp(query.Limit, 1, 50);
+        int recentLimit = Math.Clamp(query.Limit, 1, 50);
 
-        var recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecentRecipeUsage> recents = await recentItemRepository.GetRecentRecipesAsync(userId, recentLimit, cancellationToken).ConfigureAwait(false);
         if (recents.Count == 0) {
             return Result.Success<IReadOnlyList<RecipeModel>>(Array.Empty<RecipeModel>());
         }
 
         var idsInOrder = recents.Select(x => x.RecipeId).ToList();
-        var recipesById = await recipeRepository.GetByIdsWithUsageAsync(
+        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> recipesById = await recipeRepository.GetByIdsWithUsageAsync(
             idsInOrder,
             userId,
             query.IncludePublic,
@@ -37,7 +38,7 @@ public sealed class GetRecentRecipesQueryHandler(
         var response = idsInOrder
             .Where(recipesById.ContainsKey)
             .Select(id => {
-                var item = recipesById[id];
+                (Recipe Recipe, int UsageCount) item = recipesById[id];
                 return item.Recipe.ToModel(item.UsageCount, item.Recipe.UserId == userId);
             })
             .ToList();

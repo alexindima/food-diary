@@ -22,7 +22,7 @@ public class RecipeNutritionCalculatorTests {
             fiber: 4,
             alcohol: 0);
 
-        var result = RecipeNutritionCalculator.Calculate(recipe);
+        RecipeNutritionSummary result = RecipeNutritionCalculator.Calculate(recipe);
 
         Assert.Equal(320, result.TotalCalories);
         Assert.Equal(20, result.TotalProteins);
@@ -47,10 +47,10 @@ public class RecipeNutritionCalculatorTests {
             fiber: 4,
             alcohol: 0);
 
-        var step = recipe.AddStep(1, "Mix");
+        RecipeStep step = recipe.AddStep(1, "Mix");
         step.AddProductIngredient(ProductId.New(), amount: 100);
 
-        var result = RecipeNutritionCalculator.Calculate(recipe);
+        RecipeNutritionSummary result = RecipeNutritionCalculator.Calculate(recipe);
 
         Assert.Equal(111, result.TotalCalories);
         Assert.Equal(11, result.TotalProteins);
@@ -80,15 +80,15 @@ public class RecipeNutritionCalculatorTests {
             name: "Recipe",
             servings: 1);
 
-        var step = recipe.AddStep(1, "Mix");
+        RecipeStep step = recipe.AddStep(1, "Mix");
         step.AddNestedRecipeIngredient(nested.Id, 1);
-        var ingredient = Assert.Single(step.Ingredients);
-        var nestedRecipeProperty = typeof(RecipeIngredient)
+        RecipeIngredient ingredient = Assert.Single(step.Ingredients);
+        PropertyInfo? nestedRecipeProperty = typeof(RecipeIngredient)
             .GetProperty(nameof(RecipeIngredient.NestedRecipe), BindingFlags.Instance | BindingFlags.Public);
         Assert.NotNull(nestedRecipeProperty);
         nestedRecipeProperty!.SetValue(ingredient, nested);
 
-        var result = RecipeNutritionCalculator.Calculate(recipe);
+        RecipeNutritionSummary result = RecipeNutritionCalculator.Calculate(recipe);
 
         Assert.Equal(100, result.TotalCalories);
         Assert.Equal(5, result.TotalProteins);

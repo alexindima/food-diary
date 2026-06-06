@@ -24,13 +24,13 @@ public sealed class MailRelayClientTests {
             ApiKey = "secret"
         }));
 
-        var response = await client.EnqueueAsync(CreateRequest(), CancellationToken.None);
+        EnqueueMailRelayEmailResponse response = await client.EnqueueAsync(CreateRequest(), CancellationToken.None);
 
         Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), response.Id);
         Assert.Equal(HttpMethod.Post, handler.Request?.Method);
         Assert.Equal("https://relay.example.test/api/email/send", handler.Request?.RequestUri?.ToString());
         Assert.Equal("secret", handler.Request?.Headers.GetValues("X-Relay-Api-Key").Single());
-        var payload = System.Text.Json.JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
+        EnqueueMailRelayEmailRequest? payload = System.Text.Json.JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
             handler.RequestBody!,
             new System.Text.Json.JsonSerializerOptions(System.Text.Json.JsonSerializerDefaults.Web));
         Assert.Equal("user@example.com", payload!.To.Single());
@@ -67,7 +67,7 @@ public sealed class MailRelayClientTests {
             BaseUrl = "https://relay.example.test"
         }));
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.EnqueueAsync(CreateRequest(), CancellationToken.None));
 
         Assert.Equal("Mail relay returned an invalid enqueue response.", exception.Message);

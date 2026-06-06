@@ -14,7 +14,7 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
     public async Task<RecipeComment?> GetByIdAsync(
         RecipeCommentId id, bool asTracking = false, CancellationToken cancellationToken = default) {
-        var query = asTracking ? context.RecipeComments.AsTracking() : context.RecipeComments.AsNoTracking();
+        IQueryable<RecipeComment> query = asTracking ? context.RecipeComments.AsTracking() : context.RecipeComments.AsNoTracking();
         return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
@@ -30,14 +30,14 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
 
     public async Task<(IReadOnlyList<RecipeComment> Items, int Total)> GetPagedByRecipeAsync(
         RecipeId recipeId, int page, int limit, CancellationToken cancellationToken = default) {
-        var query = context.RecipeComments
+        IQueryable<RecipeComment> query = context.RecipeComments
             .AsNoTracking()
             .Include(c => c.User)
             .Where(c => c.RecipeId == recipeId);
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
-        var items = await query
+        List<RecipeComment> items = await query
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)

@@ -148,7 +148,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
         UpdateRecipeCommand command,
         ValidationContext<UpdateRecipeCommand> context,
         CancellationToken cancellationToken) {
-        context.RootContextData.TryGetValue(RecipeContextKey, out var cached);
+        context.RootContextData.TryGetValue(RecipeContextKey, out object? cached);
         if (cached is Recipe recipe) {
             if (!ValidateUsage(recipe)) {
                 context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
@@ -164,7 +164,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
             return;
         }
 
-        var existing = await _recipeRepository.GetByIdAsync(
+        Recipe? existing = await _recipeRepository.GetByIdAsync(
             new RecipeId(command.RecipeId),
             new UserId(command.UserId.Value),
             includePublic: false,
@@ -190,7 +190,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
     }
 
     private static bool ValidateUsage(Recipe recipe) {
-        var usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
         return usageCount == 0;
     }
 
@@ -202,9 +202,9 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
     private static bool HaveUniqueEffectiveStepOrder(IReadOnlyList<RecipeStepInput> steps) {
         var orders = new HashSet<int>();
-        for (var index = 0; index < steps.Count; index++) {
-            var step = steps[index];
-            var effectiveOrder = step.Order > 0 ? step.Order : index + 1;
+        for (int index = 0; index < steps.Count; index++) {
+            RecipeStepInput step = steps[index];
+            int effectiveOrder = step.Order > 0 ? step.Order : index + 1;
             if (!orders.Add(effectiveOrder)) {
                 return false;
             }

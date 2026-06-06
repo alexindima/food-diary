@@ -23,7 +23,7 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
         ?? throw new InvalidOperationException("RabbitMQ container is not available."));
 
     public async Task InitializeAsync() {
-        if (!DockerAvailability.IsAvailable(out var reason)) {
+        if (!DockerAvailability.IsAvailable(out string? reason)) {
             _skipReason = reason;
             return;
         }
@@ -69,11 +69,11 @@ public sealed class MailRelayEnvironmentFixture : IAsyncLifetime {
     public async Task<string> CreateIsolatedDatabaseAsync() {
         EnsureAvailable();
 
-        var databaseName = $"mailrelay_test_{Guid.NewGuid():N}";
+        string databaseName = $"mailrelay_test_{Guid.NewGuid():N}";
         var connection = new NpgsqlConnection(PostgresConnectionString);
         await using (connection.ConfigureAwait(false)) {
             await connection.OpenAsync().ConfigureAwait(false);
-            var command = connection.CreateCommand();
+            NpgsqlCommand command = connection.CreateCommand();
             await using (command.ConfigureAwait(false)) {
                 command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
                 await command.ExecuteNonQueryAsync().ConfigureAwait(false);

@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Wearables;
@@ -12,9 +13,9 @@ namespace FoodDiary.Infrastructure.Tests.Integrations;
 public sealed class WearableClientTests {
     [Fact]
     public void GoogleFitGetAuthorizationUrl_ContainsExpectedOAuthParameters() {
-        var client = CreateGoogleFitClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)));
+        GoogleFitClient client = CreateGoogleFitClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)));
 
-        var url = client.GetAuthorizationUrl("state value");
+        string url = client.GetAuthorizationUrl("state value");
 
         Assert.Contains("client_id=google-client", url, StringComparison.Ordinal);
         Assert.Contains("redirect_uri=https%3A%2F%2Fapp.test%2Fgoogle", url, StringComparison.Ordinal);
@@ -26,9 +27,9 @@ public sealed class WearableClientTests {
     [Fact]
     public async Task GoogleFitExchangeCodeAsync_WhenClientIdMissing_ReturnsNullWithoutRequest() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
-        var client = CreateGoogleFitClient(handler, clientId: "");
+        GoogleFitClient client = CreateGoogleFitClient(handler, clientId: "");
 
-        var result = await client.ExchangeCodeAsync("code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
         Assert.Null(result);
         Assert.Empty(handler.Requests);
@@ -45,9 +46,9 @@ public sealed class WearableClientTests {
             Assert.Equal("https://www.googleapis.com/oauth2/v1/userinfo?access_token=access", request.RequestUri.AbsoluteUri);
             return JsonResponse("""{"id":"google-user"}""");
         });
-        var client = CreateGoogleFitClient(handler);
+        GoogleFitClient client = CreateGoogleFitClient(handler);
 
-        var result = await client.ExchangeCodeAsync("code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("access", result.AccessToken);
@@ -59,9 +60,9 @@ public sealed class WearableClientTests {
     public async Task GoogleFitRefreshTokenAsync_WhenRefreshTokenMissingInResponse_ReusesExistingRefreshToken() {
         var handler = new RecordingHttpMessageHandler(_ =>
             JsonResponse("""{"access_token":"access-next","expires_in":3600}"""));
-        var client = CreateGoogleFitClient(handler);
+        GoogleFitClient client = CreateGoogleFitClient(handler);
 
-        var result = await client.RefreshTokenAsync("existing-refresh", CancellationToken.None);
+        WearableTokenResult? result = await client.RefreshTokenAsync("existing-refresh", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("access-next", result.AccessToken);
@@ -91,9 +92,9 @@ public sealed class WearableClientTests {
                 }
                 """);
         });
-        var client = CreateGoogleFitClient(handler);
+        GoogleFitClient client = CreateGoogleFitClient(handler);
 
-        var result = await client.FetchDailyDataAsync("access", new DateTime(2026, 4, 6), CancellationToken.None);
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync("access", new DateTime(2026, 4, 6), CancellationToken.None);
 
         Assert.Collection(
             result,
@@ -106,18 +107,18 @@ public sealed class WearableClientTests {
     [Fact]
     public async Task GoogleFitFetchDailyDataAsync_WhenRequestFails_ReturnsEmpty() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
-        var client = CreateGoogleFitClient(handler);
+        GoogleFitClient client = CreateGoogleFitClient(handler);
 
-        var result = await client.FetchDailyDataAsync("access", DateTime.UtcNow, CancellationToken.None);
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync("access", DateTime.UtcNow, CancellationToken.None);
 
         Assert.Empty(result);
     }
 
     [Fact]
     public void FitbitGetAuthorizationUrl_ContainsExpectedOAuthParameters() {
-        var client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)));
+        FitbitClient client = CreateFitbitClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK)));
 
-        var url = client.GetAuthorizationUrl("state value");
+        string url = client.GetAuthorizationUrl("state value");
 
         Assert.Contains("client_id=fitbit-client", url, StringComparison.Ordinal);
         Assert.Contains("redirect_uri=https%3A%2F%2Fapp.test%2Ffitbit", url, StringComparison.Ordinal);
@@ -128,9 +129,9 @@ public sealed class WearableClientTests {
     [Fact]
     public async Task FitbitExchangeCodeAsync_WhenClientIdMissing_ReturnsNullWithoutRequest() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
-        var client = CreateFitbitClient(handler, clientId: "");
+        FitbitClient client = CreateFitbitClient(handler, clientId: "");
 
-        var result = await client.ExchangeCodeAsync("code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
         Assert.Null(result);
         Assert.Empty(handler.Requests);
@@ -143,9 +144,9 @@ public sealed class WearableClientTests {
             Assert.Equal("Basic", request.Headers.Authorization!.Scheme);
             return JsonResponse("""{"access_token":"access","refresh_token":"refresh","user_id":"fitbit-user","expires_in":3600}""");
         });
-        var client = CreateFitbitClient(handler);
+        FitbitClient client = CreateFitbitClient(handler);
 
-        var result = await client.ExchangeCodeAsync("code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("code", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("access", result.AccessToken);
@@ -157,7 +158,7 @@ public sealed class WearableClientTests {
     public async Task FitbitFetchDailyDataAsync_WithDailyResponses_MapsDataPoints() {
         var handler = new RecordingHttpMessageHandler(request => {
             Assert.Equal("Bearer", request.Headers.Authorization!.Scheme);
-            var url = request.RequestUri!.AbsoluteUri;
+            string url = request.RequestUri!.AbsoluteUri;
             if (url.Contains("/activities/date/", StringComparison.Ordinal)) {
                 return JsonResponse("""{"summary":{"steps":1000,"caloriesOut":500,"veryActiveMinutes":10,"fairlyActiveMinutes":15}}""");
             }
@@ -168,9 +169,9 @@ public sealed class WearableClientTests {
 
             return JsonResponse("""{"summary":{"totalMinutesAsleep":420}}""");
         });
-        var client = CreateFitbitClient(handler);
+        FitbitClient client = CreateFitbitClient(handler);
 
-        var result = await client.FetchDailyDataAsync("access", new DateTime(2026, 4, 6), CancellationToken.None);
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync("access", new DateTime(2026, 4, 6), CancellationToken.None);
 
         Assert.Collection(
             result,
@@ -184,9 +185,9 @@ public sealed class WearableClientTests {
     [Fact]
     public async Task FitbitFetchDailyDataAsync_WhenRequestFails_ReturnsEmpty() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
-        var client = CreateFitbitClient(handler);
+        FitbitClient client = CreateFitbitClient(handler);
 
-        var result = await client.FetchDailyDataAsync("access", DateTime.UtcNow, CancellationToken.None);
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync("access", DateTime.UtcNow, CancellationToken.None);
 
         Assert.Empty(result);
     }

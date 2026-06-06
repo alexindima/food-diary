@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 
@@ -12,18 +13,18 @@ public sealed class UpdateAdminLessonCommandHandler(INutritionLessonRepository r
     public async Task<Result<AdminLessonModel>> Handle(
         UpdateAdminLessonCommand command,
         CancellationToken cancellationToken) {
-        if (!Enum.TryParse<LessonCategory>(command.Category, true, out var category)) {
+        if (!Enum.TryParse<LessonCategory>(command.Category, true, out LessonCategory category)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("category", "Invalid lesson category."));
         }
 
-        if (!Enum.TryParse<LessonDifficulty>(command.Difficulty, true, out var difficulty)) {
+        if (!Enum.TryParse<LessonDifficulty>(command.Difficulty, true, out LessonDifficulty difficulty)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("difficulty", "Invalid lesson difficulty."));
         }
 
         var lessonId = new NutritionLessonId(command.Id);
-        var lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await repository.GetByIdTrackingAsync(lessonId, cancellationToken).ConfigureAwait(false);
 
         if (lesson is null) {
             return Result.Failure<AdminLessonModel>(Errors.Lesson.NotFound(command.Id));

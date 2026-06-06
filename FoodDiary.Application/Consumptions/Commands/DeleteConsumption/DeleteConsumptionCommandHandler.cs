@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
@@ -19,7 +20,7 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
         var userId = new UserId(command.UserId!.Value);
         var consumptionId = new MealId(command.ConsumptionId);
 
-        var meal = await mealRepository.GetByIdAsync(
+        Meal? meal = await mealRepository.GetByIdAsync(
             consumptionId,
             userId,
             includeItems: false,

@@ -1,5 +1,9 @@
+using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 using FoodDiary.Application.Lessons.Models;
+using FoodDiary.Application.Lessons.Queries.GetLessonById;
+using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Presentation.Api.Features.Lessons.Mappings;
+using FoodDiary.Presentation.Api.Features.Lessons.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -9,7 +13,7 @@ public sealed class LessonHttpMappingsTests {
     public void ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery("ru", "nutrition");
+        GetLessonsQuery query = userId.ToQuery("ru", "nutrition");
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal("ru", query.Locale);
@@ -21,7 +25,7 @@ public sealed class LessonHttpMappingsTests {
         var userId = Guid.NewGuid();
         var lessonId = Guid.NewGuid();
 
-        var query = userId.ToGetByIdQuery(lessonId);
+        GetLessonByIdQuery query = userId.ToGetByIdQuery(lessonId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(lessonId, query.LessonId);
@@ -32,7 +36,7 @@ public sealed class LessonHttpMappingsTests {
         var userId = Guid.NewGuid();
         var lessonId = Guid.NewGuid();
 
-        var command = userId.ToMarkReadCommand(lessonId);
+        MarkLessonReadCommand command = userId.ToMarkReadCommand(lessonId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(lessonId, command.LessonId);
@@ -45,7 +49,7 @@ public sealed class LessonHttpMappingsTests {
             new(Guid.NewGuid(), "Advanced Macros", null, "macros", "advanced", 10, true),
         };
 
-        var responses = models.ToHttpResponse();
+        IReadOnlyList<LessonSummaryHttpResponse> responses = models.ToHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal("Basics of Nutrition", responses[0].Title);
@@ -59,7 +63,7 @@ public sealed class LessonHttpMappingsTests {
         var id = Guid.NewGuid();
         var model = new LessonDetailModel(id, "Title", "Full content", "Summary", "nutrition", "beginner", 5, true);
 
-        var response = model.ToHttpResponse();
+        LessonDetailHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal("Title", response.Title);

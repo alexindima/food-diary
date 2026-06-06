@@ -5,7 +5,7 @@ namespace FoodDiary.Application.FavoriteRecipes.Mappings;
 
 public static class FavoriteRecipeMappings {
     public static FavoriteRecipeModel ToModel(this FavoriteRecipe favorite) {
-        var totalTime = (favorite.Recipe.PrepTime ?? 0) + (favorite.Recipe.CookTime ?? 0);
+        int totalTime = (favorite.Recipe.PrepTime ?? 0) + (favorite.Recipe.CookTime ?? 0);
 
         return new FavoriteRecipeModel(
             favorite.Id.Value,

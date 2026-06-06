@@ -39,15 +39,15 @@ public readonly record struct HealthAreaScores(
         IReadOnlyDictionary<int, double> nutrientAmounts,
         IReadOnlyDictionary<int, double> dailyValues,
         int? penaltyNutrientId = null) {
-        var percentSum = 0.0;
-        var count = 0;
+        double percentSum = 0.0;
+        int count = 0;
 
-        foreach (var id in nutrientIds) {
-            if (!dailyValues.TryGetValue(id, out var dv) || dv <= 0) {
+        foreach (int id in nutrientIds) {
+            if (!dailyValues.TryGetValue(id, out double dv) || dv <= 0) {
                 continue;
             }
 
-            nutrientAmounts.TryGetValue(id, out var amount);
+            nutrientAmounts.TryGetValue(id, out double amount);
             percentSum += Math.Min(amount / dv * 100.0, 150.0);
             count++;
         }
@@ -56,20 +56,20 @@ public readonly record struct HealthAreaScores(
             return new HealthAreaScore(0, HealthAreaGrade.Unknown);
         }
 
-        var avgPercent = percentSum / count;
+        double avgPercent = percentSum / count;
 
         // Apply sodium penalty for heart health (excess sodium is harmful)
         if (penaltyNutrientId.HasValue &&
-            dailyValues.TryGetValue(penaltyNutrientId.Value, out var penaltyDv) && penaltyDv > 0 &&
-            nutrientAmounts.TryGetValue(penaltyNutrientId.Value, out var penaltyAmount)) {
-            var sodiumPercent = penaltyAmount / penaltyDv * 100.0;
+            dailyValues.TryGetValue(penaltyNutrientId.Value, out double penaltyDv) && penaltyDv > 0 &&
+            nutrientAmounts.TryGetValue(penaltyNutrientId.Value, out double penaltyAmount)) {
+            double sodiumPercent = penaltyAmount / penaltyDv * 100.0;
             if (sodiumPercent > 100) {
                 avgPercent -= (sodiumPercent - 100) * 0.3;
             }
         }
 
-        var score = (int)Math.Round(Math.Clamp(avgPercent, 0, 100));
-        var grade = score switch {
+        int score = (int)Math.Round(Math.Clamp(avgPercent, 0, 100));
+        HealthAreaGrade grade = score switch {
             >= 75 => HealthAreaGrade.Excellent,
             >= 50 => HealthAreaGrade.Good,
             >= 25 => HealthAreaGrade.Fair,

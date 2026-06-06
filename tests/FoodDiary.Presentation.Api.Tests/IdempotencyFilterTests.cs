@@ -17,12 +17,12 @@ public sealed class IdempotencyFilterTests {
     public async Task OnActionExecutionAsync_WithCachedPostResponse_ReturnsCachedContent() {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        var httpContext = CreateHttpContext("POST", "/api/v1/products", "key-1", userId: "user-123");
-        var cacheKey = "idempotency:user-123:/api/v1/products:key-1";
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-1", userId: "user-123");
+        string cacheKey = "idempotency:user-123:/api/v1/products:key-1";
         await cache.SetStringAsync(cacheKey, "{\"StatusCode\":201,\"Body\":\"{\\u0022id\\u0022:\\u0022cached\\u0022}\"}");
 
-        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
-        var nextCalled = false;
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        bool nextCalled = false;
 
         await filter.OnActionExecutionAsync(context, () => {
             nextCalled = true;
@@ -30,7 +30,7 @@ public sealed class IdempotencyFilterTests {
         });
 
         Assert.False(nextCalled);
-        var result = Assert.IsType<ContentResult>(context.Result);
+        ContentResult result = Assert.IsType<ContentResult>(context.Result);
         Assert.Equal(StatusCodes.Status201Created, result.StatusCode);
         Assert.Equal("application/json", result.ContentType);
         Assert.Equal("{\"id\":\"cached\"}", result.Content);
@@ -40,8 +40,8 @@ public sealed class IdempotencyFilterTests {
     public async Task OnActionExecutionAsync_WithSuccessfulPostAndIdempotencyKey_CachesObjectResult() {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        var httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
-        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/consumptions", "key-2", userId: "user-456");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => {
             var actionExecuted = new ActionExecutedContext(
@@ -56,12 +56,12 @@ public sealed class IdempotencyFilterTests {
             return Task.FromResult(actionExecuted);
         });
 
-        var cached = await cache.GetStringAsync("idempotency:user-456:/api/v1/consumptions:key-2");
+        string? cached = await cache.GetStringAsync("idempotency:user-456:/api/v1/consumptions:key-2");
 
         Assert.NotNull(cached);
         using var cacheDoc = JsonDocument.Parse(cached);
         Assert.Equal(StatusCodes.Status201Created, cacheDoc.RootElement.GetProperty("StatusCode").GetInt32());
-        var body = cacheDoc.RootElement.GetProperty("Body").GetString();
+        string? body = cacheDoc.RootElement.GetProperty("Body").GetString();
         Assert.NotNull(body);
         using var bodyDoc = JsonDocument.Parse(body);
         Assert.Equal("created", bodyDoc.RootElement.GetProperty("id").GetString());
@@ -72,8 +72,8 @@ public sealed class IdempotencyFilterTests {
     public async Task OnActionExecutionAsync_WithoutIdempotencyKey_DoesNotCache() {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        var httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-789");
-        var context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", idempotencyKey: null, userId: "user-789");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
 
         await filter.OnActionExecutionAsync(context, () => {
             var actionExecuted = new ActionExecutedContext(
@@ -88,7 +88,7 @@ public sealed class IdempotencyFilterTests {
             return Task.FromResult(actionExecuted);
         });
 
-        var cached = await cache.GetStringAsync("idempotency:user-789:/api/v1/products:");
+        string? cached = await cache.GetStringAsync("idempotency:user-789:/api/v1/products:");
         Assert.Null(cached);
     }
 
@@ -96,9 +96,9 @@ public sealed class IdempotencyFilterTests {
     public async Task OnActionExecutionAsync_WithoutEnableIdempotencyAttribute_SkipsCaching() {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
-        var httpContext = CreateHttpContext("POST", "/api/v1/auth/login", "key-3", userId: "user-000");
-        var context = CreateActionExecutingContext(httpContext);
-        var nextCalled = false;
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/auth/login", "key-3", userId: "user-000");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext);
+        bool nextCalled = false;
 
         await filter.OnActionExecutionAsync(context, () => {
             nextCalled = true;
@@ -109,7 +109,7 @@ public sealed class IdempotencyFilterTests {
             });
         });
 
-        var cached = await cache.GetStringAsync("idempotency:user-000:/api/v1/auth/login:key-3");
+        string? cached = await cache.GetStringAsync("idempotency:user-000:/api/v1/auth/login:key-3");
         Assert.True(nextCalled);
         Assert.Null(cached);
     }
@@ -150,7 +150,7 @@ public sealed class IdempotencyFilterTests {
         private readonly Dictionary<string, byte[]> _entries = new(StringComparer.Ordinal);
 
         public byte[]? Get(string key) {
-            return _entries.TryGetValue(key, out var value) ? value : null;
+            return _entries.TryGetValue(key, out byte[]? value) ? value : null;
         }
 
         public Task<byte[]?> GetAsync(string key, CancellationToken token = default) {

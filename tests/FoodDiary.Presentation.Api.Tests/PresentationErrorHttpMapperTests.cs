@@ -28,9 +28,9 @@ public sealed class PresentationErrorHttpMapperTests {
     [InlineData(nameof(CreateUserNotFound), StatusCodes.Status404NotFound)]
     [InlineData(nameof(CreateUnknownError), StatusCodes.Status500InternalServerError)]
     public void MapStatusCode_ReturnsExpectedStatusCode(string factoryName, int expectedStatusCode) {
-        var error = CreateError(factoryName);
+        Error error = CreateError(factoryName);
 
-        var actual = PresentationErrorHttpMapper.MapStatusCode(error);
+        int actual = PresentationErrorHttpMapper.MapStatusCode(error);
 
         Assert.Equal(expectedStatusCode, actual);
     }

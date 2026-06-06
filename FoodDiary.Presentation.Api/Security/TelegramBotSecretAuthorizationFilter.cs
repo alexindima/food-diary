@@ -19,7 +19,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
     private readonly ILogger<TelegramBotSecretAuthorizationFilter> _logger = logger;
 
     public Task OnAuthorizationAsync(AuthorizationFilterContext context) {
-        using var activity = PresentationApiTelemetry.ActivitySource.StartActivity("auth.telegram.bot-secret", ActivityKind.Internal);
+        using Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity("auth.telegram.bot-secret", ActivityKind.Internal);
         activity?.SetTag("fooddiary.presentation.feature", "Auth");
         activity?.SetTag("fooddiary.presentation.controller", "AuthTelegramController");
         activity?.SetTag("fooddiary.presentation.operation", "auth.telegram.bot-secret");
@@ -32,7 +32,7 @@ public sealed class TelegramBotSecretAuthorizationFilter(
             return Task.CompletedTask;
         }
 
-        var providedSecret = context.HttpContext.Request.Headers[SecretHeaderName].ToString();
+        string providedSecret = context.HttpContext.Request.Headers[SecretHeaderName].ToString();
         if (SecretComparison.FixedTimeEquals(_telegramBotOptions.ApiSecret, providedSecret)) {
             activity?.SetStatus(ActivityStatusCode.Ok);
             PresentationApiTelemetry.OperationCounter.Add(

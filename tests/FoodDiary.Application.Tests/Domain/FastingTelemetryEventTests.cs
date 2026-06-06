@@ -72,7 +72,7 @@ public sealed class FastingTelemetryEventTests {
 
     [Fact]
     public void Create_WithTooLongName_Throws() {
-        var name = new string('a', 65);
+        string name = new('a', 65);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => FastingTelemetryEvent.Create(name, DateTime.UtcNow));
     }

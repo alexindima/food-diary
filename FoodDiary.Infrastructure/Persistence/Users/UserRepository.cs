@@ -41,7 +41,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         int limit,
         bool includeDeleted,
         CancellationToken cancellationToken = default) {
-        var status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
+        UserAccountStatusFilter status = includeDeleted ? UserAccountStatusFilter.All : UserAccountStatusFilter.Active;
         return await GetPagedAsync(search, page, limit, status, cancellationToken).ConfigureAwait(false);
     }
 
@@ -51,9 +51,9 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Max(limit, 1);
-        var filteredQuery = context.Users.AsQueryable();
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Max(limit, 1);
+        IQueryable<User> filteredQuery = context.Users.AsQueryable();
 
         filteredQuery = status switch {
             UserAccountStatusFilter.Active => filteredQuery.Where(u => u.IsActive && u.DeletedAt == null),
@@ -63,7 +63,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         };
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var term = $"%{EscapeLikePattern(search.Trim())}%";
+            string term = $"%{EscapeLikePattern(search.Trim())}%";
             filteredQuery = filteredQuery.Where(u =>
                 EF.Functions.ILike(u.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(u.Username ?? string.Empty, term, LikeEscapeCharacter) ||
@@ -71,8 +71,8 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
                 EF.Functions.ILike(u.LastName ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
-        var pageIds = await filteredQuery
+        int total = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<UserId> pageIds = await filteredQuery
             .OrderByDescending(u => u.CreatedOnUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -83,7 +83,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             return ([], total);
         }
 
-        var usersById = await UsersWithRoles()
+        Dictionary<UserId, User> usersById = await UsersWithRoles()
             .Where(u => pageIds.Contains(u.Id))
             .ToDictionaryAsync(u => u.Id, cancellationToken).ConfigureAwait(false);
 
@@ -105,13 +105,13 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             })
             .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        var premiumUsers = await context.UserRoles
+        int premiumUsers = await context.UserRoles
             .Where(ur => ur.Role.Name == RoleNames.Premium)
             .Select(ur => ur.UserId)
             .Distinct()
             .CountAsync(cancellationToken).ConfigureAwait(false);
 
-        var recentUsers = await UsersWithRoles()
+        List<User> recentUsers = await UsersWithRoles()
             .Where(u => u.DeletedAt == null)
             .OrderByDescending(u => u.CreatedOnUtc)
             .Take(recentLimit)

@@ -14,7 +14,7 @@ public class CycleEventsTests {
 
         cycle.AddOrUpdateDay(DateTime.UtcNow, isPeriod: true, symptoms);
 
-        var evt = Assert.Single(cycle.DomainEvents.OfType<CycleDayUpsertedDomainEvent>());
+        CycleDayUpsertedDomainEvent evt = Assert.Single(cycle.DomainEvents.OfType<CycleDayUpsertedDomainEvent>());
         Assert.True(evt.IsCreated);
     }
 
@@ -22,11 +22,11 @@ public class CycleEventsTests {
     public void RemoveDay_RaisesRemovedEvent() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(0, 0, 0, 0, 0, 0, 0);
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         cycle.AddOrUpdateDay(date, isPeriod: true, symptoms);
         cycle.ClearDomainEvents();
 
-        var removed = cycle.RemoveDay(date);
+        bool removed = cycle.RemoveDay(date);
 
         Assert.True(removed);
         Assert.Contains(cycle.DomainEvents, e => e is CycleDayRemovedDomainEvent);

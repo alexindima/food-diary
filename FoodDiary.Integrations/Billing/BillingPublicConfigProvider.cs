@@ -13,8 +13,8 @@ public sealed class BillingPublicConfigProvider(
     IOptions<YooKassaOptions> yooKassaOptions)
     : IBillingPublicConfigProvider {
     public BillingPublicConfigModel GetPublicConfig() {
-        var provider = billingOptions.Value.Provider?.Trim() ?? string.Empty;
-        var availableProviders = ResolveAvailableProviders(provider);
+        string provider = billingOptions.Value.Provider?.Trim() ?? string.Empty;
+        string[] availableProviders = ResolveAvailableProviders(provider);
 
         return new BillingPublicConfigModel(
             provider,

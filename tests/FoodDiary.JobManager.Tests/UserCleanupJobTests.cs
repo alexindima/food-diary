@@ -13,11 +13,11 @@ public sealed class UserCleanupJobTests : IDisposable {
     [Fact]
     public async Task Execute_WhenNoDeletedUsers_RecordsSuccess() {
         var cleanup = new StubUserCleanupService(usersPerBatch: 0);
-        var job = CreateJob(cleanup);
+        UserCleanupJob job = CreateJob(cleanup);
 
         await job.Execute();
 
-        var snapshot = _stateTracker.GetSnapshot("users.cleanup");
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("users.cleanup");
         Assert.NotNull(snapshot);
         Assert.NotNull(snapshot.Value.LastSucceededAtUtc);
     }
@@ -26,7 +26,7 @@ public sealed class UserCleanupJobTests : IDisposable {
     public async Task Execute_WithDeletedUsers_CleansUpInBatches() {
         var cleanup = new StubUserCleanupService(usersPerBatch: 2, totalAvailable: 3);
         var options = new UserCleanupOptions { BatchSize = 2, RetentionDays = 30 };
-        var job = CreateJob(cleanup, options);
+        UserCleanupJob job = CreateJob(cleanup, options);
 
         await job.Execute();
 
@@ -39,7 +39,7 @@ public sealed class UserCleanupJobTests : IDisposable {
         var reassignId = Guid.NewGuid();
         var cleanup = new StubUserCleanupService(usersPerBatch: 0);
         var options = new UserCleanupOptions { ReassignUserId = reassignId.ToString() };
-        var job = CreateJob(cleanup, options);
+        UserCleanupJob job = CreateJob(cleanup, options);
 
         await job.Execute();
 
@@ -50,7 +50,7 @@ public sealed class UserCleanupJobTests : IDisposable {
     public async Task Execute_WithInvalidReassignUserId_PassesNull() {
         var cleanup = new StubUserCleanupService(usersPerBatch: 0);
         var options = new UserCleanupOptions { ReassignUserId = "not-a-guid" };
-        var job = CreateJob(cleanup, options);
+        UserCleanupJob job = CreateJob(cleanup, options);
 
         await job.Execute();
 
@@ -60,11 +60,11 @@ public sealed class UserCleanupJobTests : IDisposable {
     [Fact]
     public async Task Execute_WhenServiceThrows_RecordsFailure() {
         var cleanup = new ThrowingUserCleanupService();
-        var job = CreateJob(cleanup);
+        UserCleanupJob job = CreateJob(cleanup);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
 
-        var snapshot = _stateTracker.GetSnapshot("users.cleanup");
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("users.cleanup");
         Assert.Equal(1, snapshot!.Value.ConsecutiveFailures);
     }
 
@@ -91,8 +91,8 @@ public sealed class UserCleanupJobTests : IDisposable {
             DateTime olderThanUtc, int batchSize, Guid? reassignUserId, CancellationToken ct = default) {
             CallCount++;
             LastReassignUserId = reassignUserId;
-            var remaining = totalAvailable - TotalDeleted;
-            var toDelete = Math.Min(Math.Min(usersPerBatch, batchSize), remaining);
+            int remaining = totalAvailable - TotalDeleted;
+            int toDelete = Math.Min(Math.Min(usersPerBatch, batchSize), remaining);
             TotalDeleted += toDelete;
             return Task.FromResult(toDelete);
         }

@@ -24,7 +24,7 @@ public sealed class MailInboxClientTests {
             ApiKey = "secret"
         }));
 
-        var messages = await client.GetMessagesAsync(10, CancellationToken.None);
+        IReadOnlyList<InboundMailMessageSummaryResponse> messages = await client.GetMessagesAsync(10, CancellationToken.None);
 
         Assert.Empty(messages);
         Assert.Equal(HttpMethod.Get, handler.Request?.Method);
@@ -50,7 +50,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
 
         Assert.Contains("invalid message list", exception.Message, StringComparison.Ordinal);
@@ -67,7 +67,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessagesAsync(limit: null, CancellationToken.None));
 
         Assert.Contains("empty message list", exception.Message, StringComparison.Ordinal);
@@ -81,7 +81,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var message = await client.GetMessageAsync(Guid.Parse("11111111-1111-1111-1111-111111111111"), CancellationToken.None);
+        InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(Guid.Parse("11111111-1111-1111-1111-111111111111"), CancellationToken.None);
 
         Assert.Null(message);
     }
@@ -96,7 +96,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
 
         Assert.Contains("invalid message details", exception.Message, StringComparison.Ordinal);
@@ -124,7 +124,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var message = await client.GetMessageAsync(id, CancellationToken.None);
+        InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(id, CancellationToken.None);
 
         Assert.NotNull(message);
         Assert.Equal(expected.Id, message.Id);
@@ -144,7 +144,7 @@ public sealed class MailInboxClientTests {
         };
         var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(
             () => client.GetMessageAsync(Guid.NewGuid(), CancellationToken.None));
 
         Assert.Contains("empty message details", exception.Message, StringComparison.Ordinal);
@@ -153,7 +153,7 @@ public sealed class MailInboxClientTests {
     [Fact]
     public void InboundMailMessageSummaryResponse_ExposesConfiguredValues() {
         var id = Guid.NewGuid();
-        var receivedAtUtc = DateTimeOffset.UtcNow;
+        DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
 
         var response = new InboundMailMessageSummaryResponse(
             id,
@@ -191,11 +191,11 @@ public sealed class MailInboxClientTests {
             options.ApiKey = "secret";
             options.Timeout = TimeSpan.FromSeconds(3);
         });
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var options = provider.GetRequiredService<IOptions<MailInboxClientOptions>>().Value;
-        var clientFactory = provider.GetRequiredService<IHttpClientFactory>();
-        using var httpClient = clientFactory.CreateClient(nameof(IMailInboxClient));
+        MailInboxClientOptions options = provider.GetRequiredService<IOptions<MailInboxClientOptions>>().Value;
+        IHttpClientFactory clientFactory = provider.GetRequiredService<IHttpClientFactory>();
+        using HttpClient httpClient = clientFactory.CreateClient(nameof(IMailInboxClient));
 
         Assert.Equal("https://inbox.example.test", options.BaseUrl);
         Assert.Equal(TimeSpan.FromSeconds(3), options.Timeout);

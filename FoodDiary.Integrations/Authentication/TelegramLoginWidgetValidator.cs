@@ -21,14 +21,14 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramNotConfigured);
         }
 
-        var dataCheckString = BuildDataCheckString(data);
+        string dataCheckString = BuildDataCheckString(data);
         if (!IsValidHash(dataCheckString, data.Hash)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        var authDateUtc = DateTimeOffset.FromUnixTimeSeconds(data.AuthDate).UtcDateTime;
+        DateTime authDateUtc = DateTimeOffset.FromUnixTimeSeconds(data.AuthDate).UtcDateTime;
         if (_options.AuthTtlSeconds > 0) {
-            var expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
+            DateTime expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
             if (dateTimeProvider.UtcNow > expiresAt) {
                 return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
             }
@@ -72,8 +72,8 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
     }
 
     private bool IsValidHash(string dataCheckString, string hash) {
-        var secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(_options.BotToken));
-        var calculatedHash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(_options.BotToken));
+        string calculatedHash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return CryptographicOperations.FixedTimeEquals(
             Encoding.UTF8.GetBytes(calculatedHash),
             Encoding.UTF8.GetBytes(hash.ToLowerInvariant()));
@@ -81,9 +81,9 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
 
     private static string ComputeHmacSha256Hex(byte[] key, string message) {
         using var hmac = new HMACSHA256(key);
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+        byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
         var sb = new StringBuilder(hash.Length * 2);
-        foreach (var b in hash) {
+        foreach (byte b in hash) {
             sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
         }
 

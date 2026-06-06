@@ -72,8 +72,8 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateComment(string? comment) {
-        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
-        var state = GetDetailsState();
+        string? normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        MealDetailsState state = GetDetailsState();
         if (string.Equals(state.Comment, normalizedComment, StringComparison.Ordinal)) {
             return;
         }
@@ -83,9 +83,9 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateImage(string? imageUrl, ImageAssetId? imageAssetId = null) {
-        var state = GetDetailsState();
-        var changed = false;
-        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        MealDetailsState state = GetDetailsState();
+        bool changed = false;
+        string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
         if (!string.Equals(state.ImageUrl, normalizedImageUrl, StringComparison.Ordinal)) {
             state = state with { ImageUrl = normalizedImageUrl };
             changed = true;
@@ -105,8 +105,8 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateDate(DateTime date) {
-        var normalizedDate = NormalizeDate(date);
-        var state = GetDetailsState();
+        DateTime normalizedDate = NormalizeDate(date);
+        MealDetailsState state = GetDetailsState();
         if (state.Date == normalizedDate) {
             return;
         }
@@ -116,7 +116,7 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateMealType(MealType? mealType) {
-        var state = GetDetailsState();
+        MealDetailsState state = GetDetailsState();
         if (state.MealType == mealType) {
             return;
         }
@@ -169,7 +169,7 @@ public sealed class Meal : AggregateRoot<MealId> {
                 .Select(item => MealAiItem.CreateFromState(item.ToState()))
                 .ToList();
 
-            foreach (var item in createdItems) {
+            foreach (MealAiItem? item in createdItems) {
                 item.AttachToSession(session.Id);
             }
 
@@ -190,8 +190,8 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void ApplyNutrition(MealNutritionUpdate update) {
-        var nextState = CreateNutritionState(update);
-        var currentState = GetNutritionState();
+        MealNutritionState nextState = CreateNutritionState(update);
+        MealNutritionState currentState = GetNutritionState();
         if (NutritionStatesAreClose(currentState, nextState)) {
             return;
         }
@@ -212,12 +212,12 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     private static MealNutritionState CreateNutritionState(MealNutritionUpdate update) {
-        var nextTotalCalories = RoundNonNegative(update.TotalCalories, nameof(update.TotalCalories));
-        var nextTotalProteins = RoundNonNegative(update.TotalProteins, nameof(update.TotalProteins));
-        var nextTotalFats = RoundNonNegative(update.TotalFats, nameof(update.TotalFats));
-        var nextTotalCarbs = RoundNonNegative(update.TotalCarbs, nameof(update.TotalCarbs));
-        var nextTotalFiber = RoundNonNegative(update.TotalFiber, nameof(update.TotalFiber));
-        var nextTotalAlcohol = RoundNonNegative(update.TotalAlcohol, nameof(update.TotalAlcohol));
+        double nextTotalCalories = RoundNonNegative(update.TotalCalories, nameof(update.TotalCalories));
+        double nextTotalProteins = RoundNonNegative(update.TotalProteins, nameof(update.TotalProteins));
+        double nextTotalFats = RoundNonNegative(update.TotalFats, nameof(update.TotalFats));
+        double nextTotalCarbs = RoundNonNegative(update.TotalCarbs, nameof(update.TotalCarbs));
+        double nextTotalFiber = RoundNonNegative(update.TotalFiber, nameof(update.TotalFiber));
+        double nextTotalAlcohol = RoundNonNegative(update.TotalAlcohol, nameof(update.TotalAlcohol));
 
         return new MealNutritionState(
             nextTotalCalories,
@@ -236,9 +236,9 @@ public sealed class Meal : AggregateRoot<MealId> {
     }
 
     public void UpdateSatietyLevels(int? preMealLevel, int? postMealLevel) {
-        var normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 3);
-        var normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 3);
-        var state = GetDetailsState();
+        int normalizedPre = NormalizeSatietyLevel(preMealLevel ?? 3);
+        int normalizedPost = NormalizeSatietyLevel(postMealLevel ?? 3);
+        MealDetailsState state = GetDetailsState();
 
         if (state.PreMealSatietyLevel == normalizedPre && state.PostMealSatietyLevel == normalizedPost) {
             return;
@@ -354,7 +354,7 @@ public sealed class Meal : AggregateRoot<MealId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

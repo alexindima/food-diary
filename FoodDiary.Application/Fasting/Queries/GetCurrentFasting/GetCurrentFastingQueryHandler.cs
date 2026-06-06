@@ -6,6 +6,7 @@ using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 
@@ -21,17 +22,17 @@ public class GetCurrentFastingQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel?>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Success<FastingSessionModel?>(null);
         }
 
-        var checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingCheckIn> checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken).ConfigureAwait(false);
         return Result.Success<FastingSessionModel?>(current.ToModel(current.Plan, checkIns));
     }
 }

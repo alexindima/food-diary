@@ -12,8 +12,8 @@ public sealed class SearchProductSuggestionsQueryHandler(IEnumerable<IProductSea
         CancellationToken cancellationToken) {
         var suggestions = new List<ProductSearchSuggestionModel>();
 
-        foreach (var provider in providers) {
-            var providerSuggestions = await provider.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
+        foreach (IProductSearchSuggestionProvider provider in providers) {
+            IReadOnlyList<ProductSearchSuggestionModel> providerSuggestions = await provider.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
             suggestions.AddRange(providerSuggestions);
         }
 

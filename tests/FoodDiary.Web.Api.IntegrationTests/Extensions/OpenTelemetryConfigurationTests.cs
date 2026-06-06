@@ -12,12 +12,12 @@ public sealed class OpenTelemetryConfigurationTests {
     [Fact]
     public void AddApiServices_WithoutOtlpEndpoint_DoesNotRegisterTelemetryProviders() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(otlpEndpoint: null);
+        IConfiguration configuration = CreateConfiguration(otlpEndpoint: null);
 
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Null(provider.GetService<TracerProvider>());
         Assert.Null(provider.GetService<MeterProvider>());
@@ -26,12 +26,12 @@ public sealed class OpenTelemetryConfigurationTests {
     [Fact]
     public void AddApiServices_WithValidOtlpEndpoint_RegistersTelemetryProviders() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration("http://localhost:4317");
+        IConfiguration configuration = CreateConfiguration("http://localhost:4317");
 
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.NotNull(provider.GetService<TracerProvider>());
         Assert.NotNull(provider.GetService<MeterProvider>());
@@ -40,14 +40,14 @@ public sealed class OpenTelemetryConfigurationTests {
     [Fact]
     public void AddApiServices_WithInvalidOtlpEndpoint_Throws() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration("not-a-uri");
+        IConfiguration configuration = CreateConfiguration("not-a-uri");
 
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var exception = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<TracerProvider>());
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<TracerProvider>());
         Assert.Contains(exception.Failures, failure => failure.Contains("OpenTelemetry:Otlp:Endpoint", StringComparison.Ordinal));
     }
 

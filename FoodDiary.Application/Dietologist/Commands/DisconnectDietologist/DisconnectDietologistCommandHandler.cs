@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 
@@ -17,13 +18,13 @@ public class DisconnectDietologistCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var clientUserId = new UserId(command.ClientUserId);
-        var invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
+        DietologistInvitation? invitation = await invitationRepository.GetActiveByClientAndDietologistAsync(
             clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null) {

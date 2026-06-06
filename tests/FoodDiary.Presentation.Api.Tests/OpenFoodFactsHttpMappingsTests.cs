@@ -1,5 +1,8 @@
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
+using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Mappings;
+using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -7,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class OpenFoodFactsHttpMappingsTests {
     [Fact]
     public void ToQuery_MapsBarcode() {
-        var query = OpenFoodFactsHttpMappings.ToQuery("4600000000001");
+        SearchByBarcodeQuery query = OpenFoodFactsHttpMappings.ToQuery("4600000000001");
 
         Assert.Equal("4600000000001", query.Barcode);
     }
@@ -16,7 +19,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
     public void ToHttpResponse_WhenModelIsNull_ReturnsNull() {
         OpenFoodFactsProductModel? model = null;
 
-        var response = model.ToHttpResponse();
+        OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 
         Assert.Null(response);
     }
@@ -35,7 +38,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
             4.7,
             0);
 
-        var response = model.ToHttpResponse();
+        OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 
         Assert.NotNull(response);
         Assert.Equal("4600000000001", response.Barcode);
@@ -52,7 +55,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
 
     [Fact]
     public void ToSearchQuery_MapsSearchAndLimit() {
-        var query = OpenFoodFactsHttpMappings.ToSearchQuery("milk", 15);
+        SearchOpenFoodFactsQuery query = OpenFoodFactsHttpMappings.ToSearchQuery("milk", 15);
 
         Assert.Equal("milk", query.Search);
         Assert.Equal(15, query.Limit);
@@ -65,7 +68,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
             new("222", "Product B", null, "Cat B", null, null, null, null, null, null),
         };
 
-        var responses = models.ToListHttpResponse();
+        IReadOnlyList<OpenFoodFactsProductHttpResponse> responses = models.ToListHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal("111", responses[0].Barcode);
@@ -78,7 +81,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
     public void ToListHttpResponse_WithEmptyList_ReturnsEmpty() {
         var models = new List<OpenFoodFactsProductModel>();
 
-        var responses = models.ToListHttpResponse();
+        IReadOnlyList<OpenFoodFactsProductHttpResponse> responses = models.ToListHttpResponse();
 
         Assert.Empty(responses);
     }
@@ -90,7 +93,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
             "Unknown Product",
             null, null, null, null, null, null, null, null);
 
-        var response = model.ToHttpResponse();
+        OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 
         Assert.NotNull(response);
         Assert.Equal("Unknown Product", response.Name);

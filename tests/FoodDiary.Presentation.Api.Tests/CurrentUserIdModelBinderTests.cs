@@ -15,7 +15,7 @@ public sealed class CurrentUserIdModelBinderTests {
         var httpContext = new DefaultHttpContext {
             User = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.NameIdentifier, userGuid.ToString())], "test")),
         };
-        var bindingContext = CreateBindingContext(httpContext);
+        DefaultModelBindingContext bindingContext = CreateBindingContext(httpContext);
 
         await binder.BindModelAsync(bindingContext);
 
@@ -27,7 +27,7 @@ public sealed class CurrentUserIdModelBinderTests {
     public async Task BindModelAsync_WithoutCurrentUser_ThrowsCurrentUserUnavailableException() {
         var binder = new CurrentUserIdModelBinder();
         var httpContext = new DefaultHttpContext();
-        var bindingContext = CreateBindingContext(httpContext);
+        DefaultModelBindingContext bindingContext = CreateBindingContext(httpContext);
 
         await Assert.ThrowsAsync<CurrentUserUnavailableException>(() => binder.BindModelAsync(bindingContext));
     }
@@ -39,7 +39,7 @@ public sealed class CurrentUserIdModelBinderTests {
         var httpContext = new DefaultHttpContext {
             User = new ClaimsPrincipal(new ClaimsIdentity([new Claim("sub", userGuid.ToString())], "test")),
         };
-        var bindingContext = CreateBindingContext(httpContext);
+        DefaultModelBindingContext bindingContext = CreateBindingContext(httpContext);
 
         await binder.BindModelAsync(bindingContext);
 
@@ -49,7 +49,7 @@ public sealed class CurrentUserIdModelBinderTests {
 
     private static DefaultModelBindingContext CreateBindingContext(HttpContext httpContext, Type? modelType = null) {
         var metadataProvider = new EmptyModelMetadataProvider();
-        var effectiveModelType = modelType ?? typeof(Guid);
+        Type effectiveModelType = modelType ?? typeof(Guid);
 
         return new DefaultModelBindingContext {
             ActionContext = new Microsoft.AspNetCore.Mvc.ActionContext {

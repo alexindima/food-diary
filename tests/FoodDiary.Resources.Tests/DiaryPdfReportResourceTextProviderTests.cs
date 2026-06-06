@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Resources.Reports;
 
 namespace FoodDiary.Resources.Tests;
@@ -13,7 +14,7 @@ public sealed class DiaryPdfReportResourceTextProviderTests {
     public void GetTexts_ResolvesSupportedCulture(string? locale, string expectedCulture) {
         var provider = new DiaryPdfReportResourceTextProvider();
 
-        var texts = provider.GetTexts(locale);
+        DiaryPdfReportTexts texts = provider.GetTexts(locale);
 
         Assert.Equal(expectedCulture, texts.CultureName);
         Assert.False(string.IsNullOrWhiteSpace(texts.ReportTitle));
@@ -26,7 +27,7 @@ public sealed class DiaryPdfReportResourceTextProviderTests {
     public void GetTexts_WhenUnsupportedLocale_FallsBackToEnglish() {
         var provider = new DiaryPdfReportResourceTextProvider();
 
-        var texts = provider.GetTexts("ka-GE");
+        DiaryPdfReportTexts texts = provider.GetTexts("ka-GE");
 
         Assert.Equal("en", texts.CultureName);
         Assert.False(string.IsNullOrWhiteSpace(texts.NoMealsMessage));

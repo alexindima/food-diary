@@ -19,8 +19,8 @@ public sealed class MailRelayQueueProcessorHostedService(
 
         do {
             try {
-                var claimedMessages = await queueStore.ClaimDueBatchAsync(stoppingToken).ConfigureAwait(false);
-                foreach (var message in claimedMessages) {
+                IReadOnlyList<QueuedEmailMessage> claimedMessages = await queueStore.ClaimDueBatchAsync(stoppingToken).ConfigureAwait(false);
+                foreach (QueuedEmailMessage message in claimedMessages) {
                     await messageProcessor.ProcessAsync(message, stoppingToken).ConfigureAwait(false);
                 }
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {

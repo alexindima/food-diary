@@ -11,7 +11,7 @@ public sealed class FastingNotificationHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenDisabled_DoesNotProcessNotifications() {
         var scheduler = new RecordingFastingNotificationScheduler();
-        using var provider = BuildServiceProvider(scheduler);
+        using ServiceProvider provider = BuildServiceProvider(scheduler);
         var service = new FastingNotificationHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = false, PollIntervalSeconds = 1 }),
@@ -27,7 +27,7 @@ public sealed class FastingNotificationHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenEnabled_ProcessesNotifications() {
         var scheduler = new RecordingFastingNotificationScheduler();
-        using var provider = BuildServiceProvider(scheduler);
+        using ServiceProvider provider = BuildServiceProvider(scheduler);
         var service = new FastingNotificationHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = true, PollIntervalSeconds = 1 }),
@@ -43,7 +43,7 @@ public sealed class FastingNotificationHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenSchedulerThrows_ContinuesUntilStopped() {
         var scheduler = new ThrowingFastingNotificationScheduler();
-        using var provider = BuildServiceProvider(scheduler);
+        using ServiceProvider provider = BuildServiceProvider(scheduler);
         var service = new FastingNotificationHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = true, PollIntervalSeconds = 1 }),
@@ -59,7 +59,7 @@ public sealed class FastingNotificationHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenSchedulerObservesCancellation_StopsCleanly() {
         var scheduler = new CancelingFastingNotificationScheduler();
-        using var provider = BuildServiceProvider(scheduler);
+        using ServiceProvider provider = BuildServiceProvider(scheduler);
         var service = new FastingNotificationHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = true, PollIntervalSeconds = 1 }),
@@ -92,7 +92,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }
@@ -111,7 +111,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }
@@ -129,7 +129,7 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }

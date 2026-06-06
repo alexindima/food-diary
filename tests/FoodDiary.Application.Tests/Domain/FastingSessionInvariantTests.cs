@@ -24,7 +24,7 @@ public class FastingSessionInvariantTests {
     [Fact]
     public void Create_WithValidValues_Succeeds() {
         var userId = UserId.New();
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
 
         var session = FastingSession.Create(userId, FastingProtocol.F18_6, 18, startedAt);
 
@@ -66,7 +66,7 @@ public class FastingSessionInvariantTests {
     public void End_SetsCompletedAndEndedAt() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow);
-        var endedAt = DateTime.UtcNow.AddHours(16);
+        DateTime endedAt = DateTime.UtcNow.AddHours(16);
 
         session.End(endedAt);
 
@@ -81,7 +81,7 @@ public class FastingSessionInvariantTests {
     [InlineData(FastingProtocol.F20_4, 20)]
     [InlineData(FastingProtocol.CustomIntermittent, 16)]
     public void End_IntermittentBeforeTargetReached_SetsCompletedStatus(FastingProtocol protocol, int plannedDurationHours) {
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(
             UserId.New(), protocol, plannedDurationHours, startedAt);
 
@@ -94,7 +94,7 @@ public class FastingSessionInvariantTests {
 
     [Fact]
     public void End_ExtendedBeforeTargetReached_SetsInterruptedStatus() {
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F72_0, 72, startedAt);
 
@@ -107,7 +107,7 @@ public class FastingSessionInvariantTests {
 
     [Fact]
     public void End_NonIntermittentAfterTargetReached_SetsCompletedStatus() {
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F24_0, 24, startedAt);
 
@@ -134,7 +134,7 @@ public class FastingSessionInvariantTests {
         int plannedDurationHours,
         int elapsedHours,
         FastingSessionStatus expectedStatus) {
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(
             UserId.New(), protocol, plannedDurationHours, startedAt);
         session.End(startedAt.AddHours(elapsedHours));
@@ -146,10 +146,10 @@ public class FastingSessionInvariantTests {
     public void End_WhenAlreadyCompleted_IsIdempotent() {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow);
-        var endedAt = DateTime.UtcNow.AddHours(16);
+        DateTime endedAt = DateTime.UtcNow.AddHours(16);
         session.End(endedAt);
-        var modifiedOnUtc = session.ModifiedOnUtc;
-        var laterEndedAt = DateTime.UtcNow.AddHours(20);
+        DateTime? modifiedOnUtc = session.ModifiedOnUtc;
+        DateTime laterEndedAt = DateTime.UtcNow.AddHours(20);
 
         session.End(laterEndedAt);
 
@@ -224,7 +224,7 @@ public class FastingSessionInvariantTests {
 
     [Fact]
     public void Extend_WhenCompleted_Throws() {
-        var startedAt = DateTime.UtcNow;
+        DateTime startedAt = DateTime.UtcNow;
         var session = FastingSession.Create(UserId.New(), FastingProtocol.F16_8, 16, startedAt);
         session.End(startedAt.AddHours(16));
 

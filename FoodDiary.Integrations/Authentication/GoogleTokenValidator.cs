@@ -31,9 +31,9 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
         }
 
         try {
-            var configuration = await _configurationManager.GetConfigurationAsync(cancellationToken).ConfigureAwait(false);
+            OpenIdConnectConfiguration configuration = await _configurationManager.GetConfigurationAsync(cancellationToken).ConfigureAwait(false);
             var tokenHandler = new JwtSecurityTokenHandler();
-            var principal = tokenHandler.ValidateToken(credential, new TokenValidationParameters {
+            ClaimsPrincipal principal = tokenHandler.ValidateToken(credential, new TokenValidationParameters {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKeys = configuration.SigningKeys,
                 ValidateIssuer = true,
@@ -44,14 +44,14 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
                 ClockSkew = TimeSpan.FromMinutes(1),
             }, out _);
 
-            var email = GetClaimValue(principal, ClaimTypes.Email) ??
+            string? email = GetClaimValue(principal, ClaimTypes.Email) ??
                         GetClaimValue(principal, "email");
             if (string.IsNullOrWhiteSpace(email)) {
                 return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleInvalidToken);
             }
 
-            var emailVerified = GetClaimValue(principal, "email_verified");
-            if (!bool.TryParse(emailVerified, out var isEmailVerified) || !isEmailVerified) {
+            string? emailVerified = GetClaimValue(principal, "email_verified");
+            if (!bool.TryParse(emailVerified, out bool isEmailVerified) || !isEmailVerified) {
                 return Result.Failure<GoogleIdentityPayload>(Errors.Authentication.GoogleEmailNotVerified);
             }
 

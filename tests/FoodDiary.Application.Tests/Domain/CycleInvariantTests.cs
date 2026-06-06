@@ -72,10 +72,10 @@ public class CycleInvariantTests {
     public void AddOrUpdateDay_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, notes: "  note  ");
         cycle.ClearDomainEvents();
-        var modifiedOnUtc = cycle.ModifiedOnUtc;
+        DateTime? modifiedOnUtc = cycle.ModifiedOnUtc;
 
         cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, notes: "note");
 
@@ -104,10 +104,10 @@ public class CycleInvariantTests {
     public void AddOrUpdateDay_WithClearNotes_ClearsExistingNotes() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, notes: "note");
 
-        var day = cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, clearNotes: true);
+        CycleDay day = cycle.AddOrUpdateDay(date, isPeriod: true, symptoms, clearNotes: true);
 
         Assert.Null(day.Notes);
     }
@@ -117,11 +117,11 @@ public class CycleInvariantTests {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
         var originalSymptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
         var updatedSymptoms = DailySymptoms.Create(7, 6, 5, 4, 3, 2, 1);
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         cycle.AddOrUpdateDay(date, isPeriod: true, originalSymptoms, notes: "note");
         cycle.ClearDomainEvents();
 
-        var day = cycle.AddOrUpdateDay(date, isPeriod: false, updatedSymptoms, notes: " updated ");
+        CycleDay day = cycle.AddOrUpdateDay(date, isPeriod: false, updatedSymptoms, notes: " updated ");
 
         Assert.False(day.IsPeriod);
         Assert.Equal(updatedSymptoms, day.Symptoms);
@@ -208,7 +208,7 @@ public class CycleInvariantTests {
     public void RemoveDay_WhenDateDoesNotExist_ReturnsFalseAndDoesNotSetModifiedOnUtc() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
 
-        var removed = cycle.RemoveDay(DateTime.UtcNow.AddDays(1));
+        bool removed = cycle.RemoveDay(DateTime.UtcNow.AddDays(1));
 
         Assert.False(removed);
         Assert.Null(cycle.ModifiedOnUtc);

@@ -6,6 +6,8 @@ using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.FavoriteRecipes.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.FavoriteRecipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 
@@ -16,18 +18,18 @@ public class GetFavoriteRecipesQueryHandler(
     public async Task<Result<IReadOnlyList<FavoriteRecipeModel>>> Handle(
         GetFavoriteRecipesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<FavoriteRecipeModel>>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<FavoriteRecipeModel>>(accessError);
         }
 
-        var favorites = await favoriteRecipeRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteRecipe> favorites = await favoriteRecipeRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var models = favorites.Select(f => f.ToModel()).ToList();
         return Result.Success<IReadOnlyList<FavoriteRecipeModel>>(models);
     }

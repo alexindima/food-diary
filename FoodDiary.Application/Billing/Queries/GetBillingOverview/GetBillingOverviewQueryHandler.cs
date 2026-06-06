@@ -8,6 +8,8 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Application.Abstractions.Billing.Models;
 
 namespace FoodDiary.Application.Billing.Queries.GetBillingOverview;
 
@@ -25,32 +27,32 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingOverviewModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var nowUtc = dateTimeProvider.UtcNow;
-        var isTrialActive = user!.HasActivePremiumTrial(nowUtc);
-        var hasPaidPremium = user.HasRole(RoleNames.Premium);
-        var paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
-        var isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
-        var providerTrialExpired = IsExpiredProviderTrial(subscription, nowUtc);
-        var subscriptionStatus = providerTrialExpired
+        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        DateTime nowUtc = dateTimeProvider.UtcNow;
+        bool isTrialActive = user!.HasActivePremiumTrial(nowUtc);
+        bool hasPaidPremium = user.HasRole(RoleNames.Premium);
+        bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
+        bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
+        bool providerTrialExpired = IsExpiredProviderTrial(subscription, nowUtc);
+        string? subscriptionStatus = providerTrialExpired
             ? (isTrialActive ? "trialing" : null)
             : subscription?.Status ?? (isTrialActive ? "trialing" : null);
-        var currentPeriodStartUtc = providerTrialExpired
+        DateTime? currentPeriodStartUtc = providerTrialExpired
             ? (isTrialActive ? user.PremiumTrialStartedAtUtc : null)
             : subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? user.PremiumTrialStartedAtUtc : null);
-        var currentPeriodEndUtc = providerTrialExpired
+        DateTime? currentPeriodEndUtc = providerTrialExpired
             ? (isTrialActive ? user.PremiumTrialEndsAtUtc : null)
             : subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? user.PremiumTrialEndsAtUtc : null);
-        var publicConfig = billingPublicConfigProvider.GetPublicConfig();
-        var renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
+        BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
+        bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
-        var canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !user.HasUsedPremiumTrial();
+        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !user.HasUsedPremiumTrial();
 
         return Result.Success(new BillingOverviewModel(
             isPremium,

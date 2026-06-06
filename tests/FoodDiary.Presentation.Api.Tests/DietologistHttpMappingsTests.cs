@@ -1,6 +1,21 @@
+using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
+using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
+using FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
+using FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
+using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
+using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
+using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
+using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
+using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dietologist.Models;
+using FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
+using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
+using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
+using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
+using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 using FoodDiary.Presentation.Api.Features.Dietologist.Mappings;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
+using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -13,7 +28,7 @@ public sealed class DietologistHttpMappingsTests {
             "diet@example.com",
             new DietologistPermissionsHttpRequest(true, false, true, false, true, false, true, false));
 
-        var command = request.ToCommand(userId);
+        InviteDietologistCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("diet@example.com", command.DietologistEmail);
@@ -33,7 +48,7 @@ public sealed class DietologistHttpMappingsTests {
         var invitationId = Guid.NewGuid();
         var request = new AcceptInvitationHttpRequest(invitationId, "token-value");
 
-        var command = request.ToCommand(userId);
+        AcceptInvitationCommand command = request.ToCommand(userId);
 
         Assert.Equal(invitationId, command.InvitationId);
         Assert.Equal("token-value", command.Token);
@@ -46,7 +61,7 @@ public sealed class DietologistHttpMappingsTests {
         var clientUserId = Guid.NewGuid();
         var request = new CreateRecommendationHttpRequest("Eat more protein");
 
-        var command = request.ToCommand(userId, clientUserId);
+        CreateRecommendationCommand command = request.ToCommand(userId, clientUserId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(clientUserId, command.ClientUserId);
@@ -60,7 +75,7 @@ public sealed class DietologistHttpMappingsTests {
         var date = new DateTime(2026, 4, 1);
         var httpQuery = new GetClientDashboardHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
 
-        var query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
+        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
@@ -87,7 +102,7 @@ public sealed class DietologistHttpMappingsTests {
             Locale: "en",
             TrendDays: 7);
 
-        var query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
+        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
 
         Assert.Equal(dateFrom, query.Date);
         Assert.Equal(dateTo, query.DateTo);
@@ -105,31 +120,31 @@ public sealed class DietologistHttpMappingsTests {
         Assert.Equal(userId, userId.ToMyClientsQuery().UserId);
         Assert.Equal(userId, userId.ToMyRecommendationsQuery().UserId);
 
-        var invitationQuery = invitationId.ToInvitationQuery(userId);
+        GetInvitationByTokenQuery invitationQuery = invitationId.ToInvitationQuery(userId);
         Assert.Equal(userId, invitationQuery.UserId);
         Assert.Equal(invitationId, invitationQuery.InvitationId);
 
-        var currentInvitationQuery = invitationId.ToCurrentUserInvitationQuery(userId);
+        GetInvitationForCurrentUserQuery currentInvitationQuery = invitationId.ToCurrentUserInvitationQuery(userId);
         Assert.Equal(userId, currentInvitationQuery.UserId);
         Assert.Equal(invitationId, currentInvitationQuery.InvitationId);
 
-        var goalsQuery = clientUserId.ToClientGoalsQuery(userId);
+        GetClientGoalsQuery goalsQuery = clientUserId.ToClientGoalsQuery(userId);
         Assert.Equal(userId, goalsQuery.UserId);
         Assert.Equal(clientUserId, goalsQuery.ClientUserId);
 
-        var recommendationsQuery = clientUserId.ToRecommendationsForClientQuery(userId);
+        GetRecommendationsForClientQuery recommendationsQuery = clientUserId.ToRecommendationsForClientQuery(userId);
         Assert.Equal(userId, recommendationsQuery.UserId);
         Assert.Equal(clientUserId, recommendationsQuery.ClientUserId);
 
-        var markRead = recommendationId.ToMarkReadCommand(userId);
+        MarkRecommendationReadCommand markRead = recommendationId.ToMarkReadCommand(userId);
         Assert.Equal(userId, markRead.UserId);
         Assert.Equal(recommendationId, markRead.RecommendationId);
 
-        var acceptCurrent = invitationId.ToCurrentUserAcceptCommand(userId);
+        AcceptInvitationForCurrentUserCommand acceptCurrent = invitationId.ToCurrentUserAcceptCommand(userId);
         Assert.Equal(userId, acceptCurrent.UserId);
         Assert.Equal(invitationId, acceptCurrent.InvitationId);
 
-        var declineCurrent = invitationId.ToCurrentUserDeclineCommand(userId);
+        DeclineInvitationForCurrentUserCommand declineCurrent = invitationId.ToCurrentUserDeclineCommand(userId);
         Assert.Equal(userId, declineCurrent.UserId);
         Assert.Equal(invitationId, declineCurrent.InvitationId);
     }
@@ -149,9 +164,9 @@ public sealed class DietologistHttpMappingsTests {
             ShareProfile: false,
             ShareFasting: true);
 
-        var decline = new DeclineInvitationHttpRequest(invitationId, "decline-token").ToCommand(userId);
-        var updatePermissions = new UpdateDietologistPermissionsHttpRequest(permissions).ToCommand(userId);
-        var disconnect = new DisconnectClientHttpRequest(clientUserId).ToCommand(userId);
+        DeclineInvitationCommand decline = new DeclineInvitationHttpRequest(invitationId, "decline-token").ToCommand(userId);
+        UpdateDietologistPermissionsCommand updatePermissions = new UpdateDietologistPermissionsHttpRequest(permissions).ToCommand(userId);
+        DisconnectDietologistCommand disconnect = new DisconnectClientHttpRequest(clientUserId).ToCommand(userId);
 
         Assert.Equal(invitationId, decline.InvitationId);
         Assert.Equal("decline-token", decline.Token);
@@ -169,8 +184,8 @@ public sealed class DietologistHttpMappingsTests {
     public void DietologistInvitationForCurrentUserModel_ToHttpResponse_MapsAllFields() {
         var invitationId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
-        var createdAtUtc = DateTime.UtcNow.AddDays(-1);
-        var expiresAtUtc = DateTime.UtcNow.AddDays(5);
+        DateTime createdAtUtc = DateTime.UtcNow.AddDays(-1);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddDays(5);
         var model = new DietologistInvitationForCurrentUserModel(
             invitationId,
             clientUserId,
@@ -181,7 +196,7 @@ public sealed class DietologistHttpMappingsTests {
             createdAtUtc,
             expiresAtUtc);
 
-        var response = model.ToHttpResponse();
+        DietologistInvitationForCurrentUserHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(invitationId, response.InvitationId);
         Assert.Equal(clientUserId, response.ClientUserId);
@@ -199,9 +214,9 @@ public sealed class DietologistHttpMappingsTests {
         var dietologistUserId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
         var recommendationId = Guid.NewGuid();
-        var createdAtUtc = DateTime.UtcNow.AddDays(-2);
-        var acceptedAtUtc = DateTime.UtcNow.AddDays(-1);
-        var expiresAtUtc = DateTime.UtcNow.AddDays(5);
+        DateTime createdAtUtc = DateTime.UtcNow.AddDays(-2);
+        DateTime acceptedAtUtc = DateTime.UtcNow.AddDays(-1);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddDays(5);
         var permissions = new DietologistPermissionsModel(
             ShareMeals: true,
             ShareStatistics: false,
@@ -212,7 +227,7 @@ public sealed class DietologistHttpMappingsTests {
             ShareProfile: true,
             ShareFasting: false);
 
-        var relationship = new DietologistRelationshipModel(
+        DietologistRelationshipHttpResponse relationship = new DietologistRelationshipModel(
             invitationId,
             Status: "Accepted",
             Email: "diet@example.com",
@@ -223,7 +238,7 @@ public sealed class DietologistHttpMappingsTests {
             createdAtUtc,
             expiresAtUtc,
             acceptedAtUtc).ToHttpResponse();
-        var info = new DietologistInfoModel(
+        DietologistInfoHttpResponse info = new DietologistInfoModel(
             invitationId,
             dietologistUserId,
             "diet@example.com",
@@ -231,7 +246,7 @@ public sealed class DietologistHttpMappingsTests {
             "Doc",
             permissions,
             acceptedAtUtc).ToHttpResponse();
-        var client = new ClientSummaryModel(
+        ClientSummaryHttpResponse client = new ClientSummaryModel(
             clientUserId,
             "client@example.com",
             "Client",
@@ -243,7 +258,7 @@ public sealed class DietologistHttpMappingsTests {
             "Moderate",
             permissions,
             acceptedAtUtc).ToHttpResponse();
-        var invitation = new InvitationModel(
+        InvitationHttpResponse invitation = new InvitationModel(
             invitationId,
             "client@example.com",
             "Client",
@@ -251,7 +266,7 @@ public sealed class DietologistHttpMappingsTests {
             "Pending",
             createdAtUtc,
             expiresAtUtc).ToHttpResponse();
-        var recommendation = new RecommendationModel(
+        RecommendationHttpResponse recommendation = new RecommendationModel(
             recommendationId,
             dietologistUserId,
             "Dana",

@@ -33,7 +33,7 @@ public class DomainEventsTests {
             TotalAlcohol: 0,
             IsAutoCalculated: true));
 
-        var evt = Assert.Single(meal.DomainEvents.OfType<MealNutritionAppliedDomainEvent>());
+        MealNutritionAppliedDomainEvent evt = Assert.Single(meal.DomainEvents.OfType<MealNutritionAppliedDomainEvent>());
         Assert.Equal(meal.Id, evt.MealId);
         Assert.True(evt.IsAutoCalculated);
     }

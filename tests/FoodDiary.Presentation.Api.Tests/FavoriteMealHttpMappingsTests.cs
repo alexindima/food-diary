@@ -1,6 +1,11 @@
+using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
+using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Models;
+using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
+using FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Mappings;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
+using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -12,7 +17,7 @@ public sealed class FavoriteMealHttpMappingsTests {
         var mealId = Guid.NewGuid();
         var request = new AddFavoriteMealHttpRequest(mealId, "My favorite breakfast");
 
-        var command = request.ToCommand(userId);
+        AddFavoriteMealCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(mealId, command.MealId);
@@ -24,7 +29,7 @@ public sealed class FavoriteMealHttpMappingsTests {
         var userId = Guid.NewGuid();
         var favoriteId = Guid.NewGuid();
 
-        var command = favoriteId.ToDeleteCommand(userId);
+        RemoveFavoriteMealCommand command = favoriteId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(favoriteId, command.FavoriteMealId);
@@ -34,7 +39,7 @@ public sealed class FavoriteMealHttpMappingsTests {
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery();
+        GetFavoriteMealsQuery query = userId.ToQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -44,7 +49,7 @@ public sealed class FavoriteMealHttpMappingsTests {
         var userId = Guid.NewGuid();
         var mealId = Guid.NewGuid();
 
-        var query = mealId.ToIsFavoriteQuery(userId);
+        IsMealFavoriteQuery query = mealId.ToIsFavoriteQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(mealId, query.MealId);
@@ -54,11 +59,11 @@ public sealed class FavoriteMealHttpMappingsTests {
     public void FavoriteMealModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var mealId = Guid.NewGuid();
-        var createdAt = DateTime.UtcNow;
-        var mealDate = DateTime.UtcNow.Date;
+        DateTime createdAt = DateTime.UtcNow;
+        DateTime mealDate = DateTime.UtcNow.Date;
         var model = new FavoriteMealModel(id, mealId, "Breakfast", createdAt, mealDate, "Breakfast", 450, 30, 15, 55, 3);
 
-        var response = model.ToHttpResponse();
+        FavoriteMealHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal(mealId, response.MealId);

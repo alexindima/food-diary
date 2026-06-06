@@ -22,8 +22,8 @@ public sealed class MailRelayDkimOptions {
             return false;
         }
 
-        var hasInlineKey = !string.IsNullOrWhiteSpace(options.PrivateKeyPem);
-        var hasKeyPath = !string.IsNullOrWhiteSpace(options.PrivateKeyPath);
+        bool hasInlineKey = !string.IsNullOrWhiteSpace(options.PrivateKeyPem);
+        bool hasKeyPath = !string.IsNullOrWhiteSpace(options.PrivateKeyPath);
         return hasInlineKey ^ hasKeyPath;
     }
 }

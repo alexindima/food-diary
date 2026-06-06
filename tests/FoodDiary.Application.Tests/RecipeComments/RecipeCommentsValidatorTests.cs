@@ -10,21 +10,21 @@ public class RecipeCommentsValidatorTests {
     [Fact]
     public async Task Validate_WithEmptyText_HasError() {
         var command = new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "");
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateRecipeCommentCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.Text);
     }
 
     [Fact]
     public async Task Validate_WithTooLongText_HasError() {
         var command = new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), new string('c', 2001));
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateRecipeCommentCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.Text);
     }
 
     [Fact]
     public async Task Validate_WithValidCommand_NoErrors() {
         var command = new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Great recipe!");
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateRecipeCommentCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldNotHaveAnyValidationErrors();
     }
 }

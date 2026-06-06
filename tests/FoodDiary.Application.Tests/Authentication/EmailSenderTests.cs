@@ -84,7 +84,7 @@ public sealed class EmailSenderTests {
     public async Task SendTestEmail_WhenTransportFails_Rethrows() {
         var sender = new EmailSender(CreateOptions(), new StubEmailTemplateProvider(), new ThrowingEmailTransport());
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", "en"), CancellationToken.None));
 
         Assert.Equal("transport failed", ex.Message);
@@ -161,7 +161,7 @@ public sealed class EmailSenderTests {
             new StubEmailTemplateProvider(),
             new RecordingEmailTransport());
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendDietologistInvitationAsync(
                 new DietologistInvitationMessage(
                     "dietologist@example.com",
@@ -219,7 +219,7 @@ public sealed class EmailSenderTests {
             Subject = message.Subject;
             Body = message.Body;
 
-            foreach (var view in message.AlternateViews) {
+            foreach (AlternateView view in message.AlternateViews) {
                 using var reader = new StreamReader(view.ContentStream);
                 AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
             }

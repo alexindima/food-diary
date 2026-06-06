@@ -27,13 +27,13 @@ public sealed class MailRelayPresentationTests {
     [InlineData(ErrorKind.ExternalFailure, StatusCodes.Status502BadGateway)]
     [InlineData(ErrorKind.Internal, StatusCodes.Status500InternalServerError)]
     public void ErrorResult_MapsErrorKindToHttpStatus(ErrorKind kind, int expectedStatusCode) {
-        var result = MailRelayResultExtensions.ErrorResult(
+        IActionResult result = MailRelayResultExtensions.ErrorResult(
             new MailRelayError("code", "message", kind),
             "trace");
 
-        var objectResult = Assert.IsType<ObjectResult>(result);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(expectedStatusCode, objectResult.StatusCode);
-        var response = Assert.IsType<MailRelayApiErrorHttpResponse>(objectResult.Value);
+        MailRelayApiErrorHttpResponse response = Assert.IsType<MailRelayApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal("code", response.Error);
         Assert.Equal("trace", response.TraceId);
     }
@@ -41,17 +41,17 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ResultExtensions_WhenResultIsSuccessful_ReturnExpectedActionResults() {
         var controller = new TestController();
-        var ok = Result<int>.Success(42).ToOkActionResult(controller, static value => new { Value = value });
-        var created = Result<int>.Success(42).ToCreatedActionResult(
+        IActionResult ok = Result<int>.Success(42).ToOkActionResult(controller, static value => new { Value = value });
+        IActionResult created = Result<int>.Success(42).ToCreatedActionResult(
             controller,
             static value => $"/messages/{value}",
             static value => new { Value = value });
-        var accepted = Result<int>.Success(42).ToAcceptedActionResult(
+        IActionResult accepted = Result<int>.Success(42).ToAcceptedActionResult(
             controller,
             static value => $"/messages/{value}",
             static value => new { Value = value });
-        var noContent = Result.Success().ToNoContentActionResult(controller);
-        var okObject = Result.Success().ToOkActionResult(controller, new { Status = "ok" });
+        IActionResult noContent = Result.Success().ToNoContentActionResult(controller);
+        IActionResult okObject = Result.Success().ToOkActionResult(controller, new { Status = "ok" });
 
         Assert.IsType<OkObjectResult>(ok);
         Assert.IsType<CreatedResult>(created);
@@ -65,20 +65,20 @@ public sealed class MailRelayPresentationTests {
         var controller = new TestController();
         var error = new MailRelayError("code", "message", ErrorKind.Conflict);
 
-        var ok = Result<int>.Failure(error).ToOkActionResult(controller, static value => new { Value = value });
-        var created = Result<int>.Failure(error).ToCreatedActionResult(
+        IActionResult ok = Result<int>.Failure(error).ToOkActionResult(controller, static value => new { Value = value });
+        IActionResult created = Result<int>.Failure(error).ToCreatedActionResult(
             controller,
             static value => $"/messages/{value}",
             static value => new { Value = value });
-        var accepted = Result<int>.Failure(error).ToAcceptedActionResult(
+        IActionResult accepted = Result<int>.Failure(error).ToAcceptedActionResult(
             controller,
             static value => $"/messages/{value}",
             static value => new { Value = value });
-        var noContent = Result.Failure(error).ToNoContentActionResult(controller);
-        var okObject = Result.Failure(error).ToOkActionResult(controller, new { Status = "ok" });
+        IActionResult noContent = Result.Failure(error).ToNoContentActionResult(controller);
+        IActionResult okObject = Result.Failure(error).ToOkActionResult(controller, new { Status = "ok" });
 
         Assert.All([ok, created, accepted, noContent, okObject], result => {
-            var objectResult = Assert.IsType<ObjectResult>(result);
+            ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
             Assert.Equal(StatusCodes.Status409Conflict, objectResult.StatusCode);
         });
     }
@@ -95,12 +95,12 @@ public sealed class MailRelayPresentationTests {
             RequireApiKey = true,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
 
         filter.OnAuthorization(context);
 
-        var result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
-        var response = Assert.IsType<MailRelayApiErrorHttpResponse>(result.Value);
+        UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
+        MailRelayApiErrorHttpResponse response = Assert.IsType<MailRelayApiErrorHttpResponse>(result.Value);
         Assert.Equal("MailRelay.Unauthorized", response.Error);
     }
 
@@ -110,13 +110,13 @@ public sealed class MailRelayPresentationTests {
             RequireApiKey = false,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-Relay-Api-Key"] = "secret";
 
         filter.OnAuthorization(context);
 
-        var result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
-        var response = Assert.IsType<MailRelayApiErrorHttpResponse>(result.Value);
+        UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
+        MailRelayApiErrorHttpResponse response = Assert.IsType<MailRelayApiErrorHttpResponse>(result.Value);
         Assert.Equal("MailRelay.Unauthorized", response.Error);
     }
 
@@ -126,7 +126,7 @@ public sealed class MailRelayPresentationTests {
             RequireApiKey = true,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-Relay-Api-Key"] = "secret";
 
         filter.OnAuthorization(context);
@@ -137,8 +137,8 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public async Task TelemetryActionFilter_ExecutesNextDelegate() {
         var filter = new MailRelayTelemetryActionFilter(NullLogger<MailRelayTelemetryActionFilter>.Instance);
-        var context = CreateActionExecutingContext(new MailRelayQueueController(null!));
-        var executed = false;
+        ActionExecutingContext context = CreateActionExecutingContext(new MailRelayQueueController(null!));
+        bool executed = false;
 
         await filter.OnActionExecutionAsync(context, () => {
             executed = true;

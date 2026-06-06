@@ -15,16 +15,16 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task RegisterUsageAsync_WhenRecentProductsAtCapacity_KeepsNewestHundredIncludingNewItem() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("recent@example.com", "hash");
         context.Users.Add(user);
 
         var baseline = new DateTime(2026, 3, 29, 12, 0, 0, DateTimeKind.Utc);
-        var existingProductIds = Enumerable.Range(0, 100)
+        Guid[] existingProductIds = Enumerable.Range(0, 100)
             .Select(_ => Guid.NewGuid())
             .ToArray();
 
-        for (var i = 0; i < existingProductIds.Length; i++) {
+        for (int i = 0; i < existingProductIds.Length; i++) {
             context.RecentItems.Add(RecentItem.Create(
                 user.Id,
                 RecentItemType.Product,
@@ -43,9 +43,9 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
             [],
             CancellationToken.None);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
-        var storedItems = await verificationContext.RecentItems
+        List<RecentItem> storedItems = await verificationContext.RecentItems
             .AsNoTracking()
             .Where(x => x.UserId == user.Id && x.ItemType == RecentItemType.Product)
             .OrderByDescending(x => x.LastUsedAtUtc)
@@ -64,10 +64,10 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
-        var connectionString = sourceContext.Database.GetConnectionString()
+        string connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");
 
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
             .Options;
 

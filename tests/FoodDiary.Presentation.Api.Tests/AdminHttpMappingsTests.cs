@@ -5,6 +5,26 @@ using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
+using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
+using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
+using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
+using FoodDiary.Application.Admin.Commands.ReviewContentReport;
+using FoodDiary.Application.Admin.Commands.DismissContentReport;
+using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
+using FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
+using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
+using FoodDiary.Application.Admin.Queries.GetAdminUsers;
+using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
+using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
+using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
+using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
+using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+using FoodDiary.Presentation.Api.Features.Admin.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -22,7 +42,7 @@ public sealed class AdminHttpMappingsTests {
             AiInputTokenLimit: 1000,
             AiOutputTokenLimit: 2000);
 
-        var command = request.ToCommand(userId, actorUserId);
+        UpdateAdminUserCommand command = request.ToCommand(userId, actorUserId);
 
         Assert.Equal(userId, command.UserId);
         Assert.False(command.IsActive);
@@ -44,7 +64,7 @@ public sealed class AdminHttpMappingsTests {
             AiInputTokenLimit: null,
             AiOutputTokenLimit: null);
 
-        var command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
+        UpdateAdminUserCommand command = request.ToCommand(Guid.NewGuid(), Guid.NewGuid());
 
         Assert.NotNull(command.Roles);
         Assert.Empty(command.Roles);
@@ -58,7 +78,7 @@ public sealed class AdminHttpMappingsTests {
             TextBody: "Hello",
             IsActive: true);
 
-        var command = request.ToCommand("welcome", "en");
+        UpsertAdminEmailTemplateCommand command = request.ToCommand("welcome", "en");
 
         Assert.Equal("welcome", command.Key);
         Assert.Equal("en", command.Locale);
@@ -77,7 +97,7 @@ public sealed class AdminHttpMappingsTests {
             HtmlBody: "<p>Hello</p>",
             TextBody: "Hello");
 
-        var command = request.ToCommand();
+        SendAdminEmailTemplateTestCommand command = request.ToCommand();
 
         Assert.Equal(request.ToEmail, command.ToEmail);
         Assert.Equal(request.Key, command.Key);
@@ -90,7 +110,7 @@ public sealed class AdminHttpMappingsTests {
     public void AdminAiPromptUpsertHttpRequest_ToCommand_MapsAllFields() {
         var request = new AdminAiPromptUpsertHttpRequest("Prompt text", true);
 
-        var command = request.ToCommand("meal-analysis", "ru");
+        UpsertAdminAiPromptCommand command = request.ToCommand("meal-analysis", "ru");
 
         Assert.Equal("meal-analysis", command.Key);
         Assert.Equal("ru", command.Locale);
@@ -104,7 +124,7 @@ public sealed class AdminHttpMappingsTests {
         var targetUserId = Guid.NewGuid();
         var request = new AdminImpersonationStartHttpRequest("Support case");
 
-        var command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0");
+        StartAdminImpersonationCommand command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0");
 
         Assert.Equal(actorUserId, command.ActorUserId);
         Assert.Equal(targetUserId, command.TargetUserId);
@@ -118,8 +138,8 @@ public sealed class AdminHttpMappingsTests {
         var reportId = Guid.NewGuid();
         var request = new AdminReportActionHttpRequest("Reviewed");
 
-        var review = request.ToReviewCommand(reportId);
-        var dismiss = request.ToDismissCommand(reportId);
+        ReviewContentReportCommand review = request.ToReviewCommand(reportId);
+        DismissContentReportCommand dismiss = request.ToDismissCommand(reportId);
 
         Assert.Equal(reportId, review.ReportId);
         Assert.Equal("Reviewed", review.AdminNote);
@@ -135,9 +155,9 @@ public sealed class AdminHttpMappingsTests {
         var update = new AdminLessonUpdateHttpRequest(
             "Updated", "Updated content", null, "ru", "fasting", "advanced", 6, 20);
 
-        var createCommand = create.ToCreateCommand();
-        var updateCommand = update.ToUpdateCommand(lessonId);
-        var deleteCommand = lessonId.ToDeleteCommand();
+        CreateAdminLessonCommand createCommand = create.ToCreateCommand();
+        UpdateAdminLessonCommand updateCommand = update.ToUpdateCommand(lessonId);
+        DeleteAdminLessonCommand deleteCommand = lessonId.ToDeleteCommand();
 
         Assert.Equal("Title", createCommand.Title);
         Assert.Equal("Content", createCommand.Content);
@@ -163,7 +183,7 @@ public sealed class AdminHttpMappingsTests {
             Status: "deleted",
             IncludeDeleted: false);
 
-        var query = httpQuery.ToQuery();
+        GetAdminUsersQuery query = httpQuery.ToQuery();
 
         Assert.Equal(2, query.Page);
         Assert.Equal(30, query.Limit);
@@ -184,8 +204,8 @@ public sealed class AdminHttpMappingsTests {
     public void AdminQueryMappings_MapSimpleQueries() {
         var userId = Guid.NewGuid();
         var messageId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-1);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-1);
+        DateTime to = DateTime.UtcNow;
         var fromDate = new DateOnly(2026, 4, 1);
         var toDate = new DateOnly(2026, 4, 30);
 
@@ -197,17 +217,17 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal(12, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).Limit);
         Assert.Equal(messageId, messageId.ToMailInboxMessageDetailsQuery().Id);
 
-        var loginEvents = new GetAdminUserLoginEventsHttpQuery(2, 30, userId, "mail").ToQuery();
+        GetAdminUserLoginEventsQuery loginEvents = new GetAdminUserLoginEventsHttpQuery(2, 30, userId, "mail").ToQuery();
         Assert.Equal(2, loginEvents.Page);
         Assert.Equal(30, loginEvents.Limit);
         Assert.Equal(userId, loginEvents.UserId);
         Assert.Equal("mail", loginEvents.Search);
 
-        var loginSummary = new GetAdminUserLoginSummaryHttpQuery(from, to).ToQuery();
+        GetAdminUserLoginSummaryQuery loginSummary = new GetAdminUserLoginSummaryHttpQuery(from, to).ToQuery();
         Assert.Equal(from, loginSummary.FromUtc);
         Assert.Equal(to, loginSummary.ToUtc);
 
-        var aiUsage = new GetAdminAiUsageSummaryHttpQuery(fromDate, toDate).ToQuery();
+        GetAdminAiUsageSummaryQuery aiUsage = new GetAdminAiUsageSummaryHttpQuery(fromDate, toDate).ToQuery();
         Assert.Equal(fromDate, aiUsage.From);
         Assert.Equal(toDate, aiUsage.To);
 
@@ -217,8 +237,8 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void AdminBillingHttpQuery_ToQueries_MapsFilters() {
-        var from = DateTime.UtcNow.AddDays(-7);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetAdminBillingHttpQuery(
             Page: 3,
             Limit: 50,
@@ -229,9 +249,9 @@ public sealed class AdminHttpMappingsTests {
             FromUtc: from,
             ToUtc: to);
 
-        var subscriptions = httpQuery.ToSubscriptionsQuery();
-        var payments = httpQuery.ToPaymentsQuery();
-        var webhookEvents = httpQuery.ToWebhookEventsQuery();
+        GetAdminBillingSubscriptionsQuery subscriptions = httpQuery.ToSubscriptionsQuery();
+        GetAdminBillingPaymentsQuery payments = httpQuery.ToPaymentsQuery();
+        GetAdminBillingWebhookEventsQuery webhookEvents = httpQuery.ToWebhookEventsQuery();
 
         Assert.Equal(3, subscriptions.Page);
         Assert.Equal(50, subscriptions.Limit);
@@ -251,7 +271,7 @@ public sealed class AdminHttpMappingsTests {
     [InlineData(7, 7)]
     [InlineData(100, 20)]
     public void GetAdminDashboardHttpQuery_ToQuery_ClampsRecentLimit(int recent, int expectedLimit) {
-        var query = new GetAdminDashboardHttpQuery(recent).ToQuery();
+        GetAdminDashboardSummaryQuery query = new GetAdminDashboardHttpQuery(recent).ToQuery();
 
         Assert.Equal(expectedLimit, query.RecentLimit);
     }
@@ -272,10 +292,10 @@ public sealed class AdminHttpMappingsTests {
                     SortOrder: 10)
             ]);
 
-        var command = request.ToImportCommand();
+        ImportAdminLessonsCommand command = request.ToImportCommand();
 
         Assert.Equal(3, command.Version);
-        var lesson = Assert.Single(command.Lessons);
+        ImportAdminLessonItem lesson = Assert.Single(command.Lessons);
         Assert.Equal("Protein basics", lesson.Title);
         Assert.Equal("Content", lesson.Content);
         Assert.Null(lesson.Summary);
@@ -289,7 +309,7 @@ public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminDashboardSummaryModel_ToHttpResponse_MapsRecentUsers() {
         var userId = Guid.NewGuid();
-        var createdOnUtc = DateTime.UtcNow;
+        DateTime createdOnUtc = DateTime.UtcNow;
         var model = new AdminDashboardSummaryModel(
             TotalUsers: 10,
             ActiveUsers: 8,
@@ -298,14 +318,14 @@ public sealed class AdminHttpMappingsTests {
             PendingReportsCount: 3,
             RecentUsers: [CreateUser(userId, createdOnUtc)]);
 
-        var response = model.ToHttpResponse();
+        AdminDashboardSummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(10, response.TotalUsers);
         Assert.Equal(8, response.ActiveUsers);
         Assert.Equal(2, response.PremiumUsers);
         Assert.Equal(1, response.DeletedUsers);
         Assert.Equal(3, response.PendingReportsCount);
-        var user = Assert.Single(response.RecentUsers);
+        AdminUserHttpResponse user = Assert.Single(response.RecentUsers);
         Assert.Equal(userId, user.Id);
         Assert.Equal("user@example.com", user.Email);
         Assert.Equal(["Admin"], user.Roles);
@@ -324,7 +344,7 @@ public sealed class AdminHttpMappingsTests {
             ByModel: [new AdminAiUsageBreakdownModel("gpt-test", 120, 40, 80)],
             ByUser: [new AdminAiUsageUserModel(userId, "user@example.com", 150, 50, 100)]);
 
-        var response = model.ToHttpResponse();
+        AdminAiUsageSummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(300, response.TotalTokens);
         Assert.Equal(100, response.InputTokens);
@@ -332,7 +352,7 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal(new DateOnly(2026, 4, 6), Assert.Single(response.ByDay).Date);
         Assert.Equal("meal-analysis", Assert.Single(response.ByOperation).Key);
         Assert.Equal("gpt-test", Assert.Single(response.ByModel).Key);
-        var user = Assert.Single(response.ByUser);
+        AdminAiUsageUserHttpResponse user = Assert.Single(response.ByUser);
         Assert.Equal(userId, user.Id);
         Assert.Equal("user@example.com", user.Email);
         Assert.Equal(150, user.TotalTokens);
@@ -340,8 +360,8 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void AdminSingleModels_ToHttpResponse_MapAllFields() {
-        var now = DateTime.UtcNow;
-        var offsetNow = DateTimeOffset.UtcNow;
+        DateTime now = DateTime.UtcNow;
+        DateTimeOffset offsetNow = DateTimeOffset.UtcNow;
         var prompt = new AdminAiPromptModel(Guid.NewGuid(), "key", "en", "Prompt", 2, true, now, now.AddMinutes(1));
         var lesson = new AdminLessonModel(Guid.NewGuid(), "Title", "Content", "Summary", "en", "nutrition", "beginner", 4, 10, now, now.AddMinutes(2));
         var template = new AdminEmailTemplateModel(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", true, now, null);
@@ -370,7 +390,7 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void AdminBillingModels_ToHttpResponse_MapAllFields() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         var userId = Guid.NewGuid();
         var subscriptionId = Guid.NewGuid();
         var subscription = new AdminBillingSubscriptionReadModel(
@@ -383,9 +403,9 @@ public sealed class AdminHttpMappingsTests {
         var webhook = new AdminBillingWebhookEventReadModel(
             Guid.NewGuid(), "stripe", "event-3", "invoice.paid", "invoice-1", "processed", now, "{}", null, now, null);
 
-        var subscriptionResponse = subscription.ToHttpResponse();
-        var paymentResponse = payment.ToHttpResponse();
-        var webhookResponse = webhook.ToHttpResponse();
+        AdminBillingSubscriptionHttpResponse subscriptionResponse = subscription.ToHttpResponse();
+        AdminBillingPaymentHttpResponse paymentResponse = payment.ToHttpResponse();
+        AdminBillingWebhookEventHttpResponse webhookResponse = webhook.ToHttpResponse();
 
         Assert.Equal(subscriptionId, subscriptionResponse.Id);
         Assert.Equal("customer", subscriptionResponse.ExternalCustomerId);
@@ -398,9 +418,9 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void FastingTelemetrySummarySnapshot_ToHttpResponse_MapsSummaryAndPresets() {
-        var generatedAtUtc = DateTime.UtcNow;
-        var lastCheckInAtUtc = generatedAtUtc.AddMinutes(-10);
-        var lastEventAtUtc = generatedAtUtc.AddMinutes(-5);
+        DateTime generatedAtUtc = DateTime.UtcNow;
+        DateTime lastCheckInAtUtc = generatedAtUtc.AddMinutes(-10);
+        DateTime lastEventAtUtc = generatedAtUtc.AddMinutes(-5);
         var summary = new FastingTelemetrySummarySnapshot(
             WindowHours: 168,
             GeneratedAtUtc: generatedAtUtc,
@@ -430,7 +450,7 @@ public sealed class AdminHttpMappingsTests {
                     CheckInRatePercent: 66.7)
             ]);
 
-        var response = summary.ToHttpResponse();
+        FastingTelemetrySummaryHttpResponse response = summary.ToHttpResponse();
 
         Assert.Equal(168, response.WindowHours);
         Assert.Equal(generatedAtUtc, response.GeneratedAtUtc);
@@ -446,7 +466,7 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal(18.5, response.AverageCompletedDurationHours);
         Assert.Equal(lastCheckInAtUtc, response.LastCheckInAtUtc);
         Assert.Equal(lastEventAtUtc, response.LastEventAtUtc);
-        var preset = Assert.Single(response.TopPresets);
+        FastingTelemetryPresetHttpResponse preset = Assert.Single(response.TopPresets);
         Assert.Equal("morning", preset.PresetId);
         Assert.Equal(4, preset.SelectionCount);
         Assert.Equal(3, preset.TimingSaveCount);
@@ -461,7 +481,7 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void AdminPagedResponses_ToHttpResponse_MapItemsAndMetadata() {
-        var user = CreateUser(Guid.NewGuid(), DateTime.UtcNow);
+        AdminUserModel user = CreateUser(Guid.NewGuid(), DateTime.UtcNow);
         var session = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", null, null, DateTime.UtcNow);
         var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", null, null, null, null, null, null, DateTime.UtcNow);
         var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", null, DateTime.UtcNow, null);

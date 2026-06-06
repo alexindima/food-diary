@@ -1,8 +1,18 @@
+using FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
+using FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
+using FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
+using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
+using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
+using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
+using FoodDiary.Application.Notifications.Queries.GetNotifications;
+using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
+using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -12,7 +22,7 @@ public sealed class NotificationHttpMappingsTests {
     public void ToNotificationsQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToNotificationsQuery();
+        GetNotificationsQuery query = userId.ToNotificationsQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -21,7 +31,7 @@ public sealed class NotificationHttpMappingsTests {
     public void ToUnreadCountQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToUnreadCountQuery();
+        GetUnreadCountQuery query = userId.ToUnreadCountQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -31,7 +41,7 @@ public sealed class NotificationHttpMappingsTests {
         var userId = Guid.NewGuid();
         var notificationId = Guid.NewGuid();
 
-        var command = notificationId.ToMarkReadCommand(userId);
+        MarkNotificationReadCommand command = notificationId.ToMarkReadCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(notificationId, command.NotificationId);
@@ -41,7 +51,7 @@ public sealed class NotificationHttpMappingsTests {
     public void ToMarkAllReadCommand_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var command = userId.ToMarkAllReadCommand();
+        MarkAllNotificationsReadCommand command = userId.ToMarkAllReadCommand();
 
         Assert.Equal(userId, command.UserId);
     }
@@ -49,10 +59,10 @@ public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void NotificationModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
-        var createdAt = DateTime.UtcNow;
+        DateTime createdAt = DateTime.UtcNow;
         var model = new NotificationModel(id, "NewRecommendation", "New recommendation", "Details here", "/dietologist", "ref-123", false, createdAt);
 
-        var response = model.ToHttpResponse();
+        NotificationHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal("NewRecommendation", response.Type);
@@ -68,7 +78,7 @@ public sealed class NotificationHttpMappingsTests {
     public void NotificationModel_ToHttpResponse_WithNullOptionalFields() {
         var model = new NotificationModel(Guid.NewGuid(), "info", "Title", null, null, null, true, DateTime.UtcNow);
 
-        var response = model.ToHttpResponse();
+        NotificationHttpResponse response = model.ToHttpResponse();
 
         Assert.Null(response.Body);
         Assert.Null(response.TargetUrl);
@@ -80,7 +90,7 @@ public sealed class NotificationHttpMappingsTests {
     public void ToNotificationPreferencesQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToNotificationPreferencesQuery();
+        GetNotificationPreferencesQuery query = userId.ToNotificationPreferencesQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -90,7 +100,7 @@ public sealed class NotificationHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new UpdateNotificationPreferencesHttpRequest(true, false, true, 12, 20);
 
-        var command = request.ToCommand(userId);
+        UpdateNotificationPreferencesCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.PushNotificationsEnabled, command.PushNotificationsEnabled);
@@ -104,7 +114,7 @@ public sealed class NotificationHttpMappingsTests {
     public void NotificationPreferencesModel_ToHttpResponse_MapsAllFields() {
         var model = new NotificationPreferencesModel(true, false, true, 12, 20);
 
-        var response = model.ToHttpResponse();
+        NotificationPreferencesHttpResponse response = model.ToHttpResponse();
 
         Assert.True(response.PushNotificationsEnabled);
         Assert.False(response.FastingPushNotificationsEnabled);
@@ -116,7 +126,7 @@ public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void WebPushSubscription_ToHttpResponse_MapsAllFields() {
         var user = User.Create("mapping@example.com", "hash");
-        var expiration = DateTime.UtcNow.AddDays(7);
+        DateTime expiration = DateTime.UtcNow.AddDays(7);
         var subscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/123",
@@ -126,7 +136,7 @@ public sealed class NotificationHttpMappingsTests {
             "en",
             "Chrome");
 
-        var response = subscription.ToHttpResponse();
+        WebPushSubscriptionHttpResponse response = subscription.ToHttpResponse();
 
         Assert.Equal(subscription.Endpoint, response.Endpoint);
         Assert.Equal("push.example.com", response.EndpointHost);
@@ -140,16 +150,16 @@ public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void WebPushCommandsAndQueries_MapAllFields() {
         var userId = Guid.NewGuid();
-        var expiration = DateTime.UtcNow.AddDays(7);
-        var upsert = new UpsertWebPushSubscriptionHttpRequest(
+        DateTime expiration = DateTime.UtcNow.AddDays(7);
+        UpsertWebPushSubscriptionCommand upsert = new UpsertWebPushSubscriptionHttpRequest(
             "https://push.example.com/subscriptions/123",
             expiration,
             new UpsertWebPushSubscriptionKeysHttpRequest("p256dh", "auth"),
             "ru",
             "Firefox").ToCommand(userId);
-        var remove = new RemoveWebPushSubscriptionHttpRequest("https://push.example.com/subscriptions/123")
+        RemoveWebPushSubscriptionCommand remove = new RemoveWebPushSubscriptionHttpRequest("https://push.example.com/subscriptions/123")
             .ToCommand(userId);
-        var scheduled = new ScheduleTestNotificationHttpRequest(30, "fasting.completed").ToCommand(userId);
+        ScheduleTestNotificationCommand scheduled = new ScheduleTestNotificationHttpRequest(30, "fasting.completed").ToCommand(userId);
 
         Assert.NotNull(NotificationHttpMappings.ToWebPushConfigurationQuery());
         Assert.Equal(userId, userId.ToWebPushSubscriptionsQuery().UserId);
@@ -169,8 +179,8 @@ public sealed class NotificationHttpMappingsTests {
 
     [Fact]
     public void WebPushSubscriptionModel_ToHttpResponse_MapsAllFields() {
-        var createdAtUtc = DateTime.UtcNow.AddDays(-1);
-        var updatedAtUtc = DateTime.UtcNow;
+        DateTime createdAtUtc = DateTime.UtcNow.AddDays(-1);
+        DateTime updatedAtUtc = DateTime.UtcNow;
         var model = new WebPushSubscriptionModel(
             "not-a-uri",
             "not-a-uri",
@@ -180,7 +190,7 @@ public sealed class NotificationHttpMappingsTests {
             createdAtUtc,
             updatedAtUtc);
 
-        var response = model.ToHttpResponse();
+        WebPushSubscriptionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("not-a-uri", response.Endpoint);
         Assert.Equal("not-a-uri", response.EndpointHost);
@@ -193,12 +203,12 @@ public sealed class NotificationHttpMappingsTests {
 
     [Fact]
     public void ScheduledAndConfigurationModels_ToHttpResponse_MapAllFields() {
-        var scheduledAtUtc = DateTime.UtcNow.AddMinutes(1);
+        DateTime scheduledAtUtc = DateTime.UtcNow.AddMinutes(1);
         var scheduled = new ScheduledNotificationModel("fasting.completed", 45, scheduledAtUtc);
         var configuration = new WebPushConfigurationModel(true, "public-key");
 
-        var scheduledResponse = scheduled.ToHttpResponse();
-        var configurationResponse = configuration.ToHttpResponse();
+        ScheduledNotificationHttpResponse scheduledResponse = scheduled.ToHttpResponse();
+        WebPushConfigurationHttpResponse configurationResponse = configuration.ToHttpResponse();
 
         Assert.Equal("fasting.completed", scheduledResponse.Type);
         Assert.Equal(45, scheduledResponse.DelaySeconds);

@@ -13,9 +13,9 @@ if (command is null) {
     return 1;
 }
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.MailRelay.WebApi");
+string webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.MailRelay.WebApi");
 if (Directory.Exists(webApiSettingsPath)) {
     builder.Configuration
         .AddJsonFile(Path.Combine(webApiSettingsPath, "appsettings.json"), optional: true, reloadOnChange: false)
@@ -39,7 +39,7 @@ if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     });
 }
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString)) {
     Console.Error.WriteLine(
         "MailRelay initializer failed: DefaultConnection is not configured. Pass --connection-string, set ConnectionStrings__DefaultConnection, set FOODDIARY_ConnectionStrings__DefaultConnection, set MAILRELAY_ConnectionStrings__DefaultConnection, or provide appsettings in FoodDiary.MailRelay.WebApi.");
@@ -55,10 +55,10 @@ builder.Services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString)
 builder.Services.AddSingleton<MailRelayQueueStore>();
 builder.Services.AddSingleton<IMailRelaySchemaInitializer>(sp => sp.GetRequiredService<MailRelayQueueStore>());
 
-using var host = builder.Build();
-using var scope = host.Services.CreateScope();
-var dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
-var schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
+using IHost host = builder.Build();
+using IServiceScope scope = host.Services.CreateScope();
+NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
+IMailRelaySchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailRelaySchemaInitializer>();
 
 try {
     await ExecuteAsync(command, dataSource, schemaInitializer, CancellationToken.None).ConfigureAwait(false);
@@ -88,9 +88,9 @@ static async Task ExecuteAsync(
 }
 
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToken cancellationToken) {
-    var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+    NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
     await using (connection.ConfigureAwait(false)) {
-        var requiredTables = new[] {
+        string[] requiredTables = new[] {
         "mailrelay_outbound_emails",
         "mailrelay_outbox_messages",
         "mailrelay_inbox_messages",
@@ -109,7 +109,7 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToke
         var command = new NpgsqlCommand(sql, connection);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("tableNames", requiredTables);
-            using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+            using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
             while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
                 existingTables.Add(reader.GetString(0));
             }
@@ -118,8 +118,8 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource, CancellationToke
             Console.WriteLine($"Required tables:   {requiredTables.Length}");
             Console.WriteLine($"Existing tables:   {existingTables.Count}");
 
-            foreach (var table in requiredTables) {
-                var state = existingTables.Contains(table) ? "present" : "missing";
+            foreach (string? table in requiredTables) {
+                string state = existingTables.Contains(table) ? "present" : "missing";
                 Console.WriteLine($"{state,-8} {table}");
             }
         }

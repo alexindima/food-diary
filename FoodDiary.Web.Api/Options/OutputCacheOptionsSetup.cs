@@ -7,7 +7,7 @@ namespace FoodDiary.Web.Api.Options;
 public sealed class OutputCacheOptionsSetup(IOptions<ApiOutputCacheOptions> outputCacheOptions)
     : IConfigureOptions<OutputCacheOptions> {
     public void Configure(OutputCacheOptions options) {
-        var settings = outputCacheOptions.Value;
+        ApiOutputCacheOptions settings = outputCacheOptions.Value;
         options.AddPolicy(PresentationPolicyNames.AdminAiUsageCachePolicyName, builder => builder
             .Cache()
             .Expire(TimeSpan.FromSeconds(settings.AdminAiUsage.ExpirationSeconds))

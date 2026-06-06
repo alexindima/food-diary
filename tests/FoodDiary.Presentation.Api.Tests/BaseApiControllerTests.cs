@@ -17,30 +17,30 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleOk_ReturnsMappedOkResult() {
         var request = new TestOkRequest();
-        var mediator = new StubSender()
+        StubSender mediator = new StubSender()
             .Register(request, Result.Success("value"));
-        var controller = CreateController(mediator);
+        TestController controller = CreateController(mediator);
 
-        var result = await controller.HandleOkPublic(request, static value => value.ToUpperInvariant());
+        IActionResult result = await controller.HandleOkPublic(request, static value => value.ToUpperInvariant());
 
-        var ok = Assert.IsType<OkObjectResult>(result);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Equal("VALUE", ok.Value);
     }
 
     [Fact]
     public async Task HandleCreated_ReturnsCreatedAtActionResult() {
         var request = new TestCreatedRequest();
-        var mediator = new StubSender()
+        StubSender mediator = new StubSender()
             .Register(request, Result.Success(new CreatedModel(Guid.Parse("11111111-1111-1111-1111-111111111111"))));
-        var controller = CreateController(mediator);
+        TestController controller = CreateController(mediator);
 
-        var result = await controller.HandleCreatedPublic(
+        IActionResult result = await controller.HandleCreatedPublic(
             request,
             "GetById",
             static value => new { id = value.Id },
             static value => new { value.Id });
 
-        var created = Assert.IsType<CreatedAtActionResult>(result);
+        CreatedAtActionResult created = Assert.IsType<CreatedAtActionResult>(result);
         Assert.Equal("GetById", created.ActionName);
         Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), created.RouteValues!["id"]);
     }
@@ -48,11 +48,11 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleNoContent_ReturnsNoContentResult() {
         var request = new TestNoContentRequest();
-        var mediator = new StubSender()
+        StubSender mediator = new StubSender()
             .Register(request, Result.Success());
-        var controller = CreateController(mediator);
+        TestController controller = CreateController(mediator);
 
-        var result = await controller.HandleNoContentPublic(request);
+        IActionResult result = await controller.HandleNoContentPublic(request);
 
         Assert.IsType<NoContentResult>(result);
     }
@@ -60,14 +60,14 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleOk_MapsFailureThroughStandardApiErrorContract() {
         var request = new TestOkRequest();
-        var mediator = new StubSender()
+        StubSender mediator = new StubSender()
             .Register(request, Result.Failure<string>(Errors.Validation.Invalid("Email", "Invalid email format")));
-        var controller = CreateController(mediator);
+        TestController controller = CreateController(mediator);
 
-        var result = await controller.HandleOkPublic(request, static value => value);
+        IActionResult result = await controller.HandleOkPublic(request, static value => value);
 
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        var payload = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+        ApiErrorHttpResponse payload = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
         Assert.NotNull(payload.Errors);
         Assert.Contains("email", payload.Errors.Keys);
@@ -77,14 +77,14 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedOk_CreatesPresentationActivity() {
         var request = new TestOkRequest();
-        var mediator = new StubSender()
+        StubSender mediator = new StubSender()
             .Register(request, Result.Success("value"));
-        var controller = CreateController(mediator);
+        TestController controller = CreateController(mediator);
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
 
         _ = await controller.HandleObservedOkPublic(request, static value => value.ToUpperInvariant(), NullLogger.Instance, "test.operation", Guid.Parse("33333333-3333-3333-3333-333333333333"));
 
-        var activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.operation", StringComparison.Ordinal));
+        Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.operation", StringComparison.Ordinal));
         Assert.Equal("test.operation", activity.OperationName);
         Assert.Equal("TestController", activity.GetTagItem("fooddiary.presentation.controller"));
         Assert.Equal("Unknown", activity.GetTagItem("fooddiary.presentation.feature"));

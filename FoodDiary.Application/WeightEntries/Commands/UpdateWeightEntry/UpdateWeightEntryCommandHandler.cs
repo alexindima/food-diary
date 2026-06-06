@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 
@@ -27,13 +28,13 @@ public class UpdateWeightEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel>(accessError);
         }
 
         var weightEntryId = new WeightEntryId(command.WeightEntryId);
-        var existingEntry = await weightEntryRepository.GetByIdAsync(
+        WeightEntry? existingEntry = await weightEntryRepository.GetByIdAsync(
             weightEntryId,
             userId,
             asTracking: true,
@@ -43,8 +44,8 @@ public class UpdateWeightEntryCommandHandler(
             return Result.Failure<WeightEntryModel>(Errors.WeightEntry.NotFound(command.WeightEntryId));
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
-        var duplicate = await weightEntryRepository.GetByDateAsync(
+        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        WeightEntry? duplicate = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
             cancellationToken).ConfigureAwait(false);

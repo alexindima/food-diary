@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Dietologist;
 
@@ -93,7 +94,7 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
 
     public async Task UpdateAsync(
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
-        var entry = context.Entry(invitation);
+        EntityEntry<DietologistInvitation> entry = context.Entry(invitation);
         if (entry.State == EntityState.Detached) {
             context.Attach(invitation);
             entry.State = EntityState.Modified;

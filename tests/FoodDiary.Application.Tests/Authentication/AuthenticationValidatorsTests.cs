@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
@@ -15,7 +16,7 @@ public class AuthenticationValidatorsTests {
         var validator = new AdminSsoStartCommandValidator();
         var command = new AdminSsoStartCommand(Guid.Empty);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -25,7 +26,7 @@ public class AuthenticationValidatorsTests {
         var validator = new AdminSsoStartCommandValidator();
         var command = new AdminSsoStartCommand(Guid.NewGuid());
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
     }
@@ -35,7 +36,7 @@ public class AuthenticationValidatorsTests {
         var validator = new ResendEmailVerificationCommandValidator();
         var command = new ResendEmailVerificationCommand(Guid.Empty);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -45,7 +46,7 @@ public class AuthenticationValidatorsTests {
         var validator = new VerifyEmailCommandValidator();
         var command = new VerifyEmailCommand(Guid.NewGuid(), string.Empty);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -55,7 +56,7 @@ public class AuthenticationValidatorsTests {
         var validator = new ConfirmPasswordResetCommandValidator();
         var command = new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "12345");
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
@@ -66,7 +67,7 @@ public class AuthenticationValidatorsTests {
         var validator = new RequestPasswordResetCommandValidator();
         var command = new RequestPasswordResetCommand("not-an-email");
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
@@ -77,7 +78,7 @@ public class AuthenticationValidatorsTests {
         var validator = new TelegramBotAuthCommandValidator();
         var command = new TelegramBotAuthCommand(0);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -87,7 +88,7 @@ public class AuthenticationValidatorsTests {
         var validator = new TelegramLoginWidgetCommandValidator();
         var command = new TelegramLoginWidgetCommand(1, 1, "", null, null, null, null);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }

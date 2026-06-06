@@ -12,6 +12,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FoodDiary.Infrastructure.Tests;
 
@@ -20,7 +22,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidEmailBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -32,16 +34,16 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
         Assert.Contains("FrontendBaseUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void AddInfrastructure_WithInvalidAllowedEmailBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -54,16 +56,16 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<EmailOptions>>().Value);
         Assert.Contains("AllowedFrontendBaseUrls", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void AddIntegrations_WithInvalidMailRelayClientBaseUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -75,16 +77,16 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddIntegrations(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value);
         Assert.Contains("base URL", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void AddIntegrations_WithInvalidS3ServiceUrl_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -96,16 +98,16 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddIntegrations(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Integrations.Options.S3Options>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Integrations.Options.S3Options>>().Value);
         Assert.Contains("ServiceUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void AddInfrastructure_RegistersDatabaseCommandTelemetryInterceptor() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -117,7 +119,7 @@ public sealed class DependencyInjectionTests {
 
         services.AddInfrastructure(configuration);
 
-        var interceptorDescriptor = Assert.Single(
+        ServiceDescriptor interceptorDescriptor = Assert.Single(
             services,
             static descriptor => descriptor.ServiceType == typeof(DatabaseCommandTelemetryInterceptor));
         Assert.Equal(ServiceLifetime.Singleton, interceptorDescriptor.Lifetime);
@@ -126,7 +128,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_CanResolveDiaryPdfGeneratorTypedClient() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -138,9 +140,9 @@ public sealed class DependencyInjectionTests {
 
         services.AddSingleton<IDiaryPdfReportTextProvider, TestDiaryPdfReportTextProvider>();
         services.AddInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var generator = provider.GetRequiredService<IDiaryPdfGenerator>();
+        IDiaryPdfGenerator generator = provider.GetRequiredService<IDiaryPdfGenerator>();
 
         Assert.NotNull(generator);
     }
@@ -148,7 +150,7 @@ public sealed class DependencyInjectionTests {
     [Fact]
     public void AddInfrastructure_WithInvalidDatabaseRetryCount_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -161,16 +163,16 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<DatabaseOptions>>().Value);
         Assert.Contains("MaxRetryCount", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void AddInfrastructure_WithRetriesEnabled_ConfiguresRetryingExecutionStrategy() {
         var services = new ServiceCollection();
-        var configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
             ["Jwt:Issuer"] = "FoodDiary",
@@ -185,18 +187,18 @@ public sealed class DependencyInjectionTests {
 
         services.AddSingleton<IPublisher>(new NullPublisher());
         services.AddInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
-        using var scope = provider.CreateScope();
-        using var context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+        using FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
-        var strategy = context.Database.CreateExecutionStrategy();
+        IExecutionStrategy strategy = context.Database.CreateExecutionStrategy();
 
         Assert.Contains("Retry", strategy.GetType().Name, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public void FoodDiaryDbContext_Model_ConfiguresCascadeDeleteForAllUserOwnedEntities() {
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=food_diary;Username=test;Password=test")
             .Options;
 
@@ -281,12 +283,12 @@ public sealed class DependencyInjectionTests {
     }
 
     private static string? ValidateUserForeignKey(FoodDiaryDbContext context, Type clrType) {
-        var entityType = context.Model.FindEntityType(clrType);
+        IEntityType? entityType = context.Model.FindEntityType(clrType);
         if (entityType is null) {
             return $"{clrType.FullName}: not mapped in FoodDiaryDbContext.";
         }
 
-        var foreignKey = entityType
+        IForeignKey? foreignKey = entityType
             .GetForeignKeys()
             .SingleOrDefault(fk => fk.Properties.Any(property => string.Equals(property.Name, "UserId", StringComparison.Ordinal)));
 

@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 
@@ -19,12 +20,12 @@ public class UpdateDietologistPermissionsCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var invitation = await invitationRepository.GetByClientAndStatusAsync(
+        DietologistInvitation? invitation = await invitationRepository.GetByClientAndStatusAsync(
             userId,
             DietologistInvitationStatus.Pending,
             asTracking: true,

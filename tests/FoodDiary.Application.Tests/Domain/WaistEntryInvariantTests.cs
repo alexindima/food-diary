@@ -40,7 +40,7 @@ public class WaistEntryInvariantTests {
 
     [Fact]
     public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         var entry = WaistEntry.Create(UserId.New(), date, 85);
 
         entry.Update(circumference: 85, date: date);
@@ -51,7 +51,7 @@ public class WaistEntryInvariantTests {
     [Fact]
     public void Update_WithDifferentValues_SetsModifiedOnUtc() {
         var entry = WaistEntry.Create(UserId.New(), DateTime.UtcNow.Date, 85);
-        var newDate = DateTime.UtcNow.AddDays(-1);
+        DateTime newDate = DateTime.UtcNow.AddDays(-1);
 
         entry.Update(circumference: 86.5, date: newDate);
 

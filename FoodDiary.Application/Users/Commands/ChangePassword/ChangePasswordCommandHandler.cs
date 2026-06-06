@@ -18,23 +18,23 @@ public class ChangePasswordCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        Domain.Entities.Users.User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var currentUser = user!;
+        Domain.Entities.Users.User currentUser = user!;
         if (!currentUser.HasPassword) {
             return Result.Failure(User.PasswordNotSet);
         }
 
-        var isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, currentUser.Password);
+        bool isCurrentPasswordValid = passwordHasher.Verify(command.CurrentPassword, currentUser.Password);
         if (!isCurrentPasswordValid) {
             return Result.Failure(User.InvalidPassword);
         }
 
-        var hashedPassword = passwordHasher.Hash(command.NewPassword);
+        string hashedPassword = passwordHasher.Hash(command.NewPassword);
         currentUser.UpdatePassword(hashedPassword);
 
         await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);

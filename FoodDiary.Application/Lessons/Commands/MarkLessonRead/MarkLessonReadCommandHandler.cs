@@ -15,18 +15,18 @@ public class MarkLessonReadCommandHandler(
     public async Task<Result> Handle(
         MarkLessonReadCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var lessonId = new NutritionLessonId(command.LessonId);
-        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.LessonId));
         }
 
-        var existing = await repository.GetUserProgressForLessonAsync(
+        UserLessonProgress? existing = await repository.GetUserProgressForLessonAsync(
             userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Success();

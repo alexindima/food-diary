@@ -11,7 +11,7 @@ public static class SecurityTokenGenerator {
             throw new ArgumentOutOfRangeException(nameof(byteLength), byteLength, "Byte length must be greater than zero.");
         }
 
-        var bytes = RandomNumberGenerator.GetBytes(byteLength);
+        byte[] bytes = RandomNumberGenerator.GetBytes(byteLength);
         return Base64UrlEncode(bytes);
     }
 
@@ -27,8 +27,8 @@ public static class SecurityTokenGenerator {
             throw new ArgumentException("Token is required.", nameof(token));
         }
 
-        var normalizedToken = token.Trim();
-        var digest = SHA256.HashData(Encoding.UTF8.GetBytes(normalizedToken));
+        string normalizedToken = token.Trim();
+        byte[] digest = SHA256.HashData(Encoding.UTF8.GetBytes(normalizedToken));
         return Convert.ToHexString(digest);
     }
 
@@ -46,9 +46,9 @@ public static class SecurityTokenGenerator {
             return false;
         }
 
-        var expectedHash = HashForStorage(token);
-        var storedBytes = Encoding.UTF8.GetBytes(storedHash);
-        var expectedBytes = Encoding.UTF8.GetBytes(expectedHash);
+        string expectedHash = HashForStorage(token);
+        byte[] storedBytes = Encoding.UTF8.GetBytes(storedHash);
+        byte[] expectedBytes = Encoding.UTF8.GetBytes(expectedHash);
         return CryptographicOperations.FixedTimeEquals(storedBytes, expectedBytes);
     }
 }

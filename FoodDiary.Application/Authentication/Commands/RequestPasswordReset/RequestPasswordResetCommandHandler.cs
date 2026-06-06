@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 
@@ -20,22 +21,22 @@ public sealed class RequestPasswordResetCommandHandler(
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
     public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
         if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
             return Result.Success();
         }
 
-        var currentUser = user!;
-        var nowUtc = dateTimeProvider.UtcNow;
+        User currentUser = user!;
+        DateTime nowUtc = dateTimeProvider.UtcNow;
         if (currentUser.PasswordResetSentAtUtc.HasValue &&
             nowUtc - currentUser.PasswordResetSentAtUtc.Value < Cooldown) {
             logger.LogInformation("Password reset request throttled by cooldown.");
             return Result.Success();
         }
 
-        var token = SecurityTokenGenerator.GenerateUrlSafeToken();
-        var tokenHash = passwordHasher.Hash(token);
-        var expiresAtUtc = nowUtc.Add(TokenLifetime);
+        string token = SecurityTokenGenerator.GenerateUrlSafeToken();
+        string tokenHash = passwordHasher.Hash(token);
+        DateTime expiresAtUtc = nowUtc.Add(TokenLifetime);
 
         currentUser.SetPasswordResetToken(new UserTokenIssue(
             TokenHash: tokenHash,

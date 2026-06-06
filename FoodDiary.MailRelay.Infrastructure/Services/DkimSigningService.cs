@@ -16,8 +16,8 @@ public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options) {
             return;
         }
 
-        var domain = _options.Domain ?? throw new InvalidOperationException("MailRelayDkim domain is not configured.");
-        var selector = _options.Selector ?? throw new InvalidOperationException("MailRelayDkim selector is not configured.");
+        string domain = _options.Domain ?? throw new InvalidOperationException("MailRelayDkim domain is not configured.");
+        string selector = _options.Selector ?? throw new InvalidOperationException("MailRelayDkim selector is not configured.");
 
         if (message.Date == DateTimeOffset.MinValue) {
             message.Date = DateTimeOffset.UtcNow;
@@ -29,7 +29,7 @@ public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options) {
 
         message.Prepare(EncodingConstraint.SevenBit);
 
-        using var privateKeyStream = OpenPrivateKeyStream();
+        using Stream privateKeyStream = OpenPrivateKeyStream();
         var signer = new DkimSigner(privateKeyStream, domain, selector) {
             HeaderCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Relaxed,
             BodyCanonicalizationAlgorithm = DkimCanonicalizationAlgorithm.Relaxed,

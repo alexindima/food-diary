@@ -1,6 +1,9 @@
 using System.Reflection;
+using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Entities.Users;
@@ -15,7 +18,7 @@ public class DailyAdvicesFeatureTests {
         var validator = new GetDailyAdviceQueryValidator();
         var query = new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en");
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -25,14 +28,14 @@ public class DailyAdvicesFeatureTests {
         var validator = new GetDailyAdviceQueryValidator();
         var query = new GetDailyAdviceQuery(Guid.NewGuid(), DateTime.UtcNow, "ru-RU");
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
 
     [Fact]
     public void DailyAdviceSelector_NormalizeLocale_UnsupportedLocaleFallsBackToEn() {
-        var normalized = InvokeNormalizeLocale("de-DE");
+        string normalized = InvokeNormalizeLocale("de-DE");
 
         Assert.Equal("en", normalized);
     }
@@ -46,7 +49,7 @@ public class DailyAdvicesFeatureTests {
         };
 
         var date = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
-        var selected = InvokeSelectForDate(advices, date, "ru-RU");
+        DailyAdvice? selected = InvokeSelectForDate(advices, date, "ru-RU");
 
         Assert.NotNull(selected);
         Assert.Equal("ru", selected!.Locale);
@@ -58,14 +61,14 @@ public class DailyAdvicesFeatureTests {
             DailyAdvice.Create("Hydrate", "en", weight: 1)
         };
 
-        var selected = InvokeSelectForDate(advices, DateTime.UtcNow, "ru");
+        DailyAdvice? selected = InvokeSelectForDate(advices, DateTime.UtcNow, "ru");
 
         Assert.Null(selected);
     }
 
     [Fact]
     public void DailyAdviceSelector_SelectForDate_WithEmptyAdviceList_ReturnsNull() {
-        var selected = InvokeSelectForDate([], DateTime.UtcNow, "en");
+        DailyAdvice? selected = InvokeSelectForDate([], DateTime.UtcNow, "en");
 
         Assert.Null(selected);
     }
@@ -78,15 +81,15 @@ public class DailyAdvicesFeatureTests {
             DailyAdvice.Create("Sleep", "en", weight: 1)
         };
         var ordered = advices.OrderBy(advice => advice.Id.Value).ToList();
-        var date = Enumerable
+        DateTime date = Enumerable
             .Range(0, 10_000)
             .Select(offset => new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc).AddDays(offset))
             .First(candidate =>
                 InvokeGetWeightedIndex(ordered, candidate, "en") ==
                 InvokeGetWeightedIndex(ordered, candidate.AddDays(-1), "en"));
-        var todayIndex = InvokeGetWeightedIndex(ordered, date, "en");
+        int todayIndex = InvokeGetWeightedIndex(ordered, date, "en");
 
-        var selected = InvokeSelectForDate(advices, date, "en");
+        DailyAdvice? selected = InvokeSelectForDate(advices, date, "en");
 
         Assert.NotNull(selected);
         Assert.Equal(ordered[(todayIndex + 1) % ordered.Count].Id, selected!.Id);
@@ -96,7 +99,7 @@ public class DailyAdvicesFeatureTests {
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(User.Create("advice@example.com", "hash")));
 
-        var result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
+        Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -108,7 +111,7 @@ public class DailyAdvicesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
 
-        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
+        Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -121,7 +124,7 @@ public class DailyAdvicesFeatureTests {
         repository.Seed("en", DailyAdvice.Create("Hydrate", "en", weight: 1));
         var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
 
-        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
+        Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("en", result.Value.Locale);
@@ -133,7 +136,7 @@ public class DailyAdvicesFeatureTests {
         var user = User.Create("missing-advice@example.com", "hash");
         var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
 
-        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
+        Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
@@ -146,31 +149,31 @@ public class DailyAdvicesFeatureTests {
         repository.Seed("en", DailyAdvice.Create("Russian advice", "ru", weight: 1));
         var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
 
-        var result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
+        Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
     }
 
     private static string InvokeNormalizeLocale(string locale) {
-        var selectorType = GetSelectorType();
-        var method = selectorType.GetMethod("NormalizeLocale", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
+        Type selectorType = GetSelectorType();
+        MethodInfo? method = selectorType.GetMethod("NormalizeLocale", BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public);
         Assert.NotNull(method);
 
         return (string)method!.Invoke(null, [locale])!;
     }
 
     private static DailyAdvice? InvokeSelectForDate(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale) {
-        var selectorType = GetSelectorType();
-        var method = selectorType.GetMethod("SelectForDate", BindingFlags.Static | BindingFlags.Public);
+        Type selectorType = GetSelectorType();
+        MethodInfo? method = selectorType.GetMethod("SelectForDate", BindingFlags.Static | BindingFlags.Public);
         Assert.NotNull(method);
 
         return (DailyAdvice?)method!.Invoke(null, [advices, date, locale]);
     }
 
     private static int InvokeGetWeightedIndex(IReadOnlyList<DailyAdvice> advices, DateTime date, string locale) {
-        var selectorType = GetSelectorType();
-        var method = selectorType.GetMethod("GetWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
+        Type selectorType = GetSelectorType();
+        MethodInfo? method = selectorType.GetMethod("GetWeightedIndex", BindingFlags.Static | BindingFlags.NonPublic);
         Assert.NotNull(method);
 
         return (int)method!.Invoke(null, [advices, date, locale])!;

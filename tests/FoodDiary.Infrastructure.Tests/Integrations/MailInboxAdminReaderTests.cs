@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Integrations.Services.MailInbox;
 using FoodDiary.MailInbox.Client;
 using FoodDiary.MailInbox.Client.Models;
@@ -9,7 +10,7 @@ public sealed class MailInboxAdminReaderTests {
     [Fact]
     public async Task GetMessagesAsync_MapsClientSummaries() {
         var id = Guid.NewGuid();
-        var receivedAtUtc = DateTimeOffset.UtcNow;
+        DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
         var client = new StubMailInboxClient {
             Summaries = [
                 new InboundMailMessageSummaryResponse(
@@ -23,9 +24,9 @@ public sealed class MailInboxAdminReaderTests {
         };
         var reader = new MailInboxClientAdminMailInboxReader(client);
 
-        var result = await reader.GetMessagesAsync(25, CancellationToken.None);
+        IReadOnlyList<AdminMailInboxMessageSummaryModel> result = await reader.GetMessagesAsync(25, CancellationToken.None);
 
-        var message = Assert.Single(result);
+        AdminMailInboxMessageSummaryModel message = Assert.Single(result);
         Assert.Equal(id, message.Id);
         Assert.Equal("from@example.com", message.FromAddress);
         Assert.Equal(["to@example.com"], message.ToRecipients);
@@ -38,7 +39,7 @@ public sealed class MailInboxAdminReaderTests {
     [Fact]
     public async Task GetMessageAsync_WhenClientReturnsDetails_MapsDetails() {
         var id = Guid.NewGuid();
-        var receivedAtUtc = DateTimeOffset.UtcNow;
+        DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
         var client = new StubMailInboxClient {
             Details = new InboundMailMessageDetailsResponse(
                 id,
@@ -54,7 +55,7 @@ public sealed class MailInboxAdminReaderTests {
         };
         var reader = new MailInboxClientAdminMailInboxReader(client);
 
-        var result = await reader.GetMessageAsync(id, CancellationToken.None);
+        AdminMailInboxMessageDetailsModel? result = await reader.GetMessageAsync(id, CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("message-id", result.MessageId);
@@ -68,7 +69,7 @@ public sealed class MailInboxAdminReaderTests {
     public async Task GetMessageAsync_WhenClientReturnsNull_ReturnsNull() {
         var reader = new MailInboxClientAdminMailInboxReader(new StubMailInboxClient());
 
-        var result = await reader.GetMessageAsync(Guid.NewGuid(), CancellationToken.None);
+        AdminMailInboxMessageDetailsModel? result = await reader.GetMessageAsync(Guid.NewGuid(), CancellationToken.None);
 
         Assert.Null(result);
     }

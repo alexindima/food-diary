@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Consumptions.Services;
 
@@ -26,19 +28,19 @@ public class MealNutritionService(
             .Distinct()
             .ToList();
 
-        var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != productIds.Count) {
-            var missingProduct = productIds.First(id => !products.ContainsKey(id));
+            ProductId missingProduct = productIds.First(id => !products.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Product.NotAccessible(missingProduct.Value));
         }
 
-        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, Recipe> recipes = await recipeLookupService.GetAccessibleByIdsAsync(recipeIds, userId, cancellationToken).ConfigureAwait(false);
         if (recipes.Count != recipeIds.Count) {
-            var missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
+            RecipeId missingRecipe = recipeIds.First(id => !recipes.ContainsKey(id));
             return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
         }
 
-        var summary = MealNutritionCalculator.Calculate(meal, products, recipes);
+        MealNutritionSummary summary = MealNutritionCalculator.Calculate(meal, products, recipes);
         return Result.Success(summary);
     }
 }

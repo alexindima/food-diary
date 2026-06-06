@@ -24,6 +24,7 @@ using Microsoft.OpenApi;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.Web.Api.Extensions;
 
@@ -154,8 +155,8 @@ public static class ApiServiceCollectionExtensions {
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.RateLimiting.RateLimiterOptions>, RateLimiterOptionsSetup>();
         services.AddSingleton<IConfigureOptions<Microsoft.AspNetCore.OutputCaching.OutputCacheOptions>, OutputCacheOptionsSetup>();
         services.AddSingleton(static serviceProvider => {
-            var options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
-            var environment = serviceProvider.GetRequiredService<IHostEnvironment>();
+            ApiBuildInfoOptions options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
+            IHostEnvironment environment = serviceProvider.GetRequiredService<IHostEnvironment>();
             return ApiBuildInfo.Create(options, environment.EnvironmentName);
         });
         services.AddCors(static _ => { });
@@ -172,7 +173,7 @@ public static class ApiServiceCollectionExtensions {
     }
 
     private static void ConfigureJwtBearerOptions(JwtBearerOptions options, IOptions<JwtOptions> jwtOptionsAccessor) {
-        var jwtOptions = jwtOptionsAccessor.Value;
+        JwtOptions jwtOptions = jwtOptionsAccessor.Value;
         options.TokenValidationParameters = new TokenValidationParameters {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SecretKey)),
@@ -192,8 +193,8 @@ public static class ApiServiceCollectionExtensions {
     }
 
     private static void ExtractSignalRAccessToken(MessageReceivedContext context) {
-        var accessToken = context.Request.Query["access_token"];
-        var path = context.HttpContext.Request.Path;
+        StringValues accessToken = context.Request.Query["access_token"];
+        PathString path = context.HttpContext.Request.Path;
         if (!string.IsNullOrWhiteSpace(accessToken) &&
             (path.StartsWithSegments("/hubs/email-verification", StringComparison.Ordinal) ||
              path.StartsWithSegments("/hubs/notifications", StringComparison.Ordinal))) {
@@ -255,7 +256,7 @@ public static class ApiServiceCollectionExtensions {
 
     private static IServiceCollection AddConfiguredOpenTelemetry(this IServiceCollection services) {
         services.AddSingleton<TracerProvider>(static serviceProvider => {
-            var options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
             if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
                 return null!;
             }
@@ -270,7 +271,7 @@ public static class ApiServiceCollectionExtensions {
                 .Build();
         });
         services.AddSingleton<MeterProvider>(static serviceProvider => {
-            var options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
             if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
                 return null!;
             }

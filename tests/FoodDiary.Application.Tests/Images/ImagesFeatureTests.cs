@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
@@ -17,7 +18,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository());
 
         var command = new GetImageUploadUrlCommand(Guid.Empty, "file.jpg", "image/jpeg", 100);
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<GetImageUploadUrlResult> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.InvalidData", result.Error.Code);
@@ -36,7 +37,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             new FakeImageAssetRepository());
 
-        var result = await handler.Handle(
+        Result<GetImageUploadUrlResult> result = await handler.Handle(
             new GetImageUploadUrlCommand(Guid.NewGuid(), fileName, contentType, fileSizeBytes),
             CancellationToken.None);
 
@@ -52,7 +53,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             repository);
 
-        var result = await handler.Handle(
+        Result<GetImageUploadUrlResult> result = await handler.Handle(
             new GetImageUploadUrlCommand(Guid.NewGuid(), "photo.jpg", "image/jpeg", 1024),
             CancellationToken.None);
 
@@ -70,7 +71,7 @@ public class ImagesFeatureTests {
             new FakeCleanupService());
 
         var assetId = Guid.NewGuid();
-        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.NotFound", result.Error.Code);
@@ -85,7 +86,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
 
         var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService());
-        var result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.Forbidden", result.Error.Code);
@@ -99,7 +100,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
 
         var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService("storage_error"));
-        var result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.StorageError", result.Error.Code);
@@ -118,7 +119,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
 
         var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService(cleanupErrorCode));
-        var result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal(expectedErrorCode, result.Error.Code);
@@ -130,7 +131,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             new FakeCleanupService());
 
-        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.InvalidData", result.Error.Code);
@@ -143,7 +144,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             new FakeCleanupService());
 
-        var result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.InvalidData", result.Error.Code);
@@ -157,7 +158,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
+        int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
 
         Assert.Equal(0, removed);
     }
@@ -175,7 +176,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var removed = await service.CleanupOrphansAsync(
+        int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
             10,
             CancellationToken.None);
@@ -194,7 +195,7 @@ public class ImagesFeatureTests {
             NullLogger<ImageAssetCleanupService>.Instance);
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
-        var removed = await service.CleanupOrphansAsync(localCutoff, 10, CancellationToken.None);
+        int removed = await service.CleanupOrphansAsync(localCutoff, 10, CancellationToken.None);
 
         Assert.Equal(0, removed);
         Assert.Equal(localCutoff.ToUniversalTime(), repository.LastUnusedOlderThanUtc);
@@ -213,7 +214,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
 
         Assert.False(result.Deleted);
         Assert.Equal("in_use", result.ErrorCode);
@@ -226,7 +227,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
 
         Assert.False(result.Deleted);
         Assert.Equal("invalid", result.ErrorCode);
@@ -239,7 +240,7 @@ public class ImagesFeatureTests {
             new FakeImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
 
         Assert.False(result.Deleted);
         Assert.Equal("not_found", result.ErrorCode);
@@ -256,8 +257,8 @@ public class ImagesFeatureTests {
             new ThrowingImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
-        var storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+        ImageAsset? storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
 
         Assert.False(result.Deleted);
         Assert.Equal("storage_error", result.ErrorCode);
@@ -276,7 +277,7 @@ public class ImagesFeatureTests {
             new SelectivelyThrowingImageStorageService("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance);
 
-        var removed = await service.CleanupOrphansAsync(
+        int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
             10,
             CancellationToken.None);
@@ -291,7 +292,7 @@ public class ImagesFeatureTests {
         var service = new ImageAssetAccessService(new FakeImageAssetRepository(), new FakeImageStorageService());
         var assetId = ImageAssetId.New();
 
-        var result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
+        Result<ImageAsset?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.NotFound", result.Error.Code);
@@ -306,7 +307,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
 
-        var result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(asset.Url, result.Value!.Url);
@@ -320,7 +321,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
 
-        var result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
+        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.Forbidden", result.Error.Code);
@@ -336,7 +337,7 @@ public class ImagesFeatureTests {
             repo,
             new FakeImageStorageService(new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.")));
 
-        var result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
+        Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Image.InvalidData", result.Error.Code);
@@ -429,7 +430,7 @@ public class ImagesFeatureTests {
         }
 
         public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
-            _assets.TryGetValue(id, out var asset);
+            _assets.TryGetValue(id, out ImageAsset? asset);
             return Task.FromResult(asset);
         }
 

@@ -14,11 +14,11 @@ public static class DependencyInjection {
         services.AddScoped<ISender>(static provider => provider.GetRequiredService<IMediator>());
         services.AddScoped<IPublisher>(static provider => provider.GetRequiredService<IMediator>());
 
-        foreach (var assembly in configuration.Assemblies.Distinct()) {
+        foreach (Assembly? assembly in configuration.Assemblies.Distinct()) {
             services.RegisterMediatorHandlers(assembly);
         }
 
-        foreach (var behaviorType in configuration.OpenBehaviors) {
+        foreach (Type behaviorType in configuration.OpenBehaviors) {
             services.AddTransient(typeof(IPipelineBehavior<,>), behaviorType);
         }
 
@@ -26,13 +26,13 @@ public static class DependencyInjection {
     }
 
     private static void RegisterMediatorHandlers(this IServiceCollection services, Assembly assembly) {
-        var implementationTypes = assembly
+        Type[] implementationTypes = assembly
             .GetTypes()
             .Where(static type => type is { IsAbstract: false, IsInterface: false })
             .ToArray();
 
-        foreach (var implementationType in implementationTypes) {
-            foreach (var serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
+        foreach (Type? implementationType in implementationTypes) {
+            foreach (Type? serviceType in implementationType.GetInterfaces().Where(IsMediatorHandler)) {
                 services.AddTransient(serviceType, implementationType);
             }
         }
@@ -43,7 +43,7 @@ public static class DependencyInjection {
             return false;
         }
 
-        var genericDefinition = interfaceType.GetGenericTypeDefinition();
+        Type genericDefinition = interfaceType.GetGenericTypeDefinition();
         return genericDefinition == typeof(IRequestHandler<,>) ||
             genericDefinition == typeof(INotificationHandler<>);
     }

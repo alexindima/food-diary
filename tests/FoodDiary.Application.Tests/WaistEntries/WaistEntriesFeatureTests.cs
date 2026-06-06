@@ -9,6 +9,9 @@ using FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.WaistEntries.Models;
 
 namespace FoodDiary.Application.Tests.WaistEntries;
 
@@ -19,7 +22,7 @@ public class WaistEntriesFeatureTests {
         var validator = new CreateWaistEntryCommandValidator();
         var command = new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 80);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -29,7 +32,7 @@ public class WaistEntriesFeatureTests {
         var validator = new GetWaistEntriesQueryValidator();
         var query = new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -39,7 +42,7 @@ public class WaistEntriesFeatureTests {
         var validator = new GetWaistSummariesQueryValidator();
         var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-10), DateTime.UtcNow, 0);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -49,7 +52,7 @@ public class WaistEntriesFeatureTests {
         var repository = new InMemoryWaistEntryRepository();
         var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -62,11 +65,11 @@ public class WaistEntriesFeatureTests {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist@example.com", "hash");
         var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(user));
-        var userId = user.Id;
+        UserId userId = user.Id;
         var localDate = new DateTime(2026, 2, 23, 23, 30, 0, DateTimeKind.Local);
-        var expectedDate = NormalizeUtcDate(localDate);
+        DateTime expectedDate = NormalizeUtcDate(localDate);
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(userId.Value, localDate, 82),
             CancellationToken.None);
 
@@ -83,7 +86,7 @@ public class WaistEntriesFeatureTests {
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(user.Id.Value, dateOnly, 82),
             CancellationToken.None);
 
@@ -99,7 +102,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
         var query = new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -111,7 +114,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("waist-summary-missing-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
             new GetWaistSummariesQuery(null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
             CancellationToken.None);
 
@@ -125,7 +128,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("waist-summary-invalid-step@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
             new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
             CancellationToken.None);
 
@@ -141,7 +144,7 @@ public class WaistEntriesFeatureTests {
         var from = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
             new GetWaistSummariesQuery(user.Id.Value, from, to, 1),
             CancellationToken.None);
 
@@ -158,7 +161,7 @@ public class WaistEntriesFeatureTests {
         await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 82.78));
         var handler = new GetWaistSummariesQueryHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
             new GetWaistSummariesQuery(
                 user.Id.Value,
                 new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
@@ -167,7 +170,7 @@ public class WaistEntriesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var summary = Assert.Single(result.Value);
+        WaistEntrySummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
         Assert.Equal(82, summary.AverageCircumference);
@@ -181,7 +184,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
             new GetWaistSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
             CancellationToken.None);
 
@@ -195,7 +198,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteWaistEntryCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -210,7 +213,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("delete-waist-missing-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteWaistEntryCommand(null, WaistEntryId.New().Value),
             CancellationToken.None);
 
@@ -226,7 +229,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
             CancellationToken.None);
 
@@ -241,7 +244,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
             CancellationToken.None);
 
@@ -253,10 +256,10 @@ public class WaistEntriesFeatureTests {
     public async Task DeleteWaistEntryCommandHandler_WhenEntryExists_DeletesEntry() {
         var user = User.Create("delete-waist-success@example.com", "hash");
         var repository = new InMemoryWaistEntryRepository();
-        var entry = await repository.AddAsync(WaistEntry.Create(user.Id, DateTime.UtcNow.Date, 82));
+        WaistEntry entry = await repository.AddAsync(WaistEntry.Create(user.Id, DateTime.UtcNow.Date, 82));
         var handler = new DeleteWaistEntryCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteWaistEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
@@ -272,7 +275,7 @@ public class WaistEntriesFeatureTests {
         var from = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
             new GetWaistEntriesQuery(user.Id.Value, from, to, 10, true),
             CancellationToken.None);
 
@@ -285,18 +288,18 @@ public class WaistEntriesFeatureTests {
     public async Task GetWaistEntriesQueryHandler_WithEntries_ReturnsMappedEntries() {
         var repository = new InMemoryWaistEntryRepository();
         var user = User.Create("waist-list-mapped@example.com", "hash");
-        var older = await repository.AddAsync(WaistEntry.Create(
+        WaistEntry older = await repository.AddAsync(WaistEntry.Create(
             user.Id,
             new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc),
             82));
-        var newer = await repository.AddAsync(WaistEntry.Create(
+        WaistEntry newer = await repository.AddAsync(WaistEntry.Create(
             user.Id,
             new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
             81));
         await repository.AddAsync(WaistEntry.Create(UserId.New(), newer.Date.AddDays(1), 79));
         var handler = new GetWaistEntriesQueryHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
             new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
             CancellationToken.None);
 
@@ -319,7 +322,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("waist-list-missing-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
             new GetWaistEntriesQuery(null, null, null, 10, true),
             CancellationToken.None);
 
@@ -333,7 +336,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -348,7 +351,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("waist-update-missing-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(null, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -364,7 +367,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -379,7 +382,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -391,17 +394,17 @@ public class WaistEntriesFeatureTests {
     public async Task UpdateWaistEntryCommandHandler_WhenAnotherEntryExistsForDate_ReturnsAlreadyExists() {
         var user = User.Create("waist-update-duplicate@example.com", "hash");
         var repository = new InMemoryWaistEntryRepository();
-        var entry = await repository.AddAsync(WaistEntry.Create(
+        WaistEntry entry = await repository.AddAsync(WaistEntry.Create(
             user.Id,
             new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc),
             82));
-        var duplicate = await repository.AddAsync(WaistEntry.Create(
+        WaistEntry duplicate = await repository.AddAsync(WaistEntry.Create(
             user.Id,
             new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
             81));
         var handler = new UpdateWaistEntryCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
             CancellationToken.None);
 
@@ -419,7 +422,7 @@ public class WaistEntriesFeatureTests {
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, dateOnly, 81),
             CancellationToken.None);
 
@@ -436,7 +439,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
             new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
             CancellationToken.None);
 
@@ -451,7 +454,7 @@ public class WaistEntriesFeatureTests {
         var repository = new InMemoryWaistEntryRepository();
         var handler = new CreateWaistEntryCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<WaistEntryModel> result = await handler.Handle(
             new CreateWaistEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
@@ -466,7 +469,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("latest-waist@example.com", "hash")));
 
-        var result = await handler.Handle(new GetLatestWaistEntryQuery(null), CancellationToken.None);
+        Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -480,7 +483,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
+        Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -491,11 +494,11 @@ public class WaistEntriesFeatureTests {
         var user = User.Create("latest-waist-entry@example.com", "hash");
         var repository = new InMemoryWaistEntryRepository();
         await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc), 82));
-        var latest = await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), 81));
+        WaistEntry latest = await repository.AddAsync(WaistEntry.Create(user.Id, new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), 81));
         await repository.AddAsync(WaistEntry.Create(UserId.New(), new DateTime(2026, 5, 28, 0, 0, 0, DateTimeKind.Utc), 79));
         var handler = new GetLatestWaistEntryQueryHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
+        Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
@@ -504,7 +507,7 @@ public class WaistEntriesFeatureTests {
     }
 
     private static DateTime NormalizeUtcDate(DateTime value) {
-        var utc = value.Kind switch {
+        DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
             _ => value.ToUniversalTime()
         };

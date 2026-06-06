@@ -52,7 +52,7 @@ public sealed class UserLoginEvent : Entity<Guid> {
             throw new ArgumentException("Value is required.", paramName);
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 
@@ -61,7 +61,7 @@ public sealed class UserLoginEvent : Entity<Guid> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 

@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.ContentReports.Models;
 
 namespace FoodDiary.Application.Tests.ContentReports;
 
@@ -13,7 +15,7 @@ public class ContentReportsFeatureTests {
         var repo = new InMemoryContentReportRepository();
         var handler = new CreateContentReportCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam content"),
             CancellationToken.None);
 
@@ -31,7 +33,7 @@ public class ContentReportsFeatureTests {
         repo.SeedReported(new UserId(userId), ReportTargetType.Recipe, targetId);
 
         var handler = new CreateContentReportCommandHandler(repo);
-        var result = await handler.Handle(
+        Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(userId, "Recipe", targetId, "Spam"),
             CancellationToken.None);
 
@@ -43,7 +45,7 @@ public class ContentReportsFeatureTests {
     public async Task CreateContentReport_WithNullUserId_ReturnsFailure() {
         var handler = new CreateContentReportCommandHandler(new InMemoryContentReportRepository());
 
-        var result = await handler.Handle(
+        Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(null, "Recipe", Guid.NewGuid(), "Spam"),
             CancellationToken.None);
 

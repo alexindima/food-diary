@@ -11,6 +11,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 
@@ -28,7 +29,7 @@ public class CreateRecommendationCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
             userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<RecommendationModel>(currentUserAccessError);
@@ -36,14 +37,14 @@ public class CreateRecommendationCommandHandler(
 
         var clientUserId = new UserId(command.ClientUserId);
 
-        var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<RecommendationModel>(accessResult.Error);
         }
 
-        var permissionError = DietologistAccessPolicy.EnsureAllPermissions(accessResult.Value);
+        Error? permissionError = DietologistAccessPolicy.EnsureAllPermissions(accessResult.Value);
         if (permissionError is not null) {
             return Result.Failure<RecommendationModel>(permissionError);
         }
@@ -56,15 +57,15 @@ public class CreateRecommendationCommandHandler(
     }
 
     private async Task NotifyClientAsync(Recommendation recommendation, CancellationToken cancellationToken) {
-        var dietologist = await userRepository.GetByIdAsync(recommendation.DietologistUserId, cancellationToken).ConfigureAwait(false);
-        var notification = NotificationFactory.CreateNewRecommendation(
+        User? dietologist = await userRepository.GetByIdAsync(recommendation.DietologistUserId, cancellationToken).ConfigureAwait(false);
+        Notification notification = NotificationFactory.CreateNewRecommendation(
             recommendation.ClientUserId,
             ResolveDietologistLabel(dietologist),
             recommendation.Id.Value.ToString());
 
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
 
-        var unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
+        int unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(recommendation.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
     }
 
@@ -73,7 +74,7 @@ public class CreateRecommendationCommandHandler(
             return string.Empty;
         }
 
-        var fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
+        string fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName)
             ? dietologist.Email
             : $"{fullName} ({dietologist.Email})";

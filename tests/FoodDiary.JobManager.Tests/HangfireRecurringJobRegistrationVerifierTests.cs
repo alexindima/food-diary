@@ -26,7 +26,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
             storage,
             NullLogger<HangfireRecurringJobRegistrationVerifier>.Instance);
 
-        var exception = Assert.Throws<InvalidOperationException>(
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(
             () => verifier.EnsureRegistered([RecurringJobIds.ImageAssetsCleanup, RecurringJobIds.UsersCleanup]));
 
         Assert.Contains(RecurringJobIds.UsersCleanup, exception.Message, StringComparison.Ordinal);
@@ -100,7 +100,7 @@ public sealed class HangfireRecurringJobRegistrationVerifierTests {
                 return [];
             }
 
-            var recurringJobId = key[prefix.Length..];
+            string recurringJobId = key[prefix.Length..];
             return recurringJobIds.Contains(recurringJobId, StringComparer.Ordinal)
                 ? new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["Cron"] = "* * * * *",

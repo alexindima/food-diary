@@ -10,7 +10,7 @@ public sealed class MailRelayMessageProcessor(
         var queuedEmail = QueuedEmail.FromPersistence(message);
 
         try {
-            var suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<string> suppressedRecipients = await queueStore.GetSuppressedRecipientsAsync(queuedEmail.To, cancellationToken).ConfigureAwait(false);
             if (suppressedRecipients.Count > 0) {
                 queuedEmail.MarkSuppressed();
                 await queueStore.MarkSuppressedAsync(queuedEmail.Id, suppressedRecipients, cancellationToken).ConfigureAwait(false);
@@ -36,7 +36,7 @@ public sealed class MailRelayMessageProcessor(
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) {
-            var failureDecision = queuedEmail.MarkFailedAttempt(ex.ToString());
+            QueuedEmailFailureDecision failureDecision = queuedEmail.MarkFailedAttempt(ex.ToString());
             await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
 
             logger.LogWarning(

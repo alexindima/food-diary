@@ -16,12 +16,12 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
             return;
         }
 
-        var actionAttributes = controllerAction.MethodInfo.GetCustomAttributes(inherit: true);
+        object[] actionAttributes = controllerAction.MethodInfo.GetCustomAttributes(inherit: true);
         if (actionAttributes.OfType<AllowAnonymousAttribute>().Any()) {
             return;
         }
 
-        var authorizeAttributes = controllerAction.MethodInfo
+        IAuthorizeData[] authorizeAttributes = controllerAction.MethodInfo
             .GetCustomAttributes(inherit: true)
             .OfType<IAuthorizeData>()
             .Concat(controllerAction.ControllerTypeInfo.GetCustomAttributes(inherit: true).OfType<IAuthorizeData>())
@@ -43,7 +43,7 @@ public sealed class StandardErrorResponsesOperationFilter : IOperationFilter {
     private static void AddApiErrorResponse(OpenApiOperation operation, OperationFilterContext context, int statusCode) {
         operation.Responses ??= new OpenApiResponses();
 
-        var statusCodeText = statusCode.ToString(CultureInfo.InvariantCulture);
+        string statusCodeText = statusCode.ToString(CultureInfo.InvariantCulture);
         if (operation.Responses.ContainsKey(statusCodeText)) {
             return;
         }

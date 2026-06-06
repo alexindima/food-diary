@@ -160,7 +160,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         UpdateProductCommand command,
         ValidationContext<UpdateProductCommand> context,
         CancellationToken cancellationToken) {
-        context.RootContextData.TryGetValue(ProductContextKey, out var cached);
+        context.RootContextData.TryGetValue(ProductContextKey, out object? cached);
         var product = cached as Product;
 
         if (product is null) {
@@ -181,7 +181,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
             return;
         }
 
-        var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+        int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.ProductId),
                 "Product is already used in consumptions or recipes and cannot be updated") {

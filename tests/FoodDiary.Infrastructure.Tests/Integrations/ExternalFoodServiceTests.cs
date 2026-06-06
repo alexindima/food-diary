@@ -1,5 +1,7 @@
 using System.Net;
 using System.Text;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -12,9 +14,9 @@ public sealed class ExternalFoodServiceTests {
     [Fact]
     public async Task UsdaSearchBrandedAsync_WhenApiKeyMissing_ReturnsEmptyWithoutSendingRequest() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.OK));
-        var service = CreateUsdaService(handler, apiKey: "");
+        UsdaFoodSearchService service = CreateUsdaService(handler, apiKey: "");
 
-        var result = await service.SearchBrandedAsync("milk", cancellationToken: CancellationToken.None);
+        IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk", cancellationToken: CancellationToken.None);
 
         Assert.Empty(result);
         Assert.Empty(handler.Requests);
@@ -34,9 +36,9 @@ public sealed class ExternalFoodServiceTests {
                 }
                 """);
         });
-        var service = CreateUsdaService(handler);
+        UsdaFoodSearchService service = CreateUsdaService(handler);
 
-        var result = await service.SearchBrandedAsync("milk", limit: 2, cancellationToken: CancellationToken.None);
+        IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk", limit: 2, cancellationToken: CancellationToken.None);
 
         Assert.Collection(
             result,
@@ -55,9 +57,9 @@ public sealed class ExternalFoodServiceTests {
     [Fact]
     public async Task UsdaSearchBrandedAsync_WhenRequestFails_ReturnsEmpty() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
-        var service = CreateUsdaService(handler);
+        UsdaFoodSearchService service = CreateUsdaService(handler);
 
-        var result = await service.SearchBrandedAsync("milk", cancellationToken: CancellationToken.None);
+        IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk", cancellationToken: CancellationToken.None);
 
         Assert.Empty(result);
     }
@@ -65,9 +67,9 @@ public sealed class ExternalFoodServiceTests {
     [Fact]
     public async Task UsdaGetFoodDetailAsync_WhenNotFound_ReturnsNull() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.NotFound));
-        var service = CreateUsdaService(handler);
+        UsdaFoodSearchService service = CreateUsdaService(handler);
 
-        var result = await service.GetFoodDetailAsync(123, CancellationToken.None);
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(123, CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -92,16 +94,16 @@ public sealed class ExternalFoodServiceTests {
                 }
                 """);
         });
-        var service = CreateUsdaService(handler);
+        UsdaFoodSearchService service = CreateUsdaService(handler);
 
-        var result = await service.GetFoodDetailAsync(123, CancellationToken.None);
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(123, CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal(123, result.FdcId);
         Assert.Equal("Dairy", result.FoodCategory);
-        var nutrient = Assert.Single(result.Nutrients);
+        MicronutrientModel nutrient = Assert.Single(result.Nutrients);
         Assert.Equal(1003, nutrient.NutrientId);
-        var portion = Assert.Single(result.Portions);
+        UsdaFoodPortionModel portion = Assert.Single(result.Portions);
         Assert.Equal(1, portion.Id);
         Assert.Equal(1, portion.Amount);
         Assert.Equal("cup", portion.MeasureUnitName);
@@ -132,9 +134,9 @@ public sealed class ExternalFoodServiceTests {
                 }
                 """);
         });
-        var service = CreateOpenFoodFactsService(handler);
+        OpenFoodFactsService service = CreateOpenFoodFactsService(handler);
 
-        var result = await service.GetByBarcodeAsync(" 12345 ", CancellationToken.None);
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync(" 12345 ", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal(" 12345 ", result.Barcode);
@@ -148,9 +150,9 @@ public sealed class ExternalFoodServiceTests {
         var handler = new RecordingHttpMessageHandler(_ => JsonResponse("""
             { "status": 1, "product": { "product_name": "   " } }
             """));
-        var service = CreateOpenFoodFactsService(handler);
+        OpenFoodFactsService service = CreateOpenFoodFactsService(handler);
 
-        var result = await service.GetByBarcodeAsync("12345", CancellationToken.None);
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("12345", CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -169,11 +171,11 @@ public sealed class ExternalFoodServiceTests {
                 }
                 """);
         });
-        var service = CreateOpenFoodFactsService(handler);
+        OpenFoodFactsService service = CreateOpenFoodFactsService(handler);
 
-        var result = await service.SearchAsync("unique-query-for-test", limit: 2, cancellationToken: CancellationToken.None);
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("unique-query-for-test", limit: 2, cancellationToken: CancellationToken.None);
 
-        var product = Assert.Single(result);
+        OpenFoodFactsProductModel product = Assert.Single(result);
         Assert.Equal("1", product.Barcode);
         Assert.Equal("Milk", product.Name);
         Assert.Equal("Farm", product.Brand);
@@ -182,9 +184,9 @@ public sealed class ExternalFoodServiceTests {
     [Fact]
     public async Task OpenFoodFactsSearchAsync_WhenRequestFails_ReturnsEmpty() {
         var handler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
-        var service = CreateOpenFoodFactsService(handler);
+        OpenFoodFactsService service = CreateOpenFoodFactsService(handler);
 
-        var result = await service.SearchAsync(Guid.NewGuid().ToString("N"), cancellationToken: CancellationToken.None);
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync(Guid.NewGuid().ToString("N"), cancellationToken: CancellationToken.None);
 
         Assert.Empty(result);
     }

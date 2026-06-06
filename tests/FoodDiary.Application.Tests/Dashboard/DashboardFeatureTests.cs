@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -26,7 +27,7 @@ public class DashboardFeatureTests {
             Locale: "en",
             TrendDays: 7);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -42,7 +43,7 @@ public class DashboardFeatureTests {
             Locale: "en",
             TrendDays: 7);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
@@ -51,7 +52,7 @@ public class DashboardFeatureTests {
     public async Task SendDashboardTestEmailCommandValidator_WithEmptyUserId_Fails() {
         var validator = new SendDashboardTestEmailCommandValidator();
 
-        var result = await validator.ValidateAsync(new SendDashboardTestEmailCommand(Guid.Empty));
+        ValidationResult result = await validator.ValidateAsync(new SendDashboardTestEmailCommand(Guid.Empty));
 
         Assert.False(result.IsValid);
         Assert.Contains(
@@ -61,7 +62,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
-        var dto = DashboardMapping.ToStatisticsModel(null, null);
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(null, null);
 
         Assert.Equal(0, dto.TotalCalories);
         Assert.Equal(0, dto.AverageProteins);
@@ -82,7 +83,7 @@ public class DashboardFeatureTests {
             200,
             28);
 
-        var dto = DashboardMapping.ToStatisticsModel(response, user);
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response, user);
 
         Assert.Equal(1900, dto.TotalCalories);
         Assert.Equal(110, dto.AverageProteins);
@@ -95,13 +96,13 @@ public class DashboardFeatureTests {
     [Fact]
     public void DashboardMapping_ToWeeklyCalories_OrdersByDateAscending() {
         var day1 = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
-        var day2 = day1.AddDays(1);
+        DateTime day2 = day1.AddDays(1);
         var responses = new List<AggregatedStatisticsModel> {
             new(day2, day2, 2000, 100, 70, 250, 30),
             new(day1, day1, 1800, 90, 60, 220, 25)
         };
 
-        var calories = DashboardMapping.ToWeeklyCalories(responses);
+        IReadOnlyList<DailyCaloriesModel> calories = DashboardMapping.ToWeeklyCalories(responses);
 
         Assert.Collection(
             calories,
@@ -113,13 +114,13 @@ public class DashboardFeatureTests {
     public void DashboardMapping_ToWeightModel_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
-        var previousDate = latestDate.AddDays(-1);
+        DateTime previousDate = latestDate.AddDays(-1);
         var entries = new List<WeightEntry> {
             WeightEntry.Create(userId, latestDate, 82.5),
             WeightEntry.Create(userId, previousDate, 83)
         };
 
-        var dto = DashboardMapping.ToWeightModel(entries, desired: 80);
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel(entries, desired: 80);
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);
@@ -130,7 +131,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWeightModel_WithNoEntries_ReturnsEmptyPoints() {
-        var dto = DashboardMapping.ToWeightModel([], desired: null);
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel([], desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
@@ -141,13 +142,13 @@ public class DashboardFeatureTests {
     public void DashboardMapping_ToWaistModel_MapsLatestAndPreviousEntries() {
         var userId = UserId.New();
         var latestDate = new DateTime(2026, 2, 20, 0, 0, 0, DateTimeKind.Utc);
-        var previousDate = latestDate.AddDays(-1);
+        DateTime previousDate = latestDate.AddDays(-1);
         var entries = new List<WaistEntry> {
             WaistEntry.Create(userId, latestDate, 92.1),
             WaistEntry.Create(userId, previousDate, 92.8)
         };
 
-        var dto = DashboardMapping.ToWaistModel(entries, desired: 90);
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel(entries, desired: 90);
 
         Assert.NotNull(dto.Latest);
         Assert.NotNull(dto.Previous);
@@ -158,7 +159,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWaistModel_WithNoEntries_ReturnsEmptyPoints() {
-        var dto = DashboardMapping.ToWaistModel([], desired: null);
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel([], desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
@@ -173,7 +174,7 @@ public class DashboardFeatureTests {
         var handler = new GetDashboardSnapshotQueryHandler(builder);
         using var cts = new CancellationTokenSource();
 
-        var result = await handler.Handle(
+        Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetDashboardSnapshotQuery(userId.Value, date, Page: 2, PageSize: 25, Locale: "ru", TrendDays: 14),
             cts.Token);
 
@@ -194,9 +195,9 @@ public class DashboardFeatureTests {
     public async Task GetDashboardSnapshotQueryHandler_WithMissingUserId_ReturnsInvalidToken(string? userIdText) {
         var builder = new RecordingDashboardSnapshotBuilder();
         var handler = new GetDashboardSnapshotQueryHandler(builder);
-        var userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
+        Guid? userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
 
-        var result = await handler.Handle(
+        Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetDashboardSnapshotQuery(userId, DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7),
             CancellationToken.None);
 
@@ -213,7 +214,7 @@ public class DashboardFeatureTests {
             new RecordingEmailSender(throwOnSend: true),
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
-        var result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -230,7 +231,7 @@ public class DashboardFeatureTests {
             emailSender,
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
-        var result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("dashboard-email-ok@example.com", emailSender.TestEmailMessage?.ToEmail);
@@ -245,7 +246,7 @@ public class DashboardFeatureTests {
             emailSender,
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
-        var result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.NewGuid()), CancellationToken.None);
+        Result result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);

@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
 using FoodDiary.Application.Abstractions.Users.Common;
+using System.Reflection;
 
 namespace FoodDiary.JobManager.Tests;
 
@@ -31,7 +32,7 @@ public sealed class JobsTests {
         long? deletedItems = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "images.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -41,7 +42,7 @@ public sealed class JobsTests {
             onDuration: (value, _) => duration = value);
 
         var cleanupService = new RecordingImageCleanupService([2, 0]);
-        var options = Options.Create(new ImageCleanupOptions { BatchSize = 2, OlderThanHours = 12 });
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 2, OlderThanHours = 12 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new ImageCleanupJob(
@@ -68,7 +69,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "users.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -78,7 +79,7 @@ public sealed class JobsTests {
             onDuration: (value, _) => duration = value);
 
         var cleanupService = new ThrowingUserCleanupService();
-        var options = Options.Create(new UserCleanupOptions { BatchSize = 10, RetentionDays = 30 });
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions { BatchSize = 10, RetentionDays = 30 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
         var job = new UserCleanupJob(
@@ -100,7 +101,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task ImageCleanupJob_WithNonPositiveBatchSize_UsesOne() {
         var cleanupService = new RecordingImageCleanupService([1, 0]);
-        var options = Options.Create(new ImageCleanupOptions { BatchSize = 0, OlderThanHours = 12 });
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 0, OlderThanHours = 12 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new ImageCleanupJob(
             cleanupService,
@@ -118,7 +119,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task ImageCleanupJob_WithNonPositiveOlderThan_UsesDefault12Hours() {
         var cleanupService = new RecordingImageCleanupService([0]);
-        var options = Options.Create(new ImageCleanupOptions { BatchSize = 10, OlderThanHours = 0 });
+        IOptions<ImageCleanupOptions> options = Options.Create(new ImageCleanupOptions { BatchSize = 10, OlderThanHours = 0 });
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var job = new ImageCleanupJob(
             cleanupService,
@@ -136,7 +137,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task UserCleanupJob_WithInvalidReassignUserId_PassesNull() {
         var cleanupService = new RecordingUserCleanupService([0]);
-        var options = Options.Create(new UserCleanupOptions {
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
             BatchSize = 10,
             RetentionDays = 30,
             ReassignUserId = "not-a-guid",
@@ -160,7 +161,7 @@ public sealed class JobsTests {
     public async Task UserCleanupJob_WithValidReassignUserId_PassesParsedGuid() {
         var expectedId = Guid.NewGuid();
         var cleanupService = new RecordingUserCleanupService([0]);
-        var options = Options.Create(new UserCleanupOptions {
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
             BatchSize = 10,
             RetentionDays = 30,
             ReassignUserId = expectedId.ToString(),
@@ -182,7 +183,7 @@ public sealed class JobsTests {
     [Fact]
     public async Task UserCleanupJob_WithNonPositiveBatchAndRetention_UsesDefaults() {
         var cleanupService = new RecordingUserCleanupService([1, 0]);
-        var options = Options.Create(new UserCleanupOptions {
+        IOptions<UserCleanupOptions> options = Options.Create(new UserCleanupOptions {
             BatchSize = 0,
             RetentionDays = 0,
         });
@@ -207,7 +208,7 @@ public sealed class JobsTests {
         long? deletedItems = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "notifications.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -217,7 +218,7 @@ public sealed class JobsTests {
             onDuration: (value, _) => duration = value);
 
         var cleanupService = new RecordingNotificationCleanupService([2, 0]);
-        var options = Options.Create(new NotificationCleanupOptions {
+        IOptions<NotificationCleanupOptions> options = Options.Create(new NotificationCleanupOptions {
             TransientTypes = ["Test", "Reminder"],
             BatchSize = 2,
             TransientReadRetentionDays = 3,
@@ -260,7 +261,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "notifications.cleanup",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -295,7 +296,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "billing.renewal",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -329,7 +330,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "billing.renewal",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -367,7 +368,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "billing.renewal",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -378,7 +379,7 @@ public sealed class JobsTests {
 
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var user = User.Create("renewal-job@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_renewal_job",
@@ -445,7 +446,7 @@ public sealed class JobsTests {
         string? outcome = null;
         double? duration = null;
 
-        using var listener = CreateJobManagerListener(
+        using MeterListener listener = CreateJobManagerListener(
             expectedJobName: "billing.renewal",
             onExecution: (value, tags) => {
                 executionCount = value;
@@ -587,10 +588,10 @@ public sealed class JobsTests {
 
     [Fact]
     public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
-        var imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
-        var billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
-        var notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
-        var userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
+        MethodInfo? imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
+        MethodInfo? billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
+        MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
+        MethodInfo? userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
         Assert.NotNull(billingRenewalMethod);
@@ -666,7 +667,7 @@ public sealed class JobsTests {
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }
@@ -676,10 +677,10 @@ public sealed class JobsTests {
     }
 
     private static void AssertExecutionPolicy(System.Reflection.MethodInfo method) {
-        var retry = method.GetCustomAttributes(typeof(AutomaticRetryAttribute), inherit: false)
+        AutomaticRetryAttribute? retry = method.GetCustomAttributes(typeof(AutomaticRetryAttribute), inherit: false)
             .Cast<AutomaticRetryAttribute>()
             .SingleOrDefault();
-        var concurrency = method.GetCustomAttributes(typeof(DisableConcurrentExecutionAttribute), inherit: false)
+        DisableConcurrentExecutionAttribute? concurrency = method.GetCustomAttributes(typeof(DisableConcurrentExecutionAttribute), inherit: false)
             .Cast<DisableConcurrentExecutionAttribute>()
             .SingleOrDefault();
 
@@ -703,7 +704,7 @@ public sealed class JobsTests {
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
             OlderThanValues.Add(olderThanUtc);
             BatchSizes.Add(batchSize);
-            var value = _results.Count > 0 ? _results.Dequeue() : 0;
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
     }
@@ -724,7 +725,7 @@ public sealed class JobsTests {
             OlderThanValues.Add(olderThanUtc);
             BatchSizes.Add(batchSize);
             ReassignUserIds.Add(reassignUserId);
-            var value = _results.Count > 0 ? _results.Dequeue() : 0;
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
     }
@@ -737,7 +738,7 @@ public sealed class JobsTests {
 
         public Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) {
             Policies.Add(policy);
-            var value = _results.Count > 0 ? _results.Dequeue() : 0;
+            int value = _results.Count > 0 ? _results.Dequeue() : 0;
             return Task.FromResult(value);
         }
     }

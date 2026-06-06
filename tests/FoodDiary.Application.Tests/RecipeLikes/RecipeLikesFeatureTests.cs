@@ -6,6 +6,8 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.RecipeLikes.Models;
 
 namespace FoodDiary.Application.Tests.RecipeLikes;
 
@@ -19,7 +21,7 @@ public class RecipeLikesFeatureTests {
         var recipeRepo = new StubRecipeRepository(recipe);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -36,7 +38,7 @@ public class RecipeLikesFeatureTests {
         var recipeRepo = new StubRecipeRepository(recipe);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -50,7 +52,7 @@ public class RecipeLikesFeatureTests {
         var recipeRepo = new StubRecipeRepository(null);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -62,7 +64,7 @@ public class RecipeLikesFeatureTests {
         var handler = new ToggleRecipeLikeCommandHandler(
             new InMemoryRecipeLikeRepository(), new StubRecipeRepository(null));
 
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -76,7 +78,7 @@ public class RecipeLikesFeatureTests {
         repo.Seed(RecipeLike.Create(userId, recipeId));
 
         var handler = new GetRecipeLikeStatusQueryHandler(repo);
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(userId.Value, recipeId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -89,7 +91,7 @@ public class RecipeLikesFeatureTests {
         var repo = new InMemoryRecipeLikeRepository();
 
         var handler = new GetRecipeLikeStatusQueryHandler(repo);
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -101,7 +103,7 @@ public class RecipeLikesFeatureTests {
     public async Task GetRecipeLikeStatus_WithNullUserId_ReturnsFailure() {
         var handler = new GetRecipeLikeStatusQueryHandler(new InMemoryRecipeLikeRepository());
 
-        var result = await handler.Handle(
+        Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);

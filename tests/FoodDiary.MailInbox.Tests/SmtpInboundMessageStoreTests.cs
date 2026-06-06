@@ -18,9 +18,9 @@ public sealed class SmtpInboundMessageStoreTests {
     public async Task SaveAsync_WhenMessageHasToRecipients_StoresParsedInboundMessage() {
         var store = new RecordingInboundMailStore();
         var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
-        var rawMime = CreateRawMime(includeToHeader: true);
+        string rawMime = CreateRawMime(includeToHeader: true);
 
-        var response = await messageStore.SaveAsync(
+        SmtpResponse response = await messageStore.SaveAsync(
             context: null!,
             new TestMessageTransaction(["fallback@fooddiary.club"]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
@@ -39,7 +39,7 @@ public sealed class SmtpInboundMessageStoreTests {
     public async Task SaveAsync_WhenMessageHasNoToRecipients_UsesTransactionRecipients() {
         var store = new RecordingInboundMailStore();
         var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
-        var rawMime = CreateRawMime(includeToHeader: false);
+        string rawMime = CreateRawMime(includeToHeader: false);
 
         await messageStore.SaveAsync(
             context: null!,
@@ -75,7 +75,7 @@ public sealed class SmtpInboundMessageStoreTests {
 
         public IList<IMailbox> To { get; } = recipients
             .Select(static recipient => {
-                var parts = recipient.Split('@', 2);
+                string[] parts = recipient.Split('@', 2);
                 return (IMailbox)new Mailbox(parts[0], parts[1]);
             })
             .ToArray();

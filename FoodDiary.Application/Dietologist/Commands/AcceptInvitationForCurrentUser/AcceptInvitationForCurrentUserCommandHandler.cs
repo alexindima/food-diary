@@ -7,6 +7,8 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
 
@@ -23,17 +25,17 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
-        var invitation = await invitationRepository.GetByIdAsync(
+        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
             new DietologistInvitationId(command.InvitationId),
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
@@ -54,7 +56,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         if (!user.HasRole(RoleNames.Dietologist)) {
             var roles = user.GetRoleNames().ToList();
             roles.Add(RoleNames.Dietologist);
-            var roleEntities = await userRepository.GetRolesByNamesAsync(roles, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(roles, cancellationToken).ConfigureAwait(false);
             user.ReplaceRoles(roleEntities);
             await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         }
@@ -72,7 +74,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     }
 
     private static string ResolveDietologistDisplayName(FoodDiary.Domain.Entities.Users.User user) {
-        var fullName = $"{user.FirstName} {user.LastName}".Trim();
+        string fullName = $"{user.FirstName} {user.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName) ? user.Email : fullName;
     }
 }

@@ -15,12 +15,12 @@ internal sealed partial class DiaryPdfGenerator {
         CancellationToken cancellationToken) {
         using var gate = new SemaphoreSlim(MaxParallelMealImageDownloads);
         var cache = new Dictionary<string, Lazy<Task<byte[]?>>>(StringComparer.Ordinal);
-        var tasks = meals
+        Task<MealImageEntry>[] tasks = meals
             .Take(MaxMealImagesPerReport)
             .Select(meal => LoadMealImageEntryAsync(meal, cache, gate, cancellationToken))
             .ToArray();
 
-        var entries = await Task.WhenAll(tasks).ConfigureAwait(false);
+        MealImageEntry[] entries = await Task.WhenAll(tasks).ConfigureAwait(false);
 
         return entries
             .Where(entry => entry.Image is not null)
@@ -32,7 +32,7 @@ internal sealed partial class DiaryPdfGenerator {
         Dictionary<string, Lazy<Task<byte[]?>>> cache,
         SemaphoreSlim gate,
         CancellationToken cancellationToken) {
-        var image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken).ConfigureAwait(false);
+        byte[]? image = await LoadMealImageForReportAsync(meal, cache, gate, cancellationToken).ConfigureAwait(false);
         return new MealImageEntry(meal.Id, image);
     }
 
@@ -40,13 +40,13 @@ internal sealed partial class DiaryPdfGenerator {
         GetReportDayCount(dateFrom, dateTo) > 7;
 
     private static int GetReportDayCount(DateTime dateFrom, DateTime dateTo) {
-        var normalizedFrom = EnsureUtcForReport(dateFrom);
-        var normalizedTo = EnsureUtcForReport(dateTo);
+        DateTime normalizedFrom = EnsureUtcForReport(dateFrom);
+        DateTime normalizedTo = EnsureUtcForReport(dateTo);
         if (normalizedTo < normalizedFrom) {
             (normalizedFrom, normalizedTo) = (normalizedTo, normalizedFrom);
         }
 
-        var duration = normalizedTo - normalizedFrom;
+        TimeSpan duration = normalizedTo - normalizedFrom;
         return Math.Clamp((int)Math.Ceiling(duration.TotalDays), 1, 366);
     }
 
@@ -66,7 +66,7 @@ internal sealed partial class DiaryPdfGenerator {
             return await LoadCachedMealImageAsync(meal.ImageUrl, cache, gate, cancellationToken).ConfigureAwait(false);
         }
 
-        var compositionImages = await Task.WhenAll(
+        byte[]?[] compositionImages = await Task.WhenAll(
             GetCompositionImageUrls(meal)
                 .Take(MaxIngredientImagesPerCollage)
                 .Select(imageUrl => LoadCachedMealImageAsync(imageUrl, cache, gate, cancellationToken))).ConfigureAwait(false);
@@ -106,24 +106,24 @@ internal sealed partial class DiaryPdfGenerator {
 
     private async Task<byte[]?> LoadMealImageAsync(string imageUrl, CancellationToken cancellationToken) {
         try {
-            if (TryReadDataUrl(imageUrl, out var dataUrlBytes)) {
+            if (TryReadDataUrl(imageUrl, out byte[]? dataUrlBytes)) {
                 return PrepareMealImage(dataUrlBytes);
             }
 
-            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out var uri) ||
+            if (!Uri.TryCreate(imageUrl, UriKind.Absolute, out Uri? uri) ||
                 !await IsAllowedRemoteImageUriAsync(uri, cancellationToken).ConfigureAwait(false)) {
                 return null;
             }
 
-            using var response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage response = await httpClient.GetAsync(uri, HttpCompletionOption.ResponseHeadersRead, cancellationToken).ConfigureAwait(false);
             if (!response.IsSuccessStatusCode || response.Content.Headers.ContentLength > MaxMealImageBytes) {
                 return null;
             }
 
-            var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
             await using (stream.ConfigureAwait(false)) {
                 using var memory = new MemoryStream();
-                var buffer = new byte[81920];
+                byte[] buffer = new byte[81920];
                 int read;
 
                 while ((read = await stream.ReadAsync(buffer, cancellationToken).ConfigureAwait(false)) > 0) {
@@ -158,12 +158,12 @@ internal sealed partial class DiaryPdfGenerator {
     private static bool TryReadDataUrl(string value, out byte[] bytes) {
         bytes = [];
         const string marker = ";base64,";
-        var markerIndex = value.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        int markerIndex = value.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
         if (!value.StartsWith("data:image/", StringComparison.OrdinalIgnoreCase) || markerIndex < 0) {
             return false;
         }
 
-        var base64 = value[(markerIndex + marker.Length)..];
+        string base64 = value[(markerIndex + marker.Length)..];
         if (base64.Length > MaxDataUrlBase64Length) {
             return false;
         }
@@ -177,17 +177,17 @@ internal sealed partial class DiaryPdfGenerator {
             return false;
         }
 
-        var host = uri.IdnHost;
+        string host = uri.IdnHost;
         if (host.Equals("localhost", StringComparison.OrdinalIgnoreCase) ||
             host.EndsWith(".localhost", StringComparison.OrdinalIgnoreCase)) {
             return false;
         }
 
-        if (IPAddress.TryParse(host, out var literalAddress)) {
+        if (IPAddress.TryParse(host, out IPAddress? literalAddress)) {
             return IsPublicAddress(literalAddress);
         }
 
-        var addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
+        IPAddress[] addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
         return addresses.Length > 0 && addresses.All(IsPublicAddress);
     }
 
@@ -201,7 +201,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return bytes[0] is not (0 or 10 or 127) &&
                    (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
                    (bytes[0] != 169 || bytes[1] != 254) &&
@@ -213,7 +213,7 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         if (address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetworkV6) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return !address.IsIPv6LinkLocal &&
                    !address.IsIPv6Multicast &&
                    !address.IsIPv6SiteLocal &&
@@ -232,7 +232,7 @@ internal sealed partial class DiaryPdfGenerator {
                 return null;
             }
 
-            using var preparedImage = CreateCroppedBitmap(image, MealImageThumbnailSize, MealImageThumbnailSize);
+            using SKBitmap preparedImage = CreateCroppedBitmap(image, MealImageThumbnailSize, MealImageThumbnailSize);
             return EncodeMealImage(preparedImage);
         } catch {
             return null;
@@ -256,16 +256,16 @@ internal sealed partial class DiaryPdfGenerator {
                 SKAlphaType.Premul);
             using var skCanvas = new SKCanvas(canvas);
             skCanvas.Clear(new SKColor(27, 34, 43));
-            var slots = GetCollageSlots(images.Count);
+            CollageSlot[] slots = GetCollageSlots(images.Count);
 
-            for (var index = 0; index < Math.Min(images.Count, slots.Length); index++) {
+            for (int index = 0; index < Math.Min(images.Count, slots.Length); index++) {
                 using var tile = SKBitmap.Decode(images[index]);
                 if (tile is null) {
                     continue;
                 }
 
-                var slot = slots[index];
-                using var resizedTile = CreateCroppedBitmap(tile, slot.Width, slot.Height);
+                CollageSlot slot = slots[index];
+                using SKBitmap resizedTile = CreateCroppedBitmap(tile, slot.Width, slot.Height);
                 skCanvas.DrawBitmap(resizedTile, slot.X, slot.Y);
             }
 
@@ -276,7 +276,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static CollageSlot[] GetCollageSlots(int imageCount) {
-        var half = MealImageThumbnailSize / 2;
+        int half = MealImageThumbnailSize / 2;
         return imageCount switch {
             2 => [
                 new CollageSlot(0, 0, half, MealImageThumbnailSize),
@@ -297,9 +297,9 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static SKBitmap CreateCroppedBitmap(SKBitmap source, int width, int height) {
-        var scale = Math.Max((float)width / source.Width, (float)height / source.Height);
-        var scaledWidth = source.Width * scale;
-        var scaledHeight = source.Height * scale;
+        float scale = Math.Max((float)width / source.Width, (float)height / source.Height);
+        float scaledWidth = source.Width * scale;
+        float scaledHeight = source.Height * scale;
         var destination = new SKRect(
             (width - scaledWidth) / 2,
             (height - scaledHeight) / 2,
@@ -315,7 +315,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static byte[] EncodeMealImage(SKBitmap image) {
-        using var encoded = image.Encode(SKEncodedImageFormat.Jpeg, 86);
+        using SKData encoded = image.Encode(SKEncodedImageFormat.Jpeg, 86);
         return encoded.ToArray();
     }
 

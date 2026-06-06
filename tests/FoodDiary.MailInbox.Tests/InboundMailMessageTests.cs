@@ -52,11 +52,11 @@ public sealed class InboundMailMessageTests {
 
     [Fact]
     public void Archive_WhenMessageIsAlreadyArchived_DoesNotChangeModifiedTimestamp() {
-        var message = CreateMessage();
+        InboundMailMessage message = CreateMessage();
         var archivedAtUtc = new DateTimeOffset(2026, 4, 26, 10, 0, 0, TimeSpan.Zero);
 
         message.Archive(archivedAtUtc);
-        var modifiedOnUtc = message.ModifiedOnUtc;
+        DateTime? modifiedOnUtc = message.ModifiedOnUtc;
         message.Archive(archivedAtUtc.AddHours(1));
 
         Assert.Equal(InboundMailMessageStatus.Archived, message.Status);
@@ -127,7 +127,7 @@ public sealed class InboundMailMessageTests {
 
     [Fact]
     public void ClearDomainEvents_RemovesRaisedEvents() {
-        var message = CreateMessage();
+        InboundMailMessage message = CreateMessage();
 
         message.ClearDomainEvents();
 
@@ -202,8 +202,8 @@ public sealed class InboundMailMessageTests {
     public void EntityGetHashCode_WhenNonTransient_CachesComputedHashCode() {
         var entity = new TestEntity(Guid.NewGuid());
 
-        var firstHashCode = entity.GetHashCode();
-        var secondHashCode = entity.GetHashCode();
+        int firstHashCode = entity.GetHashCode();
+        int secondHashCode = entity.GetHashCode();
 
         Assert.Equal(firstHashCode, secondHashCode);
     }
@@ -212,7 +212,7 @@ public sealed class InboundMailMessageTests {
     public void EntityGetHashCode_WhenMaterializedWithoutCachedHashCode_ComputesAndCachesHashCode() {
         var entity = new TestEntity();
         var id = Guid.NewGuid();
-        var entityType = typeof(Entity<Guid>);
+        Type entityType = typeof(Entity<Guid>);
         entityType.GetField(
             "_id",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, id);
@@ -220,7 +220,7 @@ public sealed class InboundMailMessageTests {
             "_cachedHashCode",
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, null);
 
-        var hashCode = entity.GetHashCode();
+        int hashCode = entity.GetHashCode();
 
         Assert.Equal(
             HashCode.Combine(typeof(TestEntity), EqualityComparer<Guid>.Default.GetHashCode(id)),
@@ -240,7 +240,7 @@ public sealed class InboundMailMessageTests {
     [Fact]
     public void EntityEquality_TreatsSameTransientReferenceAsEqual() {
         var entity = new TestEntity();
-        var same = entity;
+        TestEntity same = entity;
 
         Assert.True(entity.Equals(entity));
         Assert.True(entity.Equals((object)entity));
@@ -296,7 +296,7 @@ public sealed class InboundMailMessageTests {
 
     [Fact]
     public void DomainTime_UtcNow_ReturnsUtcTimestamp() {
-        var type = typeof(InboundMailMessage).Assembly.GetType("FoodDiary.MailInbox.Domain.Common.DomainTime");
+        Type? type = typeof(InboundMailMessage).Assembly.GetType("FoodDiary.MailInbox.Domain.Common.DomainTime");
         var value = (DateTime)type!.GetProperty(
             "UtcNow",
             System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static)!.GetValue(null)!;

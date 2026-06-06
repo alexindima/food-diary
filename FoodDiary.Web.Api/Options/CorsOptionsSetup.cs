@@ -6,7 +6,7 @@ namespace FoodDiary.Web.Api.Options;
 
 public sealed class CorsOptionsSetup(IOptions<ApiCorsOptions> apiCorsOptions) : IConfigureOptions<CorsOptions> {
     public void Configure(CorsOptions options) {
-        var origins = apiCorsOptions.Value.Origins;
+        string[] origins = apiCorsOptions.Value.Origins;
         if (origins.Length == 0) {
             origins = ["http://localhost:4200", "http://localhost:4300"];
         }

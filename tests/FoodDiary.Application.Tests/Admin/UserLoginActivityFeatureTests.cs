@@ -1,7 +1,10 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Tests.Admin;
@@ -29,7 +32,7 @@ public sealed class UserLoginActivityFeatureTests {
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 0, Limit: 500, UserId: null, Search: "chrome"),
             CancellationToken.None);
 
@@ -63,7 +66,7 @@ public sealed class UserLoginActivityFeatureTests {
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
             CancellationToken.None);
 
@@ -92,7 +95,7 @@ public sealed class UserLoginActivityFeatureTests {
         };
         var handler = new GetAdminUserLoginEventsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
             CancellationToken.None);
 
@@ -112,12 +115,12 @@ public sealed class UserLoginActivityFeatureTests {
         };
         var handler = new GetAdminUserLoginSummaryQueryHandler(repository);
 
-        var result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
+        Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>> result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(fromUtc, repository.LastSummaryFromUtc);
         Assert.Equal(toUtc, repository.LastSummaryToUtc);
-        var item = Assert.Single(result.Value);
+        AdminUserLoginDeviceSummaryModel item = Assert.Single(result.Value);
         Assert.Equal("device:Desktop", item.Key);
         Assert.Equal(7, item.Count);
         Assert.Equal(lastSeenAtUtc, item.LastSeenAtUtc);

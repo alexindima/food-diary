@@ -6,6 +6,7 @@ using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 
@@ -14,19 +15,19 @@ public class UpdateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
     public async Task<Result<ExerciseEntryModel>> Handle(
         UpdateExerciseEntryCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<ExerciseEntryModel>(userIdResult.Error);
         }
 
         var entryId = new ExerciseEntryId(command.EntryId);
-        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
             return Result.Failure<ExerciseEntryModel>(Errors.Exercise.NotFound(command.EntryId));
         }
 
         ExerciseType? exerciseType = null;
-        if (command.ExerciseType is not null && Enum.TryParse<ExerciseType>(command.ExerciseType, true, out var parsed)) {
+        if (command.ExerciseType is not null && Enum.TryParse<ExerciseType>(command.ExerciseType, true, out ExerciseType parsed)) {
             exerciseType = parsed;
         }
 

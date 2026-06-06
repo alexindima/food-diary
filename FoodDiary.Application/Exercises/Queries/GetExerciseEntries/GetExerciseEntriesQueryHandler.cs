@@ -4,6 +4,8 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 
@@ -12,12 +14,12 @@ public class GetExerciseEntriesQueryHandler(IExerciseEntryRepository repository)
     public async Task<Result<IReadOnlyList<ExerciseEntryModel>>> Handle(
         GetExerciseEntriesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<ExerciseEntryModel>>(userIdResult.Error);
         }
 
-        var entries = await repository.GetByDateRangeAsync(
+        IReadOnlyList<ExerciseEntry> entries = await repository.GetByDateRangeAsync(
             userIdResult.Value, query.DateFrom, query.DateTo, cancellationToken).ConfigureAwait(false);
 
         var models = entries.Select(e => e.ToModel()).ToList();

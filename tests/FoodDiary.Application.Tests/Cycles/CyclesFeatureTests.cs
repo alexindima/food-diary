@@ -10,6 +10,8 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
@@ -20,7 +22,7 @@ public class CyclesFeatureTests {
         var validator = new CreateCycleCommandValidator();
         var command = new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, AverageLength: 10, LutealLength: 20, Notes: null);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -37,7 +39,7 @@ public class CyclesFeatureTests {
             Notes: null,
             ClearNotes: false);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -54,7 +56,7 @@ public class CyclesFeatureTests {
             Notes: "note",
             ClearNotes: true);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Notes cannot be provided when ClearNotes is true.", StringComparison.Ordinal));
@@ -66,7 +68,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<CycleDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
@@ -88,7 +90,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(User.Create("cycle-empty-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<CycleModel> result = await handler.Handle(
             new CreateCycleCommand(Guid.Empty, DateTime.UtcNow, 28, 14, null),
             CancellationToken.None);
 
@@ -104,7 +106,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<CycleModel> result = await handler.Handle(
             new CreateCycleCommand(user.Id.Value, DateTime.UtcNow, 28, 14, null),
             CancellationToken.None);
 
@@ -118,7 +120,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(User.Create("cycle-current-empty@example.com", "hash")));
 
-        var result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
+        Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -132,7 +134,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
+        Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -144,7 +146,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(User.Create("cycle-day-empty-user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<CycleDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 Guid.Empty,
                 Guid.NewGuid(),
@@ -167,7 +169,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<CycleDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 user.Id.Value,
                 Guid.NewGuid(),
@@ -190,7 +192,7 @@ public class CyclesFeatureTests {
             new NoopCycleRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<CycleDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 user.Id.Value,
                 cycleId,
@@ -213,7 +215,7 @@ public class CyclesFeatureTests {
         var handler = new UpsertCycleDayCommandHandler(repository, new StubUserRepository(user));
         var date = new DateTime(2026, 4, 5, 12, 30, 0, DateTimeKind.Local);
 
-        var result = await handler.Handle(
+        Result<CycleDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 user.Id.Value,
                 cycle.Id.Value,
@@ -238,7 +240,7 @@ public class CyclesFeatureTests {
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
         cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
 
-        var response = cycle.ToModel();
+        CycleModel response = cycle.ToModel();
 
         Assert.Collection(
             response.Days,
@@ -250,7 +252,7 @@ public class CyclesFeatureTests {
     public void CycleMappings_ToValueObject_MapsSymptomValues() {
         var model = new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7);
 
-        var symptoms = model.ToValueObject();
+        DailySymptoms symptoms = model.ToValueObject();
 
         Assert.Equal(1, symptoms.Pain);
         Assert.Equal(2, symptoms.Mood);
@@ -266,7 +268,7 @@ public class CyclesFeatureTests {
         var localStart = DateTime.SpecifyKind(new DateTime(2026, 1, 10, 23, 30, 0), DateTimeKind.Local);
         var cycle = Cycle.Create(UserId.New(), localStart, averageLength: 28, lutealLength: 14);
 
-        var predictions = CyclePredictionService.CalculatePredictions(cycle);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);
 
         Assert.NotNull(predictions.NextPeriodStart);
         Assert.NotNull(predictions.OvulationDate);

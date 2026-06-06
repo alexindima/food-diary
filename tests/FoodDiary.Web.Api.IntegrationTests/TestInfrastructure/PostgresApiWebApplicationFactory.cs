@@ -93,10 +93,10 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
     }
 
     protected override IHost CreateHost(IHostBuilder builder) {
-        var host = base.CreateHost(builder);
+        IHost host = base.CreateHost(builder);
 
-        using var scope = host.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using IServiceScope scope = host.Services.CreateScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         dbContext.Database.Migrate();
 
         return host;
@@ -107,7 +107,7 @@ public sealed class PostgresApiWebApplicationFactory : WebApplicationFactory<Pro
         await using (connection.ConfigureAwait(false)) {
             await connection.OpenAsync().ConfigureAwait(false);
 
-            var command = connection.CreateCommand();
+            NpgsqlCommand command = connection.CreateCommand();
             await using (command.ConfigureAwait(false)) {
                 command.CommandText = $"CREATE DATABASE \"{databaseName}\"";
                 await command.ExecuteNonQueryAsync().ConfigureAwait(false);

@@ -1,7 +1,9 @@
+using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
+using FoodDiary.Presentation.Api.Features.Cycles.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -18,7 +20,7 @@ public sealed class CycleHttpMappingsTests {
             Notes: null,
             ClearNotes: true);
 
-        var command = request.ToCommand(userId, cycleId);
+        UpsertCycleDayCommand command = request.ToCommand(userId, cycleId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleId, command.CycleId);
@@ -55,7 +57,7 @@ public sealed class CycleHttpMappingsTests {
                 OvulationDate: startDate.AddDays(15),
                 PmsStart: startDate.AddDays(26)));
 
-        var response = model.ToHttpResponse();
+        CycleHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(cycleId, response.Id);
         Assert.Equal(userId, response.UserId);
@@ -63,7 +65,7 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(29, response.AverageLength);
         Assert.Equal(13, response.LutealLength);
         Assert.Equal("cycle notes", response.Notes);
-        var day = Assert.Single(response.Days);
+        CycleDayHttpResponse day = Assert.Single(response.Days);
         Assert.Equal(dayId, day.Id);
         Assert.True(day.IsPeriod);
         Assert.Equal(7, day.Symptoms.Libido);
@@ -85,7 +87,7 @@ public sealed class CycleHttpMappingsTests {
             [],
             Predictions: null);
 
-        var response = model.ToHttpResponse();
+        CycleHttpResponse response = model.ToHttpResponse();
 
         Assert.Null(response.Predictions);
         Assert.Empty(response.Days);

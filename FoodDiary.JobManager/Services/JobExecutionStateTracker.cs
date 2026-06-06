@@ -47,7 +47,7 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     }
 
     public JobExecutionStateSnapshot? GetSnapshot(string jobName) {
-        return snapshots.TryGetValue(jobName, out var snapshot) ? snapshot : null;
+        return snapshots.TryGetValue(jobName, out JobExecutionStateSnapshot snapshot) ? snapshot : null;
     }
 
     public void Dispose() {
@@ -55,15 +55,15 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     }
 
     private IEnumerable<Measurement<long>> ObserveLastSuccessAge() {
-        var now = TimeProvider.System.GetUtcNow().UtcDateTime;
+        DateTime now = TimeProvider.System.GetUtcNow().UtcDateTime;
 
-        foreach (var entry in snapshots) {
+        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in snapshots) {
             if (entry.Value.LastSucceededAtUtc is not { } lastSucceededAtUtc) {
                 continue;
             }
 
-            var age = now - lastSucceededAtUtc;
-            var ageSeconds = age <= TimeSpan.Zero ? 0L : (long)age.TotalSeconds;
+            TimeSpan age = now - lastSucceededAtUtc;
+            long ageSeconds = age <= TimeSpan.Zero ? 0L : (long)age.TotalSeconds;
             yield return new Measurement<long>(
                 ageSeconds,
                 new KeyValuePair<string, object?>("fooddiary.job.name", entry.Key));
@@ -71,7 +71,7 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     }
 
     private IEnumerable<Measurement<int>> ObserveFailureStreak() {
-        foreach (var entry in snapshots) {
+        foreach (KeyValuePair<string, JobExecutionStateSnapshot> entry in snapshots) {
             yield return new Measurement<int>(
                 entry.Value.ConsecutiveFailures,
                 new KeyValuePair<string, object?>("fooddiary.job.name", entry.Key));

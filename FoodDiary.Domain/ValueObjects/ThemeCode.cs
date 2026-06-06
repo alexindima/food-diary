@@ -17,7 +17,7 @@ public readonly record struct ThemeCode {
             return false;
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         if (normalized is Ocean or Leaf or Dark) {
             theme = new ThemeCode(normalized);
             return true;

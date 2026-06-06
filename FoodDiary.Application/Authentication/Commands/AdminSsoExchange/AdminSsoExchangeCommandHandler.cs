@@ -8,6 +8,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 
@@ -19,17 +20,17 @@ public sealed class AdminSsoExchangeCommandHandler(
     public async Task<Result<AuthenticationModel>> Handle(
         AdminSsoExchangeCommand command,
         CancellationToken cancellationToken) {
-        var userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
+        UserId? userId = await adminSsoService.ExchangeCodeAsync(command.Code, cancellationToken).ConfigureAwait(false);
         if (userId is null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoInvalidCode);
         }
 
-        var user = await userRepository.GetByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }
 
-        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(accessError);
         }
@@ -38,7 +39,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoForbidden);
         }
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 

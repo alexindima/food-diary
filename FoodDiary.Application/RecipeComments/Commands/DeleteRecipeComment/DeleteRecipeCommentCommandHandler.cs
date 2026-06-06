@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 
@@ -14,23 +15,23 @@ public class DeleteRecipeCommentCommandHandler(
     public async Task<Result> Handle(
         DeleteRecipeCommentCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
         var commentId = (RecipeCommentId)command.CommentId;
-        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null || comment.RecipeId != recipeId) {
             return Result.Failure(Errors.RecipeComment.NotFound(command.CommentId));
         }
 
         // Author or recipe owner can delete
-        var isAuthor = comment.UserId == userIdResult.Value;
+        bool isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
-            var recipe = await recipeRepository.GetByIdAsync(
+            Recipe? recipe = await recipeRepository.GetByIdAsync(
                 recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (recipe is null) {

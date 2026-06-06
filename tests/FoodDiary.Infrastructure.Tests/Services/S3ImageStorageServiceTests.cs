@@ -1,4 +1,5 @@
 using System.Diagnostics.Metrics;
+using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
@@ -14,15 +15,15 @@ public sealed class S3ImageStorageServiceTests {
         long? count = null;
         string? operation = null;
         string? outcome = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             count = value;
             operation = GetTagValue(tags, "fooddiary.storage.operation");
             outcome = GetTagValue(tags, "fooddiary.storage.outcome");
         });
 
-        var service = CreateService(new StubObjectStorageClient());
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
-        var result = await service.CreatePresignedUploadAsync(
+        PresignedUpload result = await service.CreatePresignedUploadAsync(
             UserId.New(),
             "meal.webp",
             "image/webp",
@@ -40,13 +41,13 @@ public sealed class S3ImageStorageServiceTests {
         long? count = null;
         string? outcome = null;
         string? errorType = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             count = value;
             outcome = GetTagValue(tags, "fooddiary.storage.outcome");
             errorType = GetTagValue(tags, "error.type");
         });
 
-        var service = CreateService(new StubObjectStorageClient());
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             service.CreatePresignedUploadAsync(
@@ -63,9 +64,9 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task CreatePresignedUploadAsync_WithUnsafeFileName_EscapesPublicUrlKeySegments() {
-        var service = CreateService(new StubObjectStorageClient());
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
-        var result = await service.CreatePresignedUploadAsync(
+        PresignedUpload result = await service.CreatePresignedUploadAsync(
             UserId.New(),
             "meal #1?.webp",
             "image/webp",
@@ -82,13 +83,13 @@ public sealed class S3ImageStorageServiceTests {
         long? count = null;
         string? operation = null;
         string? outcome = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             count = value;
             operation = GetTagValue(tags, "fooddiary.storage.operation");
             outcome = GetTagValue(tags, "fooddiary.storage.outcome");
         });
 
-        var service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
+        S3ImageStorageService service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             service.DeleteAsync("users/test/image.webp", CancellationToken.None));
@@ -100,18 +101,18 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectMetadataIsValid_ReturnsValid() {
-        var service = CreateService(new StubObjectStorageClient());
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
 
-        var result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
 
         Assert.True(result.IsValid);
     }
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectIsTooLarge_ReturnsInvalid() {
-        var service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(6 * 1024 * 1024, "image/webp")));
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(6 * 1024 * 1024, "image/webp")));
 
-        var result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("too_large", result.ErrorCode);
@@ -119,9 +120,9 @@ public sealed class S3ImageStorageServiceTests {
 
     [Fact]
     public async Task ValidateUploadedObjectAsync_WhenContentTypeIsUnsupported_ReturnsInvalid() {
-        var service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(1024, "text/plain")));
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(1024, "text/plain")));
 
-        var result = await service.ValidateUploadedObjectAsync("users/test/image.txt", CancellationToken.None);
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.txt", CancellationToken.None);
 
         Assert.False(result.IsValid);
         Assert.Equal("unsupported_type", result.ErrorCode);
@@ -160,7 +161,7 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }

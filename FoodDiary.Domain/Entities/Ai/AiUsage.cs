@@ -25,11 +25,11 @@ public sealed class AiUsage : Entity<AiUsageId> {
         int outputTokens,
         int totalTokens) {
         EnsureUserId(userId);
-        var normalizedOperation = NormalizeRequiredText(operation, OperationMaxLength, nameof(operation));
-        var normalizedModel = NormalizeRequiredText(model, ModelMaxLength, nameof(model));
-        var normalizedInputTokens = NormalizeNonNegative(inputTokens, nameof(inputTokens));
-        var normalizedOutputTokens = NormalizeNonNegative(outputTokens, nameof(outputTokens));
-        var normalizedTotalTokens = NormalizeNonNegative(totalTokens, nameof(totalTokens));
+        string normalizedOperation = NormalizeRequiredText(operation, OperationMaxLength, nameof(operation));
+        string normalizedModel = NormalizeRequiredText(model, ModelMaxLength, nameof(model));
+        int normalizedInputTokens = NormalizeNonNegative(inputTokens, nameof(inputTokens));
+        int normalizedOutputTokens = NormalizeNonNegative(outputTokens, nameof(outputTokens));
+        int normalizedTotalTokens = NormalizeNonNegative(totalTokens, nameof(totalTokens));
         EnsureTotalTokensConsistency(normalizedInputTokens, normalizedOutputTokens, normalizedTotalTokens);
 
         var usage = new AiUsage {
@@ -56,7 +56,7 @@ public sealed class AiUsage : Entity<AiUsageId> {
             throw new ArgumentException("Value is required.", paramName);
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;
@@ -69,7 +69,7 @@ public sealed class AiUsage : Entity<AiUsageId> {
     }
 
     private static void EnsureTotalTokensConsistency(int inputTokens, int outputTokens, int totalTokens) {
-        var minimalTotal = (long)inputTokens + outputTokens;
+        long minimalTotal = (long)inputTokens + outputTokens;
         if (totalTokens < minimalTotal) {
             throw new ArgumentOutOfRangeException(
                 nameof(totalTokens),

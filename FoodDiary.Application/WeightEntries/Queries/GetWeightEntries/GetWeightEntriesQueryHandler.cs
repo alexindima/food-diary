@@ -7,6 +7,8 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 
@@ -17,25 +19,25 @@ public class GetWeightEntriesQueryHandler(
     public async Task<Result<IReadOnlyList<WeightEntryModel>>> Handle(
         GetWeightEntriesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WeightEntryModel>>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WeightEntryModel>>(accessError);
         }
 
-        var normalizedFrom = query.DateFrom.HasValue
+        DateTime? normalizedFrom = query.DateFrom.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
             : null;
-        var normalizedTo = query.DateTo.HasValue
+        DateTime? normalizedTo = query.DateTo.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        var entries = await weightEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WeightEntry> entries = await weightEntryRepository.GetEntriesAsync(
             userId,
             normalizedFrom,
             normalizedTo,

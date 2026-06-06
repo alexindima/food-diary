@@ -4,8 +4,8 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
     public void ApplicationAbstractions_Interfaces_AreKeptInPurposeFolders() {
-        var root = ArchitectureTestPaths.RepositoryRoot;
-        var abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
         var allowedPurposeFolders = new HashSet<string>(StringComparer.Ordinal) {
             "Abstractions",
             "Common",
@@ -13,12 +13,12 @@ public sealed class ApplicationAbstractionsBoundaryTests {
             "Services",
         };
 
-        var violations = SourceScanner.SourceFiles(abstractionsRoot)
+        string[] violations = SourceScanner.SourceFiles(abstractionsRoot)
             .Where(path => Path.GetFileName(path).StartsWith("I", StringComparison.Ordinal))
             .Where(path => path.EndsWith(".cs", StringComparison.Ordinal))
             .Where(path => {
-                var relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(abstractionsRoot, path)) ?? string.Empty;
-                var segments = relativeDirectory.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                string relativeDirectory = Path.GetDirectoryName(Path.GetRelativePath(abstractionsRoot, path)) ?? string.Empty;
+                string[] segments = relativeDirectory.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 if (segments.Length < 2) {
                     return true;
                 }
@@ -36,8 +36,8 @@ public sealed class ApplicationAbstractionsBoundaryTests {
 
     [Fact]
     public void ApplicationAbstractions_SourceFiles_DoNotReferenceHostPresentationOrInfrastructureNamespaces() {
-        var abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
-        var forbiddenPatterns = new[] {
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+        string[] forbiddenPatterns = new[] {
             "FoodDiary.Web.Api",
             "FoodDiary.Presentation.Api",
             "FoodDiary.Infrastructure",
@@ -49,7 +49,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
             "IOptions<",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(abstractionsRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(abstractionsRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }

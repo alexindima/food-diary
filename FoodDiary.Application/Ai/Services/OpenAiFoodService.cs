@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Services;
@@ -23,13 +24,13 @@ public sealed class OpenAiFoodService(
         string? description,
         CancellationToken cancellationToken) {
         const string operation = "vision";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
+        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
-        var response = await openAiFoodClient.AnalyzeFoodImageAsync(
+        string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.AnalyzeFoodImageAsync(
             imageUrl,
             userLanguage,
             description,
@@ -49,13 +50,13 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken) {
         const string operation = "text-parse";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
+        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodVisionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
-        var response = await openAiFoodClient.ParseFoodTextAsync(
+        string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> response = await openAiFoodClient.ParseFoodTextAsync(
             text,
             userLanguage,
             promptTemplate,
@@ -73,13 +74,13 @@ public sealed class OpenAiFoodService(
         UserId userId,
         CancellationToken cancellationToken) {
         const string operation = "nutrition";
-        var quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
+        Result quotaCheck = await EnsureMonthlyQuotaAsync(userId, operation, cancellationToken).ConfigureAwait(false);
         if (quotaCheck.IsFailure) {
             return Result.Failure<FoodNutritionModel>(quotaCheck.Error);
         }
 
-        var promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
-        var response = await openAiFoodClient.CalculateNutritionAsync(items, promptTemplate, cancellationToken).ConfigureAwait(false);
+        string promptTemplate = await aiPromptProvider.GetPromptAsync(operation, cancellationToken).ConfigureAwait(false);
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> response = await openAiFoodClient.CalculateNutritionAsync(items, promptTemplate, cancellationToken).ConfigureAwait(false);
         if (response.IsFailure) {
             return Result.Failure<FoodNutritionModel>(response.Error);
         }
@@ -89,20 +90,20 @@ public sealed class OpenAiFoodService(
     }
 
     private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, string operation, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId.Value));
         }
 
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.UtcNow;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
-        var monthEndUtc = monthStartUtc.AddMonths(1);
-        var totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
+        DateTime monthEndUtc = monthStartUtc.AddMonths(1);
+        AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
 
         if (totals.InputTokens >= user.AiInputTokenLimit || totals.OutputTokens >= user.AiOutputTokenLimit) {
             ApplicationAiTelemetry.RecordQuotaRejection(operation);

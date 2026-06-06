@@ -9,8 +9,8 @@ internal sealed record InitializerCommand(string Name, string? ConnectionString)
         string? name = null;
         string? connectionString = null;
 
-        for (var index = 0; index < args.Length; index++) {
-            var argument = args[index];
+        for (int index = 0; index < args.Length; index++) {
+            string argument = args[index];
 
             if (argument is "--connection-string" or "-c") {
                 index++;

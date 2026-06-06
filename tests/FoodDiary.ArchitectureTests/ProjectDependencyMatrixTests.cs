@@ -95,8 +95,8 @@ public sealed class ProjectDependencyMatrixTests {
 
     [Fact]
     public void AllProductionProjects_AreCoveredByDependencyMatrix() {
-        var actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
-        var expectedProjects = AllowedProductionProjectReferences.Keys
+        IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
+        string[] expectedProjects = AllowedProductionProjectReferences.Keys
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
 
@@ -105,11 +105,11 @@ public sealed class ProjectDependencyMatrixTests {
 
     [Fact]
     public void ProductionProjectReferences_MatchDependencyMatrix() {
-        var actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
+        IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
 
-        foreach (var (projectName, expectedReferences) in AllowedProductionProjectReferences) {
+        foreach ((string? projectName, string[]? expectedReferences) in AllowedProductionProjectReferences) {
             Assert.True(
-                actualReferencesByProject.TryGetValue(projectName, out var actualReferences),
+                actualReferencesByProject.TryGetValue(projectName, out string[]? actualReferences),
                 $"Project '{projectName}' is missing from discovered production projects.");
 
             Assert.Equal(
@@ -120,8 +120,8 @@ public sealed class ProjectDependencyMatrixTests {
 
     [Fact]
     public void CoreProjects_ReferenceMailBoundedContextsOnlyThroughAllowedClientProjects() {
-        var actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
-        var coreProjects = actualReferencesByProject.Keys
+        IReadOnlyDictionary<string, string[]> actualReferencesByProject = ProjectReferenceReader.ReadProductionProjectReferences();
+        string[] coreProjects = actualReferencesByProject.Keys
             .Where(static projectName => projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) is false)
             .Where(static projectName => projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal) is false)
             .ToArray();
@@ -131,7 +131,7 @@ public sealed class ProjectDependencyMatrixTests {
             "FoodDiary.MailRelay.Client",
         };
 
-        var violations = coreProjects
+        string[] violations = coreProjects
             .SelectMany(projectName => actualReferencesByProject[projectName]
                 .Where(static reference => reference.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal) ||
                                            reference.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))

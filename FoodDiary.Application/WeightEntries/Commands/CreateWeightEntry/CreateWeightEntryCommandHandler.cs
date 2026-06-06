@@ -23,13 +23,13 @@ public class CreateWeightEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel>(accessError);
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
-        var existing = await weightEntryRepository.GetByDateAsync(
+        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        WeightEntry? existing = await weightEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
             cancellationToken).ConfigureAwait(false);

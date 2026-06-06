@@ -53,18 +53,18 @@ public static class FastingMappings {
         this FastingOccurrence occurrence,
         FastingPlan? plan,
         IReadOnlyList<FastingCheckIn>? checkIns = null) {
-        var protocol = plan?.Protocol ?? FastingProtocol.Custom;
-        var initialPlannedDurationHours = occurrence.InitialTargetHours ?? ResolveDefaultHours(occurrence, plan);
-        var addedDurationHours = occurrence.AddedTargetHours;
-        var plannedDurationHours = initialPlannedDurationHours + addedDurationHours;
-        var isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
+        FastingProtocol protocol = plan?.Protocol ?? FastingProtocol.Custom;
+        int initialPlannedDurationHours = occurrence.InitialTargetHours ?? ResolveDefaultHours(occurrence, plan);
+        int addedDurationHours = occurrence.AddedTargetHours;
+        int plannedDurationHours = initialPlannedDurationHours + addedDurationHours;
+        bool isCompleted = occurrence.Status != FastingOccurrenceStatus.Active &&
             occurrence.Status != FastingOccurrenceStatus.Scheduled &&
             occurrence.Status != FastingOccurrenceStatus.Postponed;
-        var cyclicPhaseProgress = ResolveCyclicPhaseProgress(occurrence, plan);
+        (int? DayNumber, int? DayTotal) cyclicPhaseProgress = ResolveCyclicPhaseProgress(occurrence, plan);
         var sortedCheckIns = (checkIns ?? [])
             .OrderByDescending(static checkIn => checkIn.CheckedInAtUtc)
             .ToList();
-        var latestCheckIn = sortedCheckIns.FirstOrDefault();
+        FastingCheckIn? latestCheckIn = sortedCheckIns.FirstOrDefault();
 
         return new FastingSessionModel(
             occurrence.Id.Value,
@@ -137,16 +137,16 @@ public static class FastingMappings {
             return (null, null);
         }
 
-        var fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
-        var eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
-        var totalCycleDays = fastDays + eatDays;
-        var overallCycleDay = ((Math.Max(1, occurrence.SequenceNumber) - 1) % totalCycleDays) + 1;
+        int fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
+        int eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
+        int totalCycleDays = fastDays + eatDays;
+        int overallCycleDay = ((Math.Max(1, occurrence.SequenceNumber) - 1) % totalCycleDays) + 1;
 
         if (occurrence.Kind == FastingOccurrenceKind.FastDay) {
             return (((overallCycleDay - 1) % fastDays) + 1, fastDays);
         }
 
-        var eatCycleDay = overallCycleDay <= fastDays ? 1 : overallCycleDay - fastDays;
+        int eatCycleDay = overallCycleDay <= fastDays ? 1 : overallCycleDay - fastDays;
         return (((eatCycleDay - 1) % eatDays) + 1, eatDays);
     }
 }

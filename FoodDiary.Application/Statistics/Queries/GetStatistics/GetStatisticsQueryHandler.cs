@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
@@ -17,7 +18,7 @@ public class GetStatisticsQueryHandler(
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(
         GetStatisticsQuery request,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(request.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(request.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(userIdResult.Error);
         }
@@ -27,27 +28,27 @@ public class GetStatisticsQueryHandler(
                 Errors.Validation.Invalid(nameof(request.DateFrom), "DateFrom must be earlier than DateTo"));
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(accessError);
         }
 
-        var quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
+        int quantizationDays = Math.Clamp(request.QuantizationDays <= 0 ? 1 : request.QuantizationDays, 1, 365);
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
+        DateTime normalizedFrom = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom);
+        DateTime normalizedTo = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo);
 
-        var meals = await mealRepository.GetByPeriodAsync(
+        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(
             userId,
             normalizedFrom,
             normalizedTo,
             cancellationToken).ConfigureAwait(false);
 
-        var buckets = BuildBuckets(normalizedFrom, normalizedTo, quantizationDays);
+        List<(DateTime Start, DateTime End)> buckets = BuildBuckets(normalizedFrom, normalizedTo, quantizationDays);
         var responses = new List<AggregatedStatisticsModel>(buckets.Count);
 
-        foreach (var (bucketStart, bucketEnd) in buckets) {
+        foreach ((DateTime bucketStart, DateTime bucketEnd) in buckets) {
             var bucketMeals = meals
                 .Where(m => m.Date >= bucketStart && m.Date <= bucketEnd)
                 .ToList();
@@ -66,13 +67,13 @@ public class GetStatisticsQueryHandler(
             return new AggregatedStatisticsModel(bucketStart, bucketEnd, 0, 0, 0, 0, 0, 0, 0, 0, 0);
         }
 
-        var totalCalories = meals.Sum(m => m.TotalCalories);
-        var totalProteins = meals.Sum(m => m.TotalProteins);
-        var totalFats = meals.Sum(m => m.TotalFats);
-        var totalCarbs = meals.Sum(m => m.TotalCarbs);
-        var totalFiber = meals.Sum(m => m.TotalFiber);
+        double totalCalories = meals.Sum(m => m.TotalCalories);
+        double totalProteins = meals.Sum(m => m.TotalProteins);
+        double totalFats = meals.Sum(m => m.TotalFats);
+        double totalCarbs = meals.Sum(m => m.TotalCarbs);
+        double totalFiber = meals.Sum(m => m.TotalFiber);
 
-        var effectiveDays = GetBucketDayCount(bucketStart, bucketEnd);
+        int effectiveDays = GetBucketDayCount(bucketStart, bucketEnd);
 
         return new AggregatedStatisticsModel(
             bucketStart,
@@ -93,10 +94,10 @@ public class GetStatisticsQueryHandler(
         DateTime to,
         int quantizationDays) {
         var buckets = new List<(DateTime, DateTime)>();
-        var currentStart = from;
+        DateTime currentStart = from;
 
         while (currentStart <= to) {
-            var currentEnd = currentStart.AddDays(quantizationDays).AddTicks(-1);
+            DateTime currentEnd = currentStart.AddDays(quantizationDays).AddTicks(-1);
             if (currentEnd > to) {
                 currentEnd = to;
             }
@@ -109,7 +110,7 @@ public class GetStatisticsQueryHandler(
     }
 
     private static int GetBucketDayCount(DateTime bucketStart, DateTime bucketEnd) {
-        var totalDays = (bucketEnd - bucketStart).TotalDays;
+        double totalDays = (bucketEnd - bucketStart).TotalDays;
 
         return Math.Max(1, (int)Math.Ceiling(totalDays));
     }

@@ -5,19 +5,21 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetUserById;
 
 public class GetUserByIdQueryHandler(IUserRepository userRepository) : IQueryHandler<GetUserByIdQuery, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<UserModel>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        UserId userId = userIdResult.Value;
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<UserModel>(accessError)
             : Result.Success(user!.ToModel());

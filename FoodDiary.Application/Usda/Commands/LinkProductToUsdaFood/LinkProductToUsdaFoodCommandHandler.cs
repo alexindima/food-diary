@@ -4,6 +4,8 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
@@ -14,20 +16,20 @@ public class LinkProductToUsdaFoodCommandHandler(
     public async Task<Result> Handle(
         LinkProductToUsdaFoodCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var productId = (ProductId)command.ProductId;
-        var product = await productRepository.GetByIdForUpdateAsync(
+        Product? product = await productRepository.GetByIdForUpdateAsync(
             productId, userIdResult.Value, includePublic: false, cancellationToken).ConfigureAwait(false);
 
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
-        var usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFood? usdaFood = await usdaFoodRepository.GetByFdcIdAsync(command.FdcId, cancellationToken).ConfigureAwait(false);
         if (usdaFood is null) {
             return Result.Failure(Errors.Usda.FoodNotFound(command.FdcId));
         }

@@ -1,6 +1,9 @@
+using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.Users.Queries.GetUserGoals;
 using FoodDiary.Presentation.Api.Features.Goals.Mappings;
 using FoodDiary.Presentation.Api.Features.Goals.Requests;
+using FoodDiary.Presentation.Api.Features.Goals.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -10,7 +13,7 @@ public sealed class GoalsHttpMappingsTests {
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery();
+        GetUserGoalsQuery query = userId.ToQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -21,7 +24,7 @@ public sealed class GoalsHttpMappingsTests {
         var request = new UpdateGoalsHttpRequest(2000, 150, 70, 250, 30, 2500, 75, 80,
             true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
 
-        var command = request.ToCommand(userId);
+        UpdateGoalsCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(2000, command.DailyCalorieTarget);
@@ -42,7 +45,7 @@ public sealed class GoalsHttpMappingsTests {
         var model = new GoalsModel(2000, 150, 70, 250, 30, 2500, 75, 80,
             true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
 
-        var response = model.ToHttpResponse();
+        GoalsHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(2000, response.DailyCalorieTarget);
         Assert.Equal(150, response.ProteinTarget);
@@ -56,7 +59,7 @@ public sealed class GoalsHttpMappingsTests {
         var model = new GoalsModel(null, null, null, null, null, null, null, null,
             false, null, null, null, null, null, null, null);
 
-        var response = model.ToHttpResponse();
+        GoalsHttpResponse response = model.ToHttpResponse();
 
         Assert.Null(response.DailyCalorieTarget);
         Assert.False(response.CalorieCyclingEnabled);

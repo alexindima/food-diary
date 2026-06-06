@@ -1,6 +1,13 @@
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Wearables.Commands.ConnectWearable;
+using FoodDiary.Application.Wearables.Commands.DisconnectWearable;
+using FoodDiary.Application.Wearables.Commands.SyncWearableData;
+using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
+using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
+using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 using FoodDiary.Presentation.Api.Features.Wearables.Mappings;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
+using FoodDiary.Presentation.Api.Features.Wearables.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -10,7 +17,7 @@ public sealed class WearableHttpMappingsTests {
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = WearableHttpMappings.ToQuery(userId);
+        GetWearableConnectionsQuery query = WearableHttpMappings.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
     }
@@ -19,7 +26,7 @@ public sealed class WearableHttpMappingsTests {
     public void ToAuthUrlQuery_MapsProviderAndState() {
         var userId = Guid.NewGuid();
 
-        var query = WearableHttpMappings.ToAuthUrlQuery(userId, "fitbit", "state123");
+        GetWearableAuthUrlQuery query = WearableHttpMappings.ToAuthUrlQuery(userId, "fitbit", "state123");
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal("fitbit", query.Provider);
@@ -31,7 +38,7 @@ public sealed class WearableHttpMappingsTests {
         var userId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
-        var query = WearableHttpMappings.ToDailySummaryQuery(userId, date);
+        GetWearableDailySummaryQuery query = WearableHttpMappings.ToDailySummaryQuery(userId, date);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
@@ -42,7 +49,7 @@ public sealed class WearableHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new ConnectWearableHttpRequest("auth-code-123", "state-123");
 
-        var command = request.ToCommand(userId, "fitbit");
+        ConnectWearableCommand command = request.ToCommand(userId, "fitbit");
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
@@ -54,7 +61,7 @@ public sealed class WearableHttpMappingsTests {
     public void ToDisconnectCommand_MapsUserIdAndProvider() {
         var userId = Guid.NewGuid();
 
-        var command = WearableHttpMappings.ToDisconnectCommand(userId, "googlefit");
+        DisconnectWearableCommand command = WearableHttpMappings.ToDisconnectCommand(userId, "googlefit");
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("googlefit", command.Provider);
@@ -65,7 +72,7 @@ public sealed class WearableHttpMappingsTests {
         var userId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
-        var command = WearableHttpMappings.ToSyncCommand(userId, "fitbit", date);
+        SyncWearableDataCommand command = WearableHttpMappings.ToSyncCommand(userId, "fitbit", date);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
@@ -74,11 +81,11 @@ public sealed class WearableHttpMappingsTests {
 
     [Fact]
     public void WearableConnectionModel_ToHttpResponse_MapsAllFields() {
-        var syncedAt = DateTime.UtcNow;
-        var connectedAt = DateTime.UtcNow.AddDays(-30);
+        DateTime syncedAt = DateTime.UtcNow;
+        DateTime connectedAt = DateTime.UtcNow.AddDays(-30);
         var model = new WearableConnectionModel("fitbit", "ext-user-1", true, syncedAt, connectedAt);
 
-        var response = model.ToHttpResponse();
+        WearableConnectionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("fitbit", response.Provider);
         Assert.Equal("ext-user-1", response.ExternalUserId);
@@ -94,7 +101,7 @@ public sealed class WearableHttpMappingsTests {
             new("googlefit", "ext-2", false, null, DateTime.UtcNow),
         };
 
-        var responses = models.ToHttpResponse();
+        IReadOnlyList<WearableConnectionHttpResponse> responses = models.ToHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal("fitbit", responses[0].Provider);
@@ -106,7 +113,7 @@ public sealed class WearableHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         var model = new WearableDailySummaryModel(date, 8500, 72, 350, 45, 420);
 
-        var response = model.ToHttpResponse();
+        WearableDailySummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(date, response.Date);
         Assert.Equal(8500, response.Steps);

@@ -2,6 +2,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Services;
@@ -22,7 +24,7 @@ public static class RecipeIngredientAccessValidator {
             .ToList();
 
         if (productIds.Count > 0) {
-            var products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
+            IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(productIds, userId, cancellationToken).ConfigureAwait(false);
             if (products.Count != productIds.Count) {
                 return Result.Failure(Errors.Validation.Invalid(
                     nameof(RecipeIngredientInput.ProductId),
@@ -47,7 +49,7 @@ public static class RecipeIngredientAccessValidator {
             return Result.Success();
         }
 
-        var recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<RecipeId, Recipe> recipes = await recipeLookupService.GetAccessibleByIdsAsync(nestedRecipeIds, userId, cancellationToken).ConfigureAwait(false);
         return recipes.Count == nestedRecipeIds.Count
             ? Result.Success()
             : Result.Failure(Errors.Validation.Invalid(

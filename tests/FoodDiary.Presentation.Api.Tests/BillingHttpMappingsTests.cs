@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Presentation.Api.Features.Billing.Mappings;
+using FoodDiary.Presentation.Api.Features.Billing.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -8,11 +9,11 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class BillingHttpMappingsTests {
     [Fact]
     public void BillingOverviewModel_ToHttpResponse_MapsAllFields() {
-        var periodStart = DateTime.UtcNow.AddDays(-1);
-        var periodEnd = DateTime.UtcNow.AddDays(29);
-        var nextAttempt = DateTime.UtcNow.AddDays(30);
-        var trialStart = DateTime.UtcNow.AddDays(-3);
-        var trialEnd = DateTime.UtcNow.AddDays(4);
+        DateTime periodStart = DateTime.UtcNow.AddDays(-1);
+        DateTime periodEnd = DateTime.UtcNow.AddDays(29);
+        DateTime nextAttempt = DateTime.UtcNow.AddDays(30);
+        DateTime trialStart = DateTime.UtcNow.AddDays(-3);
+        DateTime trialEnd = DateTime.UtcNow.AddDays(4);
         var model = new BillingOverviewModel(
             IsPremium: true,
             SubscriptionStatus: "active",
@@ -33,7 +34,7 @@ public sealed class BillingHttpMappingsTests {
             PaddleClientToken: "client-token",
             AvailableProviders: ["paddle", "stripe"]);
 
-        var response = model.ToHttpResponse();
+        BillingOverviewHttpResponse response = model.ToHttpResponse();
 
         Assert.True(response.IsPremium);
         Assert.Equal("active", response.SubscriptionStatus);
@@ -65,8 +66,8 @@ public sealed class BillingHttpMappingsTests {
             "premium");
         var portal = new BillingPortalSessionModel("https://portal.example");
 
-        var checkoutResponse = checkout.ToHttpResponse();
-        var portalResponse = portal.ToHttpResponse();
+        CheckoutSessionHttpResponse checkoutResponse = checkout.ToHttpResponse();
+        PortalSessionHttpResponse portalResponse = portal.ToHttpResponse();
 
         Assert.Equal("session-1", checkoutResponse.SessionId);
         Assert.Equal("https://checkout.example", checkoutResponse.Url);

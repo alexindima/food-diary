@@ -17,10 +17,10 @@ public static class MealNutritionCalculator {
         double fiber = 0;
         double alcohol = 0;
 
-        foreach (var item in meal.Items) {
-            if (item.ProductId is { } productId && products.TryGetValue(productId, out var product)) {
-                var baseAmount = product.BaseAmount <= 0 ? 1 : product.BaseAmount;
-                var multiplier = item.Amount / baseAmount;
+        foreach (MealItem item in meal.Items) {
+            if (item.ProductId is { } productId && products.TryGetValue(productId, out Product? product)) {
+                double baseAmount = product.BaseAmount <= 0 ? 1 : product.BaseAmount;
+                double multiplier = item.Amount / baseAmount;
                 calories += product.CaloriesPerBase * multiplier;
                 proteins += product.ProteinsPerBase * multiplier;
                 fats += product.FatsPerBase * multiplier;
@@ -30,9 +30,9 @@ public static class MealNutritionCalculator {
                 continue;
             }
 
-            if (item.RecipeId is not { } recipeId || !recipes.TryGetValue(recipeId, out var recipe)) continue;
-            var servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
-            var servingsMultiplier = item.Amount;
+            if (item.RecipeId is not { } recipeId || !recipes.TryGetValue(recipeId, out Recipe? recipe)) continue;
+            int servings = recipe.Servings <= 0 ? 1 : recipe.Servings;
+            double servingsMultiplier = item.Amount;
             calories += ((recipe.TotalCalories ?? 0) / servings) * servingsMultiplier;
             proteins += ((recipe.TotalProteins ?? 0) / servings) * servingsMultiplier;
             fats += ((recipe.TotalFats ?? 0) / servings) * servingsMultiplier;
@@ -41,8 +41,8 @@ public static class MealNutritionCalculator {
             alcohol += ((recipe.TotalAlcohol ?? 0) / servings) * servingsMultiplier;
         }
 
-        foreach (var session in meal.AiSessions) {
-            foreach (var aiItem in session.Items) {
+        foreach (MealAiSession session in meal.AiSessions) {
+            foreach (MealAiItem aiItem in session.Items) {
                 calories += aiItem.Calories;
                 proteins += aiItem.Proteins;
                 fats += aiItem.Fats;

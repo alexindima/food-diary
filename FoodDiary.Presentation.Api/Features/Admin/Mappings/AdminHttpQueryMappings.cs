@@ -37,7 +37,7 @@ public static class AdminHttpQueryMappings {
     }
 
     private static UserAccountStatusFilter ResolveUserStatus(GetAdminUsersHttpQuery query) {
-        if (Enum.TryParse<UserAccountStatusFilter>(query.Status, ignoreCase: true, out var status)) {
+        if (Enum.TryParse<UserAccountStatusFilter>(query.Status, ignoreCase: true, out UserAccountStatusFilter status)) {
             return status;
         }
 

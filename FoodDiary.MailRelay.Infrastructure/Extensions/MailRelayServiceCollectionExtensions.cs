@@ -54,7 +54,7 @@ public static class MailRelayServiceCollectionExtensions {
 
     public static IServiceCollection AddMailRelayServices(this IServiceCollection services, IConfiguration configuration) {
         services.AddSingleton(_ => {
-            var connectionString = configuration.GetConnectionString("DefaultConnection")
+            string connectionString = configuration.GetConnectionString("DefaultConnection")
                                    ?? throw new InvalidOperationException("DefaultConnection is not configured.");
             return new NpgsqlDataSourceBuilder(connectionString).Build();
         });
@@ -81,7 +81,7 @@ public static class MailRelayServiceCollectionExtensions {
 
     public static IServiceCollection AddMailRelayTelemetry(this IServiceCollection services) {
         services.AddSingleton<MeterProvider>(static serviceProvider => {
-            var options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
+            OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
             if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
                 return null!;
             }

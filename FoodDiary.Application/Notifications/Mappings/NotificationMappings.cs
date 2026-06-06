@@ -27,7 +27,7 @@ public static class NotificationMappings {
             subscription.ModifiedOnUtc);
 
     private static string GetEndpointHost(string endpoint) {
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out var uri)
+        return Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? uri)
             ? uri.Host
             : endpoint;
     }

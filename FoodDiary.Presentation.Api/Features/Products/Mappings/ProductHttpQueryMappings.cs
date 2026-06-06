@@ -46,7 +46,7 @@ public static class ProductHttpQueryMappings {
             return null;
         }
 
-        var values = productTypes
+        string[] values = productTypes
             .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();

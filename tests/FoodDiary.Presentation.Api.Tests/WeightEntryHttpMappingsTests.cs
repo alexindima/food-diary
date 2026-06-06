@@ -1,6 +1,13 @@
+using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
+using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
+using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
+using FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Mappings;
 using FoodDiary.Presentation.Api.Features.WeightEntries.Requests;
+using FoodDiary.Presentation.Api.Features.WeightEntries.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -12,7 +19,7 @@ public sealed class WeightEntryHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         var request = new CreateWeightEntryHttpRequest(date, 75.5);
 
-        var command = request.ToCommand(userId);
+        CreateWeightEntryCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(date, command.Date);
@@ -26,7 +33,7 @@ public sealed class WeightEntryHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         var request = new UpdateWeightEntryHttpRequest(date, 74.8);
 
-        var command = request.ToCommand(userId, entryId);
+        UpdateWeightEntryCommand command = request.ToCommand(userId, entryId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.WeightEntryId);
@@ -39,7 +46,7 @@ public sealed class WeightEntryHttpMappingsTests {
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
 
-        var command = entryId.ToDeleteCommand(userId);
+        DeleteWeightEntryCommand command = entryId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.WeightEntryId);
@@ -49,7 +56,7 @@ public sealed class WeightEntryHttpMappingsTests {
     public void ToLatestQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToLatestQuery();
+        GetLatestWeightEntryQuery query = userId.ToLatestQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -57,11 +64,11 @@ public sealed class WeightEntryHttpMappingsTests {
     [Fact]
     public void GetWeightEntriesHttpQuery_ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-30);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-30);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetWeightEntriesHttpQuery(from, to, 10, "asc");
 
-        var query = httpQuery.ToQuery(userId);
+        GetWeightEntriesQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(from, query.DateFrom);
@@ -75,7 +82,7 @@ public sealed class WeightEntryHttpMappingsTests {
         var userId = Guid.NewGuid();
         var httpQuery = new GetWeightEntriesHttpQuery();
 
-        var query = httpQuery.ToQuery(userId);
+        GetWeightEntriesQuery query = httpQuery.ToQuery(userId);
 
         Assert.True(query.Descending);
     }
@@ -83,11 +90,11 @@ public sealed class WeightEntryHttpMappingsTests {
     [Fact]
     public void GetWeightSummariesHttpQuery_ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-30);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-30);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetWeightSummariesHttpQuery(from, to, 7);
 
-        var query = httpQuery.ToQuery(userId);
+        GetWeightSummariesQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(from, query.DateFrom);
@@ -99,10 +106,10 @@ public sealed class WeightEntryHttpMappingsTests {
     public void WeightEntryModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         var userId = Guid.NewGuid();
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         var model = new WeightEntryModel(id, userId, date, 75.5);
 
-        var response = model.ToHttpResponse();
+        WeightEntryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal(userId, response.UserId);
@@ -112,11 +119,11 @@ public sealed class WeightEntryHttpMappingsTests {
 
     [Fact]
     public void WeightEntrySummaryModel_ToHttpResponse_MapsAllFields() {
-        var from = DateTime.UtcNow.AddDays(-7);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
         var model = new WeightEntrySummaryModel(from, to, 75.2);
 
-        var response = model.ToHttpResponse();
+        WeightEntrySummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(from, response.StartDate);
         Assert.Equal(to, response.EndDate);

@@ -16,17 +16,17 @@ public sealed class ImageCleanupJob(
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
-        var settings = options.Value;
-        var olderThanHours = settings.OlderThanHours > 0 ? settings.OlderThanHours : 12;
-        var batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
-        var olderThanUtc = dateTimeProvider.UtcNow.AddHours(-olderThanHours);
-        var totalDeleted = 0;
+        ImageCleanupOptions settings = options.Value;
+        int olderThanHours = settings.OlderThanHours > 0 ? settings.OlderThanHours : 12;
+        int batchSize = settings.BatchSize > 0 ? settings.BatchSize : 1;
+        DateTime olderThanUtc = dateTimeProvider.UtcNow.AddHours(-olderThanHours);
+        int totalDeleted = 0;
         const string jobName = "images.cleanup";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
-                var deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
+                int deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
                 if (deleted < batchSize) {

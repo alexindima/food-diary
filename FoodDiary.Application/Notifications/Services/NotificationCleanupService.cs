@@ -11,7 +11,7 @@ public sealed class NotificationCleanupService(
             return Task.FromResult(0);
         }
 
-        var utcNow = dateTimeProvider.UtcNow;
+        DateTime utcNow = dateTimeProvider.UtcNow;
 
         return notificationRepository.DeleteExpiredBatchAsync(
             policy.TransientTypes,

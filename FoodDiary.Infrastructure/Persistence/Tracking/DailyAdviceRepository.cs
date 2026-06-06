@@ -8,7 +8,7 @@ public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRep
     public async Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
         string locale,
         CancellationToken cancellationToken = default) {
-        var normalizedLocale = NormalizeLocale(locale);
+        string normalizedLocale = NormalizeLocale(locale);
 
         return await context.DailyAdvices
             .AsNoTracking()
@@ -22,8 +22,8 @@ public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRep
             return "en";
         }
 
-        var normalized = locale.Trim().ToLowerInvariant();
-        var separatorIndex = normalized.IndexOfAny(new[] { '-', '_' });
+        string normalized = locale.Trim().ToLowerInvariant();
+        int separatorIndex = normalized.IndexOfAny(new[] { '-', '_' });
         return separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
     }
 }

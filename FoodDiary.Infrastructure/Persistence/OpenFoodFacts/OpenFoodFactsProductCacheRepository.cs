@@ -12,12 +12,12 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         string query,
         int limit = 10,
         CancellationToken cancellationToken = default) {
-        var normalizedQuery = query.Trim();
+        string normalizedQuery = query.Trim();
         if (string.IsNullOrWhiteSpace(normalizedQuery)) {
             return [];
         }
 
-        var pattern = $"%{EscapeLikePattern(normalizedQuery)}%";
+        string pattern = $"%{EscapeLikePattern(normalizedQuery)}%";
         return await context.OpenFoodFactsProducts
             .AsNoTracking()
             .Where(product =>
@@ -57,14 +57,14 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         }
 
         var barcodes = candidates.Select(product => product.Barcode.Trim()).ToList();
-        var existingProducts = await context.OpenFoodFactsProducts
+        Dictionary<string, OpenFoodFactsProduct> existingProducts = await context.OpenFoodFactsProducts
             .Where(product => barcodes.Contains(product.Barcode))
             .ToDictionaryAsync(product => product.Barcode, cancellationToken).ConfigureAwait(false);
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
 
-        foreach (var product in candidates) {
-            var barcode = product.Barcode.Trim();
-            if (existingProducts.TryGetValue(barcode, out var existingProduct)) {
+        foreach (OpenFoodFactsProductModel? product in candidates) {
+            string barcode = product.Barcode.Trim();
+            if (existingProducts.TryGetValue(barcode, out OpenFoodFactsProduct? existingProduct)) {
                 existingProduct.Update(
                     product.Name,
                     product.Brand,

@@ -18,21 +18,21 @@ public sealed class DietologistEmailSender(
     public async Task SendDietologistInvitationAsync(
         DietologistInvitationMessage message,
         CancellationToken cancellationToken = default) {
-        var link = BuildInvitationLink(message.InvitationId, message.Token);
-        var locale = NormalizeLanguage(message.Language);
-        var isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
-        var clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
-        var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
-        var template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
-        var fallback = CreateFallbackContent(isRu, clientName, link, brand);
+        string link = BuildInvitationLink(message.InvitationId, message.Token);
+        string locale = NormalizeLanguage(message.Language);
+        bool isRu = string.Equals(locale, "ru", StringComparison.Ordinal);
+        string clientName = BuildClientName(message.ClientFirstName, message.ClientLastName);
+        string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+        EmailTemplateContent? template = await templateProvider.GetActiveTemplateAsync(TemplateKey, locale, cancellationToken).ConfigureAwait(false);
+        (string Subject, string Html, string Text) fallback = CreateFallbackContent(isRu, clientName, link, brand);
 
-        var subject = template is null
+        string subject = template is null
             ? fallback.Subject
             : ApplyTemplateTokens(template.Subject, link, brand, clientName);
-        var htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
+        string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
             ? fallback.Html
             : ApplyTemplateTokens(template.HtmlBody, link, brand, clientName);
-        var textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
+        string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
             ? fallback.Text
             : ApplyTemplateTokens(template.TextBody, link, brand, clientName);
 
@@ -44,12 +44,12 @@ public sealed class DietologistEmailSender(
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");
         }
 
-        var baseUrl = _options.FrontendBaseUrl.TrimEnd('/');
+        string baseUrl = _options.FrontendBaseUrl.TrimEnd('/');
         return $"{baseUrl}/dietologist/accept?invitationId={Uri.EscapeDataString(invitationId.ToString())}&token={Uri.EscapeDataString(token)}";
     }
 
     private static string BuildClientName(string? firstName, string? lastName) {
-        var name = $"{firstName} {lastName}".Trim();
+        string name = $"{firstName} {lastName}".Trim();
         return string.IsNullOrWhiteSpace(name) ? "A user" : name;
     }
 
@@ -58,7 +58,7 @@ public sealed class DietologistEmailSender(
             return "en";
         }
 
-        var lower = value.Trim().ToLowerInvariant();
+        string lower = value.Trim().ToLowerInvariant();
         return lower.StartsWith("ru", StringComparison.Ordinal) ? "ru" : "en";
     }
 
@@ -67,16 +67,16 @@ public sealed class DietologistEmailSender(
         string clientName,
         string link,
         string brand) {
-        var subject = isRu
+        string subject = isRu
             ? "\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435 \u0441\u0442\u0430\u0442\u044c \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c"
             : "Invitation to become a dietologist";
-        var intro = isRu
+        string intro = isRu
             ? $"{clientName} \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0430\u0435\u0442 \u0432\u0430\u0441 \u0441\u0442\u0430\u0442\u044c \u0438\u0445 \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u043e\u043c \u0432 FoodDiary. \u041d\u0430\u0436\u043c\u0438\u0442\u0435 \u043a\u043d\u043e\u043f\u043a\u0443 \u043d\u0438\u0436\u0435, \u0447\u0442\u043e\u0431\u044b \u043f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435."
             : $"{clientName} has invited you to become their dietologist on FoodDiary. Click the button below to accept the invitation.";
-        var ctaLabel = isRu
+        string ctaLabel = isRu
             ? "\u041f\u0440\u0438\u043d\u044f\u0442\u044c \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435"
             : "Accept Invitation";
-        var footer = isRu
+        string footer = isRu
             ? "\u0415\u0441\u043b\u0438 \u0432\u044b \u043d\u0435 \u043e\u0436\u0438\u0434\u0430\u043b\u0438 \u044d\u0442\u043e \u043f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435, \u043f\u0440\u043e\u0441\u0442\u043e \u043f\u0440\u043e\u0438\u0433\u043d\u043e\u0440\u0438\u0440\u0443\u0439\u0442\u0435 \u043f\u0438\u0441\u044c\u043c\u043e."
             : "If you did not expect this invitation, you can ignore this email.";
 

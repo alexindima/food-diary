@@ -12,11 +12,11 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
 
     public async Task InvokeAsync(HttpContext context) {
         var stopwatch = Stopwatch.StartNew();
-        var request = context.Request;
-        var observation = CreateObservation(context);
-        using var activity = ApiTelemetry.ActivitySource.StartActivity("fooddiary.http.request", ActivityKind.Internal);
+        HttpRequest request = context.Request;
+        RequestObservation observation = CreateObservation(context);
+        using Activity? activity = ApiTelemetry.ActivitySource.StartActivity("fooddiary.http.request", ActivityKind.Internal);
         ConfigureActivity(activity, request.Method, observation);
-        using var scope = BeginRequestScope(context, observation);
+        using IDisposable? scope = BeginRequestScope(context, observation);
 
         try {
             await next(context).ConfigureAwait(false);
@@ -31,7 +31,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
 
     private static RequestObservation CreateObservation(HttpContext context) {
         var sensitivity = RequestSensitivity.From(context.Request.Path);
-        var userId = sensitivity.IncludeUserIdInTelemetry
+        string? userId = sensitivity.IncludeUserIdInTelemetry
             ? context.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "anonymous"
             : null;
         return new RequestObservation(sensitivity.PathLabel, sensitivity.ScopeLabel, userId);
@@ -72,8 +72,8 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         Activity? activity,
         RequestObservation observation,
         double elapsedMs) {
-        var request = context.Request;
-        var statusCode = context.Response.StatusCode;
+        HttpRequest request = context.Request;
+        int statusCode = context.Response.StatusCode;
         activity?.SetTag("http.response.status_code", statusCode);
         ObserveBusinessFlow(request.Method, request.Path, statusCode);
         ObserveOutputCache(context, statusCode);
@@ -87,7 +87,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
     }
 
     private static void ObserveBusinessFlow(string method, PathString path, int statusCode) {
-        var businessFlow = BusinessFlow.From(method, path);
+        BusinessFlow? businessFlow = BusinessFlow.From(method, path);
         if (businessFlow is null) {
             return;
         }
@@ -100,7 +100,7 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
     }
 
     private static void ObserveOutputCache(HttpContext context, int statusCode) {
-        var outputCacheObservation = OutputCacheObservation.From(context);
+        OutputCacheObservation? outputCacheObservation = OutputCacheObservation.From(context);
         if (outputCacheObservation is null) {
             return;
         }
@@ -207,14 +207,14 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
 
     private readonly record struct OutputCacheObservation(string PolicyName, string Outcome) {
         public static OutputCacheObservation? From(HttpContext context) {
-            var endpoint = context.GetEndpoint();
-            var outputCache = endpoint?.Metadata.GetMetadata<OutputCacheAttribute>();
+            Endpoint? endpoint = context.GetEndpoint();
+            OutputCacheAttribute? outputCache = endpoint?.Metadata.GetMetadata<OutputCacheAttribute>();
             if (outputCache?.PolicyName is null) {
                 return null;
             }
 
-            var policyName = outputCache.PolicyName;
-            var outcome = context.Response.Headers.ContainsKey("Age")
+            string policyName = outputCache.PolicyName;
+            string outcome = context.Response.Headers.ContainsKey("Age")
                 ? "hit"
                 : "miss";
 

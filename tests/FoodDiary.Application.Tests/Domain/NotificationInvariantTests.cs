@@ -74,7 +74,7 @@ public class NotificationInvariantTests {
     public void MarkAsRead_WhenAlreadyRead_IsIdempotent() {
         var notification = Notification.Create(UserId.New(), "info", "{}");
         notification.MarkAsRead();
-        var firstReadAt = notification.ReadAtUtc;
+        DateTime? firstReadAt = notification.ReadAtUtc;
 
         notification.MarkAsRead();
 

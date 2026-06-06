@@ -16,7 +16,7 @@ public sealed class WebPushNotificationSenderTests {
     public async Task SendAsync_WhenMasterPushDisabled_DoesNotLoadSubscriptions() {
         var user = User.Create("user@example.com", "hash");
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -31,7 +31,7 @@ public sealed class WebPushNotificationSenderTests {
             PushNotificationsEnabled: true,
             FastingPushNotificationsEnabled: false));
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -46,7 +46,7 @@ public sealed class WebPushNotificationSenderTests {
             PushNotificationsEnabled: true,
             SocialPushNotificationsEnabled: true));
         var subscriptionRepository = new RecordingSubscriptionRepository();
-        var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.NewComment, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);
@@ -69,7 +69,7 @@ public sealed class WebPushNotificationSenderTests {
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([expiredSubscription]);
-        var sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
+        WebPushNotificationSender sender = CreateSender(subscriptionRepository, new SingleUserRepository(user));
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
         await sender.SendAsync(notification, CancellationToken.None);

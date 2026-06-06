@@ -4,7 +4,7 @@ namespace FoodDiary.Telegram.Bot.Tests;
 public sealed class BotInputParserTests {
     [Fact]
     public void TryParseWaterAmount_WithValidPayload_ReturnsTrue() {
-        var ok = BotInputParser.TryParseWaterAmount("water:500", out var amount);
+        bool ok = BotInputParser.TryParseWaterAmount("water:500", out int amount);
 
         Assert.True(ok);
         Assert.Equal(500, amount);
@@ -19,7 +19,7 @@ public sealed class BotInputParserTests {
     [InlineData("water:abc")]
     [InlineData("other:100")]
     public void TryParseWaterAmount_WithInvalidPayload_ReturnsFalse(string? payload) {
-        var ok = BotInputParser.TryParseWaterAmount(payload, out var amount);
+        bool ok = BotInputParser.TryParseWaterAmount(payload, out int amount);
 
         Assert.False(ok);
         Assert.Equal(0, amount);

@@ -22,21 +22,21 @@ public static class GamificationCalculator {
             return (0, 0);
         }
 
-        var currentStreak = 0;
-        var longestStreak = 0;
-        var runStreak = 1;
+        int currentStreak = 0;
+        int longestStreak = 0;
+        int runStreak = 1;
 
-        var firstDate = sortedDatesDesc[0].Date;
-        var isCurrentRun = firstDate == today || firstDate == today.AddDays(-1);
+        DateTime firstDate = sortedDatesDesc[0].Date;
+        bool isCurrentRun = firstDate == today || firstDate == today.AddDays(-1);
 
         if (isCurrentRun) {
             currentStreak = 1;
         }
 
-        for (var i = 1; i < sortedDatesDesc.Count; i++) {
-            var prev = sortedDatesDesc[i - 1].Date;
-            var curr = sortedDatesDesc[i].Date;
-            var gap = (prev - curr).Days;
+        for (int i = 1; i < sortedDatesDesc.Count; i++) {
+            DateTime prev = sortedDatesDesc[i - 1].Date;
+            DateTime curr = sortedDatesDesc[i].Date;
+            int gap = (prev - curr).Days;
 
             if (gap == 1) {
                 runStreak++;
@@ -67,9 +67,9 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
         int currentStreak,
         double weeklyAdherence,
         int totalMeals) {
-        var streakScore = Math.Min(currentStreak, 30) / 30.0 * 40;
-        var adherenceScore = weeklyAdherence * 40;
-        var activityScore = Math.Min(totalMeals, 100) / 100.0 * 20;
+        double streakScore = Math.Min(currentStreak, 30) / 30.0 * 40;
+        double adherenceScore = weeklyAdherence * 40;
+        double activityScore = Math.Min(totalMeals, 100) / 100.0 * 20;
 
         return (int)Math.Round(streakScore + adherenceScore + activityScore);
     }
@@ -78,25 +78,25 @@ string.Equals(b.Category, "streak", StringComparison.Ordinal) ? longestStreak >=
         IReadOnlyList<Meal> weekMeals,
         Func<DateTime, double?> getCalorieTarget,
         DateTime today) {
-        var weekStart = today.AddDays(-6);
-        var daysInRange = Math.Min(7, (int)(today - weekStart).TotalDays + 1);
-        var metDays = 0;
-        var daysWithGoal = 0;
+        DateTime weekStart = today.AddDays(-6);
+        int daysInRange = Math.Min(7, (int)(today - weekStart).TotalDays + 1);
+        int metDays = 0;
+        int daysWithGoal = 0;
 
-        for (var d = 0; d < daysInRange; d++) {
-            var date = weekStart.AddDays(d);
-            var target = getCalorieTarget(date);
+        for (int d = 0; d < daysInRange; d++) {
+            DateTime date = weekStart.AddDays(d);
+            double? target = getCalorieTarget(date);
             if (target is null or <= 0) {
                 continue;
             }
 
             daysWithGoal++;
-            var dayCalories = weekMeals
+            double dayCalories = weekMeals
                 .Where(m => m.Date.Date == date)
                 .Sum(m => m.TotalCalories);
 
             if (dayCalories > 0) {
-                var ratio = dayCalories / target.Value;
+                double ratio = dayCalories / target.Value;
                 if (ratio >= 0.8 && ratio <= 1.2) {
                     metDays++;
                 }

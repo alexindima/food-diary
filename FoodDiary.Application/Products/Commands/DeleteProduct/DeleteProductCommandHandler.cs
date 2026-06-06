@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
@@ -22,14 +23,14 @@ public class DeleteProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var productId = new ProductId(command.ProductId);
 
-        var product = await productRepository.GetByIdForUpdateAsync(
+        Product? product = await productRepository.GetByIdForUpdateAsync(
             productId,
             userId,
             includePublic: false,
@@ -38,7 +39,7 @@ public class DeleteProductCommandHandler(
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
         }
 
-        var assetId = product.ImageAssetId;
+        ImageAssetId? assetId = product.ImageAssetId;
         await productRepository.DeleteAsync(product, cancellationToken).ConfigureAwait(false);
 
         if (assetId.HasValue) {

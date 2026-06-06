@@ -26,7 +26,7 @@ public sealed class RecentItem : Entity<RecentItemId> {
             throw new ArgumentException("ItemId cannot be empty.", nameof(itemId));
         }
 
-        var now = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
+        DateTime now = NormalizeUtc(usedAtUtc ?? DomainTime.UtcNow);
 
         var recentItem = new RecentItem {
             Id = RecentItemId.New(),

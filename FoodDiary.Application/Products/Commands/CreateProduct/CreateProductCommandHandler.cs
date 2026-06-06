@@ -9,6 +9,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Assets;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
@@ -27,12 +28,12 @@ public class CreateProductCommandHandler(
 
     public async Task<Result<ProductModel>>
         Handle(CreateProductCommand command, CancellationToken cancellationToken) {
-        var valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<CreateProductValues> valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<ProductModel>(valuesResult.Error);
         }
 
-        var product = CreateProduct(command, valuesResult.Value);
+        Product product = CreateProduct(command, valuesResult.Value);
         product = await productRepository.AddAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
@@ -46,12 +47,12 @@ public class CreateProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CreateProductValues>(accessError);
         }
 
-        var baseUnitResult = ParseRequiredEnum<MeasurementUnit>(
+        Result<MeasurementUnit> baseUnitResult = ParseRequiredEnum<MeasurementUnit>(
             command.BaseUnit,
             nameof(command.BaseUnit),
             "Unknown measurement unit value.");
@@ -59,7 +60,7 @@ public class CreateProductCommandHandler(
             return Result.Failure<CreateProductValues>(baseUnitResult.Error);
         }
 
-        var visibilityResult = ParseRequiredEnum<Visibility>(
+        Result<Visibility> visibilityResult = ParseRequiredEnum<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");
@@ -67,7 +68,7 @@ public class CreateProductCommandHandler(
             return Result.Failure<CreateProductValues>(visibilityResult.Error);
         }
 
-        var productTypeResult = ParseRequiredEnum<ProductType>(
+        Result<ProductType> productTypeResult = ParseRequiredEnum<ProductType>(
             command.ProductType,
             nameof(command.ProductType),
             "Unknown product type value.");
@@ -80,7 +81,7 @@ public class CreateProductCommandHandler(
                 Errors.Validation.Invalid(nameof(command.ProductType), "Unknown product type value."));
         }
 
-        var imageAssetResult = await ResolveImageAssetAsync(command, userId, cancellationToken).ConfigureAwait(false);
+        Result<(ImageAssetId? ImageAssetId, string? ImageUrl)> imageAssetResult = await ResolveImageAssetAsync(command, userId, cancellationToken).ConfigureAwait(false);
         if (imageAssetResult.IsFailure) {
             return Result.Failure<CreateProductValues>(imageAssetResult.Error);
         }
@@ -105,12 +106,12 @@ public class CreateProductCommandHandler(
         CreateProductCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
+        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<(ImageAssetId? ImageAssetId, string? ImageUrl)>(imageAssetIdResult.Error);
         }
 
-        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);

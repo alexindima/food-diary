@@ -42,8 +42,8 @@ public sealed class AsyncMethodGuardrailTests {
 
     [Fact]
     public void BackendAsyncMethods_UseAsyncSuffixUnlessFrameworkEntryPoint() {
-        var root = GetRepositoryRoot();
-        var violations = GetBackendMethods(root)
+        string root = GetRepositoryRoot();
+        string[] violations = GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal) is false)
             .Where(method => AllowedNonAsyncSuffixNames.Contains(method.Name) is false)
@@ -61,8 +61,8 @@ public sealed class AsyncMethodGuardrailTests {
 
     [Fact]
     public void BackendSynchronousMethods_DoNotUseAsyncSuffix() {
-        var root = GetRepositoryRoot();
-        var violations = GetBackendMethods(root)
+        string root = GetRepositoryRoot();
+        string[] violations = GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike is false)
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal))
             .Where(method => IsFrameworkAsyncHook(method) is false)
@@ -79,8 +79,8 @@ public sealed class AsyncMethodGuardrailTests {
 
     [Fact]
     public void BackendAsyncMethods_AcceptCancellationTokenUnlessFrameworkEntryPoint() {
-        var root = GetRepositoryRoot();
-        var violations = GetBackendMethods(root)
+        string root = GetRepositoryRoot();
+        string[] violations = GetBackendMethods(root)
             .Where(static method => method.IsAsyncLike)
             .Where(static method => method.Parameters.Contains("CancellationToken", StringComparison.Ordinal) is false)
             .Where(method => IsCancellationTokenProvidedByFramework(method) is false)
@@ -133,7 +133,7 @@ public sealed class AsyncMethodGuardrailTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }

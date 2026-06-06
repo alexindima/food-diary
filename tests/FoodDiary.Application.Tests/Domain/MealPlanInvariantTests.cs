@@ -71,7 +71,7 @@ public class MealPlanInvariantTests {
     public void AddDay_ReturnsDayWithCorrectNumber() {
         var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
 
-        var day = plan.AddDay(1);
+        MealPlanDay day = plan.AddDay(1);
 
         Assert.Equal(1, day.DayNumber);
         Assert.Single(plan.Days);
@@ -97,7 +97,7 @@ public class MealPlanInvariantTests {
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_WithZeroServings_Throws() {
         var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
-        var day = plan.AddDay(1);
+        MealPlanDay day = plan.AddDay(1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             day.AddMeal(MealType.Breakfast, RecipeId.New(), servings: 0));
@@ -106,7 +106,7 @@ public class MealPlanInvariantTests {
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_WithNegativeServings_Throws() {
         var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
-        var day = plan.AddDay(1);
+        MealPlanDay day = plan.AddDay(1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             day.AddMeal(MealType.Breakfast, RecipeId.New(), servings: -1));
@@ -115,10 +115,10 @@ public class MealPlanInvariantTests {
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_Succeeds() {
         var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
-        var day = plan.AddDay(1);
+        MealPlanDay day = plan.AddDay(1);
         var recipeId = RecipeId.New();
 
-        var meal = day.AddMeal(MealType.Lunch, recipeId, 2);
+        MealPlanMeal meal = day.AddMeal(MealType.Lunch, recipeId, 2);
 
         Assert.Equal(MealType.Lunch, meal.MealType);
         Assert.Equal(recipeId, meal.RecipeId);
@@ -136,14 +136,14 @@ public class MealPlanInvariantTests {
     [Fact]
     public void Adopt_CopiesPlanWithDaysAndMeals() {
         var plan = MealPlan.CreateCurated("Plan", "Desc", DietType.LowCarb, 3, 1800);
-        var day1 = plan.AddDay(1);
+        MealPlanDay day1 = plan.AddDay(1);
         day1.AddMeal(MealType.Breakfast, RecipeId.New(), 1);
         day1.AddMeal(MealType.Lunch, RecipeId.New(), 2);
-        var day2 = plan.AddDay(2);
+        MealPlanDay day2 = plan.AddDay(2);
         day2.AddMeal(MealType.Dinner, RecipeId.New(), 1);
         var userId = UserId.New();
 
-        var adopted = plan.Adopt(userId);
+        MealPlan adopted = plan.Adopt(userId);
 
         Assert.NotEqual(plan.Id, adopted.Id);
         Assert.Equal(userId, adopted.UserId);
@@ -155,7 +155,7 @@ public class MealPlanInvariantTests {
         Assert.Equal(1800, adopted.TargetCaloriesPerDay);
         Assert.Equal(2, adopted.Days.Count);
 
-        var adoptedDay1 = adopted.Days.First(d => d.DayNumber == 1);
+        MealPlanDay adoptedDay1 = adopted.Days.First(d => d.DayNumber == 1);
         Assert.Equal(2, adoptedDay1.Meals.Count);
     }
 }

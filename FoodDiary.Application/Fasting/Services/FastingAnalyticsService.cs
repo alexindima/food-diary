@@ -22,32 +22,32 @@ public sealed class FastingAnalyticsService(
     }
 
     public async Task<FastingStatsModel> GetStatsAsync(UserId userId, DateTime nowUtc, CancellationToken cancellationToken) {
-        var allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        var allAnalyses = await BuildAnalysesAsync(allOccurrences, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingOccurrence> allOccurrences = await fastingOccurrenceRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingOccurrenceAnalysis> allAnalyses = await BuildAnalysesAsync(allOccurrences, cancellationToken).ConfigureAwait(false);
         var completedOccurrences = allOccurrences
             .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
             .ToList();
 
-        var last30Occurrences = await fastingOccurrenceRepository.GetByUserAsync(
+        IReadOnlyList<FastingOccurrence> last30Occurrences = await fastingOccurrenceRepository.GetByUserAsync(
             userId,
             from: nowUtc.AddDays(-30),
             to: nowUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        var last30Analyses = await BuildAnalysesAsync(last30Occurrences, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FastingOccurrenceAnalysis> last30Analyses = await BuildAnalysesAsync(last30Occurrences, cancellationToken).ConfigureAwait(false);
         var completedLast30Days = last30Occurrences
             .Where(static occurrence => occurrence.Status == FastingOccurrenceStatus.Completed && occurrence.EndedAtUtc.HasValue)
             .ToList();
 
-        var averageDuration = completedLast30Days.Count > 0
+        double averageDuration = completedLast30Days.Count > 0
             ? completedLast30Days.Average(occurrence => (occurrence.EndedAtUtc!.Value - occurrence.StartedAtUtc).TotalHours)
             : 0;
-        var completionRate = last30Occurrences.Count > 0
+        double completionRate = last30Occurrences.Count > 0
             ? Math.Round(completedLast30Days.Count / (double)last30Occurrences.Count * 100, 1)
             : 0;
-        var checkInRate = last30Analyses.Count > 0
+        double checkInRate = last30Analyses.Count > 0
             ? Math.Round(last30Analyses.Count(static analysis => analysis.LatestCheckIn is not null) / (double)last30Analyses.Count * 100, 1)
             : 0;
-        var lastCheckInAtUtc = allAnalyses
+        DateTime? lastCheckInAtUtc = allAnalyses
             .Select(static analysis => analysis.LatestCheckIn?.CheckedInAtUtc)
             .Where(static checkedInAtUtc => checkedInAtUtc.HasValue)
             .Max();
@@ -67,13 +67,13 @@ public sealed class FastingAnalyticsService(
         DateTime nowUtc,
         FastingOccurrence? current,
         CancellationToken cancellationToken) {
-        var history = await fastingOccurrenceRepository.GetByUserAsync(
+        IReadOnlyList<FastingOccurrence> history = await fastingOccurrenceRepository.GetByUserAsync(
             userId,
             from: nowUtc.AddDays(-AnalysisDays),
             to: nowUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        var analyses = await BuildAnalysesAsync(history, cancellationToken).ConfigureAwait(false);
-        var currentLatestCheckIn = current is null
+        IReadOnlyList<FastingOccurrenceAnalysis> analyses = await BuildAnalysesAsync(history, cancellationToken).ConfigureAwait(false);
+        FastingCheckInSnapshot? currentLatestCheckIn = current is null
             ? null
             : (await BuildAnalysesAsync([current], cancellationToken).ConfigureAwait(false)).FirstOrDefault()?.LatestCheckIn;
 
@@ -89,20 +89,20 @@ public sealed class FastingAnalyticsService(
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken) {
-        var (occurrences, totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
+        (IReadOnlyList<FastingOccurrence>? occurrences, int totalItems) = await fastingOccurrenceRepository.GetPagedByUserAsync(
             userId,
             from: fromUtc,
             to: toUtc,
             page: page,
             limit: limit,
             cancellationToken: cancellationToken).ConfigureAwait(false);
-        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         var models = occurrences
             .Select(occurrence => occurrence.ToModel(
                 occurrence.Plan,
                 checkInsByOccurrence.GetValueOrDefault(occurrence.Id)))
             .ToList();
-        var totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)limit);
+        int totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)limit);
 
         return new PagedResponse<FastingSessionModel>(models, page, limit, totalPages, totalItems);
     }
@@ -114,10 +114,10 @@ public sealed class FastingAnalyticsService(
             return [];
         }
 
-        var checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
         return occurrences
             .Select(occurrence => {
-                var timeline = BuildTimeline(occurrence, checkInsByOccurrence.GetValueOrDefault(occurrence.Id));
+                IReadOnlyList<FastingCheckInSnapshot> timeline = BuildTimeline(occurrence, checkInsByOccurrence.GetValueOrDefault(occurrence.Id));
                 return new FastingOccurrenceAnalysis(occurrence, timeline, timeline.FirstOrDefault());
             })
             .ToList();
@@ -169,17 +169,17 @@ public sealed class FastingAnalyticsService(
     private static IReadOnlyList<FastingMessageModel> BuildInsights(IReadOnlyList<FastingOccurrenceAnalysis> history) {
         var insights = new List<FastingMessageModel>();
 
-        var shorterTolerance = BuildShorterToleranceInsight(history);
+        FastingMessageModel? shorterTolerance = BuildShorterToleranceInsight(history);
         if (shorterTolerance is not null) {
             insights.Add(shorterTolerance);
         }
 
-        var recurringSymptom = BuildRecurringSymptomInsight(history);
+        FastingMessageModel? recurringSymptom = BuildRecurringSymptomInsight(history);
         if (recurringSymptom is not null) {
             insights.Add(recurringSymptom);
         }
 
-        var positiveTolerance = BuildPositiveToleranceInsight(history);
+        FastingMessageModel? positiveTolerance = BuildPositiveToleranceInsight(history);
         if (positiveTolerance is not null) {
             insights.Add(positiveTolerance);
         }
@@ -193,7 +193,7 @@ public sealed class FastingAnalyticsService(
         DateTime nowUtc) {
         var alerts = new List<FastingMessageModel>();
 
-        var currentWarning = BuildCurrentWarning(current, latestCheckIn);
+        FastingMessageModel? currentWarning = BuildCurrentWarning(current, latestCheckIn);
         if (currentWarning is not null) {
             alerts.Add(currentWarning);
         }
@@ -215,7 +215,7 @@ public sealed class FastingAnalyticsService(
             return alerts;
         }
 
-        var elapsedHours = (nowUtc - current.StartedAtUtc).TotalHours;
+        double elapsedHours = (nowUtc - current.StartedAtUtc).TotalHours;
         if (elapsedHours >= 20) {
             alerts.Add(new FastingMessageModel(
                 "late",
@@ -257,8 +257,8 @@ public sealed class FastingAnalyticsService(
             return null;
         }
 
-        var shorterScore = shorter.Average(static analysis => GetToleranceScore(analysis.LatestCheckIn!));
-        var longerScore = longer.Average(static analysis => GetToleranceScore(analysis.LatestCheckIn!));
+        double shorterScore = shorter.Average(static analysis => GetToleranceScore(analysis.LatestCheckIn!));
+        double longerScore = longer.Average(static analysis => GetToleranceScore(analysis.LatestCheckIn!));
         if (shorterScore - longerScore < 1) {
             return null;
         }
@@ -273,13 +273,13 @@ public sealed class FastingAnalyticsService(
     private static FastingMessageModel? BuildRecurringSymptomInsight(IReadOnlyList<FastingOccurrenceAnalysis> history) {
         var symptomCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var symptom in history
+        foreach (string? symptom in history
                      .SelectMany(static analysis => analysis.Timeline)
                      .SelectMany(static checkIn => checkIn.Symptoms)) {
-            symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out var count) ? count + 1 : 1;
+            symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out int count) ? count + 1 : 1;
         }
 
-        var recurring = PrioritizedSymptoms.FirstOrDefault(symptom => symptomCounts.GetValueOrDefault(symptom) >= 2);
+        string? recurring = PrioritizedSymptoms.FirstOrDefault(symptom => symptomCounts.GetValueOrDefault(symptom) >= 2);
         if (string.IsNullOrWhiteSpace(recurring)) {
             return null;
         }
@@ -319,9 +319,9 @@ public sealed class FastingAnalyticsService(
             return false;
         }
 
-        var lowEnergy = latestCheckIn.EnergyLevel <= 2;
-        var lowMood = latestCheckIn.MoodLevel <= 2;
-        var hasRiskySymptom = latestCheckIn.Symptoms.Any(RiskySymptoms.Contains);
+        bool lowEnergy = latestCheckIn.EnergyLevel <= 2;
+        bool lowMood = latestCheckIn.MoodLevel <= 2;
+        bool hasRiskySymptom = latestCheckIn.Symptoms.Any(RiskySymptoms.Contains);
 
         return occurrence.EndedAtUtc is null && hasRiskySymptom && (lowEnergy || lowMood);
     }
@@ -331,11 +331,11 @@ public sealed class FastingAnalyticsService(
             return 0;
         }
 
-        var streak = 0;
-        var expectedDate = todayUtcDate;
+        int streak = 0;
+        DateTime expectedDate = todayUtcDate;
 
-        foreach (var occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
-            var occurrenceDate = occurrence.StartedAtUtc.Date;
+        foreach (FastingOccurrence? occurrence in completedOccurrences.OrderByDescending(static occurrence => occurrence.StartedAtUtc)) {
+            DateTime occurrenceDate = occurrence.StartedAtUtc.Date;
             if (occurrenceDate == expectedDate || occurrenceDate == expectedDate.AddDays(-1)) {
                 streak++;
                 expectedDate = occurrenceDate.AddDays(-1);
@@ -350,10 +350,10 @@ public sealed class FastingAnalyticsService(
     private static string? GetTopSymptom(IReadOnlyList<FastingOccurrenceAnalysis> analyses) {
         var symptomCounts = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var symptom in analyses
+        foreach (string? symptom in analyses
                      .SelectMany(static analysis => analysis.Timeline)
                      .SelectMany(static checkIn => checkIn.Symptoms)) {
-            symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out var count) ? count + 1 : 1;
+            symptomCounts[symptom] = symptomCounts.TryGetValue(symptom, out int count) ? count + 1 : 1;
         }
 
         return PrioritizedSymptoms.FirstOrDefault(symptom => symptomCounts.GetValueOrDefault(symptom) >= 2);

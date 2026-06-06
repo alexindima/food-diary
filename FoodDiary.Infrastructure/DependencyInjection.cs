@@ -93,7 +93,7 @@ public static class DependencyInjection {
         services.AddScoped<IDomainEventPublisher, MediatorDomainEventPublisher>();
         services.AddScoped<DomainEventDispatchInterceptor>();
         services.AddDbContext<FoodDiaryDbContext>((sp, options) => {
-            var databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
+            DatabaseOptions databaseOptions = sp.GetRequiredService<IOptions<DatabaseOptions>>().Value;
             options
                 .UseNpgsql(
                     configuration.GetConnectionString("DefaultConnection"),
@@ -208,8 +208,8 @@ public static class DependencyInjection {
     private static async ValueTask<Stream> ConnectToAllowedRemoteImageEndpointAsync(
         SocketsHttpConnectionContext context,
         CancellationToken cancellationToken) {
-        var addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
-        var publicAddress = addresses.FirstOrDefault(IsPublicAddress);
+        IPAddress[] addresses = await Dns.GetHostAddressesAsync(context.DnsEndPoint.Host, cancellationToken).ConfigureAwait(false);
+        IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress);
         if (publicAddress is null) {
             throw new HttpRequestException("Remote image host resolves only to private or loopback addresses.");
         }
@@ -241,7 +241,7 @@ public static class DependencyInjection {
         }
 
         if (address.AddressFamily == AddressFamily.InterNetwork) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return bytes[0] != 10 &&
                    bytes[0] != 127 &&
                    !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
@@ -253,7 +253,7 @@ public static class DependencyInjection {
         }
 
         if (address.AddressFamily == AddressFamily.InterNetworkV6) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return !address.IsIPv6LinkLocal &&
                    !address.IsIPv6SiteLocal &&
                    !address.IsIPv6Multicast &&

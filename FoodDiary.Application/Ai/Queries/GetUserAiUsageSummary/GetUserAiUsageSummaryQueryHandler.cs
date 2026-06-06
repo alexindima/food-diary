@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 
@@ -23,15 +24,15 @@ public sealed class GetUserAiUsageSummaryQueryHandler(
         }
 
         var userId = new UserId(query.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserAiUsageModel>(accessError);
         }
 
-        var currentUser = user!;
-        var (monthStartUtc, monthEndUtc) = GetMonthBoundsUtc(dateTimeProvider.UtcNow);
-        var totals = await aiUsageRepository.GetUserTotalsAsync(
+        User currentUser = user!;
+        (DateTime monthStartUtc, DateTime monthEndUtc) = GetMonthBoundsUtc(dateTimeProvider.UtcNow);
+        AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(
             userId,
             monthStartUtc,
             monthEndUtc,

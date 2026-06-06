@@ -9,7 +9,7 @@ public static class StringCodeParser {
             return Result.Success<string?>(null);
         }
 
-        return LanguageCode.TryParse(value, out var language)
+        return LanguageCode.TryParse(value, out LanguageCode language)
             ? Result.Success<string?>(language.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
     }
@@ -19,7 +19,7 @@ public static class StringCodeParser {
             return Result.Success<string?>(null);
         }
 
-        return GenderCode.TryParse(value, out var gender)
+        return GenderCode.TryParse(value, out GenderCode gender)
             ? Result.Success<string?>(gender.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
     }
@@ -29,7 +29,7 @@ public static class StringCodeParser {
             return Result.Success<string?>(null);
         }
 
-        return ThemeCode.TryParse(value, out var theme)
+        return ThemeCode.TryParse(value, out ThemeCode theme)
             ? Result.Success<string?>(theme.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
     }
@@ -39,13 +39,13 @@ public static class StringCodeParser {
             return Result.Success<string?>(null);
         }
 
-        return UiStyleCode.TryParse(value, out var uiStyle)
+        return UiStyleCode.TryParse(value, out UiStyleCode uiStyle)
             ? Result.Success<string?>(uiStyle.Value)
             : Result.Failure<string?>(Errors.Validation.Invalid(fieldName, message));
     }
 
     public static Result<string> ParseRequiredLanguage(string value, string fieldName, string message) {
-        return LanguageCode.TryParse(value, out var language)
+        return LanguageCode.TryParse(value, out LanguageCode language)
             ? Result.Success(language.Value)
             : Result.Failure<string>(Errors.Validation.Invalid(fieldName, message));
     }

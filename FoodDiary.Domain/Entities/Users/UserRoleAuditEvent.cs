@@ -55,7 +55,7 @@ public sealed class UserRoleAuditEvent : Entity<Guid> {
             throw new ArgumentException("Value is required.", paramName);
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 

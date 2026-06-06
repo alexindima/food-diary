@@ -7,6 +7,8 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 
@@ -17,25 +19,25 @@ public class GetWaistEntriesQueryHandler(
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(
         GetWaistEntriesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WaistEntryModel>>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WaistEntryModel>>(accessError);
         }
 
-        var normalizedFrom = query.DateFrom.HasValue
+        DateTime? normalizedFrom = query.DateFrom.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom.Value)
             : null;
-        var normalizedTo = query.DateTo.HasValue
+        DateTime? normalizedTo = query.DateTo.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo.Value)
             : null;
 
-        var entries = await waistEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetEntriesAsync(
             userId,
             normalizedFrom,
             normalizedTo,

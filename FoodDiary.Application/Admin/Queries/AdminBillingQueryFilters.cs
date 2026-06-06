@@ -24,7 +24,7 @@ internal static class AdminBillingQueryFilters {
             NormalizeUtc(toUtc));
 
     private static string? NormalizeProvider(string? value) {
-        var provider = Normalize(value);
+        string? provider = Normalize(value);
         if (provider is null) {
             return null;
         }

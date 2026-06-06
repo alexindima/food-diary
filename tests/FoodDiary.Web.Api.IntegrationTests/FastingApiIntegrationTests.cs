@@ -15,7 +15,7 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     : IClassFixture<TestAuthApiWebApplicationFactory> {
     [Fact]
     public async Task GetOverview_WithActiveSession_ReturnsCurrentStatsAlertsAndHistory() {
-        var user = await SeedUserAsync();
+        User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddDays(-5));
         var completed = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddDays(-2), 1, 16);
         completed.UpdateCheckIn(4, 4, 4, ["headache"], "completed", DateTime.UtcNow.AddDays(-2).AddHours(8));
@@ -24,9 +24,9 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
 
         await SeedFastingDataAsync(plan, completed, current);
 
-        var client = CreateAuthenticatedClient(user);
-        var response = await client.GetAsync("/api/v1/fasting/overview");
-        var payload = await response.Content.ReadFromJsonAsync<FastingOverviewPayload>();
+        HttpClient client = CreateAuthenticatedClient(user);
+        HttpResponseMessage response = await client.GetAsync("/api/v1/fasting/overview");
+        FastingOverviewPayload? payload = await response.Content.ReadFromJsonAsync<FastingOverviewPayload>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -39,16 +39,16 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
 
     [Fact]
     public async Task UpdateCheckIn_PersistsCheckIn_AndCurrentReturnsIt() {
-        var user = await SeedUserAsync();
+        User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddHours(-6));
         var current = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddHours(-6), 1, 16);
         await SeedFastingDataAsync(plan, current);
 
-        var client = CreateAuthenticatedClient(user);
-        var updateResponse = await client.PutAsJsonAsync(
+        HttpClient client = CreateAuthenticatedClient(user);
+        HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             "/api/v1/fasting/current/check-in",
             new UpdateFastingCheckInHttpRequest(2, 4, 4, ["weakness"], "holding steady"));
-        var updated = await updateResponse.Content.ReadFromJsonAsync<FastingSessionPayload>();
+        FastingSessionPayload? updated = await updateResponse.Content.ReadFromJsonAsync<FastingSessionPayload>();
 
         Assert.Equal(HttpStatusCode.OK, updateResponse.StatusCode);
         Assert.NotNull(updated);
@@ -56,22 +56,22 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         Assert.Single(updated.CheckIns);
         Assert.Equal("holding steady", updated.CheckIns[0].Notes);
 
-        var currentResponse = await client.GetAsync("/api/v1/fasting/current");
-        var currentPayload = await currentResponse.Content.ReadFromJsonAsync<FastingSessionPayload>();
+        HttpResponseMessage currentResponse = await client.GetAsync("/api/v1/fasting/current");
+        FastingSessionPayload? currentPayload = await currentResponse.Content.ReadFromJsonAsync<FastingSessionPayload>();
 
         Assert.Equal(HttpStatusCode.OK, currentResponse.StatusCode);
         Assert.NotNull(currentPayload);
         Assert.Single(currentPayload.CheckIns);
         Assert.Equal("weakness", Assert.Single(currentPayload.CheckIns[0].Symptoms));
 
-        await using var scope = factory.Services.CreateAsyncScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        await using AsyncServiceScope scope = factory.Services.CreateAsyncScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Single(dbContext.FastingCheckIns.Where(x => x.UserId == user.Id));
     }
 
     [Fact]
     public async Task GetHistory_ReturnsPagedSessionsWithCheckIns() {
-        var user = await SeedUserAsync();
+        User user = await SeedUserAsync();
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, DateTime.UtcNow.AddDays(-10));
 
         var latest = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, DateTime.UtcNow.AddDays(-1), 1, 16);
@@ -87,11 +87,11 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
         await SeedFastingDataAsync(plan, latest, earlier);
         await SeedCheckInsAsync(latestCheckIn, earlierCheckIn);
 
-        var client = CreateAuthenticatedClient(user);
-        var from = Uri.EscapeDataString(DateTime.UtcNow.AddDays(-7).ToString("O"));
-        var to = Uri.EscapeDataString(DateTime.UtcNow.ToString("O"));
-        var response = await client.GetAsync($"/api/v1/fasting/history?from={from}&to={to}&page=1&limit=1");
-        var payload = await response.Content.ReadFromJsonAsync<PagedPayload<FastingSessionPayload>>();
+        HttpClient client = CreateAuthenticatedClient(user);
+        string from = Uri.EscapeDataString(DateTime.UtcNow.AddDays(-7).ToString("O"));
+        string to = Uri.EscapeDataString(DateTime.UtcNow.ToString("O"));
+        HttpResponseMessage response = await client.GetAsync($"/api/v1/fasting/history?from={from}&to={to}&page=1&limit=1");
+        PagedPayload<FastingSessionPayload>? payload = await response.Content.ReadFromJsonAsync<PagedPayload<FastingSessionPayload>>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -103,17 +103,17 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
 
     [Fact]
     public async Task ReduceDuration_WhenAdjustedTargetAlreadyReached_CompletesSession() {
-        var user = await SeedUserAsync();
-        var startedAtUtc = DateTime.UtcNow.AddHours(-30);
+        User user = await SeedUserAsync();
+        DateTime startedAtUtc = DateTime.UtcNow.AddHours(-30);
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, startedAtUtc);
         var current = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, startedAtUtc, 1, 36);
         await SeedFastingDataAsync(plan, current);
 
-        var client = CreateAuthenticatedClient(user);
-        var response = await client.PutAsJsonAsync(
+        HttpClient client = CreateAuthenticatedClient(user);
+        HttpResponseMessage response = await client.PutAsJsonAsync(
             "/api/v1/fasting/current/duration/reduce",
             new ReduceActiveFastingTargetHttpRequest(8));
-        var payload = await response.Content.ReadFromJsonAsync<FastingSessionPayload>();
+        FastingSessionPayload? payload = await response.Content.ReadFromJsonAsync<FastingSessionPayload>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -123,16 +123,16 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     }
 
     private HttpClient CreateAuthenticatedClient(User user) {
-        var client = factory.CreateClient();
+        HttpClient client = factory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, user.Id.Value.ToString());
         return client;
     }
 
     private async Task<User> SeedUserAsync() {
-        var scope = factory.Services.CreateAsyncScope();
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             var user = User.Create($"fasting-api-{Guid.NewGuid():N}@example.com", "hash");
             dbContext.Users.Add(user);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -141,9 +141,9 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     }
 
     private async Task SeedFastingDataAsync(FastingPlan plan, params FastingOccurrence[] occurrences) {
-        var scope = factory.Services.CreateAsyncScope();
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             dbContext.FastingPlans.Add(plan);
             dbContext.FastingOccurrences.AddRange(occurrences);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -151,9 +151,9 @@ public sealed class FastingApiIntegrationTests(TestAuthApiWebApplicationFactory 
     }
 
     private async Task SeedCheckInsAsync(params FastingCheckIn[] checkIns) {
-        var scope = factory.Services.CreateAsyncScope();
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             dbContext.FastingCheckIns.AddRange(checkIns);
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
         }

@@ -9,6 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Export;
 
@@ -35,10 +36,10 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
         var userId = UserId.New();
-        var meals = new[] { CreateMeal(userId), CreateMeal(userId, TestDate.AddDays(1), MealType.Lunch) };
-        var handler = CreateHandler(meals);
+        Meal[] meals = new[] { CreateMeal(userId), CreateMeal(userId, TestDate.AddDays(1), MealType.Lunch) };
+        ExportDiaryQueryHandler handler = CreateHandler(meals);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
@@ -52,11 +53,11 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithPdfFormat_ReturnsPdfFileResult() {
         var userId = UserId.New();
-        var meals = new[] { CreateMeal(userId) };
+        Meal[] meals = new[] { CreateMeal(userId) };
         var pdfGenerator = new StubPdfGenerator();
         var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), new SingleUserRepository(), pdfGenerator);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
             CancellationToken.None);
 
@@ -74,7 +75,7 @@ public class ExportFeatureTests {
         var pdfGenerator = new StubPdfGenerator();
         var handler = new ExportDiaryQueryHandler(new StubMealRepository([]), new SingleUserRepository(), pdfGenerator);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
             CancellationToken.None);
 
@@ -86,11 +87,11 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         var repository = new StubMealRepository([]);
-        var handler = CreateHandler(repository);
-        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
-        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        ExportDiaryQueryHandler handler = CreateHandler(repository);
+        DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Pdf),
             CancellationToken.None);
 
@@ -102,19 +103,19 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithRepositoryOverfetch_FiltersToRequestedInstants() {
         var userId = UserId.New();
-        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
-        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
-        var beforeMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(-1), comment: "outside before");
-        var includedMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(1), comment: "inside period");
-        var afterMeal = CreateMeal(userId, localDayEndUtc.AddMilliseconds(1), comment: "outside after");
-        var handler = CreateHandler([beforeMeal, includedMeal, afterMeal]);
+        DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        Meal beforeMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(-1), comment: "outside before");
+        Meal includedMeal = CreateMeal(userId, localDayStartUtc.AddMinutes(1), comment: "inside period");
+        Meal afterMeal = CreateMeal(userId, localDayEndUtc.AddMilliseconds(1), comment: "outside after");
+        ExportDiaryQueryHandler handler = CreateHandler([beforeMeal, includedMeal, afterMeal]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("inside period", content, StringComparison.Ordinal);
         Assert.DoesNotContain("outside before", content, StringComparison.Ordinal);
         Assert.DoesNotContain("outside after", content, StringComparison.Ordinal);
@@ -123,18 +124,18 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithCsvFormat_UsesLocalDatesForFilenameAndRows() {
         var userId = UserId.New();
-        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
-        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
-        var meal = CreateMeal(userId, localDayStartUtc.AddHours(1), comment: "local day meal");
-        var handler = CreateHandler([meal]);
+        DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        Meal meal = CreateMeal(userId, localDayStartUtc.AddHours(1), comment: "local day meal");
+        ExportDiaryQueryHandler handler = CreateHandler([meal]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Csv, TimeZoneOffsetMinutes: 240),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
-        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
         Assert.Contains("local day meal", content, StringComparison.Ordinal);
     }
@@ -142,40 +143,40 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithMissingTimeZoneOffset_InfersDisplayDateFromRangeStart() {
         var userId = UserId.New();
-        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
-        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
-        var meal = CreateMeal(userId, localDayStartUtc.AddHours(1));
-        var handler = CreateHandler([meal]);
+        DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        Meal meal = CreateMeal(userId, localDayStartUtc.AddHours(1));
+        ExportDiaryQueryHandler handler = CreateHandler([meal]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
-        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task ExportDiary_WithNoMeals_ReturnsHeaderOnly() {
         var userId = UserId.New();
-        var handler = CreateHandler([]);
+        ExportDiaryQueryHandler handler = CreateHandler([]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("Date,MealType,Calories", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task ExportDiary_WithNullUserId_ReturnsFailure() {
-        var handler = CreateHandler([]);
+        ExportDiaryQueryHandler handler = CreateHandler([]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(null, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
@@ -185,9 +186,9 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithDateFromAfterDateTo_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = CreateHandler([]);
+        ExportDiaryQueryHandler handler = CreateHandler([]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate.AddDays(1), TestDate),
             CancellationToken.None);
 
@@ -198,9 +199,9 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportDiary_WithRangeOverOneYear_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = CreateHandler([]);
+        ExportDiaryQueryHandler handler = CreateHandler([]);
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(367)),
             CancellationToken.None);
 
@@ -217,7 +218,7 @@ public class ExportFeatureTests {
             new SingleUserRepository(user),
             new StubPdfGenerator());
 
-        var result = await handler.Handle(
+        Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
@@ -227,10 +228,10 @@ public class ExportFeatureTests {
 
     [Fact]
     public void CsvGenerator_WithAutoCalculated_UsesTotals() {
-        var meal = CreateMeal();
+        Meal meal = CreateMeal();
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("500", content, StringComparison.Ordinal);
         Assert.Contains("30", content, StringComparison.Ordinal);
@@ -239,15 +240,15 @@ public class ExportFeatureTests {
 
     [Fact]
     public void CsvGenerator_WithManualOverride_UsesManualValues() {
-        var meal = CreateMeal();
+        Meal meal = CreateMeal();
         meal.ApplyNutrition(new MealNutritionUpdate(
             500, 30, 20, 60, 5, 0,
             IsAutoCalculated: false,
             ManualCalories: 400, ManualProteins: 25, ManualFats: 15,
             ManualCarbs: 50, ManualFiber: 3, ManualAlcohol: 0));
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("400", content, StringComparison.Ordinal);
         Assert.Contains("25", content, StringComparison.Ordinal);
@@ -255,73 +256,73 @@ public class ExportFeatureTests {
 
     [Fact]
     public void CsvGenerator_WithCommaInComment_EscapesProperly() {
-        var meal = CreateMeal(comment: "eggs, bacon");
+        Meal meal = CreateMeal(comment: "eggs, bacon");
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"eggs, bacon\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithQuoteInComment_EscapesProperly() {
-        var meal = CreateMeal(comment: "she said \"hello\"");
+        Meal meal = CreateMeal(comment: "she said \"hello\"");
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"she said \"\"hello\"\"\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithNewlineInComment_EscapesProperly() {
-        var meal = CreateMeal(comment: "first line\nsecond line");
+        Meal meal = CreateMeal(comment: "first line\nsecond line");
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("\"first line\nsecond line\"", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithNoMealType_WritesEmptyField() {
-        var meal = CreateMeal(mealType: null);
+        Meal meal = CreateMeal(mealType: null);
 
-        var csv = DiaryCsvGenerator.Generate([meal]);
-        var lines = System.Text.Encoding.UTF8.GetString(csv).Split('\n', StringSplitOptions.RemoveEmptyEntries);
+        byte[] csv = DiaryCsvGenerator.Generate([meal]);
+        string[] lines = System.Text.Encoding.UTF8.GetString(csv).Split('\n', StringSplitOptions.RemoveEmptyEntries);
 
         Assert.True(lines.Length >= 2);
-        var dataLine = lines[1];
+        string dataLine = lines[1];
         Assert.Contains(",,", dataLine, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithTimeZoneOffset_WritesDisplayDate() {
-        var meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
+        Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
-        var csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 240);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 240);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithInvalidTimeZoneOffset_FallsBackToUtc() {
-        var meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
+        Meal meal = CreateMeal(date: new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc));
 
-        var csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 900);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal], timeZoneOffsetMinutes: 900);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-03,Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_WithUnspecifiedDate_TreatsValueAsUtc() {
-        var meal = CreateMeal();
+        Meal meal = CreateMeal();
         SetMealDate(meal, new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Unspecified));
 
-        var csv = DiaryCsvGenerator.Generate([meal], TimeSpan.FromHours(4));
-        var content = System.Text.Encoding.UTF8.GetString(csv);
+        byte[] csv = DiaryCsvGenerator.Generate([meal], TimeSpan.FromHours(4));
+        string content = System.Text.Encoding.UTF8.GetString(csv);
 
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
     }
@@ -329,19 +330,19 @@ public class ExportFeatureTests {
     [Fact]
     public void CsvGenerator_WithLocalDate_ConvertsValueToUtcBeforeApplyingOffset() {
         var localDate = DateTime.SpecifyKind(new DateTime(2026, 5, 3, 21, 0, 0), DateTimeKind.Local);
-        var meal = CreateMeal();
+        Meal meal = CreateMeal();
         SetMealDate(meal, localDate);
 
-        var csv = DiaryCsvGenerator.Generate([meal], TimeSpan.Zero);
-        var content = System.Text.Encoding.UTF8.GetString(csv);
-        var expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
+        byte[] csv = DiaryCsvGenerator.Generate([meal], TimeSpan.Zero);
+        string content = System.Text.Encoding.UTF8.GetString(csv);
+        string expectedDate = localDate.ToUniversalTime().ToString("yyyy-MM-dd", System.Globalization.CultureInfo.InvariantCulture);
 
         Assert.Contains($"{expectedDate},Breakfast", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void CsvGenerator_HasUtf8Bom() {
-        var csv = DiaryCsvGenerator.Generate([]);
+        byte[] csv = DiaryCsvGenerator.Generate([]);
 
         Assert.True(csv.Length >= 3);
         Assert.Equal(0xEF, csv[0]);

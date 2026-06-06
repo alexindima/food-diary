@@ -25,7 +25,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
     protected async Task<IActionResult> HandleOk<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        var result = await Send(request);
+        Result<TResponse> result = await Send(request);
         return result.ToOkActionResult(this, map);
     }
 
@@ -34,31 +34,31 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         string actionName,
         Func<TResponse, object?> routeValues,
         Func<TResponse, THttpResponse> map) {
-        var result = await Send(request);
+        Result<TResponse> result = await Send(request);
         return result.ToCreatedAtActionResult(this, actionName, routeValues, map);
     }
 
     protected async Task<IActionResult> HandleCreated<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        var result = await Send(request);
+        Result<TResponse> result = await Send(request);
         return result.ToCreatedActionResult(this, map);
     }
 
     protected async Task<IActionResult> HandleAccepted<TResponse, THttpResponse>(
         IRequest<Result<TResponse>> request,
         Func<TResponse, THttpResponse> map) {
-        var result = await Send(request);
+        Result<TResponse> result = await Send(request);
         return result.ToAcceptedActionResult(this, map);
     }
 
     protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
-        var result = await Send(request);
+        Result result = await Send(request);
         return result.ToNoContentActionResult(this);
     }
 
     protected async Task<IActionResult> HandleFile(IRequest<Result<FileExportResult>> request) {
-        var result = await Send(request);
+        Result<FileExportResult> result = await Send(request);
         return result.ToFileActionResult(this);
     }
 
@@ -68,8 +68,8 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         ILogger logger,
         string operationName,
         Guid? userId = null) {
-        using var observation = BeginObservation(operationName, userId);
-        var result = await Send(request);
+        using PresentationOperationObservation observation = BeginObservation(operationName, userId);
+        Result<TResponse> result = await Send(request);
         CompleteObservation(observation, logger, result.IsSuccess, result.IsSuccess ? null : result.Error);
         return result.ToOkActionResult(this, map);
     }
@@ -82,8 +82,8 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         ILogger logger,
         string operationName,
         Guid? userId = null) {
-        using var observation = BeginObservation(operationName, userId);
-        var result = await Send(request);
+        using PresentationOperationObservation observation = BeginObservation(operationName, userId);
+        Result<TResponse> result = await Send(request);
         CompleteObservation(observation, logger, result.IsSuccess, result.IsSuccess ? null : result.Error);
         return result.ToCreatedAtActionResult(this, actionName, routeValues, map);
     }
@@ -93,18 +93,18 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         ILogger logger,
         string operationName,
         Guid? userId = null) {
-        using var observation = BeginObservation(operationName, userId);
-        var result = await Send(request);
+        using PresentationOperationObservation observation = BeginObservation(operationName, userId);
+        Result result = await Send(request);
         CompleteObservation(observation, logger, result.IsSuccess, result.IsSuccess ? null : result.Error);
         return result.ToNoContentActionResult(this);
     }
 
     private PresentationOperationObservation BeginObservation(string operationName, Guid? userId) {
         var stopwatch = Stopwatch.StartNew();
-        var activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
-        var feature = ResolveFeatureName();
-        var controllerName = GetType().Name;
-        var route = HttpContext.GetEndpoint()?.DisplayName;
+        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
+        string feature = ResolveFeatureName();
+        string controllerName = GetType().Name;
+        string? route = HttpContext.GetEndpoint()?.DisplayName;
 
         activity?.SetTag("fooddiary.presentation.feature", feature);
         activity?.SetTag("fooddiary.presentation.controller", controllerName);
@@ -123,7 +123,7 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         bool isSuccess,
         Error? error) {
         observation.Stopwatch.Stop();
-        var outcome = isSuccess ? "success" : "failure";
+        string outcome = isSuccess ? "success" : "failure";
 
         observation.Activity?.SetTag("fooddiary.presentation.outcome", outcome);
         observation.Activity?.SetTag("fooddiary.presentation.duration_ms", observation.Stopwatch.Elapsed.TotalMilliseconds);
@@ -173,13 +173,13 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
     }
 
     private string ResolveFeatureName() {
-        var namespaceValue = GetType().Namespace;
+        string? namespaceValue = GetType().Namespace;
         if (string.IsNullOrWhiteSpace(namespaceValue)) {
             return "Unknown";
         }
 
-        var segments = namespaceValue.Split('.');
-        var featuresIndex = Array.IndexOf(segments, "Features");
+        string[] segments = namespaceValue.Split('.');
+        int featuresIndex = Array.IndexOf(segments, "Features");
         return featuresIndex >= 0 && featuresIndex < segments.Length - 1
             ? segments[featuresIndex + 1]
             : "Unknown";

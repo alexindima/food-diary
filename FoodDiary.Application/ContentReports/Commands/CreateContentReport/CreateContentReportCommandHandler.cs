@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.ContentReports.Common;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
@@ -13,14 +14,14 @@ public class CreateContentReportCommandHandler(IContentReportRepository reportRe
     public async Task<Result<ContentReportModel>> Handle(
         CreateContentReportCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<ContentReportModel>(userIdResult.Error);
         }
 
-        var targetType = Enum.Parse<ReportTargetType>(command.TargetType);
+        ReportTargetType targetType = Enum.Parse<ReportTargetType>(command.TargetType);
 
-        var alreadyReported = await reportRepository.HasUserReportedAsync(
+        bool alreadyReported = await reportRepository.HasUserReportedAsync(
             userIdResult.Value, targetType, command.TargetId, cancellationToken).ConfigureAwait(false);
 
         if (alreadyReported) {

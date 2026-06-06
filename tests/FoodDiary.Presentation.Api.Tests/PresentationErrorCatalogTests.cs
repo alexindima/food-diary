@@ -19,8 +19,8 @@ public sealed class PresentationErrorCatalogTests {
             "Wearable.ProviderNotConfigured",
         };
 
-        foreach (var error in GetCatalogErrors()) {
-            var statusCode = PresentationErrorHttpMapper.MapStatusCode(error);
+        foreach (Error error in GetCatalogErrors()) {
+            int statusCode = PresentationErrorHttpMapper.MapStatusCode(error);
 
             if (internalOnlyCodes.Contains(error.Code)) {
                 Assert.Equal(StatusCodes.Status500InternalServerError, statusCode);
@@ -35,7 +35,7 @@ public sealed class PresentationErrorCatalogTests {
 
     [Fact]
     public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
-        var missingKinds = GetCatalogErrors()
+        string[] missingKinds = GetCatalogErrors()
             .Where(static error => error.Kind is null)
             .Select(static error => error.Code)
             .Distinct(StringComparer.Ordinal)
@@ -46,7 +46,7 @@ public sealed class PresentationErrorCatalogTests {
 
     [Fact]
     public void CentralErrorCatalog_CanBeEnumeratedWithoutDuplicatesOrMissingCodes() {
-        var duplicates = GetCatalogErrors()
+        string[] duplicates = GetCatalogErrors()
             .GroupBy(static error => error.Code, StringComparer.Ordinal)
             .Where(group => group.Count() > 1)
             .Where(group => group.Key is not "User.NotFound" and not "ShoppingList.NotFound")
@@ -65,7 +65,7 @@ public sealed class PresentationErrorCatalogTests {
     }
 
     private static IEnumerable<Error> GetErrorsFromType(Type type) {
-        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static)) {
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Static)) {
             if (property.PropertyType != typeof(Error) || property.GetIndexParameters().Length > 0) {
                 continue;
             }
@@ -75,7 +75,7 @@ public sealed class PresentationErrorCatalogTests {
             }
         }
 
-        foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static)) {
+        foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Static)) {
             if (method.ReturnType != typeof(Error)) {
                 continue;
             }
@@ -84,7 +84,7 @@ public sealed class PresentationErrorCatalogTests {
                 continue;
             }
 
-            var arguments = method.GetParameters()
+            object?[] arguments = method.GetParameters()
                 .Select(CreateSampleArgument)
                 .ToArray();
 
@@ -95,7 +95,7 @@ public sealed class PresentationErrorCatalogTests {
     }
 
     private static object? CreateSampleArgument(ParameterInfo parameter) {
-        var parameterType = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+        Type parameterType = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
 
         if (parameterType == typeof(Guid)) {
             return Guid.Empty;

@@ -19,12 +19,12 @@ public sealed class MailRelayOutboxPublisherHostedService(
 
         do {
             try {
-                var batch = await queueStore.ClaimOutboxBatchAsync(stoppingToken).ConfigureAwait(false);
+                IReadOnlyList<MailRelayOutboxMessage> batch = await queueStore.ClaimOutboxBatchAsync(stoppingToken).ConfigureAwait(false);
                 if (batch.Count == 0) {
                     continue;
                 }
 
-                foreach (var message in batch) {
+                foreach (MailRelayOutboxMessage message in batch) {
                     try {
                         await broker.PublishOutboundAsync(message.EmailId, stoppingToken).ConfigureAwait(false);
                         await queueStore.MarkOutboxPublishedAsync(message.Id, stoppingToken).ConfigureAwait(false);

@@ -10,7 +10,7 @@ public sealed class GetImageUploadUrlCommandHandler(
     IImageStorageService imageStorageService,
     IImageAssetRepository imageAssetRepository) : IRequestHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
     public async Task<Result<GetImageUploadUrlResult>> Handle(GetImageUploadUrlCommand request, CancellationToken cancellationToken) {
-        var validationResult = ValidateRequest(request);
+        Result validationResult = ValidateRequest(request);
         if (validationResult.IsFailure) {
             return Result.Failure<GetImageUploadUrlResult>(validationResult.Error);
         }

@@ -6,6 +6,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.LinkTelegram;
 
@@ -26,25 +27,25 @@ public sealed class LinkTelegramCommandHandler : ICommandHandler<LinkTelegramCom
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        var initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
+        Result<TelegramInitData> initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
         if (!initDataResult.IsSuccess) {
             return Result.Failure<UserModel>(initDataResult.Error);
         }
 
-        var initData = initDataResult.Value;
-        var currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(currentUser);
+        TelegramInitData initData = initDataResult.Value;
+        User? currentUser = await _userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(currentUser);
         if (accessError is not null) {
             return Result.Failure<UserModel>(accessError);
         }
 
-        var currentAccessibleUser = currentUser!;
+        User currentAccessibleUser = currentUser!;
 
         if (currentAccessibleUser.TelegramUserId == initData.UserId) {
             return Result.Success(currentAccessibleUser.ToModel());
         }
 
-        var existingUser = await _userRepository.GetByTelegramUserIdIncludingDeletedAsync(initData.UserId, cancellationToken).ConfigureAwait(false);
+        User? existingUser = await _userRepository.GetByTelegramUserIdIncludingDeletedAsync(initData.UserId, cancellationToken).ConfigureAwait(false);
         if (existingUser != null && existingUser.Id != currentAccessibleUser.Id) {
             return Result.Failure<UserModel>(Errors.Authentication.TelegramAlreadyLinked);
         }

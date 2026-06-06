@@ -22,7 +22,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
     public static ShoppingList Create(UserId userId, string name) {
         EnsureUserId(userId);
 
-        var normalizedName = NormalizeRequiredName(name);
+        string normalizedName = NormalizeRequiredName(name);
         var list = new ShoppingList {
             Id = ShoppingListId.New(),
             UserId = userId,
@@ -33,12 +33,12 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
     }
 
     public void UpdateName(string name) {
-        var normalizedName = NormalizeRequiredName(name);
+        string normalizedName = NormalizeRequiredName(name);
         if (string.Equals(Name, normalizedName, StringComparison.Ordinal)) {
             return;
         }
 
-        var previousName = Name;
+        string previousName = Name;
         Name = normalizedName;
         SetModified();
         RaiseDomainEvent(new ShoppingListNameUpdatedDomainEvent(Id, previousName, Name));
@@ -49,7 +49,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
             return;
         }
 
-        var clearedItemsCount = _items.Count;
+        int clearedItemsCount = _items.Count;
         _items.Clear();
         SetModified();
         RaiseDomainEvent(new ShoppingListItemsClearedDomainEvent(Id, clearedItemsCount));
@@ -92,7 +92,7 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
             throw new ArgumentException("Shopping list name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Shopping list name must be at most {NameMaxLength} characters.")
             : normalized;

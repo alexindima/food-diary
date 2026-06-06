@@ -16,6 +16,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
+using System.Text.RegularExpressions;
 
 namespace FoodDiary.Application.Tests.Common;
 
@@ -25,7 +26,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void ApplicationLayer_UsesCentralErrorCatalog_ExceptValidationBehavior() {
-        var applicationRoot = Path.GetFullPath(Path.Combine(
+        string applicationRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
             "..", "..", "..", "..", "..", "FoodDiary.Application"));
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
@@ -33,7 +34,7 @@ public class CommonAbstractionsTests {
             Path.Combine(applicationRoot, "Common", "Behaviors", "ValidationBehavior.cs"),
         };
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(path => allowedFiles.Contains(path) is false)
@@ -47,7 +48,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void CentralErrorCatalog_DefinesErrorKind_ForAllPublishedErrors() {
-        var missingKinds = typeof(Errors)
+        string[] missingKinds = typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .SelectMany(GetErrorsFromType)
             .Where(static error => error.Kind is null)
@@ -60,7 +61,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void ApplicationLayer_StringErrorCodes_UseKnownCatalogCodes() {
-        var applicationRoot = Path.GetFullPath(Path.Combine(
+        string applicationRoot = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory,
             "..", "..", "..", "..", "..", "FoodDiary.Application"));
         var allowedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase) {
@@ -68,9 +69,9 @@ public class CommonAbstractionsTests {
             Path.Combine(applicationRoot, "Common", "Abstractions", "Result", "ErrorKindResolver.cs"),
         };
 
-        var knownCodes = GetKnownErrorCodes();
+        HashSet<string> knownCodes = GetKnownErrorCodes();
 
-        var violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(static path => path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) is false)
             .Where(path => allowedFiles.Contains(path) is false)
@@ -123,7 +124,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void Result_WithSuccessAndError_ThrowsInvalidOperationException() {
-        var ex = Assert.Throws<InvalidOperationException>(() =>
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
             new TestResult(isSuccess: true, Errors.Validation.Required("name")));
 
         Assert.Contains("A successful result cannot contain an error.", ex.Message, StringComparison.Ordinal);
@@ -131,7 +132,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void Result_WithFailureAndNoError_ThrowsInvalidOperationException() {
-        var ex = Assert.Throws<InvalidOperationException>(() =>
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
             new TestResult(isSuccess: false, Error.None));
 
         Assert.Contains("A failed result must contain an error.", ex.Message, StringComparison.Ordinal);
@@ -267,14 +268,14 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void NotificationPayloadSerializer_Deserialize_WithEmptyPayload_ReturnsDefault() {
-        var payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(" ");
+        NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(" ");
 
         Assert.Null(payload);
     }
 
     [Fact]
     public void NotificationPayloadSerializer_TryDeserialize_WithEmptyPayload_ReturnsFalse() {
-        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(" ", out var payload);
+        bool success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(" ", out NewRecommendationNotificationPayload? payload);
 
         Assert.False(success);
         Assert.Null(payload);
@@ -282,7 +283,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void NotificationPayloadSerializer_TryDeserialize_WithInvalidPayload_ReturnsFalse() {
-        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>("{", out var payload);
+        bool success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>("{", out NewRecommendationNotificationPayload? payload);
 
         Assert.False(success);
         Assert.Null(payload);
@@ -290,9 +291,9 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void NotificationPayloadSerializer_TryDeserialize_WithValidPayload_ReturnsPayload() {
-        var json = NotificationPayloads.NewRecommendation("Anna");
+        string json = NotificationPayloads.NewRecommendation("Anna");
 
-        var success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(json, out var payload);
+        bool success = NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(json, out NewRecommendationNotificationPayload? payload);
 
         Assert.True(success);
         Assert.NotNull(payload);
@@ -315,7 +316,7 @@ public class CommonAbstractionsTests {
         string notificationType,
         string? referenceId,
         string? expectedUrl) {
-        var url = NotificationTargetUrlResolver.Resolve(notificationType, referenceId);
+        string? url = NotificationTargetUrlResolver.Resolve(notificationType, referenceId);
 
         Assert.Equal(expectedUrl, url);
     }
@@ -354,7 +355,7 @@ public class CommonAbstractionsTests {
         var behavior = new ValidationBehavior<GenericCommand, Result<string>>([validator]);
         var command = new GenericCommand("");
 
-        var result = await behavior.Handle(command, _ => Task.FromResult(Result.Success("ok")), CancellationToken.None);
+        Result<string> result = await behavior.Handle(command, _ => Task.FromResult(Result.Success("ok")), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -366,7 +367,7 @@ public class CommonAbstractionsTests {
         var behavior = new ValidationBehavior<NonGenericCommand, Result>([validator]);
         var command = new NonGenericCommand("");
 
-        var result = await behavior.Handle(command, _ => Task.FromResult(Result.Success()), CancellationToken.None);
+        Result result = await behavior.Handle(command, _ => Task.FromResult(Result.Success()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Required", result.Error.Code);
@@ -378,7 +379,7 @@ public class CommonAbstractionsTests {
         var behavior = new ValidationBehavior<UnsupportedResultCommand, TestResult>([validator]);
         var command = new UnsupportedResultCommand("");
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             behavior.Handle(command, _ => Task.FromResult(new TestResult(true, Error.None)), CancellationToken.None));
 
         Assert.Contains(nameof(TestResult), exception.Message, StringComparison.Ordinal);
@@ -391,7 +392,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void SecurityTokenGenerator_ReturnsUrlSafeToken() {
-        var token = SecurityTokenGenerator.GenerateUrlSafeToken(32);
+        string token = SecurityTokenGenerator.GenerateUrlSafeToken(32);
 
         Assert.NotEmpty(token);
         Assert.DoesNotContain("+", token, StringComparison.Ordinal);
@@ -409,18 +410,18 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void SecurityTokenGenerator_VerifyFastStorageHash_WithMatchingToken_ReturnsTrue() {
-        var storedHash = SecurityTokenGenerator.HashForStorage(" refresh-token ");
+        string storedHash = SecurityTokenGenerator.HashForStorage(" refresh-token ");
 
-        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash);
+        bool isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash);
 
         Assert.True(isValid);
     }
 
     [Fact]
     public void SecurityTokenGenerator_VerifyFastStorageHash_WithMismatchedToken_ReturnsFalse() {
-        var storedHash = SecurityTokenGenerator.HashForStorage("refresh-token");
+        string storedHash = SecurityTokenGenerator.HashForStorage("refresh-token");
 
-        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("other-token", storedHash);
+        bool isValid = SecurityTokenGenerator.VerifyFastStorageHash("other-token", storedHash);
 
         Assert.False(isValid);
     }
@@ -430,7 +431,7 @@ public class CommonAbstractionsTests {
     [InlineData("")]
     [InlineData("legacy-hash")]
     public void SecurityTokenGenerator_VerifyFastStorageHash_WithNonFastStorageHash_ReturnsFalse(string? storedHash) {
-        var isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash!);
+        bool isValid = SecurityTokenGenerator.VerifyFastStorageHash("refresh-token", storedHash!);
 
         Assert.False(isValid);
     }
@@ -438,9 +439,9 @@ public class CommonAbstractionsTests {
     [Fact]
     public void SystemDateTimeProvider_ReturnsUtcTime_FromTimeProviderSystem() {
         var provider = new SystemDateTimeProvider();
-        var before = TimeProvider.System.GetUtcNow().UtcDateTime;
-        var now = provider.UtcNow;
-        var after = TimeProvider.System.GetUtcNow().UtcDateTime;
+        DateTime before = TimeProvider.System.GetUtcNow().UtcDateTime;
+        DateTime now = provider.UtcNow;
+        DateTime after = TimeProvider.System.GetUtcNow().UtcDateTime;
 
         Assert.Equal(DateTimeKind.Utc, now.Kind);
         Assert.InRange(now, before, after);
@@ -588,18 +589,18 @@ public class CommonAbstractionsTests {
     }
 
     private static bool ContainsAdHocErrorConstruction(string path) {
-        var content = File.ReadAllText(path);
+        string content = File.ReadAllText(path);
         return content.Contains("new Error(", StringComparison.Ordinal) ||
                content.Contains("new Error (", StringComparison.Ordinal);
     }
 
     private static HashSet<string> GetKnownErrorCodes() {
-        var publishedCodes = typeof(Errors)
+        IEnumerable<string> publishedCodes = typeof(Errors)
             .GetNestedTypes(BindingFlags.Public)
             .SelectMany(GetErrorsFromType)
             .Select(static error => error.Code);
 
-        var resolverCodes = typeof(ErrorKindResolver)
+        IEnumerable<string> resolverCodes = typeof(ErrorKindResolver)
             .GetField("ExactMappings", BindingFlags.NonPublic | BindingFlags.Static)?
             .GetValue(null) is IReadOnlyDictionary<string, ErrorKind> mappings
             ? mappings.Keys
@@ -611,8 +612,8 @@ public class CommonAbstractionsTests {
     }
 
     private static IEnumerable<string> GetReferencedStringErrorCodes(string path) {
-        var content = File.ReadAllText(path);
-        var matches = System.Text.RegularExpressions.Regex.Matches(
+        string content = File.ReadAllText(path);
+        MatchCollection matches = System.Text.RegularExpressions.Regex.Matches(
             content,
             @"(?:WithErrorCode\(|ErrorCode\s*=\s*)""(?<code>[A-Za-z]+\.[A-Za-z]+)""",
             System.Text.RegularExpressions.RegexOptions.CultureInvariant,
@@ -624,7 +625,7 @@ public class CommonAbstractionsTests {
     }
 
     private static IEnumerable<Error> GetErrorsFromType(Type type) {
-        foreach (var property in type.GetProperties(BindingFlags.Public | BindingFlags.Static)) {
+        foreach (PropertyInfo property in type.GetProperties(BindingFlags.Public | BindingFlags.Static)) {
             if (property.PropertyType != typeof(Error) || property.GetIndexParameters().Length > 0) {
                 continue;
             }
@@ -634,12 +635,12 @@ public class CommonAbstractionsTests {
             }
         }
 
-        foreach (var method in type.GetMethods(BindingFlags.Public | BindingFlags.Static)) {
+        foreach (MethodInfo method in type.GetMethods(BindingFlags.Public | BindingFlags.Static)) {
             if (method.ReturnType != typeof(Error) || method.IsSpecialName) {
                 continue;
             }
 
-            var arguments = method.GetParameters()
+            object?[] arguments = method.GetParameters()
                 .Select(CreateSampleArgument)
                 .ToArray();
 
@@ -650,7 +651,7 @@ public class CommonAbstractionsTests {
     }
 
     private static object? CreateSampleArgument(ParameterInfo parameter) {
-        var parameterType = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
+        Type parameterType = Nullable.GetUnderlyingType(parameter.ParameterType) ?? parameter.ParameterType;
 
         if (parameterType == typeof(Guid)) {
             return Guid.Empty;

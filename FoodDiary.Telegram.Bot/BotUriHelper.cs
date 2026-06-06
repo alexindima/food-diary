@@ -7,7 +7,7 @@ internal static class BotUriHelper {
             return false;
         }
 
-        if (!Uri.TryCreate(rawBaseUrl.Trim(), UriKind.Absolute, out var parsed)) {
+        if (!Uri.TryCreate(rawBaseUrl.Trim(), UriKind.Absolute, out Uri? parsed)) {
             return false;
         }
 

@@ -1,5 +1,7 @@
 using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Presentation.Api.Features.Gamification.Mappings;
+using FoodDiary.Presentation.Api.Features.Gamification.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -9,7 +11,7 @@ public sealed class GamificationHttpMappingsTests {
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery();
+        GetGamificationQuery query = userId.ToQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -22,7 +24,7 @@ public sealed class GamificationHttpMappingsTests {
         };
         var model = new GamificationModel(5, 12, 85, 72, 0.85, badges);
 
-        var response = model.ToHttpResponse();
+        GamificationHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(5, response.CurrentStreak);
         Assert.Equal(12, response.LongestStreak);
@@ -39,7 +41,7 @@ public sealed class GamificationHttpMappingsTests {
     public void GamificationModel_ToHttpResponse_WithEmptyBadges() {
         var model = new GamificationModel(0, 0, 0, 0, 0, []);
 
-        var response = model.ToHttpResponse();
+        GamificationHttpResponse response = model.ToHttpResponse();
 
         Assert.Empty(response.Badges);
     }

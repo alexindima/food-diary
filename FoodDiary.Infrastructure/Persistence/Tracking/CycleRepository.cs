@@ -23,7 +23,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
         bool includeDays = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = BuildQuery(includeDays, asTracking)
+        IQueryable<Cycle> query = BuildQuery(includeDays, asTracking)
             .Where(cycle => cycle.Id == id && cycle.UserId == userId);
 
         return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
@@ -33,7 +33,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
         UserId userId,
         bool includeDays = false,
         CancellationToken cancellationToken = default) {
-        var query = BuildQuery(includeDays, asTracking: false)
+        IOrderedQueryable<Cycle> query = BuildQuery(includeDays, asTracking: false)
             .Where(cycle => cycle.UserId == userId)
             .OrderByDescending(cycle => cycle.StartDate)
             .ThenByDescending(cycle => cycle.CreatedOnUtc);
@@ -45,7 +45,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
         UserId userId,
         bool includeDays = false,
         CancellationToken cancellationToken = default) {
-        var query = BuildQuery(includeDays, asTracking: false)
+        IOrderedQueryable<Cycle> query = BuildQuery(includeDays, asTracking: false)
             .Where(cycle => cycle.UserId == userId)
             .OrderByDescending(cycle => cycle.StartDate);
 

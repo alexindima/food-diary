@@ -1,6 +1,12 @@
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
+using FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
+using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
+using FoodDiary.Application.Usda.Queries.GetMicronutrients;
+using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 using FoodDiary.Presentation.Api.Features.Usda.Mappings;
 using FoodDiary.Presentation.Api.Features.Usda.Requests;
+using FoodDiary.Presentation.Api.Features.Usda.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -8,7 +14,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class UsdaHttpMappingsTests {
     [Fact]
     public void ToQuery_Search_MapsSearchAndLimit() {
-        var query = UsdaHttpMappings.ToQuery("chicken", 10);
+        SearchUsdaFoodsQuery query = UsdaHttpMappings.ToQuery("chicken", 10);
 
         Assert.Equal("chicken", query.Search);
         Assert.Equal(10, query.Limit);
@@ -16,7 +22,7 @@ public sealed class UsdaHttpMappingsTests {
 
     [Fact]
     public void ToQuery_Micronutrients_MapsFdcId() {
-        var query = UsdaHttpMappings.ToQuery(12345);
+        GetMicronutrientsQuery query = UsdaHttpMappings.ToQuery(12345);
 
         Assert.Equal(12345, query.FdcId);
     }
@@ -27,7 +33,7 @@ public sealed class UsdaHttpMappingsTests {
         var productId = Guid.NewGuid();
         var request = new LinkProductToUsdaFoodHttpRequest(54321);
 
-        var command = request.ToCommand(userId, productId);
+        LinkProductToUsdaFoodCommand command = request.ToCommand(userId, productId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(productId, command.ProductId);
@@ -39,7 +45,7 @@ public sealed class UsdaHttpMappingsTests {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
 
-        var command = UsdaHttpMappings.ToUnlinkCommand(userId, productId);
+        UnlinkProductFromUsdaFoodCommand command = UsdaHttpMappings.ToUnlinkCommand(userId, productId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(productId, command.ProductId);
@@ -50,7 +56,7 @@ public sealed class UsdaHttpMappingsTests {
         var userId = Guid.NewGuid();
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
 
-        var query = UsdaHttpMappings.ToDailyQuery(userId, date);
+        GetDailyMicronutrientsQuery query = UsdaHttpMappings.ToDailyQuery(userId, date);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
@@ -60,7 +66,7 @@ public sealed class UsdaHttpMappingsTests {
     public void UsdaFoodModel_ToHttpResponse_MapsAllFields() {
         var model = new UsdaFoodModel(12345, "Chicken breast", "Poultry");
 
-        var response = model.ToHttpResponse();
+        UsdaFoodHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(12345, response.FdcId);
         Assert.Equal("Chicken breast", response.Description);
@@ -74,7 +80,7 @@ public sealed class UsdaHttpMappingsTests {
             new(2, "Banana", null),
         };
 
-        var responses = models.ToHttpResponse();
+        IReadOnlyList<UsdaFoodHttpResponse> responses = models.ToHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal("Apple", responses[0].Description);
@@ -97,7 +103,7 @@ public sealed class UsdaHttpMappingsTests {
             new HealthAreaScoreModel(75, "B"));
         var model = new UsdaFoodDetailModel(123, "Broccoli", "Vegetable", nutrients, portions, scores);
 
-        var response = model.ToHttpResponse();
+        UsdaFoodDetailHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(123, response.FdcId);
         Assert.Single(response.Nutrients);
@@ -116,7 +122,7 @@ public sealed class UsdaHttpMappingsTests {
         };
         var model = new DailyMicronutrientSummaryModel(date, 5, 8, nutrients, null);
 
-        var response = model.ToHttpResponse();
+        DailyMicronutrientSummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(date, response.Date);
         Assert.Equal(5, response.LinkedProductCount);

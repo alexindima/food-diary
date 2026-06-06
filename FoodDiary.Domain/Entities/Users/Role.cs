@@ -14,7 +14,7 @@ public sealed class Role : AggregateRoot<RoleId> {
     }
 
     public static Role Create(string name) {
-        var normalizedName = NormalizeRequiredName(name);
+        string normalizedName = NormalizeRequiredName(name);
 
         var role = new Role {
             Id = RoleId.New(),
@@ -29,7 +29,7 @@ public sealed class Role : AggregateRoot<RoleId> {
             throw new ArgumentException("Role name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Role name must be at most {NameMaxLength} characters.")
             : normalized;

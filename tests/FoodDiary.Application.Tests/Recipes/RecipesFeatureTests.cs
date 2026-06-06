@@ -23,6 +23,9 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.Results;
+using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
@@ -33,7 +36,7 @@ public class RecipesFeatureTests {
         var validator = new GetRecentRecipesQueryValidator();
         var query = new GetRecentRecipesQuery(Guid.Empty, 10, true);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -43,7 +46,7 @@ public class RecipesFeatureTests {
         var validator = new GetRecipesOverviewQueryValidator();
         var query = new GetRecipesOverviewQuery(Guid.NewGuid(), 1, 10, null, true, 10);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
@@ -65,7 +68,7 @@ public class RecipesFeatureTests {
         var cleanup = new RecordingCleanupService("storage_error");
         var handler = new DeleteRecipeCommandHandler(repository, cleanup);
 
-        var result = await handler.Handle(new DeleteRecipeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteRecipeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.DeleteCalled);
@@ -78,7 +81,7 @@ public class RecipesFeatureTests {
             new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2)),
             new RecordingCleanupService());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -92,7 +95,7 @@ public class RecipesFeatureTests {
         var repository = new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2));
         var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value),
             CancellationToken.None);
 
@@ -107,7 +110,7 @@ public class RecipesFeatureTests {
         var repository = new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2));
         var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommand(userId.Value, RecipeId.New().Value),
             CancellationToken.None);
 
@@ -124,7 +127,7 @@ public class RecipesFeatureTests {
         var repository = new SingleRecipeRepository(recipe);
         var handler = new DeleteRecipeCommandHandler(repository, new RecordingCleanupService());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommand(userId.Value, recipe.Id.Value),
             CancellationToken.None);
 
@@ -138,7 +141,7 @@ public class RecipesFeatureTests {
         var validator = new DeleteRecipeCommandValidator(
             new SingleRecipeRepository(Recipe.Create(UserId.New(), "Soup", servings: 2)));
 
-        var result = await validator.ValidateAsync(new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value));
+        ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
@@ -150,7 +153,7 @@ public class RecipesFeatureTests {
         var validator = new DeleteRecipeCommandValidator(
             new SingleRecipeRepository(Recipe.Create(userId, "Soup", servings: 2)));
 
-        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, RecipeId.New().Value));
+        ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, RecipeId.New().Value));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Recipe.NotFound", StringComparison.Ordinal));
@@ -163,7 +166,7 @@ public class RecipesFeatureTests {
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
         var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
 
-        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
+        ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
@@ -175,7 +178,7 @@ public class RecipesFeatureTests {
         var recipe = Recipe.Create(userId, "Unused soup", servings: 2);
         var validator = new DeleteRecipeCommandValidator(new SingleRecipeRepository(recipe));
 
-        var result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
+        ValidationResult result = await validator.ValidateAsync(new DeleteRecipeCommand(userId.Value, recipe.Id.Value));
 
         Assert.True(result.IsValid);
     }
@@ -184,7 +187,7 @@ public class RecipesFeatureTests {
     public async Task UpdateRecipeCommandValidator_WhenRecipeIsMissing_ReturnsNotFoundError() {
         var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepositoryForCreate());
 
-        var result = await validator.ValidateAsync(new UpdateRecipeCommand(
+        ValidationResult result = await validator.ValidateAsync(new UpdateRecipeCommand(
             Guid.NewGuid(),
             Guid.NewGuid(),
             Name: "Soup",
@@ -221,7 +224,7 @@ public class RecipesFeatureTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new SingleRecipeRepository(recipe));
 
-        var result = await validator.ValidateAsync(new UpdateRecipeCommand(
+        ValidationResult result = await validator.ValidateAsync(new UpdateRecipeCommand(
             userId.Value,
             recipe.Id.Value,
             Name: "Soup",
@@ -270,7 +273,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 user.Id.Value,
                 recipe.Id.Value,
@@ -323,7 +326,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 user.Id.Value,
                 recipe.Id.Value,
@@ -364,7 +367,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 userId.Value,
                 Name: "Soup",
@@ -414,7 +417,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(
                 userId.Value,
                 calculateNutritionAutomatically: false,
@@ -444,7 +447,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(
                 userId.Value,
                 calculateNutritionAutomatically: false,
@@ -472,7 +475,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(CreateRecipeCommand(null), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -489,7 +492,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(CreateRecipeCommand(UserId.New().Value, visibility: "secret"), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(UserId.New().Value, visibility: "secret"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -498,7 +501,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task CreateRecipeCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
-        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var repository = new SingleRecipeRepositoryForCreate();
         var handler = new CreateRecipeCommandHandler(
@@ -508,7 +511,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(UserId.New().Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
@@ -528,7 +531,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(
                 UserId.New().Value,
                 steps: [
@@ -557,7 +560,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(
                 UserId.New().Value,
                 steps: [
@@ -588,7 +591,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             CreateRecipeCommand(
                 user.Id.Value,
                 steps: [
@@ -603,7 +606,7 @@ public class RecipesFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var ingredient = Assert.Single(Assert.Single(repository.LastAddedRecipe!.Steps).Ingredients);
+        RecipeIngredient ingredient = Assert.Single(Assert.Single(repository.LastAddedRecipe!.Steps).Ingredients);
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
 
@@ -615,7 +618,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 user.Id.Value,
                 Name: "Tomato Soup",
@@ -662,7 +665,7 @@ public class RecipesFeatureTests {
             new AllowAllRecipeLookupService());
 
         var productId = Guid.NewGuid();
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 user.Id.Value,
                 Name: "Tomato Soup",
@@ -695,7 +698,7 @@ public class RecipesFeatureTests {
     public async Task GetRecipeByIdQueryHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false),
             CancellationToken.None);
 
@@ -708,7 +711,7 @@ public class RecipesFeatureTests {
     public async Task GetRecipeByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(null, Guid.NewGuid(), false),
             CancellationToken.None);
 
@@ -723,7 +726,7 @@ public class RecipesFeatureTests {
         var recipe = Recipe.Create(user.Id, "Soup", servings: 1);
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false),
             CancellationToken.None);
 
@@ -747,7 +750,7 @@ public class RecipesFeatureTests {
 
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(recipe.Id.Value, result.Value.Id);
@@ -760,7 +763,7 @@ public class RecipesFeatureTests {
     public async Task DuplicateRecipeCommandHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
         var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new DuplicateRecipeCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -773,7 +776,7 @@ public class RecipesFeatureTests {
     public async Task DuplicateRecipeCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new DuplicateRecipeCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -786,7 +789,7 @@ public class RecipesFeatureTests {
         var userId = Guid.NewGuid();
         var handler = new DuplicateRecipeCommandHandler(new SingleRecipeRepositoryForCreate());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new DuplicateRecipeCommand(userId, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -810,14 +813,14 @@ public class RecipesFeatureTests {
             prepTime: 15,
             cookTime: 35,
             visibility: Visibility.Public);
-        var step = original.AddStep(1, "Boil water", "Prep", "https://cdn.test/step.png", ImageAssetId.New());
+        RecipeStep step = original.AddStep(1, "Boil water", "Prep", "https://cdn.test/step.png", ImageAssetId.New());
         step.AddProductIngredient(ProductId.New(), 200);
         step.AddNestedRecipeIngredient(nestedRecipeId, 50);
 
         var repository = new SingleRecipeRepository(original);
         var handler = new DuplicateRecipeCommandHandler(repository);
 
-        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(repository.LastAddedRecipe);
@@ -841,7 +844,7 @@ public class RecipesFeatureTests {
         var repository = new SingleRecipeRepository(original);
         var handler = new DuplicateRecipeCommandHandler(repository);
 
-        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(repository.LastAddedRecipe);
@@ -857,7 +860,7 @@ public class RecipesFeatureTests {
         var repository = new SingleRecipeRepository(original);
         var handler = new DuplicateRecipeCommandHandler(repository);
 
-        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(repository.LastAddedRecipe);
@@ -877,7 +880,7 @@ public class RecipesFeatureTests {
         var repository = new DuplicateReloadMissingRecipeRepository(original);
         var handler = new DuplicateRecipeCommandHandler(repository);
 
-        var result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Recipe.InvalidData", result.Error.Code);
@@ -891,7 +894,7 @@ public class RecipesFeatureTests {
             new StubRecentItemRepository([]),
             new StubFavoriteRecipeRepository([]));
 
-        var result = await handler.Handle(
+        Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(null, 1, 10, null, true, 10, 10),
             CancellationToken.None);
 
@@ -932,7 +935,7 @@ public class RecipesFeatureTests {
         var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
-        var result = await handler.Handle(
+        Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
             CancellationToken.None);
 
@@ -958,7 +961,7 @@ public class RecipesFeatureTests {
             recentRepository,
             new StubFavoriteRecipeRepository([]));
 
-        var result = await handler.Handle(
+        Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
             CancellationToken.None);
 
@@ -985,7 +988,7 @@ public class RecipesFeatureTests {
         var favoriteRepository = new StubFavoriteRecipeRepository([]);
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
-        var result = await handler.Handle(
+        Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", true, 10, 10),
             CancellationToken.None);
 
@@ -998,7 +1001,7 @@ public class RecipesFeatureTests {
     public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new SingleRecipeRepositoryForCreate());
 
-        var result = await handler.Handle(new GetRecentRecipesQuery(null, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(null, 10, true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1010,7 +1013,7 @@ public class RecipesFeatureTests {
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetRecentRecipesQueryHandler(recentRepository, new SingleRecipeRepositoryForCreate());
 
-        var result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
@@ -1047,7 +1050,7 @@ public class RecipesFeatureTests {
         ]);
         var handler = new GetRecentRecipesQueryHandler(recentRepository, repository);
 
-        var result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
@@ -1068,7 +1071,7 @@ public class RecipesFeatureTests {
         var repository = new OverviewRecipeRepository(pagedItems: [(owned, 3), (publicRecipe, 7)]);
         var handler = new ExploreRecipesQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(
             new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "Lunch", MaxPrepTime: 20, SortBy: "popular"),
             CancellationToken.None);
 
@@ -1089,7 +1092,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 userId.Value,
                 Name: "Soup",
@@ -1125,7 +1128,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 userId.Value,
                 Name: "Soup",
@@ -1167,7 +1170,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 userId.Value,
                 Name: "Soup",
@@ -1214,7 +1217,7 @@ public class RecipesFeatureTests {
         ]);
         var handler = new GetRecipesQueryHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(
             new GetRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", IncludePublic: true),
             CancellationToken.None);
 
@@ -1224,11 +1227,11 @@ public class RecipesFeatureTests {
         Assert.Equal(2, result.Value.TotalPages);
         Assert.Equal(2, result.Value.TotalItems);
         Assert.Equal(2, result.Value.Data.Count);
-        var owned = result.Value.Data.Single(recipe => recipe.Id == ownedRecipe.Id.Value);
+        RecipeModel owned = result.Value.Data.Single(recipe => recipe.Id == ownedRecipe.Id.Value);
         Assert.True(owned.IsOwnedByCurrentUser);
         Assert.Equal("Private note", owned.Comment);
         Assert.Equal(3, owned.UsageCount);
-        var publicModel = result.Value.Data.Single(recipe => recipe.Id == publicRecipe.Id.Value);
+        RecipeModel publicModel = result.Value.Data.Single(recipe => recipe.Id == publicRecipe.Id.Value);
         Assert.False(publicModel.IsOwnedByCurrentUser);
         Assert.Null(publicModel.Comment);
         Assert.Equal(5, publicModel.UsageCount);
@@ -1240,7 +1243,7 @@ public class RecipesFeatureTests {
             new OverviewRecipeRepository(),
             new StubUserRepository(User.Create("unused@example.com", "hash")));
 
-        var result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, null, true), CancellationToken.None);
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, null, true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1252,7 +1255,7 @@ public class RecipesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetRecipesQueryHandler(new OverviewRecipeRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, null, true), CancellationToken.None);
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, null, true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -1652,7 +1655,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new CreateRecipeCommand(
                 user.Id.Value,
                 Name: "Soup",
@@ -1681,7 +1684,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task RecipeIngredientAccessValidator_WithMissingProduct_ReturnsValidationFailure() {
-        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
             [CreateRecipeStepWithProduct(order: 1, "Mix", Guid.NewGuid())],
             recipeId: null,
             UserId.New(),
@@ -1705,7 +1708,7 @@ public class RecipesFeatureTests {
             ImageAssetId: null,
             Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: recipeId.Value, Amount: 1)]);
 
-        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
             [step],
             recipeId,
             UserId.New(),
@@ -1728,7 +1731,7 @@ public class RecipesFeatureTests {
             ImageAssetId: null,
             Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.NewGuid(), Amount: 1)]);
 
-        var result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
+        Result result = await RecipeIngredientAccessValidator.EnsureIngredientsAccessibleAsync(
             [step],
             recipeId: null,
             UserId.New(),
@@ -1769,9 +1772,9 @@ public class RecipesFeatureTests {
             0);
         var recipe = Recipe.Create(userId, "Auto", servings: 1);
         recipe.ApplyComputedNutrition(1, 1, 1, 1, 1, 1);
-        var step = recipe.AddStep(1, "Mix");
+        RecipeStep step = recipe.AddStep(1, "Mix");
         step.AddProductIngredient(product.Id, 100);
-        var ingredient = Assert.Single(step.Ingredients);
+        RecipeIngredient ingredient = Assert.Single(step.Ingredients);
         typeof(RecipeIngredient)
             .GetProperty(nameof(RecipeIngredient.Product))!
             .SetValue(ingredient, product);

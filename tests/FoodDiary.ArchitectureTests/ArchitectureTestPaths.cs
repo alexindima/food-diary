@@ -17,7 +17,7 @@ internal static class ArchitectureTestPaths {
     private static string FindRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }

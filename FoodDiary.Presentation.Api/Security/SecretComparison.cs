@@ -9,8 +9,8 @@ public static class SecretComparison {
             return false;
         }
 
-        var expectedBytes = Encoding.UTF8.GetBytes(expected);
-        var actualBytes = Encoding.UTF8.GetBytes(actual);
+        byte[] expectedBytes = Encoding.UTF8.GetBytes(expected);
+        byte[] actualBytes = Encoding.UTF8.GetBytes(actual);
 
         return expectedBytes.Length == actualBytes.Length &&
                CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes);

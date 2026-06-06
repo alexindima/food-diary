@@ -9,6 +9,9 @@ using FoodDiary.Application.Hydration.Validators;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Hydration.Models;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -19,7 +22,7 @@ public class HydrationFeatureTests {
         var validator = new CreateHydrationEntryCommandValidator();
         var command = new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -29,7 +32,7 @@ public class HydrationFeatureTests {
         var validator = new DeleteHydrationEntryCommandValidator();
         var command = new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -39,7 +42,7 @@ public class HydrationFeatureTests {
         var validator = new UpdateHydrationEntryCommandValidator();
         var command = new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, 0);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -49,7 +52,7 @@ public class HydrationFeatureTests {
         var validator = new GetHydrationDailyTotalQueryValidator();
         var query = new GetHydrationDailyTotalQuery(Guid.NewGuid(), DateTime.UtcNow);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
@@ -59,7 +62,7 @@ public class HydrationFeatureTests {
         var validator = new GetHydrationEntriesQueryValidator();
         var query = new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -69,7 +72,7 @@ public class HydrationFeatureTests {
     [InlineData(-1)]
     [InlineData(10001)]
     public void HydrationValidators_ValidateAmount_WithOutOfRangeValue_Fails(int amountMl) {
-        var result = HydrationValidators.ValidateAmount(amountMl);
+        Result result = HydrationValidators.ValidateAmount(amountMl);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -77,7 +80,7 @@ public class HydrationFeatureTests {
 
     [Fact]
     public void HydrationValidators_ValidateAmount_WithValidValue_Passes() {
-        var result = HydrationValidators.ValidateAmount(500);
+        Result result = HydrationValidators.ValidateAmount(500);
 
         Assert.True(result.IsSuccess);
     }
@@ -90,7 +93,7 @@ public class HydrationFeatureTests {
         var handler = new GetHydrationDailyTotalQueryHandler(repository, userRepository);
         var queryDate = new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(
+        Result<HydrationDailyModel> result = await handler.Handle(
             new GetHydrationDailyTotalQuery(user.Id.Value, queryDate),
             CancellationToken.None);
 
@@ -105,7 +108,7 @@ public class HydrationFeatureTests {
             new RecordingHydrationEntryRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<HydrationDailyModel> result = await handler.Handle(
             new GetHydrationDailyTotalQuery(Guid.Empty, DateTime.UtcNow),
             CancellationToken.None);
 
@@ -121,7 +124,7 @@ public class HydrationFeatureTests {
             new RecordingHydrationEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationDailyModel> result = await handler.Handle(
             new GetHydrationDailyTotalQuery(user.Id.Value, DateTime.UtcNow),
             CancellationToken.None);
 
@@ -136,7 +139,7 @@ public class HydrationFeatureTests {
         var handler = new CreateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
         var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, timestamp, 250),
             CancellationToken.None);
 
@@ -152,7 +155,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("hydration-create-empty@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250),
             CancellationToken.None);
 
@@ -168,7 +171,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250),
             CancellationToken.None);
 
@@ -183,7 +186,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 0),
             CancellationToken.None);
 
@@ -199,7 +202,7 @@ public class HydrationFeatureTests {
         var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
         var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, timestamp, null),
             CancellationToken.None);
 
@@ -215,7 +218,7 @@ public class HydrationFeatureTests {
         var repository = new InMemoryHydrationEntryRepository(entry);
         var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 750),
             CancellationToken.None);
 
@@ -229,7 +232,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("hydration-update-empty@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow, 250),
             CancellationToken.None);
 
@@ -246,7 +249,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(entry),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
             CancellationToken.None);
 
@@ -262,7 +265,7 @@ public class HydrationFeatureTests {
             new StubUserRepository(user));
         var entryId = Guid.NewGuid();
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entryId, DateTime.UtcNow, 500),
             CancellationToken.None);
 
@@ -278,7 +281,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(entry),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
             CancellationToken.None);
 
@@ -294,7 +297,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(entry),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 0),
             CancellationToken.None);
 
@@ -308,7 +311,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -323,7 +326,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("hydration-delete-empty@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -340,7 +343,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(entry),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
@@ -355,7 +358,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -371,7 +374,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(entry),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
@@ -386,7 +389,7 @@ public class HydrationFeatureTests {
         var repository = new InMemoryHydrationEntryRepository(entry);
         var handler = new DeleteHydrationEntryCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
@@ -400,7 +403,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 250),
             CancellationToken.None);
 
@@ -415,7 +418,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(User.Create("hydration-entries@example.com", "hash")));
 
-        var result = await handler.Handle(new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow), CancellationToken.None);
+        Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -429,7 +432,7 @@ public class HydrationFeatureTests {
             new InMemoryHydrationEntryRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, DateTime.UtcNow), CancellationToken.None);
+        Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, DateTime.UtcNow), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -439,7 +442,7 @@ public class HydrationFeatureTests {
     public async Task GetHydrationEntriesQueryHandler_NormalizesDateAndMapsEntries() {
         var user = User.Create("hydration-entries-date@example.com", "hash");
         var repository = new InMemoryHydrationEntryRepository();
-        var entry = await repository.AddAsync(HydrationEntry.Create(
+        HydrationEntry entry = await repository.AddAsync(HydrationEntry.Create(
             user.Id,
             new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
             350));
@@ -450,11 +453,11 @@ public class HydrationFeatureTests {
         var handler = new GetHydrationEntriesQueryHandler(repository, new StubUserRepository(user));
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, dateOnly), CancellationToken.None);
+        Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, dateOnly), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), repository.LastGetByDateDateUtc);
-        var model = Assert.Single(result.Value);
+        HydrationEntryModel model = Assert.Single(result.Value);
         Assert.Equal(entry.Id.Value, model.Id);
         Assert.Equal(350, model.AmountMl);
     }

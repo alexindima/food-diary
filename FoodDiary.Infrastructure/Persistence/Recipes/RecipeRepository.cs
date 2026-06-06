@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
@@ -22,26 +23,26 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         int limit,
         string? search,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Max(limit, 1);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Max(limit, 1);
 
-        var query = context.Recipes
+        IQueryable<Recipe> query = context.Recipes
             .AsNoTracking()
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var normalized = $"%{EscapeLikePattern(search.Trim())}%";
+            string normalized = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(r =>
                 EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
         }
 
-        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
-        var skip = (pageNumber - 1) * pageSize;
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        IOrderedQueryable<Recipe> orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
+        int skip = (pageNumber - 1) * pageSize;
 
         var items = await orderedQuery
             .Skip(skip)
@@ -97,7 +98,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     }
 
     public async Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-        var tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken).ConfigureAwait(false);
+        Recipe? tracked = await context.Recipes.FindAsync([recipe.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Recipes.Remove(tracked);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -105,7 +106,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     }
 
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-        var entry = context.Entry(recipe);
+        EntityEntry<Recipe> entry = context.Entry(recipe);
         if (entry.State == EntityState.Detached) {
             context.Attach(recipe);
             entry = context.Entry(recipe);
@@ -131,12 +132,12 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             return new Dictionary<RecipeId, Recipe>();
         }
 
-        var query = context.Recipes.AsNoTracking();
+        IQueryable<Recipe> query = context.Recipes.AsNoTracking();
         query = query.Where(r => recipeIds.Contains(r.Id) && (includePublic
             ? r.UserId == userId || r.Visibility == Visibility.Public
             : r.UserId == userId));
 
-        var recipes = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
+        List<Recipe> recipes = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         return recipes.ToDictionary(r => r.Id);
     }
 
@@ -172,15 +173,15 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         int? maxPrepTime,
         string sortBy,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Max(limit, 1);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Max(limit, 1);
 
-        var query = context.Recipes
+        IQueryable<Recipe> query = context.Recipes
             .AsNoTracking()
             .Where(r => r.Visibility == Visibility.Public);
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var pattern = $"%{EscapeLikePattern(search.Trim())}%";
+            string pattern = $"%{EscapeLikePattern(search.Trim())}%";
             query = query.Where(r =>
                 EF.Functions.ILike(r.Name, pattern, LikeEscapeCharacter) ||
                 (r.Category != null && EF.Functions.ILike(r.Category, pattern, LikeEscapeCharacter)) ||
@@ -195,9 +196,9 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             query = query.Where(r => r.PrepTime.HasValue && r.PrepTime.Value <= maxPrepTime.Value);
         }
 
-        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
-        var orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
+        IOrderedQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
             ? query.OrderByDescending(r => r.MealItems.Count + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
             : query.OrderByDescending(r => r.CreatedOnUtc);
 

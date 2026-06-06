@@ -15,6 +15,8 @@ using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.ShoppingLists.Models;
 
 namespace FoodDiary.Application.Tests.ShoppingLists;
 
@@ -23,7 +25,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(new GetCurrentShoppingListQuery(null), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -35,7 +37,7 @@ public class ShoppingListsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -44,7 +46,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -53,7 +55,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -66,7 +68,7 @@ public class ShoppingListsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -78,7 +80,7 @@ public class ShoppingListsFeatureTests {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
         var shoppingListId = Guid.NewGuid();
 
-        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("ShoppingList.NotFound", result.Error.Code);
@@ -91,7 +93,7 @@ public class ShoppingListsFeatureTests {
         list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
         var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("Weekly", result.Value.Name);
@@ -101,7 +103,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
+        Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -114,10 +116,10 @@ public class ShoppingListsFeatureTests {
         list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
         var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
+        Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var summary = Assert.Single(result.Value);
+        ShoppingListSummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(list.Id.Value, summary.Id);
         Assert.Equal("Weekly", summary.Name);
         Assert.Equal(1, summary.ItemsCount);
@@ -126,7 +128,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task DeleteShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
         var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -137,7 +139,7 @@ public class ShoppingListsFeatureTests {
     public async Task DeleteShoppingListCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(new DeleteShoppingListCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -149,7 +151,7 @@ public class ShoppingListsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -161,7 +163,7 @@ public class ShoppingListsFeatureTests {
         var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
         var shoppingListId = Guid.NewGuid();
 
-        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, shoppingListId), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, shoppingListId), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("ShoppingList.NotFound", result.Error.Code);
@@ -174,7 +176,7 @@ public class ShoppingListsFeatureTests {
         var repository = new SingleShoppingListRepository(list);
         var handler = new DeleteShoppingListCommandHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, list.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, list.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.DeleteCalled);
@@ -186,7 +188,7 @@ public class ShoppingListsFeatureTests {
             new NoopShoppingListRepository(),
             new NoopProductLookupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", null),
             CancellationToken.None);
 
@@ -202,7 +204,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(null, Guid.NewGuid(), "Weekly", null),
             CancellationToken.None);
 
@@ -217,7 +219,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), null, null),
             CancellationToken.None);
 
@@ -234,7 +236,7 @@ public class ShoppingListsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
         var shoppingListId = Guid.NewGuid();
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), shoppingListId, "Weekly", null),
             CancellationToken.None);
 
@@ -252,7 +254,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(
                 user.Id.Value,
                 list.Id.Value,
@@ -288,7 +290,7 @@ public class ShoppingListsFeatureTests {
             new ProductLookupService(product),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(
                 user.Id.Value,
                 list.Id.Value,
@@ -328,7 +330,7 @@ public class ShoppingListsFeatureTests {
             new ThrowingProductLookupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", null),
             CancellationToken.None);
 
@@ -345,7 +347,7 @@ public class ShoppingListsFeatureTests {
             new ThrowingProductLookupService(),
             new StubUserRepository(User.Create("shopping-create@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(null, "Weekly", []),
             CancellationToken.None);
 
@@ -362,7 +364,7 @@ public class ShoppingListsFeatureTests {
             new ThrowingProductLookupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new CreateShoppingListCommand(user.Id.Value, "Weekly", []), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new CreateShoppingListCommand(user.Id.Value, "Weekly", []), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -376,7 +378,7 @@ public class ShoppingListsFeatureTests {
             new ThrowingProductLookupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(user.Id.Value, " ", []),
             CancellationToken.None);
 
@@ -392,7 +394,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(
                 user.Id.Value,
                 "Weekly",
@@ -425,7 +427,7 @@ public class ShoppingListsFeatureTests {
             new ProductLookupService(product),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(
                 user.Id.Value,
                 "  Weekly  ",
@@ -452,11 +454,11 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
-        var items = new[] {
+        ShoppingListItemInput[] items = new[] {
             new ShoppingListItemInput(null, "Milk", 1, "invalid_unit", null, false, 1)
         };
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
             new NoopProductLookupService(),
@@ -468,25 +470,25 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankUnit_CreatesCustomItemWithoutUnit() {
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [new ShoppingListItemInput(null, "Milk", 1, " ", null, false, null)],
             UserId.New(),
             new NoopProductLookupService(),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var item = Assert.Single(result.Value);
+        ShoppingListItemData item = Assert.Single(result.Value);
         Assert.Null(item.Unit);
         Assert.Equal("Milk", item.Name);
     }
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails() {
-        var items = new[] {
+        ShoppingListItemInput[] items = new[] {
             new ShoppingListItemInput(null, "Milk", 0, null, null, false, 1)
         };
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
             new NoopProductLookupService(),
@@ -501,11 +503,11 @@ public class ShoppingListsFeatureTests {
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NegativeInfinity)]
     public async Task ShoppingListItemBuilder_WithNonFiniteAmount_Fails(double amount) {
-        var items = new[] {
+        ShoppingListItemInput[] items = new[] {
             new ShoppingListItemInput(null, "Milk", amount, null, null, false, 1)
         };
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
             new NoopProductLookupService(),
@@ -518,11 +520,11 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
-        var items = new[] {
+        ShoppingListItemInput[] items = new[] {
             new ShoppingListItemInput(Guid.Empty, null, 1, null, null, false, 1)
         };
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
             new NoopProductLookupService(),
@@ -535,7 +537,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithNoItems_ReturnsEmptyListWithoutProductLookup() {
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [],
             UserId.New(),
             new ThrowingProductLookupService(),
@@ -547,11 +549,11 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankCustomName_FailsWithNameRequired() {
-        var items = new[] {
+        ShoppingListItemInput[] items = new[] {
             new ShoppingListItemInput(null, "   ", 1, null, null, false, null)
         };
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             items,
             UserId.New(),
             new NoopProductLookupService(),
@@ -579,7 +581,7 @@ public class ShoppingListsFeatureTests {
             0,
             category: "Dairy");
 
-        var result = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [
                 new ShoppingListItemInput(product.Id.Value, null, 1, null, "Sale", false, 0)
             ],
@@ -588,7 +590,7 @@ public class ShoppingListsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var item = Assert.Single(result.Value);
+        ShoppingListItemData item = Assert.Single(result.Value);
         Assert.Equal("Sale", item.Category);
         Assert.Equal(1, item.SortOrder);
     }
@@ -600,7 +602,7 @@ public class ShoppingListsFeatureTests {
         list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
         list.AddItem("Apples", null, 2, MeasurementUnit.Pcs, "Fruit", true, 2);
 
-        var model = list.ToSummaryModel();
+        ShoppingListSummaryModel model = list.ToSummaryModel();
 
         Assert.Equal(list.Id.Value, model.Id);
         Assert.Equal("Weekly", model.Name);
@@ -740,7 +742,7 @@ public class ShoppingListsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
+        Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);

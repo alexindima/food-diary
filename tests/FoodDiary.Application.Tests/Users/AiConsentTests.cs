@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Commands.AcceptAiConsent;
 using FoodDiary.Application.Users.Commands.RevokeAiConsent;
@@ -13,7 +14,7 @@ public class AiConsentTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new AcceptAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(user.AiConsentAcceptedAt);
@@ -23,10 +24,10 @@ public class AiConsentTests {
     public async Task AcceptAiConsent_WhenAlreadyAccepted_RemainsIdempotent() {
         var user = User.Create("user@example.com", "hash");
         user.AcceptAiConsent();
-        var originalTimestamp = user.AiConsentAcceptedAt;
+        DateTime? originalTimestamp = user.AiConsentAcceptedAt;
         var handler = new AcceptAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(originalTimestamp, user.AiConsentAcceptedAt);
@@ -37,7 +38,7 @@ public class AiConsentTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new AcceptAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new AcceptAiConsentCommand(Guid.Empty), CancellationToken.None);
+        Result result = await handler.Handle(new AcceptAiConsentCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -49,7 +50,7 @@ public class AiConsentTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new AcceptAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -61,7 +62,7 @@ public class AiConsentTests {
         user.AcceptAiConsent();
         var handler = new RevokeAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(user.AiConsentAcceptedAt);
@@ -72,7 +73,7 @@ public class AiConsentTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new RevokeAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(user.AiConsentAcceptedAt);
@@ -83,7 +84,7 @@ public class AiConsentTests {
         var user = User.Create("user@example.com", "hash");
         var handler = new RevokeAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new RevokeAiConsentCommand(Guid.Empty), CancellationToken.None);
+        Result result = await handler.Handle(new RevokeAiConsentCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -95,7 +96,7 @@ public class AiConsentTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new RevokeAiConsentCommandHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);

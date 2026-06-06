@@ -27,7 +27,7 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
         AiPromptTemplateId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = asTracking
+        IQueryable<AiPromptTemplate> query = asTracking
             ? context.Set<AiPromptTemplate>().AsTracking()
             : context.Set<AiPromptTemplate>().AsNoTracking();
 

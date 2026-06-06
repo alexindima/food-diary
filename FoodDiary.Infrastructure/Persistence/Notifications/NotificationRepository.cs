@@ -84,12 +84,12 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
             return 0;
         }
 
-        var transientTypeList = transientTypes
+        string[] transientTypeList = transientTypes
             .Where(static type => !string.IsNullOrWhiteSpace(type))
             .Distinct(StringComparer.Ordinal)
             .ToArray();
 
-        var candidates = await context.Notifications
+        List<Notification> candidates = await context.Notifications
             .Where(n =>
                 (transientTypeList.Contains(n.Type) &&
                  ((n.IsRead && (n.ReadAtUtc ?? n.CreatedOnUtc) < transientReadOlderThanUtc) ||

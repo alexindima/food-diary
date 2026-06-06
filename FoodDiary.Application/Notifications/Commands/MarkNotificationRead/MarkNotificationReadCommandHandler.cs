@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 
@@ -18,14 +19,14 @@ public class MarkNotificationReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var notificationId = new NotificationId(command.NotificationId);
 
-        var notification = await notificationRepository.GetByIdAsync(
+        Notification? notification = await notificationRepository.GetByIdAsync(
             notificationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (notification is null || notification.UserId != userId) {
@@ -34,7 +35,7 @@ public class MarkNotificationReadCommandHandler(
 
         notification.MarkAsRead();
         await notificationRepository.UpdateAsync(notification, cancellationToken).ConfigureAwait(false);
-        var unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
+        int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         return Result.Success();

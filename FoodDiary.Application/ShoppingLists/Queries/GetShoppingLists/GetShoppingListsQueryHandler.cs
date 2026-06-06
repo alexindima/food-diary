@@ -6,6 +6,8 @@ using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 
@@ -16,18 +18,18 @@ public class GetShoppingListsQueryHandler(
     public async Task<Result<IReadOnlyList<ShoppingListSummaryModel>>> Handle(
         GetShoppingListsQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<ShoppingListSummaryModel>>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<ShoppingListSummaryModel>>(accessError);
         }
 
-        var lists = await shoppingListRepository.GetAllAsync(
+        IReadOnlyList<ShoppingList> lists = await shoppingListRepository.GetAllAsync(
             userId,
             includeItems: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);

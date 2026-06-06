@@ -1,6 +1,9 @@
+using FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
+using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Mappings;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
+using FoodDiary.Presentation.Api.Features.RecipeComments.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -12,7 +15,7 @@ public sealed class RecipeCommentHttpMappingsTests {
         var recipeId = Guid.NewGuid();
         var request = new CreateRecipeCommentHttpRequest("Great recipe!");
 
-        var command = request.ToCommand(userId, recipeId);
+        CreateRecipeCommentCommand command = request.ToCommand(userId, recipeId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
@@ -25,7 +28,7 @@ public sealed class RecipeCommentHttpMappingsTests {
         var commentId = Guid.NewGuid();
         var request = new UpdateRecipeCommentHttpRequest("Updated text");
 
-        var command = request.ToCommand(userId, commentId);
+        UpdateRecipeCommentCommand command = request.ToCommand(userId, commentId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(commentId, command.CommentId);
@@ -39,7 +42,7 @@ public sealed class RecipeCommentHttpMappingsTests {
             "johndoe", "John", "Looks delicious!",
             DateTime.UtcNow, DateTime.UtcNow, true);
 
-        var response = model.ToHttpResponse();
+        RecipeCommentHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Id, response.Id);
         Assert.Equal(model.RecipeId, response.RecipeId);

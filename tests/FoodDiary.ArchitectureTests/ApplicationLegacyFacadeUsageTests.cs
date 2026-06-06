@@ -4,10 +4,10 @@ namespace FoodDiary.ArchitectureTests;
 public class ApplicationLegacyFacadeUsageTests {
     [Fact]
     public void ApplicationLayer_DoesNotUse_RecipeWideUpdateFacade() {
-        var repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
-        var applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
+        string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+        string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        var violations = Directory
+        string[] violations = Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
@@ -24,10 +24,10 @@ public class ApplicationLegacyFacadeUsageTests {
 
     [Fact]
     public void ApplicationLayer_DoesNotUse_ProductWideIdentityFacade() {
-        var repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
-        var applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
+        string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+        string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        var violations = Directory
+        string[] violations = Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
@@ -44,10 +44,10 @@ public class ApplicationLegacyFacadeUsageTests {
 
     [Fact]
     public void ApplicationLayer_DoesNotUse_UserWideProfileFacade() {
-        var repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
-        var applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
+        string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+        string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        var violations = Directory
+        string[] violations = Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(file => File.ReadLines(file)
                 .Select((line, index) => new { file, line, lineNumber = index + 1 }))
@@ -64,10 +64,10 @@ public class ApplicationLegacyFacadeUsageTests {
 
     [Fact]
     public void ApplicationLayer_DoesNotUse_MealWideNutritionFacade() {
-        var repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
-        var applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
+        string repositoryRoot = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", ".."));
+        string applicationRoot = Path.Combine(repositoryRoot, "FoodDiary.Application");
 
-        var violations = Directory
+        string[] violations = Directory
             .GetFiles(applicationRoot, "*.cs", SearchOption.AllDirectories)
             .Select(file => new { file, content = File.ReadAllText(file) })
             .Where(entry => entry.content.Contains("meal.ApplyNutrition(", StringComparison.Ordinal) &&

@@ -27,7 +27,7 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = asTracking
+        IQueryable<WaistEntry> query = asTracking
             ? context.WaistEntries.AsQueryable()
             : context.WaistEntries.AsNoTracking();
 
@@ -40,7 +40,7 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
-        var normalizedDate = date.Date;
+        DateTime normalizedDate = date.Date;
         return await context.WaistEntries
             .AsNoTracking()
             .FirstOrDefaultAsync(
@@ -55,17 +55,17 @@ public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepos
         int? limit,
         bool descending,
         CancellationToken cancellationToken = default) {
-        var query = context.WaistEntries
+        IQueryable<WaistEntry> query = context.WaistEntries
             .AsNoTracking()
             .Where(entry => entry.UserId == userId);
 
         if (dateFrom.HasValue) {
-            var from = dateFrom.Value.Date;
+            DateTime from = dateFrom.Value.Date;
             query = query.Where(entry => entry.Date >= from);
         }
 
         if (dateTo.HasValue) {
-            var to = dateTo.Value.Date;
+            DateTime to = dateTo.Value.Date;
             query = query.Where(entry => entry.Date <= to);
         }
 

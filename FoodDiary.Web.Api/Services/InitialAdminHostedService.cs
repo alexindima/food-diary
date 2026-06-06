@@ -19,24 +19,24 @@ public sealed class InitialAdminHostedService(
     ];
 
     public async Task StartAsync(CancellationToken cancellationToken) {
-        var settings = options.Value;
+        InitialAdminOptions settings = options.Value;
         if (string.IsNullOrWhiteSpace(settings.Password)) {
             logger.LogInformation("Initial admin bootstrap skipped because InitialAdmin:Password is not configured.");
             return;
         }
 
-        var scope = serviceProvider.CreateAsyncScope();
+        AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            var passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-            var normalizedEmail = settings.Email.Trim();
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            IPasswordHasher passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
+            string normalizedEmail = settings.Email.Trim();
 
             if (await dbContext.Users.AnyAsync(user => user.Email == normalizedEmail, cancellationToken).ConfigureAwait(false)) {
                 logger.LogInformation("Initial admin bootstrap skipped because user {Email} already exists.", normalizedEmail);
                 return;
             }
 
-            var roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken).ConfigureAwait(false);
+            IReadOnlyList<Role> roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken).ConfigureAwait(false);
             var admin = User.Create(normalizedEmail, passwordHasher.Hash(settings.Password));
             admin.SetEmailConfirmed(true);
             admin.ReplaceRoles(roles);
@@ -53,12 +53,12 @@ public sealed class InitialAdminHostedService(
     private static async Task<IReadOnlyList<Role>> EnsureBootstrapRolesAsync(
         FoodDiaryDbContext dbContext,
         CancellationToken cancellationToken) {
-        var roles = await dbContext.Roles
+        List<Role> roles = await dbContext.Roles
             .Where(role => BootstrapRoles.Contains(role.Name))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var existingNames = roles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
-        foreach (var roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
+        foreach (string? roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
             var role = Role.Create(roleName);
             roles.Add(role);
             await dbContext.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);

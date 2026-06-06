@@ -42,12 +42,12 @@ public sealed class S3ImageStorageService(
                 throw new InvalidOperationException($"Unsupported content type: {contentType}.");
             }
 
-            var normalizedName = NormalizeFileName(fileName);
-            var key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
+            string normalizedName = NormalizeFileName(fileName);
+            string key = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{normalizedName}";
 
-            var expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
-            var uploadUrl = storageClient.GetPreSignedUploadUrl(_options.Bucket, key, contentType, expiresAt);
-            var fileUrl = BuildPublicUrl(key);
+            DateTime expiresAt = dateTimeProvider.UtcNow.AddMinutes(15);
+            string uploadUrl = storageClient.GetPreSignedUploadUrl(_options.Bucket, key, contentType, expiresAt);
+            string fileUrl = BuildPublicUrl(key);
 
             IntegrationsTelemetry.RecordStorageOperation("presign", "success");
             var result = new PresignedUpload(uploadUrl, fileUrl, key, expiresAt);
@@ -83,7 +83,7 @@ public sealed class S3ImageStorageService(
         }
 
         try {
-            var info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
+            StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             if (info is null) {
                 return new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.");
             }
@@ -110,8 +110,8 @@ public sealed class S3ImageStorageService(
     }
 
     private static string NormalizeFileName(string fileName) {
-        var nameOnly = Path.GetFileName(fileName);
-        var cleaned = nameOnly.Replace(' ', '-');
+        string nameOnly = Path.GetFileName(fileName);
+        string cleaned = nameOnly.Replace(' ', '-');
         return cleaned.Length switch {
             0 => "image",
             > 128 => cleaned[..128],
@@ -120,7 +120,7 @@ public sealed class S3ImageStorageService(
     }
 
     private string BuildPublicUrl(string key) {
-        var escapedKey = string.Join('/', key
+        string escapedKey = string.Join('/', key
             .Split('/', StringSplitOptions.RemoveEmptyEntries)
             .Select(Uri.EscapeDataString));
         if (!string.IsNullOrWhiteSpace(_options.PublicBaseUrl)) {

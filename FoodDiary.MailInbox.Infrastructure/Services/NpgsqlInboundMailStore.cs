@@ -30,7 +30,7 @@ public sealed class NpgsqlInboundMailStore(
                                on mailinbox_messages (received_at_utc desc);
                            """;
 
-        var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -65,7 +65,7 @@ public sealed class NpgsqlInboundMailStore(
                                @received_at_utc);
                            """;
 
-        var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
@@ -93,17 +93,17 @@ public sealed class NpgsqlInboundMailStore(
                            limit @limit;
                            """;
 
-        var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("limit", limit);
-                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
 
                 var messages = new List<InboundMailMessageSummary>();
                 while (await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
-                    var recipients = DeserializeRecipients(reader.GetString(2));
-                    var subject = reader.GetNullableString(3);
+                    IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(2));
+                    string? subject = reader.GetNullableString(3);
                     messages.Add(new InboundMailMessageSummary(
                         reader.GetGuid(0),
                         reader.GetNullableString(1),
@@ -126,20 +126,20 @@ public sealed class NpgsqlInboundMailStore(
                            where id = @id;
                            """;
 
-        var connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
             var command = new NpgsqlCommand(sql, connection);
             await using (command.ConfigureAwait(false)) {
                 command.Parameters.AddWithValue("id", id);
-                using var reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
+                using NpgsqlDataReader reader = await command.ExecuteReaderAsync(cancellationToken).ConfigureAwait(false);
                 if (!await reader.ReadAsync(cancellationToken).ConfigureAwait(false)) {
                     return null;
                 }
 
-                var recipients = DeserializeRecipients(reader.GetString(3));
-                var subject = reader.GetNullableString(4);
-                var rawMime = reader.GetString(7);
-                var dmarcReport = dmarcReportParser.TryParse(rawMime);
+                IReadOnlyList<string> recipients = DeserializeRecipients(reader.GetString(3));
+                string? subject = reader.GetNullableString(4);
+                string rawMime = reader.GetString(7);
+                DmarcReportPreview? dmarcReport = dmarcReportParser.TryParse(rawMime);
 
                 return new InboundMailMessageDetails(
                     reader.GetGuid(0),

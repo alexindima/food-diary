@@ -21,7 +21,7 @@ public sealed class MailInboxSmtpHostedService(
             return;
         }
 
-        var serverOptions = new SmtpServerOptionsBuilder()
+        ISmtpServerOptions serverOptions = new SmtpServerOptionsBuilder()
             .ServerName(_options.ServerName)
             .Endpoint(endpoint => endpoint.Port(_options.Port))
             .MaxMessageSize(_options.MaxMessageSizeBytes, MaxMessageSizeHandling.Strict)

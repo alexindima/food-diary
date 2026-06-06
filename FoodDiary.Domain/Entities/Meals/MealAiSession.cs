@@ -51,7 +51,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             return;
         }
 
-        foreach (var item in items) {
+        foreach (MealAiItem? item in items) {
             if (item is null) {
                 throw new ArgumentException("AI session item cannot be null.", nameof(items));
             }
@@ -79,7 +79,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

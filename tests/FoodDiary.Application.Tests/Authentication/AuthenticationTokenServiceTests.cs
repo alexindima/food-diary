@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Authentication.Services;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -14,14 +15,14 @@ namespace FoodDiary.Application.Tests.Authentication;
 public class AuthenticationTokenServiceTests {
     [Fact]
     public async Task IssueAndStoreAsync_StoresHashedRefreshToken_AndReturnsTokens() {
-        var user = CreateUser("user@example.com");
+        User user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
         var service = new AuthenticationTokenService(repository, loginEvents, sessions, jwt, new StubDateTimeProvider());
 
-        var result = await service.IssueAndStoreAsync(user, CancellationToken.None);
+        IssuedAuthenticationTokens result = await service.IssueAndStoreAsync(user, CancellationToken.None);
 
         Assert.Equal("access-token", result.AccessToken);
         Assert.Equal("refresh-token", result.RefreshToken);
@@ -35,7 +36,7 @@ public class AuthenticationTokenServiceTests {
 
     [Fact]
     public async Task IssueAndStoreAsync_WithClientContext_RecordsLoginEvent() {
-        var user = CreateUser("user@example.com");
+        User user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
         var loginEvents = new InMemoryUserLoginEventRepository();
         var sessions = new InMemoryRefreshTokenSessionRepository();
@@ -50,7 +51,7 @@ public class AuthenticationTokenServiceTests {
                 "203.0.113.42",
                 "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/125.0.0.0 Safari/537.36"));
 
-        var loginEvent = Assert.Single(loginEvents.Items);
+        UserLoginEvent loginEvent = Assert.Single(loginEvents.Items);
         Assert.Equal(user.Id, loginEvent.UserId);
         Assert.Equal("password", loginEvent.AuthProvider);
         Assert.Equal("203.0.113.42", loginEvent.IpAddress);
@@ -61,7 +62,7 @@ public class AuthenticationTokenServiceTests {
 
     [Fact]
     public void IssueAccessToken_UsesUserIdentityAndRoles() {
-        var user = CreateUser("user@example.com", "Admin", "Support");
+        User user = CreateUser("user@example.com", "Admin", "Support");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
         var service = new AuthenticationTokenService(
@@ -71,7 +72,7 @@ public class AuthenticationTokenServiceTests {
             jwt,
             new StubDateTimeProvider());
 
-        var token = service.IssueAccessToken(user);
+        string token = service.IssueAccessToken(user);
 
         Assert.Equal("access-token", token);
         Assert.Equal(user.Id, jwt.LastAccessUserId);
@@ -83,7 +84,7 @@ public class AuthenticationTokenServiceTests {
     [Fact]
     public void IssueAccessToken_WhenTrialIsOnlyPremiumSource_CapsAccessTokenAtTrialEnd() {
         var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
-        var user = CreateUser("trial@example.com");
+        User user = CreateUser("trial@example.com");
         user.StartPremiumTrial(now, TimeSpan.FromDays(7));
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
@@ -102,7 +103,7 @@ public class AuthenticationTokenServiceTests {
 
     private static User CreateUser(string email, params string[] roles) {
         var user = User.Create(email, "password-hash");
-        var roleEntities = roles.Select(Role.Create).ToArray();
+        Role[] roleEntities = roles.Select(Role.Create).ToArray();
         user.ReplaceRoles(roleEntities);
         return user;
     }
@@ -158,13 +159,13 @@ public class AuthenticationTokenServiceTests {
             DateTime olderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) {
-            var expiredItems = Items
+            UserLoginEvent[] expiredItems = Items
                 .Where(item => item.LoggedInAtUtc < olderThanUtc)
                 .OrderBy(item => item.LoggedInAtUtc)
                 .Take(Math.Max(batchSize, 1))
                 .ToArray();
 
-            foreach (var item in expiredItems) {
+            foreach (UserLoginEvent? item in expiredItems) {
                 Items.Remove(item);
             }
 

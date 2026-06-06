@@ -11,7 +11,7 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
         string locale,
         LessonCategory? category = null,
         CancellationToken cancellationToken = default) {
-        var query = context.Set<NutritionLesson>()
+        IQueryable<NutritionLesson> query = context.Set<NutritionLesson>()
             .AsNoTracking()
             .Where(l => l.Locale == locale);
 

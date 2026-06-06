@@ -1,7 +1,12 @@
 using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
+using FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
+using FoodDiary.Application.Ai.Commands.ParseFoodText;
+using FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 using FoodDiary.Presentation.Api.Features.Ai.Mappings;
 using FoodDiary.Presentation.Api.Features.Ai.Models;
 using FoodDiary.Presentation.Api.Features.Ai.Requests;
+using FoodDiary.Presentation.Api.Features.Ai.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -11,7 +16,7 @@ public sealed class AiHttpMappingsTests {
     public void UserId_ToUsageQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToUsageQuery();
+        GetUserAiUsageSummaryQuery query = userId.ToUsageQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -22,7 +27,7 @@ public sealed class AiHttpMappingsTests {
         var imageAssetId = Guid.NewGuid();
         var request = new FoodVisionHttpRequest(imageAssetId, "Dinner plate");
 
-        var command = request.ToCommand(userId);
+        AnalyzeFoodImageCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(imageAssetId, command.ImageAssetId);
@@ -34,7 +39,7 @@ public sealed class AiHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new FoodTextHttpRequest("two eggs and toast");
 
-        var command = request.ToCommand(userId);
+        ParseFoodTextCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.Text, command.Text);
@@ -47,10 +52,10 @@ public sealed class AiHttpMappingsTests {
             new FoodVisionItemHttpModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m)
         ]);
 
-        var command = request.ToCommand(userId);
+        CalculateFoodNutritionCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
-        var item = Assert.Single(command.Items);
+        FoodVisionItemModel item = Assert.Single(command.Items);
         Assert.Equal("egg", item.NameEn);
         Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
         Assert.Equal(2, item.Amount);
@@ -64,10 +69,10 @@ public sealed class AiHttpMappingsTests {
             Items: [new FoodVisionItemModel("egg", "ÑÐ¹Ñ†Ð¾", 2, "pcs", 0.95m)],
             Notes: "looks cooked");
 
-        var response = model.ToHttpResponse();
+        FoodVisionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("looks cooked", response.Notes);
-        var item = Assert.Single(response.Items);
+        FoodVisionItemHttpModel item = Assert.Single(response.Items);
         Assert.Equal("egg", item.NameEn);
         Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
         Assert.Equal(2, item.Amount);
@@ -87,7 +92,7 @@ public sealed class AiHttpMappingsTests {
             Items: [new FoodNutritionItemModel("egg", 2, "pcs", 160, 12, 10, 1, 0, 0)],
             Notes: "manual check");
 
-        var response = model.ToHttpResponse();
+        FoodNutritionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(300, response.Calories);
         Assert.Equal(20, response.Protein);
@@ -96,7 +101,7 @@ public sealed class AiHttpMappingsTests {
         Assert.Equal(5, response.Fiber);
         Assert.Equal(0, response.Alcohol);
         Assert.Equal("manual check", response.Notes);
-        var item = Assert.Single(response.Items);
+        FoodNutritionItemHttpResponse item = Assert.Single(response.Items);
         Assert.Equal("egg", item.Name);
         Assert.Equal(160, item.Calories);
         Assert.Equal(12, item.Protein);
@@ -104,7 +109,7 @@ public sealed class AiHttpMappingsTests {
 
     [Fact]
     public void UserAiUsageModel_ToHttpResponse_MapsAllFields() {
-        var resetAt = DateTime.UtcNow.AddHours(1);
+        DateTime resetAt = DateTime.UtcNow.AddHours(1);
         var model = new UserAiUsageModel(
             InputLimit: 1000,
             OutputLimit: 2000,
@@ -112,7 +117,7 @@ public sealed class AiHttpMappingsTests {
             OutputUsed: 200,
             ResetAtUtc: resetAt);
 
-        var response = model.ToHttpResponse();
+        UserAiUsageHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(1000, response.InputLimit);
         Assert.Equal(2000, response.OutputLimit);

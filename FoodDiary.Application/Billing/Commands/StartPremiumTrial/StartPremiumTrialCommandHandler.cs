@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
@@ -6,6 +7,7 @@ using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -27,13 +29,13 @@ public sealed class StartPremiumTrialCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingOverviewModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(subscription)) {
             return Result.Failure<BillingOverviewModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
@@ -42,11 +44,11 @@ public sealed class StartPremiumTrialCommandHandler(
             return Result.Failure<BillingOverviewModel>(Errors.Billing.TrialAlreadyUsed);
         }
 
-        var nowUtc = dateTimeProvider.UtcNow;
+        DateTime nowUtc = dateTimeProvider.UtcNow;
         user.StartPremiumTrial(nowUtc, TrialDuration);
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
-        var publicConfig = billingPublicConfigProvider.GetPublicConfig();
+        BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
         return Result.Success(new BillingOverviewModel(
             true,
             "trialing",

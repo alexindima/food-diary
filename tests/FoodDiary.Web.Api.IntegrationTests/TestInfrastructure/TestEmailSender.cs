@@ -26,7 +26,7 @@ public sealed class TestEmailSender : IEmailSender {
     }
 
     public PasswordResetMessage GetRequiredPasswordResetMessage(string email) {
-        return _passwordResetMessages.TryGetValue(email, out var message)
+        return _passwordResetMessages.TryGetValue(email, out PasswordResetMessage? message)
             ? message
             : throw new InvalidOperationException($"Password reset message for '{email}' was not captured.");
     }

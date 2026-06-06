@@ -1,3 +1,4 @@
+using FluentValidation.Results;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Enums;
@@ -9,14 +10,14 @@ public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithDuplicateStepOrder_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
-        var command = CreateCommand(
+        CreateRecipeCommand command = CreateCommand(
             Guid.NewGuid(),
             [
                 CreateStep(order: 1, "Step 1"),
                 CreateStep(order: 1, "Step 2 duplicate")
             ]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps"
@@ -27,14 +28,14 @@ public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithDistinctEffectiveStepOrder_Passes() {
         var validator = new CreateRecipeCommandValidator();
-        var command = CreateCommand(
+        CreateRecipeCommand command = CreateCommand(
             Guid.NewGuid(),
             [
                 CreateStep(order: 0, "Step uses index fallback to 1"),
                 CreateStep(order: 2, "Explicit step 2")
             ]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
     }
@@ -42,9 +43,9 @@ public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithNullSteps_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
-        var command = CreateCommand(Guid.NewGuid(), null);
+        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), null);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps", StringComparison.Ordinal)
@@ -54,9 +55,9 @@ public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithEmptySteps_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
-        var command = CreateCommand(Guid.NewGuid(), []);
+        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), []);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps", StringComparison.Ordinal)

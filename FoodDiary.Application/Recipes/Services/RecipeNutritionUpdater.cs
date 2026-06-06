@@ -14,7 +14,7 @@ public static class RecipeNutritionUpdater {
             return;
         }
 
-        var summary = RecipeNutritionCalculator.Calculate(recipe);
+        RecipeNutritionSummary summary = RecipeNutritionCalculator.Calculate(recipe);
         if (!NeedsUpdate(recipe, summary)) {
             return;
         }

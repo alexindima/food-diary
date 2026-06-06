@@ -12,7 +12,7 @@ public class CachedProductRepository(
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
-        var result = await inner.AddAsync(product, cancellationToken).ConfigureAwait(false);
+        Product result = await inner.AddAsync(product, cancellationToken).ConfigureAwait(false);
         Evict(result.Id, result.UserId);
         return result;
     }
@@ -32,11 +32,11 @@ public class CachedProductRepository(
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default) {
-        var key = CacheKey(id, userId, includePublic);
+        string key = CacheKey(id, userId, includePublic);
         if (cache.TryGetValue(key, out Product? cached))
             return cached;
 
-        var product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
+        Product? product = await inner.GetByIdAsync(id, userId, includePublic, cancellationToken).ConfigureAwait(false);
         if (product is not null)
             cache.Set(key, product, CacheDuration);
 

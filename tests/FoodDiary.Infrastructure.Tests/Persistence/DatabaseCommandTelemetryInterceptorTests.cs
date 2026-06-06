@@ -13,7 +13,7 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
         string? operation = null;
         string? source = null;
         string? errorType = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             failureCount = value;
             operation = GetTagValue(tags, "fooddiary.db.operation");
             source = GetTagValue(tags, "fooddiary.db.source");
@@ -50,7 +50,7 @@ public sealed class DatabaseCommandTelemetryInterceptorTests {
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }

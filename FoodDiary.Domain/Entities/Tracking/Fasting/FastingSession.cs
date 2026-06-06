@@ -63,7 +63,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
     }
 
     public void UpdateNotes(string? notes) {
-        var normalized = NormalizeNotes(notes);
+        string? normalized = NormalizeNotes(notes);
         if (string.Equals(Notes, normalized, StringComparison.Ordinal)) {
             return;
         }
@@ -95,7 +95,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             return FastingSessionStatus.Completed;
         }
 
-        var targetReachedAtUtc = StartedAtUtc.AddHours(PlannedDurationHours);
+        DateTime targetReachedAtUtc = StartedAtUtc.AddHours(PlannedDurationHours);
         return EndedAtUtc.Value >= targetReachedAtUtc
             ? FastingSessionStatus.Completed
             : FastingSessionStatus.Interrupted;
@@ -126,7 +126,7 @@ public sealed class FastingSession : AggregateRoot<FastingSessionId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > NotesMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {NotesMaxLength} characters.")
             : trimmed;

@@ -8,6 +8,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
@@ -26,25 +27,25 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingCheckoutSessionModel>(accessError);
         }
 
-        var existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.UtcNow)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 
-        var billingProvider = ResolveBillingProvider(command.Provider);
+        IBillingProviderGateway? billingProvider = ResolveBillingProvider(command.Provider);
         if (billingProvider is null) {
             return Result.Failure<BillingCheckoutSessionModel>(
                 Errors.Billing.ProviderNotConfigured(command.Provider ?? string.Empty));
         }
 
-        var plan = command.Plan.Trim().ToLowerInvariant();
-        var sessionResult = await billingProvider.CreateCheckoutSessionAsync(
+        string plan = command.Plan.Trim().ToLowerInvariant();
+        Result<BillingCheckoutSessionModel> sessionResult = await billingProvider.CreateCheckoutSessionAsync(
             new BillingCheckoutSessionRequestModel(
                 command.UserId.Value,
                 user.Email,
@@ -55,7 +56,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
             return Result.Failure<BillingCheckoutSessionModel>(sessionResult.Error);
         }
 
-        var session = sessionResult.Value;
+        BillingCheckoutSessionModel session = sessionResult.Value;
 
         if (existingSubscription is null) {
             var pendingSubscription = BillingSubscription.CreatePending(
@@ -80,7 +81,7 @@ public sealed class CreateCheckoutSessionCommandHandler(
     }
 
     private IBillingProviderGateway? ResolveBillingProvider(string? provider) {
-        var normalizedProvider = provider?.Trim();
+        string? normalizedProvider = provider?.Trim();
         return string.IsNullOrWhiteSpace(normalizedProvider)
             ? billingProviderGatewayAccessor.GetActiveProvider()
             : billingProviderGatewayAccessor.GetProviderOrDefault(normalizedProvider);

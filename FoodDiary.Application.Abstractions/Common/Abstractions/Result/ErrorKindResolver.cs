@@ -21,7 +21,7 @@ public static class ErrorKindResolver {
             return null;
         }
 
-        if (ExactMappings.TryGetValue(errorCode, out var kind)) {
+        if (ExactMappings.TryGetValue(errorCode, out ErrorKind kind)) {
             return kind;
         }
 

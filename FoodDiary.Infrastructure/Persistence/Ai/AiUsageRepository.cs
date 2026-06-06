@@ -16,13 +16,13 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken = default) {
-        var query = CreateSummaryQuery(fromUtc, toUtc);
+        IQueryable<AiUsage> query = CreateSummaryQuery(fromUtc, toUtc);
 
-        var totals = await GetSummaryTotalsAsync(query, cancellationToken).ConfigureAwait(false);
-        var daily = await GetDailySummaryAsync(query, cancellationToken).ConfigureAwait(false);
-        var byOperation = await GetBreakdownByOperationAsync(query, cancellationToken).ConfigureAwait(false);
-        var byModel = await GetBreakdownByModelAsync(query, cancellationToken).ConfigureAwait(false);
-        var byUser = await GetBreakdownByUserAsync(query, cancellationToken).ConfigureAwait(false);
+        AiUsageTotalsRow? totals = await GetSummaryTotalsAsync(query, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiUsageDailySummary> daily = await GetDailySummaryAsync(query, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiUsageBreakdown> byOperation = await GetBreakdownByOperationAsync(query, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiUsageBreakdown> byModel = await GetBreakdownByModelAsync(query, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<AiUsageUserSummary> byUser = await GetBreakdownByUserAsync(query, cancellationToken).ConfigureAwait(false);
 
         return new AiUsageSummary(
             totals?.TotalTokens ?? 0,
@@ -141,7 +141,7 @@ public sealed class AiUsageRepository(FoodDiaryDbContext context) : IAiUsageRepo
         DateTime fromUtc,
         DateTime toUtc,
         CancellationToken cancellationToken = default) {
-        var totals = await context.AiUsages
+        AiUsageTotals? totals = await context.AiUsages
             .AsNoTracking()
             .Where(x => x.UserId == userId && x.CreatedOnUtc >= fromUtc && x.CreatedOnUtc < toUtc)
             .GroupBy(_ => 1)

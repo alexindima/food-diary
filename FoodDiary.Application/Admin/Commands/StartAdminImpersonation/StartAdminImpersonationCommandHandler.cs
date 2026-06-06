@@ -10,6 +10,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 
@@ -23,26 +24,26 @@ public sealed class StartAdminImpersonationCommandHandler(
     public async Task<Result<AdminImpersonationStartModel>> Handle(
         StartAdminImpersonationCommand command,
         CancellationToken cancellationToken) {
-        var validationError = ValidateCommand(command);
+        Error? validationError = ValidateCommand(command);
         if (validationError is not null) {
             return Result.Failure<AdminImpersonationStartModel>(validationError);
         }
 
-        var reason = command.Reason.Trim();
+        string reason = command.Reason.Trim();
         var actorUserId = new UserId(command.ActorUserId);
         var targetUserId = new UserId(command.TargetUserId);
-        var actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
+        Result<User> actorResult = await LoadActorAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (actorResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(actorResult.Error);
         }
 
-        var targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken).ConfigureAwait(false);
+        Result<User> targetResult = await LoadTargetAsync(targetUserId, command.TargetUserId, cancellationToken).ConfigureAwait(false);
         if (targetResult.IsFailure) {
             return Result.Failure<AdminImpersonationStartModel>(targetResult.Error);
         }
 
-        var target = targetResult.Value;
-        var token = GenerateToken(target, actorUserId, reason);
+        User target = targetResult.Value;
+        string token = GenerateToken(target, actorUserId, reason);
         await StartSessionAsync(command, actorUserId, target.Id, reason, cancellationToken).ConfigureAwait(false);
         LogStart(actorUserId, target, reason);
 
@@ -71,7 +72,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     }
 
     private async Task<Result<Domain.Entities.Users.User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
-        var actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
+        User? actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
             || actor is null
             || !actor.HasRole(RoleNames.Admin)) {
@@ -85,7 +86,7 @@ public sealed class StartAdminImpersonationCommandHandler(
         UserId targetUserId,
         Guid targetId,
         CancellationToken cancellationToken) {
-        var target = await userRepository.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
+        User? target = await userRepository.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
         if (target is null) {
             return Result.Failure<Domain.Entities.Users.User>(Errors.User.NotFound(targetId));
         }
@@ -99,7 +100,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     }
 
     private string GenerateToken(Domain.Entities.Users.User target, UserId actorUserId, string reason) {
-        var roles = target.GetRoleNames().ToArray();
+        string[] roles = target.GetRoleNames().ToArray();
         return jwtTokenGenerator.GenerateAccessToken(
             target.Id,
             target.Email,

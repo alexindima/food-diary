@@ -10,7 +10,7 @@ public sealed class S3HealthCheck(IAmazonS3 s3Client, IOptions<S3Options> s3Opti
     public async Task<HealthCheckResult> CheckHealthAsync(
         HealthCheckContext context,
         CancellationToken cancellationToken = default) {
-        var bucket = s3Options.Value.Bucket;
+        string bucket = s3Options.Value.Bucket;
 
         if (string.IsNullOrWhiteSpace(bucket)) {
             return HealthCheckResult.Healthy("S3 not configured.");

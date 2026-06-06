@@ -8,6 +8,7 @@ using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 
@@ -19,19 +20,19 @@ public class AddFavoriteProductCommandHandler(
     public async Task<Result<FavoriteProductModel>> Handle(
         AddFavoriteProductCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<FavoriteProductModel>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteProductModel>(accessError);
         }
 
         var productId = new ProductId(command.ProductId);
-        var product = await productRepository.GetByIdAsync(
+        Product? product = await productRepository.GetByIdAsync(
             productId,
             userId,
             includePublic: true,
@@ -40,7 +41,7 @@ public class AddFavoriteProductCommandHandler(
             return Result.Failure<FavoriteProductModel>(Errors.Product.NotFound(command.ProductId));
         }
 
-        var existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
+        FavoriteProduct? existing = await favoriteProductRepository.GetByProductIdAsync(productId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<FavoriteProductModel>(Errors.FavoriteProduct.AlreadyExists);
         }
@@ -48,7 +49,7 @@ public class AddFavoriteProductCommandHandler(
         var favorite = FavoriteProduct.Create(userId, productId, command.Name);
         await favoriteProductRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        var saved = await favoriteProductRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        FavoriteProduct? saved = await favoriteProductRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

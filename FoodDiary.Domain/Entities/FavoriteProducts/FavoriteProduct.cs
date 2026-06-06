@@ -39,7 +39,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
     }
 
     public void UpdateName(string? name) {
-        var normalized = NormalizeOptionalText(name);
+        string? normalized = NormalizeOptionalText(name);
         if (!string.Equals(Name, normalized, StringComparison.Ordinal)) {
             Name = normalized;
             SetModified();
@@ -51,7 +51,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > DomainConstants.CommentMaxLength
             ? trimmed[..DomainConstants.CommentMaxLength]
             : trimmed;

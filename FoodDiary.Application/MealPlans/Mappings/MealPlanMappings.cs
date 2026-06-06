@@ -1,5 +1,6 @@
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.MealPlans.Mappings;
 
@@ -20,7 +21,7 @@ public static class MealPlanMappings {
     }
 
     public static MealPlanSummaryModel ToSummaryModel(this MealPlan plan) {
-        var totalRecipes = plan.Days
+        int totalRecipes = plan.Days
             .SelectMany(d => d.Meals)
             .Select(m => m.RecipeId)
             .Distinct()
@@ -48,9 +49,9 @@ public static class MealPlanMappings {
     }
 
     private static MealPlanMealModel ToModel(this MealPlanMeal meal) {
-        var recipe = meal.Recipe;
-        var servings = recipe?.Servings > 0 ? recipe.Servings : 1;
-        var multiplier = (double)meal.Servings / servings;
+        Recipe? recipe = meal.Recipe;
+        int servings = recipe?.Servings > 0 ? recipe.Servings : 1;
+        double multiplier = (double)meal.Servings / servings;
 
         return new MealPlanMealModel(
             meal.Id.Value,

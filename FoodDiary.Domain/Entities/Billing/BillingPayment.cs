@@ -72,7 +72,7 @@ public sealed class BillingPayment : Entity<Guid> {
     }
 
     private static string NormalizeProvider(string provider) {
-        var normalized = NormalizeRequired(provider, nameof(provider));
+        string normalized = NormalizeRequired(provider, nameof(provider));
         if (!BillingProviderNames.IsSupported(normalized)) {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }

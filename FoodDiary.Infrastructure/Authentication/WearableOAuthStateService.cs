@@ -29,9 +29,9 @@ public sealed class WearableOAuthStateService(
             string.IsNullOrWhiteSpace(clientState) ? null : clientState.Trim(),
             Guid.NewGuid().ToString("N"),
             dateTimeProvider.UtcNow.Add(StateLifetime));
-        var payloadBytes = JsonSerializer.SerializeToUtf8Bytes(payload, JsonOptions);
-        var payloadSegment = Base64UrlEncode(payloadBytes);
-        var signatureSegment = Base64UrlEncode(Sign(payloadSegment));
+        byte[] payloadBytes = JsonSerializer.SerializeToUtf8Bytes(payload, JsonOptions);
+        string payloadSegment = Base64UrlEncode(payloadBytes);
+        string signatureSegment = Base64UrlEncode(Sign(payloadSegment));
 
         return $"{payloadSegment}.{signatureSegment}";
     }
@@ -41,12 +41,12 @@ public sealed class WearableOAuthStateService(
             return false;
         }
 
-        var parts = state.Split('.', 2);
+        string[] parts = state.Split('.', 2);
         if (parts.Length != 2 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1])) {
             return false;
         }
 
-        var expectedSignature = Sign(parts[0]);
+        byte[] expectedSignature = Sign(parts[0]);
         byte[] providedSignature;
         try {
             providedSignature = Base64UrlDecode(parts[1]);
@@ -83,8 +83,8 @@ public sealed class WearableOAuthStateService(
         Convert.ToBase64String(bytes).TrimEnd('=').Replace('+', '-').Replace('/', '_');
 
     private static byte[] Base64UrlDecode(string value) {
-        var base64 = value.Replace('-', '+').Replace('_', '/');
-        var padding = base64.Length % 4;
+        string base64 = value.Replace('-', '+').Replace('_', '/');
+        int padding = base64.Length % 4;
         if (padding > 0) {
             base64 = base64.PadRight(base64.Length + 4 - padding, '=');
         }

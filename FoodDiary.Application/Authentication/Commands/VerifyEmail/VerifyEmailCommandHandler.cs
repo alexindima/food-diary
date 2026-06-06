@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
@@ -22,7 +23,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId));
         }
@@ -37,7 +38,7 @@ public sealed class VerifyEmailCommandHandler(
             return Result.Failure(Errors.Authentication.InvalidToken);
         }
 
-        var isValid = passwordHasher.Verify(command.Token, user.EmailConfirmationTokenHash);
+        bool isValid = passwordHasher.Verify(command.Token, user.EmailConfirmationTokenHash);
         if (!isValid) {
             return Result.Failure(Errors.Authentication.InvalidToken);
         }

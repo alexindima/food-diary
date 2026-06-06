@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Products.SearchSuggestions;
 
@@ -14,14 +15,14 @@ public sealed class UsdaProductSearchSuggestionProvider(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        var localFoods = await usdaFoodRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFood> localFoods = await usdaFoodRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         var foods = localFoods
             .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
             .ToList();
 
         if (foods.Count < limit) {
-            var remaining = limit - foods.Count;
-            var brandedFoods = await usdaFoodSearchService.SearchBrandedAsync(search, remaining, cancellationToken).ConfigureAwait(false);
+            int remaining = limit - foods.Count;
+            IReadOnlyList<UsdaFoodModel> brandedFoods = await usdaFoodSearchService.SearchBrandedAsync(search, remaining, cancellationToken).ConfigureAwait(false);
             var existingIds = foods.Select(m => m.FdcId).ToHashSet();
             foods.AddRange(brandedFoods.Where(f => !existingIds.Contains(f.FdcId)));
         }

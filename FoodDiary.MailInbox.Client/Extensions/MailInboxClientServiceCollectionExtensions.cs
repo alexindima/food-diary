@@ -17,7 +17,7 @@ public static class MailInboxClientServiceCollectionExtensions {
             .ValidateOnStart();
 
         services.AddHttpClient<IMailInboxClient, MailInboxClient>((sp, client) => {
-            var options = sp.GetRequiredService<IOptions<MailInboxClientOptions>>().Value;
+            MailInboxClientOptions options = sp.GetRequiredService<IOptions<MailInboxClientOptions>>().Value;
             if (!string.IsNullOrWhiteSpace(options.BaseUrl)) {
                 client.BaseAddress = new Uri(options.BaseUrl, UriKind.Absolute);
             }

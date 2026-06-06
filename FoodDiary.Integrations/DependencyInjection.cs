@@ -86,10 +86,10 @@ public static class DependencyInjection {
             .ValidateOnStart();
 
         services.AddSingleton<IAmazonS3>(sp => {
-            var s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
+            S3Options s3Options = sp.GetRequiredService<IOptions<S3Options>>().Value;
             var credentials = new BasicAWSCredentials(s3Options.AccessKeyId, s3Options.SecretAccessKey);
-            var regionValue = s3Options.Region?.Trim();
-            var regionEndpoint = !string.IsNullOrWhiteSpace(regionValue)
+            string? regionValue = s3Options.Region?.Trim();
+            RegionEndpoint regionEndpoint = !string.IsNullOrWhiteSpace(regionValue)
                 ? RegionEndpoint.GetBySystemName(regionValue)
                 : RegionEndpoint.USEast1;
             var config = new AmazonS3Config {
@@ -104,13 +104,13 @@ public static class DependencyInjection {
         services.AddSingleton<IImageStorageService, S3ImageStorageService>();
 
         services.AddMailRelayClient(options => {
-            var section = configuration.GetSection(MailRelayClientOptions.SectionName);
+            IConfigurationSection section = configuration.GetSection(MailRelayClientOptions.SectionName);
             options.BaseUrl = section["BaseUrl"] ?? string.Empty;
             options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
         });
         services.AddMailInboxClient(options => {
-            var section = configuration.GetSection(MailInboxClientOptions.SectionName);
+            IConfigurationSection section = configuration.GetSection(MailInboxClientOptions.SectionName);
             options.BaseUrl = section["BaseUrl"] ?? string.Empty;
             options.ApiKey = section["ApiKey"] ?? string.Empty;
             options.Timeout = TimeSpan.FromSeconds(15);
@@ -154,7 +154,7 @@ public static class DependencyInjection {
 
         services.Configure<OpenFoodFactsApiOptions>(configuration.GetSection(OpenFoodFactsApiOptions.SectionName));
         services.AddHttpClient<IOpenFoodFactsService, OpenFoodFactsService>(client => {
-            var openFoodFactsOptions = configuration
+            OpenFoodFactsApiOptions openFoodFactsOptions = configuration
                 .GetSection(OpenFoodFactsApiOptions.SectionName)
                 .Get<OpenFoodFactsApiOptions>() ?? new OpenFoodFactsApiOptions();
             client.Timeout = TimeSpan.FromSeconds(10);

@@ -17,7 +17,7 @@ public readonly record struct GenderCode {
             return false;
         }
 
-        var normalized = value.Trim().ToUpperInvariant();
+        string normalized = value.Trim().ToUpperInvariant();
         if (normalized is Male or Female or Other) {
             gender = new GenderCode(normalized);
             return true;

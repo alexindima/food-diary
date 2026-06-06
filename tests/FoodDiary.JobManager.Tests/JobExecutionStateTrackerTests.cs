@@ -16,10 +16,10 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
 
     [Fact]
     public void RecordStarted_CreatesSnapshot() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordStarted("test-job", now);
 
-        var snapshot = _tracker.GetSnapshot("test-job");
+        JobExecutionStateSnapshot? snapshot = _tracker.GetSnapshot("test-job");
 
         Assert.NotNull(snapshot);
         Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
@@ -30,24 +30,24 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
 
     [Fact]
     public void RecordStarted_UpdatesExistingSnapshot() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordSuccess("test-job", now);
 
         _tracker.RecordStarted("test-job", now.AddMinutes(1));
 
-        var snapshot = _tracker.GetSnapshot("test-job");
+        JobExecutionStateSnapshot? snapshot = _tracker.GetSnapshot("test-job");
         Assert.Equal(now.AddMinutes(1), snapshot!.Value.LastStartedAtUtc);
         Assert.Equal(now, snapshot.Value.LastSucceededAtUtc);
     }
 
     [Fact]
     public void RecordSuccess_ResetsConsecutiveFailures() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordFailure("test-job", now);
         _tracker.RecordFailure("test-job", now.AddSeconds(1));
         _tracker.RecordSuccess("test-job", now.AddSeconds(2));
 
-        var snapshot = _tracker.GetSnapshot("test-job");
+        JobExecutionStateSnapshot? snapshot = _tracker.GetSnapshot("test-job");
 
         Assert.Equal(0, snapshot!.Value.ConsecutiveFailures);
         Assert.Equal(now.AddSeconds(2), snapshot.Value.LastSucceededAtUtc);
@@ -55,12 +55,12 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
 
     [Fact]
     public void RecordFailure_IncrementsConsecutiveFailures() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordFailure("test-job", now);
         _tracker.RecordFailure("test-job", now.AddSeconds(1));
         _tracker.RecordFailure("test-job", now.AddSeconds(2));
 
-        var snapshot = _tracker.GetSnapshot("test-job");
+        JobExecutionStateSnapshot? snapshot = _tracker.GetSnapshot("test-job");
 
         Assert.Equal(3, snapshot!.Value.ConsecutiveFailures);
         Assert.Equal(now.AddSeconds(2), snapshot.Value.LastFailedAtUtc);
@@ -68,12 +68,12 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
 
     [Fact]
     public void MultipleJobs_TrackIndependently() {
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordSuccess("job-a", now);
         _tracker.RecordFailure("job-b", now);
 
-        var a = _tracker.GetSnapshot("job-a");
-        var b = _tracker.GetSnapshot("job-b");
+        JobExecutionStateSnapshot? a = _tracker.GetSnapshot("job-a");
+        JobExecutionStateSnapshot? b = _tracker.GetSnapshot("job-b");
 
         Assert.Equal(0, a!.Value.ConsecutiveFailures);
         Assert.Equal(1, b!.Value.ConsecutiveFailures);
@@ -83,7 +83,7 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
     public void ObservableGauges_ReportSuccessAgeAndFailureStreak() {
         var successAges = new List<long>();
         var failureStreaks = new Dictionary<string, int>(StringComparer.Ordinal);
-        var now = DateTime.UtcNow;
+        DateTime now = DateTime.UtcNow;
         _tracker.RecordSuccess("job-a", now.AddSeconds(-10));
         _tracker.RecordStarted("job-b", now);
         _tracker.RecordFailure("job-b", now.AddSeconds(1));
@@ -105,7 +105,7 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
                 return;
             }
 
-            var jobName = GetTagValue(tags, "fooddiary.job.name");
+            string? jobName = GetTagValue(tags, "fooddiary.job.name");
             if (jobName is not null) {
                 failureStreaks[jobName] = value;
             }
@@ -122,7 +122,7 @@ public sealed class JobExecutionStateTrackerTests : IDisposable {
     public void Dispose() => _tracker.Dispose();
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }

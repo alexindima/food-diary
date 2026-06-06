@@ -10,7 +10,7 @@ public sealed record ApiBuildInfo(
     string ApplicationVersion,
     DateTimeOffset StartedAtUtc) {
     public static ApiBuildInfo Create(ApiBuildInfoOptions options, string environmentName) {
-        var applicationVersion = typeof(Program).Assembly
+        string applicationVersion = typeof(Program).Assembly
                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                                      .InformationalVersion
                                  ?? typeof(Program).Assembly.GetName().Version?.ToString()

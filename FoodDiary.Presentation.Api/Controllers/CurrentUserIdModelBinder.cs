@@ -12,7 +12,7 @@ public sealed class CurrentUserIdModelBinder : IModelBinder {
             return Task.CompletedTask;
         }
 
-        var userId = bindingContext.HttpContext.User.GetUserGuid();
+        Guid? userId = bindingContext.HttpContext.User.GetUserGuid();
         if (!userId.HasValue || userId.Value == Guid.Empty) {
             throw new CurrentUserUnavailableException();
         }

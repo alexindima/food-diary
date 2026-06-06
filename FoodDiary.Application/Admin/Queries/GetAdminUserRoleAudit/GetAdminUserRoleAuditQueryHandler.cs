@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
@@ -19,13 +20,13 @@ public sealed class GetAdminUserRoleAuditQueryHandler(
                 Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
         }
 
-        var user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(Errors.User.NotFound(query.UserId));
         }
 
-        var limit = Math.Clamp(query.Limit, 1, 50);
-        var events = await roleAuditRepository.GetRecentForUserAsync(query.UserId, limit, cancellationToken).ConfigureAwait(false);
+        int limit = Math.Clamp(query.Limit, 1, 50);
+        IReadOnlyList<AdminUserRoleAuditEventReadModel> events = await roleAuditRepository.GetRecentForUserAsync(query.UserId, limit, cancellationToken).ConfigureAwait(false);
         return Result.Success(events);
     }
 }

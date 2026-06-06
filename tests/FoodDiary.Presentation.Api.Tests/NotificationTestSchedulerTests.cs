@@ -15,7 +15,7 @@ public sealed class NotificationTestSchedulerTests {
         var repository = new RecordingNotificationRepository();
         var pusher = new RecordingNotificationPusher();
         var sender = new RecordingWebPushNotificationSender();
-        using var serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
         using var lifetime = new TestHostApplicationLifetime();
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
@@ -23,14 +23,14 @@ public sealed class NotificationTestSchedulerTests {
             NullLogger<NotificationTestScheduler>.Instance);
         var userId = Guid.NewGuid();
 
-        var response = await scheduler.ScheduleAsync(userId, 0, " unknown-type ", CancellationToken.None);
+        ScheduledNotificationData response = await scheduler.ScheduleAsync(userId, 0, " unknown-type ", CancellationToken.None);
 
         Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
         Assert.Equal(1, response.DelaySeconds);
 
         await sender.WaitAsync();
 
-        var notification = Assert.Single(repository.Notifications);
+        Notification notification = Assert.Single(repository.Notifications);
         Assert.Equal(NotificationTypes.FastingCompleted, notification.Type);
         Assert.Equal(new UserId(userId), notification.UserId);
         Assert.Equal(1, pusher.UnreadCount);
@@ -43,14 +43,14 @@ public sealed class NotificationTestSchedulerTests {
         var repository = new RecordingNotificationRepository();
         var pusher = new RecordingNotificationPusher();
         var sender = new ThrowingWebPushNotificationSender();
-        using var serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
         using var lifetime = new TestHostApplicationLifetime();
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
             NullLogger<NotificationTestScheduler>.Instance);
 
-        var response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.EatingWindowStarted, CancellationToken.None);
+        ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.EatingWindowStarted, CancellationToken.None);
         Assert.Equal(NotificationTypes.EatingWindowStarted, response.Type);
 
         await sender.WaitAsync();
@@ -141,7 +141,7 @@ public sealed class NotificationTestSchedulerTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }
@@ -156,7 +156,7 @@ public sealed class NotificationTestSchedulerTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
             await Task.Delay(50).ConfigureAwait(false);
         }

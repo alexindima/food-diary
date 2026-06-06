@@ -27,17 +27,17 @@ public sealed class SkipCyclicDayCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
@@ -47,7 +47,7 @@ public sealed class SkipCyclicDayCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be skipped."));
         }
 
-        var now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.UtcNow;
         try {
             current.Skip(now);
             plan.ScheduleNextCyclicPhase(DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc));
@@ -55,13 +55,13 @@ public sealed class SkipCyclicDayCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("The current cyclic period cannot be skipped."));
         }
 
-        var nextKind = current.Kind == FastingOccurrenceKind.FastDay
+        FastingOccurrenceKind nextKind = current.Kind == FastingOccurrenceKind.FastDay
             ? FastingOccurrenceKind.EatDay
             : FastingOccurrenceKind.FastDay;
-        var nextTargetHours = nextKind == FastingOccurrenceKind.FastDay
+        int? nextTargetHours = nextKind == FastingOccurrenceKind.FastDay
             ? 24
             : plan.CyclicEatDayEatingWindowHours;
-        var nextSequenceNumber = ResolveNextSequenceNumber(plan, current, nextKind);
+        int nextSequenceNumber = ResolveNextSequenceNumber(plan, current, nextKind);
 
         var nextOccurrence = FastingOccurrence.Create(
             plan.Id,
@@ -81,11 +81,11 @@ public sealed class SkipCyclicDayCommandHandler(
     }
 
     private static int ResolveNextSequenceNumber(FastingPlan plan, FastingOccurrence current, FastingOccurrenceKind nextKind) {
-        var fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
-        var eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
-        var totalCycleDays = fastDays + eatDays;
-        var overallCycleDay = ((Math.Max(1, current.SequenceNumber) - 1) % totalCycleDays) + 1;
-        var cycleStartSequence = current.SequenceNumber - (overallCycleDay - 1);
+        int fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
+        int eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
+        int totalCycleDays = fastDays + eatDays;
+        int overallCycleDay = ((Math.Max(1, current.SequenceNumber) - 1) % totalCycleDays) + 1;
+        int cycleStartSequence = current.SequenceNumber - (overallCycleDay - 1);
 
         return nextKind == FastingOccurrenceKind.FastDay
             ? cycleStartSequence + totalCycleDays

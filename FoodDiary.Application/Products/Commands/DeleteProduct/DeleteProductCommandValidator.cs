@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
@@ -28,13 +29,13 @@ public class DeleteProductCommandValidator : AbstractValidator<DeleteProductComm
                     return;
                 }
 
-                var product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
+                Product? product = await productRepository.GetByIdAsync(new ProductId(command.ProductId), new UserId(command.UserId.Value), includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
                 if (product is null) {
                     context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product not found or you do not have permission to delete it") {
                         ErrorCode = "Product.NotFound"
                     });
                 } else {
-                    var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+                    int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
                     if (usageCount > 0) {
                         context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product is already used and cannot be deleted") {
                             ErrorCode = "Validation.Invalid"

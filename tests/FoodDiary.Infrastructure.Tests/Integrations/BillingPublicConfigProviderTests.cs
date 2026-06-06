@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
@@ -9,13 +10,13 @@ namespace FoodDiary.Infrastructure.Tests.Integrations;
 public sealed class BillingPublicConfigProviderTests {
     [Fact]
     public void GetPublicConfig_WithValidStripePrimaryAndOtherProviders_ListsAvailableProviders() {
-        var provider = CreateProvider(
+        BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = BillingProviderNames.Stripe },
             stripe: ValidStripeOptions(),
             paddle: ValidPaddleOptions(),
             yooKassa: ValidYooKassaOptions());
 
-        var config = provider.GetPublicConfig();
+        BillingPublicConfigModel config = provider.GetPublicConfig();
 
         Assert.Equal(BillingProviderNames.Stripe, config.Provider);
         Assert.Equal([BillingProviderNames.Stripe, BillingProviderNames.Paddle, BillingProviderNames.YooKassa], config.AvailableProviders);
@@ -24,13 +25,13 @@ public sealed class BillingPublicConfigProviderTests {
 
     [Fact]
     public void GetPublicConfig_WithPaddlePrimary_NormalizesProviderAndTrimsClientToken() {
-        var provider = CreateProvider(
+        BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = " paddle " },
             stripe: new StripeOptions(),
             paddle: ValidPaddleOptions(clientSideToken: " paddle-token "),
             yooKassa: new YooKassaOptions());
 
-        var config = provider.GetPublicConfig();
+        BillingPublicConfigModel config = provider.GetPublicConfig();
 
         Assert.Equal("paddle", config.Provider);
         Assert.Equal([BillingProviderNames.Paddle], config.AvailableProviders);
@@ -39,13 +40,13 @@ public sealed class BillingPublicConfigProviderTests {
 
     [Fact]
     public void GetPublicConfig_WithInvalidConfigurations_ReturnsNoAvailableProviders() {
-        var provider = CreateProvider(
+        BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = BillingProviderNames.Stripe },
             stripe: new StripeOptions { SecretKey = "sk" },
             paddle: new PaddleOptions(),
             yooKassa: new YooKassaOptions());
 
-        var config = provider.GetPublicConfig();
+        BillingPublicConfigModel config = provider.GetPublicConfig();
 
         Assert.Equal(BillingProviderNames.Stripe, config.Provider);
         Assert.Empty(config.AvailableProviders);

@@ -27,10 +27,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task AdminUsers_WithAdminRole_MatchesNormalizedPayloadSnapshot() {
-        var client = testAuthFactory.CreateClient();
-        var registeredEmail = $"admin-users-{Guid.NewGuid():N}@example.com";
+        HttpClient client = testAuthFactory.CreateClient();
+        string registeredEmail = $"admin-users-{Guid.NewGuid():N}@example.com";
 
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(registeredEmail, "Password123!", "en"));
         registerResponse.EnsureSuccessStatusCode();
@@ -40,9 +40,9 @@ public sealed class PresentationPayloadContractIntegrationTests(
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.RoleHeader, PresentationRoleNames.Admin);
 
-        var response = await client.GetAsync("/api/v1/admin/users");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/admin/users");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildAdminUsersSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -52,11 +52,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task RecipeById_AfterCreate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var productResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage productResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
                 null,
@@ -82,7 +82,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         Assert.NotNull(productResponse.Headers.Location);
 
         using var productJson = JsonDocument.Parse(await productResponse.Content.ReadAsStringAsync());
-        var productId = productJson.RootElement.GetProperty("id").GetGuid();
+        Guid productId = productJson.RootElement.GetProperty("id").GetGuid();
 
         var createRequest = new CreateRecipeHttpRequest(
             "Integration Recipe",
@@ -113,16 +113,16 @@ public sealed class PresentationPayloadContractIntegrationTests(
                     null)
             ]);
 
-        var createResponse = await client.PostAsJsonAsync("/api/v1/recipes", createRequest);
+        HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/recipes", createRequest);
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
         Assert.NotNull(createResponse.Headers.Location);
 
         using var createdJson = JsonDocument.Parse(await createResponse.Content.ReadAsStringAsync());
-        var recipeId = createdJson.RootElement.GetProperty("id").GetGuid();
+        Guid recipeId = createdJson.RootElement.GetProperty("id").GetGuid();
 
-        var getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/recipes/{recipeId}");
         using var recipeJson = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildRecipeSnapshot(recipeJson.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -132,13 +132,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task Statistics_ForEmptyRange_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/v1/statistics?dateFrom=2026-03-01&dateTo=2026-03-07&quantizationDays=1");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/statistics?dateFrom=2026-03-01&dateTo=2026-03-07&quantizationDays=1");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildStatisticsSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -148,11 +148,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task ShoppingListCurrent_AfterCreate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var createResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/shopping-lists",
             new CreateShoppingListHttpRequest(
                 "Weekend Shopping",
@@ -169,9 +169,9 @@ public sealed class PresentationPayloadContractIntegrationTests(
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
         Assert.NotNull(createResponse.Headers.Location);
 
-        var currentResponse = await client.GetAsync("/api/v1/shopping-lists/current");
+        HttpResponseMessage currentResponse = await client.GetAsync("/api/v1/shopping-lists/current");
         using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildShoppingListSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -181,11 +181,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task CurrentCycle_AfterCreate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var createResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/cycles",
             new CreateCycleHttpRequest(
                 new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
@@ -194,9 +194,9 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 "Integration cycle"));
         createResponse.EnsureSuccessStatusCode();
 
-        var currentResponse = await client.GetAsync("/api/v1/cycles/current");
+        HttpResponseMessage currentResponse = await client.GetAsync("/api/v1/cycles/current");
         using var json = JsonDocument.Parse(await currentResponse.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildCycleSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -206,13 +206,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task DashboardSnapshot_ForNewUser_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/v1/dashboard?date=2026-03-26&page=1&pageSize=10&locale=en&trendDays=7");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/dashboard?date=2026-03-26&page=1&pageSize=10&locale=en&trendDays=7");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildDashboardSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -222,13 +222,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task UserInfo_AfterRegister_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/v1/users/info");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/info");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildUserInfoSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -238,13 +238,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task UserOverview_AfterRegister_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/v1/users/overview");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/overview");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildUserOverviewSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -254,20 +254,20 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task HydrationDaily_AfterCreate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var createResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/hydrations",
             new CreateHydrationEntryHttpRequest(
                 new DateTime(2026, 3, 26, 9, 30, 0, DateTimeKind.Utc),
                 450));
         createResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/v1/hydrations/daily?dateUtc=2026-03-26");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/hydrations/daily?dateUtc=2026-03-26");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildHydrationDailySnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -277,13 +277,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task AiUsageMe_WithAuthenticatedUser_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var response = await client.GetAsync("/api/v1/ai/usage/me");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/ai/usage/me");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildAiUsageSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -293,18 +293,18 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task DesiredWeight_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var updateResponse = await client.PutAsJsonAsync(
+        HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             "/api/v1/users/desired-weight",
             new UpdateDesiredWeightHttpRequest(72.5));
         updateResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/v1/users/desired-weight");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/desired-weight");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildDesiredMetricSnapshot(json.RootElement, "desiredWeight"),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -314,18 +314,18 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task DesiredWaist_AfterUpdate_MatchesNormalizedPayloadSnapshot() {
-        var client = apiFactory.CreateClient();
-        var accessToken = await RegisterAndGetAccessTokenAsync(client);
+        HttpClient client = apiFactory.CreateClient();
+        string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
 
-        var updateResponse = await client.PutAsJsonAsync(
+        HttpResponseMessage updateResponse = await client.PutAsJsonAsync(
             "/api/v1/users/desired-waist",
             new UpdateDesiredWaistHttpRequest(81.5));
         updateResponse.EnsureSuccessStatusCode();
 
-        var response = await client.GetAsync("/api/v1/users/desired-waist");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/users/desired-waist");
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildDesiredMetricSnapshot(json.RootElement, "desiredWaist"),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -335,15 +335,15 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     [Fact]
     public async Task ImageUploadUrl_WithValidPayload_MatchesNormalizedPayloadSnapshot() {
-        var client = testAuthFactory.CreateClient();
+        HttpClient client = testAuthFactory.CreateClient();
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.AuthenticateHeader, "true");
         client.DefaultRequestHeaders.Add(TestAuthenticationHandler.UserIdHeader, Guid.NewGuid().ToString());
 
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
             new GetImageUploadUrlHttpRequest("payload-photo.jpg", "image/jpeg", 4096));
         using var json = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-        var actual = JsonSerializer.Serialize(
+        string actual = JsonSerializer.Serialize(
             BuildImageUploadUrlSnapshot(json.RootElement),
             new JsonSerializerOptions { WriteIndented = true });
 
@@ -352,21 +352,21 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static async Task<string> RegisterAndGetAccessTokenAsync(HttpClient client) {
-        var email = $"api-tests-{Guid.NewGuid():N}@example.com";
-        var response = await client.PostAsJsonAsync(
+        string email = $"api-tests-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         Assert.False(string.IsNullOrWhiteSpace(payload.AccessToken));
         return payload.AccessToken;
     }
 
     private static JsonObject BuildAdminUsersSnapshot(JsonElement root) {
-        var data = root.GetProperty("data");
-        var firstUserKeys = data.GetArrayLength() > 0
+        JsonElement data = root.GetProperty("data");
+        string[] firstUserKeys = data.GetArrayLength() > 0
             ? data[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal).ToArray()
             : Array.Empty<string>();
 
@@ -378,10 +378,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildRecipeSnapshot(JsonElement root) {
-        var steps = root.GetProperty("steps");
-        var firstStep = steps[0];
-        var ingredients = firstStep.GetProperty("ingredients");
-        var firstIngredientKeys = ingredients[0].EnumerateObject()
+        JsonElement steps = root.GetProperty("steps");
+        JsonElement firstStep = steps[0];
+        JsonElement ingredients = firstStep.GetProperty("ingredients");
+        string[] firstIngredientKeys = ingredients[0].EnumerateObject()
             .Select(property => property.Name)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -399,7 +399,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildStatisticsSnapshot(JsonElement root) {
-        var firstItemKeys = root.GetArrayLength() > 0
+        string[] firstItemKeys = root.GetArrayLength() > 0
             ? root[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal).ToArray()
             : Array.Empty<string>();
 
@@ -411,8 +411,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildShoppingListSnapshot(JsonElement root) {
-        var items = root.GetProperty("items");
-        var firstItem = items[0];
+        JsonElement items = root.GetProperty("items");
+        JsonElement firstItem = items[0];
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
@@ -423,7 +423,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildCycleSnapshot(JsonElement root) {
-        var predictions = root.GetProperty("predictions");
+        JsonElement predictions = root.GetProperty("predictions");
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
@@ -446,13 +446,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildUserInfoSnapshot(JsonElement root) {
-        var dashboardLayout = root.GetProperty("dashboardLayout");
-        var email = root.GetProperty("email").GetString() ?? string.Empty;
+        JsonElement dashboardLayout = root.GetProperty("dashboardLayout");
+        string email = root.GetProperty("email").GetString() ?? string.Empty;
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
             ["emailDomain"] = email.Contains('@', StringComparison.Ordinal) ? email.Split('@')[1] : string.Empty,
-            ["language"] = root.TryGetProperty("language", out var language) ? language.GetString() : null,
+            ["language"] = root.TryGetProperty("language", out JsonElement language) ? language.GetString() : null,
             ["isActive"] = root.GetProperty("isActive").GetBoolean(),
             ["isEmailConfirmed"] = root.GetProperty("isEmailConfirmed").GetBoolean(),
             ["dashboardLayoutKeys"] = dashboardLayout.ValueKind == JsonValueKind.Object
@@ -462,10 +462,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildUserOverviewSnapshot(JsonElement root) {
-        var user = root.GetProperty("user");
-        var notificationPreferences = root.GetProperty("notificationPreferences");
-        var webPushSubscriptions = root.GetProperty("webPushSubscriptions");
-        var dietologistRelationship = root.GetProperty("dietologistRelationship");
+        JsonElement user = root.GetProperty("user");
+        JsonElement notificationPreferences = root.GetProperty("notificationPreferences");
+        JsonElement webPushSubscriptions = root.GetProperty("webPushSubscriptions");
+        JsonElement dietologistRelationship = root.GetProperty("dietologistRelationship");
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
@@ -482,7 +482,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
             ["dateUtc"] = root.GetProperty("dateUtc").GetDateTime().ToString("O"),
             ["totalMl"] = root.GetProperty("totalMl").GetInt32(),
-            ["hasGoalMl"] = root.TryGetProperty("goalMl", out var goal) && goal.ValueKind is not JsonValueKind.Null
+            ["hasGoalMl"] = root.TryGetProperty("goalMl", out JsonElement goal) && goal.ValueKind is not JsonValueKind.Null
         };
     }
 
@@ -493,7 +493,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["outputLimit"] = root.GetProperty("outputLimit").GetInt64(),
             ["inputUsed"] = root.GetProperty("inputUsed").GetInt64(),
             ["outputUsed"] = root.GetProperty("outputUsed").GetInt64(),
-            ["hasResetAtUtc"] = root.TryGetProperty("resetAtUtc", out var resetAtUtc) && resetAtUtc.ValueKind == JsonValueKind.String
+            ["hasResetAtUtc"] = root.TryGetProperty("resetAtUtc", out JsonElement resetAtUtc) && resetAtUtc.ValueKind == JsonValueKind.String
         };
     }
 
@@ -505,21 +505,21 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static JsonObject BuildImageUploadUrlSnapshot(JsonElement root) {
-        var uploadUrl = root.GetProperty("uploadUrl").GetString() ?? string.Empty;
-        var fileUrl = root.GetProperty("fileUrl").GetString() ?? string.Empty;
+        string uploadUrl = root.GetProperty("uploadUrl").GetString() ?? string.Empty;
+        string fileUrl = root.GetProperty("fileUrl").GetString() ?? string.Empty;
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["uploadUrlHost"] = Uri.TryCreate(uploadUrl, UriKind.Absolute, out var uploadUri) ? uploadUri.Host : string.Empty,
+            ["uploadUrlHost"] = Uri.TryCreate(uploadUrl, UriKind.Absolute, out Uri? uploadUri) ? uploadUri.Host : string.Empty,
             ["uploadUrlHasSignature"] = uploadUrl.Contains("X-Amz-Signature=", StringComparison.Ordinal),
-            ["fileUrlHost"] = Uri.TryCreate(fileUrl, UriKind.Absolute, out var fileUri) ? fileUri.Host : string.Empty,
+            ["fileUrlHost"] = Uri.TryCreate(fileUrl, UriKind.Absolute, out Uri? fileUri) ? fileUri.Host : string.Empty,
             ["assetIdIsGuid"] = root.GetProperty("assetId").GetGuid() != Guid.Empty
         };
     }
 
     private static JsonArray ToJsonArray(IEnumerable<string> values) {
         var array = new JsonArray();
-        foreach (var value in values) {
+        foreach (string value in values) {
             array.Add(value);
         }
 
@@ -527,8 +527,8 @@ public sealed class PresentationPayloadContractIntegrationTests(
     }
 
     private static async Task AssertPayloadSnapshotAsync(string scenario, string actual) {
-        var snapshotPath = SnapshotPathResolver.GetPath("payload-contract-snapshots.json");
-        var snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false))!.AsObject();
+        string snapshotPath = SnapshotPathResolver.GetPath("payload-contract-snapshots.json");
+        JsonObject snapshotRoot = JsonNode.Parse(await File.ReadAllTextAsync(snapshotPath).ConfigureAwait(false))!.AsObject();
         if (string.Equals(Environment.GetEnvironmentVariable("UPDATE_CONTRACT_SNAPSHOTS"), "1", StringComparison.Ordinal)) {
             snapshotRoot[scenario] = JsonNode.Parse(actual);
             await File.WriteAllTextAsync(
@@ -536,7 +536,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 snapshotRoot.ToJsonString(new JsonSerializerOptions { WriteIndented = true }).ReplaceLineEndings("\n")).ConfigureAwait(false);
         }
 
-        var expected = snapshotRoot[scenario]?.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
+        string? expected = snapshotRoot[scenario]?.ToJsonString(new JsonSerializerOptions { WriteIndented = true });
 
         Assert.NotNull(expected);
         Assert.Equal(

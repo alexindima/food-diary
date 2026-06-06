@@ -1,9 +1,16 @@
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Models;
+using FoodDiary.Application.Users.Commands.ChangePassword;
+using FoodDiary.Application.Users.Commands.SetPassword;
+using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
+using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
+using FoodDiary.Application.Users.Commands.UpdateUser;
+using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Mappings;
 using FoodDiary.Presentation.Api.Features.Users.Models;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
+using FoodDiary.Presentation.Api.Features.Users.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -38,7 +45,7 @@ public sealed class UserHttpMappingsTests {
                 Mobile: ["hydration", "steps"]),
             IsActive: true);
 
-        var command = request.ToCommand(userId);
+        UpdateUserCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.Username, command.Username);
@@ -72,7 +79,7 @@ public sealed class UserHttpMappingsTests {
             CurrentPassword: "old-password",
             NewPassword: "new-password");
 
-        var command = request.ToCommand(userId);
+        ChangePasswordCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.CurrentPassword, command.CurrentPassword);
@@ -98,8 +105,8 @@ public sealed class UserHttpMappingsTests {
         var weightRequest = new UpdateDesiredWeightHttpRequest(76.5);
         var waistRequest = new UpdateDesiredWaistHttpRequest(82.4);
 
-        var weightCommand = weightRequest.ToDesiredWeightCommand(userId);
-        var waistCommand = waistRequest.ToDesiredWaistCommand(userId);
+        UpdateDesiredWeightCommand weightCommand = weightRequest.ToDesiredWeightCommand(userId);
+        UpdateDesiredWaistCommand waistCommand = waistRequest.ToDesiredWaistCommand(userId);
 
         Assert.Equal(userId, weightCommand.UserId);
         Assert.Equal(76.5, weightCommand.DesiredWeight);
@@ -113,8 +120,8 @@ public sealed class UserHttpMappingsTests {
         var appearance = new UpdateUserAppearanceHttpRequest("dark", "compact");
         var password = new SetPasswordHttpRequest("new-password");
 
-        var appearanceCommand = appearance.ToCommand(userId);
-        var passwordCommand = password.ToCommand(userId);
+        UpdateUserAppearanceCommand appearanceCommand = appearance.ToCommand(userId);
+        SetPasswordCommand passwordCommand = password.ToCommand(userId);
 
         Assert.Equal(userId, appearanceCommand.UserId);
         Assert.Equal("dark", appearanceCommand.Theme);
@@ -130,14 +137,14 @@ public sealed class UserHttpMappingsTests {
         var birthDate = new DateTime(1995, 5, 20, 0, 0, 0, DateTimeKind.Utc);
         var lastLoginAtUtc = new DateTime(2026, 4, 6, 12, 0, 0, DateTimeKind.Utc);
         var aiConsentAcceptedAt = new DateTime(2026, 4, 5, 12, 0, 0, DateTimeKind.Utc);
-        var model = CreateUserModel(
+        UserModel model = CreateUserModel(
             id,
             profileImageAssetId,
             birthDate,
             lastLoginAtUtc,
             aiConsentAcceptedAt);
 
-        var response = model.ToHttpResponse();
+        UserHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal("alex@example.com", response.Email);
@@ -221,7 +228,7 @@ public sealed class UserHttpMappingsTests {
                 ExpiresAtUtc: subscriptionCreatedAtUtc.AddDays(5),
                 AcceptedAtUtc: subscriptionCreatedAtUtc));
 
-        var response = model.ToHttpResponse();
+        ProfileOverviewHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(userId, response.User.Id);
         Assert.True(response.NotificationPreferences.PushNotificationsEnabled);

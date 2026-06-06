@@ -10,154 +10,154 @@ public class CreateConsumptionCommandValidatorTests {
 
     [Fact]
     public async Task Validate_WhenUserIdIsNull_HasError() {
-        var command = CreateCommand(useNullUserId: true);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(useNullUserId: true);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task Validate_WhenUserIdIsEmpty_HasError() {
-        var command = CreateCommand(userId: Guid.Empty);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(userId: Guid.Empty);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task Validate_WhenMealTypeInvalid_HasError() {
-        var command = CreateCommand(mealType: "InvalidType");
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(mealType: "InvalidType");
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.MealType);
     }
 
     [Fact]
     public async Task Validate_WhenMealTypeIsNull_NoError() {
-        var command = CreateCommand(mealType: null);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(mealType: null);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldNotHaveValidationErrorFor(c => c.MealType);
     }
 
     [Fact]
     public async Task Validate_WhenMealTypeIsValid_NoError() {
-        var command = CreateCommand(mealType: "Lunch");
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(mealType: "Lunch");
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldNotHaveValidationErrorFor(c => c.MealType);
     }
 
     [Fact]
     public async Task Validate_WhenNoItemsAndNoAiSessions_HasError() {
-        var command = CreateCommand(items: [], aiSessions: []);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(items: [], aiSessions: []);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenPreMealSatietyOutOfRange_HasError() {
-        var command = CreateCommand(preMealSatiety: -1);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(preMealSatiety: -1);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.PreMealSatietyLevel);
     }
 
     [Fact]
     public async Task Validate_WhenPostMealSatietyOutOfRange_HasError() {
-        var command = CreateCommand(postMealSatiety: 10);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(postMealSatiety: 10);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.PostMealSatietyLevel);
     }
 
     [Fact]
     public async Task Validate_WhenItemHasNeitherProductNorRecipe_HasError() {
-        var command = CreateCommand(items: [new ConsumptionItemInput(null, null, 100)]);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(null, null, 100)]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenItemHasBothProductAndRecipe_HasError() {
-        var command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), Guid.NewGuid(), 100)]);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), Guid.NewGuid(), 100)]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenItemAmountIsZero_HasError() {
-        var command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 0)]);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 0)]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenItemAmountIsTooLarge_HasError() {
-        var command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenAiItemNameIsBlank_HasError() {
-        var command = CreateCommand(
+        CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
                 new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)
             ])]);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenAiItemNutritionIsNegative_HasError() {
-        var command = CreateCommand(
+        CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
                 new ConsumptionAiItemInput("Apple", null, 100, "g", -1, 10, 5, 20, 3, 0)
             ])]);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenAiSessionRecognizedAtIsUnspecified_HasError() {
-        var command = CreateCommand(
+        CreateConsumptionCommand command = CreateCommand(
             items: [],
             aiSessions: [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 12, 0, 0), null, [
                 new ConsumptionAiItemInput("Apple", null, 100, "g", 100, 10, 5, 20, 3, 0)
             ])]);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenManualNutritionMissingCalories_HasError() {
-        var command = CreateCommand(
+        CreateConsumptionCommand command = CreateCommand(
             isAutoCalculated: false,
             manualCalories: null,
             manualProteins: 10, manualFats: 5, manualCarbs: 20, manualFiber: 3);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.ManualCalories);
     }
 
     [Fact]
     public async Task Validate_WhenManualNutritionNegativeValue_HasError() {
-        var command = CreateCommand(
+        CreateConsumptionCommand command = CreateCommand(
             isAutoCalculated: false,
             manualCalories: -10,
             manualProteins: 10, manualFats: 5, manualCarbs: 20, manualFiber: 3);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.ManualCalories);
     }
 
     [Fact]
     public async Task Validate_WhenAutoCalculated_ManualFieldsNotRequired() {
-        var command = CreateCommand(isAutoCalculated: true,
+        CreateConsumptionCommand command = CreateCommand(isAutoCalculated: true,
             manualCalories: null, manualProteins: null, manualFats: null,
             manualCarbs: null, manualFiber: null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldNotHaveValidationErrorFor(c => c.ManualCalories);
     }
 
     [Fact]
     public async Task Validate_WhenValidCommand_NoErrors() {
-        var command = CreateCommand();
-        var result = await _validator.TestValidateAsync(command);
+        CreateConsumptionCommand command = CreateCommand();
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldNotHaveAnyValidationErrors();
     }
 

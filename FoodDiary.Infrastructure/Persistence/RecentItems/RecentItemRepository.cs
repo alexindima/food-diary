@@ -29,7 +29,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
             return;
         }
 
-        var now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.UtcNow;
 
         if (distinctProductIds.Count > 0) {
             await TouchItemsAsync(userId, RecentItemType.Product, distinctProductIds, now, cancellationToken).ConfigureAwait(false);
@@ -54,7 +54,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
-        var sanitizedLimit = Math.Clamp(limit, 1, 100);
+        int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
             .AsNoTracking()
@@ -69,7 +69,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
         UserId userId,
         int limit,
         CancellationToken cancellationToken = default) {
-        var sanitizedLimit = Math.Clamp(limit, 1, 100);
+        int sanitizedLimit = Math.Clamp(limit, 1, 100);
 
         return await context.RecentItems
             .AsNoTracking()
@@ -86,14 +86,14 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
         IReadOnlyCollection<Guid> itemIds,
         DateTime usedAtUtc,
         CancellationToken cancellationToken) {
-        var existingItems = await context.RecentItems
+        List<RecentItem> existingItems = await context.RecentItems
             .Where(x => x.UserId == userId && x.ItemType == itemType && itemIds.Contains(x.ItemId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         var existingByItemId = existingItems.ToDictionary(x => x.ItemId);
 
-        foreach (var itemId in itemIds) {
-            if (existingByItemId.TryGetValue(itemId, out var existing)) {
+        foreach (Guid itemId in itemIds) {
+            if (existingByItemId.TryGetValue(itemId, out RecentItem? existing)) {
                 existing.Touch(usedAtUtc);
                 continue;
             }
@@ -106,7 +106,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, IDateTimeProvider 
         UserId userId,
         RecentItemType itemType,
         CancellationToken cancellationToken) {
-        var overflowItemIds = await context.RecentItems
+        List<RecentItemId> overflowItemIds = await context.RecentItems
             .Where(x => x.UserId == userId && x.ItemType == itemType)
             .OrderByDescending(x => x.LastUsedAtUtc)
             .ThenByDescending(x => x.CreatedOnUtc)

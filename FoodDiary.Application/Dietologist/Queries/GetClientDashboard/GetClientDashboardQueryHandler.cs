@@ -23,7 +23,7 @@ public class GetClientDashboardQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
-        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
             userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<DashboardSnapshotModel>(currentUserAccessError);
@@ -31,19 +31,19 @@ public class GetClientDashboardQueryHandler(
 
         var clientUserId = new UserId(query.ClientUserId);
 
-        var accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             invitationRepository, dietologistUserId, clientUserId, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<DashboardSnapshotModel>(accessResult.Error);
         }
 
-        var permissions = accessResult.Value;
+        DietologistPermissionsModel permissions = accessResult.Value;
         if (!DietologistAccessPolicy.HasAnyDashboardPermission(permissions)) {
             return Result.Failure<DashboardSnapshotModel>(Errors.Dietologist.PermissionDenied);
         }
 
-        var dashboardResult = await snapshotBuilder.BuildAsync(
+        Result<DashboardSnapshotModel> dashboardResult = await snapshotBuilder.BuildAsync(
             new DashboardSnapshotRequest(
                 query.ClientUserId,
                 query.Date,

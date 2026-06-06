@@ -1,8 +1,18 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.FavoriteProducts.Models;
+using FoodDiary.Application.Products.Commands.CreateProduct;
+using FoodDiary.Application.Products.Commands.DeleteProduct;
+using FoodDiary.Application.Products.Commands.DuplicateProduct;
+using FoodDiary.Application.Products.Commands.UpdateProduct;
 using FoodDiary.Application.Products.Models;
+using FoodDiary.Application.Products.Queries.GetProductById;
+using FoodDiary.Application.Products.Queries.GetProducts;
+using FoodDiary.Application.Products.Queries.GetProductsOverview;
+using FoodDiary.Application.Products.Queries.GetRecentProducts;
+using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
 using FoodDiary.Presentation.Api.Features.Products.Requests;
+using FoodDiary.Presentation.Api.Features.Products.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -10,7 +20,7 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class ProductHttpMappingsTests {
     [Fact]
     public void SearchProductSuggestionsQuery_MapsSearchAndLimit() {
-        var query = ProductHttpMappings.ToSuggestionsQuery("apple", 7);
+        SearchProductSuggestionsQuery query = ProductHttpMappings.ToSuggestionsQuery("apple", 7);
 
         Assert.Equal("apple", query.Search);
         Assert.Equal(7, query.Limit);
@@ -21,8 +31,8 @@ public sealed class ProductHttpMappingsTests {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
 
-        var deleteCommand = productId.ToDeleteCommand(userId);
-        var duplicateCommand = productId.ToDuplicateCommand(userId);
+        DeleteProductCommand deleteCommand = productId.ToDeleteCommand(userId);
+        DuplicateProductCommand duplicateCommand = productId.ToDuplicateCommand(userId);
 
         Assert.Equal(userId, deleteCommand.UserId);
         Assert.Equal(productId, deleteCommand.ProductId);
@@ -46,9 +56,9 @@ public sealed class ProductHttpMappingsTests {
             CarbsPer100G: 14,
             FiberPer100G: 2.4);
 
-        var response = new[] { model }.ToHttpResponse();
+        IReadOnlyList<ProductSearchSuggestionHttpResponse> response = new[] { model }.ToHttpResponse();
 
-        var item = Assert.Single(response);
+        ProductSearchSuggestionHttpResponse item = Assert.Single(response);
         Assert.Equal(model.Source, item.Source);
         Assert.Equal(model.Name, item.Name);
         Assert.Equal(model.Brand, item.Brand);
@@ -73,7 +83,7 @@ public sealed class ProductHttpMappingsTests {
             IncludePublic: true,
             ProductTypes: "Food, food, Drink");
 
-        var query = request.ToQuery(userId);
+        GetProductsQuery query = request.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(1, query.Page);
@@ -92,7 +102,7 @@ public sealed class ProductHttpMappingsTests {
             IncludePublic: false,
             ProductTypes: " ");
 
-        var query = request.ToQuery(Guid.NewGuid());
+        GetProductsQuery query = request.ToQuery(Guid.NewGuid());
 
         Assert.Equal(2, query.Page);
         Assert.Equal(20, query.Limit);
@@ -112,7 +122,7 @@ public sealed class ProductHttpMappingsTests {
             FavoriteLimit: 0,
             ProductTypes: "Custom,Food");
 
-        var query = request.ToQuery(userId);
+        GetProductsOverviewQuery query = request.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(1, query.Page);
@@ -129,7 +139,7 @@ public sealed class ProductHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new GetRecentProductsHttpQuery(Limit: 500, IncludePublic: true);
 
-        var query = request.ToQuery(userId);
+        GetRecentProductsQuery query = request.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(50, query.Limit);
@@ -141,7 +151,7 @@ public sealed class ProductHttpMappingsTests {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
 
-        var query = productId.ToQuery(userId);
+        GetProductByIdQuery query = productId.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(productId, query.ProductId);
@@ -172,7 +182,7 @@ public sealed class ProductHttpMappingsTests {
             AlcoholPerBase: 0.0,
             Visibility: "Private");
 
-        var command = request.ToCommand(userId);
+        CreateProductCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.Barcode, command.Barcode);
@@ -229,7 +239,7 @@ public sealed class ProductHttpMappingsTests {
             AlcoholPerBase: 0.2,
             Visibility: "Public");
 
-        var command = request.ToCommand(userId, productId);
+        UpdateProductCommand command = request.ToCommand(userId, productId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(productId, command.ProductId);
@@ -294,7 +304,7 @@ public sealed class ProductHttpMappingsTests {
             true,
             favoriteProductId);
 
-        var response = model.ToHttpResponse();
+        ProductHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Id, response.Id);
         Assert.True(response.IsFavorite);
@@ -351,7 +361,7 @@ public sealed class ProductHttpMappingsTests {
             [favorite],
             1);
 
-        var response = overview.ToHttpResponse();
+        ProductOverviewHttpResponse response = overview.ToHttpResponse();
 
         Assert.Single(response.RecentItems);
         Assert.Single(response.AllProducts.Data);

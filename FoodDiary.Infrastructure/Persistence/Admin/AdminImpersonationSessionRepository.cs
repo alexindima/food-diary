@@ -18,8 +18,8 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
         int limit,
         string? search,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Clamp(limit, 1, 100);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Clamp(limit, 1, 100);
 
         var query =
             from session in context.AdminImpersonationSessions.AsNoTracking()
@@ -28,7 +28,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
             select new { session, actor, target };
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var term = $"%{EscapeLikePattern(search)}%";
+            string term = $"%{EscapeLikePattern(search)}%";
             query = query.Where(item =>
                 EF.Functions.ILike(item.actor.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.target.Email, term, LikeEscapeCharacter) ||
@@ -36,8 +36,8 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
                 EF.Functions.ILike(item.session.ActorIpAddress ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminImpersonationSessionReadModel> items = await query
             .OrderByDescending(item => item.session.StartedAtUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)

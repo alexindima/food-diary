@@ -21,7 +21,7 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithoutReassign_RemovesUserAndOwnedData() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var deletedUser = User.Create("deleted@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
 
@@ -63,9 +63,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var storage = new RecordingImageStorageService();
         var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
 
-        var removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
+        int removed = await service.CleanupDeletedUsersAsync(DateTime.UtcNow.AddDays(-1), batchSize: 10, reassignUserId: null);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
@@ -82,18 +82,18 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithReassign_ReassignsContentAssetsAndDeletesUser() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
-        var (deletedUser, survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        (User? deletedUser, User? survivorUser) = await SeedReassignScenarioAsync(context).ConfigureAwait(false);
 
         var storage = new RecordingImageStorageService();
         var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
 
-        var removed = await service.CleanupDeletedUsersAsync(
+        int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
             reassignUserId: survivorUser.Id.Value).ConfigureAwait(false);
 
-        using var verificationContext = CreateVerificationContext(context);
+        using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, removed);
         await AssertReassignedContentAsync(verificationContext, deletedUser, survivorUser).ConfigureAwait(false);
@@ -104,7 +104,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
 
     [RequiresDockerFact]
     public async Task CleanupDeletedUsersAsync_WithDeletedReassignTarget_FallsBackToDeletePath() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var deletedUser = User.Create("deleted@example.com", "hash");
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
 
@@ -134,12 +134,12 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         var storage = new RecordingImageStorageService();
         var service = new UserCleanupService(context, storage, NullLogger<UserCleanupService>.Instance);
 
-        var removed = await service.CleanupDeletedUsersAsync(
+        int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
             batchSize: 10,
             reassignUserId: deletedTarget.Id.Value);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(2, removed);
         Assert.False(await verificationContext.Users.AnyAsync(user => user.Id == deletedUser.Id));
@@ -149,10 +149,10 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
-        var connectionString = sourceContext.Database.GetConnectionString()
+        string connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");
 
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
             .Options;
 
@@ -225,9 +225,9 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             .AnyAsync(user => user.Id == survivorUser.Id, cancellationToken)
             .ConfigureAwait(false));
 
-        var reassignedProduct = await verificationContext.Products.SingleAsync(cancellationToken).ConfigureAwait(false);
-        var reassignedRecipe = await verificationContext.Recipes.SingleAsync(cancellationToken).ConfigureAwait(false);
-        var reassignedAssets = await verificationContext.ImageAssets
+        Product reassignedProduct = await verificationContext.Products.SingleAsync(cancellationToken).ConfigureAwait(false);
+        Recipe reassignedRecipe = await verificationContext.Recipes.SingleAsync(cancellationToken).ConfigureAwait(false);
+        List<ImageAsset> reassignedAssets = await verificationContext.ImageAssets
             .OrderBy(asset => asset.ObjectKey)
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);

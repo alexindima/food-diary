@@ -9,7 +9,7 @@ public class DomainModelGuardrailTests {
 
     [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
-        var violations = typeof(AggregateRoot<>).Assembly
+        string[] violations = typeof(AggregateRoot<>).Assembly
             .GetTypes()
             .Where(IsConcreteAggregateRoot)
             .SelectMany(type => type.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
@@ -34,7 +34,7 @@ public class DomainModelGuardrailTests {
     }
 
     private static bool InheritsFromGeneric(Type type, Type genericBaseType) {
-        for (var current = type; current is not null && current != typeof(object); current = current.BaseType!) {
+        for (Type? current = type; current is not null && current != typeof(object); current = current.BaseType!) {
             if (current.IsGenericType && current.GetGenericTypeDefinition() == genericBaseType) {
                 return true;
             }

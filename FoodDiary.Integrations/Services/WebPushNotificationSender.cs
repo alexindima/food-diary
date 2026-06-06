@@ -2,6 +2,7 @@ using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Integrations.Options;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -31,12 +32,12 @@ public sealed class WebPushNotificationSender(
             return;
         }
 
-        var subscriptions = await GetActiveSubscriptionsAsync(notification, cancellationToken).ConfigureAwait(false);
+        List<WebPushSubscription> subscriptions = await GetActiveSubscriptionsAsync(notification, cancellationToken).ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             return;
         }
 
-        var (deliveredCount, invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        (int deliveredCount, List<WebPushSubscription>? invalidSubscriptions) = await SendToSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
         if (invalidSubscriptions.Count > 0) {
             await subscriptionRepository.DeleteRangeAsync(invalidSubscriptions, cancellationToken).ConfigureAwait(false);
         }
@@ -62,7 +63,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private async Task<bool> ShouldSendForUserAsync(Notification notification, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} because user {UserId} was not found.",
@@ -92,7 +93,7 @@ public sealed class WebPushNotificationSender(
     }
 
     private async Task<List<WebPushSubscription>> GetActiveSubscriptionsAsync(Notification notification, CancellationToken cancellationToken) {
-        var subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WebPushSubscription> subscriptions = await subscriptionRepository.GetByUserAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         if (subscriptions.Count == 0) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} for user {UserId} because there are no subscriptions.",
@@ -101,7 +102,7 @@ public sealed class WebPushNotificationSender(
             return [];
         }
 
-        var activeSubscriptions = await PruneExpiredSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
+        List<WebPushSubscription> activeSubscriptions = await PruneExpiredSubscriptionsAsync(notification, subscriptions, cancellationToken).ConfigureAwait(false);
         if (activeSubscriptions.Count == 0) {
             logger.LogDebug(
                 "Skipping web push notification {NotificationId} for user {UserId} because there are no active subscriptions.",
@@ -116,7 +117,7 @@ public sealed class WebPushNotificationSender(
         Notification notification,
         IReadOnlyCollection<WebPushSubscription> subscriptions,
         CancellationToken cancellationToken) {
-        var utcNow = DateTime.UtcNow;
+        DateTime utcNow = DateTime.UtcNow;
         var expiredSubscriptions = subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc.HasValue && subscription.ExpirationTimeUtc.Value <= utcNow)
             .ToList();
@@ -142,11 +143,11 @@ public sealed class WebPushNotificationSender(
         var client = new WebPushClient();
         var vapidDetails = new VapidDetails(options.Subject, options.PublicKey, options.PrivateKey);
         var invalidSubscriptions = new List<WebPushSubscription>();
-        var deliveredCount = 0;
+        int deliveredCount = 0;
 
-        foreach (var subscription in subscriptions) {
-            var text = notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, subscription.Locale);
-            var payload = BuildPayload(notification, text);
+        foreach (WebPushSubscription subscription in subscriptions) {
+            NotificationText text = notificationTextRenderer.RenderFromPayload(notification.Type, notification.PayloadJson, subscription.Locale);
+            string payload = BuildPayload(notification, text);
             var pushSubscription = new PushSubscription(subscription.Endpoint, subscription.P256Dh, subscription.Auth);
 
             try {
@@ -197,10 +198,10 @@ public sealed class WebPushNotificationSender(
     }
 
     private string ResolveUrl(Notification notification) {
-        var relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? options.DefaultUrl;
+        string relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? options.DefaultUrl;
 
-        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out var absoluteBase)
-            && Uri.TryCreate(absoluteBase, relativePath, out var targetUrl)) {
+        if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out Uri? absoluteBase)
+            && Uri.TryCreate(absoluteBase, relativePath, out Uri? targetUrl)) {
             return targetUrl.ToString();
         }
 

@@ -22,8 +22,8 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
 
     public static WeightEntry Create(UserId userId, DateTime date, double weight) {
         EnsureUserId(userId);
-        var normalizedDate = NormalizeDate(date);
-        var normalizedWeight = NormalizeWeight(weight);
+        DateTime normalizedDate = NormalizeDate(date);
+        double normalizedWeight = NormalizeWeight(weight);
 
         var entry = new WeightEntry(WeightEntryId.New()) {
             UserId = userId,
@@ -36,10 +36,10 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
     }
 
     public void Update(double? weight = null, DateTime? date = null) {
-        var changed = false;
+        bool changed = false;
 
         if (weight.HasValue) {
-            var normalizedWeight = NormalizeWeight(weight.Value);
+            double normalizedWeight = NormalizeWeight(weight.Value);
             if (!AreSame(Weight, normalizedWeight)) {
                 Weight = normalizedWeight;
                 changed = true;
@@ -47,7 +47,7 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
         }
 
         if (date.HasValue) {
-            var normalizedDate = NormalizeDate(date.Value);
+            DateTime normalizedDate = NormalizeDate(date.Value);
             if (Date != normalizedDate) {
                 Date = normalizedDate;
                 changed = true;
@@ -64,7 +64,7 @@ public sealed class WeightEntry : AggregateRoot<WeightEntryId> {
             return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
         }
 
-        var utc = value.ToUniversalTime();
+        DateTime utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }

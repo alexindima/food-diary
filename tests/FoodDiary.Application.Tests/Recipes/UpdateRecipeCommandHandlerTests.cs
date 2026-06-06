@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
+using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -132,7 +133,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -191,7 +192,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -223,7 +224,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -254,7 +255,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(UpdateCommand(null, recipeId.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(UpdateCommand(null, recipeId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -274,7 +275,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(UpdateCommand(userId.Value, RecipeId.New().Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, RecipeId.New().Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
@@ -294,7 +295,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: "secret"), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: "secret"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -315,7 +316,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: " "), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: " "), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(Visibility.Private, recipe.Visibility);
@@ -327,7 +328,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var handler = new UpdateRecipeCommandHandler(
             new StubRecipeRepository(recipeId, userId, recipe),
@@ -337,7 +338,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(userId.Value, recipeId.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
@@ -361,7 +362,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -409,7 +410,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -443,7 +444,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -478,7 +479,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -531,7 +532,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 Guid.Empty,
@@ -580,7 +581,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -628,7 +629,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -664,7 +665,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             UpdateCommand(
                 userId.Value,
                 recipeId.Value,
@@ -672,7 +673,7 @@ public class UpdateRecipeCommandHandlerTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var ingredient = Assert.Single(Assert.Single(recipe.Steps).Ingredients);
+        RecipeIngredient ingredient = Assert.Single(Assert.Single(recipe.Steps).Ingredients);
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
 
@@ -692,7 +693,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -741,7 +742,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,
@@ -795,7 +796,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        var result = await handler.Handle(
+        Result<RecipeModel> result = await handler.Handle(
             new UpdateRecipeCommand(
                 userId.Value,
                 recipeId.Value,

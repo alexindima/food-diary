@@ -18,7 +18,7 @@ public sealed class BillingProviderGatewayAccessorTests {
             [stripe, paddle],
             MsOptions.Create(new BillingOptions { Provider = " paddle " }));
 
-        var provider = accessor.GetActiveProvider();
+        IBillingProviderGateway provider = accessor.GetActiveProvider();
 
         Assert.Same(paddle, provider);
     }

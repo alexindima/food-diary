@@ -6,6 +6,7 @@ using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 
@@ -20,15 +21,15 @@ public sealed class UpdateNotificationPreferencesCommandHandler(
             return Result.Failure<NotificationPreferencesModel>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<NotificationPreferencesModel>(accessError);
         }
 
-        var currentUser = user!;
-        var firstReminder = command.FastingCheckInReminderHours ?? currentUser.FastingCheckInReminderHours;
-        var followUpReminder = command.FastingCheckInFollowUpReminderHours ?? currentUser.FastingCheckInFollowUpReminderHours;
+        User currentUser = user!;
+        int firstReminder = command.FastingCheckInReminderHours ?? currentUser.FastingCheckInReminderHours;
+        int followUpReminder = command.FastingCheckInFollowUpReminderHours ?? currentUser.FastingCheckInFollowUpReminderHours;
         if (followUpReminder <= firstReminder) {
             return Result.Failure<NotificationPreferencesModel>(
                 Errors.Validation.Invalid(

@@ -102,14 +102,14 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Accept_WithEmptyDietologistUserId_Throws() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
 
         Assert.Throws<ArgumentException>(() => invitation.Accept(UserId.Empty));
     }
 
     [Fact]
     public void Accept_SetsStatusToAccepted_AndRaisesEvent() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         var dietologistId = UserId.New();
 
         invitation.Accept(dietologistId);
@@ -121,7 +121,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Accept_WhenAlreadyAccepted_Throws() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         invitation.Accept(UserId.New());
 
         Assert.Throws<InvalidOperationException>(() => invitation.Accept(UserId.New()));
@@ -129,7 +129,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Decline_SetsStatusToDeclined() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
 
         invitation.Decline();
 
@@ -138,7 +138,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Decline_WhenNotPending_Throws() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         invitation.Decline();
 
         Assert.Throws<InvalidOperationException>(() => invitation.Decline());
@@ -146,7 +146,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Revoke_WhenPending_SetsStatusToRevoked() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
 
         invitation.Revoke();
 
@@ -156,7 +156,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Revoke_WhenAccepted_SetsStatusToRevoked() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         invitation.Accept(UserId.New());
 
         invitation.Revoke();
@@ -166,7 +166,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void Revoke_WhenDeclined_Throws() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         invitation.Decline();
 
         Assert.Throws<InvalidOperationException>(() => invitation.Revoke());
@@ -174,7 +174,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void UpdatePermissions_ChangesPermissions() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
         var newPerms = new DietologistPermissions(
             ShareMeals: false, ShareStatistics: false, ShareWeight: false,
             ShareWaist: false, ShareGoals: false, ShareHydration: false);
@@ -198,7 +198,7 @@ public class DietologistInvitationInvariantTests {
 
     [Fact]
     public void IsExpired_WhenPendingAndBeforeExpiry_ReturnsFalse() {
-        var invitation = CreatePendingInvitation();
+        DietologistInvitation invitation = CreatePendingInvitation();
 
         Assert.False(invitation.IsExpired());
     }

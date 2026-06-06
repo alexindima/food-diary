@@ -98,9 +98,9 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
         };
         adopted.SetCreated();
 
-        foreach (var sourceDay in _days.OrderBy(d => d.DayNumber)) {
-            var newDay = adopted.AddDay(sourceDay.DayNumber);
-            foreach (var sourceMeal in sourceDay.Meals) {
+        foreach (MealPlanDay? sourceDay in _days.OrderBy(d => d.DayNumber)) {
+            MealPlanDay newDay = adopted.AddDay(sourceDay.DayNumber);
+            foreach (MealPlanMeal sourceMeal in sourceDay.Meals) {
                 newDay.AddMeal(sourceMeal.MealType, sourceMeal.RecipeId, sourceMeal.Servings);
             }
         }
@@ -113,7 +113,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             throw new ArgumentException("Name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Name must be at most {NameMaxLength} characters.")
             : normalized;
@@ -124,7 +124,7 @@ public sealed class MealPlan : AggregateRoot<MealPlanId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > DescriptionMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Description must be at most {DescriptionMaxLength} characters.")
             : normalized;

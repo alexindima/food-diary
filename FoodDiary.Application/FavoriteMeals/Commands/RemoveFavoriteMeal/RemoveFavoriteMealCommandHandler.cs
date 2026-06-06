@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 
 namespace FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 
@@ -15,19 +16,19 @@ public class RemoveFavoriteMealCommandHandler(
     public async Task<Result> Handle(
         RemoveFavoriteMealCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var favoriteMealId = new FavoriteMealId(command.FavoriteMealId);
-        var favorite = await favoriteMealRepository.GetByIdAsync(
+        FavoriteMeal? favorite = await favoriteMealRepository.GetByIdAsync(
             favoriteMealId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {

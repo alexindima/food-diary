@@ -27,12 +27,12 @@ internal sealed partial class DiaryPdfGenerator {
         Math.Round(value, decimals).ToString($"N{decimals}", culture);
 
     private static string ApplyAlpha(string hex, double alpha) {
-        var normalized = hex.TrimStart('#');
+        string normalized = hex.TrimStart('#');
         if (normalized.Length != 6) {
             return hex;
         }
 
-        var alphaByte = (byte)Math.Round(Math.Clamp(alpha, 0, 1) * 255);
+        byte alphaByte = (byte)Math.Round(Math.Clamp(alpha, 0, 1) * 255);
         return $"#{alphaByte:X2}{normalized}";
     }
 
@@ -41,8 +41,8 @@ internal sealed partial class DiaryPdfGenerator {
             return DefaultReportHost;
         }
 
-        var normalized = reportOrigin.Trim();
-        if (Uri.TryCreate(normalized, UriKind.Absolute, out var uri) &&
+        string normalized = reportOrigin.Trim();
+        if (Uri.TryCreate(normalized, UriKind.Absolute, out Uri? uri) &&
             uri.Scheme is "http" or "https" &&
             !string.IsNullOrWhiteSpace(uri.Host)) {
             return FormatHost(uri.IdnHost, uri.Port, uri.IsDefaultPort);
@@ -54,7 +54,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static string FormatHost(string host, int? port, bool isDefaultPort) {
-        var unicodeHost = ToUnicodeHost(host.Trim().TrimEnd('.'));
+        string unicodeHost = ToUnicodeHost(host.Trim().TrimEnd('.'));
         return port.HasValue && !isDefaultPort
             ? $"{unicodeHost}:{port.Value}"
             : unicodeHost;
@@ -71,22 +71,22 @@ internal sealed partial class DiaryPdfGenerator {
         value.Length <= maxLength ? value : $"{value[..Math.Max(0, maxLength - 3)]}...";
 
     private static string FormatMealItems(Meal meal, DiaryReportData report) {
-        var items = FormatMealItemsList(meal, report);
+        string items = FormatMealItemsList(meal, report);
         return string.Equals(items, report.Texts.ItemsNotSpecified
 , StringComparison.Ordinal) ? $"{report.Texts.ItemsPrefix}: {report.Texts.ItemsNotSpecified}"
             : $"{report.Texts.ItemsPrefix}: {items}";
     }
 
     private static string FormatMealItemsList(Meal meal, DiaryReportData report) {
-        var itemLabels = FormatMealItemLabels(meal, report, maxItems: 6);
+        IReadOnlyList<string> itemLabels = FormatMealItemLabels(meal, report, maxItems: 6);
         return itemLabels.Count == 0
             ? report.Texts.ItemsNotSpecified
             : Truncate(string.Join(", ", itemLabels), 220);
     }
 
     private static IReadOnlyList<string> FormatMealItemLabels(Meal meal, DiaryReportData report, int maxItems) {
-        var compositionItems = GetMealCompositionItems(meal, report);
-        var itemLabels = compositionItems
+        IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
+        string[] itemLabels = compositionItems
             .Select(item => item.Label)
             .Where(label => !string.IsNullOrWhiteSpace(label))
             .Take(maxItems)
@@ -96,7 +96,7 @@ internal sealed partial class DiaryPdfGenerator {
             return [];
         }
 
-        var suffix = compositionItems.Count > itemLabels.Length
+        string suffix = compositionItems.Count > itemLabels.Length
             ? $" +{compositionItems.Count - itemLabels.Length} {report.Texts.MoreItemsSuffix}"
             : "";
 
@@ -106,12 +106,12 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static IReadOnlyList<MealCompositionItem> GetMealCompositionItems(Meal meal, DiaryReportData report) {
-        var manualItems = meal.Items
+        MealCompositionItem[] manualItems = meal.Items
             .OrderBy(item => item.CreatedOnUtc)
             .Select(item => FormatMealItem(item, report))
             .ToArray();
 
-        var aiItems = meal.AiSessions
+        MealCompositionItem[] aiItems = meal.AiSessions
             .OrderBy(session => session.RecognizedAtUtc)
             .SelectMany(session => session.Items.OrderBy(item => item.CreatedOnUtc))
             .Select(item => FormatMealAiItem(item, report))
@@ -121,14 +121,14 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static MealCompositionItem FormatMealItem(MealItem item, DiaryReportData report) {
-        var name = item.Product?.Name ?? item.Recipe?.Name;
+        string? name = item.Product?.Name ?? item.Recipe?.Name;
         if (string.IsNullOrWhiteSpace(name)) {
             name = item.IsRecipe ? report.Texts.RecipeFallback : report.Texts.ProductFallback;
         }
 
-        var amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
-        var amount = $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit}";
-        var nutrition = CalculateMealItemNutrition(item);
+        string amountUnit = item.IsRecipe ? report.Texts.ServingUnit : FormatProductUnit(item, report);
+        string amount = $"{FormatNumber(item.Amount, item.IsRecipe ? 1 : 0, report.Culture)} {amountUnit}";
+        MealCompositionNutrition nutrition = CalculateMealItemNutrition(item);
 
         return new MealCompositionItem(
             Label: $"{amount} {name}",
@@ -145,9 +145,9 @@ internal sealed partial class DiaryPdfGenerator {
         FormatUnit(item.Product?.BaseUnit.ToString(), report);
 
     private static MealCompositionItem FormatMealAiItem(MealAiItem item, DiaryReportData report) {
-        var name = ResolveAiItemName(item, report);
-        var unit = FormatUnit(item.Unit, report);
-        var amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
+        string name = ResolveAiItemName(item, report);
+        string unit = FormatUnit(item.Unit, report);
+        string amount = $"{FormatNumber(item.Amount, 0, report.Culture)} {unit}";
 
         return new MealCompositionItem(
             Label: $"{amount} {name}",
@@ -175,7 +175,7 @@ internal sealed partial class DiaryPdfGenerator {
             return report?.Texts.GramsUnit ?? "g";
         }
 
-        var normalized = unit.Trim();
+        string normalized = unit.Trim();
         return normalized.Equals("g", StringComparison.OrdinalIgnoreCase) ||
                normalized.Equals("gram", StringComparison.OrdinalIgnoreCase) ||
                normalized.Equals("grams", StringComparison.OrdinalIgnoreCase)
@@ -188,15 +188,15 @@ internal sealed partial class DiaryPdfGenerator {
             return value;
         }
 
-        var normalized = value.Trim();
-        var firstTextElement = StringInfo.GetNextTextElement(normalized, 0);
+        string normalized = value.Trim();
+        string firstTextElement = StringInfo.GetNextTextElement(normalized, 0);
         return firstTextElement.ToUpper(culture) + normalized[firstTextElement.Length..];
     }
 
     private static MealCompositionNutrition CalculateMealItemNutrition(MealItem item) {
         if (item.Product is not null) {
-            var baseAmount = item.Product.BaseAmount <= 0 ? 1 : item.Product.BaseAmount;
-            var multiplier = item.Amount / baseAmount;
+            double baseAmount = item.Product.BaseAmount <= 0 ? 1 : item.Product.BaseAmount;
+            double multiplier = item.Amount / baseAmount;
             return new MealCompositionNutrition(
                 item.Product.CaloriesPerBase * multiplier,
                 item.Product.ProteinsPerBase * multiplier,
@@ -206,8 +206,8 @@ internal sealed partial class DiaryPdfGenerator {
         }
 
         if (item.Recipe is not null) {
-            var servings = item.Recipe.Servings <= 0 ? 1 : item.Recipe.Servings;
-            var multiplier = item.Amount / servings;
+            int servings = item.Recipe.Servings <= 0 ? 1 : item.Recipe.Servings;
+            double multiplier = item.Amount / servings;
             return new MealCompositionNutrition(
                 (item.Recipe.TotalCalories ?? 0) * multiplier,
                 (item.Recipe.TotalProteins ?? 0) * multiplier,

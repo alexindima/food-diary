@@ -19,12 +19,12 @@ public sealed class DirectMxOptions {
             return true;
         }
 
-        var localDomain = value.Trim();
+        string localDomain = value.Trim();
         if (localDomain.Length > 253 || Uri.CheckHostName(localDomain) is not UriHostNameType.Dns) {
             return false;
         }
 
-        var labels = localDomain.Split('.');
+        string[] labels = localDomain.Split('.');
         return labels.Length > 1 &&
                labels.All(static label =>
                    label.Length is > 0 and <= 63 &&

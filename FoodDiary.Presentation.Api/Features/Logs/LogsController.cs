@@ -21,16 +21,16 @@ public sealed class LogsController(
     public async Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
         await fastingTelemetrySummaryService.RecordAsync(request, HttpContext.RequestAborted);
 
-        var details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
+        string? details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
             ? null
             : request.Details.Value.GetRawText();
-        var logLevel = request.Level?.ToLowerInvariant() switch {
+        LogLevel logLevel = request.Level?.ToLowerInvariant() switch {
             "error" => LogLevel.Error,
             "warning" => LogLevel.Warning,
             _ => LogLevel.Information,
         };
 
-        using var scope = _logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
+        using IDisposable? scope = _logger.BeginScope(new Dictionary<string, object?>(StringComparer.Ordinal) {
             ["ClientTelemetryCategory"] = request.Category,
             ["ClientTelemetryName"] = request.Name,
             ["ClientTelemetryRoute"] = request.Route,

@@ -29,7 +29,7 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
             throw new ArgumentException("Target user id must not be empty.", nameof(targetUserId));
         }
 
-        var normalizedReason = NormalizeReason(reason);
+        string normalizedReason = NormalizeReason(reason);
 
         var session = new AdminImpersonationSession {
             Id = Guid.NewGuid(),
@@ -49,7 +49,7 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
             throw new ArgumentException("Reason is required.", nameof(value));
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         if (trimmed.Length is < 10 or > 500) {
             throw new ArgumentOutOfRangeException(nameof(value), "Reason must be between 10 and 500 characters.");
         }
@@ -62,7 +62,7 @@ public sealed class AdminImpersonationSession : Entity<Guid> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 

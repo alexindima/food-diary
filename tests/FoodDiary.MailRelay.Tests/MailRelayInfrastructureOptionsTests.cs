@@ -57,7 +57,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void AddMailRelayOptions_RegistersAllOptionsWithoutResolvingInfrastructure() {
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "secret",
@@ -77,7 +77,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
         var services = new ServiceCollection();
 
         services.AddMailRelayOptions(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.True(provider.GetRequiredService<IOptions<MailRelayQueueOptions>>().Value.BatchSize > 0);
         Assert.Equal(MailRelayBrokerOptions.PostgresPollingBackend,
@@ -86,7 +86,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
     [Fact]
     public void AddMailRelayServices_RegistersInfrastructureAbstractionsWithoutCreatingExternalConnections() {
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=test;Password=test"
             })
@@ -110,7 +110,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             options.BaseUrl = "https://relay.example.test";
             options.Timeout = TimeSpan.FromSeconds(5);
         });
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Equal("https://relay.example.test", provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value.BaseUrl);
         Assert.NotNull(provider.GetRequiredService<IMailRelayClient>());

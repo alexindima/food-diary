@@ -9,6 +9,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Integrations.Options;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
 
 namespace FoodDiary.Integrations.Authentication;
 
@@ -24,32 +25,32 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramNotConfigured);
         }
 
-        var parsed = QueryHelpers.ParseQuery(initData);
-        if (!parsed.TryGetValue("hash", out var hashValues)) {
+        Dictionary<string, StringValues> parsed = QueryHelpers.ParseQuery(initData);
+        if (!parsed.TryGetValue("hash", out StringValues hashValues)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        var hash = hashValues.ToString();
+        string hash = hashValues.ToString();
         if (string.IsNullOrWhiteSpace(hash)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        var dataCheckString = BuildDataCheckString(parsed);
+        string dataCheckString = BuildDataCheckString(parsed);
         if (!IsValidHash(dataCheckString, hash) ||
-            !parsed.TryGetValue("auth_date", out var authDateValues) ||
-            !long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var authDateSeconds)) {
+            !parsed.TryGetValue("auth_date", out StringValues authDateValues) ||
+            !long.TryParse(authDateValues.ToString(), NumberStyles.Integer, CultureInfo.InvariantCulture, out long authDateSeconds)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
-        var authDateUtc = DateTimeOffset.FromUnixTimeSeconds(authDateSeconds).UtcDateTime;
+        DateTime authDateUtc = DateTimeOffset.FromUnixTimeSeconds(authDateSeconds).UtcDateTime;
         if (_options.AuthTtlSeconds > 0) {
-            var expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
+            DateTime expiresAt = authDateUtc.AddSeconds(_options.AuthTtlSeconds);
             if (dateTimeProvider.UtcNow > expiresAt) {
                 return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramAuthExpired);
             }
         }
 
-        if (!parsed.TryGetValue("user", out var userValues)) {
+        if (!parsed.TryGetValue("user", out StringValues userValues)) {
             return Result.Failure<TelegramInitData>(Errors.Authentication.TelegramInvalidData);
         }
 
@@ -78,7 +79,7 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
     }
 
     private string BuildDataCheckString(Dictionary<string, Microsoft.Extensions.Primitives.StringValues> parsed) {
-        var pairs = parsed
+        IEnumerable<string> pairs = parsed
             .Where(entry => !string.Equals(entry.Key, "hash", StringComparison.Ordinal))
             .OrderBy(entry => entry.Key, StringComparer.Ordinal)
             .Select(entry => $"{entry.Key}={entry.Value}");
@@ -87,8 +88,8 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
     }
 
     private bool IsValidHash(string dataCheckString, string hash) {
-        var secretKey = ComputeHmacSha256(_options.BotToken, "WebAppData");
-        var calculatedHash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        byte[] secretKey = ComputeHmacSha256(_options.BotToken, "WebAppData");
+        string calculatedHash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return CryptographicOperations.FixedTimeEquals(
             Encoding.UTF8.GetBytes(calculatedHash),
             Encoding.UTF8.GetBytes(hash));
@@ -101,9 +102,9 @@ public sealed class TelegramAuthValidator(IOptions<TelegramAuthOptions> options,
 
     private static string ComputeHmacSha256Hex(byte[] key, string message) {
         using var hmac = new HMACSHA256(key);
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+        byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
         var sb = new StringBuilder(hash.Length * 2);
-        foreach (var b in hash) {
+        foreach (byte b in hash) {
             sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
         }
 

@@ -17,10 +17,10 @@ public sealed class MailRelayApplicationValidationTests {
     [Fact]
     public async Task EnqueueCommand_WhenRequestIsInvalid_ReturnsValidationFailureWithoutCallingStore() {
         var queueStore = new RecordingQueueStore();
-        using var provider = CreateProvider(queueStore);
-        var sender = provider.GetRequiredService<ISender>();
+        using ServiceProvider provider = CreateProvider(queueStore);
+        ISender sender = provider.GetRequiredService<ISender>();
 
-        var result = await sender.Send(new EnqueueMailRelayEmailCommand(new RelayEmailMessageRequest(
+        Result<Guid> result = await sender.Send(new EnqueueMailRelayEmailCommand(new RelayEmailMessageRequest(
             "",
             "",
             [],
@@ -35,10 +35,10 @@ public sealed class MailRelayApplicationValidationTests {
 
     [Fact]
     public async Task IngestDeliveryEventCommand_WhenEventTypeIsInvalid_ReturnsValidationFailure() {
-        using var provider = CreateProvider(new RecordingQueueStore());
-        var sender = provider.GetRequiredService<ISender>();
+        using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
+        ISender sender = provider.GetRequiredService<ISender>();
 
-        var result = await sender.Send(new IngestMailRelayDeliveryEventCommand(new IngestMailEventRequest(
+        Result<MailRelayDeliveryEventEntry> result = await sender.Send(new IngestMailRelayDeliveryEventCommand(new IngestMailEventRequest(
             "opened",
             "user@example.com",
             "test")));
@@ -49,10 +49,10 @@ public sealed class MailRelayApplicationValidationTests {
 
     [Fact]
     public async Task GetSuppressionsQuery_WhenEmailIsInvalid_ReturnsValidationFailure() {
-        using var provider = CreateProvider(new RecordingQueueStore());
-        var sender = provider.GetRequiredService<ISender>();
+        using ServiceProvider provider = CreateProvider(new RecordingQueueStore());
+        ISender sender = provider.GetRequiredService<ISender>();
 
-        var result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
+        Result<IReadOnlyList<MailRelaySuppressionEntry>> result = await sender.Send(new GetMailRelaySuppressionsQuery("not-an-email"));
 
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorKind.Validation, result.Error?.Kind);

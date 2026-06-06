@@ -8,7 +8,7 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_Equals_SameReference_ReturnsTrue() {
         var entity = TestEntity.Transient();
 
-        var equals = entity.Equals(entity);
+        bool equals = entity.Equals(entity);
 
         Assert.True(equals);
     }
@@ -17,7 +17,7 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_Equals_NullEntity_ReturnsFalse() {
         var entity = TestEntity.WithId(Guid.NewGuid());
 
-        var equals = entity.Equals((Entity<Guid>?)null);
+        bool equals = entity.Equals((Entity<Guid>?)null);
 
         Assert.False(equals);
     }
@@ -26,7 +26,7 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_EqualsObject_NullObject_ReturnsFalse() {
         var entity = TestEntity.WithId(Guid.NewGuid());
 
-        var equals = entity.Equals((object?)null);
+        bool equals = entity.Equals((object?)null);
 
         Assert.False(equals);
     }
@@ -35,7 +35,7 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_EqualsObject_DifferentType_ReturnsFalse() {
         var entity = TestEntity.WithId(Guid.NewGuid());
 
-        var equals = entity.Equals(new object());
+        bool equals = entity.Equals(new object());
 
         Assert.False(equals);
     }
@@ -44,7 +44,7 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_EqualsObject_SameReference_ReturnsTrue() {
         var entity = TestEntity.Transient();
 
-        var equals = entity.Equals((object)entity);
+        bool equals = entity.Equals((object)entity);
 
         Assert.True(equals);
     }
@@ -91,8 +91,8 @@ public class EntityAndAggregateRootBaseTests {
     public void Entity_GetHashCode_Transient_IsStableForSameInstance() {
         var entity = TestEntity.Transient();
 
-        var first = entity.GetHashCode();
-        var second = entity.GetHashCode();
+        int first = entity.GetHashCode();
+        int second = entity.GetHashCode();
 
         Assert.Equal(first, second);
     }
@@ -100,7 +100,7 @@ public class EntityAndAggregateRootBaseTests {
     [Fact]
     public void Entity_SetCreated_SetsCreatedOnUtc() {
         var entity = TestEntity.WithId(Guid.NewGuid());
-        var before = DateTime.UtcNow;
+        DateTime before = DateTime.UtcNow;
 
         entity.MarkCreated();
 
@@ -123,7 +123,7 @@ public class EntityAndAggregateRootBaseTests {
         var entity = TestEntity.WithId(Guid.NewGuid());
         var unspecifiedTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Unspecified);
 
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkCreated(unspecifiedTime));
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkCreated(unspecifiedTime));
 
         Assert.Equal("createdOnUtc", ex.ParamName);
     }
@@ -155,7 +155,7 @@ public class EntityAndAggregateRootBaseTests {
         var entity = TestEntity.WithId(Guid.NewGuid());
         var unspecifiedTime = new DateTime(2026, 6, 3, 12, 30, 0, DateTimeKind.Unspecified);
 
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkModified(unspecifiedTime));
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() => entity.MarkModified(unspecifiedTime));
 
         Assert.Equal("modifiedOnUtc", ex.ParamName);
     }
@@ -167,7 +167,7 @@ public class EntityAndAggregateRootBaseTests {
 
         aggregate.AddEvent(@event);
 
-        var single = Assert.Single(aggregate.DomainEvents);
+        IDomainEvent single = Assert.Single(aggregate.DomainEvents);
         Assert.Same(@event, single);
     }
 

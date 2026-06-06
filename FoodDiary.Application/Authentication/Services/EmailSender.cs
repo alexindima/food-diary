@@ -31,7 +31,7 @@ public sealed class EmailSender(
     private readonly IEmailTransport _emailTransport = emailTransport;
 
     public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) {
-        var locale = NormalizeLanguage(message.Language);
+        string locale = NormalizeLanguage(message.Language);
         return SendEmailCoreAsync(
             templateKey: "email_verification",
             locale: locale,
@@ -67,7 +67,7 @@ public sealed class EmailSender(
     }
 
     public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) {
-        var locale = NormalizeLanguage(message.Language);
+        string locale = NormalizeLanguage(message.Language);
         return SendEmailCoreAsync(
             templateKey: "password_reset",
             locale: locale,
@@ -103,14 +103,14 @@ public sealed class EmailSender(
     }
 
     public async Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
-        var locale = NormalizeLanguage(message.Language);
-        var subject = string.Equals(locale, "ru"
+        string locale = NormalizeLanguage(message.Language);
+        string subject = string.Equals(locale, "ru"
 , StringComparison.Ordinal) ? "\u0422\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e FoodDiary"
             : "FoodDiary test email";
-        var intro = string.Equals(locale, "ru"
+        string intro = string.Equals(locale, "ru"
 , StringComparison.Ordinal) ? "\u042d\u0442\u043e \u0442\u0435\u0441\u0442\u043e\u0432\u043e\u0435 \u043f\u0438\u0441\u044c\u043c\u043e \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u043e \u0438\u0437 \u0432\u0430\u0448\u0435\u0433\u043e \u043b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0433\u043e FoodDiary \u0447\u0435\u0440\u0435\u0437 MailRelay."
             : "This test email was sent from your local FoodDiary through MailRelay.";
-        var footer = string.Equals(locale, "ru"
+        string footer = string.Equals(locale, "ru"
 , StringComparison.Ordinal) ? "\u0415\u0441\u043b\u0438 \u043f\u0438\u0441\u044c\u043c\u043e \u0434\u043e\u0448\u043b\u043e, \u043e\u0441\u043d\u043e\u0432\u043d\u043e\u0439 \u043f\u0443\u0442\u044c \u043e\u0442\u043f\u0440\u0430\u0432\u043a\u0438 \u0440\u0430\u0431\u043e\u0442\u0430\u0435\u0442."
             : "If this message arrived, the main email dispatch path is working.";
 
@@ -129,23 +129,23 @@ public sealed class EmailSender(
     }
 
     private string BuildLink(string path, string userId, string token, string? clientOrigin) {
-        var resolvedBaseUrl = ResolveFrontendBaseUrl(clientOrigin);
+        string resolvedBaseUrl = ResolveFrontendBaseUrl(clientOrigin);
         if (string.IsNullOrWhiteSpace(resolvedBaseUrl)) {
             throw new InvalidOperationException("Email FrontendBaseUrl is not configured.");
         }
 
-        var baseUrl = resolvedBaseUrl.TrimEnd('/');
-        var safePath = path.StartsWith('/') ? path : "/" + path;
+        string baseUrl = resolvedBaseUrl.TrimEnd('/');
+        string safePath = path.StartsWith('/') ? path : "/" + path;
         return $"{baseUrl}{safePath}?userId={Uri.EscapeDataString(userId)}&token={Uri.EscapeDataString(token)}";
     }
 
     private string ResolveFrontendBaseUrl(string? clientOrigin) {
-        var requestedOrigin = NormalizeOrigin(clientOrigin);
+        string? requestedOrigin = NormalizeOrigin(clientOrigin);
         if (requestedOrigin is null) {
             return _options.FrontendBaseUrl;
         }
 
-        foreach (var allowedBaseUrl in GetAllowedFrontendBaseUrls()) {
+        foreach (string allowedBaseUrl in GetAllowedFrontendBaseUrls()) {
             if (string.Equals(NormalizeOrigin(allowedBaseUrl), requestedOrigin, StringComparison.Ordinal)) {
                 return allowedBaseUrl.TrimEnd('/');
             }
@@ -159,7 +159,7 @@ public sealed class EmailSender(
             yield return _options.FrontendBaseUrl;
         }
 
-        foreach (var value in _options.AllowedFrontendBaseUrls) {
+        foreach (string value in _options.AllowedFrontendBaseUrls) {
             if (!string.IsNullOrWhiteSpace(value)) {
                 yield return value;
             }
@@ -168,12 +168,12 @@ public sealed class EmailSender(
 
     private static string? NormalizeOrigin(string? value) {
         if (string.IsNullOrWhiteSpace(value) ||
-            !Uri.TryCreate(value.Trim(), UriKind.Absolute, out var uri) ||
+            !Uri.TryCreate(value.Trim(), UriKind.Absolute, out Uri? uri) ||
             (!string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) && !string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal))) {
             return null;
         }
 
-        var port = uri.IsDefaultPort ? string.Empty : $":{uri.Port}";
+        string port = uri.IsDefaultPort ? string.Empty : $":{uri.Port}";
         return $"{uri.Scheme}://{uri.IdnHost.ToLowerInvariant()}{port}";
     }
 
@@ -182,7 +182,7 @@ public sealed class EmailSender(
             return "en";
         }
 
-        var lower = value.Trim().ToLowerInvariant();
+        string lower = value.Trim().ToLowerInvariant();
         return lower.StartsWith("ru", StringComparison.Ordinal) ? "ru" : "en";
     }
 
@@ -194,18 +194,18 @@ public sealed class EmailSender(
         Func<string, (string Subject, string Html, string Text)> createFallbackContent,
         CancellationToken cancellationToken) {
         try {
-            var link = buildLink();
-            var template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
-            var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
-            var fallback = createFallbackContent(link);
+            string link = buildLink();
+            EmailTemplateContent? template = await _templateProvider.GetActiveTemplateAsync(templateKey, locale, cancellationToken).ConfigureAwait(false);
+            string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+            (string Subject, string Html, string Text) fallback = createFallbackContent(link);
 
-            var subject = template is null
+            string subject = template is null
                 ? fallback.Subject
                 : ApplyTemplateTokens(template.Subject, link, brand);
-            var htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
+            string htmlBody = template is null || string.IsNullOrWhiteSpace(template.HtmlBody)
                 ? fallback.Html
                 : ApplyTemplateTokens(template.HtmlBody, link, brand);
-            var textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
+            string textBody = template is null || string.IsNullOrWhiteSpace(template.TextBody)
                 ? fallback.Text
                 : ApplyTemplateTokens(template.TextBody, link, brand);
 
@@ -224,7 +224,7 @@ public sealed class EmailSender(
     }
 
     private string BuildTemplate(string title, string intro, string ctaLabel, string ctaLink, string footer) {
-        var brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
+        string brand = string.IsNullOrWhiteSpace(_options.FromName) ? "FoodDiary" : _options.FromName;
         return $"""
                 <!doctype html>
                 <html lang="en">

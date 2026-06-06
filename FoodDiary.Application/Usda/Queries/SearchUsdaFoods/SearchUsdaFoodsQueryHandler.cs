@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
+using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 
@@ -13,7 +14,7 @@ public class SearchUsdaFoodsQueryHandler(
         SearchUsdaFoodsQuery query,
         CancellationToken cancellationToken) {
         // Search local SR Legacy database first
-        var localFoods = await repository.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFood> localFoods = await repository.SearchAsync(query.Search, query.Limit, cancellationToken).ConfigureAwait(false);
 
         var models = localFoods
             .Select(f => new UsdaFoodModel(f.FdcId, f.Description, f.FoodCategory))
@@ -21,12 +22,12 @@ public class SearchUsdaFoodsQueryHandler(
 
         // Supplement with branded foods from USDA API if local results are sparse
         if (models.Count < query.Limit) {
-            var remaining = query.Limit - models.Count;
-            var brandedFoods = await brandedSearchService.SearchBrandedAsync(
+            int remaining = query.Limit - models.Count;
+            IReadOnlyList<UsdaFoodModel> brandedFoods = await brandedSearchService.SearchBrandedAsync(
                 query.Search, remaining, cancellationToken).ConfigureAwait(false);
 
             var existingIds = models.Select(m => m.FdcId).ToHashSet();
-            var newBranded = brandedFoods.Where(f => !existingIds.Contains(f.FdcId));
+            IEnumerable<UsdaFoodModel> newBranded = brandedFoods.Where(f => !existingIds.Contains(f.FdcId));
             models.AddRange(newBranded);
         }
 

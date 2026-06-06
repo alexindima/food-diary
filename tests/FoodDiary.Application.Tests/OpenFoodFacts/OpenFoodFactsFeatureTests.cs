@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
@@ -12,11 +13,11 @@ public class OpenFoodFactsFeatureTests {
 
     [Fact]
     public async Task SearchByBarcode_WhenProductFound_ReturnsProduct() {
-        var product = CreateProduct();
+        OpenFoodFactsProductModel product = CreateProduct();
         var service = new StubOpenFoodFactsService(product);
         var handler = new SearchByBarcodeQueryHandler(service);
 
-        var result = await handler.Handle(
+        Result<OpenFoodFactsProductModel?> result = await handler.Handle(
             new SearchByBarcodeQuery("4600000000001"),
             CancellationToken.None);
 
@@ -33,7 +34,7 @@ public class OpenFoodFactsFeatureTests {
         var service = new StubOpenFoodFactsService(null);
         var handler = new SearchByBarcodeQueryHandler(service);
 
-        var result = await handler.Handle(
+        Result<OpenFoodFactsProductModel?> result = await handler.Handle(
             new SearchByBarcodeQuery("0000000000000"),
             CancellationToken.None);
 
@@ -51,7 +52,7 @@ public class OpenFoodFactsFeatureTests {
         var cache = new StubOpenFoodFactsProductCacheRepository();
         var handler = new SearchOpenFoodFactsQueryHandler(service, cache);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 10),
             CancellationToken.None);
 
@@ -67,7 +68,7 @@ public class OpenFoodFactsFeatureTests {
         var service = new StubOpenFoodFactsService(null, []);
         var handler = new SearchOpenFoodFactsQueryHandler(service, new StubOpenFoodFactsProductCacheRepository());
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("nonexistent", 10),
             CancellationToken.None);
 
@@ -86,7 +87,7 @@ public class OpenFoodFactsFeatureTests {
             service,
             new StubOpenFoodFactsProductCacheRepository(cachedProducts));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 2),
             CancellationToken.None);
 

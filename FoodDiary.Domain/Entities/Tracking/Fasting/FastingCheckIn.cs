@@ -78,7 +78,7 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             return null;
         }
 
-        var normalized = values
+        string[] normalized = values
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .Select(static value => value.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -92,7 +92,7 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
         }
 
-        var csv = string.Join(',', normalized);
+        string csv = string.Join(',', normalized);
         return csv.Length > SymptomsMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {SymptomsMaxLength} characters in total.")
             : csv;
@@ -103,7 +103,7 @@ public sealed class FastingCheckIn : Entity<FastingCheckInId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > NotesMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {NotesMaxLength} characters.")
             : trimmed;

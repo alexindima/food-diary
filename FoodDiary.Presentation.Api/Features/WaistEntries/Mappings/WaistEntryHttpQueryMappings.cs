@@ -9,7 +9,7 @@ public static class WaistEntryHttpQueryMappings {
     public static GetLatestWaistEntryQuery ToLatestQuery(this Guid userId) => new(userId);
 
     public static GetWaistEntriesQuery ToQuery(this GetWaistEntriesHttpQuery query, Guid userId) {
-        var descending = !string.Equals(query.Sort, "asc", StringComparison.OrdinalIgnoreCase);
+        bool descending = !string.Equals(query.Sort, "asc", StringComparison.OrdinalIgnoreCase);
         return new GetWaistEntriesQuery(userId, query.DateFrom, query.DateTo, query.Limit, descending);
     }
 

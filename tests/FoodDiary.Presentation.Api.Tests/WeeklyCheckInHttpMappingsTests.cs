@@ -1,5 +1,7 @@
 using FoodDiary.Application.WeeklyCheckIn.Models;
+using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Mappings;
+using FoodDiary.Presentation.Api.Features.WeeklyCheckIn.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -9,7 +11,7 @@ public sealed class WeeklyCheckInHttpMappingsTests {
     public void ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery();
+        GetWeeklyCheckInQuery query = userId.ToQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -22,7 +24,7 @@ public sealed class WeeklyCheckInHttpMappingsTests {
         var suggestions = new List<string> { "Keep up the good work!", "Try to log more meals" };
         var model = new WeeklyCheckInModel(thisWeek, lastWeek, trends, suggestions);
 
-        var response = model.ToHttpResponse();
+        WeeklyCheckInHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(14000, response.ThisWeek.TotalCalories);
         Assert.Equal(2000, response.ThisWeek.AvgDailyCalories);
@@ -47,7 +49,7 @@ public sealed class WeeklyCheckInHttpMappingsTests {
         var trends = new WeekTrendModel(0, 0, 0, 0, null, null, 0, 0);
         var model = new WeeklyCheckInModel(summary, summary, trends, []);
 
-        var response = model.ToHttpResponse();
+        WeeklyCheckInHttpResponse response = model.ToHttpResponse();
 
         Assert.Null(response.ThisWeek.WeightStart);
         Assert.Null(response.ThisWeek.WaistEnd);

@@ -13,9 +13,9 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
             throw new ArgumentException(@"Notification type is required.", nameof(type));
         }
 
-        var culture = ResolveCulture(locale);
-        var title = GetRequired($"{type}_Title", culture);
-        var body = GetOptional($"{type}_Body", culture);
+        CultureInfo culture = ResolveCulture(locale);
+        string title = GetRequired($"{type}_Title", culture);
+        string? body = GetOptional($"{type}_Body", culture);
 
         return new NotificationText(
             Format(title, culture, arguments),
@@ -37,11 +37,11 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     }
 
     private static CultureInfo ResolveCulture(string? locale) {
-        var normalized = string.IsNullOrWhiteSpace(locale)
+        string normalized = string.IsNullOrWhiteSpace(locale)
             ? "en"
             : locale.Trim().ToLowerInvariant();
 
-        var cultureName = normalized.StartsWith("ru", StringComparison.Ordinal)
+        string cultureName = normalized.StartsWith("ru", StringComparison.Ordinal)
             ? "ru"
             : "en";
 
@@ -61,8 +61,8 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
         arguments.Length == 0 ? template : string.Format(culture, template, arguments);
 
     private NotificationText RenderNewRecommendation(string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(payloadJson, out var payload);
-        var dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
+        NotificationPayloadSerializer.TryDeserialize<NewRecommendationNotificationPayload>(payloadJson, out NewRecommendationNotificationPayload? payload);
+        string dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
             || string.Equals(payload.DietologistName, "Your dietologist", StringComparison.OrdinalIgnoreCase)
             ? string.Empty
             : $" {payload.DietologistName}";
@@ -71,8 +71,8 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     }
 
     private NotificationText RenderDietologistInvitationReceived(string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationReceivedNotificationPayload>(payloadJson, out var payload);
-        var clientName = string.IsNullOrWhiteSpace(payload?.ClientName)
+        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationReceivedNotificationPayload>(payloadJson, out DietologistInvitationReceivedNotificationPayload? payload);
+        string clientName = string.IsNullOrWhiteSpace(payload?.ClientName)
             ? "A client"
             : payload.ClientName;
 
@@ -80,8 +80,8 @@ public sealed class NotificationResourceRenderer : INotificationTextRenderer {
     }
 
     private NotificationText RenderDietologistInvitationDecision(string type, string payloadJson, string? locale) {
-        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationDecisionNotificationPayload>(payloadJson, out var payload);
-        var dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
+        NotificationPayloadSerializer.TryDeserialize<DietologistInvitationDecisionNotificationPayload>(payloadJson, out DietologistInvitationDecisionNotificationPayload? payload);
+        string dietologistName = string.IsNullOrWhiteSpace(payload?.DietologistName)
             ? "Your dietologist"
             : payload.DietologistName;
 

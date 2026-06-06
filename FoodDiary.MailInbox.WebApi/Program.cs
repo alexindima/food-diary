@@ -3,7 +3,7 @@ using FoodDiary.MailInbox.Infrastructure.Extensions;
 using FoodDiary.MailInbox.Presentation.Extensions;
 using System.Diagnostics.CodeAnalysis;
 
-var builder = WebApplication.CreateBuilder(args);
+WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 #if DEBUG
 if (!builder.Environment.IsDevelopment()) {
@@ -16,7 +16,7 @@ builder.Services
     .AddMailInboxPresentation(builder.Configuration)
     .AddMailInboxInfrastructure(builder.Configuration);
 
-var app = builder.Build();
+WebApplication app = builder.Build();
 
 app.MapMailInboxPresentation();
 

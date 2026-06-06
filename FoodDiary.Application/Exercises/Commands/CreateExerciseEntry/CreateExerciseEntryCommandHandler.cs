@@ -6,6 +6,7 @@ using FoodDiary.Application.Exercises.Mappings;
 using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 
@@ -14,12 +15,12 @@ public class CreateExerciseEntryCommandHandler(IExerciseEntryRepository reposito
     public async Task<Result<ExerciseEntryModel>> Handle(
         CreateExerciseEntryCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<ExerciseEntryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<ExerciseType>(command.ExerciseType, true, out var exerciseType)) {
+        if (!Enum.TryParse<ExerciseType>(command.ExerciseType, true, out ExerciseType exerciseType)) {
             exerciseType = ExerciseType.Other;
         }
 

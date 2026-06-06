@@ -6,6 +6,9 @@ using FoodDiary.Application.Abstractions.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
@@ -14,20 +17,20 @@ public class GetDailyAdviceQueryHandler(
     IUserRepository userRepository)
     : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {
     public async Task<Result<DailyAdviceModel>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<DailyAdviceModel>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        UserId userId = userIdResult.Value;
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<DailyAdviceModel>(accessError);
         }
 
-        var locale = DailyAdviceSelector.NormalizeLocale(query.Locale);
-        var advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken).ConfigureAwait(false);
+        string locale = DailyAdviceSelector.NormalizeLocale(query.Locale);
+        IReadOnlyList<DailyAdvice> advices = await adviceRepository.GetByLocaleAsync(locale, cancellationToken).ConfigureAwait(false);
 
         if (advices.Count == 0 && !string.Equals(locale, "en", StringComparison.OrdinalIgnoreCase)) {
             locale = "en";
@@ -38,7 +41,7 @@ public class GetDailyAdviceQueryHandler(
             return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(locale));
         }
 
-        var advice = DailyAdviceSelector.SelectForDate(advices, query.Date, locale);
+        DailyAdvice? advice = DailyAdviceSelector.SelectForDate(advices, query.Date, locale);
         if (advice is null) {
             return Result.Failure<DailyAdviceModel>(Errors.DailyAdvice.NotFound(locale));
         }

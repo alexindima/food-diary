@@ -141,7 +141,7 @@ public class ShoppingListInvariantTests {
     public void AddItem_WithWhitespaceCategory_NormalizesToNull() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
-        var item = list.AddItem(
+        ShoppingListItem item = list.AddItem(
             name: "Milk",
             productId: null,
             amount: 1,
@@ -157,7 +157,7 @@ public class ShoppingListInvariantTests {
     public void AddItem_WithNullAmountAndTrimmedFields_AddsItem() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
-        var item = list.AddItem(
+        ShoppingListItem item = list.AddItem(
             name: "  Milk  ",
             productId: null,
             amount: null,
@@ -178,7 +178,7 @@ public class ShoppingListInvariantTests {
     public void AddItem_WithMaximumAmount_AddsItem() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
-        var item = list.AddItem(
+        ShoppingListItem item = list.AddItem(
             name: "Rice",
             productId: null,
             amount: 1000000d,
@@ -196,7 +196,7 @@ public class ShoppingListInvariantTests {
 
         list.UpdateName("Monthly");
 
-        var evt = Assert.Single(list.DomainEvents.OfType<ShoppingListNameUpdatedDomainEvent>());
+        ShoppingListNameUpdatedDomainEvent evt = Assert.Single(list.DomainEvents.OfType<ShoppingListNameUpdatedDomainEvent>());
         Assert.Equal(list.Id, evt.ShoppingListId);
         Assert.Equal("Weekly", evt.PreviousName);
         Assert.Equal("Monthly", evt.CurrentName);
@@ -206,7 +206,7 @@ public class ShoppingListInvariantTests {
     public void AddItem_RaisesItemAddedDomainEvent() {
         var list = ShoppingList.Create(UserId.New(), "Weekly");
 
-        var item = list.AddItem(
+        ShoppingListItem item = list.AddItem(
             name: "Milk",
             productId: null,
             amount: 1,
@@ -215,7 +215,7 @@ public class ShoppingListInvariantTests {
             isChecked: false,
             sortOrder: 1);
 
-        var evt = Assert.Single(list.DomainEvents.OfType<ShoppingListItemAddedDomainEvent>());
+        ShoppingListItemAddedDomainEvent evt = Assert.Single(list.DomainEvents.OfType<ShoppingListItemAddedDomainEvent>());
         Assert.Equal(list.Id, evt.ShoppingListId);
         Assert.Equal(item.Id, evt.ShoppingListItemId);
         Assert.Equal("Milk", evt.Name);
@@ -246,7 +246,7 @@ public class ShoppingListInvariantTests {
 
         list.ClearItems();
 
-        var evt = Assert.Single(list.DomainEvents.OfType<ShoppingListItemsClearedDomainEvent>());
+        ShoppingListItemsClearedDomainEvent evt = Assert.Single(list.DomainEvents.OfType<ShoppingListItemsClearedDomainEvent>());
         Assert.Equal(list.Id, evt.ShoppingListId);
         Assert.Equal(2, evt.ClearedItemsCount);
     }

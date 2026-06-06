@@ -19,19 +19,19 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
 
     [Fact]
     public async Task ConsumptionsController_RequiresAuthentication() {
-        var client = factory.CreateClient();
+        HttpClient client = factory.CreateClient();
 
-        var response = await client.GetAsync("/api/v1/consumptions");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/consumptions");
 
         Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
     }
 
     [Fact]
     public async Task CreateConsumption_ReturnsCreatedAndLocationHeader() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Consumption Ingredient");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Consumption Ingredient");
 
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/consumptions",
             new CreateConsumptionHttpRequest(
                 new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
@@ -41,7 +41,7 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 null,
                 [new ConsumptionItemHttpRequest(productId, null, 180)]));
 
-        var payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions);
+        ConsumptionPayload? payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.Created, response.StatusCode);
         Assert.NotNull(payload);
@@ -51,29 +51,29 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
 
     [Fact]
     public async Task ConsumptionsOverview_ReturnsFavoritePreviewAndFavoriteFlags() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Overview Ingredient");
-        var firstMealId = await CreateConsumptionAsync(client, productId, "Breakfast", "Overview breakfast");
-        var favoriteMealId = await CreateConsumptionAsync(client, productId, "Dinner", "Overview dinner");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Overview Ingredient");
+        Guid firstMealId = await CreateConsumptionAsync(client, productId, "Breakfast", "Overview breakfast");
+        Guid favoriteMealId = await CreateConsumptionAsync(client, productId, "Dinner", "Overview dinner");
 
-        var favoriteResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
             "/api/v1/favorite-meals",
             new AddFavoriteMealHttpRequest(favoriteMealId, "Favorite dinner"));
         favoriteResponse.EnsureSuccessStatusCode();
 
-        var overviewResponse = await client.GetAsync("/api/v1/consumptions/overview?page=1&limit=10&favoriteLimit=10");
+        HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/consumptions/overview?page=1&limit=10&favoriteLimit=10");
         overviewResponse.EnsureSuccessStatusCode();
 
         using var overviewJson = JsonDocument.Parse(await overviewResponse.Content.ReadAsStringAsync());
-        var overviewRoot = overviewJson.RootElement;
-        var favoriteItems = overviewRoot.GetProperty("favoriteItems");
-        var allConsumptions = overviewRoot.GetProperty("allConsumptions").GetProperty("data");
+        JsonElement overviewRoot = overviewJson.RootElement;
+        JsonElement favoriteItems = overviewRoot.GetProperty("favoriteItems");
+        JsonElement allConsumptions = overviewRoot.GetProperty("allConsumptions").GetProperty("data");
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
         Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("mealId").GetGuid() == favoriteMealId);
 
-        var favoriteMeal = allConsumptions.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteMealId);
-        var nonFavoriteMeal = allConsumptions.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstMealId);
+        JsonElement favoriteMeal = allConsumptions.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == favoriteMealId);
+        JsonElement nonFavoriteMeal = allConsumptions.EnumerateArray().Single(item => item.GetProperty("id").GetGuid() == firstMealId);
         Assert.True(favoriteMeal.GetProperty("isFavorite").GetBoolean());
         Assert.NotEqual(Guid.Empty, favoriteMeal.GetProperty("favoriteMealId").GetGuid());
         Assert.False(nonFavoriteMeal.GetProperty("isFavorite").GetBoolean());
@@ -81,11 +81,11 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
 
     [Fact]
     public async Task UpdateConsumption_PersistsPatchedValues() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Update Ingredient");
-        var mealId = await CreateConsumptionAsync(client, productId, "Lunch", "Patchable meal");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Update Ingredient");
+        Guid mealId = await CreateConsumptionAsync(client, productId, "Lunch", "Patchable meal");
 
-        var updateResponse = await client.PatchAsJsonAsync(
+        HttpResponseMessage updateResponse = await client.PatchAsJsonAsync(
             $"/api/v1/consumptions/{mealId}",
             new UpdateConsumptionHttpRequest(
                 new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc),
@@ -99,7 +99,7 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 PostMealSatietyLevel: 4));
         updateResponse.EnsureSuccessStatusCode();
 
-        var getResponse = await client.GetAsync($"/api/v1/consumptions/{mealId}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/consumptions/{mealId}");
         getResponse.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
 
@@ -111,20 +111,20 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
 
     [Fact]
     public async Task RepeatConsumption_ReturnsNewMealCopy() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Repeat Ingredient");
-        var sourceMealId = await CreateConsumptionAsync(client, productId, "Lunch", "Repeat source");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Repeat Ingredient");
+        Guid sourceMealId = await CreateConsumptionAsync(client, productId, "Lunch", "Repeat source");
 
-        var repeatResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage repeatResponse = await client.PostAsJsonAsync(
             $"/api/v1/consumptions/{sourceMealId}/repeat",
             new RepeatMealHttpRequest(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), "Dinner"));
         repeatResponse.EnsureSuccessStatusCode();
-        var repeated = await repeatResponse.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions);
+        ConsumptionPayload? repeated = await repeatResponse.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions);
 
         Assert.NotNull(repeated);
         Assert.NotEqual(sourceMealId, repeated.Id);
 
-        var getResponse = await client.GetAsync($"/api/v1/consumptions/{repeated.Id}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/consumptions/{repeated.Id}");
         getResponse.EnsureSuccessStatusCode();
         using var json = JsonDocument.Parse(await getResponse.Content.ReadAsStringAsync());
 
@@ -134,33 +134,33 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
 
     [Fact]
     public async Task DeleteConsumption_RemovesItFromSubsequentRead() {
-        var client = await CreateAuthenticatedClientAsync();
-        var productId = await CreateProductAsync(client, "Delete Ingredient");
-        var mealId = await CreateConsumptionAsync(client, productId, "Lunch", "Delete meal");
+        HttpClient client = await CreateAuthenticatedClientAsync();
+        Guid productId = await CreateProductAsync(client, "Delete Ingredient");
+        Guid mealId = await CreateConsumptionAsync(client, productId, "Lunch", "Delete meal");
 
-        var deleteResponse = await client.DeleteAsync($"/api/v1/consumptions/{mealId}");
-        var getResponse = await client.GetAsync($"/api/v1/consumptions/{mealId}");
+        HttpResponseMessage deleteResponse = await client.DeleteAsync($"/api/v1/consumptions/{mealId}");
+        HttpResponseMessage getResponse = await client.GetAsync($"/api/v1/consumptions/{mealId}");
 
         Assert.Equal(HttpStatusCode.NoContent, deleteResponse.StatusCode);
         Assert.Equal(HttpStatusCode.NotFound, getResponse.StatusCode);
     }
 
     private async Task<HttpClient> CreateAuthenticatedClientAsync() {
-        var client = factory.CreateClient();
-        var email = $"api-consumption-tests-{Guid.NewGuid():N}@example.com";
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"api-consumption-tests-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
         return client;
     }
 
     private static async Task<Guid> CreateProductAsync(HttpClient client, string name) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
                 null,
@@ -184,13 +184,13 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 "Private")).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions).ConfigureAwait(false);
+        ConsumptionPayload? payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }
 
     private static async Task<Guid> CreateConsumptionAsync(HttpClient client, Guid productId, string mealType, string comment) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/consumptions",
             new CreateConsumptionHttpRequest(
                 new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
@@ -201,7 +201,7 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 [new ConsumptionItemHttpRequest(productId, null, 180)])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
-        var payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions).ConfigureAwait(false);
+        ConsumptionPayload? payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(payload);
         return payload.Id;
     }

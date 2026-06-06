@@ -2,6 +2,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 
@@ -10,7 +11,7 @@ public sealed class GetAdminUserLoginSummaryQueryHandler(IUserLoginEventReposito
     public async Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> Handle(
         GetAdminUserLoginSummaryQuery query,
         CancellationToken cancellationToken) {
-        var summary = await repository.GetDeviceSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UserLoginDeviceSummaryModel> summary = await repository.GetDeviceSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken).ConfigureAwait(false);
         return Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>(summary
             .Select(item => new AdminUserLoginDeviceSummaryModel(item.Key, item.Count, item.LastSeenAtUtc))
             .ToArray());

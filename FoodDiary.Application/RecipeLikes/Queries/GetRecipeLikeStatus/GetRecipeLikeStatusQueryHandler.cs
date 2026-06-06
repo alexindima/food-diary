@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.RecipeLikes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Social;
 
 namespace FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 
@@ -12,16 +13,16 @@ public class GetRecipeLikeStatusQueryHandler(IRecipeLikeRepository likeRepositor
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         GetRecipeLikeStatusQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<RecipeLikeStatusModel>(userIdResult.Error);
         }
 
         var recipeId = (RecipeId)query.RecipeId;
-        var existingLike = await likeRepository.GetByUserAndRecipeAsync(
+        RecipeLike? existingLike = await likeRepository.GetByUserAndRecipeAsync(
             userIdResult.Value, recipeId, cancellationToken).ConfigureAwait(false);
 
-        var totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
+        int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
         return Result.Success(new RecipeLikeStatusModel(existingLike is not null, totalLikes));
     }
 }

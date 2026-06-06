@@ -351,21 +351,21 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserAccountState_WithTelegram_SetsTelegramUserId() {
-        var state = UserAccountState.CreateInitial().WithTelegram(12345);
+        UserAccountState state = UserAccountState.CreateInitial().WithTelegram(12345);
 
         Assert.Equal(12345, state.TelegramUserId);
     }
 
     [Fact]
     public void UserAccountState_Deactivate_SetsInactive() {
-        var state = UserAccountState.CreateInitial().Deactivate();
+        UserAccountState state = UserAccountState.CreateInitial().Deactivate();
 
         Assert.False(state.IsActive);
     }
 
     [Fact]
     public void UserAccountState_Activate_SetsActive() {
-        var state = UserAccountState.CreateInitial()
+        UserAccountState state = UserAccountState.CreateInitial()
             .Deactivate()
             .Activate();
 
@@ -374,8 +374,8 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserAccountState_MarkDeleted_SetsDeletedAtAndInactive() {
-        var deletedAt = DateTime.UtcNow;
-        var state = UserAccountState.CreateInitial().MarkDeleted(deletedAt);
+        DateTime deletedAt = DateTime.UtcNow;
+        UserAccountState state = UserAccountState.CreateInitial().MarkDeleted(deletedAt);
 
         Assert.Equal(deletedAt, state.DeletedAt);
         Assert.False(state.IsActive);
@@ -383,7 +383,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserAccountState_Restore_ClearsDeletedAtAndSetsActive() {
-        var state = UserAccountState.CreateInitial()
+        UserAccountState state = UserAccountState.CreateInitial()
             .MarkDeleted(DateTime.UtcNow)
             .Restore();
 
@@ -417,7 +417,7 @@ public class AdditionalValueObjectsInvariantTests {
     public void UserAiQuotaState_WithLimits_UpdatesOnlyProvidedValues() {
         var state = UserAiQuotaState.CreateInitial(100_000, 50_000);
 
-        var updated = state.WithLimits(inputLimit: 200_000, outputLimit: null);
+        UserAiQuotaState updated = state.WithLimits(inputLimit: 200_000, outputLimit: null);
 
         Assert.Equal(200_000, updated.AiInputTokenLimit);
         Assert.Equal(50_000, updated.AiOutputTokenLimit);
@@ -446,15 +446,15 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_WithPassword_UpdatesPassword() {
-        var state = UserSecurityState.CreateInitial("old").WithPassword("new");
+        UserSecurityState state = UserSecurityState.CreateInitial("old").WithPassword("new");
 
         Assert.Equal("new", state.Password);
     }
 
     [Fact]
     public void UserSecurityState_WithRefreshToken_SetsTokenAndLastLogin() {
-        var now = DateTime.UtcNow;
-        var state = UserSecurityState.CreateInitial("hash")
+        DateTime now = DateTime.UtcNow;
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithRefreshToken("token", now);
 
         Assert.Equal("token", state.RefreshToken);
@@ -463,8 +463,8 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_WithRefreshToken_WithNull_DoesNotUpdateLastLogin() {
-        var loginTime = DateTime.UtcNow;
-        var state = UserSecurityState.CreateInitial("hash")
+        DateTime loginTime = DateTime.UtcNow;
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithRefreshToken("token", loginTime)
             .WithRefreshToken(null, DateTime.UtcNow.AddHours(1));
 
@@ -474,7 +474,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_AsEmailConfirmed_ClearsConfirmationTokens() {
-        var state = UserSecurityState.CreateInitial("hash")
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithEmailConfirmationToken("token-hash", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .AsEmailConfirmed(true);
 
@@ -486,9 +486,9 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_WithPasswordResetToken_SetsAllFields() {
-        var expires = DateTime.UtcNow.AddHours(1);
-        var now = DateTime.UtcNow;
-        var state = UserSecurityState.CreateInitial("hash")
+        DateTime expires = DateTime.UtcNow.AddHours(1);
+        DateTime now = DateTime.UtcNow;
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithPasswordResetToken("reset-hash", expires, now);
 
         Assert.Equal("reset-hash", state.PasswordResetTokenHash);
@@ -498,7 +498,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_WithoutPasswordResetToken_ClearsResetFields() {
-        var state = UserSecurityState.CreateInitial("hash")
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithPasswordResetToken("hash", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithoutPasswordResetToken();
 
@@ -509,7 +509,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserSecurityState_WithoutTransientTokens_ClearsAllTransientState() {
-        var state = UserSecurityState.CreateInitial("hash")
+        UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithRefreshToken("refresh", DateTime.UtcNow)
             .WithEmailConfirmationToken("confirm", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithPasswordResetToken("reset", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
@@ -530,7 +530,7 @@ public class AdditionalValueObjectsInvariantTests {
     public void ProductNutrition_With_UpdatesOnlyProvidedValues() {
         var original = ProductNutrition.Create(100, 10, 5, 20, 3, 0);
 
-        var updated = original.With(caloriesPerBase: 200);
+        ProductNutrition updated = original.With(caloriesPerBase: 200);
 
         Assert.Equal(200, updated.CaloriesPerBase);
         Assert.Equal(10, updated.ProteinsPerBase);
@@ -644,7 +644,7 @@ public class AdditionalValueObjectsInvariantTests {
     public void UserActivityGoals_With_UpdatesOnlyProvidedValues() {
         var goals = UserActivityGoals.Create(10000, 2.5);
 
-        var updated = goals.With(stepGoal: 12000);
+        UserActivityGoals updated = goals.With(stepGoal: 12000);
 
         Assert.Equal(12000, updated.StepGoal);
         Assert.Equal(2.5, updated.HydrationGoal);
@@ -678,7 +678,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void DietologistPermissions_AllEnabled_AllFieldsTrue() {
-        var perms = DietologistPermissions.AllEnabled;
+        DietologistPermissions perms = DietologistPermissions.AllEnabled;
 
         Assert.True(perms.ShareMeals);
         Assert.True(perms.ShareStatistics);
@@ -710,7 +710,7 @@ public class AdditionalValueObjectsInvariantTests {
     public void DailySymptoms_CreateAndUpdate_StoreValuesAndValidateRange() {
         var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
 
-        var updated = symptoms.Update(pain: 8, libido: 9);
+        DailySymptoms updated = symptoms.Update(pain: 8, libido: 9);
 
         Assert.Equal(8, updated.Pain);
         Assert.Equal(2, updated.Mood);
@@ -740,7 +740,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData(" en ", "en")]
     [InlineData("RU", "ru")]
     public void LanguageCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
-        var parsed = LanguageCode.TryParse(value, out var language);
+        bool parsed = LanguageCode.TryParse(value, out LanguageCode language);
 
         Assert.True(parsed);
         Assert.Equal(expected, language.Value);
@@ -752,7 +752,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData("")]
     [InlineData("de")]
     public void LanguageCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
-        var parsed = LanguageCode.TryParse(value, out var language);
+        bool parsed = LanguageCode.TryParse(value, out LanguageCode language);
 
         Assert.False(parsed);
         Assert.Equal(default, language);
@@ -774,7 +774,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData(" f ", "F")]
     [InlineData("O", "O")]
     public void GenderCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
-        var parsed = GenderCode.TryParse(value, out var gender);
+        bool parsed = GenderCode.TryParse(value, out GenderCode gender);
 
         Assert.True(parsed);
         Assert.Equal(expected, gender.Value);
@@ -786,7 +786,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData("")]
     [InlineData("x")]
     public void GenderCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
-        var parsed = GenderCode.TryParse(value, out var gender);
+        bool parsed = GenderCode.TryParse(value, out GenderCode gender);
 
         Assert.False(parsed);
         Assert.Equal(default, gender);
@@ -797,7 +797,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData("LEAF", "leaf")]
     [InlineData("dark", "dark")]
     public void ThemeCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
-        var parsed = ThemeCode.TryParse(value, out var theme);
+        bool parsed = ThemeCode.TryParse(value, out ThemeCode theme);
 
         Assert.True(parsed);
         Assert.Equal(expected, theme.Value);
@@ -809,7 +809,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData("")]
     [InlineData("light")]
     public void ThemeCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
-        var parsed = ThemeCode.TryParse(value, out var theme);
+        bool parsed = ThemeCode.TryParse(value, out ThemeCode theme);
 
         Assert.False(parsed);
         Assert.Equal(default, theme);
@@ -820,7 +820,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData(" classic ", "classic")]
     [InlineData("MODERN", "modern")]
     public void UiStyleCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
-        var parsed = UiStyleCode.TryParse(value, out var style);
+        bool parsed = UiStyleCode.TryParse(value, out UiStyleCode style);
 
         Assert.True(parsed);
         Assert.Equal(expected, style.Value);
@@ -832,7 +832,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData("")]
     [InlineData("compact")]
     public void UiStyleCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
-        var parsed = UiStyleCode.TryParse(value, out var style);
+        bool parsed = UiStyleCode.TryParse(value, out UiStyleCode style);
 
         Assert.False(parsed);
         Assert.Equal(default, style);

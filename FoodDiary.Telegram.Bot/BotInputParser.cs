@@ -12,7 +12,7 @@ internal static class BotInputParser {
             return false;
         }
 
-        var amountText = callbackData[WaterPrefix.Length..];
+        string amountText = callbackData[WaterPrefix.Length..];
         if (int.TryParse(amountText, NumberStyles.Integer, CultureInfo.InvariantCulture, out amountMl) && amountMl > 0) return true;
         amountMl = 0;
         return false;

@@ -6,6 +6,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation;
+using FluentValidation.Results;
 
 namespace FoodDiary.Application.Tests.Recipes;
 
@@ -18,7 +19,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var command = CreateCommand(
+        UpdateRecipeCommand command = CreateCommand(
             userId.Value,
             recipeId,
             [
@@ -26,7 +27,7 @@ public class UpdateRecipeCommandValidatorTests {
                 CreateStep(order: 1, "Step 2 duplicate")
             ]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Steps"
@@ -41,7 +42,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var command = CreateCommand(
+        UpdateRecipeCommand command = CreateCommand(
             userId.Value,
             recipeId,
             [
@@ -49,7 +50,7 @@ public class UpdateRecipeCommandValidatorTests {
                 CreateStep(order: 2, "Explicit step 2")
             ]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
     }
@@ -93,11 +94,11 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearDescription = true
         };
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Description cannot be provided when ClearDescription is true", StringComparison.Ordinal));
@@ -110,7 +111,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearComment = true,
             ClearCategory = true,
             ClearImageUrl = true,
@@ -119,7 +120,7 @@ public class UpdateRecipeCommandValidatorTests {
             ImageAssetId = ImageAssetId.New().Value
         };
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Comment cannot be provided when ClearComment is true", StringComparison.Ordinal));
@@ -135,7 +136,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, []));
+        ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, []));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Recipe must contain at least one step", StringComparison.Ordinal));
@@ -146,7 +147,7 @@ public class UpdateRecipeCommandValidatorTests {
     public async Task ValidateAsync_WithInvalidUserId_DoesNotQueryRecipeRepository() {
         var validator = new UpdateRecipeCommandValidator(new ThrowingRecipeRepository());
 
-        var result = await validator.ValidateAsync(CreateCommand(Guid.Empty, RecipeId.New(), [CreateStep(order: 1, "Step 1")]));
+        ValidationResult result = await validator.ValidateAsync(CreateCommand(Guid.Empty, RecipeId.New(), [CreateStep(order: 1, "Step 1")]));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
@@ -160,7 +161,7 @@ public class UpdateRecipeCommandValidatorTests {
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
         var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
 
-        var result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
+        ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal) &&
@@ -174,11 +175,11 @@ public class UpdateRecipeCommandValidatorTests {
         var recipe = Recipe.Create(userId, "Cached used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
         var validator = new UpdateRecipeCommandValidator(new ThrowingRecipeRepository());
-        var command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]);
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]);
         var context = new ValidationContext<UpdateRecipeCommand>(command);
         context.RootContextData["__recipe"] = recipe;
 
-        var result = await validator.ValidateAsync(context);
+        ValidationResult result = await validator.ValidateAsync(context);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorCode, "Validation.Invalid", StringComparison.Ordinal) &&

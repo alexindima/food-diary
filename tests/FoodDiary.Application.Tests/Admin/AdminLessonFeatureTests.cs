@@ -7,6 +7,9 @@ using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Domain.Entities.Content;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Admin.Models;
+using FluentValidation.Results;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -17,7 +20,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new CreateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
                 Title: "Basics of Nutrition",
                 Content: "<p>Content here</p>",
@@ -46,7 +49,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new CreateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
                 Title: "Title",
                 Content: "Content",
@@ -68,7 +71,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new CreateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new CreateAdminLessonCommand(
                 Title: "Title",
                 Content: "Content",
@@ -92,7 +95,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
                 Id: lesson.Id.Value,
                 Title: "New Title",
@@ -121,7 +124,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new UpdateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
                 Id: Guid.NewGuid(),
                 Title: "Title",
@@ -145,7 +148,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
                 Id: lesson.Id.Value,
                 Title: "Title",
@@ -169,7 +172,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonModel> result = await handler.Handle(
             new UpdateAdminLessonCommand(
                 Id: lesson.Id.Value,
                 Title: "Title",
@@ -194,7 +197,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new DeleteAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteAdminLessonCommand(lesson.Id.Value),
             CancellationToken.None);
 
@@ -207,7 +210,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new DeleteAdminLessonCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteAdminLessonCommand(Guid.NewGuid()),
             CancellationToken.None);
 
@@ -224,7 +227,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository(lesson1, lesson2);
         var handler = new GetAdminLessonsQueryHandler(repo);
 
-        var result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
+        Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
@@ -235,7 +238,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new GetAdminLessonsQueryHandler(repo);
 
-        var result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
+        Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
@@ -246,7 +249,7 @@ public class AdminLessonFeatureTests {
         var repo = new InMemoryLessonRepository();
         var handler = new ImportAdminLessonsCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<AdminLessonsImportModel> result = await handler.Handle(
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
@@ -266,7 +269,7 @@ public class AdminLessonFeatureTests {
     public async Task ImportAdminLessonsHandler_WithInvalidCategory_ReturnsIndexedValidationFailure() {
         var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
 
-        var result = await handler.Handle(
+        Result<AdminLessonsImportModel> result = await handler.Handle(
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
@@ -283,7 +286,7 @@ public class AdminLessonFeatureTests {
     public async Task ImportAdminLessonsHandler_WithInvalidDifficulty_ReturnsIndexedValidationFailure() {
         var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
 
-        var result = await handler.Handle(
+        Result<AdminLessonsImportModel> result = await handler.Handle(
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
@@ -300,7 +303,7 @@ public class AdminLessonFeatureTests {
     public async Task ImportAdminLessonsHandler_WithInvalidLessonState_ReturnsIndexedValidationFailure() {
         var handler = new ImportAdminLessonsCommandHandler(new InMemoryLessonRepository());
 
-        var result = await handler.Handle(
+        Result<AdminLessonsImportModel> result = await handler.Handle(
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
@@ -317,7 +320,7 @@ public class AdminLessonFeatureTests {
     public async Task CreateAdminLessonValidator_WithEmptyTitle_HasError() {
         var validator = new CreateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new CreateAdminLessonCommand("", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
@@ -328,7 +331,7 @@ public class AdminLessonFeatureTests {
     public async Task CreateAdminLessonValidator_WithEmptyContent_HasError() {
         var validator = new CreateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new CreateAdminLessonCommand("Title", "", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
@@ -339,7 +342,7 @@ public class AdminLessonFeatureTests {
     public async Task CreateAdminLessonValidator_WithZeroReadMinutes_HasError() {
         var validator = new CreateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new CreateAdminLessonCommand("Title", "Content", null, "en", "NutritionBasics", "Beginner", 0, 0));
 
         Assert.False(result.IsValid);
@@ -350,7 +353,7 @@ public class AdminLessonFeatureTests {
     public async Task CreateAdminLessonValidator_WithValidData_Passes() {
         var validator = new CreateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new CreateAdminLessonCommand("Title", "Content", "Summary", "ru", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.True(result.IsValid);
@@ -360,7 +363,7 @@ public class AdminLessonFeatureTests {
     public async Task UpdateAdminLessonValidator_WithEmptyId_HasError() {
         var validator = new UpdateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new UpdateAdminLessonCommand(Guid.Empty, "Title", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
@@ -371,7 +374,7 @@ public class AdminLessonFeatureTests {
     public async Task UpdateAdminLessonValidator_WithValidData_Passes() {
         var validator = new UpdateAdminLessonCommandValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new UpdateAdminLessonCommand(Guid.NewGuid(), "Title", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.True(result.IsValid);

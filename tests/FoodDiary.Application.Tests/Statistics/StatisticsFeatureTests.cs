@@ -1,5 +1,8 @@
+using FluentValidation.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
@@ -16,7 +19,7 @@ public class StatisticsFeatureTests {
         var validator = new GetStatisticsQueryValidator();
         var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -26,7 +29,7 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new NoopUserRepository());
         var query = new GetStatisticsQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -37,7 +40,7 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new NoopUserRepository());
         var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -51,10 +54,10 @@ public class StatisticsFeatureTests {
         var to = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 1);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var bucket = Assert.Single(result.Value);
+        AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(0, bucket.TotalCalories);
         Assert.Equal(0, bucket.TotalProteins);
         Assert.Equal(0, bucket.TotalFats);
@@ -70,7 +73,7 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), new SingleUserRepository(user));
         var query = new GetStatisticsQuery(user.Id.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -86,10 +89,10 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]), new SingleUserRepository(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 2);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var bucket = Assert.Single(result.Value);
+        AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(1000, bucket.TotalCalories);
         Assert.Equal(100, bucket.TotalProteins);
         Assert.Equal(50, bucket.TotalFats);
@@ -104,8 +107,8 @@ public class StatisticsFeatureTests {
     [Fact]
     public async Task GetStatisticsQueryHandler_WithLocalDayUtcBoundaries_GroupsMealsByRequestedBoundary() {
         var user = User.Create("statistics-boundaries@example.com", "hash");
-        var localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
-        var localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
+        DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
         var includedMeal = Meal.Create(user.Id, localDayStartUtc.AddMinutes(30), MealType.Snack);
         includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, true));
         var nextLocalDayMeal = Meal.Create(user.Id, localDayEndUtc.AddMinutes(1), MealType.Snack);
@@ -113,10 +116,10 @@ public class StatisticsFeatureTests {
         var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]), new SingleUserRepository(user));
         var query = new GetStatisticsQuery(user.Id.Value, localDayStartUtc, localDayEndUtc, 1);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var bucket = Assert.Single(result.Value);
+        AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(localDayStartUtc, bucket.DateFrom);
         Assert.Equal(localDayEndUtc, bucket.DateTo);
         Assert.Equal(946, bucket.TotalCalories);

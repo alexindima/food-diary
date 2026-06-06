@@ -11,24 +11,24 @@ public static class WeeklyCheckInCalculator {
         IReadOnlyList<WaistEntry> waists,
         IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
         int daysInPeriod) {
-        var totalCalories = meals.Sum(m => m.TotalCalories);
-        var avgDaily = daysInPeriod > 0 ? totalCalories / daysInPeriod : 0;
-        var avgProteins = daysInPeriod > 0 ? meals.Sum(m => m.TotalProteins) / daysInPeriod : 0;
-        var avgFats = daysInPeriod > 0 ? meals.Sum(m => m.TotalFats) / daysInPeriod : 0;
-        var avgCarbs = daysInPeriod > 0 ? meals.Sum(m => m.TotalCarbs) / daysInPeriod : 0;
-        var mealsLogged = meals.Count;
-        var daysLogged = meals.Select(m => m.Date.Date).Distinct().Count();
+        double totalCalories = meals.Sum(m => m.TotalCalories);
+        double avgDaily = daysInPeriod > 0 ? totalCalories / daysInPeriod : 0;
+        double avgProteins = daysInPeriod > 0 ? meals.Sum(m => m.TotalProteins) / daysInPeriod : 0;
+        double avgFats = daysInPeriod > 0 ? meals.Sum(m => m.TotalFats) / daysInPeriod : 0;
+        double avgCarbs = daysInPeriod > 0 ? meals.Sum(m => m.TotalCarbs) / daysInPeriod : 0;
+        int mealsLogged = meals.Count;
+        int daysLogged = meals.Select(m => m.Date.Date).Distinct().Count();
 
         var sortedWeights = weights.OrderBy(w => w.Date).ToList();
-        var weightStart = sortedWeights.FirstOrDefault()?.Weight;
-        var weightEnd = sortedWeights.LastOrDefault()?.Weight;
+        double? weightStart = sortedWeights.FirstOrDefault()?.Weight;
+        double? weightEnd = sortedWeights.LastOrDefault()?.Weight;
 
         var sortedWaists = waists.OrderBy(w => w.Date).ToList();
-        var waistStart = sortedWaists.FirstOrDefault()?.Circumference;
-        var waistEnd = sortedWaists.LastOrDefault()?.Circumference;
+        double? waistStart = sortedWaists.FirstOrDefault()?.Circumference;
+        double? waistEnd = sortedWaists.LastOrDefault()?.Circumference;
 
-        var totalHydration = hydration.Sum(h => h.TotalMl);
-        var avgHydration = daysInPeriod > 0 ? totalHydration / daysInPeriod : 0;
+        int totalHydration = hydration.Sum(h => h.TotalMl);
+        int avgHydration = daysInPeriod > 0 ? totalHydration / daysInPeriod : 0;
 
         return new WeekSummaryModel(
             Math.Round(totalCalories, 1),
@@ -71,7 +71,7 @@ public static class WeeklyCheckInCalculator {
         }
 
         if (dailyCalorieTarget.HasValue && dailyCalorieTarget > 0) {
-            var ratio = thisWeek.AvgDailyCalories / dailyCalorieTarget.Value;
+            double ratio = thisWeek.AvgDailyCalories / dailyCalorieTarget.Value;
             if (ratio > 1.15) {
                 suggestions.Add("suggestion.over_calorie_goal");
             } else if (ratio < 0.85 && thisWeek.DaysLogged >= 3) {

@@ -13,8 +13,8 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 public sealed class ImpersonationAccessGuardMiddlewareTests {
     [Fact]
     public async Task InvokeAsync_WithProtectedEndpointAndImpersonatedUser_ReturnsForbiddenErrorContract() {
-        var context = CreateContext(hasProtectedEndpoint: true, isImpersonated: true);
-        var nextCalled = false;
+        DefaultHttpContext context = CreateContext(hasProtectedEndpoint: true, isImpersonated: true);
+        bool nextCalled = false;
         var middleware = new ImpersonationAccessGuardMiddleware(_ => {
             nextCalled = true;
             return Task.CompletedTask;
@@ -26,7 +26,7 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
         Assert.Equal(StatusCodes.Status403Forbidden, context.Response.StatusCode);
 
         context.Response.Body.Position = 0;
-        var payload = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
+        ApiErrorHttpResponse? payload = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
         Assert.NotNull(payload);
@@ -40,8 +40,8 @@ public sealed class ImpersonationAccessGuardMiddlewareTests {
     public async Task InvokeAsync_WhenEndpointIsNotProtectedOrUserIsNotImpersonated_CallsNext(
         bool hasProtectedEndpoint,
         bool isImpersonated) {
-        var context = CreateContext(hasProtectedEndpoint, isImpersonated);
-        var nextCalled = false;
+        DefaultHttpContext context = CreateContext(hasProtectedEndpoint, isImpersonated);
+        bool nextCalled = false;
         var middleware = new ImpersonationAccessGuardMiddleware(_ => {
             nextCalled = true;
             return Task.CompletedTask;

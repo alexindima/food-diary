@@ -1,5 +1,9 @@
+using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.MealPlans.Models;
+using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
+using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 using FoodDiary.Presentation.Api.Features.MealPlans.Mappings;
+using FoodDiary.Presentation.Api.Features.MealPlans.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -9,7 +13,7 @@ public sealed class MealPlanHttpMappingsTests {
     public void ToQuery_MapsUserIdAndDietType() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToQuery("LowCarb");
+        GetMealPlansQuery query = userId.ToQuery("LowCarb");
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal("LowCarb", query.DietType);
@@ -20,7 +24,7 @@ public sealed class MealPlanHttpMappingsTests {
         var userId = Guid.NewGuid();
         var planId = Guid.NewGuid();
 
-        var query = userId.ToGetByIdQuery(planId);
+        GetMealPlanByIdQuery query = userId.ToGetByIdQuery(planId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(planId, query.PlanId);
@@ -31,7 +35,7 @@ public sealed class MealPlanHttpMappingsTests {
         var userId = Guid.NewGuid();
         var planId = Guid.NewGuid();
 
-        var command = userId.ToAdoptCommand(planId);
+        AdoptMealPlanCommand command = userId.ToAdoptCommand(planId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(planId, command.PlanId);
@@ -55,7 +59,7 @@ public sealed class MealPlanHttpMappingsTests {
             new(Guid.NewGuid(), "Low carb", null, "LowCarb", 5, null, false, 8),
         };
 
-        var responses = models.ToHttpResponse();
+        IReadOnlyList<MealPlanSummaryHttpResponse> responses = models.ToHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal(models[0].Id, responses[0].Id);
@@ -99,14 +103,14 @@ public sealed class MealPlanHttpMappingsTests {
                     ])
             ]);
 
-        var response = model.ToHttpResponse();
+        MealPlanHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Id, response.Id);
         Assert.Equal("Plan", response.Name);
         Assert.Equal(2100, response.TargetCaloriesPerDay);
-        var day = Assert.Single(response.Days);
+        MealPlanDayHttpResponse day = Assert.Single(response.Days);
         Assert.Equal(1, day.DayNumber);
-        var meal = Assert.Single(day.Meals);
+        MealPlanMealHttpResponse meal = Assert.Single(day.Meals);
         Assert.Equal(mealId, meal.Id);
         Assert.Equal(recipeId, meal.RecipeId);
         Assert.Equal("Oats", meal.RecipeName);

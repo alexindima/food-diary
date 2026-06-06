@@ -14,7 +14,7 @@ public class ValueObjectsInvariantTests {
     public void DailySymptoms_Create_AndUpdate_PreserveValueEquality() {
         var source = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
         var same = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var updated = source.Update(mood: 8);
+        DailySymptoms updated = source.Update(mood: 8);
 
         Assert.Equal(source, same);
         Assert.Equal(source.GetHashCode(), same.GetHashCode());
@@ -93,7 +93,7 @@ public class ValueObjectsInvariantTests {
     [Fact]
     public void UserNutritionGoals_With_UpdatesOnlyProvidedValues() {
         var original = UserNutritionGoals.Create(2000, 120, 70, 230, 30, 2.5);
-        var updated = original.With(proteinTarget: 130);
+        UserNutritionGoals updated = original.With(proteinTarget: 130);
 
         Assert.Equal(2000, updated.DailyCalorieTarget);
         Assert.Equal(130, updated.ProteinTarget);
@@ -105,8 +105,8 @@ public class ValueObjectsInvariantTests {
 
     [Fact]
     public void GenderCode_TryParse_NormalizesAndValidates() {
-        var ok = GenderCode.TryParse("  f ", out var gender);
-        var invalid = GenderCode.TryParse("x", out _);
+        bool ok = GenderCode.TryParse("  f ", out GenderCode gender);
+        bool invalid = GenderCode.TryParse("x", out _);
 
         Assert.True(ok);
         Assert.Equal("F", gender.Value);
@@ -115,7 +115,7 @@ public class ValueObjectsInvariantTests {
 
     [Fact]
     public void LanguageCode_TryParse_AndFromPreferred_WorkAsExpected() {
-        var parsed = LanguageCode.TryParse("  EN  ", out var en);
+        bool parsed = LanguageCode.TryParse("  EN  ", out LanguageCode en);
         var preferredRu = LanguageCode.FromPreferred("ru-RU");
         var preferredDefault = LanguageCode.FromPreferred("de-DE");
 

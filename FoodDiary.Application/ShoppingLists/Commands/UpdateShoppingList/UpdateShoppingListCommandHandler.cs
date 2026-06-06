@@ -8,6 +8,7 @@ using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 
@@ -19,14 +20,14 @@ public class UpdateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        var validationResult = await ValidateCommandAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<UserId> validationResult = await ValidateCommandAsync(command, cancellationToken).ConfigureAwait(false);
         if (validationResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(validationResult.Error);
         }
 
-        var userId = validationResult.Value;
+        UserId userId = validationResult.Value;
         var shoppingListId = new ShoppingListId(command.ShoppingListId);
-        var list = await shoppingListRepository.GetByIdAsync(
+        ShoppingList? list = await shoppingListRepository.GetByIdAsync(
             shoppingListId,
             userId,
             includeItems: true,
@@ -41,7 +42,7 @@ public class UpdateShoppingListCommandHandler(
             list.UpdateName(command.Name);
         }
 
-        var itemsResult = await ApplyItemsAsync(command, userId, list, cancellationToken).ConfigureAwait(false);
+        Result itemsResult = await ApplyItemsAsync(command, userId, list, cancellationToken).ConfigureAwait(false);
         if (itemsResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(itemsResult.Error);
         }
@@ -68,12 +69,12 @@ public class UpdateShoppingListCommandHandler(
     }
 
     private async Task<Result<UserId>> ValidateCommandAsync(UpdateShoppingListCommand command, CancellationToken cancellationToken) {
-        var userResult = ValidateUser(command);
+        Result<UserId> userResult = ValidateUser(command);
         if (userResult.IsFailure) {
             return userResult;
         }
 
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userResult.Value, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userResult.Value, cancellationToken).ConfigureAwait(false);
         return accessError is null
             ? userResult
             : Result.Failure<UserId>(accessError);
@@ -88,7 +89,7 @@ public class UpdateShoppingListCommandHandler(
             return Result.Success();
         }
 
-        var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
             command.Items,
             userId,
             productLookupService,
@@ -99,7 +100,7 @@ public class UpdateShoppingListCommandHandler(
         }
 
         list.ClearItems();
-        foreach (var item in itemsResult.Value) {
+        foreach (ShoppingListItemData item in itemsResult.Value) {
             list.AddItem(item.Name, item.ProductId, item.Amount, item.Unit, item.Category, item.IsChecked, item.SortOrder);
         }
 

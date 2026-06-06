@@ -13,10 +13,10 @@ internal static class UsdaCsvReader {
 
     public static string[] ParseLine(string line) {
         var fields = new List<string>();
-        var inQuotes = false;
-        var start = 0;
+        bool inQuotes = false;
+        int start = 0;
 
-        for (var i = 0; i < line.Length; i++) {
+        for (int i = 0; i < line.Length; i++) {
             if (line[i] == '"') {
                 inQuotes = !inQuotes;
             } else if (line[i] == ',' && !inQuotes) {
@@ -33,7 +33,7 @@ internal static class UsdaCsvReader {
         value.Length <= maxLength ? value : value[..maxLength];
 
     private static string ExtractField(string line, int start, int end) {
-        var field = line[start..end].Trim();
+        string field = line[start..end].Trim();
         if (field.Length >= 2 && field[0] == '"' && field[^1] == '"') {
             field = field[1..^1].Replace("\"\"", "\"");
         }

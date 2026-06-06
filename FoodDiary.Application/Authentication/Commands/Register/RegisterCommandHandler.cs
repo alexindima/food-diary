@@ -23,9 +23,9 @@ public class RegisterCommandHandler(
     : ICommandHandler<RegisterCommand, Result<AuthenticationModel>> {
 
     public async Task<Result<AuthenticationModel>> Handle(RegisterCommand command, CancellationToken cancellationToken) {
-        var hashedPassword = passwordHasher.Hash(command.Password);
+        string hashedPassword = passwordHasher.Hash(command.Password);
         var user = User.Create(command.Email, hashedPassword);
-        var normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
+        string normalizedLanguage = LanguageCode.FromPreferred(command.Language).Value;
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
             ProteinTarget: 150,
@@ -37,14 +37,14 @@ public class RegisterCommandHandler(
 
         user = await userRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
 
-        var emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
-        var emailTokenHash = passwordHasher.Hash(emailToken);
+        string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
+        string emailTokenHash = passwordHasher.Hash(emailToken);
         user.SetEmailConfirmationToken(new UserTokenIssue(
             TokenHash: emailTokenHash,
             ExpiresAtUtc: dateTimeProvider.UtcNow.AddHours(24),
             IssuedAtUtc: dateTimeProvider.UtcNow));
 
-        var tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        IssuedAuthenticationTokens tokens = await authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
 
         try {
             await emailSender.SendEmailVerificationAsync(

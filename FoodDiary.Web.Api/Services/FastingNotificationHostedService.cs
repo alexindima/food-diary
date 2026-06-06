@@ -10,7 +10,7 @@ public sealed class FastingNotificationHostedService(
     ILogger<FastingNotificationHostedService> logger)
     : BackgroundService {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-        var settings = options.Value;
+        FastingNotificationOptions settings = options.Value;
         if (!settings.Enabled) {
             logger.LogInformation("Fasting notification hosted service is disabled.");
             return;
@@ -20,8 +20,8 @@ public sealed class FastingNotificationHostedService(
 
         do {
             try {
-                using var scope = serviceScopeFactory.CreateScope();
-                var scheduler = scope.ServiceProvider.GetRequiredService<IFastingNotificationScheduler>();
+                using IServiceScope scope = serviceScopeFactory.CreateScope();
+                IFastingNotificationScheduler scheduler = scope.ServiceProvider.GetRequiredService<IFastingNotificationScheduler>();
                 await scheduler.ProcessDueNotificationsAsync(stoppingToken).ConfigureAwait(false);
             } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
                 break;

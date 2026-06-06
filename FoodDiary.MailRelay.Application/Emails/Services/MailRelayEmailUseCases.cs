@@ -4,7 +4,7 @@ public sealed class MailRelayEmailUseCases(
     IMailRelayQueueStore queueStore,
     IMailRelayDispatchNotifier dispatchNotifier) {
     public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
-        var queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
+        Guid queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
         await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
         return queuedEmailId;
     }

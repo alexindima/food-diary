@@ -20,8 +20,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class ControllerSecurityContractTests {
     [Fact]
     public void AiFoodController_RequiresPremiumRole_AndAiRateLimitPolicy() {
-        var authorizeAttributes = typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
-        var rateLimit = AssertSingleAttribute<EnableRateLimitingAttribute>(typeof(AiFoodController));
+        AuthorizeAttribute[] authorizeAttributes = typeof(AiFoodController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
+        EnableRateLimitingAttribute rateLimit = AssertSingleAttribute<EnableRateLimitingAttribute>(typeof(AiFoodController));
 
         Assert.NotEmpty(authorizeAttributes);
         Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Premium, StringComparison.Ordinal));
@@ -48,22 +48,22 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void AuthController_TelegramBotAuth_RequiresTelegramBotSecret() {
-        var method = GetAction(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth));
+        MethodInfo method = GetAction(typeof(AuthTelegramController), nameof(AuthTelegramController.TelegramBotAuth));
 
         Assert.NotNull(method.GetCustomAttribute<RequireTelegramBotSecretAttribute>());
     }
 
     [Fact]
     public void AuthController_AdminSsoStart_RequiresAdminRole() {
-        var method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoStart));
-        var authorize = AssertSingleAttribute<AuthorizeAttribute>(method);
+        MethodInfo method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoStart));
+        AuthorizeAttribute authorize = AssertSingleAttribute<AuthorizeAttribute>(method);
 
         Assert.Equal(PresentationRoleNames.Admin, authorize.Roles);
     }
 
     [Fact]
     public void AuthController_AdminSsoExchange_AllowsAnonymous() {
-        var method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange));
+        MethodInfo method = GetAction(typeof(AdminSsoController), nameof(AdminSsoController.AdminSsoExchange));
 
         Assert.NotNull(method.GetCustomAttribute<AllowAnonymousAttribute>());
     }
@@ -81,7 +81,7 @@ public sealed class ControllerSecurityContractTests {
 
     [Fact]
     public void AdminLessonsController_RequiresAdminRole() {
-        var authorizeAttributes = typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
+        AuthorizeAttribute[] authorizeAttributes = typeof(AdminLessonsController).GetCustomAttributes<AuthorizeAttribute>(inherit: true).ToArray();
 
         Assert.NotEmpty(authorizeAttributes);
         Assert.Contains(authorizeAttributes, static attribute => string.Equals(attribute.Roles, PresentationRoleNames.Admin, StringComparison.Ordinal));
@@ -99,22 +99,22 @@ public sealed class ControllerSecurityContractTests {
     }
 
     private static void AssertActionRateLimit(Type controllerType, string actionName, string expectedPolicyName) {
-        var method = GetAction(controllerType, actionName);
-        var attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
+        MethodInfo method = GetAction(controllerType, actionName);
+        EnableRateLimitingAttribute attribute = AssertSingleAttribute<EnableRateLimitingAttribute>(method);
 
         Assert.Equal(expectedPolicyName, attribute.PolicyName);
     }
 
     private static void AssertHasFromCurrentUserParameter(Type controllerType, string actionName) {
-        var method = GetAction(controllerType, actionName);
-        var parameters = method.GetParameters();
+        MethodInfo method = GetAction(controllerType, actionName);
+        ParameterInfo[] parameters = method.GetParameters();
 
         Assert.Contains(parameters, static parameter => parameter.GetCustomAttribute<FromCurrentUserAttribute>() is not null);
     }
 
     private static void AssertHasAttribute<TAttribute>(Type controllerType, string actionName)
         where TAttribute : Attribute {
-        var method = GetAction(controllerType, actionName);
+        MethodInfo method = GetAction(controllerType, actionName);
         Assert.NotNull(method.GetCustomAttribute<TAttribute>());
     }
 
@@ -124,14 +124,14 @@ public sealed class ControllerSecurityContractTests {
 
     private static TAttribute AssertSingleAttribute<TAttribute>(Type type)
         where TAttribute : Attribute {
-        var attributes = type.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
+        TAttribute[] attributes = type.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
         Assert.Single(attributes);
         return attributes[0];
     }
 
     private static TAttribute AssertSingleAttribute<TAttribute>(MemberInfo member)
         where TAttribute : Attribute {
-        var attributes = member.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
+        TAttribute[] attributes = member.GetCustomAttributes<TAttribute>(inherit: true).ToArray();
         Assert.Single(attributes);
         return attributes[0];
     }

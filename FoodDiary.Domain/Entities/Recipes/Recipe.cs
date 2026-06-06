@@ -88,7 +88,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     public void Update(RecipeUpdate update) {
-        var changed = false;
+        bool changed = false;
         changed |= ApplyIdentityUpdates(
             update.Name,
             update.Description,
@@ -251,18 +251,18 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         bool clearComment,
         string? category,
         bool clearCategory) {
-        var state = GetDetailsState();
-        var changed = false;
-        var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
-        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
-        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        RecipeDetailsState state = GetDetailsState();
+        bool changed = false;
+        string? normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+        string? normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
 
         EnsureClearConflict(clearDescription, normalizedDescription, nameof(clearDescription), nameof(description));
         EnsureClearConflict(clearComment, normalizedComment, nameof(clearComment), nameof(comment));
         EnsureClearConflict(clearCategory, normalizedCategory, nameof(clearCategory), nameof(category));
 
         if (name is not null) {
-            var normalizedName = NormalizeRequiredName(name);
+            string normalizedName = NormalizeRequiredName(name);
             if (!string.Equals(state.Name, normalizedName, StringComparison.Ordinal)) {
                 state = state with { Name = normalizedName };
                 changed = true;
@@ -317,9 +317,9 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         bool clearImageUrl,
         ImageAssetId? imageAssetId,
         bool clearImageAssetId) {
-        var state = GetDetailsState();
-        var changed = false;
-        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        RecipeDetailsState state = GetDetailsState();
+        bool changed = false;
+        string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
 
         EnsureClearConflict(clearImageUrl, normalizedImageUrl, nameof(clearImageUrl), nameof(imageUrl));
         EnsureClearConflict(clearImageAssetId, imageAssetId, nameof(clearImageAssetId), nameof(imageAssetId));
@@ -354,11 +354,11 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     private bool ApplyTimingAndServingsUpdates(int? prepTime, int? cookTime, int? servings) {
-        var state = GetDetailsState();
-        var changed = false;
+        RecipeDetailsState state = GetDetailsState();
+        bool changed = false;
 
         if (prepTime.HasValue) {
-            var normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
+            int? normalizedPrepTime = NormalizeOptionalNonNegative(prepTime, nameof(prepTime));
             if (state.PrepTime != normalizedPrepTime) {
                 state = state with { PrepTime = normalizedPrepTime };
                 changed = true;
@@ -366,7 +366,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
 
         if (cookTime.HasValue) {
-            var normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
+            int? normalizedCookTime = NormalizeOptionalNonNegative(cookTime, nameof(cookTime));
             if (state.CookTime != normalizedCookTime) {
                 state = state with { CookTime = normalizedCookTime };
                 changed = true;
@@ -374,7 +374,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
 
         if (servings.HasValue) {
-            var normalizedServings = RequirePositive(servings.Value, nameof(servings));
+            int normalizedServings = RequirePositive(servings.Value, nameof(servings));
             if (state.Servings != normalizedServings) {
                 state = state with { Servings = normalizedServings };
                 changed = true;
@@ -409,7 +409,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     private void ApplyManualNutrition(RecipeNutrition nutrition) {
-        var state = GetNutritionState() with {
+        RecipeNutritionState state = GetNutritionState() with {
             ManualCalories = nutrition.Calories,
             ManualProteins = nutrition.Proteins,
             ManualFats = nutrition.Fats,
@@ -421,7 +421,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
     }
 
     private void ApplyTotalNutrition(RecipeNutrition nutrition) {
-        var state = GetNutritionState() with {
+        RecipeNutritionState state = GetNutritionState() with {
             TotalCalories = nutrition.Calories,
             TotalProteins = nutrition.Proteins,
             TotalFats = nutrition.Fats,
@@ -497,7 +497,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             throw new ArgumentException("Recipe name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         if (normalized.Length > NameMaxLength) {
             throw new ArgumentOutOfRangeException(nameof(value), $"Recipe name must be at most {NameMaxLength} characters.");
         }
@@ -524,7 +524,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

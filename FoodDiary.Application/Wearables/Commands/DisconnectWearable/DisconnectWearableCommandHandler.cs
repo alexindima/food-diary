@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Commands.DisconnectWearable;
 
@@ -11,16 +13,16 @@ public class DisconnectWearableCommandHandler(IWearableConnectionRepository conn
     public async Task<Result> Handle(
         DisconnectWearableCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out var provider)) {
+        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out WearableProvider provider)) {
             return Result.Failure(Errors.Wearable.InvalidProvider(command.Provider));
         }
 
-        var connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
+        WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null) {
             return Result.Failure(Errors.Wearable.NotConnected(command.Provider));
         }

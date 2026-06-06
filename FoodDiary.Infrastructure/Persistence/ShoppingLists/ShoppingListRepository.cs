@@ -58,7 +58,7 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
         UserId userId,
         bool includeItems = false,
         CancellationToken cancellationToken = default) {
-        var query = context.ShoppingLists.AsNoTracking();
+        IQueryable<ShoppingList> query = context.ShoppingLists.AsNoTracking();
 
         if (includeItems) {
             query = query.Include(l => l.Items);
@@ -76,7 +76,7 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
-        var tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
+        ShoppingList? tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.ShoppingLists.Remove(tracked);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

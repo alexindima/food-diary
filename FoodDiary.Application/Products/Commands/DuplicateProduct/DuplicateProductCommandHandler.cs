@@ -22,7 +22,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
         var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 
-        var original = await productRepository.GetByIdAsync(
+        Product? original = await productRepository.GetByIdAsync(
             productId,
             userId,
             includePublic: true,

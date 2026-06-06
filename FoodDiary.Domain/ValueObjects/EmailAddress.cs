@@ -14,7 +14,7 @@ public readonly record struct EmailAddress {
             throw new ArgumentException("Email is required.", nameof(value));
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         try {
             var parsed = new MailAddress(normalized);
             if (!string.Equals(parsed.Address, normalized, StringComparison.Ordinal)) {

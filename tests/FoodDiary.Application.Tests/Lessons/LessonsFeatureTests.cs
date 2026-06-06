@@ -1,7 +1,9 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 using FoodDiary.Application.Lessons.Mappings;
+using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Application.Lessons.Queries.GetLessonById;
 using FoodDiary.Application.Lessons.Queries.GetLessons;
 using FoodDiary.Domain.Entities.Content;
@@ -19,7 +21,7 @@ public class LessonsFeatureTests {
         var repo = new StubLessonRepository(lesson, hasProgress: false);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -33,7 +35,7 @@ public class LessonsFeatureTests {
         var repo = new StubLessonRepository(lesson, hasProgress: true);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -45,7 +47,7 @@ public class LessonsFeatureTests {
         var repo = new StubLessonRepository(null, hasProgress: false);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -57,7 +59,7 @@ public class LessonsFeatureTests {
         var handler = new MarkLessonReadCommandHandler(
             new StubLessonRepository(null, false), new FixedDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkLessonReadCommand(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -66,16 +68,16 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task GetLessons_WithLocaleAndCategory_ReturnsSortedLessonsWithReadFlags() {
         var userId = UserId.New();
-        var firstLesson = CreateLesson("Second", "ru", LessonCategory.Macronutrients, sortOrder: 2);
-        var secondLesson = CreateLesson("First", "ru", LessonCategory.Macronutrients, sortOrder: 1);
-        var otherCategoryLesson = CreateLesson("Hydration", "ru", LessonCategory.Hydration, sortOrder: 0);
+        NutritionLesson firstLesson = CreateLesson("Second", "ru", LessonCategory.Macronutrients, sortOrder: 2);
+        NutritionLesson secondLesson = CreateLesson("First", "ru", LessonCategory.Macronutrients, sortOrder: 1);
+        NutritionLesson otherCategoryLesson = CreateLesson("Hydration", "ru", LessonCategory.Hydration, sortOrder: 0);
         var progress = UserLessonProgress.Create(userId, secondLesson.Id, DateTime.UtcNow);
         var repository = new StubLessonRepository(
             [firstLesson, secondLesson, otherCategoryLesson],
             [progress]);
         var handler = new GetLessonsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, " RU ", "macronutrients"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -97,15 +99,15 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task GetLessons_WhenLocalizedLessonsAreMissing_FallsBackToEnglish() {
         var userId = UserId.New();
-        var englishLesson = CreateLesson("English", "en", LessonCategory.NutritionBasics);
+        NutritionLesson englishLesson = CreateLesson("English", "en", LessonCategory.NutritionBasics);
         var repository = new StubLessonRepository([englishLesson], []);
         var handler = new GetLessonsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, "fr", null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var lesson = Assert.Single(result.Value);
+        LessonSummaryModel lesson = Assert.Single(result.Value);
         Assert.Equal(englishLesson.Id.Value, lesson.Id);
         Assert.Equal([("fr", null), ("en", null)], repository.LocaleRequests);
     }
@@ -115,7 +117,7 @@ public class LessonsFeatureTests {
         var repository = new StubLessonRepository([], []);
         var handler = new GetLessonsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(Guid.NewGuid(), "en", "unknown"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -127,7 +129,7 @@ public class LessonsFeatureTests {
     public async Task GetLessons_WithNullUserId_ReturnsFailure() {
         var handler = new GetLessonsQueryHandler(new StubLessonRepository([], []));
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(null, "en", null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -136,11 +138,11 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task GetLessonById_WhenLessonExists_ReturnsDetailWithReadState() {
         var userId = UserId.New();
-        var lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
+        NutritionLesson lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
         var progress = UserLessonProgress.Create(userId, lesson.Id, DateTime.UtcNow);
         var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([lesson], [progress]));
 
-        var result = await handler.Handle(
+        Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(userId.Value, lesson.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -153,7 +155,7 @@ public class LessonsFeatureTests {
     public async Task GetLessonById_WhenLessonIsMissing_ReturnsNotFound() {
         var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
 
-        var result = await handler.Handle(
+        Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -164,7 +166,7 @@ public class LessonsFeatureTests {
     public async Task GetLessonById_WithNullUserId_ReturnsFailure() {
         var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
 
-        var result = await handler.Handle(
+        Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -172,9 +174,9 @@ public class LessonsFeatureTests {
 
     [Fact]
     public void LessonMappings_ToSummaryModel_MapsReadState() {
-        var lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
+        NutritionLesson lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
 
-        var model = lesson.ToSummaryModel(new HashSet<NutritionLessonId> { lesson.Id });
+        LessonSummaryModel model = lesson.ToSummaryModel(new HashSet<NutritionLessonId> { lesson.Id });
 
         Assert.Equal(lesson.Id.Value, model.Id);
         Assert.Equal("Protein basics", model.Title);
@@ -194,7 +196,7 @@ public class LessonsFeatureTests {
             LessonDifficulty.Intermediate,
             7);
 
-        var model = lesson.ToDetailModel(isRead: false);
+        LessonDetailModel model = lesson.ToDetailModel(isRead: false);
 
         Assert.Equal(lesson.Id.Value, model.Id);
         Assert.Equal("Detailed content", model.Content);

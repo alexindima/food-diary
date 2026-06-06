@@ -9,6 +9,8 @@ using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.WeeklyCheckIn.Models;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
@@ -18,9 +20,9 @@ public class WeeklyCheckInFeatureTests {
 
     [Fact]
     public async Task GetWeeklyCheckIn_WithNullUserId_ReturnsFailure() {
-        var handler = CreateHandler();
+        GetWeeklyCheckInQueryHandler handler = CreateHandler();
 
-        var result = await handler.Handle(
+        Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -28,9 +30,9 @@ public class WeeklyCheckInFeatureTests {
 
     [Fact]
     public async Task GetWeeklyCheckIn_WhenUserNotFound_ReturnsFailure() {
-        var handler = CreateHandler();
+        GetWeeklyCheckInQueryHandler handler = CreateHandler();
 
-        var result = await handler.Handle(
+        Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -45,9 +47,9 @@ public class WeeklyCheckInFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = CreateHandler(userRepo: userRepo);
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(userRepo: userRepo);
 
-        var result = await handler.Handle(
+        Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -66,9 +68,9 @@ public class WeeklyCheckInFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = CreateHandler(userRepo: userRepo);
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(userRepo: userRepo);
 
-        var result = await handler.Handle(
+        Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);

@@ -28,7 +28,7 @@ internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IE
     }
 
     private static string? GetPlainTextBody(AlternateViewCollection alternateViews) {
-        foreach (var view in alternateViews) {
+        foreach (AlternateView view in alternateViews) {
             if (!string.Equals(view.ContentType.MediaType, MediaTypeNames.Text.Plain, StringComparison.OrdinalIgnoreCase)) {
                 continue;
             }
@@ -38,7 +38,7 @@ internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IE
             }
 
             using var reader = new StreamReader(view.ContentStream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: true);
-            var content = reader.ReadToEnd();
+            string content = reader.ReadToEnd();
             if (view.ContentStream.CanSeek) {
                 view.ContentStream.Position = 0;
             }

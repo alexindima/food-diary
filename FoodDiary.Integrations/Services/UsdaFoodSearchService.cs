@@ -22,7 +22,7 @@ internal sealed class UsdaFoodSearchService(
         string query,
         int limit = 20,
         CancellationToken cancellationToken = default) {
-        var config = options.Value;
+        UsdaApiOptions config = options.Value;
         if (string.IsNullOrWhiteSpace(config.ApiKey)) {
             logger.LogDebug("USDA API key not configured, skipping branded food search");
             return [];
@@ -38,10 +38,10 @@ internal sealed class UsdaFoodSearchService(
                 Content = JsonContent.Create(requestBody, options: JsonOptions),
             };
 
-            var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
             response.EnsureSuccessStatusCode();
 
-            var result = await response.Content.ReadFromJsonAsync<UsdaSearchResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            UsdaSearchResponse? result = await response.Content.ReadFromJsonAsync<UsdaSearchResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (result?.Foods is null) {
                 return [];
             }
@@ -58,21 +58,21 @@ internal sealed class UsdaFoodSearchService(
     public async Task<UsdaFoodDetailModel?> GetFoodDetailAsync(
         int fdcId,
         CancellationToken cancellationToken = default) {
-        var config = options.Value;
+        UsdaApiOptions config = options.Value;
         if (string.IsNullOrWhiteSpace(config.ApiKey)) {
             logger.LogDebug("USDA API key not configured, skipping food detail lookup");
             return null;
         }
 
         try {
-            var response = await httpClient.GetAsync($"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}", cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage response = await httpClient.GetAsync($"{config.BaseUrl}/food/{fdcId}?api_key={config.ApiKey}", cancellationToken).ConfigureAwait(false);
             if (response.StatusCode == System.Net.HttpStatusCode.NotFound) {
                 return null;
             }
 
             response.EnsureSuccessStatusCode();
 
-            var food = await response.Content.ReadFromJsonAsync<UsdaFoodDetailResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+            UsdaFoodDetailResponse? food = await response.Content.ReadFromJsonAsync<UsdaFoodDetailResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
             if (food is null) {
                 return null;
             }

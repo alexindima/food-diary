@@ -1,3 +1,5 @@
+using System.Reflection;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Events;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -9,7 +11,7 @@ public sealed class MediatorDomainEventPublisherTests {
     [Fact]
     public async Task PublishAsync_WrapsConcreteDomainEventTypeInNotificationEnvelope() {
         var publisher = new RecordingPublisher();
-        var sut = CreatePublisher(publisher);
+        IDomainEventPublisher sut = CreatePublisher(publisher);
         var domainEvent = new RecommendationCreatedDomainEvent(
             RecommendationId.New(),
             UserId.New(),
@@ -18,7 +20,7 @@ public sealed class MediatorDomainEventPublisherTests {
         await sut.PublishAsync(domainEvent, CancellationToken.None);
 
         Assert.NotNull(publisher.PublishedNotification);
-        var notificationType = publisher.PublishedNotification.GetType();
+        Type notificationType = publisher.PublishedNotification.GetType();
         Assert.True(notificationType.IsGenericType);
         Assert.Equal(typeof(NotificationEnvelope<>), notificationType.GetGenericTypeDefinition());
         Assert.Equal(typeof(RecommendationCreatedDomainEvent), notificationType.GetGenericArguments()[0]);
@@ -26,8 +28,8 @@ public sealed class MediatorDomainEventPublisherTests {
 
     private static FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher CreatePublisher(
         IPublisher publisher) {
-        var type = Type.GetType("FoodDiary.Infrastructure.Events.MediatorDomainEventPublisher, FoodDiary.Infrastructure", throwOnError: true)!;
-        var constructor = type.GetConstructors(
+        Type type = Type.GetType("FoodDiary.Infrastructure.Events.MediatorDomainEventPublisher, FoodDiary.Infrastructure", throwOnError: true)!;
+        ConstructorInfo constructor = type.GetConstructors(
                 System.Reflection.BindingFlags.Instance |
                 System.Reflection.BindingFlags.Public |
                 System.Reflection.BindingFlags.NonPublic)

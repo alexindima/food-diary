@@ -31,11 +31,11 @@ internal sealed class DomainEventDispatchInterceptor(
             .SelectMany(a => a.DomainEvents)
             .ToList();
 
-        foreach (var aggregate in aggregates) {
+        foreach (IAggregateWithEvents? aggregate in aggregates) {
             aggregate.ClearDomainEvents();
         }
 
-        foreach (var domainEvent in events) {
+        foreach (IDomainEvent? domainEvent in events) {
             logger.LogInformation(
                 "Dispatching domain event: {EventType} at {OccurredOnUtc}",
                 domainEvent.GetType().Name,

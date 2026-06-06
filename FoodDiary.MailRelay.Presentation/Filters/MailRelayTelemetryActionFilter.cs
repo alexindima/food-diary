@@ -9,20 +9,20 @@ namespace FoodDiary.MailRelay.Presentation.Filters;
 public sealed class MailRelayTelemetryActionFilter(ILogger<MailRelayTelemetryActionFilter> logger) : IAsyncActionFilter {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         var stopwatch = Stopwatch.StartNew();
-        var endpoint = context.HttpContext.GetEndpoint();
-        var route = endpoint?.DisplayName ?? context.ActionDescriptor.AttributeRouteInfo?.Template ?? "unknown";
-        var controllerName = context.Controller.GetType().Name;
-        var feature = ResolveFeatureName(context.Controller.GetType());
-        using var activity = MailRelayTelemetry.ActivitySource.StartActivity("MailRelay.Presentation", ActivityKind.Internal);
+        Endpoint? endpoint = context.HttpContext.GetEndpoint();
+        string route = endpoint?.DisplayName ?? context.ActionDescriptor.AttributeRouteInfo?.Template ?? "unknown";
+        string controllerName = context.Controller.GetType().Name;
+        string feature = ResolveFeatureName(context.Controller.GetType());
+        using Activity? activity = MailRelayTelemetry.ActivitySource.StartActivity("MailRelay.Presentation", ActivityKind.Internal);
 
         activity?.SetTag("fooddiary.mailrelay.presentation.feature", feature);
         activity?.SetTag("fooddiary.mailrelay.presentation.controller", controllerName);
         activity?.SetTag("http.route", route);
 
-        var executedContext = await next();
+        ActionExecutedContext executedContext = await next();
         stopwatch.Stop();
 
-        var outcome = executedContext.Exception is null ? "success" : "failure";
+        string outcome = executedContext.Exception is null ? "success" : "failure";
         activity?.SetTag("fooddiary.mailrelay.presentation.outcome", outcome);
         activity?.SetTag("fooddiary.mailrelay.presentation.duration_ms", stopwatch.Elapsed.TotalMilliseconds);
 
@@ -53,13 +53,13 @@ public sealed class MailRelayTelemetryActionFilter(ILogger<MailRelayTelemetryAct
     }
 
     private static string ResolveFeatureName(Type controllerType) {
-        var namespaceValue = controllerType.Namespace;
+        string? namespaceValue = controllerType.Namespace;
         if (string.IsNullOrWhiteSpace(namespaceValue)) {
             return "Unknown";
         }
 
-        var segments = namespaceValue.Split('.');
-        var featuresIndex = Array.IndexOf(segments, "Features");
+        string[] segments = namespaceValue.Split('.');
+        int featuresIndex = Array.IndexOf(segments, "Features");
         return featuresIndex >= 0 && featuresIndex < segments.Length - 1
             ? segments[featuresIndex + 1]
             : "Unknown";

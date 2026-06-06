@@ -37,9 +37,9 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        var requestModel = _options.VisionModel;
-        var request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        string requestModel = _options.VisionModel;
+        object request = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
+        (bool IsSuccess, JsonDocument? Json, Error Error) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             IntegrationsTelemetry.AiFallbackCounter.Add(
                 1,
@@ -47,7 +47,7 @@ public sealed class OpenAiFoodClient(
                 new KeyValuePair<string, object?>("fooddiary.ai.from_model", requestModel),
                 new KeyValuePair<string, object?>("fooddiary.ai.to_model", _options.VisionFallbackModel));
             requestModel = _options.VisionFallbackModel;
-            var fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
+            object fallback = BuildVisionRequest(requestModel, imageUrl, userLanguage, description, promptTemplate);
             response = await SendRequestAsync(fallback, operation, requestModel, cancellationToken).ConfigureAwait(false);
         }
 
@@ -55,7 +55,7 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
 
-        var parsed = ParseVisionResponse(response.Json!);
+        Result<FoodVisionModel> parsed = ParseVisionResponse(response.Json!);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -77,14 +77,14 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        var requestModel = _options.TextModel;
-        var request = BuildTextParseRequest(requestModel, text, userLanguage, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        string requestModel = _options.TextModel;
+        object request = BuildTextParseRequest(requestModel, text, userLanguage, promptTemplate);
+        (bool IsSuccess, JsonDocument? Json, Error Error) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(response.Error);
         }
 
-        var parsed = ParseVisionResponse(response.Json!);
+        Result<FoodVisionModel> parsed = ParseVisionResponse(response.Json!);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodVisionModel>>(parsed.Error);
         }
@@ -105,14 +105,14 @@ public sealed class OpenAiFoodClient(
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(Errors.Ai.OpenAiFailed("OpenAI API key is not configured."));
         }
 
-        var requestModel = _options.TextModel;
-        var request = BuildNutritionRequest(requestModel, items, promptTemplate);
-        var response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
+        string requestModel = _options.TextModel;
+        object request = BuildNutritionRequest(requestModel, items, promptTemplate);
+        (bool IsSuccess, JsonDocument? Json, Error Error) response = await SendRequestAsync(request, operation, requestModel, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccess) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(response.Error);
         }
 
-        var parsed = ParseNutritionResponse(response.Json!);
+        Result<FoodNutritionModel> parsed = ParseNutritionResponse(response.Json!);
         if (parsed.IsFailure) {
             return Result.Failure<OpenAiFoodClientResponse<FoodNutritionModel>>(parsed.Error);
         }
@@ -129,9 +129,9 @@ public sealed class OpenAiFoodClient(
         string operation,
         string model,
         CancellationToken cancellationToken) {
-        var requestBody = JsonSerializer.Serialize(payload);
+        string requestBody = JsonSerializer.Serialize(payload);
 
-        for (var attempt = 0; attempt <= MaxTransientRetries; attempt++) {
+        for (int attempt = 0; attempt <= MaxTransientRetries; attempt++) {
             using var request = new HttpRequestMessage(HttpMethod.Post, "https://api.openai.com/v1/responses");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", _options.ApiKey);
             request.Content = new StringContent(requestBody, Encoding.UTF8, "application/json");
@@ -157,11 +157,11 @@ public sealed class OpenAiFoodClient(
                 return (false, null, Errors.Ai.OpenAiFailed("OpenAI request timed out."));
             }
 
-            using var _ = response;
-            var responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            using HttpResponseMessage _ = response;
+            string responseBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
 
             if (!response.IsSuccessStatusCode) {
-                var failedResponse = await HandleFailedResponseAsync(response, responseBody, attempt, operation, model, cancellationToken).ConfigureAwait(false);
+                (bool ShouldRetry, Error Error) failedResponse = await HandleFailedResponseAsync(response, responseBody, attempt, operation, model, cancellationToken).ConfigureAwait(false);
                 if (failedResponse.ShouldRetry) {
                     continue;
                 }
@@ -190,11 +190,11 @@ public sealed class OpenAiFoodClient(
         string operation,
         string model,
         CancellationToken cancellationToken) {
-        var statusCode = (int)response.StatusCode;
-        var requestId = response.Headers.TryGetValues("x-request-id", out var values)
+        int statusCode = (int)response.StatusCode;
+        string? requestId = response.Headers.TryGetValues("x-request-id", out IEnumerable<string>? values)
             ? string.Join(",", values)
             : null;
-        var summary = SummarizeErrorBody(responseBody);
+        string summary = SummarizeErrorBody(responseBody);
 
         if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
             _logger.LogWarning(
@@ -223,16 +223,16 @@ public sealed class OpenAiFoodClient(
         string? userLanguage,
         string? description,
         string promptTemplate) {
-        var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        var includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
-        var languageHint = includeLocal
+        string language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
+        bool includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
+        string languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
-        var descriptionHint = string.IsNullOrWhiteSpace(description)
+        string descriptionHint = string.IsNullOrWhiteSpace(description)
             ? string.Empty
             : $"User hint: {description.Trim()}. ";
 
-        var resolvedPrompt = promptTemplate
+        string resolvedPrompt = promptTemplate
             .Replace("{{languageHint}}", languageHint)
             .Replace("{{descriptionHint}}", descriptionHint);
 
@@ -259,13 +259,13 @@ public sealed class OpenAiFoodClient(
     }
 
     private static object BuildTextParseRequest(string model, string text, string? userLanguage, string promptTemplate) {
-        var language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
-        var includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
-        var languageHint = includeLocal
+        string language = string.IsNullOrWhiteSpace(userLanguage) ? "en" : userLanguage.Trim().ToLowerInvariant();
+        bool includeLocal = !string.Equals(language, "en", StringComparison.Ordinal);
+        string languageHint = includeLocal
             ? $"Return nameEn in English and nameLocal in language '{language}'."
             : "Return nameEn in English and set nameLocal to null.";
 
-        var resolvedPrompt = promptTemplate
+        string resolvedPrompt = promptTemplate
             .Replace("{{userText}}", text)
             .Replace("{{languageHint}}", languageHint);
 
@@ -325,8 +325,8 @@ public sealed class OpenAiFoodClient(
             unit = item.Unit
         });
 
-        var itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
-        var resolvedPrompt = promptTemplate
+        string itemsJson = JsonSerializer.Serialize(new { items = mappedItems });
+        string resolvedPrompt = promptTemplate
             .Replace("{{itemsJson}}", itemsJson);
 
         return new {
@@ -398,13 +398,13 @@ public sealed class OpenAiFoodClient(
     }
 
     private static Result<FoodVisionModel> ParseVisionResponse(JsonDocument json) {
-        var text = ExtractOutputText(json);
+        string? text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
             return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
         try {
-            var parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
+            FoodVisionModel? parsed = JsonSerializer.Deserialize<FoodVisionModel>(text, JsonOptions());
             if (parsed is null || parsed.Items is null) {
                 return Result.Failure<FoodVisionModel>(Errors.Ai.InvalidResponse("Vision response is empty."));
             }
@@ -416,13 +416,13 @@ public sealed class OpenAiFoodClient(
     }
 
     private static Result<FoodNutritionModel> ParseNutritionResponse(JsonDocument json) {
-        var text = ExtractOutputText(json);
+        string? text = ExtractOutputText(json);
         if (string.IsNullOrWhiteSpace(text)) {
             return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Missing output text."));
         }
 
         try {
-            var parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
+            FoodNutritionModel? parsed = JsonSerializer.Deserialize<FoodNutritionModel>(text, JsonOptions());
             if (parsed is null || parsed.Items is null) {
                 return Result.Failure<FoodNutritionModel>(Errors.Ai.InvalidResponse("Nutrition response is empty."));
             }
@@ -434,19 +434,19 @@ public sealed class OpenAiFoodClient(
     }
 
     private static string? ExtractOutputText(JsonDocument json) {
-        if (!json.RootElement.TryGetProperty("output", out var output) || output.ValueKind != JsonValueKind.Array) {
+        if (!json.RootElement.TryGetProperty("output", out JsonElement output) || output.ValueKind != JsonValueKind.Array) {
             return null;
         }
 
-        foreach (var item in output.EnumerateArray()) {
-            if (!item.TryGetProperty("content", out var content) || content.ValueKind != JsonValueKind.Array) {
+        foreach (JsonElement item in output.EnumerateArray()) {
+            if (!item.TryGetProperty("content", out JsonElement content) || content.ValueKind != JsonValueKind.Array) {
                 continue;
             }
 
-            foreach (var part in content.EnumerateArray()) {
-                if (part.TryGetProperty("type", out var type) &&
+            foreach (JsonElement part in content.EnumerateArray()) {
+                if (part.TryGetProperty("type", out JsonElement type) &&
 string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
-                    part.TryGetProperty("text", out var text)) {
+                    part.TryGetProperty("text", out JsonElement text)) {
                     return text.GetString();
                 }
             }
@@ -467,14 +467,14 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
     }
 
     private static AiUsageTokens? ExtractUsage(JsonDocument json) {
-        if (!json.RootElement.TryGetProperty("usage", out var usage) ||
+        if (!json.RootElement.TryGetProperty("usage", out JsonElement usage) ||
             usage.ValueKind != JsonValueKind.Object) {
             return null;
         }
 
-        var input = usage.TryGetProperty("input_tokens", out var inputTokens) ? inputTokens.GetInt32() : 0;
-        var output = usage.TryGetProperty("output_tokens", out var outputTokens) ? outputTokens.GetInt32() : 0;
-        var total = usage.TryGetProperty("total_tokens", out var totalTokens) ? totalTokens.GetInt32() : input + output;
+        int input = usage.TryGetProperty("input_tokens", out JsonElement inputTokens) ? inputTokens.GetInt32() : 0;
+        int output = usage.TryGetProperty("output_tokens", out JsonElement outputTokens) ? outputTokens.GetInt32() : 0;
+        int total = usage.TryGetProperty("total_tokens", out JsonElement totalTokens) ? totalTokens.GetInt32() : input + output;
 
         return new AiUsageTokens(input, output, total);
     }
@@ -492,25 +492,25 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
 
         try {
             var root = JsonNode.Parse(responseBody);
-            var errorNode = root?["error"];
-            if (errorNode is JsonValue errorValue && errorValue.TryGetValue<string>(out var errorText)) {
+            JsonNode? errorNode = root?["error"];
+            if (errorNode is JsonValue errorValue && errorValue.TryGetValue<string>(out string? errorText)) {
                 return TrimSummary(errorText);
             }
 
             if (errorNode is JsonObject errorObject) {
                 var parts = new List<string>();
-                if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue<string>(out var errorType) &&
+                if (errorObject["type"] is JsonValue typeValue && typeValue.TryGetValue<string>(out string? errorType) &&
                     !string.IsNullOrWhiteSpace(errorType)) {
                     parts.Add(errorType.Trim());
                 }
 
-                if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue<string>(out var errorCode) &&
+                if (errorObject["code"] is JsonValue codeValue && codeValue.TryGetValue<string>(out string? errorCode) &&
                     !string.IsNullOrWhiteSpace(errorCode)) {
                     parts.Add(errorCode.Trim());
                 }
 
                 if (errorObject["message"] is JsonValue messageValue &&
-                    messageValue.TryGetValue<string>(out var errorMessage) &&
+                    messageValue.TryGetValue<string>(out string? errorMessage) &&
                     !string.IsNullOrWhiteSpace(errorMessage)) {
                     parts.Add(errorMessage.Trim());
                 }
@@ -526,7 +526,7 @@ string.Equals(type.GetString(), "output_text", StringComparison.Ordinal) &&
     }
 
     private static string TrimSummary(string value) {
-        var compact = value.ReplaceLineEndings(" ").Trim();
+        string compact = value.ReplaceLineEndings(" ").Trim();
         return compact.Length <= 200 ? compact : compact[..200];
     }
 }

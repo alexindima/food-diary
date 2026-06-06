@@ -26,7 +26,7 @@ public sealed class Recommendation : AggregateRoot<RecommendationId> {
         EnsureUserId(dietologistUserId, nameof(dietologistUserId));
         EnsureUserId(clientUserId, nameof(clientUserId));
 
-        var normalizedText = NormalizeText(text);
+        string normalizedText = NormalizeText(text);
         var recommendation = new Recommendation {
             Id = RecommendationId.New(),
             DietologistUserId = dietologistUserId,
@@ -53,7 +53,7 @@ public sealed class Recommendation : AggregateRoot<RecommendationId> {
             throw new ArgumentException("Recommendation text is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > TextMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Recommendation text must be at most {TextMaxLength} characters.")
             : normalized;

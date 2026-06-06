@@ -20,12 +20,12 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(
+        WebPushSubscription? existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
@@ -69,7 +69,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
     }
 
     private static string GetEndpointHost(string endpoint) {
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out var uri)
+        return Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? uri)
             ? uri.Host
             : endpoint;
     }

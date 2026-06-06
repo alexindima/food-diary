@@ -11,10 +11,10 @@ namespace FoodDiary.Web.Api.Options;
 public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rateLimitingOptions)
     : IConfigureOptions<RateLimiterOptions> {
     public void Configure(RateLimiterOptions options) {
-        var settings = rateLimitingOptions.Value;
+        ApiRateLimitingOptions settings = rateLimitingOptions.Value;
 
         options.OnRejected = async (context, cancellationToken) => {
-            var httpContext = context.HttpContext;
+            HttpContext httpContext = context.HttpContext;
             httpContext.Response.StatusCode = StatusCodes.Status429TooManyRequests;
             ApiTelemetry.RateLimitRejectionCounter.Add(
                 1,
@@ -48,12 +48,12 @@ public sealed class RateLimiterOptionsSetup(IOptions<ApiRateLimitingOptions> rat
     }
 
     private static string GetPartitionKey(HttpContext context) {
-        var userId = context.User.GetUserGuid();
+        Guid? userId = context.User.GetUserGuid();
         if (userId.HasValue && userId.Value != Guid.Empty) {
             return $"user:{userId.Value:D}";
         }
 
-        var remoteIp = context.Connection.RemoteIpAddress?.MapToIPv4().ToString();
+        string? remoteIp = context.Connection.RemoteIpAddress?.MapToIPv4().ToString();
         return $"ip:{remoteIp ?? "unknown"}";
     }
 }

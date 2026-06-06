@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Domain.Entities.Billing;
 using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Admin;
@@ -32,7 +33,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            var term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = $"%{EscapeLikePattern(filter.Search)}%";
             query = query.Where(item =>
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.subscription.ExternalCustomerId, term, LikeEscapeCharacter) ||
@@ -40,8 +41,8 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
                 EF.Functions.ILike(item.subscription.ExternalPaymentMethodId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingSubscriptionReadModel> items = await query
             .OrderByDescending(item => item.subscription.CreatedOnUtc)
             .Skip((filter.Page - 1) * filter.Limit)
             .Take(filter.Limit)
@@ -92,15 +93,15 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
             query = query.Where(item => item.payment.CreatedOnUtc <= filter.ToUtc.Value);
         }
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            var term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = $"%{EscapeLikePattern(filter.Search)}%";
             query = query.Where(item =>
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalPaymentId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalCustomerId ?? string.Empty, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.payment.ExternalSubscriptionId ?? string.Empty, term, LikeEscapeCharacter));
         }
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingPaymentReadModel> items = await query
             .OrderByDescending(item => item.payment.CreatedOnUtc)
             .Skip((filter.Page - 1) * filter.Limit)
             .Take(filter.Limit)
@@ -133,7 +134,7 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
     public async Task<(IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems)> GetWebhookEventsAsync(
         AdminBillingListFilter filter,
         CancellationToken cancellationToken = default) {
-        var query = context.BillingWebhookEvents.AsNoTracking();
+        IQueryable<BillingWebhookEvent> query = context.BillingWebhookEvents.AsNoTracking();
 
         if (!string.IsNullOrWhiteSpace(filter.Provider)) {
             query = query.Where(webhookEvent => webhookEvent.Provider == filter.Provider);
@@ -152,15 +153,15 @@ public sealed class AdminBillingRepository(FoodDiaryDbContext context) : IAdminB
         }
 
         if (!string.IsNullOrWhiteSpace(filter.Search)) {
-            var term = $"%{EscapeLikePattern(filter.Search)}%";
+            string term = $"%{EscapeLikePattern(filter.Search)}%";
             query = query.Where(webhookEvent =>
                 EF.Functions.ILike(webhookEvent.EventId, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.EventType, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(webhookEvent.ExternalObjectId ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<AdminBillingWebhookEventReadModel> items = await query
             .OrderByDescending(webhookEvent => webhookEvent.ProcessedAtUtc)
             .Skip((filter.Page - 1) * filter.Limit)
             .Take(filter.Limit)

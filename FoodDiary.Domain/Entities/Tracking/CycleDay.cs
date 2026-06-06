@@ -43,8 +43,8 @@ public sealed class CycleDay : Entity<CycleDayId> {
     }
 
     public void Update(bool? isPeriod = null, DailySymptoms? symptoms = null, string? notes = null, bool clearNotes = false) {
-        var changed = false;
-        var normalizedNotes = NormalizeNotes(notes);
+        bool changed = false;
+        string? normalizedNotes = NormalizeNotes(notes);
 
         EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
 
@@ -85,7 +85,7 @@ public sealed class CycleDay : Entity<CycleDayId> {
             return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
         }
 
-        var utc = value.ToUniversalTime();
+        DateTime utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }

@@ -36,10 +36,10 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
             throw new InvalidOperationException($"Unsupported content type: {contentType}.");
         }
 
-        var safeFileName = NormalizeFileName(fileName);
-        var objectKey = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{safeFileName}";
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
-        var uploadUrl = $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.Bucket}/{objectKey}";
+        string safeFileName = NormalizeFileName(fileName);
+        string objectKey = $"users/{userId.Value:D}/images/{Guid.NewGuid():N}-{safeFileName}";
+        DateTime expiresAt = DateTime.UtcNow.AddMinutes(15);
+        string uploadUrl = $"{_options.ServiceUrl!.TrimEnd('/')}/{_options.Bucket}/{objectKey}";
 
         return Task.FromResult(new PresignedUpload(
             uploadUrl,
@@ -56,8 +56,8 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
         Task.FromResult(new ImageObjectValidationResult(true));
 
     private static string NormalizeFileName(string fileName) {
-        var nameOnly = Path.GetFileName(fileName);
-        var cleaned = nameOnly.Replace(' ', '-');
+        string nameOnly = Path.GetFileName(fileName);
+        string cleaned = nameOnly.Replace(' ', '-');
         return cleaned.Length switch {
             0 => "image",
             > 128 => cleaned[..128],

@@ -9,6 +9,9 @@ using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.RecipeComments.Models;
+using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Tests.RecipeComments;
 
@@ -26,7 +29,7 @@ public class RecipeCommentsFeatureTests {
             commentRepo,
             new StubRecipeRepository(recipe),
             notifRepo);
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
 
@@ -46,7 +49,7 @@ public class RecipeCommentsFeatureTests {
             new InMemoryRecipeCommentRepository(),
             new StubRecipeRepository(recipe),
             notifRepo);
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
 
@@ -61,7 +64,7 @@ public class RecipeCommentsFeatureTests {
             new StubRecipeRepository(null),
             new RecordingNotificationRepository());
 
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
@@ -75,7 +78,7 @@ public class RecipeCommentsFeatureTests {
             new StubRecipeRepository(Recipe.Create(UserId.New(), "Pasta", 1)),
             new RecordingNotificationRepository());
 
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
@@ -91,7 +94,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new UpdateRecipeCommentCommandHandler(repo);
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(userId.Value, comment.Id.Value, "New text"),
             CancellationToken.None);
 
@@ -108,7 +111,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new UpdateRecipeCommentCommandHandler(repo);
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(otherUserId.Value, comment.Id.Value, "Hacked"),
             CancellationToken.None);
 
@@ -120,7 +123,7 @@ public class RecipeCommentsFeatureTests {
     public async Task UpdateRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
 
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
@@ -132,7 +135,7 @@ public class RecipeCommentsFeatureTests {
     public async Task UpdateRecipeComment_WhenCommentMissing_ReturnsNotFound() {
         var handler = new UpdateRecipeCommentCommandHandler(new InMemoryRecipeCommentRepository());
 
-        var result = await handler.Handle(
+        Result<RecipeCommentModel> result = await handler.Handle(
             new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
@@ -149,7 +152,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(null));
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(userId.Value, recipeId.Value, comment.Id.Value),
             CancellationToken.None);
 
@@ -161,7 +164,7 @@ public class RecipeCommentsFeatureTests {
         var handler = new DeleteRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(), new StubRecipeRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -178,7 +181,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(ownedRecipe));
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, ownedRecipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
 
@@ -193,7 +196,7 @@ public class RecipeCommentsFeatureTests {
             new InMemoryRecipeCommentRepository(),
             new StubRecipeRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -209,7 +212,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(null));
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), recipeId.Value, comment.Id.Value),
             CancellationToken.None);
 
@@ -226,7 +229,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(comment);
 
         var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(recipe));
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, recipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
 
@@ -238,7 +241,7 @@ public class RecipeCommentsFeatureTests {
     public async Task GetRecipeComments_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetRecipeCommentsQueryHandler(new InMemoryRecipeCommentRepository());
 
-        var result = await handler.Handle(
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
             new GetRecipeCommentsQuery(Guid.Empty, Guid.NewGuid(), 1, 10),
             CancellationToken.None);
 
@@ -256,7 +259,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(RecipeComment.Create(userId, RecipeId.New(), "Different recipe"));
         var handler = new GetRecipeCommentsQueryHandler(repo);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
             new GetRecipeCommentsQuery(userId.Value, recipeId.Value, 0, 0),
             CancellationToken.None);
 

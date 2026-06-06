@@ -16,7 +16,7 @@ public sealed class AdminTelemetryController(IFastingTelemetrySummaryService fas
     [HttpGet("fasting")]
     [ProducesResponseType<FastingTelemetrySummaryHttpResponse>(StatusCodes.Status200OK)]
     public async Task<IActionResult> GetFastingSummary([FromQuery] GetFastingTelemetrySummaryHttpQuery query) {
-        var response = (await fastingTelemetrySummaryService.GetSummaryAsync(query.Hours, HttpContext.RequestAborted)).ToHttpResponse();
+        FastingTelemetrySummaryHttpResponse response = (await fastingTelemetrySummaryService.GetSummaryAsync(query.Hours, HttpContext.RequestAborted)).ToHttpResponse();
         return new OkObjectResult(response);
     }
 }

@@ -25,11 +25,11 @@ public sealed class EmailTemplate : Entity<Guid> {
         string htmlBody,
         string textBody,
         bool isActive) {
-        var normalizedKey = NormalizeKey(key);
-        var normalizedLocale = NormalizeLocale(locale);
-        var normalizedSubject = NormalizeRequired(subject, nameof(subject), SubjectMaxLength);
-        var normalizedHtmlBody = NormalizeRequired(htmlBody, nameof(htmlBody));
-        var normalizedTextBody = NormalizeRequired(textBody, nameof(textBody));
+        string normalizedKey = NormalizeKey(key);
+        string normalizedLocale = NormalizeLocale(locale);
+        string normalizedSubject = NormalizeRequired(subject, nameof(subject), SubjectMaxLength);
+        string normalizedHtmlBody = NormalizeRequired(htmlBody, nameof(htmlBody));
+        string normalizedTextBody = NormalizeRequired(textBody, nameof(textBody));
 
         var template = new EmailTemplate {
             Id = Guid.NewGuid(),
@@ -49,9 +49,9 @@ public sealed class EmailTemplate : Entity<Guid> {
         string htmlBody,
         string textBody,
         bool isActive) {
-        var normalizedSubject = NormalizeRequired(subject, nameof(subject), SubjectMaxLength);
-        var normalizedHtmlBody = NormalizeRequired(htmlBody, nameof(htmlBody));
-        var normalizedTextBody = NormalizeRequired(textBody, nameof(textBody));
+        string normalizedSubject = NormalizeRequired(subject, nameof(subject), SubjectMaxLength);
+        string normalizedHtmlBody = NormalizeRequired(htmlBody, nameof(htmlBody));
+        string normalizedTextBody = NormalizeRequired(textBody, nameof(textBody));
 
         if (string.Equals(Subject, normalizedSubject, StringComparison.Ordinal) &&
             string.Equals(HtmlBody, normalizedHtmlBody, StringComparison.Ordinal) &&
@@ -72,7 +72,7 @@ public sealed class EmailTemplate : Entity<Guid> {
     }
 
     private static string NormalizeLocale(string value) {
-        var preferred = LanguageCode.FromPreferred(value).Value;
+        string preferred = LanguageCode.FromPreferred(value).Value;
         return preferred.Length > LocaleMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Value must be at most {LocaleMaxLength} characters.")
             : preferred;
@@ -83,7 +83,7 @@ public sealed class EmailTemplate : Entity<Guid> {
             throw new ArgumentException("Value is required.", paramName);
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         if (maxLength.HasValue && normalized.Length > maxLength.Value) {
             throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength.Value} characters.");
         }

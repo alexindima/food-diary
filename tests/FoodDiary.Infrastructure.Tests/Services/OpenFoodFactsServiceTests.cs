@@ -1,4 +1,5 @@
 using System.Net;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -9,7 +10,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductFound_ReturnsMappedProduct() {
-        var json = """
+        string json = """
             {
               "status": 1,
               "product": {
@@ -27,9 +28,9 @@ public sealed class OpenFoodFactsServiceTests {
               }
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetByBarcodeAsync("4600000000001");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("4600000000001");
 
         Assert.NotNull(result);
         Assert.Equal("4600000000001", result.Barcode);
@@ -45,17 +46,17 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductNotFound_ReturnsNull() {
-        var json = """{"status": 0, "product": null}""";
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        string json = """{"status": 0, "product": null}""";
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetByBarcodeAsync("0000000000000");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("0000000000000");
 
         Assert.Null(result);
     }
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductNameEmpty_ReturnsNull() {
-        var json = """
+        string json = """
             {
               "status": 1,
               "product": {
@@ -65,18 +66,18 @@ public sealed class OpenFoodFactsServiceTests {
               }
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetByBarcodeAsync("1234567890123");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("1234567890123");
 
         Assert.Null(result);
     }
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenTransportFails_ReturnsNull() {
-        var service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
+        OpenFoodFactsService service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
 
-        var result = await service.GetByBarcodeAsync("4600000000001");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("4600000000001");
 
         Assert.Null(result);
     }
@@ -84,7 +85,7 @@ public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task GetByBarcodeAsync_EncodesBarcodePathSegment() {
         var handler = new RecordingHttpMessageHandler("""{"status": 0, "product": null}""");
-        var service = CreateService(handler);
+        OpenFoodFactsService service = CreateService(handler);
 
         await service.GetByBarcodeAsync(" 123/456 ");
 
@@ -94,25 +95,25 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenJsonInvalid_ReturnsNull() {
-        var service = CreateService(new SuccessHttpMessageHandler("not json"));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler("not json"));
 
-        var result = await service.GetByBarcodeAsync("4600000000001");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("4600000000001");
 
         Assert.Null(result);
     }
 
     [Fact]
     public async Task GetByBarcodeAsync_WhenServerReturns500_ReturnsNull() {
-        var service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError));
+        OpenFoodFactsService service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError));
 
-        var result = await service.GetByBarcodeAsync("4600000000001");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("4600000000001");
 
         Assert.Null(result);
     }
 
     [Fact]
     public async Task GetByBarcodeAsync_WithNullNutriments_ReturnsProductWithNullNutrition() {
-        var json = """
+        string json = """
             {
               "status": 1,
               "product": {
@@ -121,9 +122,9 @@ public sealed class OpenFoodFactsServiceTests {
               }
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetByBarcodeAsync("1111111111111");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("1111111111111");
 
         Assert.NotNull(result);
         Assert.Equal("Mystery Product", result.Name);
@@ -133,7 +134,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task GetByBarcodeAsync_TrimsWhitespaceFromBrandAndCategory() {
-        var json = """
+        string json = """
             {
               "status": 1,
               "product": {
@@ -144,9 +145,9 @@ public sealed class OpenFoodFactsServiceTests {
               }
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetByBarcodeAsync("1234567890123");
+        OpenFoodFactsProductModel? result = await service.GetByBarcodeAsync("1234567890123");
 
         Assert.NotNull(result);
         Assert.Equal("Brand", result.Brand);
@@ -155,7 +156,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenProductsFound_ReturnsMappedList() {
-        var json = """
+        string json = """
             {
               "products": [
                 {
@@ -172,9 +173,9 @@ public sealed class OpenFoodFactsServiceTests {
               ]
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.SearchAsync("dairy");
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("dairy");
 
         Assert.Equal(2, result.Count);
         Assert.Equal("111", result[0].Barcode);
@@ -187,7 +188,7 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_FiltersOutProductsWithNoName() {
-        var json = """
+        string json = """
             {
               "products": [
                 { "code": "111", "product_name": "Valid", "nutriments": {} },
@@ -196,9 +197,9 @@ public sealed class OpenFoodFactsServiceTests {
               ]
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.SearchAsync("test");
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("test");
 
         Assert.Single(result);
         Assert.Equal("Valid", result[0].Name);
@@ -206,26 +207,26 @@ public sealed class OpenFoodFactsServiceTests {
 
     [Fact]
     public async Task SearchAsync_WhenTransportFails_ReturnsEmptyList() {
-        var service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
+        OpenFoodFactsService service = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
 
-        var result = await service.SearchAsync("milk");
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("milk");
 
         Assert.Empty(result);
     }
 
     [Fact]
     public async Task SearchAsync_WhenNullProducts_ReturnsEmptyList() {
-        var json = """{"products": null}""";
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        string json = """{"products": null}""";
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.SearchAsync("milk");
+        IReadOnlyList<OpenFoodFactsProductModel> result = await service.SearchAsync("milk");
 
         Assert.Empty(result);
     }
 
     [Fact]
     public async Task SearchAsync_WhenRepeatedWithinCacheWindow_ReturnsCachedResultWithoutSecondRequest() {
-        var json = """
+        string json = """
             {
               "products": [
                 {
@@ -238,10 +239,10 @@ public sealed class OpenFoodFactsServiceTests {
             }
             """;
         var handler = new CountingHttpMessageHandler(json);
-        var service = CreateService(handler);
+        OpenFoodFactsService service = CreateService(handler);
 
-        var firstResult = await service.SearchAsync("cached-fanta");
-        var secondResult = await service.SearchAsync("cached-fanta");
+        IReadOnlyList<OpenFoodFactsProductModel> firstResult = await service.SearchAsync("cached-fanta");
+        IReadOnlyList<OpenFoodFactsProductModel> secondResult = await service.SearchAsync("cached-fanta");
 
         Assert.Single(firstResult);
         Assert.Single(secondResult);
@@ -252,7 +253,7 @@ public sealed class OpenFoodFactsServiceTests {
     [Fact]
     public async Task SearchAsync_ClampsLimitBeforeCallingApi() {
         var handler = new RecordingHttpMessageHandler("""{"products": []}""");
-        var service = CreateService(handler);
+        OpenFoodFactsService service = CreateService(handler);
 
         await service.SearchAsync("milk", limit: 500);
 

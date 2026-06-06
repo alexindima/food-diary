@@ -11,6 +11,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FluentValidation.Results;
 
 namespace FoodDiary.Application.Tests.Ai;
 
@@ -21,7 +22,7 @@ public class AiValidatorsTests {
         var validator = new AnalyzeFoodImageCommandValidator();
         var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, null);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -31,7 +32,7 @@ public class AiValidatorsTests {
         var validator = new AnalyzeFoodImageCommandValidator();
         var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), new string('x', 2049));
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -41,7 +42,7 @@ public class AiValidatorsTests {
         var validator = new AnalyzeFoodImageCommandValidator();
         var command = new AnalyzeFoodImageCommand(Guid.NewGuid(), Guid.NewGuid(), "some context");
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
     }
@@ -55,7 +56,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, null),
             CancellationToken.None);
 
@@ -72,7 +73,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), null),
             CancellationToken.None);
 
@@ -90,7 +91,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), null),
             CancellationToken.None);
 
@@ -109,7 +110,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, null),
             CancellationToken.None);
 
@@ -127,7 +128,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubImageStorageService(isValid: false, message: "upload incomplete"));
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, null),
             CancellationToken.None);
 
@@ -147,7 +148,7 @@ public class AiValidatorsTests {
             openAiFoodService,
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
             CancellationToken.None);
 
@@ -168,7 +169,7 @@ public class AiValidatorsTests {
             openAiFoodService,
             new StubImageStorageService());
 
-        var result = await handler.Handle(
+        Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),
             CancellationToken.None);
 
@@ -184,7 +185,7 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(Guid.NewGuid(), Array.Empty<FoodVisionItemModel>());
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -196,7 +197,7 @@ public class AiValidatorsTests {
             Guid.NewGuid(),
             [new FoodVisionItemModel("", null, 0, "", -1)]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -208,7 +209,7 @@ public class AiValidatorsTests {
             Guid.NewGuid(),
             [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
     }
@@ -218,7 +219,7 @@ public class AiValidatorsTests {
         var validator = new GetUserAiUsageSummaryQueryValidator();
         var query = new GetUserAiUsageSummaryQuery(Guid.Empty);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -228,7 +229,7 @@ public class AiValidatorsTests {
         var validator = new GetUserAiUsageSummaryQueryValidator();
         var query = new GetUserAiUsageSummaryQuery(Guid.NewGuid());
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
@@ -240,7 +241,7 @@ public class AiValidatorsTests {
             new RecordingAiUsageRepository(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
-        var result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
+        Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -253,7 +254,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubUserRepository(User.Create("ai-empty-nutrition@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 Guid.Empty,
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
@@ -270,7 +271,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubUserRepository(User.Create("ai-empty-items@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(Guid.NewGuid(), []),
             CancellationToken.None);
 
@@ -285,7 +286,7 @@ public class AiValidatorsTests {
         var openAiFoodService = new StubOpenAiFoodService();
         var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 user.Id.Value,
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
@@ -302,7 +303,7 @@ public class AiValidatorsTests {
         var openAiFoodService = new StubOpenAiFoodService();
         var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
                 user.Id.Value,
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
@@ -318,7 +319,7 @@ public class AiValidatorsTests {
             new StubOpenAiFoodService(),
             new StubUserRepository(User.Create("ai-empty-text-user@example.com", "hash")));
 
-        var result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -329,7 +330,7 @@ public class AiValidatorsTests {
         var openAiFoodService = new StubOpenAiFoodService();
         var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(null));
 
-        var result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -343,7 +344,7 @@ public class AiValidatorsTests {
         var openAiFoodService = new StubOpenAiFoodService();
         var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(user));
 
-        var result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
+        Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(openAiFoodService.WasParseFoodTextCalled);
@@ -359,7 +360,7 @@ public class AiValidatorsTests {
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc));
         var handler = new GetUserAiUsageSummaryQueryHandler(userRepository, aiUsageRepository, dateTimeProvider);
 
-        var result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
+        Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
@@ -376,7 +377,7 @@ public class AiValidatorsTests {
             new RecordingAiUsageRepository(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
-        var result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
+        Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);

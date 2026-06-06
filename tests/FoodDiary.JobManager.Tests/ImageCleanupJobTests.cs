@@ -13,11 +13,11 @@ public sealed class ImageCleanupJobTests : IDisposable {
     [Fact]
     public async Task Execute_WhenNoOrphans_RecordsSuccess() {
         var cleanup = new StubImageCleanupService(itemsPerBatch: 0);
-        var job = CreateJob(cleanup);
+        ImageCleanupJob job = CreateJob(cleanup);
 
         await job.Execute();
 
-        var snapshot = _stateTracker.GetSnapshot("images.cleanup");
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("images.cleanup");
         Assert.NotNull(snapshot);
         Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
         Assert.NotNull(snapshot.Value.LastSucceededAtUtc);
@@ -27,7 +27,7 @@ public sealed class ImageCleanupJobTests : IDisposable {
     public async Task Execute_WithOrphans_DeletesInBatches() {
         var cleanup = new StubImageCleanupService(itemsPerBatch: 3, totalAvailable: 5);
         var options = new ImageCleanupOptions { BatchSize = 3, OlderThanHours = 12 };
-        var job = CreateJob(cleanup, options);
+        ImageCleanupJob job = CreateJob(cleanup, options);
 
         await job.Execute();
 
@@ -38,11 +38,11 @@ public sealed class ImageCleanupJobTests : IDisposable {
     [Fact]
     public async Task Execute_WhenServiceThrows_RecordsFailureAndRethrows() {
         var cleanup = new ThrowingImageCleanupService();
-        var job = CreateJob(cleanup);
+        ImageCleanupJob job = CreateJob(cleanup);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
 
-        var snapshot = _stateTracker.GetSnapshot("images.cleanup");
+        JobExecutionStateSnapshot? snapshot = _stateTracker.GetSnapshot("images.cleanup");
         Assert.Equal(1, snapshot!.Value.ConsecutiveFailures);
     }
 
@@ -66,8 +66,8 @@ public sealed class ImageCleanupJobTests : IDisposable {
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken ct = default) {
             CallCount++;
-            var remaining = totalAvailable - TotalDeleted;
-            var toDelete = Math.Min(Math.Min(itemsPerBatch, batchSize), remaining);
+            int remaining = totalAvailable - TotalDeleted;
+            int toDelete = Math.Min(Math.Min(itemsPerBatch, batchSize), remaining);
             TotalDeleted += toDelete;
             return Task.FromResult(toDelete);
         }

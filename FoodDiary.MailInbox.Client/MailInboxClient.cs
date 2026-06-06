@@ -16,11 +16,11 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
-        var path = limit.HasValue
+        string path = limit.HasValue
             ? $"/api/mail-inbox/messages?limit={limit.Value}"
             : "/api/mail-inbox/messages";
-        using var request = CreateRequest(HttpMethod.Get, path);
-        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, path);
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         IReadOnlyList<InboundMailMessageSummaryResponse>? payload;
@@ -40,8 +40,8 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         CancellationToken cancellationToken) {
         EnsureBaseAddress();
 
-        using var request = CreateRequest(HttpMethod.Get, $"/api/mail-inbox/messages/{id}");
-        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using HttpRequestMessage request = CreateRequest(HttpMethod.Get, $"/api/mail-inbox/messages/{id}");
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (response.StatusCode == HttpStatusCode.NotFound) {
             return null;
         }

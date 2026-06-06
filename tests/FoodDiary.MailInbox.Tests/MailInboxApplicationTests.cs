@@ -23,7 +23,7 @@ public sealed class MailInboxApplicationTests {
         var handler = new ReceiveInboundMailCommandHandler(store);
         var receivedAt = new DateTimeOffset(2026, 5, 6, 10, 0, 0, TimeSpan.Zero);
 
-        var result = await handler.Handle(
+        Result<Guid> result = await handler.Handle(
             new ReceiveInboundMailCommand(new ReceiveInboundMailRequest(
                 MessageId: " message-id ",
                 FromAddress: " sender@example.com ",
@@ -62,7 +62,7 @@ public sealed class MailInboxApplicationTests {
         };
         var handler = new GetInboundMailMessagesQueryHandler(store);
 
-        var result = await handler.Handle(new GetInboundMailMessagesQuery(25), cts.Token);
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await handler.Handle(new GetInboundMailMessagesQuery(25), cts.Token);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(expected, Assert.Single(result.Value));
@@ -75,7 +75,7 @@ public sealed class MailInboxApplicationTests {
         var id = Guid.NewGuid();
         var handler = new GetInboundMailMessageDetailsQueryHandler(new RecordingInboundMailStore());
 
-        var result = await handler.Handle(new GetInboundMailMessageDetailsQuery(id), CancellationToken.None);
+        Result<InboundMailMessageDetails> result = await handler.Handle(new GetInboundMailMessageDetailsQuery(id), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("MailInbox.Message.NotFound", result.Error?.Code);
@@ -88,7 +88,7 @@ public sealed class MailInboxApplicationTests {
         var checker = new RecordingReadinessChecker();
         var handler = new CheckMailInboxReadinessQueryHandler(checker);
 
-        var result = await handler.Handle(new CheckMailInboxReadinessQuery(), cts.Token);
+        Result result = await handler.Handle(new CheckMailInboxReadinessQuery(), cts.Token);
 
         Assert.True(result.IsSuccess);
         Assert.True(checker.Called);
@@ -98,12 +98,12 @@ public sealed class MailInboxApplicationTests {
     [Fact]
     public async Task GetInboundMailMessageDetailsHandler_WhenFound_ReturnsDetails() {
         var id = Guid.NewGuid();
-        var details = CreateDetails(id);
+        InboundMailMessageDetails details = CreateDetails(id);
         var handler = new GetInboundMailMessageDetailsQueryHandler(new RecordingInboundMailStore {
             Details = details
         });
 
-        var result = await handler.Handle(new GetInboundMailMessageDetailsQuery(id), CancellationToken.None);
+        Result<InboundMailMessageDetails> result = await handler.Handle(new GetInboundMailMessageDetailsQuery(id), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(details, result.Value);
@@ -113,7 +113,7 @@ public sealed class MailInboxApplicationTests {
     public async Task ReceiveInboundMailValidator_WithMissingRecipientsAndRawMime_Fails() {
         var validator = new ReceiveInboundMailCommandValidator();
 
-        var result = await validator.ValidateAsync(new ReceiveInboundMailCommand(
+        ValidationResult result = await validator.ValidateAsync(new ReceiveInboundMailCommand(
             new ReceiveInboundMailRequest(null, null, [], null, null, null, "", DateTimeOffset.UtcNow)));
 
         Assert.False(result.IsValid);
@@ -129,7 +129,7 @@ public sealed class MailInboxApplicationTests {
     public async Task GetInboundMailMessagesValidator_ValidatesLimitRange(int limit, bool expectedValid) {
         var validator = new GetInboundMailMessagesQueryValidator();
 
-        var result = await validator.ValidateAsync(new GetInboundMailMessagesQuery(limit));
+        ValidationResult result = await validator.ValidateAsync(new GetInboundMailMessagesQuery(limit));
 
         Assert.Equal(expectedValid, result.IsValid);
     }
@@ -138,9 +138,9 @@ public sealed class MailInboxApplicationTests {
     public async Task MailInboxValidationBehavior_WhenValidationFails_ReturnsTypedFailureAndDoesNotInvokeNext() {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>(
             [new GetInboundMailMessagesQueryValidator()]);
-        var nextCalled = false;
+        bool nextCalled = false;
 
-        var result = await behavior.Handle(
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(0),
             _ => {
                 nextCalled = true;
@@ -159,7 +159,7 @@ public sealed class MailInboxApplicationTests {
         var behavior = new MailInboxValidationBehavior<TestCommand, Result>(
             [new AlwaysFailingTestCommandValidator()]);
 
-        var result = await behavior.Handle(
+        Result result = await behavior.Handle(
             new TestCommand(),
             _ => Task.FromResult(Result.Success()),
             CancellationToken.None);
@@ -174,7 +174,7 @@ public sealed class MailInboxApplicationTests {
         var behavior = new MailInboxValidationBehavior<TestCommand, Result>(
             [new MultipleFailuresTestCommandValidator()]);
 
-        var result = await behavior.Handle(
+        Result result = await behavior.Handle(
             new TestCommand(),
             _ => Task.FromResult(Result.Success()),
             CancellationToken.None);
@@ -190,7 +190,7 @@ public sealed class MailInboxApplicationTests {
         var behavior = new MailInboxValidationBehavior<TestUnsupportedResultCommand, UnsupportedResult>(
             [new AlwaysFailingUnsupportedResultCommandValidator()]);
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
             new TestUnsupportedResultCommand(),
             _ => Task.FromResult(new UnsupportedResult()),
             CancellationToken.None));
@@ -203,7 +203,7 @@ public sealed class MailInboxApplicationTests {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>([]);
         var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
 
-        var result = await behavior.Handle(
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
             _ => Task.FromResult(response),
             CancellationToken.None);
@@ -217,7 +217,7 @@ public sealed class MailInboxApplicationTests {
             [new GetInboundMailMessagesQueryValidator()]);
         var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
 
-        var result = await behavior.Handle(
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
             _ => Task.FromResult(response),
             CancellationToken.None);
@@ -231,7 +231,7 @@ public sealed class MailInboxApplicationTests {
             NullLogger<MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>>.Instance);
         var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Success([]);
 
-        var result = await behavior.Handle(
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
             _ => Task.FromResult(response),
             CancellationToken.None);
@@ -245,7 +245,7 @@ public sealed class MailInboxApplicationTests {
             NullLogger<MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>>.Instance);
         var response = Result<IReadOnlyList<InboundMailMessageSummary>>.Failure(MailInboxErrors.MessageNotFound(Guid.NewGuid()));
 
-        var result = await behavior.Handle(
+        Result<IReadOnlyList<InboundMailMessageSummary>> result = await behavior.Handle(
             new GetInboundMailMessagesQuery(10),
             _ => Task.FromResult(response),
             CancellationToken.None);
@@ -259,7 +259,7 @@ public sealed class MailInboxApplicationTests {
             NullLogger<MailInboxLoggingBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>>.Instance);
         var exception = new InvalidOperationException("boom");
 
-        var thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
+        InvalidOperationException thrown = await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
             new GetInboundMailMessagesQuery(10),
             _ => throw exception,
             CancellationToken.None));
@@ -272,7 +272,7 @@ public sealed class MailInboxApplicationTests {
         var services = new ServiceCollection();
 
         services.AddMailInboxApplication();
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.NotNull(provider.GetRequiredService<ISender>());
         Assert.Contains(
@@ -285,7 +285,7 @@ public sealed class MailInboxApplicationTests {
 
     [Fact]
     public void ResultFailure_CreatesFailedResult() {
-        var error = MailInboxErrors.MessageNotFound(Guid.NewGuid());
+        MailInboxError error = MailInboxErrors.MessageNotFound(Guid.NewGuid());
 
         var result = Result.Failure(error);
 

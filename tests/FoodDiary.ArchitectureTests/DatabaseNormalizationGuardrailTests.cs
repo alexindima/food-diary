@@ -86,7 +86,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void FirstNormalForm_DocumentColumnsRemainExplicitlyApproved() {
-        var violations = RelationalEntityTypes()
+        string[] violations = RelationalEntityTypes()
             .SelectMany(entity => entity.GetProperties()
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDocumentShapedColumn)
@@ -104,7 +104,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void FirstNormalForm_RawSqlSchemasDoNotIntroduceUnapprovedJsonColumns() {
-        var violations = SourceScanner.SourceFiles([
+        string[] violations = SourceScanner.SourceFiles([
                 ArchitectureTestPaths.FromRoot("FoodDiary.MailInbox.Infrastructure"),
                 ArchitectureTestPaths.FromRoot("FoodDiary.MailRelay.Infrastructure"),
             ])
@@ -122,7 +122,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void SecondNormalForm_CompositePrimaryKeyTablesDoNotCarryNonKeyFacts() {
-        var violations = RelationalEntityTypes()
+        string[] violations = RelationalEntityTypes()
             .Where(static entity => entity.FindPrimaryKey()?.Properties.Count > 1)
             .SelectMany(entity => {
                 var keyProperties = entity.FindPrimaryKey()!.Properties.ToHashSet();
@@ -144,7 +144,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void ThirdNormalForm_SnapshotColumnsRemainExplicitlyApproved() {
-        var violations = RelationalEntityTypes()
+        string[] violations = RelationalEntityTypes()
             .SelectMany(entity => FindSnapshotLikeColumns(entity)
                 .Select(property => FormatProperty(entity, property)))
             .Where(column => AllowedSnapshotColumns.Contains(column) is false)
@@ -160,7 +160,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     [Fact]
     public void ThirdNormalForm_DerivedColumnsRemainExplicitlyApproved() {
-        var violations = RelationalEntityTypes()
+        string[] violations = RelationalEntityTypes()
             .SelectMany(entity => entity.GetProperties()
                 .Where(IsPersistedApplicationColumn)
                 .Where(IsDerivedColumn)
@@ -181,7 +181,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         var entityTypes = RelationalEntityTypes()
             .ToDictionary(static entity => entity.ClrType.Name, StringComparer.Ordinal);
 
-        var violations = ExpectedBusinessKeys
+        string[] violations = ExpectedBusinessKeys
             .Where(expectation => HasUniqueKey(entityTypes, expectation) is false)
             .Select(expectation => $"{expectation.EntityName}({string.Join(", ", expectation.PropertyNames)})")
             .OrderBy(static value => value, StringComparer.Ordinal)
@@ -195,7 +195,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
     }
 
     private static IReadOnlyList<IEntityType> RelationalEntityTypes() {
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql("Host=localhost;Database=food_diary_architecture;Username=test;Password=test")
             .Options;
 
@@ -216,7 +216,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
         property.GetColumnName(StoreObjectIdentifier.Table(declaringEntity.GetTableName()!, declaringEntity.GetSchema())) is not null;
 
     private static bool IsDocumentShapedColumn(IProperty property) {
-        var columnType = property.GetColumnType();
+        string columnType = property.GetColumnType();
         if (columnType?.Contains("json", StringComparison.OrdinalIgnoreCase) == true) {
             return true;
         }
@@ -238,7 +238,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
             .Select(static name => name[..^2])
             .ToHashSet(StringComparer.Ordinal);
 
-        foreach (var property in entity.GetProperties().Where(IsPersistedApplicationColumn)) {
+        foreach (IProperty? property in entity.GetProperties().Where(IsPersistedApplicationColumn)) {
             if (property.ClrType != typeof(string)) {
                 continue;
             }
@@ -258,15 +258,15 @@ public sealed class DatabaseNormalizationGuardrailTests {
     private static bool HasUniqueKey(
         IReadOnlyDictionary<string, IEntityType> entityTypes,
         BusinessKeyExpectation expectation) {
-        if (entityTypes.TryGetValue(expectation.EntityName, out var entity) is false) {
+        if (entityTypes.TryGetValue(expectation.EntityName, out IEntityType? entity) is false) {
             return false;
         }
 
-        var expected = expectation.PropertyNames
+        string[] expected = expectation.PropertyNames
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
 
-        var primaryKey = entity.FindPrimaryKey();
+        IKey? primaryKey = entity.FindPrimaryKey();
         if (primaryKey is not null && PropertyNamesMatch(primaryKey.Properties, expected)) {
             return true;
         }
@@ -277,7 +277,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
     }
 
     private static bool PropertyNamesMatch(IReadOnlyList<IProperty> properties, string[] expected) {
-        var actual = properties
+        string[] actual = properties
             .Select(static property => property.Name)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -286,17 +286,17 @@ public sealed class DatabaseNormalizationGuardrailTests {
     }
 
     private static IEnumerable<string> ReadRawSqlJsonColumns(string path) {
-        var relativePath = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)
+        string relativePath = Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path)
             .Replace(Path.DirectorySeparatorChar, '/');
 
-        foreach (var line in File.ReadLines(path)) {
-            var normalized = line.Trim();
+        foreach (string line in File.ReadLines(path)) {
+            string normalized = line.Trim();
             if (normalized.Contains(" jsonb", StringComparison.OrdinalIgnoreCase) is false &&
                 normalized.Contains(" json ", StringComparison.OrdinalIgnoreCase) is false) {
                 continue;
             }
 
-            var columnName = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            string? columnName = normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
             if (columnName is null) {
                 continue;
             }

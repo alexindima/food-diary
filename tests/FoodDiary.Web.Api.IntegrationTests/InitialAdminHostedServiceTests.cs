@@ -15,8 +15,8 @@ namespace FoodDiary.Web.Api.IntegrationTests;
 public sealed class InitialAdminHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenPasswordIsBlank_DoesNotCreateUser() {
-        using var provider = BuildServiceProvider();
-        var service = CreateService(
+        using ServiceProvider provider = BuildServiceProvider();
+        InitialAdminHostedService service = CreateService(
             provider,
             new InitialAdminOptions {
                 Email = "owner@fooddiary.test",
@@ -25,20 +25,20 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using var scope = provider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using IServiceScope scope = provider.CreateScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Empty(dbContext.Users);
     }
 
     [Fact]
     public async Task StartAsync_WhenUserAlreadyExists_DoesNotCreateDuplicate() {
-        using var provider = BuildServiceProvider();
-        using (var seedScope = provider.CreateScope()) {
-            var seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using ServiceProvider provider = BuildServiceProvider();
+        using (IServiceScope seedScope = provider.CreateScope()) {
+            FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Users.Add(User.Create("owner@fooddiary.test", "existing-hash"));
             await seedContext.SaveChangesAsync();
         }
-        var service = CreateService(
+        InitialAdminHostedService service = CreateService(
             provider,
             new InitialAdminOptions {
                 Email = "owner@fooddiary.test",
@@ -47,20 +47,20 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using var scope = provider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using IServiceScope scope = provider.CreateScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         Assert.Single(dbContext.Users);
     }
 
     [Fact]
     public async Task StartAsync_WhenConfigured_CreatesConfirmedAdminWithBootstrapRoles() {
-        using var provider = BuildServiceProvider();
-        using (var seedScope = provider.CreateScope()) {
-            var seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using ServiceProvider provider = BuildServiceProvider();
+        using (IServiceScope seedScope = provider.CreateScope()) {
+            FoodDiaryDbContext seedContext = seedScope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
             seedContext.Roles.Add(Role.Create(RoleNames.Owner));
             await seedContext.SaveChangesAsync();
         }
-        var service = CreateService(
+        InitialAdminHostedService service = CreateService(
             provider,
             new InitialAdminOptions {
                 Email = " owner@fooddiary.test ",
@@ -69,13 +69,13 @@ public sealed class InitialAdminHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
 
-        using var scope = provider.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-        var admin = await dbContext.Users
+        using IServiceScope scope = provider.CreateScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        User admin = await dbContext.Users
             .Include(user => user.UserRoles)
             .ThenInclude(userRole => userRole.Role)
             .SingleAsync();
-        var roles = await dbContext.Roles.Select(role => role.Name).ToListAsync();
+        List<string> roles = await dbContext.Roles.Select(role => role.Name).ToListAsync();
 
         Assert.Equal("owner@fooddiary.test", admin.Email);
         Assert.True(admin.IsEmailConfirmed);
@@ -97,7 +97,7 @@ public sealed class InitialAdminHostedServiceTests {
             NullLogger<InitialAdminHostedService>.Instance);
 
     private static ServiceProvider BuildServiceProvider() {
-        var databaseName = Guid.NewGuid().ToString("N");
+        string databaseName = Guid.NewGuid().ToString("N");
         var services = new ServiceCollection();
         services.AddDbContext<FoodDiaryDbContext>(options =>
             options.UseInMemoryDatabase(databaseName));

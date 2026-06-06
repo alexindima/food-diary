@@ -27,13 +27,13 @@ public class RepeatMealCommandHandler(
     public async Task<Result<ConsumptionModel>> Handle(
         RepeatMealCommand command,
         CancellationToken cancellationToken) {
-        var valuesResult = await PrepareRepeatValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<RepeatMealValues> valuesResult = await PrepareRepeatValuesAsync(command, cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(valuesResult.Error);
         }
 
-        var values = valuesResult.Value;
-        var newMeal = CreateRepeatedMeal(command, values);
+        RepeatMealValues values = valuesResult.Value;
+        Meal newMeal = CreateRepeatedMeal(command, values);
         CopyItems(values.SourceMeal, newMeal);
         CopyAiSessions(values.SourceMeal, newMeal, command.TargetDate);
         await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
@@ -50,13 +50,13 @@ public class RepeatMealCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RepeatMealValues>(accessError);
         }
 
         var sourceMealId = new MealId(command.MealId);
-        var sourceMeal = await mealRepository.GetByIdAsync(
+        Meal? sourceMeal = await mealRepository.GetByIdAsync(
             sourceMealId,
             userId,
             includeItems: true,
@@ -65,7 +65,7 @@ public class RepeatMealCommandHandler(
             return Result.Failure<RepeatMealValues>(Errors.Consumption.NotFound(command.MealId));
         }
 
-        var mealTypeResult = EnumValueParser.ParseOptional<MealType>(
+        Result<MealType?> mealTypeResult = EnumValueParser.ParseOptional<MealType>(
             command.MealType ?? sourceMeal.MealType?.ToString(),
             "MealType",
             "Unknown meal type value.");
@@ -75,8 +75,8 @@ public class RepeatMealCommandHandler(
     }
 
     private static Meal CreateRepeatedMeal(RepeatMealCommand command, RepeatMealValues values) {
-        var sourceMeal = values.SourceMeal;
-        var shouldCopyMealImage = !sourceMeal.AiSessions.Any(session => session.ImageAssetId.HasValue);
+        Meal sourceMeal = values.SourceMeal;
+        bool shouldCopyMealImage = !sourceMeal.AiSessions.Any(session => session.ImageAssetId.HasValue);
         return Meal.Create(
             values.UserId,
             command.TargetDate,
@@ -89,7 +89,7 @@ public class RepeatMealCommandHandler(
     }
 
     private static void CopyItems(Meal sourceMeal, Meal newMeal) {
-        foreach (var item in sourceMeal.Items) {
+        foreach (MealItem item in sourceMeal.Items) {
             if (item.ProductId.HasValue) {
                 newMeal.AddProduct(item.ProductId.Value, item.Amount);
             } else if (item.RecipeId.HasValue) {
@@ -99,11 +99,11 @@ public class RepeatMealCommandHandler(
     }
 
     private static void CopyAiSessions(Meal sourceMeal, Meal newMeal, DateTime targetDate) {
-        var targetRecognizedAtUtc = targetDate.Kind == DateTimeKind.Unspecified
+        DateTime targetRecognizedAtUtc = targetDate.Kind == DateTimeKind.Unspecified
             ? DateTime.SpecifyKind(targetDate, DateTimeKind.Utc)
             : targetDate.ToUniversalTime();
 
-        foreach (var session in sourceMeal.AiSessions) {
+        foreach (MealAiSession session in sourceMeal.AiSessions) {
             var items = session.Items
                 .Select(item => MealAiItemData.Create(
                     item.NameEn,
@@ -128,7 +128,7 @@ public class RepeatMealCommandHandler(
         UserId userId,
         CancellationToken cancellationToken) {
         if (sourceMeal.IsNutritionAutoCalculated) {
-            var nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
+            Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(newMeal, userId, cancellationToken).ConfigureAwait(false);
             if (nutritionResult.IsSuccess) {
                 newMeal.ApplyNutrition(new MealNutritionUpdate(
                     nutritionResult.Value.Calories,

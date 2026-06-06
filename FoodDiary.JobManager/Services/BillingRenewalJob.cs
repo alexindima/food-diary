@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
+using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Billing.Services;
 using Hangfire;
 using Microsoft.Extensions.Options;
@@ -16,7 +17,7 @@ public sealed class BillingRenewalJob(
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
-        var settings = options.Value;
+        BillingRenewalOptions settings = options.Value;
         const string jobName = "billing.renewal";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
@@ -30,7 +31,7 @@ public sealed class BillingRenewalJob(
                 return;
             }
 
-            var result = await billingRenewalService.RenewDueSubscriptionsAsync(
+            BillingRenewalRunResult result = await billingRenewalService.RenewDueSubscriptionsAsync(
                 settings.Provider,
                 settings.BatchSize,
                 cancellationToken).ConfigureAwait(false);

@@ -25,7 +25,7 @@ public sealed class JwtOptions {
     public int RememberMeRefreshTokenExpirationDays { get; init; }
 
     public static bool HasValidSecretKey(JwtOptions options) {
-        var value = options.SecretKey.Trim();
+        string value = options.SecretKey.Trim();
         return value.Length >= 32 &&
                !value.Equals("change-me-via-user-secrets-or-env-32", StringComparison.OrdinalIgnoreCase) &&
                !value.Equals("change-me-local-jwt-secret-min-32", StringComparison.OrdinalIgnoreCase) &&

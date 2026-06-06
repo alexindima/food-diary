@@ -11,7 +11,7 @@ public sealed class AdminUserRoleAuditRepository(FoodDiaryDbContext context) : I
         int limit,
         CancellationToken cancellationToken = default) {
         var userIdValue = new UserId(userId);
-        var pageSize = Math.Clamp(limit, 1, 50);
+        int pageSize = Math.Clamp(limit, 1, 50);
 
         return await (
                 from auditEvent in context.UserRoleAuditEvents.AsNoTracking()

@@ -15,13 +15,13 @@ public sealed partial class User {
             return null;
         }
 
-        var age = CalculateAge(BirthDate.Value, DomainTime.UtcNow);
+        int age = CalculateAge(BirthDate.Value, DomainTime.UtcNow);
         if (age <= 0) {
             return null;
         }
 
         // Mifflin-St Jeor: 10 * weight(kg) + 6.25 * height(cm) - 5 * age + offset
-        var bmr = 10.0 * Weight.Value + 6.25 * Height.Value - 5.0 * age;
+        double bmr = 10.0 * Weight.Value + 6.25 * Height.Value - 5.0 * age;
 
         bmr += Gender.ToUpperInvariant() switch {
             "M" => 5.0,
@@ -36,12 +36,12 @@ public sealed partial class User {
     /// Returns null if BMR cannot be calculated.
     /// </summary>
     public double? CalculateEstimatedTdee() {
-        var bmr = CalculateBmr();
+        double? bmr = CalculateBmr();
         if (bmr is null) {
             return null;
         }
 
-        var multiplier = GetActivityMultiplier(ActivityLevel);
+        double multiplier = GetActivityMultiplier(ActivityLevel);
         return Math.Round(bmr.Value * multiplier, 0);
     }
 
@@ -57,7 +57,7 @@ public sealed partial class User {
     }
 
     private static int CalculateAge(DateTime birthDate, DateTime now) {
-        var age = now.Year - birthDate.Year;
+        int age = now.Year - birthDate.Year;
         if (now.Date < birthDate.Date.AddYears(age)) {
             age--;
         }

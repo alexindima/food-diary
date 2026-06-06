@@ -37,13 +37,13 @@ public static class MailRelayEmailHttpMappings {
 
     public static MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> ToMappedCommand(
         this AwsSesSnsWebhookHttpRequest request) =>
-        request.TryMapToDeliveryEvents(out var events, out var error)
+        request.TryMapToDeliveryEvents(out IReadOnlyList<IngestMailEventRequest>? events, out string? error)
             ? MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>>.Success(events.ToCommand())
             : MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>>.Failure(error);
 
     public static MailRelayMappedRequest<MailRelayDeliveryEventEntry> ToMappedCommand(
         this MailgunWebhookHttpRequest request) =>
-        request.TryMapToDeliveryEvent(out var deliveryEvent, out var error) && deliveryEvent is not null
+        request.TryMapToDeliveryEvent(out IngestMailEventRequest? deliveryEvent, out string? error) && deliveryEvent is not null
             ? MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Success(deliveryEvent.ToCommand())
             : MailRelayMappedRequest<MailRelayDeliveryEventEntry>.Failure(error);
 

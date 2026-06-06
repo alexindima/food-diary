@@ -22,10 +22,10 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         services.AddLogging();
         services.AddPresentationApi();
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var emailVerificationNotifier = provider.GetRequiredService<IEmailVerificationNotifier>();
-        var userIdProvider = provider.GetRequiredService<IUserIdProvider>();
+        IEmailVerificationNotifier emailVerificationNotifier = provider.GetRequiredService<IEmailVerificationNotifier>();
+        IUserIdProvider userIdProvider = provider.GetRequiredService<IUserIdProvider>();
 
         Assert.IsType<EmailVerificationNotifier>(emailVerificationNotifier);
         Assert.IsType<UserIdProvider>(userIdProvider);
@@ -39,9 +39,9 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         services.AddLogging();
         services.AddOptions();
         services.AddPresentationApi();
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var apiBehaviorOptions = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiBehaviorOptions>>().Value;
+        ApiBehaviorOptions apiBehaviorOptions = provider.GetRequiredService<Microsoft.Extensions.Options.IOptions<ApiBehaviorOptions>>().Value;
         var httpContext = new DefaultHttpContext {
             RequestServices = provider,
             TraceIdentifier = "trace-123",
@@ -52,21 +52,21 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         };
         actionContext.ModelState.AddModelError("email", "Email is required.");
 
-        var result = apiBehaviorOptions.InvalidModelStateResponseFactory(actionContext);
+        IActionResult result = apiBehaviorOptions.InvalidModelStateResponseFactory(actionContext);
 
-        var badRequest = Assert.IsType<BadRequestObjectResult>(result);
-        var response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
+        BadRequestObjectResult badRequest = Assert.IsType<BadRequestObjectResult>(result);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(badRequest.Value);
         Assert.Equal("Validation.Invalid", response.Error);
         Assert.Equal("One or more validation errors occurred.", response.Message);
         Assert.Equal("trace-123", response.TraceId);
         Assert.NotNull(response.Errors);
-        Assert.True(response.Errors.TryGetValue("email", out var errors));
+        Assert.True(response.Errors.TryGetValue("email", out string[]? errors));
         Assert.Equal(["Email is required."], errors);
     }
 
     [Fact]
     public void MapPresentationApi_MapsEmailVerificationHub() {
-        var builder = WebApplication.CreateBuilder();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.Services.AddCors(options => options.AddPolicy("TestCors", policy => policy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
         builder.Services.AddAuthorization();
         builder.Services.AddDistributedMemoryCache();
@@ -74,11 +74,11 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         builder.Services.AddSingleton<IDateTimeProvider, StubDateTimeProvider>();
         builder.Services.AddPresentationApi();
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         app.MapPresentationApi("TestCors");
 
-        var endpoints = ((IEndpointRouteBuilder)app).DataSources
+        RouteEndpoint[] endpoints = ((IEndpointRouteBuilder)app).DataSources
             .SelectMany(dataSource => dataSource.Endpoints)
             .OfType<RouteEndpoint>()
             .ToArray();

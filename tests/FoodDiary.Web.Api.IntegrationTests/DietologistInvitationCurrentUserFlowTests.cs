@@ -17,10 +17,10 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
 
     [Fact]
     public async Task Invite_ThenAcceptCurrentUser_ThenGetCurrentUserInvitation_ReturnsAcceptedStatus() {
-        var clientUser = await CreateAuthenticatedClientAsync();
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
-        var inviteResponse = await clientUser.Client.PostAsJsonAsync(
+        HttpResponseMessage inviteResponse = await clientUser.Client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistUser.Email,
@@ -33,37 +33,37 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
                     ShareHydration: true)));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, inviteResponse);
 
-        var relationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
+        HttpResponseMessage relationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
         await AssertStatusCodeAsync(HttpStatusCode.OK, relationshipResponse);
-        var relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
+        DietologistRelationshipPayload? relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
 
         Assert.NotNull(relationship);
         Assert.Equal("Pending", relationship.Status);
         Assert.Equal(dietologistUser.Email, relationship.Email);
 
-        var invitationResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
+        HttpResponseMessage invitationResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
         await AssertStatusCodeAsync(HttpStatusCode.OK, invitationResponse);
-        var invitation = await invitationResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
+        DietologistInvitationForCurrentUserPayload? invitation = await invitationResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
 
         Assert.NotNull(invitation);
         Assert.Equal("Pending", invitation.Status);
 
-        var acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
 
-        var acceptedResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
+        HttpResponseMessage acceptedResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
         await AssertStatusCodeAsync(HttpStatusCode.OK, acceptedResponse);
-        var acceptedInvitation = await acceptedResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
+        DietologistInvitationForCurrentUserPayload? acceptedInvitation = await acceptedResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
 
         Assert.NotNull(acceptedInvitation);
         Assert.Equal("Accepted", acceptedInvitation.Status);
         Assert.Equal(clientUser.Email, acceptedInvitation.ClientEmail);
 
-        var updatedRelationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
+        HttpResponseMessage updatedRelationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
         await AssertStatusCodeAsync(HttpStatusCode.OK, updatedRelationshipResponse);
-        var updatedRelationship = await updatedRelationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
+        DietologistRelationshipPayload? updatedRelationship = await updatedRelationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
 
         Assert.NotNull(updatedRelationship);
         Assert.Equal("Accepted", updatedRelationship.Status);
@@ -71,44 +71,44 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
 
     [Fact]
     public async Task Invite_ThenDeclineCurrentUser_ThenGetCurrentUserInvitation_ReturnsDeclinedStatus() {
-        var clientUser = await CreateAuthenticatedClientAsync();
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
-        var inviteResponse = await clientUser.Client.PostAsJsonAsync(
+        HttpResponseMessage inviteResponse = await clientUser.Client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistUser.Email,
                 new DietologistPermissionsHttpRequest()));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, inviteResponse);
 
-        var relationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
+        HttpResponseMessage relationshipResponse = await clientUser.Client.GetAsync("/api/v1/dietologist/relationship");
         await AssertStatusCodeAsync(HttpStatusCode.OK, relationshipResponse);
-        var relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
+        DietologistRelationshipPayload? relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions);
 
         Assert.NotNull(relationship);
 
-        var declineResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage declineResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/decline-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, declineResponse);
 
-        var invitationResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
+        HttpResponseMessage invitationResponse = await dietologistUser.Client.GetAsync($"/api/v1/dietologist/invitations/{relationship.InvitationId}/current-user");
         await AssertStatusCodeAsync(HttpStatusCode.OK, invitationResponse);
-        var invitation = await invitationResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
+        DietologistInvitationForCurrentUserPayload? invitation = await invitationResponse.Content.ReadFromJsonAsync<DietologistInvitationForCurrentUserPayload>(JsonOptions);
 
         Assert.NotNull(invitation);
         Assert.Equal("Declined", invitation.Status);
     }
 
     private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
-        var client = factory.CreateClient();
-        var email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
@@ -120,7 +120,7 @@ public sealed class DietologistInvitationCurrentUserFlowTests(ApiWebApplicationF
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

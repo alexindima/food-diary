@@ -16,13 +16,13 @@ public sealed class EmailSenderTests {
         long? count = null;
         string? outcome = null;
         string? template = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             count = value;
             outcome = GetTagValue(tags, "fooddiary.email.outcome");
             template = GetTagValue(tags, "fooddiary.email.template");
         });
 
-        var sender = CreateSender(new RecordingEmailTransport());
+        EmailSender sender = CreateSender(new RecordingEmailTransport());
 
         await sender.SendEmailVerificationAsync(
             new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en"),
@@ -38,13 +38,13 @@ public sealed class EmailSenderTests {
         long? count = null;
         string? outcome = null;
         string? errorType = null;
-        using var listener = CreateInfrastructureListener((value, tags) => {
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
             count = value;
             outcome = GetTagValue(tags, "fooddiary.email.outcome");
             errorType = GetTagValue(tags, "error.type");
         });
 
-        var sender = CreateSender(new ThrowingEmailTransport(new InvalidOperationException("boom")));
+        EmailSender sender = CreateSender(new ThrowingEmailTransport(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendPasswordResetAsync(
@@ -59,7 +59,7 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendPasswordResetAsync_WithAllowedClientOrigin_UsesThatOriginInLink() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(
+        EmailSender sender = CreateSender(
             transport,
             new EmailOptions {
                 FromAddress = "noreply@example.com",
@@ -80,7 +80,7 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendEmailVerificationAsync_WithUntrustedClientOrigin_FallsBackToDefaultFrontendBaseUrl() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(
+        EmailSender sender = CreateSender(
             transport,
             new EmailOptions {
                 FromAddress = "noreply@example.com",
@@ -134,7 +134,7 @@ public sealed class EmailSenderTests {
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }

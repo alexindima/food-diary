@@ -24,7 +24,7 @@ public sealed class MailInboxMailboxFilter(IOptions<MailInboxSmtpOptions> option
         IMailbox to,
         IMailbox from,
         CancellationToken cancellationToken) {
-        var address = to.AsAddress().Trim().ToLowerInvariant();
+        string address = to.AsAddress().Trim().ToLowerInvariant();
         return Task.FromResult(_allowedRecipients.Contains(address));
     }
 }

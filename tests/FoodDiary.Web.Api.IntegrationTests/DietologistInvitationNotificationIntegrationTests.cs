@@ -23,22 +23,22 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
 
     [Fact]
     public async Task InviteRegisteredDietologist_CreatesInAppNotification() {
-        var clientUser = await CreateAuthenticatedClientAsync();
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync();
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
-        var inviteResponse = await clientUser.Client.PostAsJsonAsync(
+        HttpResponseMessage inviteResponse = await clientUser.Client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistUser.Email,
                 new DietologistPermissionsHttpRequest()));
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, inviteResponse);
 
-        var notificationsResponse = await dietologistUser.Client.GetAsync("/api/v1/notifications");
+        HttpResponseMessage notificationsResponse = await dietologistUser.Client.GetAsync("/api/v1/notifications");
         await AssertStatusCodeAsync(HttpStatusCode.OK, notificationsResponse);
-        var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions);
+        List<NotificationPayload>? notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions);
 
         Assert.NotNull(notifications);
-        var invitationNotification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
+        NotificationPayload invitationNotification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationReceived", invitationNotification.Type);
         Assert.NotNull(invitationNotification.ReferenceId);
         Assert.Equal($"/dietologist-invitations/{invitationNotification.ReferenceId}", invitationNotification.TargetUrl);
@@ -48,41 +48,41 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
 
     [Fact]
     public async Task DietologistInvitationNotification_CanBeMarkedRead_Individually() {
-        var firstClient = await CreateAuthenticatedClientAsync("client-a");
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser firstClient = await CreateAuthenticatedClientAsync("client-a");
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
         await InviteDietologistAsync(firstClient.Client, dietologistUser.Email);
 
-        var initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
-        var firstNotification = Assert.Single(initialNotifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
+        List<NotificationPayload> initialNotifications = await GetNotificationsAsync(dietologistUser.Client);
+        NotificationPayload firstNotification = Assert.Single(initialNotifications, x => string.Equals(x.Type, "DietologistInvitationReceived", StringComparison.Ordinal));
         Assert.False(firstNotification.IsRead);
 
-        var markReadResponse = await dietologistUser.Client.PutAsJsonAsync(
+        HttpResponseMessage markReadResponse = await dietologistUser.Client.PutAsJsonAsync(
             $"/api/v1/notifications/{firstNotification.Id}/read",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, markReadResponse);
 
-        var afterSingleRead = await GetNotificationsAsync(dietologistUser.Client);
-        var readNotification = Assert.Single(afterSingleRead, x => x.Id == firstNotification.Id);
+        List<NotificationPayload> afterSingleRead = await GetNotificationsAsync(dietologistUser.Client);
+        NotificationPayload readNotification = Assert.Single(afterSingleRead, x => x.Id == firstNotification.Id);
         Assert.True(readNotification.IsRead);
     }
 
     [Fact]
     public async Task AcceptCurrentUser_CreatesClientNotification() {
-        var clientUser = await CreateAuthenticatedClientAsync("client");
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
         await EnsureDietologistRoleAsync();
 
         await InviteDietologistAsync(clientUser.Client, dietologistUser.Email);
-        var relationship = await GetRelationshipAsync(clientUser.Client);
+        DietologistRelationshipPayload relationship = await GetRelationshipAsync(clientUser.Client);
 
-        var acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
 
-        var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationAccepted", StringComparison.Ordinal));
+        List<NotificationPayload> notifications = await GetNotificationsAsync(clientUser.Client);
+        NotificationPayload notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationAccepted", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationAccepted", notification.Type);
         Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
         Assert.Equal("/profile", notification.TargetUrl);
@@ -92,19 +92,19 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
 
     [Fact]
     public async Task DeclineCurrentUser_CreatesClientNotification() {
-        var clientUser = await CreateAuthenticatedClientAsync("client");
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
         await InviteDietologistAsync(clientUser.Client, dietologistUser.Email);
-        var relationship = await GetRelationshipAsync(clientUser.Client);
+        DietologistRelationshipPayload relationship = await GetRelationshipAsync(clientUser.Client);
 
-        var declineResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage declineResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/decline-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, declineResponse);
 
-        var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationDeclined", StringComparison.Ordinal));
+        List<NotificationPayload> notifications = await GetNotificationsAsync(clientUser.Client);
+        NotificationPayload notification = Assert.Single(notifications, x => string.Equals(x.Type, "DietologistInvitationDeclined", StringComparison.Ordinal));
         Assert.Equal("DietologistInvitationDeclined", notification.Type);
         Assert.Equal(relationship.InvitationId.ToString(), notification.ReferenceId);
         Assert.Equal("/profile", notification.TargetUrl);
@@ -114,47 +114,47 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
 
     [Fact]
     public async Task CreateRecommendation_CreatesClientNotification_WithTargetUrl_AndCanBeMarkedRead() {
-        var clientUser = await CreateAuthenticatedClientAsync("client");
-        var dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
+        AuthenticatedUser clientUser = await CreateAuthenticatedClientAsync("client");
+        AuthenticatedUser dietologistUser = await CreateAuthenticatedClientAsync("dietologist");
 
         await InviteDietologistAsync(clientUser.Client, dietologistUser.Email);
-        var relationship = await GetRelationshipAsync(clientUser.Client);
+        DietologistRelationshipPayload relationship = await GetRelationshipAsync(clientUser.Client);
 
-        var acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage acceptResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/invitations/{relationship.InvitationId}/accept-current-user",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, acceptResponse);
         SetDietologistToken(dietologistUser);
 
-        var recommendationResponse = await dietologistUser.Client.PostAsJsonAsync(
+        HttpResponseMessage recommendationResponse = await dietologistUser.Client.PostAsJsonAsync(
             $"/api/v1/dietologist/clients/{clientUser.UserId}/recommendations",
             new CreateRecommendationHttpRequest("Add more protein at breakfast."));
         await AssertStatusCodeAsync(HttpStatusCode.Created, recommendationResponse);
-        var recommendation = await recommendationResponse.Content.ReadFromJsonAsync<RecommendationPayload>(JsonOptions);
+        RecommendationPayload? recommendation = await recommendationResponse.Content.ReadFromJsonAsync<RecommendationPayload>(JsonOptions);
         Assert.NotNull(recommendation);
 
-        var notifications = await GetNotificationsAsync(clientUser.Client);
-        var notification = Assert.Single(notifications, x => string.Equals(x.Type, "NewRecommendation", StringComparison.Ordinal));
+        List<NotificationPayload> notifications = await GetNotificationsAsync(clientUser.Client);
+        NotificationPayload notification = Assert.Single(notifications, x => string.Equals(x.Type, "NewRecommendation", StringComparison.Ordinal));
         Assert.Equal(recommendation.Id.ToString(), notification.ReferenceId);
         Assert.Equal($"/recommendations?recommendationId={recommendation.Id}", notification.TargetUrl);
         Assert.False(notification.IsRead);
         Assert.Contains(dietologistUser.Email, notification.Title, StringComparison.OrdinalIgnoreCase);
 
-        var markReadResponse = await clientUser.Client.PutAsJsonAsync(
+        HttpResponseMessage markReadResponse = await clientUser.Client.PutAsJsonAsync(
             $"/api/v1/recommendations/{recommendation.Id}/read",
             new { });
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, markReadResponse);
 
-        var recommendationsResponse = await clientUser.Client.GetAsync("/api/v1/recommendations");
+        HttpResponseMessage recommendationsResponse = await clientUser.Client.GetAsync("/api/v1/recommendations");
         await AssertStatusCodeAsync(HttpStatusCode.OK, recommendationsResponse);
-        var recommendations = await recommendationsResponse.Content.ReadFromJsonAsync<List<RecommendationPayload>>(JsonOptions);
+        List<RecommendationPayload>? recommendations = await recommendationsResponse.Content.ReadFromJsonAsync<List<RecommendationPayload>>(JsonOptions);
         Assert.NotNull(recommendations);
-        var readRecommendation = Assert.Single(recommendations, x => x.Id == recommendation.Id);
+        RecommendationPayload readRecommendation = Assert.Single(recommendations, x => x.Id == recommendation.Id);
         Assert.True(readRecommendation.IsRead);
     }
 
     private async Task InviteDietologistAsync(HttpClient client, string dietologistEmail) {
-        var inviteResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage inviteResponse = await client.PostAsJsonAsync(
             "/api/v1/dietologist/invite",
             new InviteDietologistHttpRequest(
                 dietologistEmail,
@@ -163,8 +163,8 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
     }
 
     private async Task EnsureDietologistRoleAsync() {
-        using var scope = factory.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+        using IServiceScope scope = factory.Services.CreateScope();
+        FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
         if (!dbContext.Roles.Any(role => role.Name == RoleNames.Dietologist)) {
             dbContext.Roles.Add(Role.Create(RoleNames.Dietologist));
             await dbContext.SaveChangesAsync().ConfigureAwait(false);
@@ -172,37 +172,37 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
     }
 
     private async Task<List<NotificationPayload>> GetNotificationsAsync(HttpClient client) {
-        var notificationsResponse = await client.GetAsync("/api/v1/notifications").ConfigureAwait(false);
+        HttpResponseMessage notificationsResponse = await client.GetAsync("/api/v1/notifications").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, notificationsResponse).ConfigureAwait(false);
-        var notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions).ConfigureAwait(false);
+        List<NotificationPayload>? notifications = await notificationsResponse.Content.ReadFromJsonAsync<List<NotificationPayload>>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(notifications);
         return notifications;
     }
 
     private async Task<DietologistRelationshipPayload> GetRelationshipAsync(HttpClient client) {
-        var relationshipResponse = await client.GetAsync("/api/v1/dietologist/relationship").ConfigureAwait(false);
+        HttpResponseMessage relationshipResponse = await client.GetAsync("/api/v1/dietologist/relationship").ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.OK, relationshipResponse).ConfigureAwait(false);
-        var relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions).ConfigureAwait(false);
+        DietologistRelationshipPayload? relationship = await relationshipResponse.Content.ReadFromJsonAsync<DietologistRelationshipPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(relationship);
         return relationship;
     }
 
     private void SetDietologistToken(AuthenticatedUser user) {
-        using var scope = factory.Services.CreateScope();
-        var tokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
-        var token = tokenGenerator.GenerateAccessToken(new UserId(user.UserId), user.Email, [RoleNames.Dietologist]);
+        using IServiceScope scope = factory.Services.CreateScope();
+        IJwtTokenGenerator tokenGenerator = scope.ServiceProvider.GetRequiredService<IJwtTokenGenerator>();
+        string token = tokenGenerator.GenerateAccessToken(new UserId(user.UserId), user.Email, [RoleNames.Dietologist]);
         user.Client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
     private async Task<AuthenticatedUser> CreateAuthenticatedClientAsync(string emailPrefix = "api-tests") {
-        var client = factory.CreateClient();
-        var email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
-        var registerResponse = await client.PostAsJsonAsync(
+        HttpClient client = factory.CreateClient();
+        string email = $"{emailPrefix}-{Guid.NewGuid():N}@example.com";
+        HttpResponseMessage registerResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
         registerResponse.EnsureSuccessStatusCode();
 
-        var authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? authPayload = await registerResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(authPayload);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
@@ -215,7 +215,7 @@ public sealed class DietologistInvitationNotificationIntegrationTests(ApiWebAppl
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail($"Expected {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }
 

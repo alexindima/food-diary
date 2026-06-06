@@ -12,13 +12,13 @@ public static class DiaryCsvGenerator {
         var sb = new StringBuilder();
         sb.AppendLine("Date,MealType,Calories,Proteins,Fats,Carbs,Fiber,Alcohol,Comment");
 
-        foreach (var meal in meals) {
-            var calories = meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
-            var proteins = meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
-            var fats = meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;
-            var carbs = meal.IsNutritionAutoCalculated ? meal.TotalCarbs : meal.ManualCarbs ?? meal.TotalCarbs;
-            var fiber = meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
-            var alcohol = meal.IsNutritionAutoCalculated ? meal.TotalAlcohol : meal.ManualAlcohol ?? meal.TotalAlcohol;
+        foreach (Meal meal in meals) {
+            double calories = meal.IsNutritionAutoCalculated ? meal.TotalCalories : meal.ManualCalories ?? meal.TotalCalories;
+            double proteins = meal.IsNutritionAutoCalculated ? meal.TotalProteins : meal.ManualProteins ?? meal.TotalProteins;
+            double fats = meal.IsNutritionAutoCalculated ? meal.TotalFats : meal.ManualFats ?? meal.TotalFats;
+            double carbs = meal.IsNutritionAutoCalculated ? meal.TotalCarbs : meal.ManualCarbs ?? meal.TotalCarbs;
+            double fiber = meal.IsNutritionAutoCalculated ? meal.TotalFiber : meal.ManualFiber ?? meal.TotalFiber;
+            double alcohol = meal.IsNutritionAutoCalculated ? meal.TotalAlcohol : meal.ManualAlcohol ?? meal.TotalAlcohol;
 
             sb.Append(ToDisplayDate(meal.Date, displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             sb.Append(',');
@@ -39,9 +39,9 @@ public static class DiaryCsvGenerator {
             sb.AppendLine(EscapeCsv(meal.Comment));
         }
 
-        var preamble = Encoding.UTF8.GetPreamble();
-        var content = Encoding.UTF8.GetBytes(sb.ToString());
-        var result = new byte[preamble.Length + content.Length];
+        byte[] preamble = Encoding.UTF8.GetPreamble();
+        byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
+        byte[] result = new byte[preamble.Length + content.Length];
         preamble.CopyTo(result, 0);
         content.CopyTo(result, preamble.Length);
         return result;
@@ -65,7 +65,7 @@ public static class DiaryCsvGenerator {
             : TimeSpan.Zero;
 
     private static DateTime ToDisplayDate(DateTime value, TimeSpan displayOffset) {
-        var utc = value.Kind switch {
+        DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
             DateTimeKind.Local => value.ToUniversalTime(),
             _ => DateTime.SpecifyKind(value, DateTimeKind.Utc),

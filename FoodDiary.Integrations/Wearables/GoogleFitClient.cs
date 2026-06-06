@@ -19,7 +19,7 @@ internal sealed class GoogleFitClient(
     public WearableProvider Provider => WearableProvider.GoogleFit;
 
     public string GetAuthorizationUrl(string state) {
-        var config = options.Value;
+        GoogleFitOptions config = options.Value;
         return $"https://accounts.google.com/o/oauth2/v2/auth?response_type=code&client_id={config.ClientId}" +
                $"&redirect_uri={Uri.EscapeDataString(config.RedirectUri)}" +
                $"&scope={Uri.EscapeDataString("https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.heart_rate.read https://www.googleapis.com/auth/fitness.sleep.read")}" +
@@ -27,13 +27,13 @@ internal sealed class GoogleFitClient(
     }
 
     public async Task<WearableTokenResult?> ExchangeCodeAsync(string code, CancellationToken cancellationToken = default) {
-        var config = options.Value;
+        GoogleFitOptions config = options.Value;
         if (string.IsNullOrWhiteSpace(config.ClientId)) {
             return null;
         }
 
         try {
-            var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
+            HttpResponseMessage response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
                 new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "authorization_code",
                     ["code"] = code,
@@ -43,15 +43,15 @@ internal sealed class GoogleFitClient(
                 }), cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            GoogleTokenResponse? token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
 
             // Get user ID from token info
-            var userInfo = await httpClient.GetFromJsonAsync<JsonElement>(
+            JsonElement userInfo = await httpClient.GetFromJsonAsync<JsonElement>(
                 $"https://www.googleapis.com/oauth2/v1/userinfo?access_token={token.AccessToken}", cancellationToken).ConfigureAwait(false);
-            var userId = userInfo.TryGetProperty("id", out var id) ? id.GetString() ?? "unknown" : "unknown";
+            string userId = userInfo.TryGetProperty("id", out JsonElement id) ? id.GetString() ?? "unknown" : "unknown";
 
             return new WearableTokenResult(
                 token.AccessToken,
@@ -65,9 +65,9 @@ internal sealed class GoogleFitClient(
     }
 
     public async Task<WearableTokenResult?> RefreshTokenAsync(string refreshToken, CancellationToken cancellationToken = default) {
-        var config = options.Value;
+        GoogleFitOptions config = options.Value;
         try {
-            var response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
+            HttpResponseMessage response = await httpClient.PostAsync("https://oauth2.googleapis.com/token",
                 new FormUrlEncodedContent(new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["grant_type"] = "refresh_token",
                     ["refresh_token"] = refreshToken,
@@ -76,7 +76,7 @@ internal sealed class GoogleFitClient(
                 }), cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            GoogleTokenResponse? token = await response.Content.ReadFromJsonAsync<GoogleTokenResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (token is null) {
                 return null;
             }
@@ -95,8 +95,8 @@ internal sealed class GoogleFitClient(
     public async Task<IReadOnlyList<WearableDataPoint>> FetchDailyDataAsync(
         string accessToken, DateTime date, CancellationToken cancellationToken = default) {
         var results = new List<WearableDataPoint>();
-        var startTimeMillis = new DateTimeOffset(date.Date, TimeSpan.Zero).ToUnixTimeMilliseconds();
-        var endTimeMillis = new DateTimeOffset(date.Date.AddDays(1), TimeSpan.Zero).ToUnixTimeMilliseconds();
+        long startTimeMillis = new DateTimeOffset(date.Date, TimeSpan.Zero).ToUnixTimeMilliseconds();
+        long endTimeMillis = new DateTimeOffset(date.Date.AddDays(1), TimeSpan.Zero).ToUnixTimeMilliseconds();
 
         try {
             httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -113,12 +113,12 @@ internal sealed class GoogleFitClient(
                 endTimeMillis,
             };
 
-            var response = await httpClient.PostAsJsonAsync(
+            HttpResponseMessage response = await httpClient.PostAsJsonAsync(
                 "https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate",
                 aggregateRequest, cancellationToken).ConfigureAwait(false);
 
             response.EnsureSuccessStatusCode();
-            var data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken).ConfigureAwait(false);
+            JsonElement data = await response.Content.ReadFromJsonAsync<JsonElement>(cancellationToken: cancellationToken).ConfigureAwait(false);
             results.AddRange(ParseDailyData(data));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Google Fit data fetch failed for {Date}", date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
@@ -128,18 +128,18 @@ internal sealed class GoogleFitClient(
     }
 
     private static IReadOnlyList<WearableDataPoint> ParseDailyData(JsonElement data) {
-        if (!data.TryGetProperty("bucket", out var buckets) || buckets.GetArrayLength() == 0) {
+        if (!data.TryGetProperty("bucket", out JsonElement buckets) || buckets.GetArrayLength() == 0) {
             return [];
         }
 
-        var bucket = buckets[0];
-        if (!bucket.TryGetProperty("dataset", out var datasets)) {
+        JsonElement bucket = buckets[0];
+        if (!bucket.TryGetProperty("dataset", out JsonElement datasets)) {
             return [];
         }
 
         var results = new List<WearableDataPoint>();
-        foreach (var dataset in datasets.EnumerateArray()) {
-            var dataPoint = TryCreateDataPoint(dataset);
+        foreach (JsonElement dataset in datasets.EnumerateArray()) {
+            WearableDataPoint? dataPoint = TryCreateDataPoint(dataset);
             if (dataPoint is not null) {
                 results.Add(dataPoint);
             }
@@ -149,17 +149,17 @@ internal sealed class GoogleFitClient(
     }
 
     private static WearableDataPoint? TryCreateDataPoint(JsonElement dataset) {
-        if (!dataset.TryGetProperty("point", out var points) || points.GetArrayLength() == 0) {
+        if (!dataset.TryGetProperty("point", out JsonElement points) || points.GetArrayLength() == 0) {
             return null;
         }
 
-        var dataSourceId = dataset.TryGetProperty("dataSourceId", out var dsId) ? dsId.GetString() : string.Empty;
-        var point = points[0];
-        if (!point.TryGetProperty("value", out var values) || values.GetArrayLength() == 0) {
+        string? dataSourceId = dataset.TryGetProperty("dataSourceId", out JsonElement dsId) ? dsId.GetString() : string.Empty;
+        JsonElement point = points[0];
+        if (!point.TryGetProperty("value", out JsonElement values) || values.GetArrayLength() == 0) {
             return null;
         }
 
-        var numericValue = ReadNumericValue(values[0]);
+        double numericValue = ReadNumericValue(values[0]);
         if (dataSourceId?.Contains("step_count") == true) {
             return new WearableDataPoint(WearableDataType.Steps, numericValue);
         }
@@ -178,11 +178,11 @@ internal sealed class GoogleFitClient(
     }
 
     private static double ReadNumericValue(JsonElement value) {
-        if (value.TryGetProperty("intVal", out var intVal)) {
+        if (value.TryGetProperty("intVal", out JsonElement intVal)) {
             return intVal.GetDouble();
         }
 
-        return value.TryGetProperty("fpVal", out var fpVal) ? fpVal.GetDouble() : 0;
+        return value.TryGetProperty("fpVal", out JsonElement fpVal) ? fpVal.GetDouble() : 0;
     }
 
     private sealed class GoogleTokenResponse {

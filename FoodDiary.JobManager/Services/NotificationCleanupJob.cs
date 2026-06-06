@@ -16,8 +16,8 @@ public sealed class NotificationCleanupJob(
     [DisableConcurrentExecution(RecurringJobExecutionPolicy.CleanupConcurrencyTimeoutSeconds)]
     public async Task Execute(CancellationToken cancellationToken = default) {
         var stopwatch = Stopwatch.StartNew();
-        var settings = options.Value;
-        var totalDeleted = 0;
+        NotificationCleanupOptions settings = options.Value;
+        int totalDeleted = 0;
         const string jobName = "notifications.cleanup";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.UtcNow);
 
@@ -31,7 +31,7 @@ public sealed class NotificationCleanupJob(
 
         try {
             while (!cancellationToken.IsCancellationRequested) {
-                var deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
+                int deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
                 if (deleted < settings.BatchSize) {

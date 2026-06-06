@@ -1,4 +1,5 @@
 using System.Net;
+using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -9,7 +10,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class UsdaFoodSearchServiceTests {
     [Fact]
     public async Task GetFoodDetailAsync_WhenBrandedFoodFound_ReturnsMappedNutrients() {
-        var json = """
+        string json = """
             {
               "fdcId": 539789,
               "description": "FANTA, SODA, RASPBERRY & PASSIONFRUIT",
@@ -48,9 +49,9 @@ public sealed class UsdaFoodSearchServiceTests {
               ]
             }
             """;
-        var service = CreateService(new SuccessHttpMessageHandler(json));
+        UsdaFoodSearchService service = CreateService(new SuccessHttpMessageHandler(json));
 
-        var result = await service.GetFoodDetailAsync(539789);
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
 
         Assert.NotNull(result);
         Assert.Equal(539789, result.FdcId);
@@ -65,9 +66,9 @@ public sealed class UsdaFoodSearchServiceTests {
 
     [Fact]
     public async Task GetFoodDetailAsync_WhenNotFound_ReturnsNull() {
-        var service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.NotFound));
+        UsdaFoodSearchService service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.NotFound));
 
-        var result = await service.GetFoodDetailAsync(539789);
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
 
         Assert.Null(result);
     }

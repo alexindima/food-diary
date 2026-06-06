@@ -5,6 +5,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Dietologist;
 
@@ -14,7 +15,7 @@ public class DietologistAccessPolicyTests {
     public async Task EnsureCanAccessClientAsync_WithNoActiveInvitation_ReturnsFailure() {
         var repo = new StubInvitationRepository(null);
 
-        var result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, UserId.New(), UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -33,7 +34,7 @@ public class DietologistAccessPolicyTests {
 
         var repo = new StubInvitationRepository(invitation);
 
-        var result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, dietologistId, clientId, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -63,7 +64,7 @@ public class DietologistAccessPolicyTests {
     public void EnsurePermission_WhenMealsDenied_ReturnsError() {
         var perms = new DietologistPermissionsModel(false, true, true, true, true, true, true, true);
 
-        var error = DietologistAccessPolicy.EnsurePermission(perms, "Meals");
+        Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Meals");
 
         Assert.NotNull(error);
         Assert.Contains("PermissionDenied", error.Code, StringComparison.Ordinal);
@@ -73,7 +74,7 @@ public class DietologistAccessPolicyTests {
     public void EnsurePermission_WhenHydrationDenied_ReturnsError() {
         var perms = new DietologistPermissionsModel(true, true, true, true, true, false, true, true);
 
-        var error = DietologistAccessPolicy.EnsurePermission(perms, "Hydration");
+        Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Hydration");
 
         Assert.NotNull(error);
     }
@@ -84,7 +85,7 @@ public class DietologistAccessPolicyTests {
     [InlineData("Waist")]
     [InlineData("Goals")]
     public void EnsurePermission_WhenSpecificPermissionDenied_ReturnsError(string category) {
-        var perms = category switch {
+        DietologistPermissionsModel perms = category switch {
             "Statistics" => new DietologistPermissionsModel(true, false, true, true, true, true, true, true),
             "Weight" => new DietologistPermissionsModel(true, true, false, true, true, true, true, true),
             "Waist" => new DietologistPermissionsModel(true, true, true, false, true, true, true, true),
@@ -92,7 +93,7 @@ public class DietologistAccessPolicyTests {
             _ => throw new ArgumentOutOfRangeException(nameof(category))
         };
 
-        var error = DietologistAccessPolicy.EnsurePermission(perms, category);
+        Error? error = DietologistAccessPolicy.EnsurePermission(perms, category);
 
         Assert.NotNull(error);
         Assert.Contains("PermissionDenied", error.Code, StringComparison.Ordinal);
@@ -102,7 +103,7 @@ public class DietologistAccessPolicyTests {
     public void EnsurePermission_WhenProfileDenied_ReturnsError() {
         var perms = new DietologistPermissionsModel(true, true, true, true, true, true, false, true);
 
-        var error = DietologistAccessPolicy.EnsurePermission(perms, "Profile");
+        Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Profile");
 
         Assert.NotNull(error);
     }
@@ -111,7 +112,7 @@ public class DietologistAccessPolicyTests {
     public void EnsurePermission_WhenFastingDenied_ReturnsError() {
         var perms = new DietologistPermissionsModel(true, true, true, true, true, true, true, false);
 
-        var error = DietologistAccessPolicy.EnsurePermission(perms, "Fasting");
+        Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Fasting");
 
         Assert.NotNull(error);
     }

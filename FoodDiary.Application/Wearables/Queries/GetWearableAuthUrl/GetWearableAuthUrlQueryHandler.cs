@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 
@@ -13,22 +14,22 @@ public class GetWearableAuthUrlQueryHandler(
     public Task<Result<string>> Handle(
         GetWearableAuthUrlQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Task.FromResult(Result.Failure<string>(userIdResult.Error));
         }
 
-        if (!Enum.TryParse<WearableProvider>(query.Provider, true, out var provider)) {
+        if (!Enum.TryParse<WearableProvider>(query.Provider, true, out WearableProvider provider)) {
             return Task.FromResult(Result.Failure<string>(Errors.Wearable.InvalidProvider(query.Provider)));
         }
 
-        var client = wearableClients.FirstOrDefault(c => c.Provider == provider);
+        IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {
             return Task.FromResult(Result.Failure<string>(Errors.Wearable.ProviderNotConfigured(query.Provider)));
         }
 
-        var state = stateService.CreateState(userIdResult.Value, provider, query.State);
-        var url = client.GetAuthorizationUrl(state);
+        string state = stateService.CreateState(userIdResult.Value, provider, query.State);
+        string url = client.GetAuthorizationUrl(state);
         return Task.FromResult(Result.Success(url));
     }
 }

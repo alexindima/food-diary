@@ -27,7 +27,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
             "<p>Hello</p>",
             "Hello");
 
-        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             transport.SendAsync(request, CancellationToken.None));
 
         Assert.Contains("private or loopback", ex.InnerException?.Message ?? ex.Message, StringComparison.Ordinal);

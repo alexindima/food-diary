@@ -9,9 +9,9 @@ public static class CyclePredictionService {
     public static CyclePredictionsModel CalculatePredictions(Cycle cycle) {
         ArgumentNullException.ThrowIfNull(cycle);
 
-        var nextPeriodStart = NormalizeDate(cycle.StartDate.AddDays(cycle.AverageLength));
-        var ovulation = NormalizeDate(nextPeriodStart.AddDays(-cycle.LutealLength));
-        var pmsStart = NormalizeDate(nextPeriodStart.AddDays(-DefaultPmsWindow));
+        DateTime nextPeriodStart = NormalizeDate(cycle.StartDate.AddDays(cycle.AverageLength));
+        DateTime ovulation = NormalizeDate(nextPeriodStart.AddDays(-cycle.LutealLength));
+        DateTime pmsStart = NormalizeDate(nextPeriodStart.AddDays(-DefaultPmsWindow));
 
         return new CyclePredictionsModel(
             nextPeriodStart,

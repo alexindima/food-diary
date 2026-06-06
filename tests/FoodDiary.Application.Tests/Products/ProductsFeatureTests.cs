@@ -17,6 +17,9 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Products.Models;
+using FluentValidation.Results;
+using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Tests.Products;
 
@@ -40,12 +43,12 @@ public class ProductsFeatureTests {
             comment: "Owner note",
             visibility: Visibility.Private);
 
-        var nonOwnerModel = product.ToModel(
+        ProductModel nonOwnerModel = product.ToModel(
             usageCount: 7,
             isOwnedByCurrentUser: false,
             isFavorite: true,
             favoriteProductId: favoriteProductId.Value);
-        var ownerModel = product.ToModel(isOwnedByCurrentUser: true);
+        ProductModel ownerModel = product.ToModel(isOwnedByCurrentUser: true);
 
         Assert.Null(nonOwnerModel.Comment);
         Assert.Equal("Owner note", ownerModel.Comment);
@@ -59,7 +62,7 @@ public class ProductsFeatureTests {
         var validator = new GetProductsOverviewQueryValidator();
         var query = new GetProductsOverviewQuery(Guid.Empty, 1, 10, null, true);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.False(result.IsValid);
     }
@@ -69,7 +72,7 @@ public class ProductsFeatureTests {
         var validator = new GetRecentProductsQueryValidator();
         var query = new GetRecentProductsQuery(Guid.NewGuid(), 10, true);
 
-        var result = await validator.ValidateAsync(query);
+        ValidationResult result = await validator.ValidateAsync(query);
 
         Assert.True(result.IsValid);
     }
@@ -79,7 +82,7 @@ public class ProductsFeatureTests {
         var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var query = new GetProductsQuery(null, 1, 10, null, true);
 
-        var result = await handler.Handle(query, CancellationToken.None);
+        Result<PagedResponse<ProductModel>> result = await handler.Handle(query, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -119,14 +122,14 @@ public class ProductsFeatureTests {
         var repository = new OverviewProductRepository([(owned, 4), (supplement, 2)]);
         var handler = new GetProductsQueryHandler(repository, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, Page: 0, Limit: 0, Search: "ignored", IncludePublic: true, ProductTypes: ["fruit", "Fruit", "invalid"]),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
-        var item = Assert.Single(result.Value.Data);
+        ProductModel item = Assert.Single(result.Value.Data);
         Assert.Equal(owned.Id.Value, item.Id);
         Assert.Equal(4, item.UsageCount);
         Assert.True(item.IsOwnedByCurrentUser);
@@ -157,7 +160,7 @@ public class ProductsFeatureTests {
             AlcoholPerBase: 0,
             Visibility: "Private");
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -188,7 +191,7 @@ public class ProductsFeatureTests {
             AlcoholPerBase: 0,
             Visibility: "Private");
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -201,7 +204,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new CreateProductCommand(
                 UserId: user.Id.Value,
                 Barcode: null,
@@ -237,7 +240,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateProductCommand(user.Id.Value),
             CancellationToken.None);
 
@@ -252,7 +255,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateProductCommand(user.Id.Value, baseUnit: "Cup"),
             CancellationToken.None);
 
@@ -267,7 +270,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateProductCommand(user.Id.Value, visibility: "Shared"),
             CancellationToken.None);
 
@@ -282,7 +285,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateProductCommand(user.Id.Value, productType: "999"),
             CancellationToken.None);
 
@@ -298,7 +301,7 @@ public class ProductsFeatureTests {
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteProductCommand(null, ProductId.New().Value),
             CancellationToken.None);
 
@@ -316,7 +319,7 @@ public class ProductsFeatureTests {
             new RecordingCleanupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
@@ -333,7 +336,7 @@ public class ProductsFeatureTests {
             new RecordingCleanupService(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
@@ -364,7 +367,7 @@ public class ProductsFeatureTests {
         var cleanup = new RecordingCleanupService("storage_error");
         var handler = new DeleteProductCommandHandler(repository, cleanup, new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.GetByIdForUpdateCalled);
@@ -379,7 +382,7 @@ public class ProductsFeatureTests {
             new RecordingCleanupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteProductCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -392,7 +395,7 @@ public class ProductsFeatureTests {
     public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new GetProductByIdQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -407,7 +410,7 @@ public class ProductsFeatureTests {
             new NoopProductRepository(),
             new StubUserRepository(User.Create("product-by-id-invalid-token@example.com", "hash")));
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new GetProductByIdQuery(null, ProductId.New().Value),
             CancellationToken.None);
 
@@ -423,7 +426,7 @@ public class ProductsFeatureTests {
             new NoopProductRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new GetProductByIdQuery(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
@@ -435,7 +438,7 @@ public class ProductsFeatureTests {
     public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
         var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
@@ -448,7 +451,7 @@ public class ProductsFeatureTests {
     public async Task DuplicateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(null, ProductId.New().Value),
             CancellationToken.None);
 
@@ -460,7 +463,7 @@ public class ProductsFeatureTests {
     public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotFound() {
         var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(Guid.NewGuid(), ProductId.New().Value),
             CancellationToken.None);
 
@@ -522,7 +525,7 @@ public class ProductsFeatureTests {
             AlcoholPerBase: null,
             Visibility: null);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(repository.GetByIdForUpdateCalled);
@@ -566,7 +569,7 @@ public class ProductsFeatureTests {
             new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
                 .WithAsset(newAssetId, "https://cdn.example/new.jpg"));
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateFullProductUpdateCommand(user.Id.Value, product.Id.Value, newAssetId.Value),
             CancellationToken.None);
 
@@ -611,7 +614,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
                 userId.Value,
                 product.Id.Value,
@@ -656,7 +659,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
@@ -716,7 +719,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
                 user.Id.Value,
                 product.Id.Value,
@@ -761,7 +764,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(null, ProductId.New().Value),
             CancellationToken.None);
 
@@ -778,7 +781,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, baseUnit: "Cup"),
             CancellationToken.None);
 
@@ -796,7 +799,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, visibility: "Hidden"),
             CancellationToken.None);
 
@@ -815,7 +818,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(user),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, productId.Value, name: "Updated"),
             CancellationToken.None);
 
@@ -826,7 +829,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task UpdateProductCommandHandler_WhenImageAssetAccessFails_ReturnsFailure() {
         var user = User.Create("update-product-forbidden-image@example.com", "hash");
-        var access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var handler = new UpdateProductCommandHandler(
             new NoopProductRepository(),
@@ -834,7 +837,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(user),
             access);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, imageAssetId: Guid.NewGuid()),
             CancellationToken.None);
 
@@ -848,7 +851,7 @@ public class ProductsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, 1, 10, null, true),
             CancellationToken.None);
 
@@ -862,7 +865,7 @@ public class ProductsFeatureTests {
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new CreateProductCommand(
                 user.Id.Value,
                 "4601234567890",
@@ -898,12 +901,12 @@ public class ProductsFeatureTests {
     public async Task CreateProductCommandHandler_WithImageAsset_UsesResolvedAssetUrl() {
         var user = User.Create("create-product-image@example.com", "hash");
         var assetId = ImageAssetId.New();
-        var access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithAsset(assetId, "https://cdn.test/assets/product.webp");
         var repository = new NoopProductRepository();
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new CreateProductCommand(
                 user.Id.Value,
                 Barcode: null,
@@ -937,11 +940,11 @@ public class ProductsFeatureTests {
     public async Task CreateProductCommandHandler_WhenImageAssetAccessFails_DoesNotPersist() {
         var user = User.Create("create-product-forbidden-image@example.com", "hash");
         var repository = new NoopProductRepository();
-        var access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService access = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var handler = new CreateProductCommandHandler(repository, new StubUserRepository(user), access);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new CreateProductCommand(
                 user.Id.Value,
                 Barcode: null,
@@ -991,7 +994,7 @@ public class ProductsFeatureTests {
         SetProductUsageCollections(product, mealItemsCount: 2, recipeIngredientsCount: 1);
         var handler = new GetProductByIdQueryHandler(new SingleProductRepository(product), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetProductByIdQuery(user.Id.Value, product.Id.Value), CancellationToken.None);
+        Result<ProductModel> result = await handler.Handle(new GetProductByIdQuery(user.Id.Value, product.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(product.Id.Value, result.Value.Id);
@@ -1027,7 +1030,7 @@ public class ProductsFeatureTests {
         var repository = new SingleProductRepository(original);
         var handler = new DuplicateProductCommandHandler(repository);
 
-        var result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
+        Result<ProductModel> result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(repository.LastAddedProduct);
@@ -1061,7 +1064,7 @@ public class ProductsFeatureTests {
         var cleanup = new RecordingCleanupService();
         var handler = new UpdateProductCommandHandler(repository, cleanup, new StubUserRepository(user), FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<ProductModel> result = await handler.Handle(
             new UpdateProductCommand(
                 user.Id.Value,
                 product.Id.Value,
@@ -1143,7 +1146,7 @@ public class ProductsFeatureTests {
         var favoriteRepository = new StubFavoriteProductRepository([favorite]);
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
-        var result = await handler.Handle(
+        Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
             CancellationToken.None);
 
@@ -1182,7 +1185,7 @@ public class ProductsFeatureTests {
         var favoriteRepository = new StubFavoriteProductRepository([]);
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
-        var result = await handler.Handle(
+        Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", true, 10, 10),
             CancellationToken.None);
 
@@ -1198,7 +1201,7 @@ public class ProductsFeatureTests {
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]));
 
-        var result = await handler.Handle(
+        Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(null, 1, 10, null, true),
             CancellationToken.None);
 
@@ -1228,7 +1231,7 @@ public class ProductsFeatureTests {
             recentRepository,
             new StubFavoriteProductRepository([]));
 
-        var result = await handler.Handle(
+        Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
             CancellationToken.None);
 
@@ -1273,7 +1276,7 @@ public class ProductsFeatureTests {
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]));
 
-        var result = await handler.Handle(
+        Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(
                 user.Id.Value,
                 Page: 1,
@@ -1284,7 +1287,7 @@ public class ProductsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var item = Assert.Single(result.Value.AllProducts.Data);
+        ProductModel item = Assert.Single(result.Value.AllProducts.Data);
         Assert.Equal(dairy.Id.Value, item.Id);
         Assert.Equal(ProductType.Dairy.ToString(), item.ProductType);
     }
@@ -1293,7 +1296,7 @@ public class ProductsFeatureTests {
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new NoopProductRepository());
 
-        var result = await handler.Handle(new GetRecentProductsQuery(null, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(null, 10, true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1305,7 +1308,7 @@ public class ProductsFeatureTests {
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetRecentProductsQueryHandler(recentRepository, new NoopProductRepository());
 
-        var result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
@@ -1354,7 +1357,7 @@ public class ProductsFeatureTests {
         ]);
         var handler = new GetRecentProductsQueryHandler(recentRepository, repository);
 
-        var result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);

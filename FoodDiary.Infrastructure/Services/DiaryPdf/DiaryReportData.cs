@@ -59,16 +59,16 @@ internal sealed partial class DiaryPdfGenerator {
             DiaryPdfReportTexts texts,
             int? timeZoneOffsetMinutes,
             string reportHost) {
-            var normalizedFrom = EnsureUtc(dateFrom);
-            var normalizedTo = EnsureUtc(dateTo);
+            DateTime normalizedFrom = EnsureUtc(dateFrom);
+            DateTime normalizedTo = EnsureUtc(dateTo);
             if (normalizedTo < normalizedFrom) {
                 (normalizedFrom, normalizedTo) = (normalizedTo, normalizedFrom);
             }
 
-            var culture = ResolveCulture(texts.CultureName);
-            var displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
-            var days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
-            var orderedMeals = meals.OrderBy(meal => meal.Date).ToArray();
+            CultureInfo culture = ResolveCulture(texts.CultureName);
+            TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, timeZoneOffsetMinutes);
+            IReadOnlyList<DiaryDay> days = BuildDays(meals, normalizedFrom, normalizedTo, displayOffset, culture);
+            Meal[] orderedMeals = meals.OrderBy(meal => meal.Date).ToArray();
             return new DiaryReportData(
                 orderedMeals,
                 days,
@@ -89,18 +89,18 @@ internal sealed partial class DiaryPdfGenerator {
             DateTime dateTo,
             TimeSpan displayOffset,
             CultureInfo culture) {
-            var duration = dateTo - dateFrom;
-            var dayCount = Math.Clamp((int)Math.Ceiling(duration.TotalDays), 1, 366);
+            TimeSpan duration = dateTo - dateFrom;
+            int dayCount = Math.Clamp((int)Math.Ceiling(duration.TotalDays), 1, 366);
             var result = new List<DiaryDay>(dayCount);
 
-            for (var index = 0; index < dayCount; index++) {
-                var start = dateFrom.AddDays(index);
-                var end = index == dayCount - 1 ? dateTo : start.AddDays(1).AddTicks(-1);
-                var bucketMeals = meals
+            for (int index = 0; index < dayCount; index++) {
+                DateTime start = dateFrom.AddDays(index);
+                DateTime end = index == dayCount - 1 ? dateTo : start.AddDays(1).AddTicks(-1);
+                Meal[] bucketMeals = meals
                     .Where(meal => meal.Date >= start && meal.Date <= end)
                     .ToArray();
 
-                var labelDate = start.Add(displayOffset).Date;
+                DateTime labelDate = start.Add(displayOffset).Date;
                 result.Add(new DiaryDay(
                     labelDate.ToString("d MMM", culture),
                     bucketMeals.Sum(EffectiveCalories),
@@ -135,15 +135,15 @@ internal sealed partial class DiaryPdfGenerator {
                 return TimeSpan.FromMinutes(timeZoneOffsetMinutes.Value);
             }
 
-            var timeOfDay = dateFrom.TimeOfDay;
+            TimeSpan timeOfDay = dateFrom.TimeOfDay;
             return timeOfDay <= TimeSpan.FromHours(12)
                 ? -timeOfDay
                 : TimeSpan.FromDays(1) - timeOfDay;
         }
 
         private static string FormatTimeZoneOffset(TimeSpan offset) {
-            var sign = offset < TimeSpan.Zero ? "-" : "+";
-            var absolute = offset.Duration();
+            string sign = offset < TimeSpan.Zero ? "-" : "+";
+            TimeSpan absolute = offset.Duration();
             return $"UTC{sign}{(int)absolute.TotalHours:00}:{absolute.Minutes:00}";
         }
     }

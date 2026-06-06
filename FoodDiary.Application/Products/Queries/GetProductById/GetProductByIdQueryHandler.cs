@@ -5,6 +5,7 @@ using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
@@ -24,12 +25,12 @@ public class GetProductByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ProductModel>(accessError);
         }
         var productId = new ProductId(query.ProductId);
-        var product = await productRepository.GetByIdAsync(
+        Product? product = await productRepository.GetByIdAsync(
             productId,
             userId,
             includePublic: false,
@@ -38,8 +39,8 @@ public class GetProductByIdQueryHandler(
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId));
         }
 
-        var usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        var isOwner = product.UserId == userId;
+        int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+        bool isOwner = product.UserId == userId;
         return Result.Success(product.ToModel(usageCount, isOwner));
     }
 }

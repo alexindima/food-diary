@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
@@ -22,7 +23,7 @@ public class DeleteRecipeCommandHandler(
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
-        var recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: false,
@@ -39,7 +40,7 @@ public class DeleteRecipeCommandHandler(
                 "Recipe is already used and cannot be deleted"));
         }
 
-        var assetId = recipe.ImageAssetId;
+        ImageAssetId? assetId = recipe.ImageAssetId;
         var stepAssetIds = recipe.Steps
             .Select(step => step.ImageAssetId)
             .Where(id => id.HasValue)
@@ -52,7 +53,7 @@ public class DeleteRecipeCommandHandler(
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);
         }
 
-        foreach (var stepAssetId in stepAssetIds) {
+        foreach (ImageAssetId stepAssetId in stepAssetIds) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(stepAssetId, cancellationToken).ConfigureAwait(false);
         }
 

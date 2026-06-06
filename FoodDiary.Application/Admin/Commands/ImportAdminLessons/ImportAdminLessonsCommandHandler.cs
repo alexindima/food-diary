@@ -14,15 +14,15 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository 
         CancellationToken cancellationToken) {
         var lessons = new List<NutritionLesson>(command.Lessons.Count);
 
-        for (var index = 0; index < command.Lessons.Count; index++) {
-            var item = command.Lessons[index];
+        for (int index = 0; index < command.Lessons.Count; index++) {
+            ImportAdminLessonItem item = command.Lessons[index];
 
-            if (!Enum.TryParse<LessonCategory>(item.Category, true, out var category)) {
+            if (!Enum.TryParse<LessonCategory>(item.Category, true, out LessonCategory category)) {
                 return Result.Failure<AdminLessonsImportModel>(
                     Errors.Validation.Invalid($"lessons[{index}].category", "Invalid lesson category."));
             }
 
-            if (!Enum.TryParse<LessonDifficulty>(item.Difficulty, true, out var difficulty)) {
+            if (!Enum.TryParse<LessonDifficulty>(item.Difficulty, true, out LessonDifficulty difficulty)) {
                 return Result.Failure<AdminLessonsImportModel>(
                     Errors.Validation.Invalid($"lessons[{index}].difficulty", "Invalid lesson difficulty."));
             }

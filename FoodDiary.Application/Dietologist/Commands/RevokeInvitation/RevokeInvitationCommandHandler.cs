@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 
@@ -18,12 +19,12 @@ public class RevokeInvitationCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
-        var pending = await invitationRepository.GetByClientAndStatusAsync(
+        DietologistInvitation? pending = await invitationRepository.GetByClientAndStatusAsync(
             userId, DietologistInvitationStatus.Pending, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (pending is not null) {
@@ -32,7 +33,7 @@ public class RevokeInvitationCommandHandler(
             return Result.Success();
         }
 
-        var active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? active = await invitationRepository.GetActiveByClientAsync(userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (active is not null) {
             active.Revoke();
             await invitationRepository.UpdateAsync(active, cancellationToken).ConfigureAwait(false);

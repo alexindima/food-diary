@@ -1,7 +1,22 @@
+using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
+using FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
+using FoodDiary.Application.Authentication.Commands.GoogleLogin;
+using FoodDiary.Application.Authentication.Commands.LinkTelegram;
+using FoodDiary.Application.Authentication.Commands.Login;
+using FoodDiary.Application.Authentication.Commands.RefreshToken;
+using FoodDiary.Application.Authentication.Commands.Register;
+using FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
+using FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
+using FoodDiary.Application.Authentication.Commands.RestoreAccount;
+using FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
+using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
+using FoodDiary.Application.Authentication.Commands.TelegramVerify;
+using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Presentation.Api.Features.Auth.Mappings;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
+using FoodDiary.Presentation.Api.Features.Auth.Responses;
 using Microsoft.AspNetCore.Http;
 using System.Net;
 
@@ -17,7 +32,7 @@ public sealed class AuthHttpMappingsTests {
             Language: "ru",
             ClientOrigin: "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„");
 
-        var command = request.ToCommand();
+        RegisterCommand command = request.ToCommand();
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal(request.Password, command.Password);
@@ -32,9 +47,9 @@ public sealed class AuthHttpMappingsTests {
             Password: "P@ssw0rd!",
             Language: "ru",
             ClientOrigin: "https://fooddiary.club");
-        var httpContext = CreateHttpContext("203.0.113.10", "FoodDiaryTest/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.10", "FoodDiaryTest/1.0");
 
-        var command = request.ToCommand(httpContext);
+        RegisterCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal("password-register", command.ClientContext!.AuthProvider);
@@ -46,7 +61,7 @@ public sealed class AuthHttpMappingsTests {
     public void RestoreAccountRequest_ToCommand_MapsAllFields() {
         var request = new RestoreAccountHttpRequest("alex@example.com", "P@ssw0rd!");
 
-        var command = request.ToCommand();
+        RestoreAccountCommand command = request.ToCommand();
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal(request.Password, command.Password);
@@ -55,9 +70,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void RestoreAccountRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new RestoreAccountHttpRequest("alex@example.com", "P@ssw0rd!");
-        var httpContext = CreateHttpContext("203.0.113.11", "RestoreAgent/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.11", "RestoreAgent/1.0");
 
-        var command = request.ToCommand(httpContext);
+        RestoreAccountCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal("password-restore", command.ClientContext!.AuthProvider);
@@ -69,7 +84,7 @@ public sealed class AuthHttpMappingsTests {
     public void LoginRequest_ToCommand_MapsAllFields() {
         var request = new LoginHttpRequest("alex@example.com", "P@ssw0rd!");
 
-        var command = request.ToCommand();
+        LoginCommand command = request.ToCommand();
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal(request.Password, command.Password);
@@ -78,9 +93,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void LoginRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new LoginHttpRequest("alex@example.com", "P@ssw0rd!");
-        var httpContext = CreateHttpContext("203.0.113.12", "LoginAgent/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.12", "LoginAgent/1.0");
 
-        var command = request.ToCommand(httpContext);
+        LoginCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal("password", command.ClientContext!.AuthProvider);
@@ -92,7 +107,7 @@ public sealed class AuthHttpMappingsTests {
     public void GoogleLoginRequest_ToCommand_MapsCredential() {
         var request = new GoogleLoginHttpRequest("google-credential");
 
-        var command = request.ToCommand();
+        GoogleLoginCommand command = request.ToCommand();
 
         Assert.Equal(request.Credential, command.Credential);
     }
@@ -100,9 +115,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void GoogleLoginRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new GoogleLoginHttpRequest("google-credential");
-        var httpContext = CreateHttpContext("203.0.113.13", "GoogleAgent/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.13", "GoogleAgent/1.0");
 
-        var command = request.ToCommand(httpContext);
+        GoogleLoginCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Credential, command.Credential);
         Assert.Equal("google", command.ClientContext!.AuthProvider);
@@ -114,7 +129,7 @@ public sealed class AuthHttpMappingsTests {
     public void RefreshTokenRequest_ToCommand_MapsRefreshToken() {
         var request = new RefreshTokenHttpRequest("refresh-token");
 
-        var command = request.ToCommand();
+        RefreshTokenCommand command = request.ToCommand();
 
         Assert.Equal(request.RefreshToken, command.RefreshToken);
     }
@@ -123,7 +138,7 @@ public sealed class AuthHttpMappingsTests {
     public void TelegramAuthRequest_ToCommand_MapsInitData() {
         var request = new TelegramAuthHttpRequest(InitData: "query_id=123&hash=abc");
 
-        var command = request.ToCommand();
+        TelegramVerifyCommand command = request.ToCommand();
 
         Assert.Equal(request.InitData, command.InitData);
     }
@@ -131,9 +146,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void TelegramAuthRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new TelegramAuthHttpRequest(InitData: "query_id=123&hash=abc");
-        var httpContext = CreateHttpContext("203.0.113.14", "TelegramMiniApp/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.14", "TelegramMiniApp/1.0");
 
-        var command = request.ToCommand(httpContext);
+        TelegramVerifyCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.InitData, command.InitData);
         Assert.Equal("telegram-mini-app", command.ClientContext!.AuthProvider);
@@ -146,7 +161,7 @@ public sealed class AuthHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new TelegramAuthHttpRequest(InitData: "query_id=123&hash=abc");
 
-        var command = request.ToLinkCommand(userId);
+        LinkTelegramCommand command = request.ToLinkCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.InitData, command.InitData);
@@ -163,7 +178,7 @@ public sealed class AuthHttpMappingsTests {
             LastName: "Doe",
             PhotoUrl: "https://cdn.example/avatar.png");
 
-        var command = request.ToCommand();
+        TelegramLoginWidgetCommand command = request.ToCommand();
 
         Assert.Equal(request.Id, command.Id);
         Assert.Equal(request.AuthDate, command.AuthDate);
@@ -184,9 +199,9 @@ public sealed class AuthHttpMappingsTests {
             FirstName: "Alex",
             LastName: "Doe",
             PhotoUrl: "https://cdn.example/avatar.png");
-        var httpContext = CreateHttpContext("203.0.113.15", "TelegramWidget/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.15", "TelegramWidget/1.0");
 
-        var command = request.ToCommand(httpContext);
+        TelegramLoginWidgetCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Id, command.Id);
         Assert.Equal("telegram-login-widget", command.ClientContext!.AuthProvider);
@@ -198,7 +213,7 @@ public sealed class AuthHttpMappingsTests {
     public void TelegramBotAuthRequest_ToCommand_MapsTelegramUserId() {
         var request = new TelegramBotAuthHttpRequest(TelegramUserId: 123456);
 
-        var command = request.ToCommand();
+        TelegramBotAuthCommand command = request.ToCommand();
 
         Assert.Equal(request.TelegramUserId, command.TelegramUserId);
     }
@@ -206,9 +221,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void TelegramBotAuthRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new TelegramBotAuthHttpRequest(TelegramUserId: 123456);
-        var httpContext = CreateHttpContext("203.0.113.16", "TelegramBot/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.16", "TelegramBot/1.0");
 
-        var command = request.ToCommand(httpContext);
+        TelegramBotAuthCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.TelegramUserId, command.TelegramUserId);
         Assert.Equal("telegram-bot", command.ClientContext!.AuthProvider);
@@ -220,7 +235,7 @@ public sealed class AuthHttpMappingsTests {
     public void AdminSsoExchangeRequest_ToCommand_MapsCode() {
         var request = new AdminSsoExchangeHttpRequest("sso-code");
 
-        var command = request.ToCommand();
+        AdminSsoExchangeCommand command = request.ToCommand();
 
         Assert.Equal(request.Code, command.Code);
     }
@@ -228,9 +243,9 @@ public sealed class AuthHttpMappingsTests {
     [Fact]
     public void AdminSsoExchangeRequest_ToCommand_WithHttpContext_MapsClientContext() {
         var request = new AdminSsoExchangeHttpRequest("sso-code");
-        var httpContext = CreateHttpContext("203.0.113.17", "AdminSso/1.0");
+        HttpContext httpContext = CreateHttpContext("203.0.113.17", "AdminSso/1.0");
 
-        var command = request.ToCommand(httpContext);
+        AdminSsoExchangeCommand command = request.ToCommand(httpContext);
 
         Assert.Equal(request.Code, command.Code);
         Assert.Equal("admin-sso", command.ClientContext!.AuthProvider);
@@ -242,7 +257,7 @@ public sealed class AuthHttpMappingsTests {
     public void UserId_ToResendVerificationCommand_MapsUserIdAndClientOrigin() {
         var userId = Guid.NewGuid();
 
-        var command = userId.ToResendVerificationCommand("https://fooddiary.club");
+        ResendEmailVerificationCommand command = userId.ToResendVerificationCommand("https://fooddiary.club");
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("https://fooddiary.club", command.ClientOrigin);
@@ -261,7 +276,7 @@ public sealed class AuthHttpMappingsTests {
     public void VerifyEmailRequest_ToCommand_MapsAllFields() {
         var request = new VerifyEmailHttpRequest(Guid.NewGuid(), "verification-token");
 
-        var command = request.ToCommand();
+        VerifyEmailCommand command = request.ToCommand();
 
         Assert.Equal(request.UserId, command.UserId);
         Assert.Equal(request.Token, command.Token);
@@ -275,7 +290,7 @@ public sealed class AuthHttpMappingsTests {
             Token: "reset-token",
             NewPassword: "N3wP@ssword");
 
-        var command = request.ToCommand();
+        ConfirmPasswordResetCommand command = request.ToCommand();
 
         Assert.Equal(request.UserId, command.UserId);
         Assert.Equal(request.Token, command.Token);
@@ -288,7 +303,7 @@ public sealed class AuthHttpMappingsTests {
             Email: "alex@example.com",
             ClientOrigin: "https://fooddiary.club");
 
-        var command = request.ToCommand();
+        RequestPasswordResetCommand command = request.ToCommand();
 
         Assert.Equal(request.Email, command.Email);
         Assert.Equal(request.ClientOrigin, command.ClientOrigin);
@@ -302,7 +317,7 @@ public sealed class AuthHttpMappingsTests {
             "refresh-token",
             CreateUserModel(userId));
 
-        var response = model.ToHttpResponse();
+        AuthenticationHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("access-token", response.AccessToken);
         Assert.Equal("refresh-token", response.RefreshToken);
@@ -312,10 +327,10 @@ public sealed class AuthHttpMappingsTests {
 
     [Fact]
     public void AdminSsoStartModel_ToHttpResponse_MapsCodeAndExpiration() {
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(5);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(5);
         var model = new AdminSsoStartModel("sso-code", expiresAtUtc);
 
-        var response = model.ToHttpResponse();
+        AdminSsoStartHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("sso-code", response.Code);
         Assert.Equal(expiresAtUtc, response.ExpiresAtUtc);

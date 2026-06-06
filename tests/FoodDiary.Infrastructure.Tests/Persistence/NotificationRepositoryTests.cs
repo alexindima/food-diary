@@ -12,7 +12,7 @@ namespace FoodDiary.Infrastructure.Tests.Persistence;
 public sealed class NotificationRepositoryTests {
     [Fact]
     public async Task DeleteExpiredBatchAsync_WhenReadRecently_KeepsOldCreatedNotification() {
-        await using var context = CreateContext();
+        await using FoodDiaryDbContext context = CreateContext();
         var user = User.Create("recent-read-notification@example.com", "hash");
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, NotificationPayloads.Empty());
         SetAuditState(
@@ -27,7 +27,7 @@ public sealed class NotificationRepositoryTests {
 
         var repository = new NotificationRepository(context);
 
-        var deleted = await repository.DeleteExpiredBatchAsync(
+        int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: RetentionCutoff,
             transientUnreadOlderThanUtc: RetentionCutoff,
@@ -41,7 +41,7 @@ public sealed class NotificationRepositoryTests {
 
     [Fact]
     public async Task DeleteExpiredBatchAsync_WhenReadBeforeRetentionCutoff_DeletesByReadTimestamp() {
-        await using var context = CreateContext();
+        await using FoodDiaryDbContext context = CreateContext();
         var user = User.Create("expired-read-notification@example.com", "hash");
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, NotificationPayloads.Empty());
         SetAuditState(
@@ -56,7 +56,7 @@ public sealed class NotificationRepositoryTests {
 
         var repository = new NotificationRepository(context);
 
-        var deleted = await repository.DeleteExpiredBatchAsync(
+        int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: RetentionCutoff,
             transientUnreadOlderThanUtc: RetentionCutoff,
@@ -71,7 +71,7 @@ public sealed class NotificationRepositoryTests {
     private static DateTime RetentionCutoff => new(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc);
 
     private static FoodDiaryDbContext CreateContext() {
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
 
@@ -89,16 +89,16 @@ public sealed class NotificationRepositoryTests {
     }
 
     private static void SetProperty(Notification notification, string propertyName, object? value) {
-        var property = FindProperty(typeof(Notification), propertyName);
-        var setter = property.GetSetMethod(nonPublic: true)
+        PropertyInfo property = FindProperty(typeof(Notification), propertyName);
+        MethodInfo setter = property.GetSetMethod(nonPublic: true)
             ?? throw new InvalidOperationException($"Property '{propertyName}' does not have a setter.");
 
         setter.Invoke(notification, [value]);
     }
 
     private static PropertyInfo FindProperty(Type type, string propertyName) {
-        for (var current = type; current is not null; current = current.BaseType) {
-            var property = current.GetProperty(
+        for (Type? current = type; current is not null; current = current.BaseType) {
+            PropertyInfo? property = current.GetProperty(
                 propertyName,
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly);
             if (property is not null) {

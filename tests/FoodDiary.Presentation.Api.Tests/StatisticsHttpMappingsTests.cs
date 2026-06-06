@@ -1,6 +1,8 @@
 using FoodDiary.Application.Statistics.Models;
+using FoodDiary.Application.Statistics.Queries.GetStatistics;
 using FoodDiary.Presentation.Api.Features.Statistics.Mappings;
 using FoodDiary.Presentation.Api.Features.Statistics.Requests;
+using FoodDiary.Presentation.Api.Features.Statistics.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -13,7 +15,7 @@ public sealed class StatisticsHttpMappingsTests {
         var to = new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc);
         var httpQuery = new GetStatisticsHttpQuery(from, to, 7);
 
-        var query = httpQuery.ToQuery(userId);
+        GetStatisticsQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(from, query.DateFrom);
@@ -27,7 +29,7 @@ public sealed class StatisticsHttpMappingsTests {
         var to = new DateTime(2026, 3, 7, 0, 0, 0, DateTimeKind.Utc);
         var model = new AggregatedStatisticsModel(from, to, 14000, 120, 80, 250, 25, 840, 560, 1750, 175);
 
-        var response = model.ToHttpResponse();
+        AggregatedStatisticsHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(from, response.DateFrom);
         Assert.Equal(to, response.DateTo);

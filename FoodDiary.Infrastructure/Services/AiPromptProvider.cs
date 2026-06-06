@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
@@ -18,15 +19,15 @@ internal sealed class AiPromptProvider(
     };
 
     public async Task<string> GetPromptAsync(string key, CancellationToken cancellationToken = default) {
-        var cacheKey = $"ai-prompt:{key}";
+        string cacheKey = $"ai-prompt:{key}";
         if (cache.TryGetValue(cacheKey, out string? cached) && cached is not null) {
             return cached;
         }
 
         string? promptText = null;
-        using (var scope = scopeFactory.CreateScope()) {
-            var context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            var template = await context.Set<Domain.Entities.Ai.AiPromptTemplate>()
+        using (IServiceScope scope = scopeFactory.CreateScope()) {
+            FoodDiaryDbContext context = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            AiPromptTemplate? template = await context.Set<Domain.Entities.Ai.AiPromptTemplate>()
                 .AsNoTracking()
                 .Where(t => t.Key == key && t.IsActive)
                 .OrderByDescending(t => t.Version)
@@ -35,7 +36,7 @@ internal sealed class AiPromptProvider(
             promptText = template?.PromptText;
         }
 
-        var result = promptText ?? (Fallbacks.TryGetValue(key, out var fallback) ? fallback : key);
+        string result = promptText ?? (Fallbacks.TryGetValue(key, out string? fallback) ? fallback : key);
         cache.Set(cacheKey, result, CacheDuration);
         return result;
     }

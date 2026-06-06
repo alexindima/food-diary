@@ -11,6 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
@@ -22,19 +23,19 @@ public sealed class GoogleLoginCommandHandler(
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<GoogleLoginCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(GoogleLoginCommand command, CancellationToken cancellationToken) {
-        var payloadResult = await googleTokenValidator.ValidateCredentialAsync(command.Credential, cancellationToken).ConfigureAwait(false);
+        Result<GoogleIdentityPayload> payloadResult = await googleTokenValidator.ValidateCredentialAsync(command.Credential, cancellationToken).ConfigureAwait(false);
         if (!payloadResult.IsSuccess) {
             return Result.Failure<AuthenticationModel>(payloadResult.Error);
         }
 
-        var payload = payloadResult.Value;
-        var user = await userRepository.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
+        GoogleIdentityPayload payload = payloadResult.Value;
+        User? user = await userRepository.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
 
         if (user is null) {
             user = CreateGoogleUser(payload, passwordHasher);
             user = await userRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
         } else {
-            var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+            Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
             if (accessError is not null) {
                 return Result.Failure<AuthenticationModel>(accessError);
             }
@@ -45,14 +46,14 @@ public sealed class GoogleLoginCommandHandler(
 
         await EnsurePasswordSetupReminderAsync(user, notificationRepository, cancellationToken).ConfigureAwait(false);
 
-        var tokens = await authenticationTokenService
+        IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
             .ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 
     private static User CreateGoogleUser(GoogleIdentityPayload payload, IPasswordHasher passwordHasher) {
-        var placeholderPasswordHash = passwordHasher.Hash(SecurityTokenGenerator.GenerateUrlSafeToken());
+        string placeholderPasswordHash = passwordHasher.Hash(SecurityTokenGenerator.GenerateUrlSafeToken());
         var user = User.Create(payload.Email, placeholderPasswordHash, hasPassword: false);
         user.UpdateGoals(new UserGoalUpdate(
             DailyCalorieTarget: 2000,
@@ -71,7 +72,7 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         if (!string.IsNullOrWhiteSpace(payload.Locale)) {
-            var normalizedLanguage = LanguageCode.FromPreferred(payload.Locale).Value;
+            string normalizedLanguage = LanguageCode.FromPreferred(payload.Locale).Value;
             if (!string.Equals(user.Language, normalizedLanguage, StringComparison.Ordinal)) {
                 user.SetLanguage(normalizedLanguage);
             }
@@ -90,13 +91,13 @@ public sealed class GoogleLoginCommandHandler(
             return;
         }
 
-        var referenceId = $"password-setup:{user.Id.Value}";
-        var exists = await notificationRepository.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
+        string referenceId = $"password-setup:{user.Id.Value}";
+        bool exists = await notificationRepository.ExistsAsync(user.Id, NotificationTypes.PasswordSetupSuggested, referenceId, cancellationToken).ConfigureAwait(false);
         if (exists) {
             return;
         }
 
-        var notification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, referenceId);
+        Notification notification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, referenceId);
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
     }
 }

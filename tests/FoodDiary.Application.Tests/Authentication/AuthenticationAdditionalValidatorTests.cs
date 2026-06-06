@@ -16,14 +16,14 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task AdminSsoExchange_WithEmptyCode_HasError() {
         var validator = new AdminSsoExchangeCommandValidator();
-        var result = await validator.TestValidateAsync(new AdminSsoExchangeCommand(""));
+        TestValidationResult<AdminSsoExchangeCommand> result = await validator.TestValidateAsync(new AdminSsoExchangeCommand(""));
         result.ShouldHaveValidationErrorFor(c => c.Code);
     }
 
     [Fact]
     public async Task AdminSsoExchange_WithValidCode_NoErrors() {
         var validator = new AdminSsoExchangeCommandValidator();
-        var result = await validator.TestValidateAsync(new AdminSsoExchangeCommand("valid-code"));
+        TestValidationResult<AdminSsoExchangeCommand> result = await validator.TestValidateAsync(new AdminSsoExchangeCommand("valid-code"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -32,14 +32,14 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task GoogleLogin_WithEmptyCredential_HasError() {
         var validator = new GoogleLoginCommandValidator();
-        var result = await validator.TestValidateAsync(new GoogleLoginCommand(""));
+        TestValidationResult<GoogleLoginCommand> result = await validator.TestValidateAsync(new GoogleLoginCommand(""));
         result.ShouldHaveValidationErrorFor(c => c.Credential);
     }
 
     [Fact]
     public async Task GoogleLogin_WithValidCredential_NoErrors() {
         var validator = new GoogleLoginCommandValidator();
-        var result = await validator.TestValidateAsync(new GoogleLoginCommand("id-token"));
+        TestValidationResult<GoogleLoginCommand> result = await validator.TestValidateAsync(new GoogleLoginCommand("id-token"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -48,21 +48,21 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task LinkTelegram_WithEmptyUserId_HasError() {
         var validator = new LinkTelegramCommandValidator();
-        var result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.Empty, "data"));
+        TestValidationResult<LinkTelegramCommand> result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.Empty, "data"));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task LinkTelegram_WithEmptyInitData_HasError() {
         var validator = new LinkTelegramCommandValidator();
-        var result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.NewGuid(), ""));
+        TestValidationResult<LinkTelegramCommand> result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.NewGuid(), ""));
         result.ShouldHaveValidationErrorFor(c => c.InitData);
     }
 
     [Fact]
     public async Task LinkTelegram_WithValidData_NoErrors() {
         var validator = new LinkTelegramCommandValidator();
-        var result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.NewGuid(), "init-data"));
+        TestValidationResult<LinkTelegramCommand> result = await validator.TestValidateAsync(new LinkTelegramCommand(Guid.NewGuid(), "init-data"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -71,28 +71,28 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task Login_WithEmptyEmail_HasError() {
         var validator = new LoginCommandValidator();
-        var result = await validator.TestValidateAsync(new LoginCommand("", "pass"));
+        TestValidationResult<LoginCommand> result = await validator.TestValidateAsync(new LoginCommand("", "pass"));
         result.ShouldHaveValidationErrorFor(c => c.Email);
     }
 
     [Fact]
     public async Task Login_WithInvalidEmail_HasError() {
         var validator = new LoginCommandValidator();
-        var result = await validator.TestValidateAsync(new LoginCommand("not-email", "pass"));
+        TestValidationResult<LoginCommand> result = await validator.TestValidateAsync(new LoginCommand("not-email", "pass"));
         result.ShouldHaveValidationErrorFor(c => c.Email);
     }
 
     [Fact]
     public async Task Login_WithEmptyPassword_HasError() {
         var validator = new LoginCommandValidator();
-        var result = await validator.TestValidateAsync(new LoginCommand("user@test.com", ""));
+        TestValidationResult<LoginCommand> result = await validator.TestValidateAsync(new LoginCommand("user@test.com", ""));
         result.ShouldHaveValidationErrorFor(c => c.Password);
     }
 
     [Fact]
     public async Task Login_WithValidData_NoErrors() {
         var validator = new LoginCommandValidator();
-        var result = await validator.TestValidateAsync(new LoginCommand("user@test.com", "password"));
+        TestValidationResult<LoginCommand> result = await validator.TestValidateAsync(new LoginCommand("user@test.com", "password"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -101,14 +101,14 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task RefreshToken_WithEmptyToken_HasError() {
         var validator = new RefreshTokenCommandValidator();
-        var result = await validator.TestValidateAsync(new RefreshTokenCommand(""));
+        TestValidationResult<RefreshTokenCommand> result = await validator.TestValidateAsync(new RefreshTokenCommand(""));
         result.ShouldHaveValidationErrorFor(c => c.RefreshToken);
     }
 
     [Fact]
     public async Task RefreshToken_WithValidToken_NoErrors() {
         var validator = new RefreshTokenCommandValidator();
-        var result = await validator.TestValidateAsync(new RefreshTokenCommand("token-value"));
+        TestValidationResult<RefreshTokenCommand> result = await validator.TestValidateAsync(new RefreshTokenCommand("token-value"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -117,21 +117,21 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task RestoreAccount_WithEmptyEmail_HasError() {
         var validator = new RestoreAccountCommandValidator();
-        var result = await validator.TestValidateAsync(new RestoreAccountCommand("", "password1"));
+        TestValidationResult<RestoreAccountCommand> result = await validator.TestValidateAsync(new RestoreAccountCommand("", "password1"));
         result.ShouldHaveValidationErrorFor(c => c.Email);
     }
 
     [Fact]
     public async Task RestoreAccount_WithShortPassword_HasError() {
         var validator = new RestoreAccountCommandValidator();
-        var result = await validator.TestValidateAsync(new RestoreAccountCommand("user@test.com", "12345"));
+        TestValidationResult<RestoreAccountCommand> result = await validator.TestValidateAsync(new RestoreAccountCommand("user@test.com", "12345"));
         result.ShouldHaveValidationErrorFor(c => c.Password);
     }
 
     [Fact]
     public async Task RestoreAccount_WithValidData_NoErrors() {
         var validator = new RestoreAccountCommandValidator();
-        var result = await validator.TestValidateAsync(new RestoreAccountCommand("user@test.com", "password1"));
+        TestValidationResult<RestoreAccountCommand> result = await validator.TestValidateAsync(new RestoreAccountCommand("user@test.com", "password1"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -140,14 +140,14 @@ public class AuthenticationAdditionalValidatorTests {
     [Fact]
     public async Task TelegramVerify_WithEmptyInitData_HasError() {
         var validator = new TelegramVerifyCommandValidator();
-        var result = await validator.TestValidateAsync(new TelegramVerifyCommand(""));
+        TestValidationResult<TelegramVerifyCommand> result = await validator.TestValidateAsync(new TelegramVerifyCommand(""));
         result.ShouldHaveValidationErrorFor(c => c.InitData);
     }
 
     [Fact]
     public async Task TelegramVerify_WithValidInitData_NoErrors() {
         var validator = new TelegramVerifyCommandValidator();
-        var result = await validator.TestValidateAsync(new TelegramVerifyCommand("init-data"));
+        TestValidationResult<TelegramVerifyCommand> result = await validator.TestValidateAsync(new TelegramVerifyCommand("init-data"));
         result.ShouldNotHaveAnyValidationErrors();
     }
 }

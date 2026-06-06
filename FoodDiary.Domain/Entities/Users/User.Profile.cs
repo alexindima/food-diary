@@ -137,16 +137,16 @@ public sealed partial class User {
         string? gender,
         double? weight,
         double? height) {
-        var normalizedUsername = NormalizeOptionalProfileText(username);
-        var normalizedFirstName = NormalizeOptionalProfileText(firstName);
-        var normalizedLastName = NormalizeOptionalProfileText(lastName);
+        string? normalizedUsername = NormalizeOptionalProfileText(username);
+        string? normalizedFirstName = NormalizeOptionalProfileText(firstName);
+        string? normalizedLastName = NormalizeOptionalProfileText(lastName);
 
         EnsureBirthDateIsNotFuture(birthDate);
         EnsurePositive(weight, nameof(weight));
         EnsurePositive(height, nameof(height));
 
-        var state = GetPersonalProfileState();
-        var changed = false;
+        UserPersonalProfileState state = GetPersonalProfileState();
+        bool changed = false;
 
         if (username is not null && !string.Equals(state.Username, normalizedUsername, StringComparison.Ordinal)) {
             state = state with { Username = normalizedUsername };
@@ -169,7 +169,7 @@ public sealed partial class User {
         }
 
         if (gender is not null) {
-            var normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
+            string normalizedGender = NormalizeRequiredGender(gender, nameof(gender));
             if (!string.Equals(state.Gender, normalizedGender, StringComparison.Ordinal)) {
                 state = state with { Gender = normalizedGender };
                 changed = true;
@@ -199,12 +199,12 @@ public sealed partial class User {
         double? hydrationGoal) {
         EnsureActivityLevel(activityLevel, nameof(activityLevel));
 
-        var updatedActivityGoals = GetActivityGoals().With(
+        UserActivityGoals updatedActivityGoals = GetActivityGoals().With(
             stepGoal: stepGoal,
             hydrationGoal: hydrationGoal);
-        var state = GetPersonalProfileState();
+        UserPersonalProfileState state = GetPersonalProfileState();
 
-        var changed = false;
+        bool changed = false;
 
         if (activityLevel.HasValue && state.ActivityLevel != activityLevel.Value) {
             state = state with { ActivityLevel = activityLevel.Value };
@@ -224,9 +224,9 @@ public sealed partial class User {
     }
 
     private bool ApplyProfileMediaChanges(string? profileImage, ImageAssetId? profileImageAssetId) {
-        var normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
-        var state = GetProfileMediaState();
-        var changed = false;
+        string? normalizedProfileImage = NormalizeOptionalProfileText(profileImage);
+        UserProfileMediaState state = GetProfileMediaState();
+        bool changed = false;
 
         if (profileImage is not null && !string.Equals(state.ProfileImage, normalizedProfileImage, StringComparison.Ordinal)) {
             state = state with { ProfileImage = normalizedProfileImage };
@@ -255,7 +255,7 @@ public sealed partial class User {
         bool? socialPushNotificationsEnabled,
         int? fastingCheckInReminderHours,
         int? fastingCheckInFollowUpReminderHours) {
-        var state = GetPreferenceState();
+        UserPreferenceState state = GetPreferenceState();
 
         EnsureLanguage(language, nameof(language));
         EnsureTheme(theme, nameof(theme));
@@ -263,7 +263,7 @@ public sealed partial class User {
         EnsureReminderHours(fastingCheckInReminderHours, nameof(fastingCheckInReminderHours));
         EnsureReminderHours(fastingCheckInFollowUpReminderHours, nameof(fastingCheckInFollowUpReminderHours));
 
-        var nextState = ApplyPreferenceTextChanges(state, dashboardLayoutJson, language, theme, uiStyle);
+        UserPreferenceState nextState = ApplyPreferenceTextChanges(state, dashboardLayoutJson, language, theme, uiStyle);
         nextState = ApplyNotificationPreferenceChanges(
             nextState,
             pushNotificationsEnabled,

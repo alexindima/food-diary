@@ -12,18 +12,18 @@ public sealed class EmailTemplateProvider(
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(1);
 
     public async Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default) {
-        var normalizedKey = NormalizeKey(key);
-        var normalizedLocale = NormalizeLocale(locale);
-        var cacheKey = $"email-template:{normalizedKey}:{normalizedLocale}";
+        string normalizedKey = NormalizeKey(key);
+        string normalizedLocale = NormalizeLocale(locale);
+        string cacheKey = $"email-template:{normalizedKey}:{normalizedLocale}";
         if (cache.TryGetValue(cacheKey, out EmailTemplateContent? cached)) {
             return cached;
         }
 
-        var scope = scopeFactory.CreateAsyncScope();
+        AsyncServiceScope scope = scopeFactory.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            FoodDiaryDbContext db = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
-            var template = await db.EmailTemplates
+            EmailTemplateContent? template = await db.EmailTemplates
                 .AsNoTracking()
                 .Where(t => t.Key == normalizedKey && t.Locale == normalizedLocale && t.IsActive)
                 .Select(t => new EmailTemplateContent(t.Subject, t.HtmlBody, t.TextBody))
@@ -47,7 +47,7 @@ public sealed class EmailTemplateProvider(
             return "en";
         }
 
-        var lower = locale.Trim().ToLowerInvariant();
+        string lower = locale.Trim().ToLowerInvariant();
         return lower.StartsWith("ru", StringComparison.Ordinal) ? "ru" : "en";
     }
 

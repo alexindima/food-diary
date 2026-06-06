@@ -30,7 +30,7 @@ public class HydrationEntryInvariantTests {
 
     [Fact]
     public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var timestamp = DateTime.UtcNow;
+        DateTime timestamp = DateTime.UtcNow;
         var entry = HydrationEntry.Create(UserId.New(), timestamp, 250);
 
         entry.Update(amountMl: 250, timestampUtc: timestamp);
@@ -41,7 +41,7 @@ public class HydrationEntryInvariantTests {
     [Fact]
     public void Update_WithChangedValues_UpdatesState() {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
-        var nextTimestamp = DateTime.UtcNow.AddMinutes(5);
+        DateTime nextTimestamp = DateTime.UtcNow.AddMinutes(5);
 
         entry.Update(amountMl: 500, timestampUtc: nextTimestamp);
 

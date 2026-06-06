@@ -6,7 +6,7 @@ using Hangfire;
 using Hangfire.PostgreSql;
 using System.Diagnostics.CodeAnalysis;
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
@@ -34,7 +34,7 @@ builder.Services.AddOptions<BillingRenewalOptions>()
     .ValidateOnStart();
 
 builder.Services.AddHangfire((sp, config) => {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
                            ?? throw new InvalidOperationException("DefaultConnection is not configured.");
 
     config
@@ -52,7 +52,7 @@ builder.Services.AddSingleton<IJobExecutionStateTracker, JobExecutionStateTracke
 builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();
 builder.Services.AddHostedService<RecurringJobsHostedService>();
 
-var app = builder.Build();
+IHost app = builder.Build();
 
 await app.RunAsync().ConfigureAwait(false);
 

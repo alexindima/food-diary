@@ -22,14 +22,14 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     }
 
     public static DailyAdvice Create(string value, string locale, int weight = 1, string? tag = null) {
-        var normalizedValue = NormalizeRequired(
+        string normalizedValue = NormalizeRequired(
             value,
             nameof(value),
             "Advice value cannot be empty.",
             ValueMaxLength);
-        var normalizedLocale = NormalizeLocale(locale);
-        var normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
-        var normalizedWeight = Math.Max(1, weight);
+        string normalizedLocale = NormalizeLocale(locale);
+        string? normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
+        int normalizedWeight = Math.Max(1, weight);
 
         var advice = new DailyAdvice(DailyAdviceId.New()) {
             Value = normalizedValue,
@@ -43,13 +43,13 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
     }
 
     public void Update(string? value = null, string? locale = null, int? weight = null, string? tag = null, bool clearTag = false) {
-        var changed = false;
-        var normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
+        bool changed = false;
+        string? normalizedTag = NormalizeOptional(tag, nameof(tag), TagMaxLength);
 
         EnsureClearConflict(clearTag, normalizedTag, nameof(clearTag), nameof(tag));
 
         if (value is not null) {
-            var normalizedValue = NormalizeRequired(
+            string normalizedValue = NormalizeRequired(
                 value,
                 nameof(value),
                 "Advice value cannot be empty.",
@@ -62,7 +62,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         }
 
         if (locale is not null) {
-            var normalizedLocale = NormalizeLocale(locale);
+            string normalizedLocale = NormalizeLocale(locale);
             if (!string.Equals(Locale, normalizedLocale, StringComparison.Ordinal)) {
                 Locale = normalizedLocale;
                 changed = true;
@@ -70,7 +70,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
         }
 
         if (weight.HasValue) {
-            var normalizedWeight = Math.Max(1, weight.Value);
+            int normalizedWeight = Math.Max(1, weight.Value);
             if (Weight != normalizedWeight) {
                 Weight = normalizedWeight;
                 changed = true;
@@ -99,23 +99,23 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
             throw new ArgumentException(message, paramName);
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;
     }
 
     private static string NormalizeLocale(string value) {
-        var normalized = NormalizeRequired(
+        string normalized = NormalizeRequired(
             value,
             nameof(value),
             "Locale is required.",
             LocaleMaxLength).ToLowerInvariant();
 
-        var separatorIndex = normalized.IndexOfAny(['-', '_']);
-        var primaryLanguage = separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
+        int separatorIndex = normalized.IndexOfAny(['-', '_']);
+        string primaryLanguage = separatorIndex > 0 ? normalized[..separatorIndex] : normalized;
 
-        return !LanguageCode.TryParse(primaryLanguage, out var languageCode)
+        return !LanguageCode.TryParse(primaryLanguage, out LanguageCode languageCode)
             ? throw new ArgumentOutOfRangeException(nameof(value), "Locale must be one of the supported language codes.")
             : languageCode.Value;
     }
@@ -125,7 +125,7 @@ public sealed class DailyAdvice : AggregateRoot<DailyAdviceId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

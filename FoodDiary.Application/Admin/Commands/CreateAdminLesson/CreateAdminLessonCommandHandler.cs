@@ -12,12 +12,12 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonRepository r
     public async Task<Result<AdminLessonModel>> Handle(
         CreateAdminLessonCommand command,
         CancellationToken cancellationToken) {
-        if (!Enum.TryParse<LessonCategory>(command.Category, true, out var category)) {
+        if (!Enum.TryParse<LessonCategory>(command.Category, true, out LessonCategory category)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("category", "Invalid lesson category."));
         }
 
-        if (!Enum.TryParse<LessonDifficulty>(command.Difficulty, true, out var difficulty)) {
+        if (!Enum.TryParse<LessonDifficulty>(command.Difficulty, true, out LessonDifficulty difficulty)) {
             return Result.Failure<AdminLessonModel>(
                 Errors.Validation.Invalid("difficulty", "Invalid lesson difficulty."));
         }

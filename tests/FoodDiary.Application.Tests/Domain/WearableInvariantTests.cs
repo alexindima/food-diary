@@ -30,7 +30,7 @@ public class WearableInvariantTests {
     [Fact]
     public void WearableConnection_Create_WithValidValues_Succeeds() {
         var userId = UserId.New();
-        var expires = DateTime.UtcNow.AddHours(1);
+        DateTime expires = DateTime.UtcNow.AddHours(1);
 
         var conn = WearableConnection.Create(
             userId, WearableProvider.GoogleFit, "ext-456", "access-token", "refresh-token", expires);
@@ -46,15 +46,15 @@ public class WearableInvariantTests {
 
     [Fact]
     public void WearableConnection_UpdateTokens_WithBlankAccessToken_Throws() {
-        var conn = CreateConnection();
+        WearableConnection conn = CreateConnection();
 
         Assert.Throws<ArgumentException>(() => conn.UpdateTokens("  ", null, null));
     }
 
     [Fact]
     public void WearableConnection_UpdateTokens_UpdatesValues() {
-        var conn = CreateConnection();
-        var newExpires = DateTime.UtcNow.AddHours(2);
+        WearableConnection conn = CreateConnection();
+        DateTime newExpires = DateTime.UtcNow.AddHours(2);
 
         conn.UpdateTokens("new-token", "new-refresh", newExpires);
 
@@ -75,7 +75,7 @@ public class WearableInvariantTests {
 
     [Fact]
     public void WearableConnection_MarkSynced_SetsLastSyncedAtUtc() {
-        var conn = CreateConnection();
+        WearableConnection conn = CreateConnection();
 
         conn.MarkSynced();
 
@@ -84,7 +84,7 @@ public class WearableInvariantTests {
 
     [Fact]
     public void WearableConnection_Deactivate_ClearsTokensAndSetsInactive() {
-        var conn = CreateConnection();
+        WearableConnection conn = CreateConnection();
 
         conn.Deactivate();
 
@@ -96,9 +96,9 @@ public class WearableInvariantTests {
 
     [Fact]
     public void WearableConnection_Deactivate_WhenAlreadyInactive_IsIdempotent() {
-        var conn = CreateConnection();
+        WearableConnection conn = CreateConnection();
         conn.Deactivate();
-        var firstModified = conn.ModifiedOnUtc;
+        DateTime? firstModified = conn.ModifiedOnUtc;
 
         conn.Deactivate();
 

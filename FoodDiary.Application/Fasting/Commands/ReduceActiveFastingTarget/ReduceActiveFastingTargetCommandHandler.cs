@@ -9,6 +9,7 @@ using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 
@@ -27,17 +28,17 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
@@ -56,7 +57,7 @@ public sealed class ReduceActiveFastingTargetCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.UtcNow;
         if (current.TargetHours.HasValue && now >= current.StartedAtUtc.AddHours(current.TargetHours.Value)) {
             current.Complete(now);
             plan.Stop(now);

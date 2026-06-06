@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
@@ -9,6 +10,7 @@ using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
+using FoodDiary.Presentation.Api.Features.Products.Responses;
 
 namespace FoodDiary.Application.Tests.Products;
 
@@ -50,7 +52,7 @@ public sealed class ProductSearchSuggestionTests {
         ]);
         var handler = new SearchProductSuggestionsQueryHandler([firstProvider, secondProvider]);
 
-        var result = await handler.Handle(new SearchProductSuggestionsQuery("fanta", 5), CancellationToken.None);
+        Result<IReadOnlyList<ProductSearchSuggestionModel>> result = await handler.Handle(new SearchProductSuggestionsQuery("fanta", 5), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
@@ -70,7 +72,7 @@ public sealed class ProductSearchSuggestionTests {
         var cache = new StubOpenFoodFactsProductCacheRepository(cachedProducts);
         var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
 
-        var result = await provider.SearchAsync("fanta", 2, CancellationToken.None);
+        IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 2, CancellationToken.None);
 
         Assert.Equal(2, result.Count);
         Assert.All(result, suggestion => Assert.Equal("openFoodFacts", suggestion.Source));
@@ -88,7 +90,7 @@ public sealed class ProductSearchSuggestionTests {
         var cache = new StubOpenFoodFactsProductCacheRepository([CreateOpenFoodFactsProduct("cached-1")]);
         var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
 
-        var result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
+        IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
         Assert.Equal(2, result.Count);
         Assert.Equal("external-1", result[0].Barcode);
@@ -112,7 +114,7 @@ public sealed class ProductSearchSuggestionTests {
         ]);
         var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
 
-        var result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
+        IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
         Assert.Equal(2, result.Count);
         Assert.All(result, suggestion => Assert.Equal("usda", suggestion.Source));
@@ -133,7 +135,7 @@ public sealed class ProductSearchSuggestionTests {
         var searchService = new StubUsdaFoodSearchService([]);
         var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
 
-        var result = await provider.SearchAsync("fanta", 1, CancellationToken.None);
+        IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 1, CancellationToken.None);
 
         Assert.Single(result);
         Assert.Null(searchService.LastBrandedSearchCall);
@@ -141,9 +143,9 @@ public sealed class ProductSearchSuggestionTests {
 
     [Fact]
     public async Task SearchProductSuggestionsValidator_WithInvalidQuery_HasErrors() {
-        var emptySearch = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("", 5));
-        var tooLowLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 0));
-        var tooHighLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 21));
+        TestValidationResult<SearchProductSuggestionsQuery> emptySearch = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("", 5));
+        TestValidationResult<SearchProductSuggestionsQuery> tooLowLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 0));
+        TestValidationResult<SearchProductSuggestionsQuery> tooHighLimit = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 21));
 
         emptySearch.ShouldHaveValidationErrorFor(q => q.Search);
         tooLowLimit.ShouldHaveValidationErrorFor(q => q.Limit);
@@ -152,7 +154,7 @@ public sealed class ProductSearchSuggestionTests {
 
     [Fact]
     public async Task SearchProductSuggestionsValidator_WithValidQuery_HasNoErrors() {
-        var result = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 5));
+        TestValidationResult<SearchProductSuggestionsQuery> result = await _validator.TestValidateAsync(new SearchProductSuggestionsQuery("fanta", 5));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -188,7 +190,7 @@ public sealed class ProductSearchSuggestionTests {
                 null),
         ];
 
-        var responses = models.ToHttpResponse();
+        IReadOnlyList<ProductSearchSuggestionHttpResponse> responses = models.ToHttpResponse();
 
         Assert.Equal(2, responses.Count);
         Assert.Equal("openFoodFacts", responses[0].Source);

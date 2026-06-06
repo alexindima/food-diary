@@ -20,8 +20,8 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         Guid? userId,
         string? search,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Clamp(limit, 1, 100);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Clamp(limit, 1, 100);
 
         var query =
             from loginEvent in context.UserLoginEvents.AsNoTracking()
@@ -34,7 +34,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         }
 
         if (!string.IsNullOrWhiteSpace(search)) {
-            var term = $"%{EscapeLikePattern(search)}%";
+            string term = $"%{EscapeLikePattern(search)}%";
             query = query.Where(item =>
                 EF.Functions.ILike(item.user.Email, term, LikeEscapeCharacter) ||
                 EF.Functions.ILike(item.loginEvent.AuthProvider, term, LikeEscapeCharacter) ||
@@ -44,8 +44,8 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 EF.Functions.ILike(item.loginEvent.DeviceType ?? string.Empty, term, LikeEscapeCharacter));
         }
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<UserLoginEventReadModel> items = await query
             .OrderByDescending(item => item.loginEvent.LoggedInAtUtc)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
@@ -70,7 +70,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         DateTime? fromUtc,
         DateTime? toUtc,
         CancellationToken cancellationToken = default) {
-        var query = context.UserLoginEvents.AsNoTracking().AsQueryable();
+        IQueryable<UserLoginEvent> query = context.UserLoginEvents.AsNoTracking().AsQueryable();
 
         if (fromUtc.HasValue) {
             query = query.Where(item => item.LoggedInAtUtc >= fromUtc.Value);
@@ -80,7 +80,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
             query = query.Where(item => item.LoggedInAtUtc <= toUtc.Value);
         }
 
-        var byDeviceType = await query
+        List<UserLoginDeviceSummaryModel> byDeviceType = await query
             .GroupBy(item => item.DeviceType ?? "Unknown")
             .Select(group => new UserLoginDeviceSummaryModel(
                 $"device:{group.Key}",
@@ -88,7 +88,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 group.Max(item => item.LoggedInAtUtc)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var byBrowser = await query
+        List<UserLoginDeviceSummaryModel> byBrowser = await query
             .GroupBy(item => item.BrowserName ?? "Unknown")
             .Select(group => new UserLoginDeviceSummaryModel(
                 $"browser:{group.Key}",
@@ -96,7 +96,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
                 group.Max(item => item.LoggedInAtUtc)))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var byOperatingSystem = await query
+        List<UserLoginDeviceSummaryModel> byOperatingSystem = await query
             .GroupBy(item => item.OperatingSystem ?? "Unknown")
             .Select(group => new UserLoginDeviceSummaryModel(
                 $"os:{group.Key}",
@@ -116,7 +116,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
         DateTime olderThanUtc,
         int batchSize,
         CancellationToken cancellationToken = default) {
-        var ids = await context.UserLoginEvents
+        Guid[] ids = await context.UserLoginEvents
             .AsNoTracking()
             .Where(item => item.LoggedInAtUtc < olderThanUtc)
             .OrderBy(item => item.LoggedInAtUtc)

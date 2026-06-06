@@ -6,6 +6,8 @@ using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
@@ -26,14 +28,14 @@ public class UpsertCycleDayCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CycleDayModel>(accessError);
         }
 
         var cycleId = new CycleId(command.CycleId);
 
-        var cycle = await cycleRepository.GetByIdAsync(
+        Cycle? cycle = await cycleRepository.GetByIdAsync(
             cycleId,
             userId,
             includeDays: true,
@@ -44,8 +46,8 @@ public class UpsertCycleDayCommandHandler(
             return Result.Failure<CycleDayModel>(Errors.Cycle.NotFound(command.CycleId));
         }
 
-        var symptoms = command.Symptoms.ToValueObject();
-        var day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes, command.ClearNotes);
+        DailySymptoms symptoms = command.Symptoms.ToValueObject();
+        CycleDay day = cycle.AddOrUpdateDay(command.Date, command.IsPeriod, symptoms, command.Notes, command.ClearNotes);
 
         await cycleRepository.UpdateAsync(cycle, cancellationToken).ConfigureAwait(false);
         return Result.Success(day.ToModel());

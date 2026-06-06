@@ -1,5 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -7,7 +8,7 @@ namespace FoodDiary.Application.Tests.Authentication;
 public sealed class AuthenticationUserAccessPolicyTests {
     [Fact]
     public void EnsureCanAuthenticate_WithNullUser_ReturnsInvalidCredentials() {
-        var error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(null);
+        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(null);
 
         Assert.NotNull(error);
         Assert.Equal("Authentication.InvalidCredentials", error!.Code);
@@ -18,7 +19,7 @@ public sealed class AuthenticationUserAccessPolicyTests {
         var user = User.Create("deleted@example.com", "password-hash");
         user.DeleteAccount(DateTime.UtcNow);
 
-        var error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
 
         Assert.NotNull(error);
         Assert.Equal("Authentication.AccountDeleted", error!.Code);
@@ -29,7 +30,7 @@ public sealed class AuthenticationUserAccessPolicyTests {
         var user = User.Create("inactive@example.com", "password-hash");
         user.Deactivate();
 
-        var error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
 
         Assert.NotNull(error);
         Assert.Equal("Authentication.InvalidCredentials", error!.Code);
@@ -39,7 +40,7 @@ public sealed class AuthenticationUserAccessPolicyTests {
     public void EnsureCanAuthenticate_WithActiveUser_ReturnsNull() {
         var user = User.Create("active@example.com", "password-hash");
 
-        var error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
 
         Assert.Null(error);
     }

@@ -1,3 +1,6 @@
+using FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
+using FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
+using FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 using FoodDiary.Presentation.Api.Features.Hydration.Mappings;
 using FoodDiary.Presentation.Api.Features.Hydration.Requests;
 
@@ -8,10 +11,10 @@ public sealed class HydrationHttpMappingsTests {
     [Fact]
     public void CreateHydrationEntryRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var timestamp = DateTime.UtcNow;
+        DateTime timestamp = DateTime.UtcNow;
         var request = new CreateHydrationEntryHttpRequest(timestamp, 500);
 
-        var command = request.ToCommand(userId);
+        CreateHydrationEntryCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(timestamp, command.TimestampUtc);
@@ -22,10 +25,10 @@ public sealed class HydrationHttpMappingsTests {
     public void UpdateHydrationEntryRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
-        var timestamp = DateTime.UtcNow;
+        DateTime timestamp = DateTime.UtcNow;
         var request = new UpdateHydrationEntryHttpRequest(timestamp, 750);
 
-        var command = request.ToCommand(userId, entryId);
+        UpdateHydrationEntryCommand command = request.ToCommand(userId, entryId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.HydrationEntryId);
@@ -38,7 +41,7 @@ public sealed class HydrationHttpMappingsTests {
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
 
-        var command = entryId.ToDeleteCommand(userId);
+        DeleteHydrationEntryCommand command = entryId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.HydrationEntryId);

@@ -142,7 +142,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static void ComposeMealsCards(IContainer container, DiaryReportData report) {
-        var meals = report.Meals;
+        IReadOnlyList<Meal> meals = report.Meals;
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
@@ -155,14 +155,14 @@ internal sealed partial class DiaryPdfGenerator {
                 return;
             }
 
-            foreach (var meal in meals) {
+            foreach (Meal meal in meals) {
                 column.Item().ShowEntire().Element(c => ComposeMealCard(c, report, meal));
             }
         });
     }
 
     private static void ComposeMealCard(IContainer container, DiaryReportData report, Meal meal) {
-        var hasImage = report.MealImages.TryGetValue(meal.Id, out var imageBytes);
+        bool hasImage = report.MealImages.TryGetValue(meal.Id, out byte[]? imageBytes);
 
         container.Background(CardBackground).Border(1).BorderColor(BorderColor).Padding(8).Row(row => {
             row.Spacing(10);
@@ -211,7 +211,7 @@ internal sealed partial class DiaryPdfGenerator {
     }
 
     private static void ComposeMealsTable(IContainer container, DiaryReportData report) {
-        var meals = report.Meals;
+        IReadOnlyList<Meal> meals = report.Meals;
 
         container.Background(PanelBackground).Border(1).BorderColor(BorderColor).Padding(12).Column(column => {
             column.Spacing(10);
@@ -239,13 +239,13 @@ internal sealed partial class DiaryPdfGenerator {
                 });
 
                 table.Header(header => {
-                    foreach (var headerText in GetMealTableHeaders(report)) {
+                    foreach (string headerText in GetMealTableHeaders(report)) {
                         HeaderCell(header.Cell(), headerText);
                     }
                 });
 
-                foreach (var meal in meals) {
-                    foreach (var value in GetMealTableValues(meal, report)) {
+                foreach (Meal meal in meals) {
+                    foreach (string value in GetMealTableValues(meal, report)) {
                         DataCell(table.Cell(), value);
                     }
                 }
@@ -280,7 +280,7 @@ internal sealed partial class DiaryPdfGenerator {
     ];
 
     private static void ComposeMealItemsList(IContainer container, DiaryReportData report, Meal meal) {
-        var compositionItems = GetMealCompositionItems(meal, report);
+        IReadOnlyList<MealCompositionItem> compositionItems = GetMealCompositionItems(meal, report);
         container.Column(column => {
             column.Spacing(3);
 
@@ -313,7 +313,7 @@ internal sealed partial class DiaryPdfGenerator {
                     CompositionHeaderCell(table.Cell(), report.Texts.CarbsColumnShort);
                     CompositionHeaderCell(table.Cell(), report.Texts.FiberColumnShort);
 
-                    foreach (var item in compositionItems) {
+                    foreach (MealCompositionItem item in compositionItems) {
                         DataCell(table.Cell(), Truncate(item.Name, 44));
                         DataCell(table.Cell(), item.Amount);
                         DataCell(table.Cell(), FormatNumber(item.Calories, 0, report.Culture));
@@ -374,8 +374,8 @@ internal sealed partial class DiaryPdfGenerator {
             column.Item().Text(label).FontSize(6).FontColor(MutedTextColor);
             column.Item().Row(row => {
                 row.Spacing(2);
-                for (var index = 1; index <= 5; index++) {
-                    var color = index <= level ? SatietyColor : BorderColor;
+                for (int index = 1; index <= 5; index++) {
+                    string color = index <= level ? SatietyColor : BorderColor;
                     row.RelativeItem().Height(4).Background(color);
                 }
             });

@@ -23,12 +23,12 @@ public sealed class ProcessBillingWebhookCommandHandler(
     IDateTimeProvider dateTimeProvider)
     : ICommandHandler<ProcessBillingWebhookCommand, Result> {
     public async Task<Result> Handle(ProcessBillingWebhookCommand command, CancellationToken cancellationToken) {
-        var billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(command.Provider);
+        IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(command.Provider);
         if (billingProvider is null) {
             return Result.Failure(Errors.Billing.InvalidProvider(command.Provider));
         }
 
-        var webhookResult = await billingProvider.ParseWebhookEventAsync(
+        Result<BillingWebhookEventModel?> webhookResult = await billingProvider.ParseWebhookEventAsync(
             command.Payload,
             command.SignatureHeader,
             cancellationToken).ConfigureAwait(false);
@@ -36,12 +36,12 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Failure(webhookResult.Error);
         }
 
-        var webhookEvent = webhookResult.Value;
+        BillingWebhookEventModel? webhookEvent = webhookResult.Value;
         if (webhookEvent is null) {
             return Result.Success();
         }
 
-        var webhookEventValidationError = ValidateWebhookEvent(webhookEvent);
+        Error? webhookEventValidationError = ValidateWebhookEvent(webhookEvent);
         if (webhookEventValidationError is not null) {
             return Result.Failure(webhookEventValidationError);
         }
@@ -50,7 +50,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Success();
         }
 
-        var subscription = await ResolveSubscriptionAsync(
+        BillingSubscription? subscription = await ResolveSubscriptionAsync(
             billingProvider.Provider,
             webhookEvent,
             cancellationToken).ConfigureAwait(false);
@@ -59,7 +59,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return Result.Success();
         }
 
-        var user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken).ConfigureAwait(false);
+        User? user = await ResolveUserAsync(subscription, webhookEvent.UserId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.Billing.WebhookValidationFailed("Webhook user could not be resolved."));
         }
@@ -89,10 +89,10 @@ public sealed class ProcessBillingWebhookCommandHandler(
         User user,
         CancellationToken cancellationToken) {
         await billingTransactionRunner.ExecuteAsync(async ct => {
-            var processedWebhookEvent = CreateProcessedWebhookEvent(provider, webhookEvent, payload);
+            BillingWebhookEvent processedWebhookEvent = CreateProcessedWebhookEvent(provider, webhookEvent, payload);
             await billingWebhookEventRepository.AddAsync(processedWebhookEvent, ct).ConfigureAwait(false);
 
-            var updatedSubscription = await UpsertSubscriptionAsync(
+            BillingSubscription updatedSubscription = await UpsertSubscriptionAsync(
                 provider,
                 webhookEvent,
                 subscription,
@@ -101,7 +101,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
 
             await AddWebhookPaymentIfPresentAsync(updatedSubscription, provider, webhookEvent, ct).ConfigureAwait(false);
 
-            var shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
+            bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                 webhookEvent.Status,
                 webhookEvent.CurrentPeriodEndUtc);
             await SyncPremiumRoleAsync(user, updatedSubscription, shouldHavePremium, ct).ConfigureAwait(false);
@@ -126,7 +126,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         BillingSubscription? subscription,
         User user,
         CancellationToken cancellationToken) {
-        var currentSubscription = subscription ?? BillingSubscription.CreatePending(
+        BillingSubscription currentSubscription = subscription ?? BillingSubscription.CreatePending(
             user.Id,
             provider,
             webhookEvent.ExternalCustomerId,
@@ -195,10 +195,10 @@ public sealed class ProcessBillingWebhookCommandHandler(
             return;
         }
 
-        var externalPaymentId = webhookEvent.ExternalSubscriptionId ??
+        string externalPaymentId = webhookEvent.ExternalSubscriptionId ??
             webhookEvent.ExternalPaymentMethodId ??
             webhookEvent.EventId;
-        var existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
+        BillingPayment? existingPayment = await billingPaymentRepository.GetByExternalPaymentIdAsync(
             provider,
             externalPaymentId,
             cancellationToken).ConfigureAwait(false);
@@ -232,7 +232,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         BillingWebhookEventModel webhookEvent,
         CancellationToken cancellationToken) {
         if (!string.IsNullOrWhiteSpace(webhookEvent.ExternalSubscriptionId)) {
-            var bySubscription = await billingSubscriptionRepository.GetByExternalSubscriptionIdAsync(
+            BillingSubscription? bySubscription = await billingSubscriptionRepository.GetByExternalSubscriptionIdAsync(
                 provider,
                 webhookEvent.ExternalSubscriptionId,
                 cancellationToken).ConfigureAwait(false);
@@ -242,7 +242,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         if (!string.IsNullOrWhiteSpace(webhookEvent.ExternalPaymentMethodId)) {
-            var byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
+            BillingSubscription? byPaymentMethod = await billingSubscriptionRepository.GetByExternalPaymentMethodIdAsync(
                 provider,
                 webhookEvent.ExternalPaymentMethodId,
                 cancellationToken).ConfigureAwait(false);
@@ -277,7 +277,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         BillingSubscription subscription,
         bool shouldHavePremium,
         CancellationToken cancellationToken) {
-        var canAccess = CurrentUserAccessPolicy.EnsureCanAccess(user) is null;
+        bool canAccess = CurrentUserAccessPolicy.EnsureCanAccess(user) is null;
         if (canAccess) {
             await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken).ConfigureAwait(false);
             return;

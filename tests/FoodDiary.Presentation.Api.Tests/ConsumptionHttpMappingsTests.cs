@@ -1,8 +1,16 @@
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
+using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
+using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
+using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 using FoodDiary.Application.FavoriteMeals.Models;
 using FoodDiary.Presentation.Api.Features.Consumptions.Mappings;
 using FoodDiary.Presentation.Api.Features.Consumptions.Requests;
+using FoodDiary.Presentation.Api.Features.Consumptions.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -15,7 +23,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();
 
-        var command = consumptionId.ToDeleteCommand(userId);
+        DeleteConsumptionCommand command = consumptionId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(consumptionId, command.ConsumptionId);
@@ -24,7 +32,7 @@ public sealed class ConsumptionHttpMappingsTests {
     [Fact]
     public void CreateRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var date = DateTime.UtcNow;
+        DateTime date = DateTime.UtcNow;
         var productId = Guid.NewGuid();
         var request = new CreateConsumptionHttpRequest(
             date, "Breakfast", "Tasty", null, null,
@@ -34,7 +42,7 @@ public sealed class ConsumptionHttpMappingsTests {
             PreMealSatietyLevel: 3,
             PostMealSatietyLevel: 4);
 
-        var command = request.ToCommand(userId);
+        CreateConsumptionCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(date, command.Date);
@@ -51,7 +59,7 @@ public sealed class ConsumptionHttpMappingsTests {
     public void CreateRequest_ToCommand_WithAiSessions_MapsNestedItems() {
         var userId = Guid.NewGuid();
         var assetId = Guid.NewGuid();
-        var recognizedAt = DateTime.UtcNow;
+        DateTime recognizedAt = DateTime.UtcNow;
         var request = new CreateConsumptionHttpRequest(
             DateTime.UtcNow, null, null, null, null,
             [],
@@ -61,7 +69,7 @@ public sealed class ConsumptionHttpMappingsTests {
                 }),
             });
 
-        var command = request.ToCommand(userId);
+        CreateConsumptionCommand command = request.ToCommand(userId);
 
         Assert.Single(command.AiSessions);
         Assert.Equal(assetId, command.AiSessions[0].ImageAssetId);
@@ -78,7 +86,7 @@ public sealed class ConsumptionHttpMappingsTests {
     public void CreateRequest_ToCommand_WithNullAiSessions_MapsToEmptyList() {
         var request = new CreateConsumptionHttpRequest(DateTime.UtcNow, null, null, null, null, []);
 
-        var command = request.ToCommand(Guid.NewGuid());
+        CreateConsumptionCommand command = request.ToCommand(Guid.NewGuid());
 
         Assert.Empty(command.AiSessions);
     }
@@ -93,7 +101,7 @@ public sealed class ConsumptionHttpMappingsTests {
             ManualCalories: 500, ManualProteins: 30, ManualFats: 20, ManualCarbs: 60,
             ManualFiber: 5, ManualAlcohol: 0, IsNutritionAutoCalculated: false);
 
-        var command = request.ToCommand(userId, consumptionId);
+        UpdateConsumptionCommand command = request.ToCommand(userId, consumptionId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(consumptionId, command.ConsumptionId);
@@ -105,10 +113,10 @@ public sealed class ConsumptionHttpMappingsTests {
     public void RepeatMealRequest_ToRepeatCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var mealId = Guid.NewGuid();
-        var targetDate = DateTime.UtcNow.AddDays(1);
+        DateTime targetDate = DateTime.UtcNow.AddDays(1);
         var request = new RepeatMealHttpRequest(targetDate, "Dinner");
 
-        var command = request.ToRepeatCommand(userId, mealId);
+        RepeatMealCommand command = request.ToRepeatCommand(userId, mealId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(mealId, command.MealId);
@@ -121,11 +129,11 @@ public sealed class ConsumptionHttpMappingsTests {
     [Fact]
     public void GetConsumptionsHttpQuery_ToQuery_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-7);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetConsumptionsHttpQuery(2, 20, from, to);
 
-        var query = httpQuery.ToQuery(userId);
+        GetConsumptionsQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(2, query.Page);
@@ -137,8 +145,8 @@ public sealed class ConsumptionHttpMappingsTests {
     [Fact]
     public void GetConsumptionsOverviewHttpQuery_ToQuery_NormalizesPagingAndFavoriteLimit() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-30);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-30);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetConsumptionsOverviewHttpQuery(
             Page: 0,
             Limit: 500,
@@ -146,7 +154,7 @@ public sealed class ConsumptionHttpMappingsTests {
             DateTo: to,
             FavoriteLimit: 0);
 
-        var query = httpQuery.ToQuery(userId);
+        GetConsumptionsOverviewQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(1, query.Page);
@@ -161,7 +169,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();
 
-        var query = consumptionId.ToQuery(userId);
+        GetConsumptionByIdQuery query = consumptionId.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(consumptionId, query.ConsumptionId);
@@ -172,13 +180,13 @@ public sealed class ConsumptionHttpMappingsTests {
     [Fact]
     public void ConsumptionModel_ToHttpResponse_MapsTopLevelFields() {
         var id = Guid.NewGuid();
-        var date = DateTime.UtcNow;
+        DateTime date = DateTime.UtcNow;
         var model = new ConsumptionModel(
             id, date, "Breakfast", "Comment", null, null,
             500, 30, 20, 60, 5, 0, true, null, null, null, null, null, null,
             3, 4, 72, "green", false, null, [], []);
 
-        var response = model.ToHttpResponse();
+        ConsumptionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal(date, response.Date);
@@ -242,7 +250,7 @@ public sealed class ConsumptionHttpMappingsTests {
             425, 36, 4.2, 56, 0.4, 0, true, null, null, null, null, null, null,
             0, 0, 61, "yellow", false, null, items, sessions);
 
-        var response = model.ToHttpResponse();
+        ConsumptionHttpResponse response = model.ToHttpResponse();
 
         Assert.Single(response.Items);
         Assert.Equal(itemId, response.Items[0].Id);
@@ -267,7 +275,7 @@ public sealed class ConsumptionHttpMappingsTests {
             0, 0, 0, 0, 0, 0, false, 500, 30, 20, 60, 5, 0,
             0, 0, 55, "yellow", false, null, [], []);
 
-        var response = model.ToHttpResponse();
+        ConsumptionHttpResponse response = model.ToHttpResponse();
 
         Assert.False(response.IsNutritionAutoCalculated);
         Assert.Equal(500, response.ManualCalories);
@@ -306,7 +314,7 @@ public sealed class ConsumptionHttpMappingsTests {
             [],
             []);
 
-        var response = model.ToHttpResponse();
+        ConsumptionHttpResponse response = model.ToHttpResponse();
 
         Assert.True(response.IsFavorite);
         Assert.Equal(favoriteMealId, response.FavoriteMealId);
@@ -359,7 +367,7 @@ public sealed class ConsumptionHttpMappingsTests {
             [favorite],
             1);
 
-        var response = overview.ToHttpResponse();
+        ConsumptionOverviewHttpResponse response = overview.ToHttpResponse();
 
         Assert.Single(response.AllConsumptions.Data);
         Assert.Single(response.FavoriteItems);

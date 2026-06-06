@@ -1,5 +1,6 @@
 using System.IO.Compression;
 using System.Text;
+using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using MimeKit;
 
@@ -9,17 +10,17 @@ namespace FoodDiary.MailInbox.Tests;
 public sealed class DmarcReportParserTests {
     [Fact]
     public void TryParse_WhenMessageContainsGzipDmarcReport_ReturnsPreview() {
-        var rawMime = CreateRawMessage(CreateGzipReportAttachment());
+        string rawMime = CreateRawMessage(CreateGzipReportAttachment());
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
         Assert.Equal("fooddiary.club", report.Domain);
         Assert.Equal("report-1", report.ReportId);
         Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1777161600), report.DateRangeStartUtc);
-        var record = Assert.Single(report.Records);
+        DmarcReportRecordPreview record = Assert.Single(report.Records);
         Assert.Equal("193.109.69.58", record.SourceIp);
         Assert.Equal(2, record.Count);
         Assert.Equal("none", record.Disposition);
@@ -29,10 +30,10 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenMessageContainsZipDmarcReport_ReturnsPreview() {
-        var rawMime = CreateRawMessage(CreateZipReportAttachment());
+        string rawMime = CreateRawMessage(CreateZipReportAttachment());
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
@@ -42,12 +43,12 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenZipContentTypeHasNoFileName_ReturnsPreview() {
-        var attachment = CreateZipReportAttachment();
+        MimePart attachment = CreateZipReportAttachment();
         attachment.FileName = null;
-        var rawMime = CreateRawMessage(attachment);
+        string rawMime = CreateRawMessage(attachment);
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
@@ -55,7 +56,7 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenMessageContainsXmlDmarcReport_ReturnsPreview() {
-        var rawMime = CreateRawMessage(new MimePart("text", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("text", "xml") {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
@@ -63,7 +64,7 @@ public sealed class DmarcReportParserTests {
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
@@ -73,14 +74,14 @@ public sealed class DmarcReportParserTests {
     [InlineData("application", "xml")]
     [InlineData("text", "xml")]
     public void TryParse_WhenXmlContentTypeHasNoFileName_ReturnsPreview(string mediaType, string mediaSubtype) {
-        var rawMime = CreateRawMessage(new MimePart(mediaType, mediaSubtype) {
+        string rawMime = CreateRawMessage(new MimePart(mediaType, mediaSubtype) {
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes(CreateDmarcXml()))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
             ContentTransferEncoding = ContentEncoding.Base64
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("fooddiary.club", report.Domain);
@@ -90,14 +91,14 @@ public sealed class DmarcReportParserTests {
     [InlineData("application", "gzip")]
     [InlineData("application", "x-gzip")]
     public void TryParse_WhenGzipContentTypeHasNoFileName_ReturnsPreview(string mediaType, string mediaSubtype) {
-        var attachment = CreateGzipReportAttachment();
+        MimePart attachment = CreateGzipReportAttachment();
         attachment.FileName = null;
         attachment.ContentType.MediaType = mediaType;
         attachment.ContentType.MediaSubtype = mediaSubtype;
-        var rawMime = CreateRawMessage(attachment);
+        string rawMime = CreateRawMessage(attachment);
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("report-1", report.ReportId);
@@ -105,20 +106,20 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenMessagePartHasNoContent_ReturnsNull() {
-        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenAttachmentExceedsLimit_ReturnsNull() {
-        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(new byte[5 * 1024 * 1024 + 1])),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
@@ -126,29 +127,29 @@ public sealed class DmarcReportParserTests {
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenZipDoesNotContainXml_ReturnsNull() {
-        var rawMime = CreateRawMessage(CreateZipAttachment("readme.txt", "not xml"));
+        string rawMime = CreateRawMessage(CreateZipAttachment("readme.txt", "not xml"));
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenZipContainsInvalidXmlBeforeValidReport_ReturnsPreview() {
-        var rawMime = CreateRawMessage(CreateZipAttachment(
+        string rawMime = CreateRawMessage(CreateZipAttachment(
             ("invalid.xml", "<not-feedback />"),
             ("report.xml", CreateDmarcXml())));
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("google.com", report.OrganizationName);
@@ -156,7 +157,7 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenGzipAttachmentIsInvalidBeforeValidXmlReport_ReturnsPreview() {
-        var rawMime = CreateRawMessage(
+        string rawMime = CreateRawMessage(
             CreateGzipAttachment("<not-feedback />"),
             new MimePart("application", "xml") {
                 FileName = "report.xml",
@@ -166,7 +167,7 @@ public sealed class DmarcReportParserTests {
             });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Equal("fooddiary.club", report.Domain);
@@ -174,17 +175,17 @@ public sealed class DmarcReportParserTests {
 
     [Fact]
     public void TryParse_WhenZipXmlEntryIsTooLarge_ReturnsNull() {
-        var rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', 2 * 1024 * 1024 + 1)));
+        string rawMime = CreateRawMessage(CreateZipAttachment("report.xml", new string('a', 2 * 1024 * 1024 + 1)));
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenXmlRootIsNotFeedback_ReturnsNull() {
-        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes("<not-feedback />"))),
             ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
@@ -192,14 +193,14 @@ public sealed class DmarcReportParserTests {
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenReportContainsInvalidNumbers_ReturnsPreviewWithDefaults() {
-        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes("""
                 <feedback>
@@ -222,7 +223,7 @@ public sealed class DmarcReportParserTests {
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.NotNull(report);
         Assert.Null(report.DateRangeStartUtc);
@@ -233,24 +234,24 @@ public sealed class DmarcReportParserTests {
     public void TryParse_WhenMessageDoesNotContainDmarcReport_ReturnsNull() {
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse("From: sender@example.com\r\nSubject: Hello\r\n\r\nPlain message");
+        DmarcReportPreview? report = parser.TryParse("From: sender@example.com\r\nSubject: Hello\r\n\r\nPlain message");
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenGzipReportExpandsPastLimit_ReturnsNull() {
-        var rawMime = CreateRawMessage(CreateGzipAttachment(new string('a', 2 * 1024 * 1024 + 1)));
+        string rawMime = CreateRawMessage(CreateGzipAttachment(new string('a', 2 * 1024 * 1024 + 1)));
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
 
     [Fact]
     public void TryParse_WhenXmlContainsDtd_ReturnsNull() {
-        var rawMime = CreateRawMessage(new MimePart("application", "xml") {
+        string rawMime = CreateRawMessage(new MimePart("application", "xml") {
             FileName = "report.xml",
             Content = new MimeContent(new MemoryStream(Encoding.UTF8.GetBytes("""
                 <!DOCTYPE feedback [
@@ -263,7 +264,7 @@ public sealed class DmarcReportParserTests {
         });
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse(rawMime);
+        DmarcReportPreview? report = parser.TryParse(rawMime);
 
         Assert.Null(report);
     }
@@ -272,7 +273,7 @@ public sealed class DmarcReportParserTests {
     public void TryParse_WhenRawMimeIsInvalid_ReturnsNull() {
         var parser = new DmarcReportParser();
 
-        var report = parser.TryParse("\ud800");
+        DmarcReportPreview? report = parser.TryParse("\ud800");
 
         Assert.Null(report);
     }
@@ -292,9 +293,9 @@ public sealed class DmarcReportParserTests {
     private static MimePart CreateZipAttachment(params (string EntryName, string Payload)[] entries) {
         using var compressed = new MemoryStream();
         using (var archive = new ZipArchive(compressed, ZipArchiveMode.Create, leaveOpen: true)) {
-            foreach (var (entryName, payload) in entries) {
-                var entry = archive.CreateEntry(entryName);
-                using var entryStream = entry.Open();
+            foreach ((string? entryName, string? payload) in entries) {
+                ZipArchiveEntry entry = archive.CreateEntry(entryName);
+                using Stream entryStream = entry.Open();
                 using var writer = new StreamWriter(entryStream, Encoding.UTF8);
                 writer.Write(payload);
             }
@@ -332,7 +333,7 @@ public sealed class DmarcReportParserTests {
         var builder = new BodyBuilder {
             TextBody = "DMARC aggregate report"
         };
-        foreach (var attachment in attachments) {
+        foreach (MimePart attachment in attachments) {
             builder.Attachments.Add(attachment);
         }
         message.Body = builder.ToMessageBody();

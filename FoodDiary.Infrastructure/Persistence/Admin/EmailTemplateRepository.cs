@@ -27,7 +27,7 @@ public sealed class EmailTemplateRepository(FoodDiaryDbContext context) : IEmail
         string textBody,
         bool isActive,
         CancellationToken cancellationToken = default) {
-        var existing = await context.EmailTemplates
+        EmailTemplate? existing = await context.EmailTemplates
             .FirstOrDefaultAsync(t => t.Key == key && t.Locale == locale, cancellationToken).ConfigureAwait(false);
 
         if (existing is null) {

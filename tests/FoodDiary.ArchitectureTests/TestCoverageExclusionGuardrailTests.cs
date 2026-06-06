@@ -9,8 +9,8 @@ public sealed class TestCoverageExclusionGuardrailTests {
 
     [Fact]
     public void TestTypes_AreExcludedFromCodeCoverage() {
-        var testRoot = ArchitectureTestPaths.FromRoot("tests");
-        var violations = Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
+        string testRoot = ArchitectureTestPaths.FromRoot("tests");
+        string[] violations = Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
             .Where(static path => ArchitectureTestPaths.IsGeneratedOrBuildPath(path) is false)
             .SelectMany(FindTypesWithoutCoverageExclusion)
             .OrderBy(static violation => violation.Path, PathComparer)
@@ -26,8 +26,8 @@ public sealed class TestCoverageExclusionGuardrailTests {
     }
 
     private static IEnumerable<CoverageExclusionViolation> FindTypesWithoutCoverageExclusion(string path) {
-        var syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
-        var root = syntaxTree.GetCompilationUnitRoot();
+        Microsoft.CodeAnalysis.SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
+        CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
 
         return root.DescendantNodes()
             .OfType<TypeDeclarationSyntax>()

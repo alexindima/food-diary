@@ -10,23 +10,23 @@ public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsy
     private const string ActivityKey = "__TelemetryActivity";
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
-        var controllerName = context.Controller.GetType().Name;
-        var actionName = context.ActionDescriptor.RouteValues.TryGetValue("action", out var action) ? action : "Unknown";
-        var feature = ResolveFeature(context.Controller.GetType());
-        var operationName = $"{controllerName}.{actionName}";
+        string controllerName = context.Controller.GetType().Name;
+        string? actionName = context.ActionDescriptor.RouteValues.TryGetValue("action", out string? action) ? action : "Unknown";
+        string feature = ResolveFeature(context.Controller.GetType());
+        string operationName = $"{controllerName}.{actionName}";
 
         var stopwatch = Stopwatch.StartNew();
-        var activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
+        Activity? activity = PresentationApiTelemetry.ActivitySource.StartActivity(operationName, ActivityKind.Internal);
         activity?.SetTag("fooddiary.presentation.feature", feature);
         activity?.SetTag("fooddiary.presentation.controller", controllerName);
         activity?.SetTag("fooddiary.presentation.operation", operationName);
 
-        var executedContext = await next();
+        ActionExecutedContext executedContext = await next();
         stopwatch.Stop();
 
-        var statusCode = executedContext.HttpContext.Response.StatusCode;
-        var isSuccess = executedContext.Exception is null && statusCode < 400;
-        var outcome = isSuccess ? "success" : "failure";
+        int statusCode = executedContext.HttpContext.Response.StatusCode;
+        bool isSuccess = executedContext.Exception is null && statusCode < 400;
+        string outcome = isSuccess ? "success" : "failure";
 
         activity?.SetTag("fooddiary.presentation.outcome", outcome);
         activity?.SetTag("fooddiary.presentation.duration_ms", stopwatch.Elapsed.TotalMilliseconds);
@@ -72,10 +72,10 @@ public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsy
     }
 
     private static string ResolveFeature(Type controllerType) {
-        var ns = controllerType.Namespace;
+        string? ns = controllerType.Namespace;
         if (string.IsNullOrWhiteSpace(ns)) return "Unknown";
-        var segments = ns.Split('.');
-        var idx = Array.IndexOf(segments, "Features");
+        string[] segments = ns.Split('.');
+        int idx = Array.IndexOf(segments, "Features");
         return idx >= 0 && idx < segments.Length - 1 ? segments[idx + 1] : "Unknown";
     }
 }

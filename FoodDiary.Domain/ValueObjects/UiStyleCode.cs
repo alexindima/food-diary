@@ -16,7 +16,7 @@ public readonly record struct UiStyleCode {
             return false;
         }
 
-        var normalized = value.Trim().ToLowerInvariant();
+        string normalized = value.Trim().ToLowerInvariant();
         if (normalized is Classic or Modern) {
             style = new UiStyleCode(normalized);
             return true;

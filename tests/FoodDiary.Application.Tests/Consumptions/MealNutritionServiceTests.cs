@@ -6,6 +6,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Consumptions;
 
@@ -15,9 +16,9 @@ public class MealNutritionServiceTests {
     public async Task CalculateAsync_WhenMealHasNoItems_ReturnsZeroNutrition() {
         var userId = UserId.New();
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Lunch);
-        var service = CreateService();
+        MealNutritionService service = CreateService();
 
-        var result = await service.CalculateAsync(meal, userId);
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Calories);
@@ -31,10 +32,10 @@ public class MealNutritionServiceTests {
         var missingProductId = ProductId.New();
         meal.AddProduct(missingProductId, 100);
 
-        var service = CreateService(
+        MealNutritionService service = CreateService(
             products: new Dictionary<ProductId, Product>());
 
-        var result = await service.CalculateAsync(meal, userId);
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsFailure);
         Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
@@ -47,10 +48,10 @@ public class MealNutritionServiceTests {
         var missingRecipeId = RecipeId.New();
         meal.AddRecipe(missingRecipeId, 1);
 
-        var service = CreateService(
+        MealNutritionService service = CreateService(
             recipes: new Dictionary<RecipeId, Recipe>());
 
-        var result = await service.CalculateAsync(meal, userId);
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsFailure);
         Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
@@ -72,11 +73,11 @@ public class MealNutritionServiceTests {
         meal.AddProduct(product.Id, 200);
         meal.AddRecipe(recipe.Id, 1);
 
-        var service = CreateService(
+        MealNutritionService service = CreateService(
             products: new Dictionary<ProductId, Product> { [product.Id] = product },
             recipes: new Dictionary<RecipeId, Recipe> { [recipe.Id] = recipe });
 
-        var result = await service.CalculateAsync(meal, userId);
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(410, result.Value.Calories, 1);
@@ -94,9 +95,9 @@ public class MealNutritionServiceTests {
             notes: null,
             items: [MealAiItemData.Create("Cookie", null, 50, "g", 250, 3, 12, 34, 1, 0)]);
 
-        var service = CreateService();
+        MealNutritionService service = CreateService();
 
-        var result = await service.CalculateAsync(meal, userId);
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(250, result.Value.Calories);

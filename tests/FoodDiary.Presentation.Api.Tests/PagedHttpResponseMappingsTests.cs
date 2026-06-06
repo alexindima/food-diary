@@ -25,9 +25,9 @@ public sealed class PagedHttpResponseMappingsTests {
 
     [Fact]
     public void ToHttpResponseList_MapsItemsToList() {
-        var items = new[] { 2, 4, 6 };
+        int[] items = new[] { 2, 4, 6 };
 
-        var result = items.ToHttpResponseList(static value => $"value-{value}");
+        IReadOnlyList<string> result = items.ToHttpResponseList(static value => $"value-{value}");
 
         Assert.Equal(["value-2", "value-4", "value-6"], result);
     }

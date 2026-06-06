@@ -32,10 +32,10 @@ public sealed class ResultExtensionsTests {
     public void ToActionResult_FailedResult_MapsExpectedStatusCode(string errorCode, int expectedStatusCode) {
         var result = Result.Failure(CreateError(errorCode, "Failure"));
 
-        var actionResult = result.ToActionResult();
+        IActionResult actionResult = result.ToActionResult();
 
-        var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(expectedStatusCode, objectResult.StatusCode);
         Assert.Equal(errorCode, response.Error);
     }
@@ -44,7 +44,7 @@ public sealed class ResultExtensionsTests {
     public void ToActionResult_SuccessfulResult_ReturnsOk() {
         var result = Result.Success();
 
-        var actionResult = result.ToActionResult();
+        IActionResult actionResult = result.ToActionResult();
 
         Assert.IsType<OkResult>(actionResult);
     }
@@ -52,12 +52,12 @@ public sealed class ResultExtensionsTests {
     [Fact]
     public void ToOkActionResult_FailedGenericResult_ReturnsStandardApiErrorResponse() {
         var result = Result.Failure<string>(CreateError("Image.StorageError", "Storage failed"));
-        var controller = CreateController("trace-ok-failure");
+        TestController controller = CreateController("trace-ok-failure");
 
-        var actionResult = result.ToOkActionResult(controller);
+        IActionResult actionResult = result.ToOkActionResult(controller);
 
-        var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status502BadGateway, objectResult.StatusCode);
         Assert.Equal("Image.StorageError", response.Error);
         Assert.Equal("trace-ok-failure", response.TraceId);
@@ -67,29 +67,29 @@ public sealed class ResultExtensionsTests {
     public void ToActionResult_SuccessfulGenericResult_ReturnsOkObjectResult() {
         var result = Result.Success("value");
 
-        var actionResult = result.ToActionResult();
+        IActionResult actionResult = result.ToActionResult();
 
-        var okResult = Assert.IsType<OkObjectResult>(actionResult);
+        OkObjectResult okResult = Assert.IsType<OkObjectResult>(actionResult);
         Assert.Equal("value", okResult.Value);
     }
 
     [Fact]
     public void ToOkActionResult_WithMap_MapsSuccessfulValue() {
         var result = Result.Success("value");
-        var controller = CreateController("trace-success");
+        TestController controller = CreateController("trace-success");
 
-        var actionResult = result.ToOkActionResult(controller, value => value.ToUpperInvariant());
+        IActionResult actionResult = result.ToOkActionResult(controller, value => value.ToUpperInvariant());
 
-        var okResult = Assert.IsType<OkObjectResult>(actionResult);
+        OkObjectResult okResult = Assert.IsType<OkObjectResult>(actionResult);
         Assert.Equal("VALUE", okResult.Value);
     }
 
     [Fact]
     public void ToNoContentActionResult_SuccessfulResult_ReturnsNoContent() {
         var result = Result.Success();
-        var controller = CreateController("trace-no-content");
+        TestController controller = CreateController("trace-no-content");
 
-        var actionResult = result.ToNoContentActionResult(controller);
+        IActionResult actionResult = result.ToNoContentActionResult(controller);
 
         Assert.IsType<NoContentResult>(actionResult);
     }
@@ -97,12 +97,12 @@ public sealed class ResultExtensionsTests {
     [Fact]
     public void ToNoContentActionResult_FailedResult_UsesControllerTraceIdentifier() {
         var result = Result.Failure(CreateError("Validation.Invalid", "Failure"));
-        var controller = CreateController("trace-no-content-failure");
+        TestController controller = CreateController("trace-no-content-failure");
 
-        var actionResult = result.ToNoContentActionResult(controller);
+        IActionResult actionResult = result.ToNoContentActionResult(controller);
 
-        var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal("trace-no-content-failure", response.TraceId);
     }
 
@@ -110,10 +110,10 @@ public sealed class ResultExtensionsTests {
     public void ToErrorActionResult_UsesExplicitStatusCode() {
         var error = new Error("Custom.Error", "Failure");
 
-        var actionResult = error.ToErrorActionResult(StatusCodes.Status418ImATeapot);
+        IActionResult actionResult = error.ToErrorActionResult(StatusCodes.Status418ImATeapot);
 
-        var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status418ImATeapot, objectResult.StatusCode);
         Assert.Equal("Custom.Error", response.Error);
     }
@@ -129,12 +129,12 @@ public sealed class ResultExtensionsTests {
             ErrorKindResolver.Resolve("Validation.Invalid"));
         var result = Result.Failure(error);
 
-        var actionResult = result.ToActionResult();
+        IActionResult actionResult = result.ToActionResult();
 
-        var objectResult = Assert.IsType<ObjectResult>(actionResult);
-        var response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
         Assert.NotNull(response.Errors);
-        Assert.True(response.Errors.TryGetValue("email", out var errors));
+        Assert.True(response.Errors.TryGetValue("email", out string[]? errors));
         Assert.Equal(["Invalid email format"], errors);
     }
 

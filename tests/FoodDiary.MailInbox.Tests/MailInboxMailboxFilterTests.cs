@@ -13,7 +13,7 @@ public sealed class MailInboxMailboxFilterTests {
             AllowedRecipients = ["admin@fooddiary.club"]
         }));
 
-        var canAccept = await filter.CanAcceptFromAsync(
+        bool canAccept = await filter.CanAcceptFromAsync(
             context: null!,
             from: new Mailbox("sender", "example.com"),
             size: 1024,
@@ -28,7 +28,7 @@ public sealed class MailInboxMailboxFilterTests {
             AllowedRecipients = ["admin@fooddiary.club"]
         }));
 
-        var canDeliver = await filter.CanDeliverToAsync(
+        bool canDeliver = await filter.CanDeliverToAsync(
             context: null!,
             to: new Mailbox("admin", "fooddiary.club"),
             from: new Mailbox("sender", "example.com"),
@@ -43,7 +43,7 @@ public sealed class MailInboxMailboxFilterTests {
             AllowedRecipients = ["admin@fooddiary.club"]
         }));
 
-        var canDeliver = await filter.CanDeliverToAsync(
+        bool canDeliver = await filter.CanDeliverToAsync(
             context: null!,
             to: new Mailbox("unknown", "fooddiary.club"),
             from: new Mailbox("sender", "example.com"),

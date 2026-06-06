@@ -12,10 +12,10 @@ public sealed class GetAdminImpersonationSessionsQueryHandler(
     public async Task<Result<PagedResponse<AdminImpersonationSessionReadModel>>> Handle(
         GetAdminImpersonationSessionsQuery query,
         CancellationToken cancellationToken) {
-        var page = query.Page <= 0 ? 1 : query.Page;
-        var limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
-        var pageData = await repository.GetPagedAsync(page, limit, query.Search, cancellationToken).ConfigureAwait(false);
-        var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
+        int page = query.Page <= 0 ? 1 : query.Page;
+        int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
+        (IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems) pageData = await repository.GetPagedAsync(page, limit, query.Search, cancellationToken).ConfigureAwait(false);
+        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
 
         return Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>(
             pageData.Items,

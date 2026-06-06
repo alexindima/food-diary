@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.Events;
@@ -142,7 +143,7 @@ public class UserInvariantTests {
     public void Activate_WithExplicitTimestamp_ActivatesAndSetsModifiedTimestamp() {
         var user = User.Create("test@example.com", "hash");
         user.Deactivate();
-        var activatedAtUtc = DateTime.UtcNow.AddMinutes(5);
+        DateTime activatedAtUtc = DateTime.UtcNow.AddMinutes(5);
 
         user.Activate(activatedAtUtc);
 
@@ -172,7 +173,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetEmailConfirmationToken_WithValidData_UpdatesFields() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
 
         user.SetEmailConfirmationToken(" token-hash ", expiresAtUtc);
 
@@ -184,7 +185,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetEmailConfirmationToken_WithTypedIssue_UpdatesFields() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
 
         user.SetEmailConfirmationToken(new UserTokenIssue(" token-hash ", expiresAtUtc));
 
@@ -196,7 +197,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetEmailConfirmationToken_WithLocalExpiry_NormalizesToUtc() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtLocal = DateTime.Now.AddMinutes(30);
+        DateTime expiresAtLocal = DateTime.Now.AddMinutes(30);
 
         user.SetEmailConfirmationToken("token-hash", expiresAtLocal);
 
@@ -229,7 +230,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetPasswordResetToken_WithValidData_UpdatesFields() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
 
         user.SetPasswordResetToken(" reset-hash ", expiresAtUtc);
 
@@ -241,7 +242,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetPasswordResetToken_WithTypedIssue_UpdatesFields() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
+        DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(30);
 
         user.SetPasswordResetToken(new UserTokenIssue(" reset-hash ", expiresAtUtc));
 
@@ -253,7 +254,7 @@ public class UserInvariantTests {
     [Fact]
     public void SetPasswordResetToken_WithLocalExpiry_NormalizesToUtc() {
         var user = User.Create("test@example.com", "hash");
-        var expiresAtLocal = DateTime.Now.AddMinutes(30);
+        DateTime expiresAtLocal = DateTime.Now.AddMinutes(30);
 
         user.SetPasswordResetToken("reset-hash", expiresAtLocal);
 
@@ -352,7 +353,7 @@ public class UserInvariantTests {
     [Fact]
     public void UpdatePersonalInfo_WithRemainingProfileFields_UpdatesState() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30);
 
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             LastName: " Doe ",
@@ -424,7 +425,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
         user.UpdateActivity(hydrationGoal: 2.2);
         user.ClearDomainEvents();
-        var modifiedOnUtc = user.ModifiedOnUtc;
+        DateTime? modifiedOnUtc = user.ModifiedOnUtc;
 
         user.UpdateActivity(hydrationGoal: 2.2000005);
 
@@ -765,8 +766,8 @@ public class UserInvariantTests {
     public void AcceptAiConsent_WhenAlreadyAccepted_DoesNotChangeTimestamp() {
         var user = User.Create("test@example.com", "hash");
         user.AcceptAiConsent();
-        var acceptedAt = user.AiConsentAcceptedAt;
-        var modifiedAt = user.ModifiedOnUtc;
+        DateTime? acceptedAt = user.AiConsentAcceptedAt;
+        DateTime? modifiedAt = user.ModifiedOnUtc;
 
         user.AcceptAiConsent();
 
@@ -909,7 +910,7 @@ public class UserInvariantTests {
         var adminRole = Role.Create("Admin");
         var supportRole = Role.Create("Support");
         user.ReplaceRoles([adminRole, supportRole]);
-        var modifiedAt = user.ModifiedOnUtc;
+        DateTime? modifiedAt = user.ModifiedOnUtc;
 
         user.ReplaceRoles([supportRole, adminRole]);
 
@@ -1000,7 +1001,7 @@ public class UserInvariantTests {
     [Fact]
     public void CalculateBmr_WithMaleProfile_UsesMifflinStJeorFormula() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
@@ -1013,7 +1014,7 @@ public class UserInvariantTests {
     [Fact]
     public void CalculateBmr_WithFemaleProfile_UsesFemaleOffset() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
@@ -1026,7 +1027,7 @@ public class UserInvariantTests {
     [Fact]
     public void CalculateEstimatedTdee_UsesExtremeActivityMultiplier() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
@@ -1044,7 +1045,7 @@ public class UserInvariantTests {
     [InlineData(ActivityLevel.High, 3070)]
     public void CalculateEstimatedTdee_CoversActivityMultipliers(ActivityLevel activityLevel, double expectedTdee) {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
@@ -1065,11 +1066,11 @@ public class UserInvariantTests {
 
     [Fact]
     public void GetActivityMultiplier_WithUnsupportedActivityLevel_Throws() {
-        var method = typeof(User).GetMethod(
+        MethodInfo? method = typeof(User).GetMethod(
             "GetActivityMultiplier",
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-        var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
             method!.Invoke(null, [(ActivityLevel)999]));
 
         Assert.IsType<ArgumentOutOfRangeException>(exception.InnerException);
@@ -1078,7 +1079,7 @@ public class UserInvariantTests {
     [Fact]
     public void CalculateBmr_WhenBirthdayHasNotHappenedThisYear_DecrementsAge() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-30).AddDays(1);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-30).AddDays(1);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "M",
@@ -1091,7 +1092,7 @@ public class UserInvariantTests {
     [Fact]
     public void CalculateBmr_WhenFormulaIsNonPositive_ReturnsNull() {
         var user = User.Create("test@example.com", "hash");
-        var birthDate = DateTime.UtcNow.Date.AddYears(-120);
+        DateTime birthDate = DateTime.UtcNow.Date.AddYears(-120);
         user.UpdatePersonalInfo(new UserPersonalInfoUpdate(
             BirthDate: birthDate,
             Gender: "F",
@@ -1133,7 +1134,7 @@ public class UserInvariantTests {
     [Fact]
     public void StartPremiumTrial_WithValidValues_SetsTrialWindow() {
         var user = User.Create("test@example.com", "hash");
-        var startedAtLocal = DateTime.Now;
+        DateTime startedAtLocal = DateTime.Now;
 
         user.StartPremiumTrial(startedAtLocal, TimeSpan.FromDays(7));
 
@@ -1174,7 +1175,7 @@ public class UserInvariantTests {
     [Fact]
     public void MarkDeleted_SetsDeletedState_AndRaisesDomainEvent() {
         var user = User.Create("test@example.com", "hash");
-        var deletedAt = DateTime.UtcNow;
+        DateTime deletedAt = DateTime.UtcNow;
 
         user.MarkDeleted(deletedAt);
 
@@ -1187,7 +1188,7 @@ public class UserInvariantTests {
     [Fact]
     public void MarkDeleted_WithLocalTimestamp_NormalizesToUtc() {
         var user = User.Create("test@example.com", "hash");
-        var deletedAtLocal = DateTime.Now;
+        DateTime deletedAtLocal = DateTime.Now;
 
         user.MarkDeleted(deletedAtLocal);
 
@@ -1208,7 +1209,7 @@ public class UserInvariantTests {
     public void MarkDeleted_WhenAlreadyDeletedAndInactive_IsIdempotent() {
         var user = User.Create("test@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var initialEventCount = user.DomainEvents.Count;
+        int initialEventCount = user.DomainEvents.Count;
 
         user.MarkDeleted(DateTime.UtcNow.AddMinutes(1));
 
@@ -1236,7 +1237,7 @@ public class UserInvariantTests {
         user.SetEmailConfirmationToken("email-token", DateTime.UtcNow.AddMinutes(30));
         user.SetPasswordResetToken("reset-token", DateTime.UtcNow.AddMinutes(30));
         user.ClearDomainEvents();
-        var deletedAtUtc = DateTime.UtcNow;
+        DateTime deletedAtUtc = DateTime.UtcNow;
 
         user.DeleteAccount(deletedAtUtc);
 

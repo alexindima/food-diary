@@ -9,6 +9,7 @@ using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Commands.EndFasting;
 
@@ -26,22 +27,22 @@ public class EndFastingCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingPlan? plan = current.Plan ?? await fastingPlanRepository.GetActiveAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
-        var now = dateTimeProvider.UtcNow;
+        DateTime now = dateTimeProvider.UtcNow;
         if (plan.Type == FastingPlanType.Cyclic) {
             current.Interrupt(now);
             plan.Stop(now);
@@ -55,7 +56,7 @@ public class EndFastingCommandHandler(
         if (plan.Type == FastingPlanType.Intermittent) {
             current.Complete(now);
         } else {
-            var targetReachedAtUtc = current.StartedAtUtc.AddHours(current.TargetHours ?? 0);
+            DateTime targetReachedAtUtc = current.StartedAtUtc.AddHours(current.TargetHours ?? 0);
             if (now >= targetReachedAtUtc) {
                 current.Complete(now);
             } else {

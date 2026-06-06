@@ -9,14 +9,14 @@ public sealed class HangfireRecurringJobRegistrationVerifier(
     public void EnsureRegistered(IReadOnlyCollection<string> expectedJobIds) {
         ArgumentNullException.ThrowIfNull(expectedJobIds);
 
-        using var connection = jobStorage.GetConnection();
+        using IStorageConnection connection = jobStorage.GetConnection();
         var registeredJobIds = connection
             .GetRecurringJobs()
             .Select(job => job.Id)
             .Where(static id => !string.IsNullOrWhiteSpace(id))
             .ToHashSet(StringComparer.Ordinal);
 
-        var missingJobIds = expectedJobIds
+        string[] missingJobIds = expectedJobIds
             .Where(expectedJobId => !registeredJobIds.Contains(expectedJobId))
             .ToArray();
 

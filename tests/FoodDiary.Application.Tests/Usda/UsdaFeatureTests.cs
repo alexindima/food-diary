@@ -6,6 +6,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Usda;
 
@@ -20,7 +21,7 @@ public class UsdaFeatureTests {
         var usdaRepo = new StubUsdaFoodRepository(usdaFood);
 
         var handler = new LinkProductToUsdaFoodCommandHandler(productRepo, usdaRepo);
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 171077),
             CancellationToken.None);
 
@@ -34,7 +35,7 @@ public class UsdaFeatureTests {
         var handler = new LinkProductToUsdaFoodCommandHandler(
             new StubProductRepository(null), new StubUsdaFoodRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
             CancellationToken.None);
 
@@ -49,7 +50,7 @@ public class UsdaFeatureTests {
         var handler = new LinkProductToUsdaFoodCommandHandler(
             new StubProductRepository(product), new StubUsdaFoodRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
             CancellationToken.None);
 
@@ -64,7 +65,7 @@ public class UsdaFeatureTests {
         var productRepo = new StubProductRepository(product);
 
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(productRepo);
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(userId.Value, product.Id.Value),
             CancellationToken.None);
 
@@ -77,7 +78,7 @@ public class UsdaFeatureTests {
     public async Task UnlinkProductFromUsdaFood_WhenProductNotFound_ReturnsFailure() {
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
@@ -89,7 +90,7 @@ public class UsdaFeatureTests {
         var handler = new LinkProductToUsdaFoodCommandHandler(
             new StubProductRepository(null), new StubUsdaFoodRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(null, Guid.NewGuid(), 1), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -99,7 +100,7 @@ public class UsdaFeatureTests {
     public async Task UnlinkProductFromUsdaFood_WithNullUserId_ReturnsFailure() {
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);

@@ -1,6 +1,8 @@
+using FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Presentation.Api.Features.ContentReports.Mappings;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
+using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -12,7 +14,7 @@ public sealed class ContentReportHttpMappingsTests {
         var targetId = Guid.NewGuid();
         var request = new CreateContentReportHttpRequest("Recipe", targetId, "Spam content");
 
-        var command = request.ToCommand(userId);
+        CreateContentReportCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("Recipe", command.TargetType);
@@ -25,11 +27,11 @@ public sealed class ContentReportHttpMappingsTests {
         var id = Guid.NewGuid();
         var reporterId = Guid.NewGuid();
         var targetId = Guid.NewGuid();
-        var createdAt = DateTime.UtcNow;
+        DateTime createdAt = DateTime.UtcNow;
         var model = new ContentReportModel(
             id, reporterId, "Comment", targetId, "Offensive", "Pending", null, createdAt, null);
 
-        var response = model.ToHttpResponse();
+        ContentReportHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal(reporterId, response.ReporterId);

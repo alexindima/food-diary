@@ -8,6 +8,7 @@ using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 
@@ -18,13 +19,13 @@ public class GenerateShoppingListCommandHandler(
     public async Task<Result<ShoppingListModel>> Handle(
         GenerateShoppingListCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<ShoppingListModel>(userIdResult.Error);
         }
 
         var planId = new MealPlanId(command.PlanId);
-        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
@@ -33,7 +34,7 @@ public class GenerateShoppingListCommandHandler(
             return Result.Failure<ShoppingListModel>(Errors.MealPlan.NotFound(command.PlanId));
         }
 
-        var shoppingList = CreateShoppingList(userIdResult.Value, plan);
+        ShoppingList shoppingList = CreateShoppingList(userIdResult.Value, plan);
         await shoppingListRepository.AddAsync(shoppingList, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(shoppingList.ToModel());
@@ -41,7 +42,7 @@ public class GenerateShoppingListCommandHandler(
 
     private static ShoppingList CreateShoppingList(UserId userId, MealPlan plan) {
         var shoppingList = ShoppingList.Create(userId, plan.Name);
-        foreach (var item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
+        foreach (AggregatedIngredient? item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
             shoppingList.AddItem(
                 item.Name,
                 item.ProductId,
@@ -57,29 +58,29 @@ public class GenerateShoppingListCommandHandler(
 
     private static Dictionary<ProductId, AggregatedIngredient> AggregateIngredients(MealPlan plan) {
         var aggregated = new Dictionary<ProductId, AggregatedIngredient>();
-        var sortOrder = 0;
+        int sortOrder = 0;
 
-        foreach (var day in plan.Days.OrderBy(d => d.DayNumber)) {
-            foreach (var meal in day.Meals) {
-                var recipe = meal.Recipe;
+        foreach (MealPlanDay? day in plan.Days.OrderBy(d => d.DayNumber)) {
+            foreach (MealPlanMeal meal in day.Meals) {
+                Recipe? recipe = meal.Recipe;
                 if (recipe is null) {
                     continue;
                 }
 
-                var servingsMultiplier = recipe.Servings > 0
+                double servingsMultiplier = recipe.Servings > 0
                     ? (double)meal.Servings / recipe.Servings
                     : 1.0;
 
-                foreach (var step in recipe.Steps) {
-                    foreach (var ingredient in step.Ingredients) {
+                foreach (RecipeStep step in recipe.Steps) {
+                    foreach (RecipeIngredient ingredient in step.Ingredients) {
                         if (ingredient.ProductId is null || ingredient.Product is null) {
                             continue;
                         }
 
-                        var productId = ingredient.ProductId.Value;
-                        var scaledAmount = ingredient.Amount * servingsMultiplier;
+                        ProductId productId = ingredient.ProductId.Value;
+                        double scaledAmount = ingredient.Amount * servingsMultiplier;
 
-                        if (aggregated.TryGetValue(productId, out var existing)) {
+                        if (aggregated.TryGetValue(productId, out AggregatedIngredient? existing)) {
                             existing.TotalAmount += scaledAmount;
                         } else {
                             aggregated[productId] = new AggregatedIngredient {

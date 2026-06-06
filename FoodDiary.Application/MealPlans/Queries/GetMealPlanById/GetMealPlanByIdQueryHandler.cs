@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
 
@@ -13,13 +14,13 @@ public class GetMealPlanByIdQueryHandler(IMealPlanRepository mealPlanRepository)
     public async Task<Result<MealPlanModel>> Handle(
         GetMealPlanByIdQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<MealPlanModel>(userIdResult.Error);
         }
 
         var planId = new MealPlanId(query.PlanId);
-        var plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(query.PlanId));
         }

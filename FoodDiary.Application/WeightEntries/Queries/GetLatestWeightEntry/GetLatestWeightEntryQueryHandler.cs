@@ -6,6 +6,8 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
@@ -16,18 +18,18 @@ public class GetLatestWeightEntryQueryHandler(
     public async Task<Result<WeightEntryModel?>> Handle(
         GetLatestWeightEntryQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<WeightEntryModel?>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel?>(accessError);
         }
 
-        var entries = await weightEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WeightEntry> entries = await weightEntryRepository.GetEntriesAsync(
             userId,
             dateFrom: null,
             dateTo: null,
@@ -35,7 +37,7 @@ public class GetLatestWeightEntryQueryHandler(
             descending: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        var latest = entries.FirstOrDefault();
+        WeightEntry? latest = entries.FirstOrDefault();
         return Result.Success(latest?.ToModel());
     }
 }

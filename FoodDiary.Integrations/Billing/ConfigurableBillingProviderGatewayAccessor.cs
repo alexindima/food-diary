@@ -14,9 +14,9 @@ public sealed class ConfigurableBillingProviderGatewayAccessor(
         StringComparer.OrdinalIgnoreCase);
 
     public IBillingProviderGateway GetActiveProvider() {
-        var configuredProvider = billingOptions.Value.Provider?.Trim();
+        string? configuredProvider = billingOptions.Value.Provider?.Trim();
         if (string.IsNullOrWhiteSpace(configuredProvider) ||
-            !_providers.TryGetValue(configuredProvider, out var billingProvider)) {
+            !_providers.TryGetValue(configuredProvider, out IBillingProviderGateway? billingProvider)) {
             throw new InvalidOperationException(Errors.Billing.ProviderNotConfigured(configuredProvider ?? string.Empty).Message);
         }
 

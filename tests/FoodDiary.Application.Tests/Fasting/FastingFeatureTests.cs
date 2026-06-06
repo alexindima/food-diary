@@ -27,6 +27,7 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Reflection;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
@@ -41,7 +42,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -60,7 +61,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "CustomIntermittent", null, 17, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -77,7 +78,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F36_0", null, null, null, null, null, null, "extended notes"),
             CancellationToken.None);
 
@@ -101,7 +102,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "CustomIntermittent", null, duration, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -115,7 +116,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F18_6", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -128,7 +129,7 @@ public class FastingFeatureTests {
         var handler = new StartFastingCommandHandler(
             new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "InvalidProtocol", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -144,7 +145,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, null, null, null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -154,7 +155,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithBlankIntermittentProtocol_ReturnsInvalidProtocol() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -164,7 +165,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "   ", "Intermittent", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -176,7 +177,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithExplicitIntermittentInvalidProtocol_ReturnsInvalidProtocol() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -186,7 +187,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "not-a-protocol", "Intermittent", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -208,7 +209,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "InvalidPlanType", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -219,7 +220,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithUndefinedNumericPlanType_ReturnsFailure() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -229,7 +230,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "999", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -241,7 +242,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithExtendedPlanTypeAndInvalidProtocol_ReturnsInvalidProtocol() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -251,7 +252,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "not-a-protocol", "Extended", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -263,7 +264,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
@@ -274,7 +275,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", null, null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -289,7 +290,7 @@ public class FastingFeatureTests {
         var handler = new StartFastingCommandHandler(
             new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(null), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(null, "F16_8", null, null, null, null, null, null, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -302,7 +303,7 @@ public class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, null, "Cyclic", null, 1, 3, 16, 8, null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -314,7 +315,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithInvalidCyclicDays_ReturnsInvalidProtocol() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -324,7 +325,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, null, "Cyclic", null, 0, 3, 16, 8, null),
             CancellationToken.None);
 
@@ -336,7 +337,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task StartFasting_WithExtendedPlanTypeAndIntermittentProtocol_ReturnsInvalidProtocol() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var handler = new StartFastingCommandHandler(
@@ -346,7 +347,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "Extended", null, null, null, null, null, null),
             CancellationToken.None);
 
@@ -365,7 +366,7 @@ public class FastingFeatureTests {
             FixedNow,
             notes: "morning fast");
 
-        var model = session.ToModel();
+        FastingSessionModel model = session.ToModel();
 
         Assert.Equal("F16_8", model.Protocol);
         Assert.Equal("Intermittent", model.PlanType);
@@ -385,7 +386,7 @@ public class FastingFeatureTests {
             notes: null);
         session.End(FixedNow);
 
-        var model = session.ToModel();
+        FastingSessionModel model = session.ToModel();
 
         Assert.Equal("Extended", model.PlanType);
         Assert.Equal("FastDay", model.OccurrenceKind);
@@ -406,7 +407,7 @@ public class FastingFeatureTests {
             FixedNow,
             notes: null);
 
-        var model = session.ToModel();
+        FastingSessionModel model = session.ToModel();
 
         Assert.Equal("Intermittent", model.PlanType);
         Assert.Equal("FastingWindow", model.OccurrenceKind);
@@ -423,7 +424,7 @@ public class FastingFeatureTests {
             targetHours: null,
             notes: "custom");
 
-        var model = occurrence.ToModel();
+        FastingSessionModel model = occurrence.ToModel();
 
         Assert.Equal("Custom", model.Protocol);
         Assert.Equal("Extended", model.PlanType);
@@ -452,7 +453,7 @@ public class FastingFeatureTests {
             targetHours: 8,
             notes: null);
 
-        var model = occurrence.ToModel(plan);
+        FastingSessionModel model = occurrence.ToModel(plan);
 
         Assert.Equal("Cyclic", model.PlanType);
         Assert.Equal("EatingWindow", model.OccurrenceKind);
@@ -485,7 +486,7 @@ public class FastingFeatureTests {
             notes: "latest",
             checkedInAtUtc: FixedNow.AddMinutes(-10));
 
-        var model = occurrence.ToModel(plan, [olderCheckIn, latestCheckIn]);
+        FastingSessionModel model = occurrence.ToModel(plan, [olderCheckIn, latestCheckIn]);
 
         Assert.Equal("Extended", model.PlanType);
         Assert.Equal("FastDay", model.OccurrenceKind);
@@ -519,7 +520,7 @@ public class FastingFeatureTests {
             FixedNow,
             sequenceNumber: 4);
 
-        var model = occurrence.ToModel(plan);
+        FastingSessionModel model = occurrence.ToModel(plan);
 
         Assert.Equal("Cyclic", model.PlanType);
         Assert.Equal("EatDay", model.OccurrenceKind);
@@ -541,7 +542,7 @@ public class FastingFeatureTests {
             sequenceNumber: 1);
         occurrence.UpdateCheckIn(3, 4, 5, ["weakness", "Weakness"], "fallback", FixedNow.AddHours(-1));
 
-        var model = occurrence.ToModel(plan: null);
+        FastingSessionModel model = occurrence.ToModel(plan: null);
 
         Assert.Equal("Custom", model.Protocol);
         Assert.Equal("Extended", model.PlanType);
@@ -563,7 +564,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -584,7 +585,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -611,7 +612,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -633,7 +634,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -651,7 +652,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -667,7 +668,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new EndFastingCommand(null), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -684,7 +685,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -703,7 +704,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("Completed", result.Value.Status);
@@ -712,7 +713,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task EndFasting_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
@@ -723,7 +724,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -742,7 +743,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -760,7 +761,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -778,7 +779,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new ExtendActiveFastingCommand(userId.Value, 0), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new ExtendActiveFastingCommand(userId.Value, 0), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -793,7 +794,7 @@ public class FastingFeatureTests {
             new StubUserRepository(null),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(Guid.Empty, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -810,7 +811,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -829,7 +830,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -847,7 +848,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -856,7 +857,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task ExtendActiveFasting_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
@@ -866,7 +867,7 @@ public class FastingFeatureTests {
             new StubUserRepository(user),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(user.Id.Value, 24), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -885,7 +886,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 4),
             CancellationToken.None);
 
@@ -906,7 +907,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -919,7 +920,7 @@ public class FastingFeatureTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WhenNewTargetAlreadyReached_CompletesSession() {
         var userId = UserId.New();
-        var now = FixedNow;
+        DateTime now = FixedNow;
         var plan = FastingPlan.CreateExtended(userId, FastingProtocol.F36_0, 36, now.AddHours(-30));
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, now.AddHours(-30), 1, 36);
         var handler = new ReduceActiveFastingTargetCommandHandler(
@@ -929,7 +930,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -940,7 +941,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task ReduceActiveFastingTarget_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
@@ -951,7 +952,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(user.Id.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -970,7 +971,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -988,7 +989,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 12),
             CancellationToken.None);
 
@@ -1006,7 +1007,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(Guid.Empty, 8), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1024,7 +1025,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1043,7 +1044,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 0), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1063,7 +1064,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1072,7 +1073,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F72_0, 72, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
@@ -1084,7 +1085,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 3, 3, 3, ["good"], "steady"),
             CancellationToken.None);
 
@@ -1103,7 +1104,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(null, 3, 3, 3, ["good"], "steady"),
             CancellationToken.None);
 
@@ -1113,7 +1114,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WhenNoActiveSession_ReturnsFailure() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var checkInRepo = new InMemoryFastingCheckInRepository();
         var handler = new UpdateCurrentFastingCheckInCommandHandler(
             new InMemoryFastingOccurrenceRepository(),
@@ -1122,7 +1123,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 3, 3, 3, ["good"], "steady"),
             CancellationToken.None);
 
@@ -1133,7 +1134,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_ReturnsValidationFailure() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         var checkInRepo = new InMemoryFastingCheckInRepository();
@@ -1144,7 +1145,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 0, 3, 3, ["good"], "steady"),
             CancellationToken.None);
 
@@ -1156,7 +1157,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithActiveSession_AddsCheckInAndUpdatesSession() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         var plan = FastingPlan.CreateExtended(user.Id, FastingProtocol.F36_0, 36, FixedNow.AddHours(-1));
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         AttachNavigation(occurrence, plan, user);
@@ -1169,7 +1170,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             unitOfWork);
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 4, 5, 3, ["tired", "focused"], "steady"),
             CancellationToken.None);
 
@@ -1196,7 +1197,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1221,7 +1222,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1235,7 +1236,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task SkipCyclicDay_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateCyclic(user.Id, 1, 3, 16, 8, FixedNow, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
@@ -1247,7 +1248,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1265,7 +1266,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new SkipCyclicDayCommand(Guid.Empty), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1282,7 +1283,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -1299,7 +1300,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -1317,7 +1318,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
@@ -1336,7 +1337,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
@@ -1356,7 +1357,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1379,7 +1380,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1404,7 +1405,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1429,7 +1430,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1443,7 +1444,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task PostponeCyclicDay_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var plan = FastingPlan.CreateCyclic(user.Id, 1, 3, 16, 8, FixedNow, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
@@ -1455,7 +1456,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(
+        Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1473,7 +1474,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(Guid.Empty), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1490,7 +1491,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -1507,7 +1508,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.NoActiveSession", result.Error.Code);
@@ -1525,7 +1526,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
@@ -1544,7 +1545,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
@@ -1563,7 +1564,7 @@ public class FastingFeatureTests {
             new UnspecifiedDateTimeProvider(),
             new StubUnitOfWork());
 
-        var result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
@@ -1609,7 +1610,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(result.Value.Alerts, x => string.Equals(x.Id, "mid", StringComparison.Ordinal));
@@ -1633,7 +1634,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(result.Value.Alerts, x => string.Equals(x.Id, "late", StringComparison.Ordinal));
@@ -1665,7 +1666,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(result.Value.Alerts, x => string.Equals(x.Id, "current-warning", StringComparison.Ordinal));
@@ -1698,7 +1699,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.DoesNotContain(result.Value.Alerts, x => string.Equals(x.Id, "late", StringComparison.Ordinal));
@@ -1744,7 +1745,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Contains(result.Value.Insights, x => string.Equals(x.Id, "shorter-fasts", StringComparison.Ordinal));
@@ -1789,7 +1790,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.DoesNotContain(result.Value.Insights, x => string.Equals(x.Id, "shorter-fasts", StringComparison.Ordinal));
@@ -1806,7 +1807,7 @@ public class FastingFeatureTests {
             new InMemoryFastingCheckInRepository(checkIn),
             CreateUserRepository(userId));
 
-        var result = await handler.Handle(new GetCurrentFastingQuery(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel?> result = await handler.Handle(new GetCurrentFastingQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value);
@@ -1822,7 +1823,7 @@ public class FastingFeatureTests {
             new InMemoryFastingCheckInRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(new GetCurrentFastingQuery(null), CancellationToken.None);
+        Result<FastingSessionModel?> result = await handler.Handle(new GetCurrentFastingQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1830,14 +1831,14 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task GetCurrentFasting_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var handler = new GetCurrentFastingQueryHandler(
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetCurrentFastingQuery(user.Id.Value), CancellationToken.None);
+        Result<FastingSessionModel?> result = await handler.Handle(new GetCurrentFastingQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -1851,7 +1852,7 @@ public class FastingFeatureTests {
             new InMemoryFastingCheckInRepository(),
             CreateUserRepository(userId));
 
-        var result = await handler.Handle(new GetCurrentFastingQuery(userId.Value), CancellationToken.None);
+        Result<FastingSessionModel?> result = await handler.Handle(new GetCurrentFastingQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(result.Value);
@@ -1877,7 +1878,7 @@ public class FastingFeatureTests {
                 new InMemoryFastingCheckInRepository(latestCheckIn, earlierCheckIn)),
             CreateUserRepository(userId));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(
             new GetFastingHistoryQuery(userId.Value, FixedNow.AddDays(-7), FixedNow, 1, 1),
             CancellationToken.None);
 
@@ -1898,7 +1899,7 @@ public class FastingFeatureTests {
                 new InMemoryFastingCheckInRepository()),
             CreateUserRepository(userId));
 
-        var result = await handler.Handle(
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(
             new GetFastingHistoryQuery(userId.Value, FixedNow.AddDays(-7), FixedNow, 1, 10),
             CancellationToken.None);
 
@@ -1916,7 +1917,7 @@ public class FastingFeatureTests {
         var from = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 4, 30, 23, 59, 59, DateTimeKind.Unspecified);
 
-        var result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DateTimeKind.Utc, analytics.FromUtc.Kind);
@@ -1933,7 +1934,7 @@ public class FastingFeatureTests {
         var from = new DateTime(2026, 4, 1, 4, 0, 0, DateTimeKind.Local);
         var to = new DateTime(2026, 4, 30, 23, 59, 59, DateTimeKind.Local);
 
-        var result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(new GetFastingHistoryQuery(userId.Value, from, to, 1, 10), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(DateTimeKind.Utc, analytics.FromUtc.Kind);
@@ -1946,7 +1947,7 @@ public class FastingFeatureTests {
     public async Task GetFastingHistory_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetFastingHistoryQueryHandler(new RecordingFastingAnalyticsService(), new StubUserRepository(null));
 
-        var result = await handler.Handle(new GetFastingHistoryQuery(null, FixedNow.AddDays(-7), FixedNow, 1, 10), CancellationToken.None);
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(new GetFastingHistoryQuery(null, FixedNow.AddDays(-7), FixedNow, 1, 10), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1954,11 +1955,11 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task GetFastingHistory_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var handler = new GetFastingHistoryQueryHandler(new RecordingFastingAnalyticsService(), new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetFastingHistoryQuery(user.Id.Value, FixedNow.AddDays(-7), FixedNow, 1, 10), CancellationToken.None);
+        Result<PagedResponse<FastingSessionModel>> result = await handler.Handle(new GetFastingHistoryQuery(user.Id.Value, FixedNow.AddDays(-7), FixedNow, 1, 10), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -1967,7 +1968,7 @@ public class FastingFeatureTests {
     [Fact]
     public async Task GetFastingStats_ComputesRatesAndTopSymptom() {
         var userId = UserId.New();
-        var now = FixedNow;
+        DateTime now = FixedNow;
 
         var oldCompleted = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastingWindow, now.AddDays(-40), 1, 16);
         oldCompleted.Complete(now.AddDays(-40).AddHours(16));
@@ -1992,7 +1993,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
+        Result<FastingStatsModel> result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(3, result.Value.TotalCompleted);
@@ -2012,7 +2013,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
+        Result<FastingStatsModel> result = await handler.Handle(new GetFastingStatsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.TotalCompleted);
@@ -2031,7 +2032,7 @@ public class FastingFeatureTests {
             new StubUserRepository(null),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingStatsQuery(null), CancellationToken.None);
+        Result<FastingStatsModel> result = await handler.Handle(new GetFastingStatsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -2039,14 +2040,14 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task GetFastingStats_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var handler = new GetFastingStatsQueryHandler(
             new RecordingFastingAnalyticsService(),
             new StubUserRepository(user),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingStatsQuery(user.Id.Value), CancellationToken.None);
+        Result<FastingStatsModel> result = await handler.Handle(new GetFastingStatsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -2078,7 +2079,7 @@ public class FastingFeatureTests {
             CreateUserRepository(userId),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingOverviewQuery(userId.Value), CancellationToken.None);
+        Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value.CurrentSession);
@@ -2092,7 +2093,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task GetFastingOverview_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
@@ -2103,7 +2104,7 @@ public class FastingFeatureTests {
             new StubUserRepository(user),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingOverviewQuery(user.Id.Value), CancellationToken.None);
+        Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -2120,7 +2121,7 @@ public class FastingFeatureTests {
             new StubUserRepository(null),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingOverviewQuery(null), CancellationToken.None);
+        Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -2136,7 +2137,7 @@ public class FastingFeatureTests {
             new StubUserRepository(null),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(null), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -2144,7 +2145,7 @@ public class FastingFeatureTests {
 
     [Fact]
     public async Task GetFastingInsights_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(UserId.New());
+        User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
@@ -2154,7 +2155,7 @@ public class FastingFeatureTests {
             new StubUserRepository(user),
             new FixedDateTimeProvider());
 
-        var result = await handler.Handle(new GetFastingInsightsQuery(user.Id.Value), CancellationToken.None);
+        Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -2163,7 +2164,7 @@ public class FastingFeatureTests {
     [Fact]
     public void GetDefaultHistoryWindow_UsesCanonicalUtcMonthWindow() {
         var service = new FastingAnalyticsService(new InMemoryFastingOccurrenceRepository(), new InMemoryFastingCheckInRepository());
-        var (fromUtc, toUtc) = service.GetDefaultHistoryWindow(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
+        (DateTime fromUtc, DateTime toUtc) = service.GetDefaultHistoryWindow(new DateTime(2026, 1, 15, 9, 30, 0, DateTimeKind.Utc));
 
         Assert.Equal(new DateTime(2025, 12, 1, 0, 0, 0, DateTimeKind.Utc), fromUtc);
         Assert.Equal(new DateTime(2026, 2, 28, 23, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), toUtc);
@@ -2183,7 +2184,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2204,7 +2205,7 @@ public class FastingFeatureTests {
             new RecordingWebPushNotificationSender(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
-        var method = typeof(FastingNotificationScheduler).GetMethod(
+        MethodInfo? method = typeof(FastingNotificationScheduler).GetMethod(
             "TryCreateNotificationAsync",
             BindingFlags.Instance | BindingFlags.NonPublic);
         Assert.NotNull(method);
@@ -2220,7 +2221,7 @@ public class FastingFeatureTests {
                 CancellationToken.None
             ])!;
 
-        var exception = await Assert.ThrowsAsync<InvalidOperationException>(() => task);
+        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => task);
         Assert.Contains("Unsupported fasting notification type", exception.Message, StringComparison.Ordinal);
     }
 
@@ -2243,7 +2244,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2268,7 +2269,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2298,7 +2299,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2324,7 +2325,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2352,7 +2353,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2379,7 +2380,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(1, created);
         Assert.Single(notificationRepo.Stored);
@@ -2411,8 +2412,8 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var firstCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
-        var secondCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int firstCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int secondCreated = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(2, firstCreated);
         Assert.Equal(0, secondCreated);
@@ -2441,10 +2442,10 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(1, created);
-        var notification = Assert.Single(notificationRepo.Stored);
+        Notification notification = Assert.Single(notificationRepo.Stored);
         Assert.Equal(NotificationTypes.FastingCompleted, notification.Type);
         Assert.Equal($"fasting-completed:{occurrence.Id.Value}", notification.ReferenceId);
         Assert.Single(webPushSender.Sent);
@@ -2470,7 +2471,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2502,7 +2503,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Single(notificationRepo.Stored);
@@ -2529,7 +2530,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(2, created);
         Assert.Contains(notificationRepo.Stored, x =>
@@ -2562,7 +2563,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2589,7 +2590,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Empty(notificationRepo.Stored);
@@ -2621,7 +2622,7 @@ public class FastingFeatureTests {
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
-        var created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
 
         Assert.Equal(0, created);
         Assert.Single(notificationRepo.Stored);
@@ -2666,7 +2667,7 @@ public class FastingFeatureTests {
             return Task.FromResult(occurrences);
         }
         public Task<IReadOnlyList<FastingOccurrence>> GetByUserAsync(UserId userId, DateTime? from = null, DateTime? to = null, FastingOccurrenceStatus? status = null, CancellationToken ct = default) {
-            var query = StoredOccurrences.Where(x => x.UserId == userId);
+            IEnumerable<FastingOccurrence> query = StoredOccurrences.Where(x => x.UserId == userId);
 
             if (from.HasValue) {
                 query = query.Where(x => x.StartedAtUtc >= from.Value);
@@ -2694,7 +2695,7 @@ public class FastingFeatureTests {
             DateTime? to = null,
             FastingOccurrenceStatus? status = null,
             CancellationToken ct = default) {
-            var query = StoredOccurrences.Where(x => x.UserId == userId);
+            IEnumerable<FastingOccurrence> query = StoredOccurrences.Where(x => x.UserId == userId);
 
             if (from.HasValue) {
                 query = query.Where(x => x.StartedAtUtc >= from.Value);
@@ -2925,7 +2926,7 @@ public class FastingFeatureTests {
     }
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
-        var property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        PropertyInfo? property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
         Assert.NotNull(property);
         property!.SetValue(target, value);
     }

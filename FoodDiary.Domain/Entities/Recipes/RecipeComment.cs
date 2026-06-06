@@ -24,7 +24,7 @@ public sealed class RecipeComment : AggregateRoot<RecipeCommentId> {
             throw new ArgumentException("RecipeId is required.", nameof(recipeId));
         }
 
-        var normalizedText = NormalizeText(text);
+        string normalizedText = NormalizeText(text);
 
         var comment = new RecipeComment {
             Id = RecipeCommentId.New(),
@@ -37,7 +37,7 @@ public sealed class RecipeComment : AggregateRoot<RecipeCommentId> {
     }
 
     public void UpdateText(string text) {
-        var normalizedText = NormalizeText(text);
+        string normalizedText = NormalizeText(text);
         if (string.Equals(Text, normalizedText, StringComparison.Ordinal)) {
             return;
         }
@@ -51,7 +51,7 @@ public sealed class RecipeComment : AggregateRoot<RecipeCommentId> {
             throw new ArgumentException("Comment text is required.", nameof(text));
         }
 
-        var normalized = text.Trim();
+        string normalized = text.Trim();
         return normalized.Length > TextMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(text), $"Comment text must be at most {TextMaxLength} characters.")
             : normalized;

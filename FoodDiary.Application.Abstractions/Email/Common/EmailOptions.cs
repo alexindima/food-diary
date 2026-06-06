@@ -26,7 +26,7 @@ public sealed class EmailOptions {
     public static bool HasPasswordResetPath(EmailOptions options) => !string.IsNullOrWhiteSpace(options.PasswordResetPath);
 
     private static bool IsHttpUrl(string value) {
-        return Uri.TryCreate(value, UriKind.Absolute, out var uri) &&
+        return Uri.TryCreate(value, UriKind.Absolute, out Uri? uri) &&
                (string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.Ordinal) || string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.Ordinal));
     }
 }

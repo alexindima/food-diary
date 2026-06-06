@@ -7,6 +7,7 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
 
@@ -22,17 +23,17 @@ public class GetMyDietologistRelationshipQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<DietologistRelationshipModel?>(accessError);
         }
 
-        var accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (accepted is not null) {
             return Result.Success<DietologistRelationshipModel?>(accepted.ToRelationshipModel());
         }
 
-        var pending = await invitationRepository.GetByClientAndStatusAsync(
+        DietologistInvitation? pending = await invitationRepository.GetByClientAndStatusAsync(
             userId,
             DietologistInvitationStatus.Pending,
             cancellationToken: cancellationToken).ConfigureAwait(false);

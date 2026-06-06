@@ -17,7 +17,7 @@ public sealed class CreateCheckoutSessionCommandValidator : AbstractValidator<Cr
     }
 
     private static bool IsSupportedPlan(string? plan) {
-        var normalizedPlan = plan?.Trim();
+        string? normalizedPlan = plan?.Trim();
         return string.Equals(normalizedPlan, "monthly", StringComparison.OrdinalIgnoreCase) ||
             string.Equals(normalizedPlan, "yearly", StringComparison.OrdinalIgnoreCase);
     }

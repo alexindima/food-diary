@@ -28,10 +28,10 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
 
         StripeConfiguration.ApiKey = _options.SecretKey;
 
-        var customerId = request.ExistingCustomerId;
+        string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
             var customerService = new CustomerService();
-            var customer = await customerService.CreateAsync(
+            Customer customer = await customerService.CreateAsync(
                 new CustomerCreateOptions {
                     Email = request.Email,
                     Metadata = new Dictionary<string, string>(StringComparer.Ordinal) {
@@ -42,9 +42,9 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             customerId = customer.Id;
         }
 
-        var priceId = ResolvePriceId(request.Plan);
+        string priceId = ResolvePriceId(request.Plan);
         var sessionService = new CheckoutSessionService();
-        var session = await sessionService.CreateAsync(
+        CheckoutSession session = await sessionService.CreateAsync(
             new CheckoutSessionCreateOptions {
                 Mode = "subscription",
                 Customer = customerId,
@@ -87,7 +87,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         StripeConfiguration.ApiKey = _options.SecretKey;
 
         var portalSessionService = new BillingPortalSessionService();
-        var portalSession = await portalSessionService.CreateAsync(
+        Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
             new BillingPortalSessionCreateOptions {
                 Customer = request.CustomerId,
                 ReturnUrl = _options.PortalReturnUrl,
@@ -115,7 +115,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
 
         try {
             StripeConfiguration.ApiKey = _options.SecretKey;
-            var stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
+            Event stripeEvent = EventUtility.ConstructEvent(payload, signatureHeader, _options.WebhookSecret);
 
             return stripeEvent.Type switch {
                 "customer.subscription.created" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
@@ -141,7 +141,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         }
 
         var subscriptionService = new SubscriptionService();
-        var subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata);
     }
 
@@ -149,9 +149,9 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         Subscription subscription,
         Event stripeEvent,
         IReadOnlyDictionary<string, string>? fallbackMetadata = null) {
-        var metadata = subscription.Metadata?.Count > 0 ? subscription.Metadata : fallbackMetadata;
-        var firstItem = subscription.Items.Data.FirstOrDefault();
-        var plan = ResolvePlan(subscription.Items.Data.FirstOrDefault()?.Price?.Id)
+        IReadOnlyDictionary<string, string>? metadata = subscription.Metadata?.Count > 0 ? subscription.Metadata : fallbackMetadata;
+        SubscriptionItem? firstItem = subscription.Items.Data.FirstOrDefault();
+        string? plan = ResolvePlan(subscription.Items.Data.FirstOrDefault()?.Price?.Id)
                    ?? ReadMetadata(metadata, "plan");
 
         return new BillingWebhookEventModel(
@@ -212,7 +212,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         !string.IsNullOrWhiteSpace(_options.WebhookSecret);
 
     private static string? ReadMetadata(IReadOnlyDictionary<string, string>? metadata, string key) {
-        if (metadata is null || !metadata.TryGetValue(key, out var value) || string.IsNullOrWhiteSpace(value)) {
+        if (metadata is null || !metadata.TryGetValue(key, out string? value) || string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
@@ -220,7 +220,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
     }
 
     private static Guid? ParseUserId(string? value) {
-        return Guid.TryParse(value, out var parsed) && parsed != Guid.Empty
+        return Guid.TryParse(value, out Guid parsed) && parsed != Guid.Empty
             ? parsed
             : null;
     }

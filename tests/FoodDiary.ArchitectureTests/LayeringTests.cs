@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 public class LayeringTests {
     [Fact]
     public void DomainProject_DoesNotReference_OtherApplicationLayers() {
-        var references = GetProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Domain/FoodDiary.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.Application.Abstractions", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -17,7 +17,7 @@ public class LayeringTests {
 
     [Fact]
     public void ApplicationAbstractionsProject_ReferencesOnly_DomainAmongCoreProjects() {
-        var references = GetProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj");
 
         Assert.Contains("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -29,7 +29,7 @@ public class LayeringTests {
 
     [Fact]
     public void ApplicationProject_ReferencesOnly_DomainAndContracts_AmongCoreProjects() {
-        var references = GetProjectReferences("FoodDiary.Application/FoodDiary.Application.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Application/FoodDiary.Application.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
         Assert.Contains("FoodDiary.Domain", references);
@@ -41,7 +41,7 @@ public class LayeringTests {
 
     [Fact]
     public void InfrastructureProject_ReferencesOnly_DomainAndApplicationAbstractions_AmongCoreProjects() {
-        var references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
         Assert.Contains("FoodDiary.Domain", references);
@@ -53,7 +53,7 @@ public class LayeringTests {
 
     [Fact]
     public void IntegrationsProject_ReferencesApplicationAbstractionsAndExternalClients_ButNotInfrastructure() {
-        var references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
         Assert.Contains("FoodDiary.Domain", references);
@@ -67,7 +67,7 @@ public class LayeringTests {
 
     [Fact]
     public void InfrastructureProject_DoesNotReferenceExternalProviderPackages() {
-        var packages = GetPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
+        HashSet<string> packages = GetPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 
         Assert.DoesNotContain("AWSSDK.S3", packages);
         Assert.DoesNotContain("Stripe.net", packages);
@@ -78,7 +78,7 @@ public class LayeringTests {
 
     [Fact]
     public void PresentationApiProject_ReferencesApplication_ButNotInfrastructure() {
-        var references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
 
         Assert.Contains("FoodDiary.Application", references);
         Assert.DoesNotContain("FoodDiary.Domain", references);
@@ -89,7 +89,7 @@ public class LayeringTests {
 
     [Fact]
     public void ResourcesProject_ReferencesOnly_ApplicationAmongCoreProjects() {
-        var references = GetProjectReferences("FoodDiary.Resources/FoodDiary.Resources.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Resources/FoodDiary.Resources.csproj");
 
         Assert.Contains("FoodDiary.Application.Abstractions", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -101,17 +101,17 @@ public class LayeringTests {
 
     [Fact]
     public void PresentationApi_SourceFiles_DoNotUseDomainNamespaces() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
 
-        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, ["using FoodDiary.Domain"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, ["using FoodDiary.Domain"]);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void WebApiProject_IsHostAndReferencesPresentationApplicationAndInfrastructure() {
-        var references = GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Web.Api/FoodDiary.Web.Api.csproj");
 
         Assert.Contains("FoodDiary.Application", references);
         Assert.Contains("FoodDiary.Infrastructure", references);
@@ -123,7 +123,7 @@ public class LayeringTests {
 
     [Fact]
     public void JobManagerProject_DoesNotReference_WebApi() {
-        var references = GetProjectReferences("FoodDiary.JobManager/FoodDiary.JobManager.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.JobManager/FoodDiary.JobManager.csproj");
 
         Assert.DoesNotContain("FoodDiary.Web.Api", references);
         Assert.DoesNotContain("FoodDiary.Presentation.Api", references);
@@ -131,7 +131,7 @@ public class LayeringTests {
 
     [Fact]
     public void TelegramBotProject_DoesNotReference_CoreProjects() {
-        var references = GetProjectReferences("FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj");
 
         Assert.DoesNotContain("FoodDiary.Domain", references);
         Assert.DoesNotContain("FoodDiary.Application", references);
@@ -143,9 +143,9 @@ public class LayeringTests {
 
     [Fact]
     public void PresentationApi_OnlyBaseControllersRemainInControllersFolder() {
-        var root = GetRepositoryRoot();
-        var controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Presentation.Api", "Controllers"), "*Controller.cs");
-        var names = controllerFiles.Select(Path.GetFileNameWithoutExtension).ToArray();
+        string root = GetRepositoryRoot();
+        string[] controllerFiles = Directory.GetFiles(Path.Combine(root, "FoodDiary.Presentation.Api", "Controllers"), "*Controller.cs");
+        string?[] names = controllerFiles.Select(Path.GetFileNameWithoutExtension).ToArray();
 
         Assert.Contains("BaseApiController", names);
         Assert.Contains("AuthorizedController", names);
@@ -153,8 +153,8 @@ public class LayeringTests {
     }
 
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {
-        var root = GetRepositoryRoot();
-        var projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
+        string root = GetRepositoryRoot();
+        string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
         var references = document.Descendants("ProjectReference")
@@ -167,8 +167,8 @@ public class LayeringTests {
     }
 
     private static HashSet<string> GetPackageReferences(string relativeProjectPath) {
-        var root = GetRepositoryRoot();
-        var projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
+        string root = GetRepositoryRoot();
+        string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
         return document.Descendants("PackageReference")
@@ -181,7 +181,7 @@ public class LayeringTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }
@@ -193,8 +193,8 @@ public class LayeringTests {
     }
 
     private static string GetProjectNameFromReference(string includeValue) {
-        var normalized = includeValue.Replace('\\', '/');
-        var fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
+        string normalized = includeValue.Replace('\\', '/');
+        string fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
         return Path.GetFileNameWithoutExtension(fileName);
     }
 }

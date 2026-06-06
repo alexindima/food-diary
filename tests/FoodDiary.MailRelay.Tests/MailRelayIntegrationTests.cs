@@ -18,12 +18,12 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
-        using var client = factory.CreateClient();
+        using HttpClient client = factory.CreateClient();
         AddRelayApiKey(client);
 
         long? deliveryCount = null;
         string? deliveryOutcome = null;
-        using var listener = CreateMailRelayListener((instrument, value, tags) => {
+        using MeterListener listener = CreateMailRelayListener((instrument, value, tags) => {
             if (!string.Equals(instrument.Name, "fooddiary.mailrelay.delivery.events", StringComparison.Ordinal)) {
                 return;
             }
@@ -32,7 +32,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             deliveryOutcome = GetTagValue(tags, "fooddiary.mailrelay.delivery.outcome");
         });
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -41,11 +41,11 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "Hello"));
 
         response.EnsureSuccessStatusCode();
-        var payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
+        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
+            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
         });
 
@@ -59,10 +59,10 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport(remainingFailures: 5);
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
-        using var client = factory.CreateClient();
+        using HttpClient client = factory.CreateClient();
         AddRelayApiKey(client);
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -71,15 +71,15 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "Hello"));
 
         response.EnsureSuccessStatusCode();
-        var payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
+        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
+            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "failed", StringComparison.Ordinal);
         }, timeout: TimeSpan.FromSeconds(20));
 
-        var failedMessage = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
+        MessageDetails? failedMessage = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}");
         Assert.Equal("failed", failedMessage?.Status);
         Assert.NotNull(failedMessage?.LastError);
     }
@@ -89,16 +89,16 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
-        using var client = factory.CreateClient();
+        using HttpClient client = factory.CreateClient();
         AddRelayApiKey(client);
 
-        var suppressionResponse = await client.PostAsJsonAsync("/api/email/suppressions", new CreateSuppressionRequest(
+        HttpResponseMessage suppressionResponse = await client.PostAsJsonAsync("/api/email/suppressions", new CreateSuppressionRequest(
             "user@example.com",
             "hard-bounce",
             "integration-test"));
         suppressionResponse.EnsureSuccessStatusCode();
 
-        var response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
             "noreply@example.com",
             "FoodDiary",
             ["user@example.com"],
@@ -107,11 +107,11 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "Hello"));
 
         response.EnsureSuccessStatusCode();
-        var payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
+        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
         Assert.NotNull(payload);
 
         await WaitForAsync(async () => {
-            var message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
+            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
             return string.Equals(message?.Status, "suppressed", StringComparison.Ordinal);
         });
 
@@ -123,10 +123,10 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport();
         await using var factory = new MailRelayWebApplicationFactory(fixture, transport);
-        using var client = factory.CreateClient();
+        using HttpClient client = factory.CreateClient();
         AddRelayApiKey(client);
 
-        var eventResponse = await client.PostAsJsonAsync("/api/email/events", new IngestMailEventRequest(
+        HttpResponseMessage eventResponse = await client.PostAsJsonAsync("/api/email/events", new IngestMailEventRequest(
             "bounce",
             "user@example.com",
             "integration-test",
@@ -135,12 +135,12 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "mailbox-does-not-exist"));
         eventResponse.EnsureSuccessStatusCode();
 
-        var suppressions = await client.GetFromJsonAsync<List<SuppressionEntry>>("/api/email/suppressions?email=user@example.com");
+        List<SuppressionEntry>? suppressions = await client.GetFromJsonAsync<List<SuppressionEntry>>("/api/email/suppressions?email=user@example.com");
         Assert.NotNull(suppressions);
         Assert.Single(suppressions);
         Assert.Equal("user@example.com", suppressions[0].Email);
 
-        var events = await client.GetFromJsonAsync<List<DeliveryEventEntry>>("/api/email/events?email=user@example.com");
+        List<DeliveryEventEntry>? events = await client.GetFromJsonAsync<List<DeliveryEventEntry>>("/api/email/events?email=user@example.com");
         Assert.NotNull(events);
         Assert.Single(events);
         Assert.Equal("bounce", events[0].EventType);
@@ -167,7 +167,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             }
             """);
 
-        var mapped = payload.TryMapToDeliveryEvents(out var events, out var error);
+        bool mapped = payload.TryMapToDeliveryEvents(out IReadOnlyList<IngestMailEventRequest>? events, out string? error);
 
         Assert.True(mapped);
         Assert.Null(error);
@@ -186,7 +186,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             null,
             "spam-complaint"));
 
-        var mapped = payload.TryMapToDeliveryEvent(out var deliveryEvent, out var error);
+        bool mapped = payload.TryMapToDeliveryEvent(out IngestMailEventRequest? deliveryEvent, out string? error);
 
         Assert.True(mapped);
         Assert.Null(error);
@@ -213,7 +213,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
         client.DefaultRequestHeaders.Add("X-Relay-Api-Key", "integration-relay-api-key");
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }
@@ -223,7 +223,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
     }
 
     private static async Task WaitForAsync(Func<Task<bool>> condition, TimeSpan? timeout = null) {
-        var deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(10));
+        DateTime deadline = DateTime.UtcNow + (timeout ?? TimeSpan.FromSeconds(10));
         while (DateTime.UtcNow < deadline) {
             if (await condition().ConfigureAwait(false)) {
                 return;

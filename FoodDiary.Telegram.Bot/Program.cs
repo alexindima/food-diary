@@ -3,7 +3,7 @@ using Microsoft.Extensions.Options;
 using System.Diagnostics.CodeAnalysis;
 using Telegram.Bot;
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddOptions<TelegramBotOptions>()
     .Bind(builder.Configuration.GetSection(TelegramBotOptions.SectionName))
@@ -18,13 +18,13 @@ builder.Services.AddOptions<TelegramBotOptions>()
 builder.Services.AddHttpClient();
 
 builder.Services.AddSingleton<ITelegramBotClient>(sp => {
-    var options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;
+    TelegramBotOptions options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;
     return new TelegramBotClient(options.Token);
 });
 
 builder.Services.AddHostedService<TelegramBotWorker>();
 
-var app = builder.Build();
+IHost app = builder.Build();
 
 await app.RunAsync().ConfigureAwait(false);
 

@@ -3,6 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Integrations.Authentication;
 using FoodDiary.Integrations.Options;
@@ -17,11 +18,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithValidSignedPayload_ReturnsUser() {
-        var authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();
-        var initData = CreateSignedInitData(authDate);
-        var validator = CreateInitDataValidator();
+        long authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();
+        string initData = CreateSignedInitData(authDate);
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData(initData);
+        Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.Value.UserId);
@@ -35,11 +36,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithExpiredPayload_ReturnsFailure() {
-        var authDate = new DateTimeOffset(NowUtc.AddHours(-2)).ToUnixTimeSeconds();
-        var initData = CreateSignedInitData(authDate);
-        var validator = CreateInitDataValidator(authTtlSeconds: 60);
+        long authDate = new DateTimeOffset(NowUtc.AddHours(-2)).ToUnixTimeSeconds();
+        string initData = CreateSignedInitData(authDate);
+        TelegramAuthValidator validator = CreateInitDataValidator(authTtlSeconds: 60);
 
-        var result = validator.ValidateInitData(initData);
+        Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramAuthExpired", result.Error.Code);
@@ -47,10 +48,10 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithInvalidHash_ReturnsFailure() {
-        var authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
-        var validator = CreateInitDataValidator();
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}&hash=bad");
+        Result<TelegramInitData> result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}&hash=bad");
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -58,9 +59,9 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithBlankPayload_ReturnsRequiredFailure() {
-        var validator = CreateInitDataValidator();
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData("   ");
+        Result<TelegramInitData> result = validator.ValidateInitData("   ");
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Required", result.Error.Code);
@@ -68,10 +69,10 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithMissingHash_ReturnsInvalidDataFailure() {
-        var authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
-        var validator = CreateInitDataValidator();
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}");
+        Result<TelegramInitData> result = validator.ValidateInitData($"auth_date={authDate}&user={{\"id\":42}}");
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -79,11 +80,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithMalformedUserJson_ReturnsInvalidDataFailure() {
-        var authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
-        var initData = CreateSignedInitData(authDate, userJson: "{bad-json");
-        var validator = CreateInitDataValidator();
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        string initData = CreateSignedInitData(authDate, userJson: "{bad-json");
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData(initData);
+        Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -91,11 +92,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithInvalidUserId_ReturnsInvalidDataFailure() {
-        var authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
-        var initData = CreateSignedInitData(authDate, userJson: "{\"id\":0}");
-        var validator = CreateInitDataValidator();
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        string initData = CreateSignedInitData(authDate, userJson: "{\"id\":0}");
+        TelegramAuthValidator validator = CreateInitDataValidator();
 
-        var result = validator.ValidateInitData(initData);
+        Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -103,11 +104,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateInitData_WithZeroTtl_DoesNotExpirePayload() {
-        var authDate = new DateTimeOffset(NowUtc.AddDays(-7)).ToUnixTimeSeconds();
-        var initData = CreateSignedInitData(authDate);
-        var validator = CreateInitDataValidator(authTtlSeconds: 0);
+        long authDate = new DateTimeOffset(NowUtc.AddDays(-7)).ToUnixTimeSeconds();
+        string initData = CreateSignedInitData(authDate);
+        TelegramAuthValidator validator = CreateInitDataValidator(authTtlSeconds: 0);
 
-        var result = validator.ValidateInitData(initData);
+        Result<TelegramInitData> result = validator.ValidateInitData(initData);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.Value.UserId);
@@ -119,7 +120,7 @@ public sealed class TelegramAuthValidatorsTests {
             MsOptions.Create(new TelegramAuthOptions { BotToken = "" }),
             new FixedDateTimeProvider(NowUtc));
 
-        var result = validator.ValidateInitData("hash=value");
+        Result<TelegramInitData> result = validator.ValidateInitData("hash=value");
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramNotConfigured", result.Error.Code);
@@ -127,11 +128,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateLoginWidget_WithValidSignedPayload_ReturnsUser() {
-        var authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();
-        var data = CreateSignedWidgetData(authDate);
-        var validator = CreateWidgetValidator();
+        long authDate = new DateTimeOffset(NowUtc.AddMinutes(-5)).ToUnixTimeSeconds();
+        TelegramLoginWidgetData data = CreateSignedWidgetData(authDate);
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
-        var result = validator.ValidateLoginWidget(data);
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(data);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.Value.UserId);
@@ -144,11 +145,11 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateLoginWidget_WithExpiredPayload_ReturnsFailure() {
-        var authDate = new DateTimeOffset(NowUtc.AddHours(-2)).ToUnixTimeSeconds();
-        var data = CreateSignedWidgetData(authDate);
-        var validator = CreateWidgetValidator(authTtlSeconds: 60);
+        long authDate = new DateTimeOffset(NowUtc.AddHours(-2)).ToUnixTimeSeconds();
+        TelegramLoginWidgetData data = CreateSignedWidgetData(authDate);
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator(authTtlSeconds: 60);
 
-        var result = validator.ValidateLoginWidget(data);
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(data);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramAuthExpired", result.Error.Code);
@@ -156,9 +157,9 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateLoginWidget_WithInvalidRequiredFields_ReturnsFailure() {
-        var validator = CreateWidgetValidator();
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
-        var result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(0, 0, "", null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(0, 0, "", null, null, null, null));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -170,7 +171,7 @@ public sealed class TelegramAuthValidatorsTests {
             MsOptions.Create(new TelegramAuthOptions { BotToken = "" }),
             new FixedDateTimeProvider(NowUtc));
 
-        var result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, 1, "hash", null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, 1, "hash", null, null, null, null));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramNotConfigured", result.Error.Code);
@@ -178,16 +179,16 @@ public sealed class TelegramAuthValidatorsTests {
 
     [Fact]
     public void ValidateLoginWidget_WithOptionalFieldsMissing_ReturnsUser() {
-        var authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
-        var dataCheckString = string.Join("\n", [
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        string dataCheckString = string.Join("\n", [
             $"auth_date={authDate}",
             "id=42"
         ]);
-        var secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
-        var hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
-        var validator = CreateWidgetValidator();
+        byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
+        string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
-        var result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, authDate, hash, null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, authDate, hash, null, null, null, null));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.Value.UserId);
@@ -215,14 +216,14 @@ public sealed class TelegramAuthValidatorsTests {
             photo_url = "https://example.com/photo.jpg",
             language_code = "en"
         });
-        var dataCheckString = $"auth_date={authDate}\nuser={userJson}";
-        var secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
-        var hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        string dataCheckString = $"auth_date={authDate}\nuser={userJson}";
+        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
+        string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return $"auth_date={authDate}&user={Uri.EscapeDataString(userJson)}&hash={hash}";
     }
 
     private static TelegramLoginWidgetData CreateSignedWidgetData(long authDate) {
-        var dataCheckString = string.Join("\n", [
+        string dataCheckString = string.Join("\n", [
             $"auth_date={authDate}",
             "first_name=Alex",
             "id=42",
@@ -230,8 +231,8 @@ public sealed class TelegramAuthValidatorsTests {
             "photo_url=https://example.com/photo.jpg",
             "username=alex"
         ]);
-        var secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
-        var hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        byte[] secretKey = SHA256.HashData(Encoding.UTF8.GetBytes(BotToken));
+        string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         return new TelegramLoginWidgetData(
             42,
             authDate,
@@ -249,9 +250,9 @@ public sealed class TelegramAuthValidatorsTests {
 
     private static string ComputeHmacSha256Hex(byte[] key, string message) {
         using var hmac = new HMACSHA256(key);
-        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
+        byte[] hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(message));
         var sb = new StringBuilder(hash.Length * 2);
-        foreach (var b in hash) {
+        foreach (byte b in hash) {
             sb.Append(b.ToString("x2", CultureInfo.InvariantCulture));
         }
 

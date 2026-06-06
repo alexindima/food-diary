@@ -74,9 +74,9 @@ public sealed class Product : AggregateRoot<ProductId> {
         ImageAssetId? imageAssetId = null,
         Visibility visibility = Visibility.Public) {
         EnsureUserId(userId);
-        var normalizedName = NormalizeRequiredName(name);
-        var normalizedBaseAmount = NormalizeBaseAmount(baseUnit, baseAmount, nameof(baseAmount));
-        var normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount ?? normalizedBaseAmount, nameof(defaultPortionAmount));
+        string normalizedName = NormalizeRequiredName(name);
+        double normalizedBaseAmount = NormalizeBaseAmount(baseUnit, baseAmount, nameof(baseAmount));
+        double normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount ?? normalizedBaseAmount, nameof(defaultPortionAmount));
         var nutrition = ProductNutrition.Create(
             caloriesPerBase,
             proteinsPerBase,
@@ -84,12 +84,12 @@ public sealed class Product : AggregateRoot<ProductId> {
             carbsPerBase,
             fiberPerBase,
             alcoholPerBase);
-        var normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
-        var normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
-        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
-        var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
-        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
-        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        string? normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
+        string? normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
+        string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        string? normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+        string? normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
 
         var product = new Product {
             Id = ProductId.New(),
@@ -123,13 +123,13 @@ public sealed class Product : AggregateRoot<ProductId> {
         string? brand = null,
         bool clearBrand = false,
         ProductType? productType = null) {
-        var normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
-        var normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
+        string? normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
+        string? normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
 
         EnsureClearConflict(clearBarcode, normalizedBarcode, nameof(clearBarcode), nameof(barcode));
         EnsureClearConflict(clearBrand, normalizedBrand, nameof(clearBrand), nameof(brand));
 
-        var state = GetIdentityState();
+        ProductIdentityState state = GetIdentityState();
 
         if (name is not null) {
             state = state with { Name = NormalizeRequiredName(name) };
@@ -161,15 +161,15 @@ public sealed class Product : AggregateRoot<ProductId> {
         bool clearDescription = false,
         string? comment = null,
         bool clearComment = false) {
-        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
-        var normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
-        var normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
+        string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        string? normalizedDescription = NormalizeOptionalText(description, DescriptionMaxLength, nameof(description));
+        string? normalizedComment = NormalizeOptionalText(comment, CommentMaxLength, nameof(comment));
 
         EnsureClearConflict(clearCategory, normalizedCategory, nameof(clearCategory), nameof(category));
         EnsureClearConflict(clearDescription, normalizedDescription, nameof(clearDescription), nameof(description));
         EnsureClearConflict(clearComment, normalizedComment, nameof(clearComment), nameof(comment));
 
-        var state = GetIdentityState();
+        ProductIdentityState state = GetIdentityState();
 
         if (clearCategory) {
             state = state with { Category = null };
@@ -213,10 +213,10 @@ public sealed class Product : AggregateRoot<ProductId> {
         MeasurementUnit? baseUnit = null,
         double? baseAmount = null,
         double? defaultPortionAmount = null) {
-        var state = GetMeasurementState();
-        var changed = false;
-        var targetUnit = baseUnit ?? state.BaseUnit;
-        var targetBaseAmount = state.BaseAmount;
+        ProductMeasurementState state = GetMeasurementState();
+        bool changed = false;
+        MeasurementUnit targetUnit = baseUnit ?? state.BaseUnit;
+        double targetBaseAmount = state.BaseAmount;
 
         if (baseAmount.HasValue) {
             targetBaseAmount = NormalizeBaseAmount(targetUnit, baseAmount.Value, nameof(baseAmount));
@@ -235,7 +235,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
 
         if (defaultPortionAmount.HasValue) {
-            var normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount.Value, nameof(defaultPortionAmount));
+            double normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount.Value, nameof(defaultPortionAmount));
             if (!AreClose(state.DefaultPortionAmount, normalizedDefaultPortionAmount)) {
                 state = state with { DefaultPortionAmount = normalizedDefaultPortionAmount };
                 changed = true;
@@ -255,8 +255,8 @@ public sealed class Product : AggregateRoot<ProductId> {
         double? carbsPerBase = null,
         double? fiberPerBase = null,
         double? alcoholPerBase = null) {
-        var currentNutrition = GetNutrition();
-        var updatedNutrition = currentNutrition.With(
+        ProductNutrition currentNutrition = GetNutrition();
+        ProductNutrition updatedNutrition = currentNutrition.With(
             caloriesPerBase: caloriesPerBase,
             proteinsPerBase: proteinsPerBase,
             fatsPerBase: fatsPerBase,
@@ -275,13 +275,13 @@ public sealed class Product : AggregateRoot<ProductId> {
         bool clearImageUrl = false,
         ImageAssetId? imageAssetId = null,
         bool clearImageAssetId = false) {
-        var normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
+        string? normalizedImageUrl = NormalizeOptionalText(imageUrl, ImageUrlMaxLength, nameof(imageUrl));
 
         EnsureClearConflict(clearImageUrl, normalizedImageUrl, nameof(clearImageUrl), nameof(imageUrl));
         EnsureClearConflict(clearImageAssetId, imageAssetId, nameof(clearImageAssetId), nameof(imageAssetId));
 
-        var state = GetMediaState();
-        var changed = false;
+        ProductMediaState state = GetMediaState();
+        bool changed = false;
 
         if (clearImageUrl) {
             if (state.ImageUrl is not null) {
@@ -352,7 +352,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             throw new ArgumentException("Product name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Product name must be at most {NameMaxLength} characters.")
             : normalized;
@@ -369,7 +369,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;
@@ -377,7 +377,7 @@ public sealed class Product : AggregateRoot<ProductId> {
 
     private static double NormalizeBaseAmount(MeasurementUnit unit, double value, string paramName) {
         RequirePositive(value, paramName);
-        var canonicalAmount = GetCanonicalBaseAmount(unit);
+        double canonicalAmount = GetCanonicalBaseAmount(unit);
         return !AreClose(value, canonicalAmount)
             ? throw new ArgumentOutOfRangeException(paramName, $"Base amount for {unit} must be {canonicalAmount}.")
             : canonicalAmount;

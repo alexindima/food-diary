@@ -37,12 +37,12 @@ public sealed class UpdateAdminUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        var user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
 
-        var languageResult = StringCodeParser.ParseOptionalLanguage(
+        Result<string?> languageResult = StringCodeParser.ParseOptionalLanguage(
             command.Language,
             "language",
             "Invalid language value.");
@@ -50,12 +50,12 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Failure<AdminUserModel>(languageResult.Error);
         }
 
-        var roleUpdateResult = await PrepareRoleUpdateAsync(user, command, cancellationToken).ConfigureAwait(false);
+        Result<RoleUpdate?> roleUpdateResult = await PrepareRoleUpdateAsync(user, command, cancellationToken).ConfigureAwait(false);
         if (roleUpdateResult.IsFailure) {
             return Result.Failure<AdminUserModel>(roleUpdateResult.Error);
         }
 
-        var lifecycleError = ApplyLifecycleUpdate(user, command);
+        Error? lifecycleError = ApplyLifecycleUpdate(user, command);
         if (lifecycleError is not null) {
             return Result.Failure<AdminUserModel>(lifecycleError);
         }
@@ -96,24 +96,24 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Success<RoleUpdate?>(null);
         }
 
-        var requestedRoles = command.Roles
+        string[] requestedRoles = command.Roles
             .Where(role => !string.IsNullOrWhiteSpace(role))
             .Select(role => role.Trim())
             .Distinct(StringComparer.Ordinal)
             .ToArray();
 
-        var rolesError = ValidateRequestedRoles(user, command, requestedRoles);
+        Error? rolesError = ValidateRequestedRoles(user, command, requestedRoles);
         if (rolesError is not null) {
             return Result.Failure<RoleUpdate?>(rolesError);
         }
 
-        var roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
         if (roleEntities.Count != requestedRoles.Length) {
             return Result.Failure<RoleUpdate?>(
                 Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
         }
 
-        var roleAuditEvents = CreateRoleAuditEvents(
+        IReadOnlyList<UserRoleAuditEvent> roleAuditEvents = CreateRoleAuditEvents(
             user,
             roleEntities,
             command.ActorUserId.HasValue ? new UserId(command.ActorUserId.Value) : null,
@@ -130,9 +130,9 @@ public sealed class UpdateAdminUserCommandHandler(
             return Errors.Validation.Invalid("roles", "Unknown role.");
         }
 
-        var isOwner = user.HasRole(RoleNames.Owner);
-        var requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
-        var requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
+        bool isOwner = user.HasRole(RoleNames.Owner);
+        bool requestsOwner = requestedRoles.Contains(RoleNames.Owner, StringComparer.Ordinal);
+        bool requestsAdmin = requestedRoles.Contains(RoleNames.Admin, StringComparer.Ordinal);
 
         if (IsSelfUpdate(command) && user.HasRole(RoleNames.Admin) && !requestsAdmin) {
             return Errors.Validation.Invalid("roles", "Admin users cannot remove their own Admin role.");
@@ -163,7 +163,7 @@ public sealed class UpdateAdminUserCommandHandler(
             return null;
         }
 
-        var deactivateError = ValidateDeactivation(user, command);
+        Error? deactivateError = ValidateDeactivation(user, command);
         if (deactivateError is not null) {
             return deactivateError;
         }
@@ -193,7 +193,7 @@ public sealed class UpdateAdminUserCommandHandler(
         var requestedRolesByName = requestedRoles
             .ToDictionary(role => role.Name, StringComparer.Ordinal);
 
-        var addedEvents = requestedRolesByName
+        IEnumerable<UserRoleAuditEvent> addedEvents = requestedRolesByName
             .Where(item => !currentRolesByName.ContainsKey(item.Key))
             .Select(item => UserRoleAuditEvent.Create(
                 user.Id,
@@ -203,7 +203,7 @@ public sealed class UpdateAdminUserCommandHandler(
                 RoleAuditSource,
                 occurredAtUtc));
 
-        var removedEvents = currentRolesByName
+        IEnumerable<UserRoleAuditEvent> removedEvents = currentRolesByName
             .Where(item => !requestedRolesByName.ContainsKey(item.Key))
             .Select(item => UserRoleAuditEvent.Create(
                 user.Id,

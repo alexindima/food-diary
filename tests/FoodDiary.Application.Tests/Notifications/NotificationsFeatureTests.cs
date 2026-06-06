@@ -17,6 +17,8 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Notifications.Models;
 
 namespace FoodDiary.Application.Tests.Notifications;
 
@@ -32,7 +34,7 @@ public class NotificationsFeatureTests {
     }
 
     private static User CreateDeletedUser(UserId id) {
-        var user = CreateUser(id, "deleted-notifications@example.com");
+        User user = CreateUser(id, "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
         return user;
     }
@@ -46,7 +48,7 @@ public class NotificationsFeatureTests {
         var pusher = new RecordingNotificationPusher();
 
         var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
@@ -66,7 +68,7 @@ public class NotificationsFeatureTests {
         repo.Seed(notification);
 
         var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher());
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
 
@@ -79,7 +81,7 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -93,7 +95,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingNotificationPusher());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkNotificationReadCommand(null, Guid.NewGuid()),
             CancellationToken.None);
 
@@ -108,7 +110,7 @@ public class NotificationsFeatureTests {
         repo.Seed(notification);
         var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
@@ -126,7 +128,7 @@ public class NotificationsFeatureTests {
         var pusher = new RecordingNotificationPusher();
         var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
             CancellationToken.None);
 
@@ -144,7 +146,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingNotificationPusher());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(null),
             CancellationToken.None);
 
@@ -157,7 +159,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
             CancellationToken.None);
 
@@ -174,7 +176,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
 
         var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateUser(userId)));
-        var result = await handler.Handle(
+        Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
@@ -188,7 +190,7 @@ public class NotificationsFeatureTests {
             new InMemoryNotificationRepository(),
             new SingleUserRepository(CreateUser()));
 
-        var result = await handler.Handle(new GetUnreadCountQuery(null), CancellationToken.None);
+        Result<int> result = await handler.Handle(new GetUnreadCountQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -197,13 +199,13 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task GetUnreadCount_WithPasswordUser_ExcludesPasswordSetupSuggestion() {
         var userId = UserId.New();
-        var user = CreateUser(userId);
+        User user = CreateUser(userId);
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, NotificationTypes.PasswordSetupSuggested, "{}"));
         repo.Seed(Notification.Create(userId, NotificationTypes.FastingCompleted, "{}"));
         var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
@@ -218,7 +220,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
 
-        var result = await handler.Handle(
+        Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
@@ -228,12 +230,12 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task UpdateNotificationPreferences_UpdatesUserAndWritesAuditLog() {
-        var user = CreateUser(email: "notifications@example.com");
+        User user = CreateUser(email: "notifications@example.com");
         var userRepository = new SingleUserRepository(user);
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
 
-        var result = await handler.Handle(
+        Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, true, false, true, 12, 20),
             CancellationToken.None);
 
@@ -254,11 +256,11 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task UpdateNotificationPreferences_WhenPartialReminderUpdateWouldInvertOrder_ReturnsValidationFailure() {
-        var user = CreateUser(email: "partial-reminders@example.com");
+        User user = CreateUser(email: "partial-reminders@example.com");
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpdateNotificationPreferencesCommandHandler(new SingleUserRepository(user), auditLogger);
 
-        var result = await handler.Handle(
+        Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, null, null, null, 20, null),
             CancellationToken.None);
 
@@ -275,7 +277,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(Guid.Empty, true, null, null, null, null),
             CancellationToken.None);
 
@@ -291,7 +293,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             auditLogger);
 
-        var result = await handler.Handle(
+        Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(userId.Value, true, null, null, null, null),
             CancellationToken.None);
 
@@ -302,11 +304,11 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = CreateUser(email: "deleted-notifications@example.com");
+        User user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(user));
 
-        var result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
+        Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -316,7 +318,7 @@ public class NotificationsFeatureTests {
     public async Task GetNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(CreateUser()));
 
-        var result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
+        Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -329,7 +331,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingNotificationTextRenderer());
 
-        var result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
+        Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -343,7 +345,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             new RecordingNotificationTextRenderer());
 
-        var result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
+        Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -358,7 +360,7 @@ public class NotificationsFeatureTests {
         var renderer = new RecordingNotificationTextRenderer();
         var handler = new GetNotificationsQueryHandler(repo, new SingleUserRepository(user), renderer);
 
-        var result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
+        Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
@@ -368,7 +370,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task GetWebPushSubscriptions_PrunesExpiredSubscriptions() {
-        var user = CreateUser();
+        User user = CreateUser();
         var utcNow = new DateTime(2026, 5, 28, 8, 0, 0, DateTimeKind.Utc);
         var active = WebPushSubscription.Create(
             user.Id,
@@ -388,10 +390,10 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(user),
             new FixedDateTimeProvider(utcNow));
 
-        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
+        Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var item = Assert.Single(result.Value);
+        WebPushSubscriptionModel item = Assert.Single(result.Value);
         Assert.Equal(active.Endpoint, item.Endpoint);
         Assert.Equal([expired.Endpoint], repository.DeletedEndpoints);
     }
@@ -403,7 +405,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
-        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
+        Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -417,7 +419,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
-        var result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
+        Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -428,7 +430,7 @@ public class NotificationsFeatureTests {
         var handler = new GetWebPushConfigurationQueryHandler(
             new StaticWebPushConfigurationProvider(new WebPushClientConfiguration(true, "public-key")));
 
-        var result = await handler.Handle(new GetWebPushConfigurationQuery(), CancellationToken.None);
+        Result<WebPushConfigurationModel> result = await handler.Handle(new GetWebPushConfigurationQuery(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.Enabled);
@@ -437,12 +439,12 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task UpsertWebPushSubscription_WithNewEndpoint_AddsSubscriptionAndWritesAuditLog() {
-        var user = CreateUser();
+        User user = CreateUser();
         var repository = new InMemoryWebPushSubscriptionRepository();
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
                 user.Id.Value,
                 "https://push.example.com/new",
@@ -454,7 +456,7 @@ public class NotificationsFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var subscription = Assert.Single(repository.Subscriptions);
+        WebPushSubscription subscription = Assert.Single(repository.Subscriptions);
         Assert.Equal(user.Id, subscription.UserId);
         Assert.Equal("notifications.push-subscription.connected", auditLogger.Action);
         Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
@@ -469,7 +471,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
                 userId.Value,
                 "https://push.example.com/new",
@@ -493,7 +495,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
                 Guid.Empty,
                 "https://push.example.com/new",
@@ -511,7 +513,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task UpsertWebPushSubscription_WithExistingEndpoint_RefreshesSubscriptionAndWritesAuditLog() {
-        var user = CreateUser();
+        User user = CreateUser();
         var subscription = WebPushSubscription.Create(
             UserId.New(),
             "https://push.example.com/existing",
@@ -524,7 +526,7 @@ public class NotificationsFeatureTests {
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
                 user.Id.Value,
                 subscription.Endpoint,
@@ -549,7 +551,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task RemoveWebPushSubscription_WhenOwned_DeletesSubscriptionAndWritesAuditLog() {
-        var user = CreateUser();
+        User user = CreateUser();
         var subscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/remove",
@@ -559,7 +561,7 @@ public class NotificationsFeatureTests {
         var auditLogger = new RecordingAuditLogger();
         var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
             CancellationToken.None);
 
@@ -577,7 +579,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(Guid.Empty, "https://push.example.com/remove"),
             CancellationToken.None);
 
@@ -595,7 +597,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(userId.Value, "https://push.example.com/remove"),
             CancellationToken.None);
 
@@ -606,12 +608,12 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task RemoveWebPushSubscription_WithBlankEndpoint_ReturnsSuccessWithoutLookup() {
-        var user = CreateUser();
+        User user = CreateUser();
         var repository = new InMemoryWebPushSubscriptionRepository();
         var auditLogger = new RecordingAuditLogger();
         var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, "   "),
             CancellationToken.None);
 
@@ -622,14 +624,14 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task RemoveWebPushSubscription_WhenEndpointMissing_ReturnsSuccessWithoutDeleting() {
-        var user = CreateUser();
+        User user = CreateUser();
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new RemoveWebPushSubscriptionCommandHandler(
             repository,
             new SingleUserRepository(user),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, "https://push.example.com/missing"),
             CancellationToken.None);
 
@@ -639,7 +641,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task RemoveWebPushSubscription_WhenEndpointBelongsToAnotherUser_ReturnsSuccessWithoutDeleting() {
-        var user = CreateUser();
+        User user = CreateUser();
         var subscription = WebPushSubscription.Create(
             UserId.New(),
             "https://push.example.com/other",
@@ -651,7 +653,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(user),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
             CancellationToken.None);
 
@@ -662,7 +664,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task ScheduleTestNotification_WithValidUser_SchedulesAndWritesAuditLog() {
-        var user = CreateUser();
+        User user = CreateUser();
         var scheduledAtUtc = new DateTime(2026, 5, 28, 9, 0, 0, DateTimeKind.Utc);
         var scheduler = new RecordingNotificationTestScheduler(
             new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, scheduledAtUtc));
@@ -672,7 +674,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(user),
             auditLogger);
 
-        var result = await handler.Handle(
+        Result<ScheduledNotificationModel> result = await handler.Handle(
             new ScheduleTestNotificationCommand(user.Id.Value, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
@@ -695,7 +697,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result<ScheduledNotificationModel> result = await handler.Handle(
             new ScheduleTestNotificationCommand(userId.Value, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
@@ -713,7 +715,7 @@ public class NotificationsFeatureTests {
             new SingleUserRepository(CreateUser()),
             new RecordingAuditLogger());
 
-        var result = await handler.Handle(
+        Result<ScheduledNotificationModel> result = await handler.Handle(
             new ScheduleTestNotificationCommand(Guid.Empty, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
@@ -729,7 +731,7 @@ public class NotificationsFeatureTests {
             repository,
             new FixedDateTimeProvider(new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc)));
 
-        var deleted = await service.CleanupExpiredNotificationsAsync(
+        int deleted = await service.CleanupExpiredNotificationsAsync(
             new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 0),
             CancellationToken.None);
 
@@ -744,7 +746,7 @@ public class NotificationsFeatureTests {
         var utcNow = new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc);
         var service = new NotificationCleanupService(repository, new FixedDateTimeProvider(utcNow));
 
-        var deleted = await service.CleanupExpiredNotificationsAsync(
+        int deleted = await service.CleanupExpiredNotificationsAsync(
             new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 25),
             cts.Token);
 
@@ -796,7 +798,7 @@ public class NotificationsFeatureTests {
 
         public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) {
             MarkAllReadCalled = true;
-            foreach (var notification in _notifications.Where(n => n.UserId == userId)) {
+            foreach (Notification? notification in _notifications.Where(n => n.UserId == userId)) {
                 notification.MarkAsRead();
             }
 
@@ -892,7 +894,7 @@ public class NotificationsFeatureTests {
         public Task DeleteRangeAsync(
             IReadOnlyCollection<WebPushSubscription> subscriptionsToDelete,
             CancellationToken cancellationToken = default) {
-            foreach (var subscription in subscriptionsToDelete) {
+            foreach (WebPushSubscription subscription in subscriptionsToDelete) {
                 DeletedEndpoints.Add(subscription.Endpoint);
                 _subscriptions.Remove(subscription);
             }

@@ -27,29 +27,29 @@ public class StartFastingCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        FastingPlan? currentPlan = await fastingPlanRepository.GetActiveAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (currentPlan is not null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.AlreadyActive);
         }
 
-        var planTypeResult = ResolvePlanType(command);
+        Result<FastingPlanType> planTypeResult = ResolvePlanType(command);
         if (planTypeResult.IsFailure) {
             return Result.Failure<FastingSessionModel>(planTypeResult.Error);
         }
 
-        var startedAtUtc = dateTimeProvider.UtcNow;
-        var planType = planTypeResult.Value;
-        var creation = CreatePlanAndOccurrence(command, userId, planType, startedAtUtc, command.Notes);
+        DateTime startedAtUtc = dateTimeProvider.UtcNow;
+        FastingPlanType planType = planTypeResult.Value;
+        Result<(FastingPlan Plan, FastingOccurrence Occurrence)> creation = CreatePlanAndOccurrence(command, userId, planType, startedAtUtc, command.Notes);
         if (creation.IsFailure) {
             return Result.Failure<FastingSessionModel>(creation.Error);
         }
 
-        var (plan, occurrence) = creation.Value;
+        (FastingPlan? plan, FastingOccurrence? occurrence) = creation.Value;
 
         await fastingPlanRepository.AddAsync(plan, cancellationToken).ConfigureAwait(false);
         await fastingOccurrenceRepository.AddAsync(occurrence, cancellationToken).ConfigureAwait(false);
@@ -60,17 +60,17 @@ public class StartFastingCommandHandler(
 
     private static Result<FastingPlanType> ResolvePlanType(StartFastingCommand command) {
         if (!string.IsNullOrWhiteSpace(command.PlanType)) {
-            return Enum.TryParse<FastingPlanType>(command.PlanType, ignoreCase: true, out var explicitPlanType)
+            return Enum.TryParse<FastingPlanType>(command.PlanType, ignoreCase: true, out FastingPlanType explicitPlanType)
                 ? Result.Success(explicitPlanType)
                 : Result.Failure<FastingPlanType>(Errors.Fasting.InvalidProtocol);
         }
 
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
+            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Success(FastingPlanType.Intermittent);
         }
 
-        var planType = protocol switch {
+        FastingPlanType planType = protocol switch {
             FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
             _ => FastingPlanType.Extended
         };
@@ -102,11 +102,11 @@ public class StartFastingCommandHandler(
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
+            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
-        var duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
+        int duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
         if (protocol == FastingProtocol.CustomIntermittent && (duration < 1 || duration >= 24)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
@@ -130,11 +130,11 @@ public class StartFastingCommandHandler(
         DateTime startedAtUtc,
         string? notes) {
         if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out var protocol)) {
+            !Enum.TryParse<FastingProtocol>(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
         }
 
-        var duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
+        int duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
         var plan = FastingPlan.CreateExtended(userId, protocol, duration, startedAtUtc);
         var occurrence = FastingOccurrence.Create(
             plan.Id,
@@ -153,10 +153,10 @@ public class StartFastingCommandHandler(
         UserId userId,
         DateTime startedAtUtc,
         string? notes) {
-        var fastDays = command.CyclicFastDays ?? 1;
-        var eatDays = command.CyclicEatDays ?? 1;
-        var eatDayFastHours = command.CyclicEatDayFastHours ?? 16;
-        var eatDayEatingWindowHours = command.CyclicEatDayEatingWindowHours ?? 8;
+        int fastDays = command.CyclicFastDays ?? 1;
+        int eatDays = command.CyclicEatDays ?? 1;
+        int eatDayFastHours = command.CyclicEatDayFastHours ?? 16;
+        int eatDayEatingWindowHours = command.CyclicEatDayEatingWindowHours ?? 8;
 
         var plan = FastingPlan.CreateCyclic(
             userId,

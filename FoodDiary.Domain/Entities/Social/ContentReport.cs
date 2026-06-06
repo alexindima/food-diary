@@ -30,7 +30,7 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
             throw new ArgumentException("TargetId is required.", nameof(targetId));
         }
 
-        var normalizedReason = NormalizeReason(reason);
+        string normalizedReason = NormalizeReason(reason);
 
         var report = new ContentReport {
             Id = ContentReportId.New(),
@@ -63,7 +63,7 @@ public sealed class ContentReport : AggregateRoot<ContentReportId> {
             throw new ArgumentException("Reason is required.", nameof(reason));
         }
 
-        var normalized = reason.Trim();
+        string normalized = reason.Trim();
         return normalized.Length > ReasonMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(reason), $"Reason must be at most {ReasonMaxLength} characters.")
             : normalized;

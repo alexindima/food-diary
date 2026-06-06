@@ -8,6 +8,8 @@ using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Tdee.Models;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
@@ -17,9 +19,9 @@ public class TdeeFeatureTests {
 
     [Fact]
     public async Task GetTdeeInsight_WithNullUserId_ReturnsFailure() {
-        var handler = CreateHandler();
+        GetTdeeInsightQueryHandler handler = CreateHandler();
 
-        var result = await handler.Handle(
+        Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -27,9 +29,9 @@ public class TdeeFeatureTests {
 
     [Fact]
     public async Task GetTdeeInsight_WhenUserNotFound_ReturnsFailure() {
-        var handler = CreateHandler();
+        GetTdeeInsightQueryHandler handler = CreateHandler();
 
-        var result = await handler.Handle(
+        Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -40,9 +42,9 @@ public class TdeeFeatureTests {
         var userId = UserId.New();
         var user = User.Create("disappearing-tdee-user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        var handler = CreateHandler(userRepo: new DisappearingUserRepository(user));
+        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: new DisappearingUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -58,9 +60,9 @@ public class TdeeFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = CreateHandler(userRepo: userRepo);
+        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: userRepo);
 
-        var result = await handler.Handle(
+        Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);

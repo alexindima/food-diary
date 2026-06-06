@@ -9,7 +9,7 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 public sealed class ForwardedHeadersMiddlewareTests {
     [Fact]
     public async Task Invoke_WithKnownProxy_UsesForwardedForAndProto() {
-        var middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
             KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") }
@@ -29,7 +29,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
 
     [Fact]
     public async Task Invoke_WithUnknownProxy_IgnoresForwardedHeaders() {
-        var middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
+        ForwardedHeadersMiddleware middleware = CreateMiddleware(new Microsoft.AspNetCore.Builder.ForwardedHeadersOptions {
             ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto,
             ForwardLimit = 1,
             KnownProxies = { System.Net.IPAddress.Parse("10.0.0.10") }
@@ -71,7 +71,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
     public void HasValidForwardLimit_ReturnsExpectedResult(int forwardLimit, bool expected) {
         var options = new ApiForwardedHeadersOptions { ForwardLimit = forwardLimit };
 
-        var valid = ApiForwardedHeadersOptions.HasValidForwardLimit(options);
+        bool valid = ApiForwardedHeadersOptions.HasValidForwardLimit(options);
 
         Assert.Equal(expected, valid);
     }
@@ -83,7 +83,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
     public void HasValidKnownProxies_ReturnsExpectedResult(string proxy, bool expected) {
         var options = new ApiForwardedHeadersOptions { KnownProxies = [proxy] };
 
-        var valid = ApiForwardedHeadersOptions.HasValidKnownProxies(options);
+        bool valid = ApiForwardedHeadersOptions.HasValidKnownProxies(options);
 
         Assert.Equal(expected, valid);
     }
@@ -101,7 +101,7 @@ public sealed class ForwardedHeadersMiddlewareTests {
     public void HasValidKnownNetworks_ReturnsExpectedResult(string network, bool expected) {
         var options = new ApiForwardedHeadersOptions { KnownNetworks = [network] };
 
-        var valid = ApiForwardedHeadersOptions.HasValidKnownNetworks(options);
+        bool valid = ApiForwardedHeadersOptions.HasValidKnownNetworks(options);
 
         Assert.Equal(expected, valid);
     }

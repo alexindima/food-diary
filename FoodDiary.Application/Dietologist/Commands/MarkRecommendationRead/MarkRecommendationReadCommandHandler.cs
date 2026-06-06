@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 
@@ -17,7 +18,7 @@ public class MarkRecommendationReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
+        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
             userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure(currentUserAccessError);
@@ -25,7 +26,7 @@ public class MarkRecommendationReadCommandHandler(
 
         var recommendationId = new RecommendationId(command.RecommendationId);
 
-        var recommendation = await recommendationRepository.GetByIdAsync(
+        Recommendation? recommendation = await recommendationRepository.GetByIdAsync(
             recommendationId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recommendation is null || recommendation.ClientUserId != userId) {

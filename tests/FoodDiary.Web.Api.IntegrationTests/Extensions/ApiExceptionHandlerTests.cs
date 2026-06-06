@@ -12,12 +12,12 @@ namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 public sealed class ApiExceptionHandlerTests {
     [Fact]
     public async Task TryHandleAsync_ForCurrentUserUnavailable_ReturnsUnauthorizedApiError() {
-        var context = CreateHttpContext();
+        DefaultHttpContext context = CreateHttpContext();
         var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
 
-        var handled = await handler.TryHandleAsync(context, new CurrentUserUnavailableException(), CancellationToken.None);
+        bool handled = await handler.TryHandleAsync(context, new CurrentUserUnavailableException(), CancellationToken.None);
 
-        var response = await ReadResponseAsync(context);
+        ApiErrorHttpResponse response = await ReadResponseAsync(context);
         Assert.True(handled);
         Assert.Equal(StatusCodes.Status401Unauthorized, context.Response.StatusCode);
         Assert.Equal("Authentication.Unauthorized", response.Error);
@@ -27,12 +27,12 @@ public sealed class ApiExceptionHandlerTests {
 
     [Fact]
     public async Task TryHandleAsync_ForConcurrencyException_ReturnsConflictApiError() {
-        var context = CreateHttpContext();
+        DefaultHttpContext context = CreateHttpContext();
         var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
 
-        var handled = await handler.TryHandleAsync(context, new DbUpdateConcurrencyException("Conflict"), CancellationToken.None);
+        bool handled = await handler.TryHandleAsync(context, new DbUpdateConcurrencyException("Conflict"), CancellationToken.None);
 
-        var response = await ReadResponseAsync(context);
+        ApiErrorHttpResponse response = await ReadResponseAsync(context);
         Assert.True(handled);
         Assert.Equal(StatusCodes.Status409Conflict, context.Response.StatusCode);
         Assert.Equal("Concurrency.Conflict", response.Error);
@@ -42,12 +42,12 @@ public sealed class ApiExceptionHandlerTests {
 
     [Fact]
     public async Task TryHandleAsync_ForUnhandledException_ReturnsUnexpectedApiError() {
-        var context = CreateHttpContext();
+        DefaultHttpContext context = CreateHttpContext();
         var handler = new ApiExceptionHandler(NullLogger<ApiExceptionHandler>.Instance);
 
-        var handled = await handler.TryHandleAsync(context, new InvalidOperationException("Unexpected"), CancellationToken.None);
+        bool handled = await handler.TryHandleAsync(context, new InvalidOperationException("Unexpected"), CancellationToken.None);
 
-        var response = await ReadResponseAsync(context);
+        ApiErrorHttpResponse response = await ReadResponseAsync(context);
         Assert.True(handled);
         Assert.Equal(StatusCodes.Status500InternalServerError, context.Response.StatusCode);
         Assert.Equal("Server.Unexpected", response.Error);
@@ -67,7 +67,7 @@ public sealed class ApiExceptionHandlerTests {
 
     private static async Task<ApiErrorHttpResponse> ReadResponseAsync(DefaultHttpContext context) {
         context.Response.Body.Position = 0;
-        var response = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
+        ApiErrorHttpResponse? response = await JsonSerializer.DeserializeAsync<ApiErrorHttpResponse>(
             context.Response.Body,
             new JsonSerializerOptions(JsonSerializerDefaults.Web)).ConfigureAwait(false);
 

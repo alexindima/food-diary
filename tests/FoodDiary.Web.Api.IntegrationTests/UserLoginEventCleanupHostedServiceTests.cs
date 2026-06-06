@@ -14,7 +14,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenDisabled_DoesNotDeleteLoginEvents() {
         var repository = new RecordingUserLoginEventRepository();
-        using var provider = BuildServiceProvider(repository);
+        using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -35,7 +35,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenEnabled_DeletesExpiredLoginEventsUntilBatchIsNotFull() {
         var repository = new RecordingUserLoginEventRepository(10, 10, 3);
-        using var provider = BuildServiceProvider(repository);
+        using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -45,13 +45,13 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 PollIntervalHours = 1
             }),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
-        var beforeStartUtc = DateTime.UtcNow;
+        DateTime beforeStartUtc = DateTime.UtcNow;
 
         await service.StartAsync(CancellationToken.None);
         await repository.WaitAsync();
         await service.StopAsync(CancellationToken.None);
 
-        var afterStartUtc = DateTime.UtcNow;
+        DateTime afterStartUtc = DateTime.UtcNow;
         Assert.Equal(3, repository.DeleteCallCount);
         Assert.Equal([10, 10, 10], repository.BatchSizes);
         Assert.Equal([10, 10, 3], repository.DeletedCounts);
@@ -64,7 +64,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenRepositoryThrows_ContinuesUntilStopped() {
         var repository = new ThrowingUserLoginEventRepository();
-        using var provider = BuildServiceProvider(repository);
+        using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -85,7 +85,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenRepositoryObservesCancellation_StopsCleanly() {
         var repository = new CancelingUserLoginEventRepository();
-        using var provider = BuildServiceProvider(repository);
+        using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
             OptionsFactory.Create(new UserLoginEventCleanupOptions {
@@ -143,7 +143,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
             DeleteCallCount++;
             BatchSizes.Add(batchSize);
             Cutoffs.Add(olderThanUtc);
-            var deleteCount = _deleteCounts.Count == 0 ? 0 : _deleteCounts.Dequeue();
+            int deleteCount = _deleteCounts.Count == 0 ? 0 : _deleteCounts.Dequeue();
             DeletedCounts.Add(deleteCount);
             if (_deleteCounts.Count == 0) {
                 _completion.TrySetResult();
@@ -153,7 +153,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(_completion.Task, finished);
         }
     }
@@ -192,7 +192,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }
@@ -230,7 +230,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            var finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
+            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
             Assert.Same(completion.Task, finished);
         }
     }

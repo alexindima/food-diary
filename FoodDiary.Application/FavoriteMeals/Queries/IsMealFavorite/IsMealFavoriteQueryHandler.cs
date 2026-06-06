@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 
 namespace FoodDiary.Application.FavoriteMeals.Queries.IsMealFavorite;
 
@@ -15,19 +16,19 @@ public class IsMealFavoriteQueryHandler(
     public async Task<Result<bool>> Handle(
         IsMealFavoriteQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<bool>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<bool>(accessError);
         }
 
         var mealId = new MealId(query.MealId);
-        var favorite = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
+        FavoriteMeal? favorite = await favoriteMealRepository.GetByMealIdAsync(mealId, userId, cancellationToken).ConfigureAwait(false);
         return Result.Success(favorite is not null);
     }
 }

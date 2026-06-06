@@ -22,6 +22,6 @@ public sealed class YooKassaOptions {
         Uri.IsWellFormedUriString(options.ReturnUrl, UriKind.Absolute);
 
     private static bool IsValidAmount(string? value) =>
-        decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out var amount) &&
+        decimal.TryParse(value, System.Globalization.NumberStyles.Number, System.Globalization.CultureInfo.InvariantCulture, out decimal amount) &&
         amount > 0;
 }

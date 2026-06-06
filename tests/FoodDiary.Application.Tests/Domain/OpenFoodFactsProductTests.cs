@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Tests.Domain;
 public sealed class OpenFoodFactsProductTests {
     [Fact]
     public void Create_WithValidValues_NormalizesFieldsAndMarksSeen() {
-        var syncedAt = DateTime.UtcNow;
+        DateTime syncedAt = DateTime.UtcNow;
 
         var product = OpenFoodFactsProduct.Create(
             barcode: " 4600000000001 ",
@@ -50,7 +50,7 @@ public sealed class OpenFoodFactsProductTests {
             4.8,
             0,
             DateTime.UtcNow.AddDays(-1));
-        var syncedAt = DateTime.UtcNow;
+        DateTime syncedAt = DateTime.UtcNow;
 
         product.Update(
             name: " Kefir ",
@@ -92,7 +92,7 @@ public sealed class OpenFoodFactsProductTests {
             null,
             null,
             DateTime.UtcNow.AddDays(-1));
-        var seenAt = DateTime.UtcNow;
+        DateTime seenAt = DateTime.UtcNow;
 
         product.MarkSeen(seenAt);
 

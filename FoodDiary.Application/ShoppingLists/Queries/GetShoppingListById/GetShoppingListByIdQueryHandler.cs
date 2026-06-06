@@ -6,6 +6,7 @@ using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 
@@ -26,14 +27,14 @@ public class GetShoppingListByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ShoppingListModel>(accessError);
         }
 
         var shoppingListId = new ShoppingListId(query.ShoppingListId);
 
-        var list = await shoppingListRepository.GetByIdAsync(
+        ShoppingList? list = await shoppingListRepository.GetByIdAsync(
             shoppingListId,
             userId,
             includeItems: true,

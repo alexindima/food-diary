@@ -17,7 +17,7 @@ public static class MailInboxServiceCollectionExtensions {
             .ValidateOnStart();
 
         services.AddSingleton(static sp => {
-            var connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection")
+            string connectionString = sp.GetRequiredService<IConfiguration>().GetConnectionString("DefaultConnection")
                 ?? throw new InvalidOperationException("ConnectionStrings:DefaultConnection is not configured.");
             return NpgsqlDataSource.Create(connectionString);
         });

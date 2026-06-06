@@ -98,8 +98,8 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     public static User Create(string email, string hashedPassword, bool hasPassword = true) {
-        var normalizedEmail = NormalizeRequiredEmail(email);
-        var normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
+        string normalizedEmail = NormalizeRequiredEmail(email);
+        string normalizedPassword = NormalizeRequiredPasswordHash(hashedPassword);
 
         var user = new User {
             Id = UserId.New(),
@@ -468,7 +468,7 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private static string NormalizeRequiredGender(string value, string paramName) {
-        if (!GenderCode.TryParse(value, out var gender)) {
+        if (!GenderCode.TryParse(value, out GenderCode gender)) {
             throw new ArgumentOutOfRangeException(paramName, "Gender must be one of the supported codes.");
         }
 
@@ -476,19 +476,19 @@ public sealed partial class User : AggregateRoot<UserId> {
     }
 
     private static string NormalizeOptionalLanguage(string value, string paramName) {
-        return !LanguageCode.TryParse(value, out var languageCode)
+        return !LanguageCode.TryParse(value, out LanguageCode languageCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Language must be one of the supported codes.")
             : languageCode.Value;
     }
 
     private static string NormalizeOptionalTheme(string value, string paramName) {
-        return !ThemeCode.TryParse(value, out var themeCode)
+        return !ThemeCode.TryParse(value, out ThemeCode themeCode)
             ? throw new ArgumentOutOfRangeException(paramName, "Theme must be one of the supported codes.")
             : themeCode.Value;
     }
 
     private static string NormalizeOptionalUiStyle(string value, string paramName) {
-        return !UiStyleCode.TryParse(value, out var uiStyleCode)
+        return !UiStyleCode.TryParse(value, out UiStyleCode uiStyleCode)
             ? throw new ArgumentOutOfRangeException(paramName, "UI style must be one of the supported codes.")
             : uiStyleCode.Value;
     }
@@ -517,11 +517,11 @@ public sealed partial class User : AggregateRoot<UserId> {
         ArgumentNullException.ThrowIfNull(roles);
         EnsureNotDeleted();
 
-        var requestedRoleIds = roles
+        RoleId[] requestedRoleIds = roles
             .Select(role => role.Id)
             .OrderBy(id => id.Value)
             .ToArray();
-        var currentRoleIds = _userRoles
+        RoleId[] currentRoleIds = _userRoles
             .Select(role => role.RoleId)
             .OrderBy(id => id.Value)
             .ToArray();
@@ -563,7 +563,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             return false;
         }
 
-        var normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
         return PremiumTrialStartedAtUtc.Value <= normalizedNow && PremiumTrialEndsAtUtc.Value > normalizedNow;
     }
 
@@ -578,7 +578,7 @@ public sealed partial class User : AggregateRoot<UserId> {
             throw new InvalidOperationException("Premium trial has already been used.");
         }
 
-        var normalizedStartedAt = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc));
+        DateTime normalizedStartedAt = NormalizeUtcTimestamp(startedAtUtc, nameof(startedAtUtc));
         PremiumTrialStartedAtUtc = normalizedStartedAt;
         PremiumTrialEndsAtUtc = normalizedStartedAt.Add(duration);
 

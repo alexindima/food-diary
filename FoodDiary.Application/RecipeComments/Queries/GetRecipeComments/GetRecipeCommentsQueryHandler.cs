@@ -13,16 +13,16 @@ public class GetRecipeCommentsQueryHandler(IRecipeCommentRepository commentRepos
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
         GetRecipeCommentsQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<PagedResponse<RecipeCommentModel>>(userIdResult.Error);
         }
 
-        var pageNumber = Math.Max(query.Page, 1);
-        var pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = Math.Max(query.Page, 1);
+        int pageSize = Math.Max(query.Limit, 1);
         var recipeId = (RecipeId)query.RecipeId;
 
-        var (items, total) = await commentRepository.GetPagedByRecipeAsync(
+        (IReadOnlyList<Domain.Entities.Recipes.RecipeComment>? items, int total) = await commentRepository.GetPagedByRecipeAsync(
             recipeId, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
         var models = items.Select(c => new RecipeCommentModel(
@@ -36,7 +36,7 @@ public class GetRecipeCommentsQueryHandler(IRecipeCommentRepository commentRepos
             c.ModifiedOnUtc,
             c.UserId == userIdResult.Value)).ToList();
 
-        var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+        int totalPages = (int)Math.Ceiling(total / (double)pageSize);
         return Result.Success(new PagedResponse<RecipeCommentModel>(models, pageNumber, pageSize, totalPages, total));
     }
 }

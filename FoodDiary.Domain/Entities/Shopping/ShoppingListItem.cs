@@ -36,9 +36,9 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
         int sortOrder) {
         EnsureShoppingListId(shoppingListId);
         EnsureProductId(productId);
-        var normalizedName = NormalizeRequiredName(name);
-        var normalizedAmount = NormalizeOptionalAmount(amount, nameof(amount));
-        var normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
+        string normalizedName = NormalizeRequiredName(name);
+        double? normalizedAmount = NormalizeOptionalAmount(amount, nameof(amount));
+        string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
 
         if (sortOrder < 0) {
             throw new ArgumentOutOfRangeException(nameof(sortOrder), "Sort order must be non-negative.");
@@ -64,7 +64,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
             throw new ArgumentException("Name is required.", nameof(value));
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > NameMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Name must be at most {NameMaxLength} characters.")
             : normalized;
@@ -75,7 +75,7 @@ public sealed class ShoppingListItem : Entity<ShoppingListItemId> {
             return null;
         }
 
-        var normalized = value.Trim();
+        string normalized = value.Trim();
         return normalized.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : normalized;

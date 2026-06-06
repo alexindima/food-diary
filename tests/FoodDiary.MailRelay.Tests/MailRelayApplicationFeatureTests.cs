@@ -18,9 +18,9 @@ public sealed class MailRelayApplicationFeatureTests {
         var store = new RecordingQueueStore { QueuedEmailId = Guid.NewGuid() };
         var notifier = new RecordingDispatchNotifier();
         var useCases = new MailRelayEmailUseCases(store, notifier);
-        var request = CreateRelayRequest();
+        RelayEmailMessageRequest request = CreateRelayRequest();
 
-        var id = await useCases.EnqueueAsync(request, CancellationToken.None);
+        Guid id = await useCases.EnqueueAsync(request, CancellationToken.None);
 
         Assert.Equal(store.QueuedEmailId, id);
         Assert.Same(request, store.EnqueueRequest);
@@ -33,7 +33,7 @@ public sealed class MailRelayApplicationFeatureTests {
             RemoveSuppressionResult = false
         }));
 
-        var result = await handler.Handle(new RemoveMailRelaySuppressionCommand("missing@example.com"), CancellationToken.None);
+        Result result = await handler.Handle(new RemoveMailRelaySuppressionCommand("missing@example.com"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal(ErrorKind.NotFound, result.Error?.Kind);
@@ -45,7 +45,7 @@ public sealed class MailRelayApplicationFeatureTests {
             RemoveSuppressionResult = true
         }));
 
-        var result = await handler.Handle(new RemoveMailRelaySuppressionCommand("known@example.com"), CancellationToken.None);
+        Result result = await handler.Handle(new RemoveMailRelaySuppressionCommand("known@example.com"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
     }
@@ -55,7 +55,7 @@ public sealed class MailRelayApplicationFeatureTests {
         var id = Guid.NewGuid();
         var handler = new GetMailRelayMessageDetailsQueryHandler(CreateUseCases(new RecordingQueueStore()));
 
-        var result = await handler.Handle(new GetMailRelayMessageDetailsQuery(id), CancellationToken.None);
+        Result<MailRelayMessageDetails> result = await handler.Handle(new GetMailRelayMessageDetailsQuery(id), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("MailRelay.Message.NotFound", result.Error?.Code);
@@ -80,7 +80,7 @@ public sealed class MailRelayApplicationFeatureTests {
             MessageDetails = details
         }));
 
-        var result = await handler.Handle(new GetMailRelayMessageDetailsQuery(details.Id), CancellationToken.None);
+        Result<MailRelayMessageDetails> result = await handler.Handle(new GetMailRelayMessageDetailsQuery(details.Id), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Same(details, result.Value);
@@ -106,17 +106,17 @@ public sealed class MailRelayApplicationFeatureTests {
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow);
         var stats = new MailRelayQueueStats(1, 2, 3, 4, 5, 6);
-        var useCases = CreateUseCases(new RecordingQueueStore {
+        MailRelayEmailUseCases useCases = CreateUseCases(new RecordingQueueStore {
             Suppressions = [suppression],
             DeliveryEvents = [deliveryEvent],
             Stats = stats
         });
 
-        var suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
+        Result<IReadOnlyList<MailRelaySuppressionEntry>> suppressions = await new GetMailRelaySuppressionsQueryHandler(useCases)
             .Handle(new GetMailRelaySuppressionsQuery("user@example.com"), CancellationToken.None);
-        var deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
+        Result<IReadOnlyList<MailRelayDeliveryEventEntry>> deliveryEvents = await new GetMailRelayDeliveryEventsQueryHandler(useCases)
             .Handle(new GetMailRelayDeliveryEventsQuery("user@example.com"), CancellationToken.None);
-        var queueStats = await new GetMailRelayQueueStatsQueryHandler(useCases)
+        Result<MailRelayQueueStats> queueStats = await new GetMailRelayQueueStatsQueryHandler(useCases)
             .Handle(new GetMailRelayQueueStatsQuery(), CancellationToken.None);
 
         Assert.Same(suppression, Assert.Single(suppressions.Value));
@@ -127,13 +127,13 @@ public sealed class MailRelayApplicationFeatureTests {
     [Fact]
     public async Task CommandHandlers_DelegateToUseCases() {
         var store = new RecordingQueueStore { QueuedEmailId = Guid.NewGuid() };
-        var useCases = CreateUseCases(store);
-        var request = CreateRelayRequest();
+        MailRelayEmailUseCases useCases = CreateUseCases(store);
+        RelayEmailMessageRequest request = CreateRelayRequest();
         var suppressionRequest = new CreateSuppressionRequest("user@example.com", "manual", "test");
 
-        var enqueueResult = await new EnqueueMailRelayEmailCommandHandler(useCases)
+        Result<Guid> enqueueResult = await new EnqueueMailRelayEmailCommandHandler(useCases)
             .Handle(new EnqueueMailRelayEmailCommand(request), CancellationToken.None);
-        var createResult = await new CreateMailRelaySuppressionCommandHandler(useCases)
+        Result createResult = await new CreateMailRelaySuppressionCommandHandler(useCases)
             .Handle(new CreateMailRelaySuppressionCommand(suppressionRequest), CancellationToken.None);
 
         Assert.Equal(store.QueuedEmailId, enqueueResult.Value);
@@ -146,7 +146,7 @@ public sealed class MailRelayApplicationFeatureTests {
         var store = new RecordingQueueStore();
         var service = new MailRelayDeliveryEventIngestionService(store);
 
-        var result = await service.IngestAsync(
+        Result<MailRelayDeliveryEventEntry> result = await service.IngestAsync(
             new IngestMailEventRequest("opened", "user@example.com", "test"),
             CancellationToken.None);
 
@@ -160,7 +160,7 @@ public sealed class MailRelayApplicationFeatureTests {
         var store = new RecordingQueueStore();
         var service = new MailRelayDeliveryEventIngestionService(store);
 
-        var result = await service.IngestAsync(
+        Result<MailRelayDeliveryEventEntry> result = await service.IngestAsync(
             new IngestMailEventRequest(
                 " Bounce ",
                 "user@example.com",
@@ -169,9 +169,9 @@ public sealed class MailRelayApplicationFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var recorded = Assert.Single(store.RecordedEvents);
+        IngestMailEventRequest recorded = Assert.Single(store.RecordedEvents);
         Assert.Equal(MailRelayDeliveryEventType.Bounce, recorded.EventType);
-        var suppression = Assert.Single(store.UpsertSuppressions);
+        CreateSuppressionRequest suppression = Assert.Single(store.UpsertSuppressions);
         Assert.Equal("user@example.com", suppression.Email);
         Assert.Equal(MailRelaySuppressionPolicy.HardBounceReason, suppression.Reason);
     }
@@ -181,7 +181,7 @@ public sealed class MailRelayApplicationFeatureTests {
         var store = new RecordingQueueStore();
         var service = new MailRelayDeliveryEventIngestionService(store);
 
-        var result = await service.IngestAsync(
+        Result<MailRelayDeliveryEventEntry> result = await service.IngestAsync(
             new IngestMailEventRequest(
                 MailRelayDeliveryEventType.Bounce,
                 "user@example.com",
@@ -198,7 +198,7 @@ public sealed class MailRelayApplicationFeatureTests {
         var store = new RecordingQueueStore();
         var service = new MailRelayDeliveryEventIngestionService(store);
 
-        var result = await service.IngestManyAsync(
+        Result<IReadOnlyList<MailRelayDeliveryEventEntry>> result = await service.IngestManyAsync(
             [
                 new IngestMailEventRequest(MailRelayDeliveryEventType.Complaint, "first@example.com", "ses"),
                 new IngestMailEventRequest("opened", "second@example.com", "ses")

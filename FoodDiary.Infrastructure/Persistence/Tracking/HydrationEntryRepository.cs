@@ -26,7 +26,7 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
         HydrationEntryId id,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = context.HydrationEntries.AsQueryable();
+        IQueryable<HydrationEntry> query = context.HydrationEntries.AsQueryable();
         if (!asTracking) {
             query = query.AsNoTracking();
         }
@@ -38,8 +38,8 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken = default) {
-        var dayStart = dateUtc.Date;
-        var dayEnd = dayStart.AddDays(1);
+        DateTime dayStart = dateUtc.Date;
+        DateTime dayEnd = dayStart.AddDays(1);
 
         return await context.HydrationEntries
             .AsNoTracking()
@@ -49,8 +49,8 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
     }
 
     public async Task<int> GetDailyTotalAsync(UserId userId, DateTime dateUtc, CancellationToken cancellationToken = default) {
-        var dayStart = dateUtc.Date;
-        var dayEnd = dayStart.AddDays(1);
+        DateTime dayStart = dateUtc.Date;
+        DateTime dayEnd = dayStart.AddDays(1);
 
         return await context.HydrationEntries
             .AsNoTracking()
@@ -63,8 +63,8 @@ public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEn
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        var from = dateFrom.Date;
-        var to = dateTo.Date.AddDays(1);
+        DateTime from = dateFrom.Date;
+        DateTime to = dateTo.Date.AddDays(1);
 
         var results = await context.HydrationEntries
             .AsNoTracking()

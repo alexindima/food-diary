@@ -6,6 +6,7 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
@@ -17,13 +18,13 @@ public class UpdateGoalsCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<GoalsModel>(accessError);
         }
 
-        var currentUser = user!;
+        User currentUser = user!;
         try {
             currentUser.UpdateGoals(new UserGoalUpdate(
                 DailyCalorieTarget: command.DailyCalorieTarget,

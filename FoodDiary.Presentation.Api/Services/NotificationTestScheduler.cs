@@ -18,9 +18,9 @@ public sealed class NotificationTestScheduler(
         CancellationToken cancellationToken) {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var normalizedDelaySeconds = Math.Clamp(delaySeconds, 1, 3600);
-        var normalizedType = NormalizeType(type);
-        var scheduledAtUtc = DateTime.UtcNow.AddSeconds(normalizedDelaySeconds);
+        int normalizedDelaySeconds = Math.Clamp(delaySeconds, 1, 3600);
+        string normalizedType = NormalizeType(type);
+        DateTime scheduledAtUtc = DateTime.UtcNow.AddSeconds(normalizedDelaySeconds);
 
         _ = RunScheduledAsync(userId, normalizedDelaySeconds, normalizedType, applicationLifetime.ApplicationStopping);
 
@@ -34,14 +34,14 @@ public sealed class NotificationTestScheduler(
         try {
             await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
 
-            using var scope = serviceScopeFactory.CreateScope();
-            var notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
-            var notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
-            var webPushNotificationSender = scope.ServiceProvider.GetRequiredService<IWebPushNotificationSender>();
+            using IServiceScope scope = serviceScopeFactory.CreateScope();
+            INotificationRepository notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
+            INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
+            IWebPushNotificationSender webPushNotificationSender = scope.ServiceProvider.GetRequiredService<IWebPushNotificationSender>();
             var domainUserId = new FoodDiary.Domain.ValueObjects.Ids.UserId(userId);
-            var referenceId = $"test-notification:{type}:{Guid.NewGuid():N}";
+            string referenceId = $"test-notification:{type}:{Guid.NewGuid():N}";
 
-            var notification = type switch {
+            FoodDiary.Domain.Entities.Notifications.Notification notification = type switch {
                 NotificationTypes.FastingCompleted => NotificationFactory.CreateFastingCompleted(
                     domainUserId,
                     "Extended",
@@ -69,7 +69,7 @@ public sealed class NotificationTestScheduler(
 
             await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
             await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
-            var unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
+            int unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

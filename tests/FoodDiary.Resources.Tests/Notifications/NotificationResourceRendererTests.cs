@@ -9,7 +9,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithEmptyType_ThrowsArgumentException() {
         var renderer = new NotificationResourceRenderer();
 
-        var ex = Assert.Throws<ArgumentException>(() => renderer.Render(""));
+        ArgumentException ex = Assert.Throws<ArgumentException>(() => renderer.Render(""));
 
         Assert.Equal("type", ex.ParamName);
     }
@@ -18,7 +18,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WhenTemplateHasNoBody_ReturnsNullBody() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, " ", string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, " ", string.Empty);
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
         Assert.Null(text.Body);
@@ -28,7 +28,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithNullLocale_UsesEnglishResources() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, null, string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, null, string.Empty);
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
         Assert.Null(text.Body);
@@ -38,7 +38,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithEnglishLocale_UsesEnglishResources() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, "en", string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, "en", string.Empty);
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
         Assert.Null(text.Body);
@@ -48,7 +48,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithRussianLocale_UsesRussianResources() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, "ru", string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, "ru", string.Empty);
 
         Assert.Equal("\u041d\u043e\u0432\u0430\u044f \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044f \u043e\u0442 \u0432\u0430\u0448\u0435\u0433\u043e \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u0430", text.Title);
         Assert.Null(text.Body);
@@ -58,7 +58,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithRussianRegionLocale_UsesRussianResources() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, "ru-RU", string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, "ru-RU", string.Empty);
 
         Assert.Equal("\u041d\u043e\u0432\u0430\u044f \u0440\u0435\u043a\u043e\u043c\u0435\u043d\u0434\u0430\u0446\u0438\u044f \u043e\u0442 \u0432\u0430\u0448\u0435\u0433\u043e \u0434\u0438\u0435\u0442\u043e\u043b\u043e\u0433\u0430", text.Title);
         Assert.Null(text.Body);
@@ -68,7 +68,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithUnknownLocale_FallsBackToEnglishResources() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.Render(NotificationTypes.NewRecommendation, "ka-GE", string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, "ka-GE", string.Empty);
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
         Assert.Null(text.Body);
@@ -78,7 +78,7 @@ public sealed class NotificationResourceRendererTests {
     public void RenderFromPayload_WithEmptyPayload_ThrowsArgumentException() {
         var renderer = new NotificationResourceRenderer();
 
-        var ex = Assert.Throws<ArgumentException>(() => renderer.RenderFromPayload(NotificationTypes.NewRecommendation, ""));
+        ArgumentException ex = Assert.Throws<ArgumentException>(() => renderer.RenderFromPayload(NotificationTypes.NewRecommendation, ""));
 
         Assert.Equal("payloadJson", ex.ParamName);
     }
@@ -87,7 +87,7 @@ public sealed class NotificationResourceRendererTests {
     public void RenderFromPayload_WithNonPersonalizedType_UsesGenericRenderer() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.RenderFromPayload(NotificationTypes.NewComment, "{}", "en");
+        NotificationText text = renderer.RenderFromPayload(NotificationTypes.NewComment, "{}", "en");
 
         Assert.Equal("New comment on your recipe", text.Title);
         Assert.Null(text.Body);
@@ -97,7 +97,7 @@ public sealed class NotificationResourceRendererTests {
     public void RenderFromPayload_WhenPersonalizedPayloadIsMalformed_ReturnsFallbackText() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.RenderFromPayload(NotificationTypes.NewRecommendation, "{", "en");
+        NotificationText text = renderer.RenderFromPayload(NotificationTypes.NewRecommendation, "{", "en");
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
     }
@@ -106,7 +106,7 @@ public sealed class NotificationResourceRendererTests {
     public void RenderFromPayload_WhenInvitationPayloadIsMalformed_UsesDefaultArgument() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.RenderFromPayload(NotificationTypes.DietologistInvitationReceived, "{", "en");
+        NotificationText text = renderer.RenderFromPayload(NotificationTypes.DietologistInvitationReceived, "{", "en");
 
         Assert.Equal("New dietologist invitation", text.Title);
         Assert.Equal(
@@ -118,7 +118,7 @@ public sealed class NotificationResourceRendererTests {
     public void RenderFromPayload_WithRussianLocale_ReturnsReadableCyrillicText() {
         var renderer = new NotificationResourceRenderer();
 
-        var text = renderer.RenderFromPayload(
+        NotificationText text = renderer.RenderFromPayload(
             NotificationTypes.NewRecommendation,
             NotificationPayloads.NewRecommendation("\u0410\u043d\u043d\u0430"),
             "ru");

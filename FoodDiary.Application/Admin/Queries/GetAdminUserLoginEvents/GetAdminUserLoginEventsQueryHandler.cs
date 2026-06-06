@@ -12,11 +12,11 @@ public sealed class GetAdminUserLoginEventsQueryHandler(IUserLoginEventRepositor
     public async Task<Result<PagedResponse<AdminUserLoginEventModel>>> Handle(
         GetAdminUserLoginEventsQuery query,
         CancellationToken cancellationToken) {
-        var page = query.Page <= 0 ? 1 : query.Page;
-        var limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
-        var pageData = await repository.GetPagedAsync(page, limit, query.UserId, query.Search, cancellationToken).ConfigureAwait(false);
-        var items = pageData.Items.Select(ToModel).ToArray();
-        var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
+        int page = query.Page <= 0 ? 1 : query.Page;
+        int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
+        (IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems) pageData = await repository.GetPagedAsync(page, limit, query.UserId, query.Search, cancellationToken).ConfigureAwait(false);
+        AdminUserLoginEventModel[] items = pageData.Items.Select(ToModel).ToArray();
+        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)limit);
         return Result.Success(new PagedResponse<AdminUserLoginEventModel>(items, page, limit, totalPages, pageData.TotalItems));
     }
 
@@ -40,13 +40,13 @@ public sealed class GetAdminUserLoginEventsQueryHandler(IUserLoginEventRepositor
             return null;
         }
 
-        var trimmed = value.Trim();
-        var ipv4Parts = trimmed.Split('.');
+        string trimmed = value.Trim();
+        string[] ipv4Parts = trimmed.Split('.');
         if (ipv4Parts.Length == 4) {
             return $"{ipv4Parts[0]}.{ipv4Parts[1]}.{ipv4Parts[2]}.0";
         }
 
-        var ipv6Parts = trimmed.Split(':');
+        string[] ipv6Parts = trimmed.Split(':');
         return ipv6Parts.Length > 2
             ? string.Join(':', ipv6Parts.Take(4).Concat(["0000"]))
             : trimmed;

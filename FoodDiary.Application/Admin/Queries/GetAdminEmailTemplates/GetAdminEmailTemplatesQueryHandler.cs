@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminEmailTemplates;
 
@@ -11,7 +12,7 @@ public sealed class GetAdminEmailTemplatesQueryHandler(
     public async Task<Result<IReadOnlyList<AdminEmailTemplateModel>>> Handle(
         GetAdminEmailTemplatesQuery query,
         CancellationToken cancellationToken) {
-        var templates = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<EmailTemplate> templates = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
         var response = templates
             .Select(t => new AdminEmailTemplateModel(
                 t.Id,

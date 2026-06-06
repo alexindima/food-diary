@@ -24,19 +24,19 @@ public sealed class IdempotencyFilter(
             return;
         }
 
-        var idempotencyKey = context.HttpContext.Request.Headers[IdempotencyKeyHeader].FirstOrDefault();
+        string? idempotencyKey = context.HttpContext.Request.Headers[IdempotencyKeyHeader].FirstOrDefault();
 
         if (string.IsNullOrWhiteSpace(idempotencyKey)) {
             await next();
             return;
         }
 
-        var cacheKey = BuildCacheKey(context, idempotencyKey);
-        var cached = await cache.GetStringAsync(cacheKey, context.HttpContext.RequestAborted);
+        string cacheKey = BuildCacheKey(context, idempotencyKey);
+        string? cached = await cache.GetStringAsync(cacheKey, context.HttpContext.RequestAborted);
 
         if (cached is not null) {
             logger.LogInformation("Idempotency cache hit for key {IdempotencyKey}", idempotencyKey);
-            var entry = JsonSerializer.Deserialize<IdempotencyCacheEntry>(cached);
+            IdempotencyCacheEntry? entry = JsonSerializer.Deserialize<IdempotencyCacheEntry>(cached);
             if (entry is not null) {
                 context.Result = new ContentResult {
                     Content = entry.Body,
@@ -47,7 +47,7 @@ public sealed class IdempotencyFilter(
             }
         }
 
-        var executedContext = await next();
+        ActionExecutedContext executedContext = await next();
 
         if (executedContext.Exception is null && executedContext.Result is ObjectResult objectResult) {
             var entry = new IdempotencyCacheEntry(
@@ -63,8 +63,8 @@ public sealed class IdempotencyFilter(
     }
 
     private static string BuildCacheKey(ActionExecutingContext context, string idempotencyKey) {
-        var userId = context.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
-        var path = context.HttpContext.Request.Path.Value ?? "";
+        string userId = context.HttpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? "anonymous";
+        string path = context.HttpContext.Request.Path.Value ?? "";
         return $"idempotency:{userId}:{path}:{idempotencyKey}";
     }
 

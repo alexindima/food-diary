@@ -12,11 +12,11 @@ namespace FoodDiary.Presentation.Api.Tests {
         [Fact]
         public async Task OnActionExecutionAsync_WithSuccessfulAction_InvokesNext() {
             var filter = new TelemetryActionFilter(NullLogger<TelemetryActionFilter>.Instance);
-            var context = CreateActionExecutingContext(
+            ActionExecutingContext context = CreateActionExecutingContext(
                 new FoodDiary.Presentation.Api.Features.TelemetryTests.TelemetryProbeController(),
                 actionName: "Get",
                 statusCode: StatusCodes.Status200OK);
-            var nextCalled = false;
+            bool nextCalled = false;
 
             await filter.OnActionExecutionAsync(context, () => {
                 nextCalled = true;
@@ -29,7 +29,7 @@ namespace FoodDiary.Presentation.Api.Tests {
         [Fact]
         public async Task OnActionExecutionAsync_WithFailureStatus_InvokesNext() {
             var filter = new TelemetryActionFilter(NullLogger<TelemetryActionFilter>.Instance);
-            var context = CreateActionExecutingContext(
+            ActionExecutingContext context = CreateActionExecutingContext(
                 controller: new object(),
                 actionName: null,
                 statusCode: StatusCodes.Status404NotFound);
@@ -43,7 +43,7 @@ namespace FoodDiary.Presentation.Api.Tests {
         [Fact]
         public async Task OnActionExecutionAsync_WithActionException_RecordsFailureAndInvokesNext() {
             var filter = new TelemetryActionFilter(NullLogger<TelemetryActionFilter>.Instance);
-            var context = CreateActionExecutingContext(
+            ActionExecutingContext context = CreateActionExecutingContext(
                 new FoodDiary.Presentation.Api.Features.TelemetryTests.TelemetryProbeController(),
                 actionName: "Post",
                 statusCode: StatusCodes.Status500InternalServerError);

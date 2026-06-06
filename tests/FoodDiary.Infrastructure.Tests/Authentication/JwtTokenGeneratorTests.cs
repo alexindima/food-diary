@@ -15,8 +15,8 @@ public sealed class JwtTokenGeneratorTests {
         var userId = UserId.New();
         const string email = "user@example.com";
 
-        var token = generator.GenerateAccessToken(userId, email, ["Admin"]);
-        var validated = generator.ValidateToken(token);
+        string token = generator.GenerateAccessToken(userId, email, ["Admin"]);
+        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.NotNull(validated);
         Assert.Equal(userId, validated.Value.userId);
@@ -28,7 +28,7 @@ public sealed class JwtTokenGeneratorTests {
     public void ValidateToken_WithInvalidToken_ReturnsNull() {
         var generator = new JwtTokenGenerator(CreateOptions(), new StubDateTimeProvider());
 
-        var validated = generator.ValidateToken("not-a-jwt-token");
+        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken("not-a-jwt-token");
 
         Assert.Null(validated);
     }
@@ -38,8 +38,8 @@ public sealed class JwtTokenGeneratorTests {
         var generator = new JwtTokenGenerator(CreateOptions(expirationMinutes: -1, refreshDays: 0), new StubDateTimeProvider());
         var userId = UserId.New();
 
-        var token = generator.GenerateAccessToken(userId, "fallback@example.com", []);
-        var validated = generator.ValidateToken(token);
+        string token = generator.GenerateAccessToken(userId, "fallback@example.com", []);
+        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.NotNull(validated);
         Assert.Equal(userId, validated.Value.userId);
@@ -51,9 +51,9 @@ public sealed class JwtTokenGeneratorTests {
         var generator = new JwtTokenGenerator(CreateOptions(refreshDays: 30, rememberMeRefreshDays: 90), new StubDateTimeProvider(now));
         var userId = UserId.New();
 
-        var token = generator.GenerateRefreshToken(userId, "remember@example.com", [], rememberMe: true);
-        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
-        var validated = generator.ValidateToken(token);
+        string token = generator.GenerateRefreshToken(userId, "remember@example.com", [], rememberMe: true);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validated = generator.ValidateToken(token);
 
         Assert.Equal(now.AddDays(90), jwt.ValidTo);
         Assert.NotNull(validated);
@@ -63,21 +63,21 @@ public sealed class JwtTokenGeneratorTests {
     [Fact]
     public void GenerateAccessToken_WithEarlierExpirationCap_UsesCap() {
         var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
-        var cap = now.AddMinutes(5);
+        DateTime cap = now.AddMinutes(5);
         var generator = new JwtTokenGenerator(CreateOptions(expirationMinutes: 60), new StubDateTimeProvider(now));
         var userId = UserId.New();
 
-        var token = generator.GenerateAccessToken(userId, "trial@example.com", ["Premium"], cap);
-        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        string token = generator.GenerateAccessToken(userId, "trial@example.com", ["Premium"], cap);
+        JwtSecurityToken jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
 
         Assert.Equal(cap, jwt.ValidTo);
     }
 
     [Fact]
     public void Constructor_WithoutSecretKey_Throws() {
-        var options = CreateOptions(includeSecret: false);
+        IOptions<JwtOptions> options = CreateOptions(includeSecret: false);
 
-        var ex = Assert.Throws<InvalidOperationException>(() => new JwtTokenGenerator(options, new StubDateTimeProvider()));
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => new JwtTokenGenerator(options, new StubDateTimeProvider()));
         Assert.Contains("SecretKey", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 

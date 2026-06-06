@@ -1,3 +1,6 @@
+using FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
+using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
+using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 using FoodDiary.Presentation.Api.Features.Exercises.Mappings;
 using FoodDiary.Presentation.Api.Features.Exercises.Requests;
 
@@ -8,10 +11,10 @@ public sealed class ExerciseHttpMappingsTests {
     [Fact]
     public void CreateExerciseEntryRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var date = DateTime.UtcNow;
+        DateTime date = DateTime.UtcNow;
         var request = new CreateExerciseEntryHttpRequest(date, "Running", 30, 250.5, "Morning jog", "Easy pace");
 
-        var command = request.ToCommand(userId);
+        CreateExerciseEntryCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(date, command.Date);
@@ -28,7 +31,7 @@ public sealed class ExerciseHttpMappingsTests {
         var entryId = Guid.NewGuid();
         var request = new UpdateExerciseEntryHttpRequest("Swimming", 45, 300, null, true, "Pool", false, null);
 
-        var command = request.ToCommand(userId, entryId);
+        UpdateExerciseEntryCommand command = request.ToCommand(userId, entryId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.EntryId);
@@ -41,10 +44,10 @@ public sealed class ExerciseHttpMappingsTests {
     [Fact]
     public void GetExerciseEntriesQuery_MapsDateRange() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-7);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
 
-        var query = userId.ToQuery(from, to);
+        GetExerciseEntriesQuery query = userId.ToQuery(from, to);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(from, query.DateFrom);

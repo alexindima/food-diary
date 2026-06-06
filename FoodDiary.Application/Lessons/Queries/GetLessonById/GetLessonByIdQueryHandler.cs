@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Lessons.Common;
 using FoodDiary.Application.Lessons.Mappings;
 using FoodDiary.Application.Lessons.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessonById;
 
@@ -13,18 +14,18 @@ public class GetLessonByIdQueryHandler(INutritionLessonRepository repository)
     public async Task<Result<LessonDetailModel>> Handle(
         GetLessonByIdQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<LessonDetailModel>(userIdResult.Error);
         }
 
         var lessonId = new NutritionLessonId(query.LessonId);
-        var lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure<LessonDetailModel>(Errors.Lesson.NotFound(query.LessonId));
         }
 
-        var progress = await repository.GetUserProgressForLessonAsync(
+        UserLessonProgress? progress = await repository.GetUserProgressForLessonAsync(
             userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(lesson.ToDetailModel(progress is not null));

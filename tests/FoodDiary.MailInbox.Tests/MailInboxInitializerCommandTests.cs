@@ -6,7 +6,7 @@ namespace FoodDiary.MailInbox.Tests;
 public sealed class MailInboxInitializerCommandTests {
     [Fact]
     public void Parse_WhenArgsAreEmpty_ReturnsNull() {
-        var command = Parse();
+        object? command = Parse();
 
         Assert.Null(command);
     }
@@ -15,11 +15,11 @@ public sealed class MailInboxInitializerCommandTests {
     [InlineData("status", null)]
     [InlineData("update", "Host=localhost;Database=mailinbox")]
     public void Parse_WithKnownCommand_ReturnsCommand(string name, string? connectionString) {
-        var args = connectionString is null
+        string[] args = connectionString is null
             ? new[] { name }
             : [name, "--connection-string", connectionString];
 
-        var command = Parse(args);
+        object? command = Parse(args);
 
         Assert.NotNull(command);
         Assert.Equal(name, GetProperty<string>(command, "Name"));
@@ -28,7 +28,7 @@ public sealed class MailInboxInitializerCommandTests {
 
     [Fact]
     public void Parse_WithShortConnectionStringOption_ReturnsCommand() {
-        var command = Parse("update", "-c", "Host=localhost;Database=mailinbox");
+        object? command = Parse("update", "-c", "Host=localhost;Database=mailinbox");
 
         Assert.NotNull(command);
         Assert.Equal("update", GetProperty<string>(command, "Name"));
@@ -37,22 +37,22 @@ public sealed class MailInboxInitializerCommandTests {
 
     [Fact]
     public void Parse_WhenConnectionStringValueIsMissing_Throws() {
-        var exception = Assert.Throws<TargetInvocationException>(() => Parse("update", "--connection-string"));
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() => Parse("update", "--connection-string"));
 
         Assert.IsType<InvalidOperationException>(exception.InnerException);
     }
 
     [Fact]
     public void Parse_WhenUnexpectedArgumentExists_Throws() {
-        var exception = Assert.Throws<TargetInvocationException>(() => Parse("status", "unexpected"));
+        TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() => Parse("status", "unexpected"));
 
         Assert.IsType<InvalidOperationException>(exception.InnerException);
     }
 
     private static object? Parse(params string[] args) {
-        var type = Assembly.Load("FoodDiary.MailInbox.Initializer")
+        Type? type = Assembly.Load("FoodDiary.MailInbox.Initializer")
             .GetType("FoodDiary.MailInbox.Initializer.InitializerCommand");
-        var method = type!.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
+        MethodInfo? method = type!.GetMethod("Parse", BindingFlags.Public | BindingFlags.Static);
         return method!.Invoke(null, [args]);
     }
 

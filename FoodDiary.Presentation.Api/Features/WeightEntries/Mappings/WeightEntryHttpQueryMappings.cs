@@ -9,7 +9,7 @@ public static class WeightEntryHttpQueryMappings {
     public static GetLatestWeightEntryQuery ToLatestQuery(this Guid userId) => new(userId);
 
     public static GetWeightEntriesQuery ToQuery(this GetWeightEntriesHttpQuery query, Guid userId) {
-        var descending = !string.Equals(query.Sort, "asc", StringComparison.OrdinalIgnoreCase);
+        bool descending = !string.Equals(query.Sort, "asc", StringComparison.OrdinalIgnoreCase);
         return new GetWeightEntriesQuery(userId, query.DateFrom, query.DateTo, query.Limit, descending);
     }
 

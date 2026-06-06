@@ -7,6 +7,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
@@ -17,7 +18,7 @@ public class GetWaistSummariesQueryHandler(
     public async Task<Result<IReadOnlyList<WaistEntrySummaryModel>>> Handle(
         GetWaistSummariesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(userIdResult.Error);
         }
@@ -32,22 +33,22 @@ public class GetWaistSummariesQueryHandler(
                 Errors.Validation.Invalid(nameof(query.QuantizationDays), "Value must be greater than zero."));
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WaistEntrySummaryModel>>(accessError);
         }
 
-        var normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
-        var normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
+        DateTime normalizedFrom = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateFrom);
+        DateTime normalizedTo = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateTo);
 
-        var entries = await waistEntryRepository.GetByPeriodAsync(
+        IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetByPeriodAsync(
             userId,
             normalizedFrom,
             normalizedTo,
             cancellationToken).ConfigureAwait(false);
 
-        var buckets = BuildBuckets(normalizedFrom, normalizedTo, query.QuantizationDays);
+        IEnumerable<(DateTime start, DateTime end)> buckets = BuildBuckets(normalizedFrom, normalizedTo, query.QuantizationDays);
         var response = buckets
             .Select(bucket => BuildResponse(bucket.start, bucket.end, entries))
             .ToList();
@@ -56,10 +57,10 @@ public class GetWaistSummariesQueryHandler(
     }
 
     private static IEnumerable<(DateTime start, DateTime end)> BuildBuckets(DateTime from, DateTime to, int step) {
-        var current = from.Date;
-        var end = to.Date;
+        DateTime current = from.Date;
+        DateTime end = to.Date;
         while (current <= end) {
-            var bucketEnd = current.AddDays(step - 1);
+            DateTime bucketEnd = current.AddDays(step - 1);
             if (bucketEnd > end) {
                 bucketEnd = end;
             }
@@ -81,7 +82,7 @@ public class GetWaistSummariesQueryHandler(
             return new WaistEntrySummaryModel(start, end, 0);
         }
 
-        var avg = bucketEntries.Average(entry => entry.Circumference);
+        double avg = bucketEntries.Average(entry => entry.Circumference);
         return new WaistEntrySummaryModel(start, end, Math.Round(avg, 2));
     }
 }

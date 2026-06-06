@@ -21,20 +21,20 @@ public class GetProductsQueryHandler(
             return Result.Failure<PagedResponse<ProductModel>>(Errors.Authentication.InvalidToken);
         }
 
-        var pageNumber = Math.Max(query.Page, 1);
-        var pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = Math.Max(query.Page, 1);
+        int pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }
-        var productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
+        ProductType[]? productTypes = query.ProductTypes?
+            .Select(type => Enum.TryParse<ProductType>(type, true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
             .Distinct()
             .ToArray();
 
-        var (items, totalItems) = await productRepository.GetPagedAsync(
+        (IReadOnlyList<(Domain.Entities.Products.Product Product, int UsageCount)>? items, int totalItems) = await productRepository.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,
@@ -49,7 +49,7 @@ public class GetProductsQueryHandler(
             IsOwner = item.Product.UserId == userId
         }).ToList();
 
-        var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+        int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<ProductModel>(
             productsWithUsage.Select(p => p.Product.ToModel(p.UsageCount, p.IsOwner)).ToList(),
             pageNumber,

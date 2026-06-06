@@ -20,9 +20,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly int _rememberMeRefreshTokenExpirationMinutes;
 
     public JwtTokenGenerator(IOptions<JwtOptions> options, IDateTimeProvider dateTimeProvider) {
-        var jwtOptions = options.Value;
+        JwtOptions jwtOptions = options.Value;
         _dateTimeProvider = dateTimeProvider;
-        var secretKey = jwtOptions.SecretKey;
+        string secretKey = jwtOptions.SecretKey;
         _issuer = jwtOptions.Issuer;
         _audience = jwtOptions.Audience;
 
@@ -40,9 +40,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
 
         _signingKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
         _accessTokenExpirationMinutes = jwtOptions.ExpirationMinutes > 0 ? jwtOptions.ExpirationMinutes : 60;
-        var refreshDays = jwtOptions.RefreshTokenExpirationDays > 0 ? jwtOptions.RefreshTokenExpirationDays : 7;
+        int refreshDays = jwtOptions.RefreshTokenExpirationDays > 0 ? jwtOptions.RefreshTokenExpirationDays : 7;
         _refreshTokenExpirationMinutes = refreshDays * 1440;
-        var rememberMeRefreshDays = jwtOptions.RememberMeRefreshTokenExpirationDays > 0
+        int rememberMeRefreshDays = jwtOptions.RememberMeRefreshTokenExpirationDays > 0
             ? jwtOptions.RememberMeRefreshTokenExpirationDays
             : 90;
         _rememberMeRefreshTokenExpirationMinutes = rememberMeRefreshDays * 1440;
@@ -93,17 +93,17 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
                 ValidAudience = _audience,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
-            }, out var validatedToken);
+            }, out SecurityToken? validatedToken);
 
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userIdValue = Guid.Parse(jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.NameIdentifier, StringComparison.Ordinal)).Value);
-            var email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
-            var rememberMe = jwtToken.Claims.Any(static x =>
+            string email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
+            bool rememberMe = jwtToken.Claims.Any(static x =>
                 string.Equals(x.Type, JwtClaimNames.RememberMe, StringComparison.Ordinal) &&
                 string.Equals(x.Value, "true", StringComparison.OrdinalIgnoreCase));
-            var refreshSessionIdClaim = jwtToken.Claims.FirstOrDefault(static x =>
+            string? refreshSessionIdClaim = jwtToken.Claims.FirstOrDefault(static x =>
                 string.Equals(x.Type, JwtClaimNames.RefreshSessionId, StringComparison.Ordinal))?.Value;
-            var refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out var parsedRefreshSessionId)
+            Guid? refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out Guid parsedRefreshSessionId)
                 ? parsedRefreshSessionId
                 : (Guid?)null;
 
@@ -125,9 +125,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim> {
-            new Claim(ClaimTypes.NameIdentifier, userId.Value.ToString()),
-            new Claim(ClaimTypes.Email, email),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            new(ClaimTypes.NameIdentifier, userId.Value.ToString()),
+            new(ClaimTypes.Email, email),
+            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
         };
 
         if (impersonation is not null) {
@@ -144,12 +144,12 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(JwtClaimNames.RefreshSessionId, refreshSessionId.Value.ToString()));
         }
 
-        foreach (var role in roles) {
+        foreach (string role in roles) {
             claims.Add(new Claim(ClaimTypes.Role, role));
         }
 
-        var configuredExpiresAtUtc = _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes);
-        var tokenExpiresAtUtc = expiresAtUtc.HasValue && expiresAtUtc.Value < configuredExpiresAtUtc
+        DateTime configuredExpiresAtUtc = _dateTimeProvider.UtcNow.AddMinutes(expirationMinutes);
+        DateTime tokenExpiresAtUtc = expiresAtUtc.HasValue && expiresAtUtc.Value < configuredExpiresAtUtc
             ? expiresAtUtc.Value.ToUniversalTime()
             : configuredExpiresAtUtc;
 

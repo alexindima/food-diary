@@ -32,9 +32,9 @@ public sealed class PaddleBillingGateway(
 
         ConfigureClient();
 
-        var customerId = request.ExistingCustomerId;
+        string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
-            var customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
+            Result<string> customerResult = await CreateCustomerAsync(request, cancellationToken).ConfigureAwait(false);
             if (customerResult.IsFailure) {
                 return Result.Failure<BillingCheckoutSessionModel>(customerResult.Error);
             }
@@ -42,8 +42,8 @@ public sealed class PaddleBillingGateway(
             customerId = customerResult.Value;
         }
 
-        var priceId = ResolvePriceId(request.Plan);
-        var transactionResponse = await SendAsync<CreateTransactionResponse>(
+        string priceId = ResolvePriceId(request.Plan);
+        Result<CreateTransactionResponse> transactionResponse = await SendAsync<CreateTransactionResponse>(
             HttpMethod.Post,
             "transactions",
             new CreateTransactionRequest(
@@ -62,7 +62,7 @@ public sealed class PaddleBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(transactionResponse.Error);
         }
 
-        var transaction = transactionResponse.Value;
+        CreateTransactionResponse transaction = transactionResponse.Value;
         if (string.IsNullOrWhiteSpace(transaction.Checkout?.Url)) {
             return Result.Failure<BillingCheckoutSessionModel>(
                 Errors.Billing.ProviderOperationFailed(Provider, "Paddle transaction checkout URL is missing."));
@@ -85,7 +85,7 @@ public sealed class PaddleBillingGateway(
 
         ConfigureClient();
 
-        var sessionResponse = await SendAsync<CreateCustomerPortalSessionResponse>(
+        Result<CreateCustomerPortalSessionResponse> sessionResponse = await SendAsync<CreateCustomerPortalSessionResponse>(
             HttpMethod.Post,
             $"customers/{request.CustomerId}/portal-sessions",
             new { },
@@ -94,7 +94,7 @@ public sealed class PaddleBillingGateway(
             return Result.Failure<BillingPortalSessionModel>(sessionResponse.Error);
         }
 
-        var url = sessionResponse.Value.Urls?.General?.Overview;
+        string? url = sessionResponse.Value.Urls?.General?.Overview;
         if (string.IsNullOrWhiteSpace(url)) {
             return Result.Failure<BillingPortalSessionModel>(
                 Errors.Billing.ProviderOperationFailed(Provider, "Paddle customer portal URL is missing."));
@@ -119,23 +119,23 @@ public sealed class PaddleBillingGateway(
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(Errors.Billing.ProviderNotConfigured(Provider)));
         }
 
-        if (!TryVerifySignature(payload, signatureHeader, out var signatureError)) {
+        if (!TryVerifySignature(payload, signatureHeader, out string? signatureError)) {
             return Task.FromResult(Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed(signatureError)));
         }
 
         try {
             using var document = JsonDocument.Parse(payload);
-            var root = document.RootElement;
-            var eventType = root.GetProperty("event_type").GetString();
+            JsonElement root = document.RootElement;
+            string? eventType = root.GetProperty("event_type").GetString();
             if (string.IsNullOrWhiteSpace(eventType) ||
                 !eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
                 return Task.FromResult(Result.Success<BillingWebhookEventModel?>(null));
             }
 
-            var data = root.GetProperty("data");
-            var subscriptionId = GetString(data, "id");
-            var customerId = GetString(data, "customer_id");
+            JsonElement data = root.GetProperty("data");
+            string? subscriptionId = GetString(data, "id");
+            string? customerId = GetString(data, "customer_id");
             if (string.IsNullOrWhiteSpace(subscriptionId) || string.IsNullOrWhiteSpace(customerId)) {
                 return Task.FromResult(Result.Success<BillingWebhookEventModel?>(null));
             }
@@ -153,13 +153,13 @@ public sealed class PaddleBillingGateway(
         string eventType,
         string customerId,
         string subscriptionId) {
-        var externalPriceId = GetFirstItemPriceId(data);
-        var customData = data.TryGetProperty("custom_data", out var customDataElement) ? customDataElement : default;
-        var currentBillingPeriod = data.TryGetProperty("current_billing_period", out var billingPeriodElement)
+        string? externalPriceId = GetFirstItemPriceId(data);
+        JsonElement customData = data.TryGetProperty("custom_data", out JsonElement customDataElement) ? customDataElement : default;
+        JsonElement currentBillingPeriod = data.TryGetProperty("current_billing_period", out JsonElement billingPeriodElement)
             ? billingPeriodElement
             : default;
-        var trialDates = GetFirstTrialDates(data);
-        var scheduledChange = data.TryGetProperty("scheduled_change", out var scheduledChangeElement)
+        JsonElement trialDates = GetFirstTrialDates(data);
+        JsonElement scheduledChange = data.TryGetProperty("scheduled_change", out JsonElement scheduledChangeElement)
             ? scheduledChangeElement
             : default;
 
@@ -187,7 +187,7 @@ public sealed class PaddleBillingGateway(
     private async Task<Result<string>> CreateCustomerAsync(
         BillingCheckoutSessionRequestModel request,
         CancellationToken cancellationToken) {
-        var customerResponse = await SendAsync<CreateCustomerResponse>(
+        Result<CreateCustomerResponse> customerResponse = await SendAsync<CreateCustomerResponse>(
             HttpMethod.Post,
             "customers",
             new CreateCustomerRequest(
@@ -215,15 +215,15 @@ public sealed class PaddleBillingGateway(
             request.Content = JsonContent.Create(body, options: JsonOptions);
         }
 
-        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode) {
-            var error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
                 $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
         }
 
-        var envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken).ConfigureAwait(false);
+        PaddleEnvelope<TResponse>? envelope = await response.Content.ReadFromJsonAsync<PaddleEnvelope<TResponse>>(JsonOptions, cancellationToken).ConfigureAwait(false);
         if (envelope?.Data is null) {
             return Result.Failure<TResponse>(
                 Errors.Billing.ProviderOperationFailed(Provider, "Paddle returned an empty response."));
@@ -242,11 +242,11 @@ public sealed class PaddleBillingGateway(
     private bool TryVerifySignature(string payload, string signatureHeader, out string error) {
         error = string.Empty;
 
-        var parts = signatureHeader.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        var timestamp = parts
+        string[] parts = signatureHeader.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        string? timestamp = parts
             .Select(static part => part.Split('=', 2))
             .FirstOrDefault(static values => values.Length == 2 && string.Equals(values[0], "ts", StringComparison.OrdinalIgnoreCase))?[1];
-        var signatures = parts
+        string[] signatures = parts
             .Select(static part => part.Split('=', 2))
             .Where(static values => values.Length == 2 && string.Equals(values[0], "h1", StringComparison.OrdinalIgnoreCase))
             .Select(static values => values[1])
@@ -258,13 +258,13 @@ public sealed class PaddleBillingGateway(
             return false;
         }
 
-        var signedPayload = $"{timestamp}:{payload}";
+        string signedPayload = $"{timestamp}:{payload}";
         using var hmac = new HMACSHA256(Encoding.UTF8.GetBytes(_options.WebhookSecretKey));
-        var computedHash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes(signedPayload))).ToLowerInvariant();
-        var computedBytes = Encoding.UTF8.GetBytes(computedHash);
+        string computedHash = Convert.ToHexString(hmac.ComputeHash(Encoding.UTF8.GetBytes(signedPayload))).ToLowerInvariant();
+        byte[] computedBytes = Encoding.UTF8.GetBytes(computedHash);
 
-        foreach (var candidate in signatures) {
-            var candidateBytes = Encoding.UTF8.GetBytes(candidate.Trim().ToLowerInvariant());
+        foreach (string? candidate in signatures) {
+            byte[] candidateBytes = Encoding.UTF8.GetBytes(candidate.Trim().ToLowerInvariant());
             if (candidateBytes.Length == computedBytes.Length &&
                 CryptographicOperations.FixedTimeEquals(candidateBytes, computedBytes)) {
                 return true;
@@ -316,12 +316,12 @@ public sealed class PaddleBillingGateway(
     }
 
     private static JsonElement GetFirstTrialDates(JsonElement data) {
-        if (!data.TryGetProperty("items", out var items) || items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0) {
+        if (!data.TryGetProperty("items", out JsonElement items) || items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0) {
             return default;
         }
 
-        var firstItem = items[0];
-        if (!firstItem.TryGetProperty("trial_dates", out var trialDates)) {
+        JsonElement firstItem = items[0];
+        if (!firstItem.TryGetProperty("trial_dates", out JsonElement trialDates)) {
             return default;
         }
 
@@ -329,12 +329,12 @@ public sealed class PaddleBillingGateway(
     }
 
     private static string? GetFirstItemPriceId(JsonElement data) {
-        if (!data.TryGetProperty("items", out var items) || items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0) {
+        if (!data.TryGetProperty("items", out JsonElement items) || items.ValueKind != JsonValueKind.Array || items.GetArrayLength() == 0) {
             return null;
         }
 
-        var firstItem = items[0];
-        if (!firstItem.TryGetProperty("price", out var price)) {
+        JsonElement firstItem = items[0];
+        if (!firstItem.TryGetProperty("price", out JsonElement price)) {
             return null;
         }
 
@@ -344,7 +344,7 @@ public sealed class PaddleBillingGateway(
     private static string? GetString(JsonElement element, string propertyName) {
         if (element.ValueKind == JsonValueKind.Undefined ||
             element.ValueKind == JsonValueKind.Null ||
-            !element.TryGetProperty(propertyName, out var property) ||
+            !element.TryGetProperty(propertyName, out JsonElement property) ||
             property.ValueKind == JsonValueKind.Null) {
             return null;
         }
@@ -353,7 +353,7 @@ public sealed class PaddleBillingGateway(
     }
 
     private static DateTime? ParseDateTime(JsonElement element, string propertyName) {
-        var value = GetString(element, propertyName);
+        string? value = GetString(element, propertyName);
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
@@ -362,8 +362,8 @@ public sealed class PaddleBillingGateway(
     }
 
     private static Guid? ParseUserId(JsonElement customData) {
-        var rawUserId = GetString(customData, "user_id");
-        return Guid.TryParse(rawUserId, out var parsed) && parsed != Guid.Empty
+        string? rawUserId = GetString(customData, "user_id");
+        return Guid.TryParse(rawUserId, out Guid parsed) && parsed != Guid.Empty
             ? parsed
             : null;
     }

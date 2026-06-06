@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Tests.Domain;
 public class FastingOccurrenceInvariantTests {
     [Fact]
     public void Create_WithTargetHours_Succeeds() {
-        var startedAtUtc = DateTime.UtcNow;
+        DateTime startedAtUtc = DateTime.UtcNow;
 
         var occurrence = FastingOccurrence.Create(
             FastingPlanId.New(),
@@ -63,7 +63,7 @@ public class FastingOccurrenceInvariantTests {
 
     [Fact]
     public void Postpone_ChangesStatusAndSchedule() {
-        var scheduledForUtc = DateTime.UtcNow.AddDays(1);
+        DateTime scheduledForUtc = DateTime.UtcNow.AddDays(1);
         var occurrence = FastingOccurrence.Schedule(
             FastingPlanId.New(),
             UserId.New(),
@@ -72,8 +72,8 @@ public class FastingOccurrenceInvariantTests {
             sequenceNumber: 2,
             targetHours: 24);
 
-        var postponedAtUtc = scheduledForUtc;
-        var nextScheduledForUtc = scheduledForUtc.AddDays(1);
+        DateTime postponedAtUtc = scheduledForUtc;
+        DateTime nextScheduledForUtc = scheduledForUtc.AddDays(1);
 
         occurrence.Postpone(postponedAtUtc, nextScheduledForUtc);
 
@@ -137,7 +137,7 @@ public class FastingOccurrenceInvariantTests {
 
     [Fact]
     public void Schedule_WithValidValues_CreatesScheduledOccurrence() {
-        var scheduledForUtc = DateTime.UtcNow.AddDays(1);
+        DateTime scheduledForUtc = DateTime.UtcNow.AddDays(1);
 
         var occurrence = FastingOccurrence.Schedule(
             FastingPlanId.New(),
@@ -161,7 +161,7 @@ public class FastingOccurrenceInvariantTests {
             FastingOccurrenceKind.FastDay,
             DateTime.UtcNow.AddDays(1),
             sequenceNumber: 1);
-        var startedAtUtc = DateTime.UtcNow;
+        DateTime startedAtUtc = DateTime.UtcNow;
 
         occurrence.Start(startedAtUtc);
 
@@ -173,7 +173,7 @@ public class FastingOccurrenceInvariantTests {
 
     [Fact]
     public void Start_WhenAlreadyActive_DoesNotSetModifiedOnUtc() {
-        var startedAtUtc = DateTime.UtcNow;
+        DateTime startedAtUtc = DateTime.UtcNow;
         var occurrence = FastingOccurrence.Create(
             FastingPlanId.New(),
             UserId.New(),
@@ -217,7 +217,7 @@ public class FastingOccurrenceInvariantTests {
             FastingOccurrenceKind.FastDay,
             DateTime.UtcNow.AddDays(1),
             sequenceNumber: 1);
-        var postponedAtUtc = DateTime.UtcNow.AddDays(1);
+        DateTime postponedAtUtc = DateTime.UtcNow.AddDays(1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.Postpone(postponedAtUtc, postponedAtUtc));
     }
@@ -271,7 +271,7 @@ public class FastingOccurrenceInvariantTests {
     [Fact]
     public void UpdateCheckIn_NormalizesSymptomsAndNotes() {
         var occurrence = FastingOccurrence.Create(FastingPlanId.New(), UserId.New(), FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1);
-        var checkedInAtUtc = DateTime.UtcNow.AddHours(1);
+        DateTime checkedInAtUtc = DateTime.UtcNow.AddHours(1);
 
         occurrence.UpdateCheckIn(
             hungerLevel: 1,

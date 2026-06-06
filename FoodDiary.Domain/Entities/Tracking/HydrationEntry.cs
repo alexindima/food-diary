@@ -23,8 +23,8 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
 
     public static HydrationEntry Create(UserId userId, DateTime timestampUtc, int amountMl) {
         EnsureUserId(userId);
-        var normalizedAmountMl = NormalizeAmount(amountMl);
-        var normalizedTimestamp = Normalize(timestampUtc);
+        int normalizedAmountMl = NormalizeAmount(amountMl);
+        DateTime normalizedTimestamp = Normalize(timestampUtc);
 
         var entry = new HydrationEntry(HydrationEntryId.New()) {
             UserId = userId,
@@ -37,10 +37,10 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     public void Update(int? amountMl = null, DateTime? timestampUtc = null) {
-        var changed = false;
+        bool changed = false;
 
         if (amountMl.HasValue) {
-            var normalizedAmountMl = NormalizeAmount(amountMl.Value);
+            int normalizedAmountMl = NormalizeAmount(amountMl.Value);
             if (AmountMl != normalizedAmountMl) {
                 AmountMl = normalizedAmountMl;
                 changed = true;
@@ -48,7 +48,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
         }
 
         if (timestampUtc.HasValue) {
-            var normalizedTimestamp = Normalize(timestampUtc.Value);
+            DateTime normalizedTimestamp = Normalize(timestampUtc.Value);
             if (Timestamp != normalizedTimestamp) {
                 Timestamp = normalizedTimestamp;
                 changed = true;
@@ -61,7 +61,7 @@ public sealed class HydrationEntry : AggregateRoot<HydrationEntryId> {
     }
 
     private static DateTime Normalize(DateTime value) {
-        var utc = value.Kind switch {
+        DateTime utc = value.Kind switch {
             DateTimeKind.Utc => value,
             _ => value.ToUniversalTime()
         };

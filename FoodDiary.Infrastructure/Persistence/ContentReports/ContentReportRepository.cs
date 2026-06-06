@@ -15,7 +15,7 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
 
     public async Task<ContentReport?> GetByIdAsync(
         ContentReportId id, bool asTracking = false, CancellationToken cancellationToken = default) {
-        var query = asTracking ? context.ContentReports.AsTracking() : context.ContentReports.AsNoTracking();
+        IQueryable<ContentReport> query = asTracking ? context.ContentReports.AsTracking() : context.ContentReports.AsNoTracking();
         return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
@@ -33,15 +33,15 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
 
     public async Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(
         ReportStatus? status, int page, int limit, CancellationToken cancellationToken = default) {
-        var query = context.ContentReports.AsNoTracking();
+        IQueryable<ContentReport> query = context.ContentReports.AsNoTracking();
 
         if (status.HasValue) {
             query = query.Where(r => r.Status == status.Value);
         }
 
-        var total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
 
-        var items = await query
+        List<ContentReport> items = await query
             .OrderByDescending(r => r.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)

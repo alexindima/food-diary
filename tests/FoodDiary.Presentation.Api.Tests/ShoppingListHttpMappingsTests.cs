@@ -1,6 +1,13 @@
+using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
+using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
+using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
+using FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
+using FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Mappings;
 using FoodDiary.Presentation.Api.Features.ShoppingLists.Requests;
+using FoodDiary.Presentation.Api.Features.ShoppingLists.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -10,7 +17,7 @@ public sealed class ShoppingListHttpMappingsTests {
     public void ToCurrentQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToCurrentQuery();
+        GetCurrentShoppingListQuery query = userId.ToCurrentQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -19,7 +26,7 @@ public sealed class ShoppingListHttpMappingsTests {
     public void ToListQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToListQuery();
+        GetShoppingListsQuery query = userId.ToListQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -29,7 +36,7 @@ public sealed class ShoppingListHttpMappingsTests {
         var userId = Guid.NewGuid();
         var listId = Guid.NewGuid();
 
-        var query = listId.ToGetByIdQuery(userId);
+        GetShoppingListByIdQuery query = listId.ToGetByIdQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(listId, query.ShoppingListId);
@@ -40,7 +47,7 @@ public sealed class ShoppingListHttpMappingsTests {
         var userId = Guid.NewGuid();
         var listId = Guid.NewGuid();
 
-        var command = listId.ToDeleteCommand(userId);
+        DeleteShoppingListCommand command = listId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(listId, command.ShoppingListId);
@@ -54,7 +61,7 @@ public sealed class ShoppingListHttpMappingsTests {
             new(productId, "Milk", 2.0, "L", "Dairy", false, 1),
         });
 
-        var command = request.ToCommand(userId);
+        CreateShoppingListCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("Groceries", command.Name);
@@ -69,7 +76,7 @@ public sealed class ShoppingListHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new CreateShoppingListHttpRequest("Empty List");
 
-        var command = request.ToCommand(userId);
+        CreateShoppingListCommand command = request.ToCommand(userId);
 
         Assert.Empty(command.Items);
     }
@@ -82,7 +89,7 @@ public sealed class ShoppingListHttpMappingsTests {
             new(null, "Eggs", 12, "pcs", "Protein", true, 2),
         });
 
-        var command = request.ToCommand(userId, listId);
+        UpdateShoppingListCommand command = request.ToCommand(userId, listId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(listId, command.ShoppingListId);
@@ -94,10 +101,10 @@ public sealed class ShoppingListHttpMappingsTests {
     [Fact]
     public void ShoppingListSummaryModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
-        var createdAt = DateTime.UtcNow;
+        DateTime createdAt = DateTime.UtcNow;
         var model = new ShoppingListSummaryModel(id, "Weekly", createdAt, 5);
 
-        var response = model.ToHttpResponse();
+        ShoppingListSummaryHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal("Weekly", response.Name);
@@ -110,13 +117,13 @@ public sealed class ShoppingListHttpMappingsTests {
         var listId = Guid.NewGuid();
         var itemId = Guid.NewGuid();
         var productId = Guid.NewGuid();
-        var createdAt = DateTime.UtcNow;
+        DateTime createdAt = DateTime.UtcNow;
         var items = new List<ShoppingListItemModel> {
             new(itemId, listId, productId, "Bread", 1, "loaf", "Bakery", false, 0),
         };
         var model = new ShoppingListModel(listId, "Shopping", createdAt, items);
 
-        var response = model.ToHttpResponse();
+        ShoppingListHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(listId, response.Id);
         Assert.Equal("Shopping", response.Name);

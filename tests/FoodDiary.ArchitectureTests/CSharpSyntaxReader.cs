@@ -7,9 +7,9 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 internal static class CSharpSyntaxReader {
     public static IReadOnlyList<MethodDeclaration> ReadMethods(string path) {
-        var source = File.ReadAllText(path);
-        var tree = CSharpSyntaxTree.ParseText(source);
-        var root = tree.GetCompilationUnitRoot();
+        string source = File.ReadAllText(path);
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(source);
+        CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
 
         return root.DescendantNodes()
             .OfType<MethodDeclarationSyntax>()
@@ -25,13 +25,33 @@ internal static class CSharpSyntaxReader {
     }
 
     public static string? ReadNamespace(string path) {
-        var source = File.ReadAllText(path);
-        var root = CSharpSyntaxTree.ParseText(source).GetCompilationUnitRoot();
+        string source = File.ReadAllText(path);
+        CompilationUnitSyntax root = CSharpSyntaxTree.ParseText(source).GetCompilationUnitRoot();
 
         return root.DescendantNodes()
             .OfType<BaseNamespaceDeclarationSyntax>()
             .Select(namespaceDeclaration => namespaceDeclaration.Name.ToString())
             .FirstOrDefault();
+    }
+
+    public static IReadOnlyList<SourceLocation> ReadTargetTypedNewInvocationArguments(string path) {
+        string source = File.ReadAllText(path);
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(source);
+        CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
+
+        return root.DescendantNodes()
+            .OfType<ImplicitObjectCreationExpressionSyntax>()
+            .Where(static expression =>
+                expression.Parent is ArgumentSyntax {
+                    Parent: ArgumentListSyntax {
+                        Parent: InvocationExpressionSyntax
+                    }
+                })
+            .Select(expression => new SourceLocation(
+                path,
+                tree.GetLineSpan(expression.Span).StartLinePosition.Line + 1,
+                expression.ToString()))
+            .ToArray();
     }
 
     private static bool IsControllerAction(MethodDeclarationSyntax method) {
@@ -41,6 +61,12 @@ internal static class CSharpSyntaxReader {
 
         return classDeclaration.Identifier.ValueText.EndsWith("Controller", StringComparison.Ordinal) ||
                classDeclaration.Identifier.ValueText.EndsWith("ControllerBase", StringComparison.Ordinal);
+    }
+
+    [ExcludeFromCodeCoverage]
+    internal sealed record SourceLocation(string Path, int Line, string Text) {
+        public string Format(string repositoryRoot) =>
+            $"{System.IO.Path.GetRelativePath(repositoryRoot, Path)}:{Line} {Text}";
     }
 
     [ExcludeFromCodeCoverage]
@@ -54,7 +80,7 @@ internal static class CSharpSyntaxReader {
         bool IsControllerAction) {
         public bool IsAsyncLike {
             get {
-                var normalizedReturnType = ReturnType.Replace(" ", string.Empty, StringComparison.Ordinal);
+                string normalizedReturnType = ReturnType.Replace(" ", string.Empty, StringComparison.Ordinal);
 
                 return HasAsyncModifier ||
                     normalizedReturnType.Equals("Task", StringComparison.Ordinal) ||

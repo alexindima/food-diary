@@ -73,7 +73,7 @@ public sealed class QueuedEmail : AggregateRoot<QueuedEmailId> {
     public QueuedEmailFailureDecision MarkFailedAttempt(string error) {
         ArgumentException.ThrowIfNullOrWhiteSpace(error);
 
-        var isTerminalFailure = AttemptCount >= MaxAttempts;
+        bool isTerminalFailure = AttemptCount >= MaxAttempts;
         Status = isTerminalFailure ? QueuedEmailStatus.Failed : QueuedEmailStatus.Retry;
 
         return new QueuedEmailFailureDecision(

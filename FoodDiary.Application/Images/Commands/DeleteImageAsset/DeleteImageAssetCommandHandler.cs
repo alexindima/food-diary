@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 
@@ -20,7 +21,7 @@ public sealed class DeleteImageAssetCommandHandler(
         var userId = new UserId(request.UserId);
         var assetId = new ImageAssetId(request.AssetId);
 
-        var asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
+        ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
             return Result.Failure(Errors.Image.NotFound(request.AssetId));
         }
@@ -29,7 +30,7 @@ public sealed class DeleteImageAssetCommandHandler(
             return Result.Failure(Errors.Image.Forbidden());
         }
 
-        var cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
+        DeleteImageAssetResult cleanupResult = await cleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (cleanupResult.Deleted) {
             return Result.Success();
         }

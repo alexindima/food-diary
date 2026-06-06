@@ -3,6 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 
@@ -11,12 +13,12 @@ public class GetWearableConnectionsQueryHandler(IWearableConnectionRepository re
     public async Task<Result<IReadOnlyList<WearableConnectionModel>>> Handle(
         GetWearableConnectionsQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<WearableConnectionModel>>(userIdResult.Error);
         }
 
-        var connections = await repository.GetAllForUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<WearableConnection> connections = await repository.GetAllForUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         var models = connections
             .Select(c => new WearableConnectionModel(

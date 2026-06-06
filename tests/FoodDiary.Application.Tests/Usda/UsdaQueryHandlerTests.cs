@@ -9,6 +9,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 
 namespace FoodDiary.Application.Tests.Usda;
 
@@ -29,7 +30,7 @@ public sealed class UsdaQueryHandlerTests {
         };
         var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
 
-        var result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 3), CancellationToken.None);
+        Result<IReadOnlyList<UsdaFoodModel>> result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 3), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal([1, 2], result.Value.Select(f => f.FdcId));
@@ -47,7 +48,7 @@ public sealed class UsdaQueryHandlerTests {
         var branded = new StubUsdaFoodSearchService();
         var handler = new SearchUsdaFoodsQueryHandler(repository, branded);
 
-        var result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 2), CancellationToken.None);
+        Result<IReadOnlyList<UsdaFoodModel>> result = await handler.Handle(new SearchUsdaFoodsQuery("chicken", Limit: 2), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.False(branded.SearchCalled);
@@ -78,15 +79,15 @@ public sealed class UsdaQueryHandlerTests {
         };
         var handler = new GetMicronutrientsQueryHandler(repository, new StubUsdaFoodSearchService());
 
-        var result = await handler.Handle(new GetMicronutrientsQuery(10), CancellationToken.None);
+        Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(10), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("Spinach", result.Value.Description);
-        var calcium = Assert.Single(result.Value.Nutrients);
+        MicronutrientModel calcium = Assert.Single(result.Value.Nutrients);
         Assert.Equal(120, calcium.AmountPer100g);
         Assert.Equal(1000, calcium.DailyValue);
         Assert.Equal(12, calcium.PercentDailyValue);
-        var portion = Assert.Single(result.Value.Portions);
+        UsdaFoodPortionModel portion = Assert.Single(result.Value.Portions);
         Assert.Equal("cup", portion.MeasureUnitName);
     }
 
@@ -108,7 +109,7 @@ public sealed class UsdaQueryHandlerTests {
         };
         var handler = new GetMicronutrientsQueryHandler(repository, branded);
 
-        var result = await handler.Handle(new GetMicronutrientsQuery(20), CancellationToken.None);
+        Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(20), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("Branded yogurt", result.Value.Description);
@@ -121,7 +122,7 @@ public sealed class UsdaQueryHandlerTests {
             new StubUsdaFoodRepository(),
             new StubUsdaFoodSearchService());
 
-        var result = await handler.Handle(new GetMicronutrientsQuery(999), CancellationToken.None);
+        Result<UsdaFoodDetailModel> result = await handler.Handle(new GetMicronutrientsQuery(999), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Usda.FoodNotFound", result.Error.Code);
@@ -175,17 +176,17 @@ public sealed class UsdaQueryHandlerTests {
         };
         var handler = new GetDailyMicronutrientsQueryHandler(meals, repository);
 
-        var result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
+        Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.LinkedProductCount);
         Assert.Equal(3, result.Value.TotalProductCount);
         Assert.NotNull(result.Value.HealthScores);
-        var calcium = Assert.Single(result.Value.Nutrients, nutrient => nutrient.NutrientId == 301);
+        DailyMicronutrientModel calcium = Assert.Single(result.Value.Nutrients, nutrient => nutrient.NutrientId == 301);
         Assert.Equal(240, calcium.TotalAmount);
         Assert.Equal(1000, calcium.DailyValue);
         Assert.Equal(24, calcium.PercentDailyValue);
-        var iron = Assert.Single(result.Value.Nutrients, nutrient => nutrient.NutrientId == 303);
+        DailyMicronutrientModel iron = Assert.Single(result.Value.Nutrients, nutrient => nutrient.NutrientId == 303);
         Assert.Equal(5, iron.TotalAmount);
         Assert.Equal(27.8, iron.PercentDailyValue);
     }
@@ -211,7 +212,7 @@ public sealed class UsdaQueryHandlerTests {
         var repository = new StubUsdaFoodRepository();
         var handler = new GetDailyMicronutrientsQueryHandler(new StubMealRepository { Meals = [meal] }, repository);
 
-        var result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
+        Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.LinkedProductCount);
@@ -225,7 +226,7 @@ public sealed class UsdaQueryHandlerTests {
     public async Task GetDailyMicronutrients_WithNullUserId_ReturnsFailure() {
         var handler = new GetDailyMicronutrientsQueryHandler(new StubMealRepository(), new StubUsdaFoodRepository());
 
-        var result = await handler.Handle(
+        Result<DailyMicronutrientSummaryModel> result = await handler.Handle(
             new GetDailyMicronutrientsQuery(null, new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc)),
             CancellationToken.None);
 
@@ -259,7 +260,7 @@ public sealed class UsdaQueryHandlerTests {
             new StubMealRepository { Meals = [meal] },
             repository);
 
-        var result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
+        Result<DailyMicronutrientSummaryModel> result = await handler.Handle(new GetDailyMicronutrientsQuery(userId.Value, date), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.LinkedProductCount);
@@ -394,7 +395,7 @@ public sealed class UsdaQueryHandlerTests {
     }
 
     private static void AddProductItem(Meal meal, Product product, double amount) {
-        var item = meal.AddProduct(product.Id, amount);
+        MealItem item = meal.AddProduct(product.Id, amount);
         typeof(MealItem).GetProperty(nameof(MealItem.Product))!.SetValue(item, product);
     }
 }

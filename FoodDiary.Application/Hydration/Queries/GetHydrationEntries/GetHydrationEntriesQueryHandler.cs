@@ -7,6 +7,8 @@ using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
@@ -17,19 +19,19 @@ public class GetHydrationEntriesQueryHandler(
     public async Task<Result<IReadOnlyList<HydrationEntryModel>>> Handle(
         GetHydrationEntriesQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<IReadOnlyList<HydrationEntryModel>>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<HydrationEntryModel>>(accessError);
         }
 
-        var dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
-        var entries = await repository.GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
+        DateTime dateUtc = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(query.DateUtc);
+        IReadOnlyList<HydrationEntry> entries = await repository.GetByDateAsync(userId, dateUtc, cancellationToken).ConfigureAwait(false);
         var response = entries.Select(e => e.ToModel()).ToList();
         return Result.Success<IReadOnlyList<HydrationEntryModel>>(response);
     }

@@ -18,7 +18,7 @@ public sealed class MailRelayDomainTests {
         string eventType,
         string? classification,
         bool expectedShouldSuppress) {
-        var shouldSuppress = MailRelaySuppressionPolicy.ShouldSuppress(eventType, classification);
+        bool shouldSuppress = MailRelaySuppressionPolicy.ShouldSuppress(eventType, classification);
 
         Assert.Equal(expectedShouldSuppress, shouldSuppress);
     }
@@ -33,7 +33,7 @@ public sealed class MailRelayDomainTests {
         string value,
         bool expectedResult,
         string expectedNormalized) {
-        var result = MailRelayDeliveryEventType.TryNormalize(value, out var normalized);
+        bool result = MailRelayDeliveryEventType.TryNormalize(value, out string? normalized);
 
         Assert.Equal(expectedResult, result);
         Assert.Equal(expectedNormalized, normalized);
@@ -48,7 +48,7 @@ public sealed class MailRelayDomainTests {
     public void BounceClassification_IsSupportedOptional_ReturnsExpectedResult(
         string? value,
         bool expectedResult) {
-        var result = MailRelayBounceClassification.IsSupportedOptional(value);
+        bool result = MailRelayBounceClassification.IsSupportedOptional(value);
 
         Assert.Equal(expectedResult, result);
     }
@@ -73,7 +73,7 @@ public sealed class MailRelayDomainTests {
             attemptCount,
             maxAttempts));
 
-        var decision = email.MarkFailedAttempt("SMTP failure");
+        QueuedEmailFailureDecision decision = email.MarkFailedAttempt("SMTP failure");
 
         Assert.Equal(expectedStatus, email.Status);
         Assert.Equal(expectedStatus, decision.Status);
@@ -96,7 +96,7 @@ public sealed class MailRelayDomainTests {
             3);
         var email = QueuedEmail.FromPersistence(message);
 
-        var request = email.ToSubmissionRequest();
+        RelayEmailMessageRequest request = email.ToSubmissionRequest();
 
         Assert.Equal(message.FromAddress, request.FromAddress);
         Assert.Equal(message.FromName, request.FromName);
@@ -139,9 +139,9 @@ public sealed class MailRelayDomainTests {
     [Fact]
     public void Entity_GetHashCode_CachesPersistedIdentityHashAndUsesRuntimeHashForTransientEntities() {
         var persisted = new TestEntity(Guid.NewGuid());
-        var first = persisted.GetHashCode();
+        int first = persisted.GetHashCode();
 
-        var second = persisted.GetHashCode();
+        int second = persisted.GetHashCode();
         var transient = new TestEntity();
 
         Assert.Equal(first, second);

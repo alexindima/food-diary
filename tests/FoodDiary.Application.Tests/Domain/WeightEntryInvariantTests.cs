@@ -40,7 +40,7 @@ public class WeightEntryInvariantTests {
 
     [Fact]
     public void Update_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         var entry = WeightEntry.Create(UserId.New(), date, 72);
 
         entry.Update(weight: 72, date: date);
@@ -51,7 +51,7 @@ public class WeightEntryInvariantTests {
     [Fact]
     public void Update_WithDifferentValues_SetsModifiedOnUtc() {
         var entry = WeightEntry.Create(UserId.New(), DateTime.UtcNow.Date, 72);
-        var newDate = DateTime.UtcNow.AddDays(-1);
+        DateTime newDate = DateTime.UtcNow.AddDays(-1);
 
         entry.Update(weight: 73.5, date: newDate);
 

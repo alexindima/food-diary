@@ -12,14 +12,14 @@ public sealed class GetAdminContentReportsQueryHandler(IContentReportRepository 
     public async Task<Result<PagedResponse<AdminContentReportModel>>> Handle(
         GetAdminContentReportsQuery query,
         CancellationToken cancellationToken) {
-        var pageNumber = Math.Max(query.Page, 1);
-        var pageSize = Math.Max(query.Limit, 1);
+        int pageNumber = Math.Max(query.Page, 1);
+        int pageSize = Math.Max(query.Limit, 1);
 
-        ReportStatus? status = query.Status is not null && Enum.TryParse<ReportStatus>(query.Status, out var parsed)
+        ReportStatus? status = query.Status is not null && Enum.TryParse<ReportStatus>(query.Status, out ReportStatus parsed)
             ? parsed
             : null;
 
-        var (items, total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<Domain.Entities.Social.ContentReport>? items, int total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
         var models = items.Select(r => new AdminContentReportModel(
             r.Id.Value,
@@ -32,7 +32,7 @@ public sealed class GetAdminContentReportsQueryHandler(IContentReportRepository 
             r.CreatedOnUtc,
             r.ReviewedAtUtc)).ToList();
 
-        var totalPages = (int)Math.Ceiling(total / (double)pageSize);
+        int totalPages = (int)Math.Ceiling(total / (double)pageSize);
         return Result.Success(new PagedResponse<AdminContentReportModel>(models, pageNumber, pageSize, totalPages, total));
     }
 }

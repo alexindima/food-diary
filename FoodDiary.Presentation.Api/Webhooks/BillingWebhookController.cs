@@ -25,10 +25,10 @@ public sealed class BillingWebhookController(ISender mediator) : BaseApiControll
     public async Task<IActionResult> HandleWebhook([FromRoute] string provider) {
         Request.EnableBuffering();
         using var reader = new StreamReader(Request.Body, Encoding.UTF8, leaveOpen: true);
-        var payload = await reader.ReadToEndAsync();
+        string payload = await reader.ReadToEndAsync();
         Request.Body.Position = 0;
 
-        var signatureHeader = ResolveSignatureHeader(provider);
+        string signatureHeader = ResolveSignatureHeader(provider);
         return await HandleNoContent(provider.ToWebhookCommand(payload, signatureHeader));
     }
 

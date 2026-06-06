@@ -2,6 +2,7 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Lessons.Common;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminLessons;
 
@@ -10,7 +11,7 @@ public sealed class GetAdminLessonsQueryHandler(INutritionLessonRepository repos
     public async Task<Result<IReadOnlyList<AdminLessonModel>>> Handle(
         GetAdminLessonsQuery query,
         CancellationToken cancellationToken) {
-        var lessons = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<NutritionLesson> lessons = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
         var models = lessons.Select(l => new AdminLessonModel(
             l.Id.Value,

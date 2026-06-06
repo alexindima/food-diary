@@ -1,5 +1,6 @@
 using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,7 +13,7 @@ public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
     public void AddApiServices_BindsHostOptionsFromConfiguration() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
@@ -40,14 +41,14 @@ public sealed class ApiHostOptionsConfigurationTests {
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var cors = provider.GetRequiredService<IOptions<ApiCorsOptions>>().Value;
-        var forwardedHeaders = provider.GetRequiredService<IOptions<ApiForwardedHeadersOptions>>().Value;
-        var rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
-        var outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
-        var userLoginEventCleanup = provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value;
-        var forwardedHeadersOptions = provider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>().Value;
+        ApiCorsOptions cors = provider.GetRequiredService<IOptions<ApiCorsOptions>>().Value;
+        ApiForwardedHeadersOptions forwardedHeaders = provider.GetRequiredService<IOptions<ApiForwardedHeadersOptions>>().Value;
+        ApiRateLimitingOptions rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
+        ApiOutputCacheOptions outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
+        UserLoginEventCleanupOptions userLoginEventCleanup = provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value;
+        ForwardedHeadersOptions forwardedHeadersOptions = provider.GetRequiredService<IOptions<Microsoft.AspNetCore.Builder.ForwardedHeadersOptions>>().Value;
 
         Assert.Equal(["http://localhost:4200"], cors.Origins);
         Assert.Equal(2, forwardedHeaders.ForwardLimit);
@@ -77,7 +78,7 @@ public sealed class ApiHostOptionsConfigurationTests {
             }
         };
 
-        var valid = ApiOutputCacheOptions.HasValidUserScoped(options);
+        bool valid = ApiOutputCacheOptions.HasValidUserScoped(options);
 
         Assert.Equal(expected, valid);
     }
@@ -85,7 +86,7 @@ public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
     public void AddApiServices_WithInvalidUserScopedOutputCache_FailsOptionsValidation() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
@@ -104,9 +105,9 @@ public sealed class ApiHostOptionsConfigurationTests {
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var exception = Assert.Throws<OptionsValidationException>(
+        OptionsValidationException exception = Assert.Throws<OptionsValidationException>(
             () => provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value);
         Assert.Contains("OutputCache:UserScoped:ExpirationSeconds", exception.Message, StringComparison.Ordinal);
     }
@@ -114,7 +115,7 @@ public sealed class ApiHostOptionsConfigurationTests {
     [Fact]
     public void AddApiServices_ConfiguresHttpLoggingOptions() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
                 ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
@@ -131,9 +132,9 @@ public sealed class ApiHostOptionsConfigurationTests {
         services.AddLogging();
         services.AddSingleton<IConfiguration>(configuration);
         services.AddApiServices(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var options = provider.GetRequiredService<IOptions<HttpLoggingOptions>>().Value;
+        HttpLoggingOptions options = provider.GetRequiredService<IOptions<HttpLoggingOptions>>().Value;
 
         Assert.Equal(
             HttpLoggingFields.RequestMethod |

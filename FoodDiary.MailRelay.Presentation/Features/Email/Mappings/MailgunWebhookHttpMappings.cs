@@ -15,7 +15,7 @@ public static class MailgunWebhookHttpMappings {
             return false;
         }
 
-        var eventType = request.EventData.Event.Trim().ToLowerInvariant();
+        string eventType = request.EventData.Event.Trim().ToLowerInvariant();
         deliveryEvent = eventType switch {
             "complained" => new IngestMailEventRequest(
                 "complaint",

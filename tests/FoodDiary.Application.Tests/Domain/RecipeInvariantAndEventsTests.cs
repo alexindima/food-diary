@@ -3,6 +3,8 @@ using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using System.Reflection;
+using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tests.Domain;
 
@@ -207,7 +209,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void UpdateMedia_WithImageUrlOnly_PreservesImageAssetId() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2, imageAssetId: ImageAssetId.New());
-        var initialAssetId = recipe.ImageAssetId;
+        ImageAssetId? initialAssetId = recipe.ImageAssetId;
 
         recipe.UpdateMedia(imageUrl: " https://img ");
 
@@ -328,7 +330,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void RemoveStep_WhenStepBelongsToRecipe_RemovesStepAndSetsModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step 1");
+        RecipeStep step = recipe.AddStep(1, "Step 1");
         recipe.ClearDomainEvents();
 
         recipe.RemoveStep(step);
@@ -354,7 +356,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_Update_WithSameValues_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Instruction", "Title", "https://img");
+        RecipeStep step = recipe.AddStep(1, "Instruction", "Title", "https://img");
         recipe.ClearDomainEvents();
 
         step.Update("Instruction", "Title", "https://img", null);
@@ -365,7 +367,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_Update_NormalizesAndClearsOptionalFields() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Instruction", "Title", "https://img");
+        RecipeStep step = recipe.AddStep(1, "Instruction", "Title", "https://img");
 
         step.Update("  New instruction  ", "   ", "   ", null);
 
@@ -377,10 +379,10 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_AddNestedRecipeIngredient_WithValidValues_AddsIngredient() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
+        RecipeStep step = recipe.AddStep(1, "Step");
         var nestedRecipeId = RecipeId.New();
 
-        var ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, 1.5);
+        RecipeIngredient ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, 1.5);
 
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
         Assert.Null(ingredient.ProductId);
@@ -392,8 +394,8 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_RemoveIngredient_WhenIngredientExists_RemovesIngredientAndSetsModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
-        var ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeStep step = recipe.AddStep(1, "Step");
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
 
         step.RemoveIngredient(ingredient);
 
@@ -404,7 +406,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_Update_WithTitleOverLimit_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Instruction");
+        RecipeStep step = recipe.AddStep(1, "Instruction");
 
         Assert.Throws<ArgumentOutOfRangeException>(() => step.Update("Instruction", new string('t', 257)));
     }
@@ -412,7 +414,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_AddProductIngredient_WithEmptyProductId_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
+        RecipeStep step = recipe.AddStep(1, "Step");
 
         Assert.Throws<ArgumentException>(() => step.AddProductIngredient(ProductId.Empty, 100));
     }
@@ -420,18 +422,18 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_AddNestedRecipeIngredient_WithEmptyRecipeId_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
+        RecipeStep step = recipe.AddStep(1, "Step");
 
         Assert.Throws<ArgumentException>(() => step.AddNestedRecipeIngredient(RecipeId.Empty, 1));
     }
 
     [Fact]
     public void Step_Create_WithEmptyRecipeId_Throws() {
-        var method = typeof(RecipeStep).GetMethod(
+        MethodInfo? method = typeof(RecipeStep).GetMethod(
             "Create",
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-        var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
             method!.Invoke(null, [RecipeId.Empty, 1, "Step", null, null, null]));
 
         Assert.IsType<ArgumentException>(exception.InnerException);
@@ -445,7 +447,7 @@ public class RecipeInvariantAndEventsTests {
     [InlineData(double.PositiveInfinity)]
     public void Step_AddProductIngredient_WithInvalidAmount_Throws(double amount) {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
+        RecipeStep step = recipe.AddStep(1, "Step");
 
         Assert.Throws<ArgumentOutOfRangeException>(() => step.AddProductIngredient(ProductId.New(), amount));
     }
@@ -453,8 +455,8 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Ingredient_UpdateAmount_WithSameValue_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
-        var ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeStep step = recipe.AddStep(1, "Step");
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
 
         ingredient.UpdateAmount(100);
 
@@ -464,8 +466,8 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Ingredient_UpdateAmount_WithBoundaryValue_UpdatesAmount() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
-        var ingredient = step.AddProductIngredient(ProductId.New(), 100);
+        RecipeStep step = recipe.AddStep(1, "Step");
+        RecipeIngredient ingredient = step.AddProductIngredient(ProductId.New(), 100);
 
         ingredient.UpdateAmount(1000000d);
 
@@ -475,11 +477,11 @@ public class RecipeInvariantAndEventsTests {
 
     [Fact]
     public void Ingredient_CreateWithRecipe_WithEmptyRecipeStepId_Throws() {
-        var method = typeof(RecipeIngredient).GetMethod(
+        MethodInfo? method = typeof(RecipeIngredient).GetMethod(
             "CreateWithRecipe",
             System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic);
 
-        var exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
+        TargetInvocationException exception = Assert.Throws<System.Reflection.TargetInvocationException>(() =>
             method!.Invoke(null, [RecipeStepId.Empty, RecipeId.New(), 1d]));
 
         Assert.IsType<ArgumentException>(exception.InnerException);
@@ -505,7 +507,7 @@ public class RecipeInvariantAndEventsTests {
     public void RemoveStep_WhenStepDoesNotBelongToRecipe_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         var anotherRecipe = Recipe.Create(UserId.New(), "Other", 2);
-        var foreignStep = anotherRecipe.AddStep(1, "Foreign");
+        RecipeStep foreignStep = anotherRecipe.AddStep(1, "Foreign");
         anotherRecipe.ClearDomainEvents();
 
         recipe.RemoveStep(foreignStep);
@@ -516,7 +518,7 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_RemoveIngredient_WithNull_Throws() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
+        RecipeStep step = recipe.AddStep(1, "Step");
 
         Assert.Throws<ArgumentNullException>(() => step.RemoveIngredient(null!));
     }
@@ -524,9 +526,9 @@ public class RecipeInvariantAndEventsTests {
     [Fact]
     public void Step_RemoveIngredient_WhenMissing_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
-        var step = recipe.AddStep(1, "Step");
-        var otherStep = recipe.AddStep(2, "Another");
-        var foreignIngredient = otherStep.AddProductIngredient(ProductId.New(), 100);
+        RecipeStep step = recipe.AddStep(1, "Step");
+        RecipeStep otherStep = recipe.AddStep(2, "Another");
+        RecipeIngredient foreignIngredient = otherStep.AddProductIngredient(ProductId.New(), 100);
 
         step.RemoveIngredient(foreignIngredient);
 
@@ -556,8 +558,8 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
         recipe.SetManualNutrition(100, 10, 10, 10, 1, 0);
-        var eventCountBefore = recipe.DomainEvents.Count;
-        var modifiedBefore = recipe.ModifiedOnUtc;
+        int eventCountBefore = recipe.DomainEvents.Count;
+        DateTime? modifiedBefore = recipe.ModifiedOnUtc;
 
         recipe.SetManualNutrition(100, 10, 10, 10, 1, 0);
 
@@ -615,9 +617,9 @@ public class RecipeInvariantAndEventsTests {
     public void NavigationCollections_AreExposedAsReadOnly() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
-        var mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(recipe.MealItems);
-        var nestedRecipeUsages = Assert.IsAssignableFrom<ICollection<RecipeIngredient>>(recipe.NestedRecipeUsages);
-        var steps = Assert.IsAssignableFrom<ICollection<RecipeStep>>(recipe.Steps);
+        ICollection<MealItem> mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(recipe.MealItems);
+        ICollection<RecipeIngredient> nestedRecipeUsages = Assert.IsAssignableFrom<ICollection<RecipeIngredient>>(recipe.NestedRecipeUsages);
+        ICollection<RecipeStep> steps = Assert.IsAssignableFrom<ICollection<RecipeStep>>(recipe.Steps);
 
         Assert.True(mealItems.IsReadOnly);
         Assert.True(nestedRecipeUsages.IsReadOnly);

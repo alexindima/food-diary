@@ -11,9 +11,9 @@ public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider d
     private static readonly TimeSpan CodeTtl = TimeSpan.FromMinutes(2);
 
     public async Task<AdminSsoCode> CreateCodeAsync(UserId userId, CancellationToken cancellationToken = default) {
-        var code = GenerateCode();
-        var expiresAt = dateTimeProvider.UtcNow.Add(CodeTtl);
-        var key = CachePrefix + code;
+        string code = GenerateCode();
+        DateTime expiresAt = dateTimeProvider.UtcNow.Add(CodeTtl);
+        string key = CachePrefix + code;
 
         await cache.SetStringAsync(
             key,
@@ -29,20 +29,20 @@ public sealed class AdminSsoService(IDistributedCache cache, IDateTimeProvider d
             return null;
         }
 
-        var key = CachePrefix + code;
-        var value = await cache.GetStringAsync(key, cancellationToken).ConfigureAwait(false);
+        string key = CachePrefix + code;
+        string? value = await cache.GetStringAsync(key, cancellationToken).ConfigureAwait(false);
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
         await cache.RemoveAsync(key, cancellationToken).ConfigureAwait(false);
 
-        return Guid.TryParse(value, out var id) ? new UserId(id) : null;
+        return Guid.TryParse(value, out Guid id) ? new UserId(id) : null;
     }
 
     private static string GenerateCode() {
-        var bytes = RandomNumberGenerator.GetBytes(32);
-        var text = Convert.ToBase64String(bytes)
+        byte[] bytes = RandomNumberGenerator.GetBytes(32);
+        string text = Convert.ToBase64String(bytes)
             .TrimEnd('=')
             .Replace('+', '-')
             .Replace('/', '_');

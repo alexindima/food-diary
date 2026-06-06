@@ -36,7 +36,7 @@ public sealed class RecordingImageAssetAccessService : IImageAssetAccessService 
             return Task.FromResult(Result.Success<ImageAsset?>(null));
         }
 
-        var url = _urls.GetValueOrDefault(assetId.Value, $"https://cdn.example/{assetId.Value.Value:D}.jpg");
+        string url = _urls.GetValueOrDefault(assetId.Value, $"https://cdn.example/{assetId.Value.Value:D}.jpg");
         var asset = ImageAsset.Create(userId, $"images/{assetId.Value.Value:D}.jpg", url);
         return Task.FromResult(Result.Success<ImageAsset?>(asset));
     }

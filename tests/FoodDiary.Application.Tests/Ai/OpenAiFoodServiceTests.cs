@@ -23,7 +23,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.CalculateNutritionAsync(
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
@@ -45,7 +45,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.CalculateNutritionAsync(
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             user.Id,
             CancellationToken.None);
@@ -66,7 +66,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.CalculateNutritionAsync(
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             userId,
             CancellationToken.None);
@@ -87,7 +87,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.CalculateNutritionAsync(
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
@@ -111,7 +111,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.CalculateNutritionAsync(
+        Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
@@ -131,7 +131,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
@@ -139,7 +139,7 @@ public sealed class OpenAiFoodServiceTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var usage = Assert.Single(usageRepository.Items);
+        AiUsage usage = Assert.Single(usageRepository.Items);
         Assert.Equal("vision", usage.Operation);
         Assert.Equal("test-model", usage.Model);
         Assert.Equal(18, usage.TotalTokens);
@@ -155,7 +155,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
@@ -178,7 +178,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             userId,
@@ -200,7 +200,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
@@ -225,7 +225,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
@@ -254,7 +254,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.AnalyzeFoodImageAsync(
+        Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
@@ -276,7 +276,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value.Items);
@@ -294,7 +294,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
@@ -314,7 +314,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubDateTimeProvider(),
             new StubAiPromptProvider());
 
-        var result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
+        Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Ai.EmptyItems", result.Error.Code);

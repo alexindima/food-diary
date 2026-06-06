@@ -21,7 +21,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task StartFasting_WithNullUserId_HasError() {
         var command = new StartFastingCommand(null, "F16_8", null, null, null, null, null, null, null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -29,7 +29,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task StartFasting_WithEmptyUserId_HasError() {
         var command = new StartFastingCommand(Guid.Empty, "F16_8", null, null, null, null, null, null, null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -37,7 +37,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task StartFasting_WithEmptyProtocol_HasError() {
         var command = new StartFastingCommand(Guid.NewGuid(), "", null, null, null, null, null, null, null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.Protocol);
     }
@@ -45,7 +45,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task StartFasting_WithValidCommand_NoErrors() {
         var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", null, 16, null, null, null, null, null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -53,7 +53,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task StartFasting_WithCyclicPlanType_WithoutProtocol_NoErrors() {
         var command = new StartFastingCommand(Guid.NewGuid(), null, "Cyclic", null, 1, 3, 16, 8, null);
-        var result = await _validator.TestValidateAsync(command);
+        TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveValidationErrorFor(c => c.Protocol);
     }
@@ -61,7 +61,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task EndFasting_WithEmptyUserId_HasError() {
         var validator = new EndFastingCommandValidator();
-        var result = await validator.TestValidateAsync(new EndFastingCommand(Guid.Empty));
+        TestValidationResult<EndFastingCommand> result = await validator.TestValidateAsync(new EndFastingCommand(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -69,7 +69,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task SkipCyclicDay_WithNullUserId_HasError() {
         var validator = new SkipCyclicDayCommandValidator();
-        var result = await validator.TestValidateAsync(new SkipCyclicDayCommand(null));
+        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(null));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -77,7 +77,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task SkipCyclicDay_WithEmptyUserId_HasError() {
         var validator = new SkipCyclicDayCommandValidator();
-        var result = await validator.TestValidateAsync(new SkipCyclicDayCommand(Guid.Empty));
+        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -85,7 +85,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task PostponeCyclicDay_WithEmptyUserId_HasError() {
         var validator = new PostponeCyclicDayCommandValidator();
-        var result = await validator.TestValidateAsync(new PostponeCyclicDayCommand(Guid.Empty));
+        TestValidationResult<PostponeCyclicDayCommand> result = await validator.TestValidateAsync(new PostponeCyclicDayCommand(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -93,7 +93,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task ReduceActiveFastingTarget_WithInvalidHours_HasError() {
         var validator = new ReduceActiveFastingTargetCommandValidator();
-        var result = await validator.TestValidateAsync(new ReduceActiveFastingTargetCommand(Guid.NewGuid(), 0));
+        TestValidationResult<ReduceActiveFastingTargetCommand> result = await validator.TestValidateAsync(new ReduceActiveFastingTargetCommand(Guid.NewGuid(), 0));
 
         result.ShouldHaveValidationErrorFor(x => x.ReducedHours);
     }
@@ -101,7 +101,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task ExtendActiveFasting_WithNullUserId_HasInvalidTokenError() {
         var validator = new ExtendActiveFastingCommandValidator();
-        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(null, 4));
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(null, 4));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId)
             .WithErrorCode("Authentication.InvalidToken");
@@ -110,7 +110,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task ExtendActiveFasting_WithInvalidHours_HasError() {
         var validator = new ExtendActiveFastingCommandValidator();
-        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 0));
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 0));
 
         result.ShouldHaveValidationErrorFor(x => x.AdditionalHours)
             .WithErrorCode("Validation.Invalid");
@@ -119,7 +119,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task ExtendActiveFasting_WithValidCommand_HasNoErrors() {
         var validator = new ExtendActiveFastingCommandValidator();
-        var result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 4));
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(Guid.NewGuid(), 4));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -127,7 +127,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetCurrentFasting_WithNullUserId_HasError() {
         var validator = new GetCurrentFastingQueryValidator();
-        var result = await validator.TestValidateAsync(new GetCurrentFastingQuery(null));
+        TestValidationResult<GetCurrentFastingQuery> result = await validator.TestValidateAsync(new GetCurrentFastingQuery(null));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -135,7 +135,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetFastingOverview_WithEmptyUserId_HasError() {
         var validator = new GetFastingOverviewQueryValidator();
-        var result = await validator.TestValidateAsync(new GetFastingOverviewQuery(Guid.Empty));
+        TestValidationResult<GetFastingOverviewQuery> result = await validator.TestValidateAsync(new GetFastingOverviewQuery(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -143,7 +143,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetFastingStats_WithEmptyUserId_HasError() {
         var validator = new GetFastingStatsQueryValidator();
-        var result = await validator.TestValidateAsync(new GetFastingStatsQuery(Guid.Empty));
+        TestValidationResult<GetFastingStatsQuery> result = await validator.TestValidateAsync(new GetFastingStatsQuery(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -151,7 +151,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetFastingInsights_WithEmptyUserId_HasError() {
         var validator = new GetFastingInsightsQueryValidator();
-        var result = await validator.TestValidateAsync(new GetFastingInsightsQuery(Guid.Empty));
+        TestValidationResult<GetFastingInsightsQuery> result = await validator.TestValidateAsync(new GetFastingInsightsQuery(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -159,7 +159,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetFastingHistory_WithInvalidPagingAndRange_HasErrors() {
         var validator = new GetFastingHistoryQueryValidator();
-        var result = await validator.TestValidateAsync(new GetFastingHistoryQuery(
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(new GetFastingHistoryQuery(
             Guid.NewGuid(),
             DateTime.UtcNow,
             DateTime.UtcNow.AddDays(-1),
@@ -174,9 +174,9 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetFastingHistory_WithValidQuery_HasNoErrors() {
         var validator = new GetFastingHistoryQueryValidator();
-        var from = DateTime.UtcNow.AddDays(-7);
-        var to = DateTime.UtcNow;
-        var result = await validator.TestValidateAsync(new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 1, 10));
+        DateTime from = DateTime.UtcNow.AddDays(-7);
+        DateTime to = DateTime.UtcNow;
+        TestValidationResult<GetFastingHistoryQuery> result = await validator.TestValidateAsync(new GetFastingHistoryQuery(Guid.NewGuid(), from, to, 1, 10));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -184,7 +184,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithNullUserId_HasInvalidTokenError() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
             new UpdateCurrentFastingCheckInCommand(null, 3, 3, 3, null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId)
@@ -194,7 +194,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_HasErrors() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
             new UpdateCurrentFastingCheckInCommand(Guid.NewGuid(), 0, 6, 0, null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.HungerLevel);
@@ -205,7 +205,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithInvalidSymptomsAndLongNotes_HasErrors() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
             new UpdateCurrentFastingCheckInCommand(
                 Guid.NewGuid(),
                 3,
@@ -223,7 +223,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task UpdateCurrentFastingCheckIn_WithValidCommand_HasNoErrors() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
             new UpdateCurrentFastingCheckInCommand(
                 Guid.NewGuid(),
                 3,

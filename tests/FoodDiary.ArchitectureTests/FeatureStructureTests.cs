@@ -4,11 +4,11 @@ namespace FoodDiary.ArchitectureTests;
 public class FeatureStructureTests {
     [Fact]
     public void Application_Features_HaveCommandsOrQueriesFolders() {
-        var root = GetRepositoryRoot();
-        var applicationPath = Path.Combine(root, "FoodDiary.Application");
+        string root = GetRepositoryRoot();
+        string applicationPath = Path.Combine(root, "FoodDiary.Application");
         var excluded = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { "bin", "obj", "Common" };
 
-        var featureDirectories = Directory.GetDirectories(applicationPath)
+        string[] featureDirectories = Directory.GetDirectories(applicationPath)
             .Select(Path.GetFileName)
             .Where(name => !string.IsNullOrWhiteSpace(name))
             .Select(name => name!)
@@ -17,11 +17,11 @@ public class FeatureStructureTests {
 
         Assert.NotEmpty(featureDirectories);
 
-        foreach (var feature in featureDirectories) {
-            var featurePath = Path.Combine(applicationPath, feature);
-            var hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
-            var hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
-            var hasCommon = Directory.Exists(Path.Combine(featurePath, "Common"));
+        foreach (string? feature in featureDirectories) {
+            string featurePath = Path.Combine(applicationPath, feature);
+            bool hasCommands = Directory.Exists(Path.Combine(featurePath, "Commands"));
+            bool hasQueries = Directory.Exists(Path.Combine(featurePath, "Queries"));
+            bool hasCommon = Directory.Exists(Path.Combine(featurePath, "Common"));
             Assert.True(hasCommands || hasQueries || hasCommon,
                 $"Feature '{feature}' should contain Commands, Queries, and/or Common folder.");
         }
@@ -29,14 +29,14 @@ public class FeatureStructureTests {
 
     [Fact]
     public void PresentationApi_FeatureFolders_ContainControllers() {
-        var root = GetRepositoryRoot();
-        var featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
-        var featureDirectories = Directory.GetDirectories(featuresPath);
+        string root = GetRepositoryRoot();
+        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] featureDirectories = Directory.GetDirectories(featuresPath);
 
         Assert.NotEmpty(featureDirectories);
 
-        foreach (var featurePath in featureDirectories) {
-            var controllers = Directory.GetFiles(featurePath, "*Controller.cs");
+        foreach (string featurePath in featureDirectories) {
+            string[] controllers = Directory.GetFiles(featurePath, "*Controller.cs");
             Assert.NotEmpty(controllers);
         }
     }
@@ -64,18 +64,18 @@ public class FeatureStructureTests {
     [InlineData("FoodDiary.Telegram.Bot", "FoodDiary.Telegram.Bot")]
     [InlineData("FoodDiary.Web.Api", "FoodDiary.Web.Api")]
     public void Namespaces_Match_ProjectFolderStructure(string projectFolder, string namespaceRoot) {
-        var root = GetRepositoryRoot();
-        var projectPath = Path.Combine(root, projectFolder);
-        var sourceFiles = SourceScanner.SourceFiles(projectPath).ToArray();
+        string root = GetRepositoryRoot();
+        string projectPath = Path.Combine(root, projectFolder);
+        string[] sourceFiles = SourceScanner.SourceFiles(projectPath).ToArray();
 
         Assert.NotEmpty(sourceFiles);
 
-        foreach (var sourceFile in sourceFiles) {
-            var namespaceFromFile = CSharpSyntaxReader.ReadNamespace(sourceFile);
+        foreach (string? sourceFile in sourceFiles) {
+            string? namespaceFromFile = CSharpSyntaxReader.ReadNamespace(sourceFile);
             if (string.IsNullOrWhiteSpace(namespaceFromFile)) {
                 // Entry points may use top-level statements without explicit namespace.
                 // AssemblyInfo files may contain only assembly-level attributes.
-                var fileName = Path.GetFileName(sourceFile);
+                string fileName = Path.GetFileName(sourceFile);
                 if (string.Equals(fileName, "Program.cs", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(fileName, "GlobalUsings.cs", StringComparison.OrdinalIgnoreCase) ||
                     string.Equals(fileName, "AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase)) {
@@ -86,13 +86,13 @@ public class FeatureStructureTests {
                     $"Namespace declaration not found in '{sourceFile}'.");
             }
 
-            var relativeDirectory =
+            string relativeDirectory =
                 Path.GetDirectoryName(Path.GetRelativePath(projectPath, sourceFile)) ?? string.Empty;
-            var namespaceSuffix = relativeDirectory
+            string namespaceSuffix = relativeDirectory
                 .Replace(Path.DirectorySeparatorChar, '.')
                 .Replace(Path.AltDirectorySeparatorChar, '.');
 
-            var expectedNamespace = string.IsNullOrWhiteSpace(namespaceSuffix)
+            string expectedNamespace = string.IsNullOrWhiteSpace(namespaceSuffix)
                 ? namespaceRoot
                 : $"{namespaceRoot}.{namespaceSuffix}";
 
@@ -103,7 +103,7 @@ public class FeatureStructureTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }

@@ -58,7 +58,7 @@ public class RecommendationInvariantTests {
     public void MarkAsRead_WhenAlreadyRead_IsIdempotent() {
         var rec = Recommendation.Create(UserId.New(), UserId.New(), "Eat more veggies");
         rec.MarkAsRead();
-        var firstReadAt = rec.ReadAtUtc;
+        DateTime? firstReadAt = rec.ReadAtUtc;
 
         rec.MarkAsRead();
 

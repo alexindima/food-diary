@@ -1,8 +1,17 @@
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.FavoriteRecipes.Models;
+using FoodDiary.Application.Recipes.Commands.CreateRecipe;
+using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipeById;
+using FoodDiary.Application.Recipes.Queries.GetRecipes;
+using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Presentation.Api.Features.Recipes.Mappings;
 using FoodDiary.Presentation.Api.Features.Recipes.Requests;
+using FoodDiary.Presentation.Api.Features.Recipes.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -17,7 +26,7 @@ public sealed class RecipeHttpMappingsTests {
             Search: "soup",
             IncludePublic: false);
 
-        var query = request.ToQuery(userId);
+        GetRecipesQuery query = request.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(2, query.Page);
@@ -37,7 +46,7 @@ public sealed class RecipeHttpMappingsTests {
             Search: "  salad  ",
             IncludePublic: true);
 
-        var query = request.ToQuery(userId);
+        GetRecipesOverviewQuery query = request.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(1, query.Page);
@@ -61,9 +70,9 @@ public sealed class RecipeHttpMappingsTests {
             MaxPrepTime: 20,
             SortBy: "popular");
 
-        var recentQuery = recent.ToQuery(userId);
-        var byIdQuery = recipeId.ToQuery(userId, includePublic: true);
-        var exploreQuery = explore.ToExploreQuery(userId);
+        GetRecentRecipesQuery recentQuery = recent.ToQuery(userId);
+        GetRecipeByIdQuery byIdQuery = recipeId.ToQuery(userId, includePublic: true);
+        ExploreRecipesQuery exploreQuery = explore.ToExploreQuery(userId);
 
         Assert.Equal(userId, recentQuery.UserId);
         Assert.Equal(50, recentQuery.Limit);
@@ -117,7 +126,7 @@ public sealed class RecipeHttpMappingsTests {
                     ImageAssetId: stepAssetId)
             ]);
 
-        var command = request.ToCommand(userId);
+        CreateRecipeCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.Name, command.Name);
@@ -138,19 +147,19 @@ public sealed class RecipeHttpMappingsTests {
         Assert.Equal(request.ManualFiber, command.ManualFiber);
         Assert.Equal(request.ManualAlcohol, command.ManualAlcohol);
 
-        var step = Assert.Single(command.Steps);
+        RecipeStepInput step = Assert.Single(command.Steps);
         Assert.Equal(1, step.Order);
         Assert.Equal("Prep", step.Title);
         Assert.Equal("Chop vegetables", step.Description);
         Assert.Equal("https://cdn.example/step-1.png", step.ImageUrl);
         Assert.Equal(stepAssetId, step.ImageAssetId);
 
-        var firstIngredient = step.Ingredients[0];
+        RecipeIngredientInput firstIngredient = step.Ingredients[0];
         Assert.Equal(productId, firstIngredient.ProductId);
         Assert.Null(firstIngredient.NestedRecipeId);
         Assert.Equal(200, firstIngredient.Amount);
 
-        var secondIngredient = step.Ingredients[1];
+        RecipeIngredientInput secondIngredient = step.Ingredients[1];
         Assert.Null(secondIngredient.ProductId);
         Assert.Equal(nestedRecipeId, secondIngredient.NestedRecipeId);
         Assert.Equal(50, secondIngredient.Amount);
@@ -186,7 +195,7 @@ public sealed class RecipeHttpMappingsTests {
             ManualAlcohol: 0,
             Steps: null);
 
-        var command = request.ToCommand(userId, recipeId);
+        UpdateRecipeCommand command = request.ToCommand(userId, recipeId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
@@ -286,7 +295,7 @@ public sealed class RecipeHttpMappingsTests {
             true,
             favoriteRecipeId);
 
-        var response = model.ToHttpResponse();
+        RecipeHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Id, response.Id);
         Assert.True(response.IsFavorite);
@@ -348,7 +357,7 @@ public sealed class RecipeHttpMappingsTests {
             [favorite],
             1);
 
-        var response = overview.ToHttpResponse();
+        RecipeOverviewHttpResponse response = overview.ToHttpResponse();
 
         Assert.Single(response.RecentItems);
         Assert.Single(response.AllRecipes.Data);

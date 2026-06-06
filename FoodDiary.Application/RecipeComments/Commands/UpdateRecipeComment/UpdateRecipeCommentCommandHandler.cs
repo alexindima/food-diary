@@ -4,6 +4,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 
@@ -12,13 +13,13 @@ public class UpdateRecipeCommentCommandHandler(IRecipeCommentRepository commentR
     public async Task<Result<RecipeCommentModel>> Handle(
         UpdateRecipeCommentCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<RecipeCommentModel>(userIdResult.Error);
         }
 
         var commentId = (RecipeCommentId)command.CommentId;
-        var comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        RecipeComment? comment = await commentRepository.GetByIdAsync(commentId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (comment is null) {
             return Result.Failure<RecipeCommentModel>(Errors.RecipeComment.NotFound(command.CommentId));

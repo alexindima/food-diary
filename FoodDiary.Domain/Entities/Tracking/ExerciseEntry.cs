@@ -59,7 +59,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         string? notes = null,
         bool clearNotes = false,
         DateTime? date = null) {
-        var changed = false;
+        bool changed = false;
 
         if (exerciseType.HasValue && exerciseType.Value != ExerciseType) {
             ExerciseType = exerciseType.Value;
@@ -76,7 +76,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
 
         if (caloriesBurned.HasValue) {
             EnsureCalories(caloriesBurned.Value);
-            var rounded = Math.Round(caloriesBurned.Value, 1);
+            double rounded = Math.Round(caloriesBurned.Value, 1);
             if (Math.Abs(rounded - CaloriesBurned) > 0.01) {
                 CaloriesBurned = rounded;
                 changed = true;
@@ -86,19 +86,19 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
         if (clearName) {
             if (Name is not null) { Name = null; changed = true; }
         } else if (name is not null) {
-            var normalized = NormalizeOptionalText(name, NameMaxLength, nameof(name));
+            string? normalized = NormalizeOptionalText(name, NameMaxLength, nameof(name));
             if (!string.Equals(Name, normalized, StringComparison.Ordinal)) { Name = normalized; changed = true; }
         }
 
         if (clearNotes) {
             if (Notes is not null) { Notes = null; changed = true; }
         } else if (notes is not null) {
-            var normalized = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes));
+            string? normalized = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes));
             if (!string.Equals(Notes, normalized, StringComparison.Ordinal)) { Notes = normalized; changed = true; }
         }
 
         if (date.HasValue) {
-            var normalizedDate = NormalizeDate(date.Value);
+            DateTime normalizedDate = NormalizeDate(date.Value);
             if (normalizedDate != Date) { Date = normalizedDate; changed = true; }
         }
 
@@ -118,7 +118,7 @@ public sealed class ExerciseEntry : AggregateRoot<ExerciseEntryId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Value must be at most {maxLength} characters.")
             : trimmed;

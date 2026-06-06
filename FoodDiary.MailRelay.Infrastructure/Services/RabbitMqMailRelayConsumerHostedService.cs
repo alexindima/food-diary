@@ -20,9 +20,9 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
             return;
         }
 
-        var connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
+        IConnection connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
         await using (connection.ConfigureAwait(false)) {
-            var channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
+            IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
             await using (channel.ConfigureAwait(false)) {
                 await RunConsumerAsync(channel, stoppingToken).ConfigureAwait(false);
             }
@@ -43,8 +43,8 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         await broker.DeclareTopologyAsync(stoppingToken).ConfigureAwait(false);
         await channel.BasicQosAsync(0, _brokerOptions.PrefetchCount, global: false, cancellationToken: stoppingToken).ConfigureAwait(false);
 
-        var consumer = CreateConsumer(channel, stoppingToken);
-        var consumerTag = await channel.BasicConsumeAsync(
+        AsyncEventingBasicConsumer consumer = CreateConsumer(channel, stoppingToken);
+        string consumerTag = await channel.BasicConsumeAsync(
             queue: _brokerOptions.QueueName,
             autoAck: false,
             consumer: consumer,
@@ -69,7 +69,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     }
 
     private async Task HandleDeliveryAsync(IChannel channel, BasicDeliverEventArgs eventArgs, CancellationToken stoppingToken) {
-        var deliveryTag = eventArgs.DeliveryTag;
+        ulong deliveryTag = eventArgs.DeliveryTag;
 
         try {
             await ProcessDeliveryAsync(channel, eventArgs, stoppingToken).ConfigureAwait(false);
@@ -83,22 +83,22 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     }
 
     private async Task ProcessDeliveryAsync(IChannel channel, BasicDeliverEventArgs eventArgs, CancellationToken cancellationToken) {
-        var deliveryTag = eventArgs.DeliveryTag;
-        var bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-        if (!Guid.TryParse(bodyText, out var queuedEmailId)) {
+        ulong deliveryTag = eventArgs.DeliveryTag;
+        string bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
+        if (!Guid.TryParse(bodyText, out Guid queuedEmailId)) {
             logger.LogWarning("RabbitMQ relay message payload is not a valid email id: {Payload}", bodyText);
             await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
             return;
         }
 
-        var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), cancellationToken).ConfigureAwait(false);
+        MailRelayInboxClaimResult inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), cancellationToken).ConfigureAwait(false);
         if (!inboxClaim.Claimed) {
             logger.LogDebug("Queued email {QueuedEmailId} was already processed via inbox dedup.", queuedEmailId);
             await channel.BasicAckAsync(deliveryTag, multiple: false, cancellationToken: cancellationToken).ConfigureAwait(false);
             return;
         }
 
-        var claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
+        QueuedEmailMessage? claimedMessage = await queueStore.TryClaimMessageByIdAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
         if (claimedMessage is null) {
             logger.LogDebug("Queued email {QueuedEmailId} was not claimable when RabbitMQ delivered it.", queuedEmailId);
             await queueStore.MarkInboxProcessedAsync(inboxClaim.InboxId, cancellationToken).ConfigureAwait(false);
@@ -112,7 +112,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     }
 
     private async Task ProcessClaimedMessageAsync(Guid queuedEmailId, QueuedEmailMessage claimedMessage, CancellationToken cancellationToken) {
-        var result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken).ConfigureAwait(false);
+        MailRelayProcessResult result = await messageProcessor.ProcessAsync(claimedMessage, cancellationToken).ConfigureAwait(false);
         if (result.Succeeded) {
             return;
         }
@@ -130,9 +130,9 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         Exception exception,
         CancellationToken cancellationToken) {
         logger.LogError(exception, "RabbitMQ relay consumer failed to process a delivery.");
-        var bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
-        if (Guid.TryParse(bodyText, out var queuedEmailId)) {
-            var inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), CancellationToken.None).ConfigureAwait(false);
+        string bodyText = Encoding.UTF8.GetString(eventArgs.Body.ToArray());
+        if (Guid.TryParse(bodyText, out Guid queuedEmailId)) {
+            MailRelayInboxClaimResult inboxClaim = await queueStore.TryClaimInboxMessageAsync(ConsumerName, queuedEmailId.ToString("D"), CancellationToken.None).ConfigureAwait(false);
             await queueStore.MarkInboxFailedAsync(inboxClaim.InboxId, exception.ToString(), CancellationToken.None).ConfigureAwait(false);
         }
 

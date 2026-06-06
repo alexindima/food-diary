@@ -1,5 +1,7 @@
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using System.Diagnostics;
 
@@ -13,12 +15,12 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactRecipeMatch() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipes-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var userId = user.Id;
+        UserId userId = user.Id;
         var matchingRecipe = Recipe.Create(
             userId,
             "100% Soup",
@@ -34,26 +36,26 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         var repository = new RecipeRepository(context);
 
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
             userId,
             includePublic: false,
             page: 0,
             limit: 0,
             search: "100% Soup");
 
-        var item = Assert.Single(items);
+        (Recipe Recipe, int UsageCount) item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Equal(matchingRecipe.Id, item.Recipe.Id);
     }
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_FirstOwnedPage_StaysWithinLatencyBudget() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"recipes-perf-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var recipes = Enumerable.Range(0, PerformanceSeedCount)
+        Recipe[] recipes = Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Recipe.Create(
                 user.Id,
                 $"Perf Recipe {index:D4}",
@@ -74,7 +76,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             search: null);
 
         var stopwatch = Stopwatch.StartNew();
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,

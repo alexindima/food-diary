@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 
@@ -11,13 +12,13 @@ public class DeleteExerciseEntryCommandHandler(IExerciseEntryRepository reposito
     public async Task<Result> Handle(
         DeleteExerciseEntryCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
         var entryId = new ExerciseEntryId(command.EntryId);
-        var entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
+        ExerciseEntry? entry = await repository.GetByIdAsync(entryId, userIdResult.Value, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (entry is null) {
             return Result.Failure(Errors.Exercise.NotFound(command.EntryId));
         }

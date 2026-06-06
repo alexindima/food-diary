@@ -1,6 +1,8 @@
+using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
 using FoodDiary.Presentation.Api.Features.Images.Mappings;
 using FoodDiary.Presentation.Api.Features.Images.Requests;
+using FoodDiary.Presentation.Api.Features.Images.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -11,7 +13,7 @@ public sealed class ImageHttpMappingsTests {
         var userId = Guid.NewGuid();
         var assetId = Guid.NewGuid();
 
-        var command = assetId.ToDeleteCommand(userId);
+        DeleteImageAssetCommand command = assetId.ToDeleteCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(assetId, command.AssetId);
@@ -22,7 +24,7 @@ public sealed class ImageHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new GetImageUploadUrlHttpRequest("photo.jpg", "image/jpeg", 1024000);
 
-        var command = request.ToCommand(userId);
+        GetImageUploadUrlCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("photo.jpg", command.FileName);
@@ -33,12 +35,12 @@ public sealed class ImageHttpMappingsTests {
     [Fact]
     public void GetImageUploadUrlResult_ToHttpResponse_MapsAllFields() {
         var assetId = Guid.NewGuid();
-        var expiresAt = DateTime.UtcNow.AddMinutes(15);
+        DateTime expiresAt = DateTime.UtcNow.AddMinutes(15);
         var result = new GetImageUploadUrlResult(
             "https://s3.example.com/upload", "https://cdn.example.com/file.jpg",
             expiresAt, assetId);
 
-        var response = result.ToHttpResponse();
+        GetImageUploadUrlHttpResponse response = result.ToHttpResponse();
 
         Assert.Equal("https://s3.example.com/upload", response.UploadUrl);
         Assert.Equal("https://cdn.example.com/file.jpg", response.FileUrl);

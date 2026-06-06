@@ -5,6 +5,7 @@ using System.Net.Http.Json;
 using System.Text.Json;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
@@ -33,20 +34,20 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     [RequiresDockerFact]
     public async Task Refresh_WithWarmTokenRotation_StaysWithinLatencyBudget() {
-        var client = factory.CreateClient();
-        var email = $"perf-refresh-{Guid.NewGuid():N}@example.com";
+        HttpClient client = factory.CreateClient();
+        string email = $"perf-refresh-{Guid.NewGuid():N}@example.com";
 
-        var registerPayload = await RegisterAsync(client, email);
-        var firstWarmPayload = await RefreshAsync(client, registerPayload.RefreshToken);
-        var warmedPayload = await RefreshAsync(client, firstWarmPayload.RefreshToken);
+        AuthPayload registerPayload = await RegisterAsync(client, email);
+        AuthPayload firstWarmPayload = await RefreshAsync(client, registerPayload.RefreshToken);
+        AuthPayload warmedPayload = await RefreshAsync(client, firstWarmPayload.RefreshToken);
 
         var stopwatch = Stopwatch.StartNew();
-        var measuredResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage measuredResponse = await client.PostAsJsonAsync(
             "/api/v1/auth/refresh",
             new RefreshTokenHttpRequest(warmedPayload.RefreshToken));
         stopwatch.Stop();
 
-        var measuredPayload = await measuredResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
+        AuthPayload? measuredPayload = await measuredResponse.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, measuredResponse.StatusCode);
         Assert.NotNull(measuredPayload);
@@ -58,9 +59,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     [RequiresDockerFact]
     public async Task Products_FirstOwnedPage_StaysWithinEndpointLatencyBudget() {
-        var client = factory.CreateClient();
-        var email = $"perf-products-{Guid.NewGuid():N}@example.com";
-        var authPayload = await RegisterAsync(client, email);
+        HttpClient client = factory.CreateClient();
+        string email = $"perf-products-{Guid.NewGuid():N}@example.com";
+        AuthPayload authPayload = await RegisterAsync(client, email);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         await SeedProductsAsync(email, SeedCount);
@@ -68,11 +69,11 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         _ = await client.GetAsync("/api/v1/products?page=1&limit=25&includePublic=false");
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await client.GetAsync("/api/v1/products?page=1&limit=25&includePublic=false");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/products?page=1&limit=25&includePublic=false");
         stopwatch.Stop();
 
         await AssertStatusCodeAsync(HttpStatusCode.OK, response);
-        var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
+        PagedPayload<ItemPayload>? payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
         Assert.NotNull(payload);
         Assert.Equal(SeedCount, payload.TotalItems);
@@ -84,9 +85,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     [RequiresDockerFact]
     public async Task Recipes_FirstOwnedPage_StaysWithinEndpointLatencyBudget() {
-        var client = factory.CreateClient();
-        var email = $"perf-recipes-{Guid.NewGuid():N}@example.com";
-        var authPayload = await RegisterAsync(client, email);
+        HttpClient client = factory.CreateClient();
+        string email = $"perf-recipes-{Guid.NewGuid():N}@example.com";
+        AuthPayload authPayload = await RegisterAsync(client, email);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         await SeedRecipesAsync(email, SeedCount);
@@ -94,11 +95,11 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         _ = await client.GetAsync("/api/v1/recipes?page=1&limit=25&includePublic=false");
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await client.GetAsync("/api/v1/recipes?page=1&limit=25&includePublic=false");
+        HttpResponseMessage response = await client.GetAsync("/api/v1/recipes?page=1&limit=25&includePublic=false");
         stopwatch.Stop();
 
         await AssertStatusCodeAsync(HttpStatusCode.OK, response);
-        var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
+        PagedPayload<ItemPayload>? payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
         Assert.NotNull(payload);
         Assert.Equal(SeedCount, payload.TotalItems);
@@ -110,9 +111,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     [RequiresDockerFact]
     public async Task Consumptions_FirstPageWithinMonthRange_StaysWithinEndpointLatencyBudget() {
-        var client = factory.CreateClient();
-        var email = $"perf-consumptions-{Guid.NewGuid():N}@example.com";
-        var authPayload = await RegisterAsync(client, email);
+        HttpClient client = factory.CreateClient();
+        string email = $"perf-consumptions-{Guid.NewGuid():N}@example.com";
+        AuthPayload authPayload = await RegisterAsync(client, email);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         await SeedConsumptionsAsync(client, SeedCount);
@@ -122,11 +123,11 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         _ = await client.GetAsync(url);
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await client.GetAsync(url);
+        HttpResponseMessage response = await client.GetAsync(url);
         stopwatch.Stop();
 
         await AssertStatusCodeAsync(HttpStatusCode.OK, response);
-        var payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
+        PagedPayload<ItemPayload>? payload = await response.Content.ReadFromJsonAsync<PagedPayload<ItemPayload>>(JsonOptions);
 
         Assert.NotNull(payload);
         Assert.Equal(31, payload.TotalItems);
@@ -138,9 +139,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
 
     [RequiresDockerFact]
     public async Task ImageUploadUrl_WithAuthenticatedUser_StaysWithinLatencyBudget() {
-        var client = factory.CreateClient();
-        var email = $"perf-images-{Guid.NewGuid():N}@example.com";
-        var authPayload = await RegisterAsync(client, email);
+        HttpClient client = factory.CreateClient();
+        string email = $"perf-images-{Guid.NewGuid():N}@example.com";
+        AuthPayload authPayload = await RegisterAsync(client, email);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", authPayload.AccessToken);
 
         _ = await client.PostAsJsonAsync(
@@ -148,12 +149,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             new GetImageUploadUrlHttpRequest("warmup-photo.jpg", "image/jpeg", 4096));
 
         var stopwatch = Stopwatch.StartNew();
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/images/upload-url",
             new GetImageUploadUrlHttpRequest("measured-photo.jpg", "image/jpeg", 4096));
         stopwatch.Stop();
 
-        var payload = await response.Content.ReadFromJsonAsync<ImageUploadPayload>(JsonOptions);
+        ImageUploadPayload? payload = await response.Content.ReadFromJsonAsync<ImageUploadPayload>(JsonOptions);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -164,10 +165,10 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private static async Task<AuthPayload> RegisterAsync(HttpClient client, string email) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/register",
             new RegisterHttpRequest(email, "Password123!", "en")).ConfigureAwait(false);
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -177,10 +178,10 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private static async Task<AuthPayload> RefreshAsync(HttpClient client, string refreshToken) {
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/auth/refresh",
             new RefreshTokenHttpRequest(refreshToken)).ConfigureAwait(false);
-        var payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
+        AuthPayload? payload = await response.Content.ReadFromJsonAsync<AuthPayload>(JsonOptions).ConfigureAwait(false);
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.NotNull(payload);
@@ -189,12 +190,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private async Task SeedProductsAsync(string email, int count) {
-        var scope = factory.Services.CreateAsyncScope();
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            var user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            User user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-            var products = Enumerable.Range(0, count)
+            Product[] products = Enumerable.Range(0, count)
                 .Select(index => Product.Create(
                     user.Id,
                     $"Perf Product {index:D4}",
@@ -216,12 +217,12 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private async Task SeedRecipesAsync(string email, int count) {
-        var scope = factory.Services.CreateAsyncScope();
+        AsyncServiceScope scope = factory.Services.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            var user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
+            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+            User user = await dbContext.Users.SingleAsync(x => x.Email == email).ConfigureAwait(false);
 
-            var recipes = Enumerable.Range(0, count)
+            Recipe[] recipes = Enumerable.Range(0, count)
                 .Select(index => Recipe.Create(
                     user.Id,
                     $"Perf Recipe {index:D4}",
@@ -236,7 +237,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
     }
 
     private static async Task SeedConsumptionsAsync(HttpClient client, int count) {
-        var createProductResponse = await client.PostAsJsonAsync(
+        HttpResponseMessage createProductResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
                 null,
@@ -259,14 +260,14 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                 0,
                 "Private")).ConfigureAwait(false);
         await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse).ConfigureAwait(false);
-        var product = await createProductResponse.Content.ReadFromJsonAsync<ItemPayload>(JsonOptions).ConfigureAwait(false);
+        ItemPayload? product = await createProductResponse.Content.ReadFromJsonAsync<ItemPayload>(JsonOptions).ConfigureAwait(false);
         Assert.NotNull(product);
 
         var startDate = new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
+        MealType[] mealTypes = new[] { MealType.Breakfast, MealType.Lunch, MealType.Dinner, MealType.Snack };
 
-        foreach (var index in Enumerable.Range(0, count)) {
-            var createConsumptionResponse = await client.PostAsJsonAsync(
+        foreach (int index in Enumerable.Range(0, count)) {
+            HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync(
                 "/api/v1/consumptions",
                 new CreateConsumptionHttpRequest(
                     startDate.AddDays(index),
@@ -285,7 +286,7 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
             return;
         }
 
-        var body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+        string body = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
         Assert.Fail(
             $"Expected status {(int)expected} ({expected}), got {(int)response.StatusCode} ({response.StatusCode}). Body: {body}");
     }

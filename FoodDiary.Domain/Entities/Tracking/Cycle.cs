@@ -46,13 +46,13 @@ public sealed class Cycle : AggregateRoot<CycleId> {
     }
 
     public void UpdateLengths(int? averageLength = null, int? lutealLength = null, string? notes = null, bool clearNotes = false) {
-        var changed = false;
-        var normalizedNotes = NormalizeNotes(notes);
+        bool changed = false;
+        string? normalizedNotes = NormalizeNotes(notes);
 
         EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
 
         if (averageLength.HasValue) {
-            var normalizedAverageLength = NormalizeAverageLength(averageLength);
+            int normalizedAverageLength = NormalizeAverageLength(averageLength);
             if (AverageLength != normalizedAverageLength) {
                 AverageLength = normalizedAverageLength;
                 changed = true;
@@ -60,7 +60,7 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         }
 
         if (lutealLength.HasValue) {
-            var normalizedLutealLength = NormalizeLutealLength(lutealLength);
+            int normalizedLutealLength = NormalizeLutealLength(lutealLength);
             if (LutealLength != normalizedLutealLength) {
                 LutealLength = normalizedLutealLength;
                 changed = true;
@@ -90,12 +90,12 @@ public sealed class Cycle : AggregateRoot<CycleId> {
         DailySymptoms symptoms,
         string? notes = null,
         bool clearNotes = false) {
-        var normalizedDate = NormalizeDate(date);
-        var normalizedNotes = NormalizeNotes(notes);
+        DateTime normalizedDate = NormalizeDate(date);
+        string? normalizedNotes = NormalizeNotes(notes);
         EnsureClearConflict(clearNotes, normalizedNotes, nameof(clearNotes), nameof(notes));
-        var existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
+        CycleDay? existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
         if (existing is not null) {
-            var hasChanges =
+            bool hasChanges =
                 existing.IsPeriod != isPeriod ||
                 !existing.Symptoms.Equals(symptoms) ||
                 !string.Equals(existing.Notes, clearNotes ? null : normalizedNotes, StringComparison.Ordinal);
@@ -118,8 +118,8 @@ public sealed class Cycle : AggregateRoot<CycleId> {
     }
 
     public bool RemoveDay(DateTime date) {
-        var normalizedDate = NormalizeDate(date);
-        var existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
+        DateTime normalizedDate = NormalizeDate(date);
+        CycleDay? existing = _days.FirstOrDefault(d => d.Date == normalizedDate);
         if (existing is null) {
             return false;
         }
@@ -135,20 +135,20 @@ public sealed class Cycle : AggregateRoot<CycleId> {
             return DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
         }
 
-        var utc = value.ToUniversalTime();
+        DateTime utc = value.ToUniversalTime();
 
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
     private static int NormalizeAverageLength(int? value) {
-        var length = value ?? DefaultCycleLength;
+        int length = value ?? DefaultCycleLength;
         return length is < 18 or > 60
             ? throw new ArgumentOutOfRangeException(nameof(value), "Average cycle length must be in range [18, 60].")
             : length;
     }
 
     private static int NormalizeLutealLength(int? value) {
-        var length = value ?? DefaultLutealLength;
+        int length = value ?? DefaultLutealLength;
         return length is < 8 or > 18
             ? throw new ArgumentOutOfRangeException(nameof(value), "Luteal length must be in range [8, 18].")
             : length;

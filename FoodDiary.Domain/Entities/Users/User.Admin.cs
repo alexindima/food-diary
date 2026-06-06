@@ -6,7 +6,7 @@ public sealed partial class User {
     public void UpdateAdminSecurity(UserAdminSecurityUpdate update) {
         EnsureNotDeleted();
 
-        var securityState = GetSecurityState();
+        UserSecurityState securityState = GetSecurityState();
         if (!update.IsEmailConfirmed.HasValue || securityState.IsEmailConfirmed == update.IsEmailConfirmed.Value) {
             return;
         }
@@ -23,8 +23,8 @@ public sealed partial class User {
         }
 
         EnsureLanguage(update.Language, nameof(update.Language));
-        var normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
-        var preferenceState = GetPreferenceState();
+        string normalizedLanguage = NormalizeOptionalLanguage(update.Language, nameof(update.Language));
+        UserPreferenceState preferenceState = GetPreferenceState();
         if (string.Equals(preferenceState.Language, normalizedLanguage, StringComparison.Ordinal)) {
             return;
         }

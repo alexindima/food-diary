@@ -6,7 +6,7 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class MailRelayArchitectureTests {
     [Fact]
     public void MailRelayDomainProject_DoesNotReferenceOtherMailRelayLayers() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
@@ -17,7 +17,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayApplicationProject_ReferencesDomainOnlyAmongMailRelayLayers() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Domain", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Client", references);
@@ -28,7 +28,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayClientProject_DoesNotReferenceMailRelayLayers() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj");
 
         Assert.DoesNotContain("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Domain", references);
@@ -39,7 +39,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayInfrastructureProject_ReferencesApplicationButNotPresentationOrWebApi() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.DoesNotContain("FoodDiary.MailRelay.Presentation", references);
@@ -48,7 +48,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayInitializerProject_ReferencesApplicationAndInfrastructureOnlyAmongMailRelayLayers() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Infrastructure", references);
@@ -59,7 +59,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayPresentationProject_ReferencesApplicationAndClientButNotInfrastructureOrWebApi() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Client", references);
@@ -69,7 +69,7 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayWebApiProject_IsHostAndReferencesApplicationInfrastructureAndPresentation() {
-        var references = GetProjectReferences("FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj");
+        HashSet<string> references = GetProjectReferences("FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj");
 
         Assert.Contains("FoodDiary.MailRelay.Application", references);
         Assert.Contains("FoodDiary.MailRelay.Infrastructure", references);
@@ -79,9 +79,9 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
-        var root = GetRepositoryRoot();
-        var domainRoot = Path.Combine(root, "FoodDiary.MailRelay.Domain");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string domainRoot = Path.Combine(root, "FoodDiary.MailRelay.Domain");
+        string[] forbiddenPatterns = new[] {
             "Microsoft.",
             "Npgsql",
             "RabbitMQ",
@@ -93,16 +93,16 @@ public sealed class MailRelayArchitectureTests {
             "HttpContext",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayApplicationSource_DoesNotReferenceTransportPersistenceOrConfigurationTypes() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.MailRelay.Application");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.MailRelay.Application");
+        string[] forbiddenPatterns = new[] {
             "Microsoft.AspNetCore",
             "Microsoft.Extensions.Options",
             "Microsoft.Extensions.Configuration",
@@ -118,16 +118,16 @@ public sealed class MailRelayArchitectureTests {
             "IEndpointRouteBuilder",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayPresentationSource_DoesNotReferenceInfrastructureLayer() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
+        string[] forbiddenPatterns = new[] {
             "FoodDiary.MailRelay.Infrastructure",
             "MailRelayQueueStore",
             "Npgsql",
@@ -136,33 +136,33 @@ public sealed class MailRelayArchitectureTests {
             "DnsClient",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayPresentationControllers_UseMediatorInsteadOfApplicationServicesDirectly() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
+        string[] forbiddenPatterns = new[] {
             "MailRelayEmailUseCases",
             "MailRelayDeliveryEventIngestionService",
             "IMailRelayQueueStore",
             "IMailRelayDispatchNotifier",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayEmailControllers_RequireRelayApiKeyThroughAuthorizedBaseController() {
-        var root = GetRepositoryRoot();
-        var emailFeatureRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation", "Features", "Email");
+        string root = GetRepositoryRoot();
+        string emailFeatureRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation", "Features", "Email");
 
-        var violations = Directory.GetFiles(emailFeatureRoot, "*Controller.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(emailFeatureRoot, "*Controller.cs", SearchOption.AllDirectories)
             .Where(static path => IsGeneratedPath(path) is false)
             .Where(path => File.ReadAllText(path).Contains(": AuthorizedMailRelayController", StringComparison.Ordinal) is false)
             .Select(path => Path.GetRelativePath(root, path))
@@ -174,9 +174,9 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayWebApiProgram_UsesMvcControllersForEmailEndpoints() {
-        var root = GetRepositoryRoot();
-        var programPath = Path.Combine(root, "FoodDiary.MailRelay.WebApi", "Program.cs");
-        var content = File.ReadAllText(programPath);
+        string root = GetRepositoryRoot();
+        string programPath = Path.Combine(root, "FoodDiary.MailRelay.WebApi", "Program.cs");
+        string content = File.ReadAllText(programPath);
 
         Assert.DoesNotContain("MapGet", content, StringComparison.Ordinal);
         Assert.DoesNotContain("MapPost", content, StringComparison.Ordinal);
@@ -188,17 +188,17 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayPresentationControllers_AreKeptInFeatureFolders() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
         var allowedControllerFiles = new HashSet<string>(StringComparer.Ordinal) {
             Path.Combine("Controllers", "MailRelayControllerBase.cs"),
             Path.Combine("Controllers", "AuthorizedMailRelayController.cs"),
         };
 
-        var violations = Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
             .Where(static path => IsGeneratedPath(path) is false)
             .Where(path => {
-                var relative = Path.GetRelativePath(presentationRoot, path);
+                string relative = Path.GetRelativePath(presentationRoot, path);
                 return relative.StartsWith($"Features{Path.DirectorySeparatorChar}", StringComparison.Ordinal) is false &&
                        allowedControllerFiles.Contains(relative) is false;
             })
@@ -211,8 +211,8 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayPresentationFeatureFiles_FollowHttpNamingConventions() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
 
         var conventions = new[] {
             new { Folder = "Requests", Suffix = "HttpRequest.cs" },
@@ -220,7 +220,7 @@ public sealed class MailRelayArchitectureTests {
             new { Folder = "Mappings", Suffix = "HttpMappings.cs" },
         };
 
-        var violations = conventions
+        string[] violations = conventions
             .SelectMany(convention => Directory.GetFiles(presentationRoot, "*.cs", SearchOption.AllDirectories)
                 .Where(static path => IsGeneratedPath(path) is false)
                 .Where(path => path.Contains(
@@ -237,9 +237,9 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayPresentationControllers_UseHttpMappingsInsteadOfConstructingApplicationRequests() {
-        var root = GetRepositoryRoot();
-        var presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.MailRelay.Presentation");
+        string[] forbiddenPatterns = new[] {
             "new GetMailRelay",
             "new EnqueueMailRelay",
             "new CreateMailRelay",
@@ -248,15 +248,15 @@ public sealed class MailRelayArchitectureTests {
             "new CheckMailRelay",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayInfrastructureOptions_AreKeptInInfrastructureOptionsFolderExceptListenOptions() {
-        var root = GetRepositoryRoot();
-        var mailRelayRoots = new[] {
+        string root = GetRepositoryRoot();
+        string[] mailRelayRoots = new[] {
             "FoodDiary.MailRelay.Application",
             "FoodDiary.MailRelay.Client",
             "FoodDiary.MailRelay.Domain",
@@ -270,7 +270,7 @@ public sealed class MailRelayArchitectureTests {
             Path.Combine("FoodDiary.MailRelay.Client", "Options", "MailRelayClientOptions.cs"),
         };
 
-        var violations = mailRelayRoots
+        string[] violations = mailRelayRoots
             .Select(rootName => Path.Combine(root, rootName))
             .Where(Directory.Exists)
             .SelectMany(directory => Directory.GetFiles(directory, "*Options.cs", SearchOption.AllDirectories))
@@ -286,10 +286,10 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayApplicationInterfaces_AsyncMethodsAcceptCancellationToken() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.MailRelay.Application");
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.MailRelay.Application");
 
-        var violations = Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(applicationRoot, "I*.cs", SearchOption.AllDirectories)
             .Where(static path => IsGeneratedPath(path) is false)
             .SelectMany(path => GetAsyncMethodSignatures(path)
                 .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
@@ -301,8 +301,8 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void MailRelayApplication_DoesNotUseFlatServicesFolder() {
-        var root = GetRepositoryRoot();
-        var servicesRoot = Path.Combine(root, "FoodDiary.MailRelay.Application", "Services");
+        string root = GetRepositoryRoot();
+        string servicesRoot = Path.Combine(root, "FoodDiary.MailRelay.Application", "Services");
 
         Assert.False(
             Directory.Exists(servicesRoot) &&
@@ -312,12 +312,12 @@ public sealed class MailRelayArchitectureTests {
 
     [Fact]
     public void PrimaryApiAndInfrastructure_DoNotOwnSmtpDeliveryConfiguration() {
-        var root = GetRepositoryRoot();
-        var sourceRoots = new[] {
+        string root = GetRepositoryRoot();
+        string[] sourceRoots = new[] {
             Path.Combine(root, "FoodDiary.Infrastructure"),
             Path.Combine(root, "FoodDiary.Web.Api"),
         };
-        var forbiddenPatterns = new[] {
+        string[] forbiddenPatterns = new[] {
             "EmailDelivery",
             "SmtpClientEmailTransport",
             "ConfigurableEmailTransport",
@@ -329,19 +329,19 @@ public sealed class MailRelayArchitectureTests {
             "new SmtpClient",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(sourceRoots, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(sourceRoots, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void MailRelayRuntimeConfiguration_UsesSeparateDatabase() {
-        var root = GetRepositoryRoot();
-        var appsettingsPath = Path.Combine(root, "FoodDiary.MailRelay.WebApi", "appsettings.json");
-        var composePath = Path.Combine(root, "docker-compose.yml");
+        string root = GetRepositoryRoot();
+        string appsettingsPath = Path.Combine(root, "FoodDiary.MailRelay.WebApi", "appsettings.json");
+        string composePath = Path.Combine(root, "docker-compose.yml");
 
-        var appsettings = File.ReadAllText(appsettingsPath);
-        var compose = File.ReadAllText(composePath);
+        string appsettings = File.ReadAllText(appsettingsPath);
+        string compose = File.ReadAllText(composePath);
 
         Assert.Contains("Database=fooddiary_mailrelay", appsettings, StringComparison.Ordinal);
         Assert.DoesNotContain("Database=fooddiary;", appsettings, StringComparison.Ordinal);
@@ -355,8 +355,8 @@ public sealed class MailRelayArchitectureTests {
     }
 
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {
-        var root = GetRepositoryRoot();
-        var projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
+        string root = GetRepositoryRoot();
+        string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
         return document.Descendants("ProjectReference")
@@ -375,7 +375,7 @@ public sealed class MailRelayArchitectureTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }
@@ -387,8 +387,8 @@ public sealed class MailRelayArchitectureTests {
     }
 
     private static string GetProjectNameFromReference(string includeValue) {
-        var normalized = includeValue.Replace('\\', '/');
-        var fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
+        string normalized = includeValue.Replace('\\', '/');
+        string fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
         return Path.GetFileNameWithoutExtension(fileName);
     }
 

@@ -83,7 +83,7 @@ public sealed class MailInboxSmtpOptionsTests {
     [Fact]
     public void AddMailInboxInfrastructure_BindsAndValidatesSmtpOptions() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_mailinbox;Username=postgres;Password=test",
                 ["MailInboxSmtp:Enabled"] = "false",
@@ -96,9 +96,9 @@ public sealed class MailInboxSmtpOptionsTests {
         services.AddSingleton<IConfiguration>(configuration);
 
         services.AddMailInboxInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var options = provider.GetRequiredService<IOptions<MailInboxSmtpOptions>>().Value;
+        MailInboxSmtpOptions options = provider.GetRequiredService<IOptions<MailInboxSmtpOptions>>().Value;
         Assert.False(options.Enabled);
         Assert.Equal("mail.fooddiary.club", options.ServerName);
         Assert.Equal(2526, options.Port);
@@ -109,7 +109,7 @@ public sealed class MailInboxSmtpOptionsTests {
     [Fact]
     public void AddMailInboxInfrastructure_WhenConnectionStringIsMissing_ThrowsOnDataSourceResolution() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailInboxSmtp:Enabled"] = "false",
                 ["MailInboxSmtp:ServerName"] = "mail.fooddiary.club",
@@ -121,7 +121,7 @@ public sealed class MailInboxSmtpOptionsTests {
         services.AddSingleton<IConfiguration>(configuration);
         services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
         Assert.Throws<InvalidOperationException>(() => provider.GetRequiredService<NpgsqlDataSource>());
     }
@@ -129,7 +129,7 @@ public sealed class MailInboxSmtpOptionsTests {
     [Fact]
     public void AddMailInboxInfrastructure_RegistersNpgsqlDataSourceWithoutOpeningConnection() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_mailinbox;Username=postgres;Password=test",
                 ["MailInboxSmtp:Enabled"] = "false",
@@ -142,9 +142,9 @@ public sealed class MailInboxSmtpOptionsTests {
         services.AddSingleton<IConfiguration>(configuration);
         services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var dataSource = provider.GetRequiredService<NpgsqlDataSource>();
+        NpgsqlDataSource dataSource = provider.GetRequiredService<NpgsqlDataSource>();
 
         Assert.NotNull(dataSource);
         Assert.IsType<NpgsqlInboundMailStore>(provider.GetRequiredService<NpgsqlInboundMailStore>());
@@ -153,7 +153,7 @@ public sealed class MailInboxSmtpOptionsTests {
     [Fact]
     public void AddMailInboxInfrastructure_RegistersInfrastructureServices() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary_mailinbox;Username=postgres;Password=test",
                 ["MailInboxSmtp:Enabled"] = "false",
@@ -166,9 +166,9 @@ public sealed class MailInboxSmtpOptionsTests {
         services.AddSingleton<IConfiguration>(configuration);
         services.AddLogging();
         services.AddMailInboxInfrastructure(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var store = provider.GetRequiredService<NpgsqlInboundMailStore>();
+        NpgsqlInboundMailStore store = provider.GetRequiredService<NpgsqlInboundMailStore>();
         Assert.Same(store, provider.GetRequiredService<IInboundMailStore>());
         Assert.Same(store, provider.GetRequiredService<IMailInboxSchemaInitializer>());
         Assert.IsType<NpgsqlMailInboxReadinessChecker>(provider.GetRequiredService<IMailInboxReadinessChecker>());
@@ -176,7 +176,7 @@ public sealed class MailInboxSmtpOptionsTests {
         Assert.IsType<SmtpInboundMessageStore>(provider.GetRequiredService<SmtpInboundMessageStore>());
         Assert.IsType<MailInboxMailboxFilter>(provider.GetRequiredService<MailInboxMailboxFilter>());
 
-        var hostedServices = provider.GetServices<IHostedService>().ToArray();
+        IHostedService[] hostedServices = provider.GetServices<IHostedService>().ToArray();
         Assert.Contains(hostedServices, static service => service is MailInboxSchemaInitializerHostedService);
         Assert.Contains(hostedServices, static service => service is MailInboxSmtpHostedService);
     }

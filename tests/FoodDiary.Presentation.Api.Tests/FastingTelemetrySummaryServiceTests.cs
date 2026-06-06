@@ -11,7 +11,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
     public async Task GetSummaryAsync_AggregatesTrackedFastingEvents() {
         var repository = new InMemoryFastingTelemetryEventRepository();
         var service = new FastingTelemetrySummaryService(repository);
-        var timestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
+        string timestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
 
         await service.RecordAsync(CreateRequest("fasting.reminder-preset.selected", timestamp, """
             {"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
@@ -29,7 +29,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
             {"sessionId":"s1","actualDurationHours":15.5,"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
 
-        var summary = await service.GetSummaryAsync(24, CancellationToken.None);
+        FastingTelemetrySummarySnapshot summary = await service.GetSummaryAsync(24, CancellationToken.None);
 
         Assert.Equal(1, summary.StartedSessions);
         Assert.Equal(1, summary.CompletedSessions);
@@ -55,7 +55,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
 
         await service.RecordAsync(CreateRequest("notifications.preference.changed", DateTime.UtcNow.ToString("O")), CancellationToken.None);
 
-        var summary = await service.GetSummaryAsync(24, CancellationToken.None);
+        FastingTelemetrySummarySnapshot summary = await service.GetSummaryAsync(24, CancellationToken.None);
 
         Assert.Equal(0, summary.StartedSessions);
         Assert.Equal(0, summary.ReminderPresetSelections);

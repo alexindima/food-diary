@@ -100,7 +100,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     }
 
     public void MarkPremiumRoleManagedByBilling(bool value, DateTime changedAtUtc) {
-        var normalizedChangedAt = NormalizeRequiredUtc(changedAtUtc, nameof(changedAtUtc));
+        DateTime normalizedChangedAt = NormalizeRequiredUtc(changedAtUtc, nameof(changedAtUtc));
         if (PremiumRoleManagedByBilling == value) {
             return;
         }
@@ -137,7 +137,7 @@ public sealed class BillingSubscription : Entity<Guid> {
     }
 
     private static string NormalizeProvider(string provider) {
-        var normalized = NormalizeRequired(provider, nameof(provider));
+        string normalized = NormalizeRequired(provider, nameof(provider));
         if (!BillingProviderNames.IsSupported(normalized)) {
             throw new ArgumentException("Unsupported billing provider.", nameof(provider));
         }

@@ -11,7 +11,7 @@ internal sealed class UnitOfWorkBehavior<TRequest, TResponse>(IUnitOfWork unitOf
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken) {
-        var response = await next(cancellationToken).ConfigureAwait(false);
+        TResponse? response = await next(cancellationToken).ConfigureAwait(false);
         if (unitOfWork.HasPendingChanges) {
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }

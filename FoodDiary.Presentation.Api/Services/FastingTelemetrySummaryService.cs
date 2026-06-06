@@ -17,7 +17,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             return;
         }
 
-        var details = ReadDetails(request.Details);
+        IReadOnlyDictionary<string, string> details = ReadDetails(request.Details);
         var record = new FastingTelemetryEventRecord(
             request.Name,
             ParseTimestampUtc(request.Timestamp),
@@ -42,30 +42,30 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
     }
 
     public async Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {
-        var normalizedWindowHours = Math.Clamp(windowHours, 1, 168);
-        var windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
-        var events = await repository.GetSinceAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
+        int normalizedWindowHours = Math.Clamp(windowHours, 1, 168);
+        DateTime windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
+        IReadOnlyList<FastingTelemetryEventRecord> events = await repository.GetSinceAsync(windowStartUtc, cancellationToken).ConfigureAwait(false);
 
-        var startedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal)).ToArray();
-        var completedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal)).ToArray();
-        var checkInEvents = events.Where(x => string.Equals(x.Name, "fasting.check-in.saved", StringComparison.Ordinal)).ToArray();
-        var reminderPresetSelections = events.Where(x => string.Equals(x.Name, "fasting.reminder-preset.selected", StringComparison.Ordinal)).ToArray();
-        var reminderTimingSaves = events.Where(x => string.Equals(x.Name, "fasting.reminder-timing.saved", StringComparison.Ordinal)).ToArray();
-        var completedDurations = completedEvents
+        FastingTelemetryEventRecord[] startedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.started", StringComparison.Ordinal)).ToArray();
+        FastingTelemetryEventRecord[] completedEvents = events.Where(x => string.Equals(x.Name, "fasting.session.completed", StringComparison.Ordinal)).ToArray();
+        FastingTelemetryEventRecord[] checkInEvents = events.Where(x => string.Equals(x.Name, "fasting.check-in.saved", StringComparison.Ordinal)).ToArray();
+        FastingTelemetryEventRecord[] reminderPresetSelections = events.Where(x => string.Equals(x.Name, "fasting.reminder-preset.selected", StringComparison.Ordinal)).ToArray();
+        FastingTelemetryEventRecord[] reminderTimingSaves = events.Where(x => string.Equals(x.Name, "fasting.reminder-timing.saved", StringComparison.Ordinal)).ToArray();
+        double[] completedDurations = completedEvents
             .Where(x => x.ActualDurationHours.HasValue)
             .Select(x => x.ActualDurationHours!.Value)
             .ToArray();
 
-        var topPresets = startedEvents
+        FastingTelemetryPresetSnapshot[] topPresets = startedEvents
             .GroupBy(x => x.ReminderPresetId ?? "custom", StringComparer.OrdinalIgnoreCase)
             .Select(group => {
-                var presetId = group.Key;
-                var startedSessions = group.Count();
-                var completedSessions = completedEvents.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
-                var savedCheckIns = checkInEvents.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
-                var selectionCount = reminderPresetSelections.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
-                var timingSaveCount = reminderTimingSaves.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
-                var latestEvent = group.OrderByDescending(x => x.OccurredAtUtc).First();
+                string presetId = group.Key;
+                int startedSessions = group.Count();
+                int completedSessions = completedEvents.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
+                int savedCheckIns = checkInEvents.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
+                int selectionCount = reminderPresetSelections.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
+                int timingSaveCount = reminderTimingSaves.Count(x => string.Equals(x.ReminderPresetId ?? "custom", presetId, StringComparison.OrdinalIgnoreCase));
+                FastingTelemetryEventRecord latestEvent = group.OrderByDescending(x => x.OccurredAtUtc).First();
 
                 return new FastingTelemetryPresetSnapshot(
                     presetId,
@@ -108,7 +108,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
                 timestamp,
                 CultureInfo.InvariantCulture,
                 DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                out var parsed)) {
+                out DateTime parsed)) {
             return parsed;
         }
 
@@ -125,8 +125,8 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
         }
 
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var property in details.Value.EnumerateObject()) {
-            var value = property.Value.ValueKind switch {
+        foreach (JsonProperty property in details.Value.EnumerateObject()) {
+            string? value = property.Value.ValueKind switch {
                 JsonValueKind.String => property.Value.GetString(),
                 JsonValueKind.Number => property.Value.GetRawText(),
                 JsonValueKind.True => bool.TrueString,
@@ -143,20 +143,20 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
     }
 
     private static string? ReadString(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out var value) ? value : null;
+        details.TryGetValue(key, out string? value) ? value : null;
 
     private static int? ReadInt(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out var value) && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed)
+        details.TryGetValue(key, out string? value) && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed)
             ? parsed
             : null;
 
     private static double? ReadDouble(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out var value) && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out var parsed)
+        details.TryGetValue(key, out string? value) && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed)
             ? parsed
             : null;
 
     private static bool? ReadBool(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out var value) && bool.TryParse(value, out var parsed)
+        details.TryGetValue(key, out string? value) && bool.TryParse(value, out bool parsed)
             ? parsed
             : null;
 }

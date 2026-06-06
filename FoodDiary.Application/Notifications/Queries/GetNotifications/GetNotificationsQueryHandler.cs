@@ -6,6 +6,8 @@ using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Notifications.Queries.GetNotifications;
 
@@ -21,14 +23,14 @@ public class GetNotificationsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<NotificationModel>>(accessError);
         }
 
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        var visibleNotifications = user?.HasPassword == true
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Notification> notifications = await notificationRepository.GetByUserAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        IEnumerable<Notification> visibleNotifications = user?.HasPassword == true
             ? notifications.Where(notification => !string.Equals(notification.Type, NotificationTypes.PasswordSetupSuggested, StringComparison.Ordinal))
             : notifications;
         var models = visibleNotifications

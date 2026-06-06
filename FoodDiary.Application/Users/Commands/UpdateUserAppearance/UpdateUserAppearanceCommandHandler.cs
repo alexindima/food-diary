@@ -7,6 +7,7 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 
@@ -17,13 +18,13 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepos
             return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<UserModel>(accessError);
         }
 
-        var themeResult = StringCodeParser.ParseOptionalTheme(
+        Result<string?> themeResult = StringCodeParser.ParseOptionalTheme(
             command.Theme,
             nameof(UpdateUserAppearanceCommand.Theme),
             "Invalid theme value.");
@@ -31,7 +32,7 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepos
             return Result.Failure<UserModel>(themeResult.Error);
         }
 
-        var uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
+        Result<string?> uiStyleResult = StringCodeParser.ParseOptionalUiStyle(
             command.UiStyle,
             nameof(UpdateUserAppearanceCommand.UiStyle),
             "Invalid UI style value.");

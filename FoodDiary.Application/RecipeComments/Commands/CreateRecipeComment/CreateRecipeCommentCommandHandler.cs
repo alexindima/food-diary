@@ -8,6 +8,7 @@ using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 
@@ -19,13 +20,13 @@ public class CreateRecipeCommentCommandHandler(
     public async Task<Result<RecipeCommentModel>> Handle(
         CreateRecipeCommentCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<RecipeCommentModel>(userIdResult.Error);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        var recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
@@ -37,7 +38,7 @@ public class CreateRecipeCommentCommandHandler(
 
         // Notify recipe owner (unless commenting on own recipe)
         if (recipe.UserId != userIdResult.Value) {
-            var notification = NotificationFactory.CreateNewComment(
+            Notification notification = NotificationFactory.CreateNewComment(
                 recipe.UserId,
                 recipe.Id.Value.ToString());
             await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);

@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramBotAuth;
 
@@ -20,14 +21,14 @@ public sealed class TelegramBotAuthCommandHandler : ICommandHandler<TelegramBotA
     }
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramBotAuthCommand command, CancellationToken cancellationToken) {
-        var user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken).ConfigureAwait(false);
-        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        User? user = await _userRepository.GetByTelegramUserIdAsync(command.TelegramUserId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
         }
 
-        var currentUser = user!;
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        User currentUser = user!;
+        IssuedAuthenticationTokens tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }

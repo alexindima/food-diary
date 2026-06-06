@@ -52,7 +52,7 @@ public static class AwsSesSnsWebhookHttpMappings {
         AwsSesNotificationHttpModel notification,
         out IReadOnlyList<IngestMailEventRequest> events,
         out string? error) {
-        var classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
+        string classification = string.Equals(notification.Bounce?.BounceType, "Permanent", StringComparison.OrdinalIgnoreCase)
             ? "hard"
             : "soft";
 

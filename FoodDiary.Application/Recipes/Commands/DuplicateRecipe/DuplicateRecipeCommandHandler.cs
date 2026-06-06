@@ -23,7 +23,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
-        var original = await recipeRepository.GetByIdAsync(
+        Recipe? original = await recipeRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: true,
@@ -34,10 +34,10 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
-        var duplicate = CreateDuplicate(userId, original);
+        Recipe duplicate = CreateDuplicate(userId, original);
         await recipeRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
-        var created = await recipeRepository.GetByIdAsync(
+        Recipe? created = await recipeRepository.GetByIdAsync(
             duplicate.Id,
             userId,
             includePublic: false,
@@ -93,10 +93,10 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             .OrderBy(step => step.StepNumber)
             .ToList();
 
-        foreach (var step in orderedSteps) {
-            var newStep = target.AddStep(step.StepNumber, step.Instruction, step.Title, step.ImageUrl, step.ImageAssetId);
+        foreach (RecipeStep? step in orderedSteps) {
+            RecipeStep newStep = target.AddStep(step.StepNumber, step.Instruction, step.Title, step.ImageUrl, step.ImageAssetId);
 
-            foreach (var ingredient in step.Ingredients) {
+            foreach (RecipeIngredient ingredient in step.Ingredients) {
                 if (ingredient.ProductId.HasValue) {
                     newStep.AddProductIngredient(ingredient.ProductId.Value, ingredient.Amount);
                 } else if (ingredient.NestedRecipeId.HasValue) {

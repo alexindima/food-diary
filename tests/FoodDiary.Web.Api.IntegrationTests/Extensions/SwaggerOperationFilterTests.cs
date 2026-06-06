@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.Web.Api.Swagger;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -66,7 +67,7 @@ public sealed class SwaggerOperationFilterTests {
     public void Apply_ForNonControllerAction_AddsOnlyStandard500Response() {
         var filter = new StandardErrorResponsesOperationFilter();
         var operation = new OpenApiOperation { Responses = [] };
-        var context = CreateContext(new ActionDescriptor());
+        OperationFilterContext context = CreateContext(new ActionDescriptor());
 
         filter.Apply(operation, context);
 
@@ -91,17 +92,17 @@ public sealed class SwaggerOperationFilterTests {
 
     [Fact]
     public void GetDescription_ForUnknownStatusCode_ReturnsGenericErrorDescription() {
-        var method = typeof(StandardErrorResponsesOperationFilter).GetMethod(
+        MethodInfo? method = typeof(StandardErrorResponsesOperationFilter).GetMethod(
             "GetDescription",
             System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
 
-        var description = method!.Invoke(null, [StatusCodes.Status418ImATeapot]);
+        object? description = method!.Invoke(null, [StatusCodes.Status418ImATeapot]);
 
         Assert.Equal("Error", description);
     }
 
     private static OperationFilterContext CreateContext(string methodName) {
-        var methodInfo = typeof(TestController).GetMethod(methodName)!;
+        MethodInfo methodInfo = typeof(TestController).GetMethod(methodName)!;
         var apiDescription = new ApiDescription {
             ActionDescriptor = new ControllerActionDescriptor {
                 MethodInfo = methodInfo,
@@ -113,7 +114,7 @@ public sealed class SwaggerOperationFilterTests {
     }
 
     private static OperationFilterContext CreateContext(ActionDescriptor actionDescriptor) {
-        var methodInfo = typeof(TestController).GetMethod(nameof(TestController.Authorized))!;
+        MethodInfo methodInfo = typeof(TestController).GetMethod(nameof(TestController.Authorized))!;
         return CreateContext(actionDescriptor, methodInfo);
     }
 

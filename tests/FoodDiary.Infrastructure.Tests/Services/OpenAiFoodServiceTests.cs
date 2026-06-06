@@ -1,6 +1,8 @@
 using System.Diagnostics.Metrics;
 using System.Net;
+using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Services.OpenAi;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -17,7 +19,7 @@ public sealed class OpenAiFoodServiceTests {
     public async Task CalculateNutritionAsync_WhenTransportFails_ReturnsOpenAiFailedError() {
         long? requestCount = null;
         string? outcome = null;
-        using var listener = CreateIntegrationsListener(
+        using MeterListener listener = CreateIntegrationsListener(
             onRequest: (value, tags) => {
                 requestCount = value;
                 outcome = GetTagValue(tags, "fooddiary.ai.outcome");
@@ -25,9 +27,9 @@ public sealed class OpenAiFoodServiceTests {
             onFallback: null);
 
         using var httpClient = new HttpClient(new ThrowingHttpMessageHandler(new HttpRequestException("boom")));
-        var client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
-        var result = await client.CalculateNutritionAsync(
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
@@ -49,13 +51,13 @@ public sealed class OpenAiFoodServiceTests {
         ]);
 
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(responses));
-        var client = CreateClient(httpClient, new OpenAiOptions {
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
             ApiKey = "test-key",
             VisionModel = "vision-primary",
             VisionFallbackModel = "vision-fallback"
         });
 
-        var result = await client.AnalyzeFoodImageAsync(
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             null,
@@ -72,7 +74,7 @@ public sealed class OpenAiFoodServiceTests {
     [Fact]
     public async Task AnalyzeFoodImageAsync_WhenPrimaryFails_UsesFallbackAndRecordsMetric() {
         long? fallbackCount = null;
-        using var listener = CreateIntegrationsListener(
+        using MeterListener listener = CreateIntegrationsListener(
             onRequest: null,
             onFallback: (value, _) => fallbackCount = value);
 
@@ -84,13 +86,13 @@ public sealed class OpenAiFoodServiceTests {
         ]);
 
         using var httpClient = new HttpClient(new SequenceHttpMessageHandler(responses));
-        var client = CreateClient(httpClient, new OpenAiOptions {
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions {
             ApiKey = "test-key",
             VisionModel = "vision-primary",
             VisionFallbackModel = "vision-fallback"
         });
 
-        var result = await client.AnalyzeFoodImageAsync(
+        Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
             null,
@@ -122,9 +124,9 @@ public sealed class OpenAiFoodServiceTests {
                     """)
             }
         ])));
-        var client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
-        var result = await client.CalculateNutritionAsync(
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
@@ -148,9 +150,9 @@ public sealed class OpenAiFoodServiceTests {
                     """)
             }
         ])));
-        var client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
+        OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
-        var result = await client.CalculateNutritionAsync(
+        Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
@@ -221,7 +223,7 @@ public sealed class OpenAiFoodServiceTests {
     }
 
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
-        foreach (var tag in tags) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
                 return tag.Value?.ToString();
             }

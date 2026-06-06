@@ -11,7 +11,7 @@ public sealed class MailRelayDkimSigningServiceTests {
     [Fact]
     public void Sign_WhenDisabled_DoesNotAddDkimSignature() {
         var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions()));
-        var message = CreateMessage();
+        MimeMessage message = CreateMessage();
 
         service.Sign(message);
 
@@ -27,7 +27,7 @@ public sealed class MailRelayDkimSigningServiceTests {
             Selector = "mail",
             PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem()
         }));
-        var message = CreateMessage();
+        MimeMessage message = CreateMessage();
 
         service.Sign(message);
 

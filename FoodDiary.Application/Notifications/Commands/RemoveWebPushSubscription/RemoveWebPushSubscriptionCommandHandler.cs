@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
@@ -19,7 +20,7 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
@@ -28,7 +29,7 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
             return Result.Success();
         }
 
-        var existing = await webPushSubscriptionRepository.GetByEndpointAsync(
+        WebPushSubscription? existing = await webPushSubscriptionRepository.GetByEndpointAsync(
             command.Endpoint,
             asTracking: true,
             cancellationToken).ConfigureAwait(false);
@@ -47,7 +48,7 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
     }
 
     private static string GetEndpointHost(string endpoint) {
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out var uri)
+        return Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? uri)
             ? uri.Host
             : endpoint;
     }

@@ -44,11 +44,11 @@ public sealed class UpdateUserCommandHandlerTests {
             DashboardLayout: layout,
             IsActive: null);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(user.DashboardLayoutJson);
-        var deserialized = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
+        DashboardLayoutModel? deserialized = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
         Assert.NotNull(deserialized);
         Assert.Equal(layout.Web, deserialized.Web);
         Assert.Equal(layout.Mobile, deserialized.Mobile);
@@ -90,7 +90,7 @@ public sealed class UpdateUserCommandHandlerTests {
             DashboardLayout: null,
             IsActive: null);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(newAssetId, user.ProfileImageAssetId);
@@ -105,7 +105,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new UpdateUserCommand(
                 UserId: user.Id.Value,
                 Username: null,
@@ -143,7 +143,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(CreateCommand(null), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(CreateCommand(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -158,7 +158,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -183,7 +183,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             CreateCommand(
                 user.Id.Value,
                 activityLevel: activityLevel,
@@ -229,7 +229,7 @@ public sealed class UpdateUserCommandHandlerTests {
             DashboardLayout: null,
             IsActive: null);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("leaf", user.Theme);
@@ -241,7 +241,7 @@ public sealed class UpdateUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WhenProfileImageAccessFails_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
-        var imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
+        RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
         var handler = new UpdateUserCommandHandler(
             new SingleUserRepository(user),
@@ -249,7 +249,7 @@ public sealed class UpdateUserCommandHandlerTests {
             imageAccess);
 
         var assetId = Guid.NewGuid();
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, profileImageAssetId: assetId),
             CancellationToken.None);
 
@@ -266,7 +266,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: false),
             CancellationToken.None);
 
@@ -283,7 +283,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             CreateCommand(user.Id.Value, isActive: true),
             CancellationToken.None);
 

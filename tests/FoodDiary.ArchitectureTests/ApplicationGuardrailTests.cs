@@ -4,30 +4,30 @@ namespace FoodDiary.ArchitectureTests;
 public sealed class ApplicationGuardrailTests {
     [Fact]
     public void ApplicationSourceFiles_DoNotUseEnumParseDirectly() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["Enum.Parse("]);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["Enum.Parse("]);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void ApplicationHandlersAndServices_DoNotUseDateTimeUtcNow_Directly() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["DateTime.UtcNow"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["DateTime.UtcNow"]);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void ApplicationServiceInterfaces_AsyncMethodsAcceptCancellationToken() {
-        var root = GetRepositoryRoot();
-        var servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
+        string root = GetRepositoryRoot();
+        string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
 
-        var violations = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
                 .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))
@@ -38,10 +38,10 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationPersistenceInterfaces_AsyncMethodsAcceptCancellationToken() {
-        var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
+        string root = GetRepositoryRoot();
+        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
 
-        var violations = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.AllDirectories)
+        string[] violations = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.AllDirectories)
             .SelectMany(path => GetAsyncMethodSignatures(path)
                 .Where(static signature => signature.Contains("CancellationToken", StringComparison.Ordinal) is false)
                 .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))
@@ -52,13 +52,13 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
-        var root = GetRepositoryRoot();
-        var servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
-        var allowedFiles = new[] {
+        string root = GetRepositoryRoot();
+        string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
+        string[] allowedFiles = new[] {
             "IDateTimeProvider.cs",
         };
 
-        var actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        string?[] actualFiles = Directory.GetFiles(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -68,9 +68,9 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationAbstractionsCommonPersistenceInterfaces_DoNotRegrowMovedFeatureSpecificContracts() {
-        var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
-        var forbiddenFiles = new[] {
+        string root = GetRepositoryRoot();
+        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
+        string[] forbiddenFiles = new[] {
             "IAiUsageRepository.cs",
             "ICycleRepository.cs",
             "IDailyAdviceRepository.cs",
@@ -88,7 +88,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(Path.GetFileName)
             .ToHashSet(StringComparer.Ordinal);
 
-        var violations = forbiddenFiles
+        string[] violations = forbiddenFiles
             .Where(actualFiles.Contains)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -98,15 +98,15 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
-        var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
-        var allowedFiles = new[] {
+        string root = GetRepositoryRoot();
+        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
+        string[] allowedFiles = new[] {
             "IProductRepository.cs",
             "IRecipeRepository.cs",
             "IUserRepository.cs",
         };
 
-        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        string?[] actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -116,15 +116,15 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationSourceFiles_UseFullProductRepositoryOnlyInsideProductsSlice() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var allowedDirectories = new[] {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] allowedDirectories = new[] {
             Path.Combine(applicationRoot, "Products"),
             Path.Combine(applicationRoot, "FavoriteProducts"),
             Path.Combine(applicationRoot, "Usda"),
         };
 
-        var violations = FindRepositoryReferenceViolations(
+        string[] violations = FindRepositoryReferenceViolations(
             root,
             applicationRoot,
             "IProductRepository",
@@ -135,16 +135,16 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationSourceFiles_UseFullRecipeRepositoryOnlyInsideRecipesSlice() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var allowedDirectories = new[] {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] allowedDirectories = new[] {
             Path.Combine(applicationRoot, "Recipes"),
             Path.Combine(applicationRoot, "FavoriteRecipes"),
             Path.Combine(applicationRoot, "RecipeComments"),
             Path.Combine(applicationRoot, "RecipeLikes"),
         };
 
-        var violations = FindRepositoryReferenceViolations(
+        string[] violations = FindRepositoryReferenceViolations(
             root,
             applicationRoot,
             "IRecipeRepository",
@@ -155,15 +155,15 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void InfrastructurePersistenceRoot_StayLimitedToSharedEfInfrastructureFiles() {
-        var root = GetRepositoryRoot();
-        var persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");
-        var allowedFiles = new[] {
+        string root = GetRepositoryRoot();
+        string persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");
+        string[] allowedFiles = new[] {
             "EfUnitOfWork.cs",
             "FoodDiaryDbContext.cs",
             "FoodDiaryDbContextFactory.cs",
         };
 
-        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        string?[] actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)
             .ToArray();
@@ -173,9 +173,9 @@ public sealed class ApplicationGuardrailTests {
 
     [Fact]
     public void ApplicationSourceFiles_DoNotReferencePresentationOrAspNetTransportTypes() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] forbiddenPatterns = new[] {
             "FoodDiary.Presentation.Api",
             "Microsoft.AspNetCore",
             "IActionResult",
@@ -185,35 +185,35 @@ public sealed class ApplicationGuardrailTests {
             "HttpResponse",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void ApplicationProject_DoesNotReferencePresentationProject() {
-        var root = GetRepositoryRoot();
-        var projectPath = Path.Combine(root, "FoodDiary.Application", "FoodDiary.Application.csproj");
-        var content = File.ReadAllText(projectPath);
+        string root = GetRepositoryRoot();
+        string projectPath = Path.Combine(root, "FoodDiary.Application", "FoodDiary.Application.csproj");
+        string content = File.ReadAllText(projectPath);
 
         Assert.DoesNotContain("FoodDiary.Presentation.Api", content, StringComparison.Ordinal);
     }
 
     [Fact]
     public void ApplicationSourceFiles_DoNotUseCancellationTokenNone() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CancellationToken.None"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CancellationToken.None"]);
 
         Assert.Empty(violations);
     }
 
     [Fact]
     public void ApplicationSourceFiles_DoNotDependOnOptionsOrConfiguration() {
-        var root = GetRepositoryRoot();
-        var applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        var forbiddenPatterns = new[] {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] forbiddenPatterns = new[] {
             "IOptions<",
             "IOptionsMonitor<",
             "IOptionsSnapshot<",
@@ -222,7 +222,7 @@ public sealed class ApplicationGuardrailTests {
             "using Microsoft.Extensions.Configuration",
         };
 
-        var violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }
@@ -230,7 +230,7 @@ public sealed class ApplicationGuardrailTests {
     private static string GetRepositoryRoot() {
         var current = new DirectoryInfo(AppContext.BaseDirectory);
         while (current is not null) {
-            var solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
+            string solutionPath = Path.Combine(current.FullName, "FoodDiary.slnx");
             if (File.Exists(solutionPath)) {
                 return current.FullName;
             }

@@ -85,7 +85,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
         EnsureSequenceNumber(sequenceNumber);
         EnsureTargetHours(targetHours);
 
-        var normalizedScheduledFor = NormalizeTimestamp(scheduledForUtc, nameof(scheduledForUtc));
+        DateTime normalizedScheduledFor = NormalizeTimestamp(scheduledForUtc, nameof(scheduledForUtc));
         var occurrence = new FastingOccurrence {
             Id = FastingOccurrenceId.New(),
             PlanId = planId,
@@ -144,8 +144,8 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     public void Postpone(DateTime postponedAtUtc, DateTime nextScheduledForUtc) {
         EnsureTerminalTransition();
 
-        var normalizedPostponedAt = NormalizeTimestamp(postponedAtUtc, nameof(postponedAtUtc));
-        var normalizedNextScheduledFor = NormalizeTimestamp(nextScheduledForUtc, nameof(nextScheduledForUtc));
+        DateTime normalizedPostponedAt = NormalizeTimestamp(postponedAtUtc, nameof(postponedAtUtc));
+        DateTime normalizedNextScheduledFor = NormalizeTimestamp(nextScheduledForUtc, nameof(nextScheduledForUtc));
         if (normalizedNextScheduledFor <= normalizedPostponedAt) {
             throw new ArgumentOutOfRangeException(nameof(nextScheduledForUtc), "The next scheduled time must be later than the postponement time.");
         }
@@ -193,7 +193,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
     }
 
     public void UpdateNotes(string? notes) {
-        var normalizedNotes = NormalizeNotes(notes);
+        string? normalizedNotes = NormalizeNotes(notes);
         if (string.Equals(Notes, normalizedNotes, StringComparison.Ordinal)) {
             return;
         }
@@ -269,7 +269,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > NotesMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Notes must be at most {NotesMaxLength} characters.")
             : trimmed;
@@ -286,7 +286,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             return null;
         }
 
-        var normalized = values
+        string[] normalized = values
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .Select(static value => value.Trim())
             .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -300,7 +300,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             throw new ArgumentOutOfRangeException(nameof(values), $"A maximum of {MaxSymptomsCount} symptoms is allowed.");
         }
 
-        var csv = string.Join(',', normalized);
+        string csv = string.Join(',', normalized);
         return csv.Length > CheckInSymptomsMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(values), $"Symptoms must be at most {CheckInSymptomsMaxLength} characters in total.")
             : csv;
@@ -311,7 +311,7 @@ public sealed class FastingOccurrence : AggregateRoot<FastingOccurrenceId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > CheckInNotesMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Check-in notes must be at most {CheckInNotesMaxLength} characters.")
             : trimmed;

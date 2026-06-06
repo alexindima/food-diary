@@ -23,8 +23,8 @@ public sealed class ImageAsset : Entity<ImageAssetId> {
 
     public static ImageAsset Create(UserId userId, string objectKey, string url) {
         EnsureUserId(userId);
-        var normalizedObjectKey = NormalizeRequiredValue(objectKey, nameof(objectKey));
-        var normalizedUrl = NormalizeRequiredValue(url, nameof(url));
+        string normalizedObjectKey = NormalizeRequiredValue(objectKey, nameof(objectKey));
+        string normalizedUrl = NormalizeRequiredValue(url, nameof(url));
 
         var asset = new ImageAsset(ImageAssetId.New(), userId, normalizedObjectKey, normalizedUrl);
         asset.SetCreated();

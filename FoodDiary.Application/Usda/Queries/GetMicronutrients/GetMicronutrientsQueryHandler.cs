@@ -15,25 +15,25 @@ public class GetMicronutrientsQueryHandler(
     public async Task<Result<UsdaFoodDetailModel>> Handle(
         GetMicronutrientsQuery query,
         CancellationToken cancellationToken) {
-        var food = await repository.GetByFdcIdAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFood? food = await repository.GetByFdcIdAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         if (food is null) {
             return await BuildBrandedDetailAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
         }
 
-        var nutrients = await repository.GetNutrientsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
-        var portions = await repository.GetPortionsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
-        var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFoodNutrient> nutrients = await repository.GetNutrientsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<UsdaFoodPortion> portions = await repository.GetPortionsAsync(query.FdcId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(BuildLocalDetail(food, nutrients, portions, dailyValues));
     }
 
     private async Task<Result<UsdaFoodDetailModel>> BuildBrandedDetailAsync(int fdcId, CancellationToken cancellationToken) {
-        var brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
+        UsdaFoodDetailModel? brandedDetail = await brandedSearchService.GetFoodDetailAsync(fdcId, cancellationToken).ConfigureAwait(false);
         if (brandedDetail is null) {
             return Result.Failure<UsdaFoodDetailModel>(Errors.Usda.FoodNotFound(fdcId));
         }
 
-        var dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
-        var nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues);
+        IReadOnlyDictionary<int, DailyReferenceValue> dailyValues = await repository.GetDailyReferenceValuesAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MicronutrientModel> nutrientModels = ApplyDailyValues(brandedDetail.Nutrients, dailyValues);
         var nutrientAmounts = nutrientModels.ToDictionary(n => n.NutrientId, n => n.AmountPer100g);
         var dvAmounts = dailyValues.ToDictionary(kvp => kvp.Key, kvp => kvp.Value.Value);
         var healthScores = HealthAreaScores.Calculate(nutrientAmounts, dvAmounts);
@@ -51,9 +51,9 @@ public class GetMicronutrientsQueryHandler(
         IReadOnlyDictionary<int, Domain.Entities.Usda.DailyReferenceValue> dailyValues) {
         var nutrientModels = nutrients
             .Select(n => {
-                dailyValues.TryGetValue(n.NutrientId, out var drv);
-                var dailyValue = drv?.Value;
-                var percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1) : (double?)null;
+                dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
+                double? dailyValue = drv?.Value;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.Amount / dailyValue.Value * 100, 1) : (double?)null;
 
                 return new MicronutrientModel(
                     n.NutrientId,
@@ -93,9 +93,9 @@ public class GetMicronutrientsQueryHandler(
         IReadOnlyDictionary<int, Domain.Entities.Usda.DailyReferenceValue> dailyValues) =>
         nutrients
             .Select(n => {
-                dailyValues.TryGetValue(n.NutrientId, out var drv);
-                var dailyValue = drv?.Value;
-                var percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1) : (double?)null;
+                dailyValues.TryGetValue(n.NutrientId, out DailyReferenceValue? drv);
+                double? dailyValue = drv?.Value;
+                double? percentDv = dailyValue is > 0 ? Math.Round(n.AmountPer100g / dailyValue.Value * 100, 1) : (double?)null;
 
                 return n with {
                     DailyValue = dailyValue,

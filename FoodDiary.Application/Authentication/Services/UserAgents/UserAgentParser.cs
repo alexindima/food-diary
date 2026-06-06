@@ -6,8 +6,8 @@ internal static class UserAgentParser {
             return new ParsedUserAgent(null, null, null, null);
         }
 
-        var value = userAgent.Trim();
-        var browser = ResolveBrowser(value);
+        string value = userAgent.Trim();
+        (string? Name, string? Version) browser = ResolveBrowser(value);
         return new ParsedUserAgent(
             browser.Name,
             browser.Version,
@@ -84,13 +84,13 @@ internal static class UserAgentParser {
     }
 
     private static string? ExtractVersion(string value, string marker) {
-        var markerIndex = value.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+        int markerIndex = value.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
         if (markerIndex < 0) {
             return null;
         }
 
-        var start = markerIndex + marker.Length;
-        var end = start;
+        int start = markerIndex + marker.Length;
+        int end = start;
         while (end < value.Length && !char.IsWhiteSpace(value[end]) && value[end] != ';' && value[end] != ')') {
             end++;
         }

@@ -11,7 +11,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpsertWebPushSubscription_WithRequiredFieldsMissing_HasErrors() {
         var validator = new UpsertWebPushSubscriptionCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
             new UpsertWebPushSubscriptionCommand(null, "", "", "", null, null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
@@ -24,7 +24,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpsertWebPushSubscription_WithLongOptionalFields_HasErrors() {
         var validator = new UpsertWebPushSubscriptionCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
             new UpsertWebPushSubscriptionCommand(
                 Guid.NewGuid(),
                 new string('e', 2049),
@@ -45,7 +45,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpsertWebPushSubscription_WithValidInput_HasNoErrors() {
         var validator = new UpsertWebPushSubscriptionCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
             new UpsertWebPushSubscriptionCommand(
                 Guid.NewGuid(),
                 "https://push.example/sub",
@@ -62,7 +62,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpdateNotificationPreferences_WithInvalidReminderHours_HasErrors() {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
             new UpdateNotificationPreferencesCommand(Guid.NewGuid(), null, null, null, 0, 169));
 
         result.ShouldHaveValidationErrorFor(command => command.FastingCheckInReminderHours);
@@ -73,7 +73,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpdateNotificationPreferences_WithFollowUpBeforeFirstReminder_HasError() {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
             new UpdateNotificationPreferencesCommand(Guid.NewGuid(), null, null, null, 12, 12));
 
         result.ShouldHaveValidationErrorFor(command => command);
@@ -83,7 +83,7 @@ public sealed class NotificationsValidatorTests {
     public async Task UpdateNotificationPreferences_WithValidInput_HasNoErrors() {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
             new UpdateNotificationPreferencesCommand(Guid.NewGuid(), true, true, false, 12, 18));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -93,7 +93,7 @@ public sealed class NotificationsValidatorTests {
     public async Task ScheduleTestNotification_WithEmptyUserId_HasError() {
         var validator = new ScheduleTestNotificationCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<ScheduleTestNotificationCommand> result = await validator.TestValidateAsync(
             new ScheduleTestNotificationCommand(null, 15, "test"));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
@@ -105,7 +105,7 @@ public sealed class NotificationsValidatorTests {
     public async Task ScheduleTestNotification_WithInvalidDelay_HasError(int delaySeconds) {
         var validator = new ScheduleTestNotificationCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<ScheduleTestNotificationCommand> result = await validator.TestValidateAsync(
             new ScheduleTestNotificationCommand(Guid.NewGuid(), delaySeconds, "test"));
 
         result.ShouldHaveValidationErrorFor(command => command.DelaySeconds);
@@ -115,7 +115,7 @@ public sealed class NotificationsValidatorTests {
     public async Task ScheduleTestNotification_WithValidInput_HasNoErrors() {
         var validator = new ScheduleTestNotificationCommandValidator();
 
-        var result = await validator.TestValidateAsync(
+        TestValidationResult<ScheduleTestNotificationCommand> result = await validator.TestValidateAsync(
             new ScheduleTestNotificationCommand(Guid.NewGuid(), 60, "test"));
 
         result.ShouldNotHaveAnyValidationErrors();

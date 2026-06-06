@@ -18,11 +18,11 @@ public sealed class DirectMxRelayDeliveryTransport(
     private readonly DirectMxOptions _options = options.Value;
 
     public async Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
-        var recipientsByDomain = request.To
+        IEnumerable<IGrouping<string, MailboxAddress>> recipientsByDomain = request.To
             .Select(static recipient => MailboxAddress.Parse(recipient))
             .GroupBy(static recipient => recipient.Domain, StringComparer.OrdinalIgnoreCase);
 
-        foreach (var recipientGroup in recipientsByDomain) {
+        foreach (IGrouping<string, MailboxAddress> recipientGroup in recipientsByDomain) {
             await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken).ConfigureAwait(false);
         }
     }
@@ -32,10 +32,10 @@ public sealed class DirectMxRelayDeliveryTransport(
         string domain,
         IReadOnlyList<MailboxAddress> recipients,
         CancellationToken cancellationToken) {
-        var mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<MxRecord> mxRecords = await mxResolver.ResolveAsync(domain, cancellationToken).ConfigureAwait(false);
         Exception? lastError = null;
 
-        foreach (var mxRecord in mxRecords) {
+        foreach (MxRecord mxRecord in mxRecords) {
             try {
                 await SendToMxAsync(request, recipients, mxRecord.Host, cancellationToken).ConfigureAwait(false);
                 return;
@@ -57,7 +57,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         IReadOnlyList<MailboxAddress> recipients,
         string mxHost,
         CancellationToken cancellationToken) {
-        var secureSocketOptions = _options.UseStartTlsWhenAvailable
+        SecureSocketOptions secureSocketOptions = _options.UseStartTlsWhenAvailable
             ? SecureSocketOptions.StartTlsWhenAvailable
             : SecureSocketOptions.None;
 
@@ -69,17 +69,17 @@ public sealed class DirectMxRelayDeliveryTransport(
             client.LocalDomain = _options.LocalDomain;
         }
 
-        var socket = await ConnectToAllowedMxEndpointAsync(mxHost, linkedToken.Token).ConfigureAwait(false);
+        Socket socket = await ConnectToAllowedMxEndpointAsync(mxHost, linkedToken.Token).ConfigureAwait(false);
         await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token).ConfigureAwait(false);
         await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token).ConfigureAwait(false);
         await client.DisconnectAsync(true, linkedToken.Token).ConfigureAwait(false);
     }
 
     private async Task<Socket> ConnectToAllowedMxEndpointAsync(string mxHost, CancellationToken cancellationToken) {
-        var addresses = IPAddress.TryParse(mxHost, out var literalAddress)
+        IPAddress[] addresses = IPAddress.TryParse(mxHost, out IPAddress? literalAddress)
             ? [literalAddress]
             : await Dns.GetHostAddressesAsync(mxHost, cancellationToken).ConfigureAwait(false);
-        var publicAddress = addresses.FirstOrDefault(IsPublicAddress);
+        IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress);
         if (publicAddress is null) {
             throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
         }
@@ -111,7 +111,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         }
 
         if (address.AddressFamily == AddressFamily.InterNetwork) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return bytes[0] != 10 &&
                    bytes[0] != 127 &&
                    !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
@@ -123,7 +123,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         }
 
         if (address.AddressFamily == AddressFamily.InterNetworkV6) {
-            var bytes = address.GetAddressBytes();
+            byte[] bytes = address.GetAddressBytes();
             return !address.IsIPv6LinkLocal &&
                    !address.IsIPv6SiteLocal &&
                    !address.IsIPv6Multicast &&
@@ -168,7 +168,7 @@ public sealed class DirectMxRelayDeliveryTransport(
             return string.Empty;
         }
 
-        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
+        string withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
         return WebUtility.HtmlDecode(withoutTags);
     }
 }

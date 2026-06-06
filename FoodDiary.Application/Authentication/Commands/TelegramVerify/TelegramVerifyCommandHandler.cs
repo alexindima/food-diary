@@ -6,6 +6,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.TelegramVerify;
 
@@ -24,20 +25,20 @@ public sealed class TelegramVerifyCommandHandler : ICommandHandler<TelegramVerif
     }
 
     public async Task<Result<AuthenticationModel>> Handle(TelegramVerifyCommand command, CancellationToken cancellationToken) {
-        var initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
+        Result<TelegramInitData> initDataResult = _telegramAuthValidator.ValidateInitData(command.InitData);
         if (!initDataResult.IsSuccess) {
             return Result.Failure<AuthenticationModel>(initDataResult.Error);
         }
 
-        var initData = initDataResult.Value;
-        var user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId, cancellationToken).ConfigureAwait(false);
-        var accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
+        TelegramInitData initData = initDataResult.Value;
+        User? user = await _userRepository.GetByTelegramUserIdAsync(initData.UserId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(user is null ? Errors.Authentication.TelegramNotLinked : accessError);
         }
 
-        var currentUser = user!;
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        User currentUser = user!;
+        IssuedAuthenticationTokens tokens = await _authenticationTokenService.IssueAndStoreAsync(currentUser, cancellationToken, command.ClientContext).ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
 }

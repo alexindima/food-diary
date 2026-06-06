@@ -23,6 +23,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
+using FoodDiary.Application.Dashboard.Models;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
@@ -40,7 +41,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 Guid.Empty,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
@@ -69,7 +70,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 user.Id.Value,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
@@ -98,7 +99,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 Guid.NewGuid(),
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
@@ -127,7 +128,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 user.Id.Value,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
@@ -158,10 +159,10 @@ public sealed class DashboardSnapshotBuilderTests {
     [Fact]
     public async Task BuildAsync_ForPastDate_UsesMeasurementEntriesAvailableBySelectedDate() {
         var user = User.Create("dashboard-measurements@example.com", "hash");
-        var userId = user.Id;
+        UserId userId = user.Id;
         var selectedDate = new DateTime(2026, 3, 20, 12, 0, 0, DateTimeKind.Utc);
-        var futureDate = selectedDate.AddDays(1);
-        var previousDate = selectedDate.AddDays(-1);
+        DateTime futureDate = selectedDate.AddDays(1);
+        DateTime previousDate = selectedDate.AddDays(-1);
         var weightRepository = new FilteringWeightEntryRepository([
             WeightEntry.Create(userId, futureDate, 90),
             WeightEntry.Create(userId, selectedDate, 82),
@@ -182,7 +183,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 userId.Value,
                 selectedDate,
@@ -228,7 +229,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new StubExerciseEntryRepository(),
             NullLogger<DashboardSnapshotBuilder>.Instance);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             new DashboardSnapshotRequest(
                 user.Id.Value,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
@@ -263,9 +264,9 @@ public sealed class DashboardSnapshotBuilderTests {
         var sender = new ConfigurableDashboardSender {
             FirstStatisticsError = Errors.Validation.Invalid("statistics", "Statistics failed.")
         };
-        var builder = CreateBuilder(user, sender);
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             CreateRequest(user.Id.Value, Sections(includeStatistics: true)),
             CancellationToken.None);
 
@@ -281,9 +282,9 @@ public sealed class DashboardSnapshotBuilderTests {
         var sender = new ConfigurableDashboardSender {
             SecondStatisticsError = Errors.Validation.Invalid("weeklyStatistics", "Weekly statistics failed.")
         };
-        var builder = CreateBuilder(user, sender);
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             CreateRequest(user.Id.Value, Sections(includeStatistics: true), date),
             CancellationToken.None);
 
@@ -299,9 +300,9 @@ public sealed class DashboardSnapshotBuilderTests {
         var sender = new ConfigurableDashboardSender {
             MealsError = Errors.Validation.Invalid("meals", "Meals failed.")
         };
-        var builder = CreateBuilder(user, sender);
+        DashboardSnapshotBuilder builder = CreateBuilder(user, sender);
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             CreateRequest(user.Id.Value, Sections(includeStatistics: true, includeMeals: true)),
             CancellationToken.None);
 
@@ -315,7 +316,7 @@ public sealed class DashboardSnapshotBuilderTests {
         var user = User.Create("dashboard-hydration@example.com", "hash");
         user.UpdateGoals(waterGoal: 1800);
         var date = new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc);
-        var builder = CreateBuilder(
+        DashboardSnapshotBuilder builder = CreateBuilder(
             user,
             new ConfigurableDashboardSender(),
             new StubHydrationEntryRepository([
@@ -323,7 +324,7 @@ public sealed class DashboardSnapshotBuilderTests {
                 (date.Date.AddDays(1), 700)
             ]));
 
-        var result = await builder.BuildAsync(
+        Result<DashboardSnapshotModel> result = await builder.BuildAsync(
             CreateRequest(user.Id.Value, Sections(includeHydration: true), date, date.AddDays(1)),
             CancellationToken.None);
 
@@ -397,7 +398,7 @@ public sealed class DashboardSnapshotBuilderTests {
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
             if (request is GetStatisticsQuery statisticsQuery) {
                 StatisticsQueries.Add(statisticsQuery);
-                var error = StatisticsQueries.Count == 1 ? FirstStatisticsError : SecondStatisticsError;
+                Error? error = StatisticsQueries.Count == 1 ? FirstStatisticsError : SecondStatisticsError;
                 return error is not null
                     ? Task.FromResult((TResponse)(object)Result.Failure<IReadOnlyList<AggregatedStatisticsModel>>(error))
                     : Task.FromResult((TResponse)(object)Result.Success<IReadOnlyList<AggregatedStatisticsModel>>([
@@ -521,7 +522,7 @@ public sealed class DashboardSnapshotBuilderTests {
             bool descending,
             CancellationToken cancellationToken = default) {
             LastDateTo = dateTo;
-            var filtered = entries
+            IEnumerable<WeightEntry> filtered = entries
                 .Where(entry => entry.UserId == userId)
                 .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
                 .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);
@@ -554,7 +555,7 @@ public sealed class DashboardSnapshotBuilderTests {
             bool descending,
             CancellationToken cancellationToken = default) {
             LastDateTo = dateTo;
-            var filtered = entries
+            IEnumerable<WaistEntry> filtered = entries
                 .Where(entry => entry.UserId == userId)
                 .Where(entry => !dateFrom.HasValue || entry.Date.Date >= dateFrom.Value.Date)
                 .Where(entry => !dateTo.HasValue || entry.Date.Date <= dateTo.Value.Date);

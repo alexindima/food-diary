@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
@@ -12,8 +13,8 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
     public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,
         CancellationToken cancellationToken) {
-        var key = NormalizeKey(command.Key);
-        var localeResult = StringCodeParser.ParseRequiredLanguage(
+        string key = NormalizeKey(command.Key);
+        Result<string> localeResult = StringCodeParser.ParseRequiredLanguage(
             command.Locale,
             nameof(command.Locale),
             "Locale must be one of the supported codes.");
@@ -21,7 +22,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             return Result.Failure<AdminEmailTemplateModel>(localeResult.Error);
         }
 
-        var template = await repository.UpsertAsync(
+        EmailTemplate template = await repository.UpsertAsync(
             key,
             localeResult.Value,
             command.Subject,
@@ -45,7 +46,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
     }
 
     private static string NormalizeKey(string value) {
-        var trimmed = value?.Trim() ?? string.Empty;
+        string trimmed = value?.Trim() ?? string.Empty;
         return trimmed.ToLowerInvariant();
     }
 }

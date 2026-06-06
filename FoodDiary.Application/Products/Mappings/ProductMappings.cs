@@ -1,5 +1,6 @@
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Products.Mappings;
 
@@ -10,7 +11,7 @@ public static class ProductMappings {
         bool isOwnedByCurrentUser = false,
         bool isFavorite = false,
         Guid? favoriteProductId = null) {
-        var quality = product.GetQualityScore();
+        FoodQualityScore quality = product.GetQualityScore();
         return new ProductModel(
             product.Id.Value,
             product.Barcode,

@@ -10,7 +10,7 @@ public sealed class GetWebPushConfigurationQueryHandler(IWebPushConfigurationPro
     public Task<Result<WebPushConfigurationModel>> Handle(
         GetWebPushConfigurationQuery query,
         CancellationToken cancellationToken) {
-        var configuration = webPushConfigurationProvider.GetClientConfiguration();
+        WebPushClientConfiguration configuration = webPushConfigurationProvider.GetClientConfiguration();
         return Task.FromResult(Result.Success(new WebPushConfigurationModel(configuration.Enabled, configuration.PublicKey)));
     }
 }

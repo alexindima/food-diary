@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
@@ -22,7 +23,7 @@ public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
         var userId = new UserId(request.UserId!.Value);
         var consumptionId = new MealId(request.ConsumptionId);
 
-        var meal = await mealRepository.GetByIdAsync(
+        Meal? meal = await mealRepository.GetByIdAsync(
             consumptionId,
             userId,
             includeItems: true,

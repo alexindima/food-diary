@@ -6,7 +6,7 @@ public static class MailInboxApiErrorDetailsMapper {
             return "request";
         }
 
-        var segments = path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        string[] segments = path.Split('.', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         return string.Join(".", segments.Select(ToCamelCaseSegment));
     }
 

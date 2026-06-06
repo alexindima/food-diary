@@ -6,6 +6,8 @@ using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Exercises.Models;
 
 namespace FoodDiary.Application.Tests.Exercises;
 
@@ -16,7 +18,7 @@ public class ExercisesFeatureTests {
         var repo = new InMemoryExerciseEntryRepository();
         var handler = new CreateExerciseEntryCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 250, "Jog", null),
             CancellationToken.None);
 
@@ -31,7 +33,7 @@ public class ExercisesFeatureTests {
         var repo = new InMemoryExerciseEntryRepository();
         var handler = new CreateExerciseEntryCommandHandler(repo);
 
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "UnknownType", 30, 100, null, null),
             CancellationToken.None);
 
@@ -43,7 +45,7 @@ public class ExercisesFeatureTests {
     public async Task CreateExerciseEntry_WithNullUserId_ReturnsFailure() {
         var handler = new CreateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new CreateExerciseEntryCommand(null, DateTime.UtcNow, "Running", 30, 100, null, null),
             CancellationToken.None);
 
@@ -58,7 +60,7 @@ public class ExercisesFeatureTests {
         repo.Seed(entry);
 
         var handler = new DeleteExerciseEntryCommandHandler(repo);
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(userId.Value, entry.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -69,7 +71,7 @@ public class ExercisesFeatureTests {
     public async Task DeleteExerciseEntry_WhenNotFound_ReturnsFailure() {
         var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -79,7 +81,7 @@ public class ExercisesFeatureTests {
     public async Task DeleteExerciseEntry_WithNullUserId_ReturnsFailure() {
         var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -93,7 +95,7 @@ public class ExercisesFeatureTests {
         repo.Seed(entry);
 
         var handler = new UpdateExerciseEntryCommandHandler(repo);
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(userId.Value, entry.Id.Value, "Swimming", 45, null, null, false, null, false, null),
             CancellationToken.None);
 
@@ -105,7 +107,7 @@ public class ExercisesFeatureTests {
     public async Task UpdateExerciseEntry_WhenNotFound_ReturnsFailure() {
         var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), null, null, null, null, false, null, false, null),
             CancellationToken.None);
 
@@ -116,7 +118,7 @@ public class ExercisesFeatureTests {
     public async Task UpdateExerciseEntry_WithNullUserId_ReturnsFailure() {
         var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result<ExerciseEntryModel> result = await handler.Handle(
             new UpdateExerciseEntryCommand(null, Guid.NewGuid(), null, null, null, null, false, null, false, null),
             CancellationToken.None);
 
@@ -131,7 +133,7 @@ public class ExercisesFeatureTests {
         repo.Seed(entry);
 
         var handler = new GetExerciseEntriesQueryHandler(repo);
-        var result = await handler.Handle(
+        Result<IReadOnlyList<ExerciseEntryModel>> result = await handler.Handle(
             new GetExerciseEntriesQuery(userId.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1)),
             CancellationToken.None);
 
@@ -143,7 +145,7 @@ public class ExercisesFeatureTests {
     public async Task GetExerciseEntries_WithNullUserId_ReturnsFailure() {
         var handler = new GetExerciseEntriesQueryHandler(new InMemoryExerciseEntryRepository());
 
-        var result = await handler.Handle(
+        Result<IReadOnlyList<ExerciseEntryModel>> result = await handler.Handle(
             new GetExerciseEntriesQuery(null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),
             CancellationToken.None);
 

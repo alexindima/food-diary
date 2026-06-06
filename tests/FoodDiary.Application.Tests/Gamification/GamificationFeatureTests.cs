@@ -5,6 +5,8 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Gamification.Models;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -17,7 +19,7 @@ public class GamificationFeatureTests {
         var handler = new GetGamificationQueryHandler(
             new StubMealRepository(), new InMemoryUserRepository(), new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -28,7 +30,7 @@ public class GamificationFeatureTests {
         var handler = new GetGamificationQueryHandler(
             new StubMealRepository(), new InMemoryUserRepository(), new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -49,7 +51,7 @@ public class GamificationFeatureTests {
 
         var handler = new GetGamificationQueryHandler(mealRepo, userRepo, new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -69,7 +71,7 @@ public class GamificationFeatureTests {
         var handler = new GetGamificationQueryHandler(
             new StubMealRepository(), userRepo, new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);

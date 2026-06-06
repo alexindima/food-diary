@@ -18,10 +18,10 @@ if (command is null) {
     return 1;
 }
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 builder.Configuration.AddEnvironmentVariables("FOODDIARY_");
 
-var webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.Web.Api");
+string webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.Web.Api");
 if (Directory.Exists(webApiSettingsPath)) {
     builder.Configuration
         .AddJsonFile(Path.Combine(webApiSettingsPath, "appsettings.json"), optional: true, reloadOnChange: false)
@@ -53,9 +53,9 @@ builder.Services.AddDistributedMemoryCache();
 builder.Services.AddScoped<IEmailVerificationNotifier, NoOpEmailVerificationNotifier>();
 builder.Services.AddScoped<INotificationPusher, NoOpNotificationPusher>();
 
-using var host = builder.Build();
-using var scope = host.Services.CreateScope();
-var dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
+using IHost host = builder.Build();
+using IServiceScope scope = host.Services.CreateScope();
+FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
 
 try {
     await ExecuteAsync(command, dbContext).ConfigureAwait(false);
@@ -98,20 +98,20 @@ static async Task ExecuteAsync(InitializerCommand command, FoodDiaryDbContext db
 }
 
 static async Task ListMigrationsAsync(FoodDiaryDbContext dbContext) {
-    var migrationsAssembly = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrationsAssembly>();
-    var allMigrations = migrationsAssembly.Migrations.Keys;
+    IMigrationsAssembly migrationsAssembly = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrationsAssembly>();
+    IEnumerable<string> allMigrations = migrationsAssembly.Migrations.Keys;
     var appliedMigrations = new HashSet<string>(await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false), StringComparer.OrdinalIgnoreCase);
 
-    foreach (var migration in allMigrations) {
-        var state = appliedMigrations.Contains(migration) ? "applied" : "pending";
+    foreach (string migration in allMigrations) {
+        string state = appliedMigrations.Contains(migration) ? "applied" : "pending";
         Console.WriteLine($"{state,-8} {migration}");
     }
 }
 
 static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
-    var canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
-    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
-    var pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).ToArray();
+    bool canConnect = await dbContext.Database.CanConnectAsync().ConfigureAwait(false);
+    string[] appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
+    string[] pendingMigrations = (await dbContext.Database.GetPendingMigrationsAsync().ConfigureAwait(false)).ToArray();
 
     Console.WriteLine($"Can connect:       {canConnect}");
     Console.WriteLine($"Applied count:     {appliedMigrations.Length}");
@@ -120,15 +120,15 @@ static async Task PrintStatusAsync(FoodDiaryDbContext dbContext) {
 
     if (pendingMigrations.Length > 0) {
         Console.WriteLine("Pending migrations:");
-        foreach (var migration in pendingMigrations) {
+        foreach (string? migration in pendingMigrations) {
             Console.WriteLine($"  {migration}");
         }
     }
 }
 
 static async Task UpdateDatabaseAsync(FoodDiaryDbContext dbContext, string? targetMigration) {
-    var migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
-    var destination = string.IsNullOrWhiteSpace(targetMigration) ? "<latest>" : targetMigration;
+    IMigrator migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
+    string destination = string.IsNullOrWhiteSpace(targetMigration) ? "<latest>" : targetMigration;
 
     Console.WriteLine($"Updating database to {destination}...");
     await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
@@ -140,7 +140,7 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
         throw new InvalidOperationException("Rollback requires a target migration or 0.");
     }
 
-    var migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
+    IMigrator migrator = dbContext.Database.GetInfrastructure().GetRequiredService<IMigrator>();
 
     Console.WriteLine($"Rolling database back to {targetMigration}...");
     await migrator.MigrateAsync(targetMigration).ConfigureAwait(false);
@@ -148,13 +148,13 @@ static async Task RollbackDatabaseAsync(FoodDiaryDbContext dbContext, string? ta
 }
 
 static async Task RollbackLastMigrationAsync(FoodDiaryDbContext dbContext) {
-    var appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
+    string[] appliedMigrations = (await dbContext.Database.GetAppliedMigrationsAsync().ConfigureAwait(false)).ToArray();
     if (appliedMigrations.Length == 0) {
         Console.WriteLine("Database has no applied migrations.");
         return;
     }
 
-    var targetMigration = appliedMigrations.Length == 1 ? "0" : appliedMigrations[^2];
+    string targetMigration = appliedMigrations.Length == 1 ? "0" : appliedMigrations[^2];
     await RollbackDatabaseAsync(dbContext, targetMigration).ConfigureAwait(false);
 }
 
@@ -192,10 +192,10 @@ namespace FoodDiary.Initializer {
             string? name = null;
             string? targetMigration = null;
             string? connectionString = null;
-            var force = false;
+            bool force = false;
 
-            for (var index = 0; index < args.Length; index++) {
-                var argument = args[index];
+            for (int index = 0; index < args.Length; index++) {
+                string argument = args[index];
 
                 if (argument is "--connection-string" or "-c") {
                     index++;

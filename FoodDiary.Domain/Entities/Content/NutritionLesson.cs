@@ -55,12 +55,12 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
         LessonDifficulty difficulty,
         int estimatedReadMinutes,
         int sortOrder) {
-        var newTitle = NormalizeRequired(title, TitleMaxLength, nameof(title));
-        var newContent = NormalizeRequired(content, ContentMaxLength, nameof(content));
-        var newSummary = NormalizeOptional(summary, SummaryMaxLength);
-        var newLocale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant();
-        var newReadMinutes = Math.Max(1, estimatedReadMinutes);
-        var newSortOrder = Math.Max(0, sortOrder);
+        string newTitle = NormalizeRequired(title, TitleMaxLength, nameof(title));
+        string newContent = NormalizeRequired(content, ContentMaxLength, nameof(content));
+        string? newSummary = NormalizeOptional(summary, SummaryMaxLength);
+        string newLocale = NormalizeRequired(locale, LocaleMaxLength, nameof(locale)).ToLowerInvariant();
+        int newReadMinutes = Math.Max(1, estimatedReadMinutes);
+        int newSortOrder = Math.Max(0, sortOrder);
 
         if (string.Equals(Title, newTitle, StringComparison.Ordinal) &&
             string.Equals(Content, newContent, StringComparison.Ordinal) &&
@@ -89,7 +89,7 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
             throw new ArgumentException($"{paramName} is required.", paramName);
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > maxLength
             ? throw new ArgumentOutOfRangeException(paramName, $"Must be at most {maxLength} characters.")
             : trimmed;
@@ -100,7 +100,7 @@ public sealed class NutritionLesson : Entity<NutritionLessonId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > maxLength ? trimmed[..maxLength] : trimmed;
     }
 }

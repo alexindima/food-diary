@@ -10,7 +10,7 @@ public sealed class UserLoginEventCleanupHostedService(
     ILogger<UserLoginEventCleanupHostedService> logger)
     : BackgroundService {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
-        var settings = options.Value;
+        UserLoginEventCleanupOptions settings = options.Value;
         if (!settings.Enabled) {
             logger.LogInformation("User login event cleanup hosted service is disabled.");
             return;
@@ -32,11 +32,11 @@ public sealed class UserLoginEventCleanupHostedService(
     private async Task DeleteExpiredLoginEventsAsync(
         UserLoginEventCleanupOptions settings,
         CancellationToken cancellationToken) {
-        var cutoffUtc = DateTime.UtcNow.AddDays(-settings.RetentionDays);
+        DateTime cutoffUtc = DateTime.UtcNow.AddDays(-settings.RetentionDays);
 
-        using var scope = serviceScopeFactory.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<IUserLoginEventRepository>();
-        var totalDeletedCount = 0;
+        using IServiceScope scope = serviceScopeFactory.CreateScope();
+        IUserLoginEventRepository repository = scope.ServiceProvider.GetRequiredService<IUserLoginEventRepository>();
+        int totalDeletedCount = 0;
         int deletedCount;
         do {
             deletedCount = await repository.DeleteOlderThanAsync(

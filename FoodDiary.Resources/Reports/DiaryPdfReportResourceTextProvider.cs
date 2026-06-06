@@ -9,7 +9,7 @@ public sealed class DiaryPdfReportResourceTextProvider : IDiaryPdfReportTextProv
         new("FoodDiary.Resources.Reports.DiaryPdfReport", typeof(DiaryPdfReportResourceTextProvider).Assembly);
 
     public DiaryPdfReportTexts GetTexts(string? locale) {
-        var culture = ResolveCulture(locale);
+        CultureInfo culture = ResolveCulture(locale);
         return new DiaryPdfReportTexts(
             CultureName: culture.Name,
             ReportTitle: GetRequired(nameof(DiaryPdfReportTexts.ReportTitle), culture),
@@ -61,11 +61,11 @@ public sealed class DiaryPdfReportResourceTextProvider : IDiaryPdfReportTextProv
     }
 
     private static CultureInfo ResolveCulture(string? locale) {
-        var normalized = string.IsNullOrWhiteSpace(locale)
+        string normalized = string.IsNullOrWhiteSpace(locale)
             ? "en"
             : locale.Trim().ToLowerInvariant();
 
-        var cultureName = normalized.StartsWith("ru", StringComparison.Ordinal)
+        string cultureName = normalized.StartsWith("ru", StringComparison.Ordinal)
             ? "ru"
             : "en";
 

@@ -15,8 +15,8 @@ public sealed class DmarcReportParser {
 
     public DmarcReportPreview? TryParse(string rawMime) {
         try {
-            foreach (var xml in ExtractXmlPayloads(rawMime)) {
-                var report = TryParseXml(xml);
+            foreach (string xml in ExtractXmlPayloads(rawMime)) {
+                DmarcReportPreview? report = TryParseXml(xml);
                 if (report is not null) {
                     return report;
                 }
@@ -31,9 +31,9 @@ public sealed class DmarcReportParser {
     private static IEnumerable<string> ExtractXmlPayloads(string rawMime) {
         using var stream = new MemoryStream(Encoding.UTF8.GetBytes(rawMime));
         var message = MimeMessage.Load(stream);
-        foreach (var part in message.BodyParts.OfType<MimePart>()) {
-            var fileName = part.FileName ?? string.Empty;
-            var contentType = part.ContentType.MimeType;
+        foreach (MimePart part in message.BodyParts.OfType<MimePart>()) {
+            string fileName = part.FileName ?? string.Empty;
+            string contentType = part.ContentType.MimeType;
             if (part.Content is null) {
                 continue;
             }
@@ -44,11 +44,11 @@ public sealed class DmarcReportParser {
                 continue;
             }
 
-            var bytes = content.ToArray();
+            byte[] bytes = content.ToArray();
 
             if (fileName.EndsWith(".zip", StringComparison.OrdinalIgnoreCase) ||
                 contentType.Equals("application/zip", StringComparison.OrdinalIgnoreCase)) {
-                foreach (var xml in ExtractZipXmlPayloads(bytes)) {
+                foreach (string xml in ExtractZipXmlPayloads(bytes)) {
                     yield return xml;
                 }
 
@@ -73,16 +73,16 @@ public sealed class DmarcReportParser {
     private static IEnumerable<string> ExtractZipXmlPayloads(byte[] bytes) {
         using var stream = new MemoryStream(bytes);
         using var archive = new ZipArchive(stream, ZipArchiveMode.Read);
-        var xmlEntries = archive.Entries
+        IEnumerable<ZipArchiveEntry> xmlEntries = archive.Entries
             .Where(static entry => entry.FullName.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
             .Take(MaxZipXmlEntries);
 
-        foreach (var entry in xmlEntries) {
+        foreach (ZipArchiveEntry? entry in xmlEntries) {
             if (entry.Length > MaxDmarcXmlCharacters) {
                 continue;
             }
 
-            using var entryStream = entry.Open();
+            using Stream entryStream = entry.Open();
             yield return ReadTextWithLimit(entryStream);
         }
     }
@@ -108,15 +108,15 @@ public sealed class DmarcReportParser {
             return null;
         }
 
-        var root = document.Root;
+        XElement? root = document.Root;
         if (root is null || !IsElement(root, "feedback")) {
             return null;
         }
 
-        var metadata = root.Elements().FirstOrDefault(static element => IsElement(element, "report_metadata"));
-        var policy = root.Elements().FirstOrDefault(static element => IsElement(element, "policy_published"));
-        var dateRange = metadata?.Elements().FirstOrDefault(static element => IsElement(element, "date_range"));
-        var records = root.Elements()
+        XElement? metadata = root.Elements().FirstOrDefault(static element => IsElement(element, "report_metadata"));
+        XElement? policy = root.Elements().FirstOrDefault(static element => IsElement(element, "policy_published"));
+        XElement? dateRange = metadata?.Elements().FirstOrDefault(static element => IsElement(element, "date_range"));
+        DmarcReportRecordPreview[] records = root.Elements()
             .Where(static element => IsElement(element, "record"))
             .Select(ParseRecord)
             .ToArray();
@@ -131,12 +131,12 @@ public sealed class DmarcReportParser {
     }
 
     private static DmarcReportRecordPreview ParseRecord(XElement record) {
-        var row = record.Elements().FirstOrDefault(static element => IsElement(element, "row"));
-        var evaluated = row?.Elements().FirstOrDefault(static element => IsElement(element, "policy_evaluated"));
-        var identifiers = record.Elements().FirstOrDefault(static element => IsElement(element, "identifiers"));
-        var authResults = record.Elements().FirstOrDefault(static element => IsElement(element, "auth_results"));
-        var dkim = authResults?.Elements().FirstOrDefault(static element => IsElement(element, "dkim"));
-        var spf = authResults?.Elements().FirstOrDefault(static element => IsElement(element, "spf"));
+        XElement? row = record.Elements().FirstOrDefault(static element => IsElement(element, "row"));
+        XElement? evaluated = row?.Elements().FirstOrDefault(static element => IsElement(element, "policy_evaluated"));
+        XElement? identifiers = record.Elements().FirstOrDefault(static element => IsElement(element, "identifiers"));
+        XElement? authResults = record.Elements().FirstOrDefault(static element => IsElement(element, "auth_results"));
+        XElement? dkim = authResults?.Elements().FirstOrDefault(static element => IsElement(element, "dkim"));
+        XElement? spf = authResults?.Elements().FirstOrDefault(static element => IsElement(element, "spf"));
 
         return new DmarcReportRecordPreview(
             GetChildValue(row, "source_ip"),
@@ -159,17 +159,17 @@ public sealed class DmarcReportParser {
         element?.Elements().FirstOrDefault(child => IsElement(child, name))?.Value;
 
     private static int ParseInt(string? value) =>
-        int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result) ? result : 0;
+        int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int result) ? result : 0;
 
     private static DateTimeOffset? ParseUnixTime(string? value) =>
-        long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+        long.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out long result)
             ? DateTimeOffset.FromUnixTimeSeconds(result)
             : null;
 
     private static string ReadTextWithLimit(Stream stream) {
         using var reader = new StreamReader(stream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: false);
         var builder = new StringBuilder();
-        var buffer = new char[8192];
+        char[] buffer = new char[8192];
         int read;
 
         while ((read = reader.Read(buffer, 0, buffer.Length)) > 0) {

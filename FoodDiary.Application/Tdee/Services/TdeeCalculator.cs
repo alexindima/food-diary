@@ -22,38 +22,38 @@ public static class TdeeCalculator {
             return AdaptiveTdeeResult.Insufficient;
         }
 
-        var dailyCalories = CalculateDailyCalories(meals);
-        var daysWithCalories = dailyCalories.Count;
+        Dictionary<DateTime, double> dailyCalories = CalculateDailyCalories(meals);
+        int daysWithCalories = dailyCalories.Count;
         if (daysWithCalories < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;
         }
 
-        var avgDailyIntake = dailyCalories.Values.Average();
-        var avgDailyExercise = CalculateAvgDailyExercise(exerciseEntries, dailyCalories.Count);
+        double avgDailyIntake = dailyCalories.Values.Average();
+        double avgDailyExercise = CalculateAvgDailyExercise(exerciseEntries, dailyCalories.Count);
 
-        var smoothedStart = GetEmaWeight(sortedWeights, fromStart: true);
-        var smoothedEnd = GetEmaWeight(sortedWeights, fromStart: false);
+        double smoothedStart = GetEmaWeight(sortedWeights, fromStart: true);
+        double smoothedEnd = GetEmaWeight(sortedWeights, fromStart: false);
 
-        var firstDate = sortedWeights[0].Date;
-        var lastDate = sortedWeights[^1].Date;
-        var actualDays = (lastDate - firstDate).TotalDays;
+        DateTime firstDate = sortedWeights[0].Date;
+        DateTime lastDate = sortedWeights[^1].Date;
+        double actualDays = (lastDate - firstDate).TotalDays;
         if (actualDays < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;
         }
 
-        var weightChange = smoothedEnd - smoothedStart;
-        var weightChangePerDay = weightChange / actualDays;
-        var caloriesFromWeightChange = weightChangePerDay * KcalPerKgBodyWeight;
+        double weightChange = smoothedEnd - smoothedStart;
+        double weightChangePerDay = weightChange / actualDays;
+        double caloriesFromWeightChange = weightChangePerDay * KcalPerKgBodyWeight;
 
         // TDEE = average food intake + average exercise burn - caloric surplus from weight change
-        var adaptiveTdee = avgDailyIntake + avgDailyExercise - caloriesFromWeightChange;
+        double adaptiveTdee = avgDailyIntake + avgDailyExercise - caloriesFromWeightChange;
 
         if (adaptiveTdee < MinReasonableTdee || adaptiveTdee > MaxReasonableTdee) {
             return AdaptiveTdeeResult.Insufficient;
         }
 
-        var confidence = DetermineConfidence(sortedWeights.Count, daysWithCalories, actualDays);
-        var weightTrendPerWeek = Math.Round(weightChangePerDay * 7, 2);
+        TdeeConfidence confidence = DetermineConfidence(sortedWeights.Count, daysWithCalories, actualDays);
+        double weightTrendPerWeek = Math.Round(weightChangePerDay * 7, 2);
 
         return new AdaptiveTdeeResult(
             Math.Round(adaptiveTdee, 0),
@@ -70,13 +70,13 @@ public static class TdeeCalculator {
             return Math.Round(adaptiveTdee, 0);
         }
 
-        var deficit = currentWeight > desiredWeight
+        double deficit = currentWeight > desiredWeight
             ? -500.0  // lose ~0.45 kg/week
             : currentWeight < desiredWeight
                 ? 300.0   // gain ~0.27 kg/week (lean bulk)
                 : 0.0;    // maintain
 
-        var target = adaptiveTdee + deficit;
+        double target = adaptiveTdee + deficit;
         return Math.Round(Math.Max(target, 1200.0), 0);
     }
 
@@ -89,9 +89,9 @@ public static class TdeeCalculator {
             return null;
         }
 
-        var diff = currentTarget.Value - adaptiveTdee.Value;
-        var isLosing = currentWeight > desiredWeight;
-        var isGaining = currentWeight < desiredWeight;
+        double diff = currentTarget.Value - adaptiveTdee.Value;
+        bool isLosing = currentWeight > desiredWeight;
+        bool isGaining = currentWeight < desiredWeight;
 
         return (diff, isLosing, isGaining) switch {
             ( < -700, true, _) => "hint.deficit_too_aggressive",
@@ -107,9 +107,9 @@ public static class TdeeCalculator {
 
     private static Dictionary<DateTime, double> CalculateDailyCalories(IReadOnlyList<Meal> meals) {
         var daily = new Dictionary<DateTime, double>();
-        foreach (var meal in meals) {
-            var date = meal.Date.Date;
-            if (!daily.TryGetValue(date, out var total)) {
+        foreach (Meal meal in meals) {
+            DateTime date = meal.Date.Date;
+            if (!daily.TryGetValue(date, out double total)) {
                 total = 0;
             }
 
@@ -126,7 +126,7 @@ public static class TdeeCalculator {
             return 0;
         }
 
-        var totalBurned = exerciseEntries.Sum(e => e.CaloriesBurned);
+        double totalBurned = exerciseEntries.Sum(e => e.CaloriesBurned);
         return totalBurned / daysWithCalories;
     }
 
@@ -138,21 +138,21 @@ public static class TdeeCalculator {
     /// </summary>
     private static double GetEmaWeight(IReadOnlyList<WeightEntry> sorted, bool fromStart) {
         if (sorted.Count <= 3) {
-            var entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
+            IEnumerable<WeightEntry> entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
             return entries.Average(w => w.Weight);
         }
 
-        var half = sorted.Count / 2;
+        int half = sorted.Count / 2;
         if (fromStart) {
-            var ema = sorted[0].Weight;
-            for (var i = 1; i <= half; i++) {
+            double ema = sorted[0].Weight;
+            for (int i = 1; i <= half; i++) {
                 ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
             }
 
             return ema;
         } else {
-            var ema = sorted[^1].Weight;
-            for (var i = sorted.Count - 2; i >= sorted.Count - 1 - half; i--) {
+            double ema = sorted[^1].Weight;
+            for (int i = sorted.Count - 2; i >= sorted.Count - 1 - half; i--) {
                 ema = EmaAlpha * sorted[i].Weight + (1 - EmaAlpha) * ema;
             }
 

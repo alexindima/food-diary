@@ -8,6 +8,7 @@ using FoodDiary.Application.FavoriteRecipes.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 
@@ -19,19 +20,19 @@ public class AddFavoriteRecipeCommandHandler(
     public async Task<Result<FavoriteRecipeModel>> Handle(
         AddFavoriteRecipeCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<FavoriteRecipeModel>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteRecipeModel>(accessError);
         }
 
         var recipeId = new RecipeId(command.RecipeId);
-        var recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: true,
@@ -41,7 +42,7 @@ public class AddFavoriteRecipeCommandHandler(
             return Result.Failure<FavoriteRecipeModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
-        var existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
+        FavoriteRecipe? existing = await favoriteRecipeRepository.GetByRecipeIdAsync(recipeId, userId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Failure<FavoriteRecipeModel>(Errors.FavoriteRecipe.AlreadyExists);
         }
@@ -49,7 +50,7 @@ public class AddFavoriteRecipeCommandHandler(
         var favorite = FavoriteRecipe.Create(userId, recipeId, command.Name);
         await favoriteRecipeRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        var saved = await favoriteRecipeRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        FavoriteRecipe? saved = await favoriteRecipeRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return Result.Success(saved!.ToModel());
     }
 }

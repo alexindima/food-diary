@@ -23,17 +23,17 @@ public class CreateHydrationEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<HydrationEntryModel>(accessError);
         }
 
-        var validation = HydrationValidators.ValidateAmount(command.AmountMl);
+        Result validation = HydrationValidators.ValidateAmount(command.AmountMl);
         if (validation.IsFailure) {
             return Result.Failure<HydrationEntryModel>(validation.Error);
         }
 
-        var timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
+        DateTime timestampUtc = UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(command.TimestampUtc);
         var entry = HydrationEntry.Create(userId, timestampUtc, command.AmountMl);
         await repository.AddAsync(entry, cancellationToken).ConfigureAwait(false);
 

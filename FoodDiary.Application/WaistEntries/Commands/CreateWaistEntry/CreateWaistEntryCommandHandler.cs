@@ -23,13 +23,13 @@ public class CreateWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel>(accessError);
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
-        var existing = await waistEntryRepository.GetByDateAsync(
+        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        WaistEntry? existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
             cancellationToken).ConfigureAwait(false);

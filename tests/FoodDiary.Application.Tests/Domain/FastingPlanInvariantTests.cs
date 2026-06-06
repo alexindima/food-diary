@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Tests.Domain;
 public class FastingPlanInvariantTests {
     [Fact]
     public void CreateIntermittent_WithValidValues_Succeeds() {
-        var startedAtUtc = DateTime.UtcNow;
+        DateTime startedAtUtc = DateTime.UtcNow;
 
         var plan = FastingPlan.CreateIntermittent(
             UserId.New(),
@@ -77,7 +77,7 @@ public class FastingPlanInvariantTests {
             FastingProtocol.F72_0,
             targetHours: 72,
             startedAtUtc: DateTime.UtcNow);
-        var stoppedAtUtc = DateTime.UtcNow.AddHours(4);
+        DateTime stoppedAtUtc = DateTime.UtcNow.AddHours(4);
 
         plan.Stop(stoppedAtUtc);
 
@@ -176,7 +176,7 @@ public class FastingPlanInvariantTests {
 
         plan.Pause();
         Assert.Equal(FastingPlanStatus.Paused, plan.Status);
-        var modifiedAfterPause = plan.ModifiedOnUtc;
+        DateTime? modifiedAfterPause = plan.ModifiedOnUtc;
         plan.Pause();
         Assert.Equal(modifiedAfterPause, plan.ModifiedOnUtc);
 
@@ -185,9 +185,9 @@ public class FastingPlanInvariantTests {
         plan.Rename("  Plan  ");
         Assert.Equal("Plan", plan.Title);
 
-        var stoppedAtUtc = DateTime.UtcNow.AddHours(1);
+        DateTime stoppedAtUtc = DateTime.UtcNow.AddHours(1);
         plan.Stop(stoppedAtUtc);
-        var modifiedAfterStop = plan.ModifiedOnUtc;
+        DateTime? modifiedAfterStop = plan.ModifiedOnUtc;
         plan.Stop(stoppedAtUtc.AddHours(1));
         Assert.Equal(stoppedAtUtc, plan.StoppedAtUtc);
         Assert.Equal(modifiedAfterStop, plan.ModifiedOnUtc);
@@ -216,7 +216,7 @@ public class FastingPlanInvariantTests {
     [Fact]
     public void ScheduleNextCyclicPhase_WithCyclicPlan_UpdatesDate() {
         var plan = FastingPlan.CreateCyclic(UserId.New(), 1, 3, 16, 8, DateTime.UtcNow, DateTime.UtcNow);
-        var nextDate = DateTime.UtcNow.AddDays(1);
+        DateTime nextDate = DateTime.UtcNow.AddDays(1);
 
         plan.ScheduleNextCyclicPhase(nextDate);
 

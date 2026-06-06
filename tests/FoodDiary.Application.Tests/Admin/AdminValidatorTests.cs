@@ -14,7 +14,7 @@ namespace FoodDiary.Application.Tests.Admin;
 public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithEmptyActorUserId_HasError() {
-        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+        TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
             new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.ActorUserId);
@@ -22,7 +22,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task StartAdminImpersonation_WithEmptyTargetUserId_HasError() {
-        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+        TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
             new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.TargetUserId);
@@ -32,7 +32,7 @@ public class AdminValidatorTests {
     [InlineData("")]
     [InlineData("short")]
     public async Task StartAdminImpersonation_WithInvalidReason_HasError(string reason) {
-        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+        TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
             new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, null, null));
 
         result.ShouldHaveValidationErrorFor(command => command.Reason);
@@ -40,7 +40,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task StartAdminImpersonation_WithValidData_NoErrors() {
-        var result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
+        TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
             new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", null, null));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -50,42 +50,42 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task UpdateAdminUser_WithEmptyUserId_HasError() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.Empty, null, null, null, null, null, null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithNegativeAiTokenLimit_HasError() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.NewGuid(), null, null, null, null, -1, null));
         result.ShouldHaveValidationErrorFor(c => c.AiInputTokenLimit);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithInvalidLanguage_HasError() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.NewGuid(), null, null, null, "invalid-lang", null, null));
         result.ShouldHaveValidationErrorFor(c => c.Language);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithUnknownRole_HasError() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "UnknownRole" }, null, null, null));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithValidAdminRole_NoErrors() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "Admin" }, null, null, null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithValidOwnerRole_NoErrors() {
-        var result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
+        TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
             new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "Owner", "Admin" }, null, null, null));
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -94,28 +94,28 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task UpsertEmailTemplate_WithEmptyKey_HasError() {
-        var result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
+        TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
             new UpsertAdminEmailTemplateCommand("", "en", "Subject", "<p>Body</p>", "Body", true));
         result.ShouldHaveValidationErrorFor(c => c.Key);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithInvalidLocale_HasError() {
-        var result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
+        TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
             new UpsertAdminEmailTemplateCommand("key", "xx", "Subject", "<p>Body</p>", "Body", true));
         result.ShouldHaveValidationErrorFor(c => c.Locale);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithEmptySubject_HasError() {
-        var result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
+        TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
             new UpsertAdminEmailTemplateCommand("key", "en", "", "<p>Body</p>", "Body", true));
         result.ShouldHaveValidationErrorFor(c => c.Subject);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithValidData_NoErrors() {
-        var result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
+        TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
             new UpsertAdminEmailTemplateCommand("welcome", "en", "Welcome!", "<p>Hi</p>", "Hi", true));
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -124,14 +124,14 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task GetAdminAiUsage_WithInvertedDates_HasError() {
-        var result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminAiUsageSummaryQuery> result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
             new GetAdminAiUsageSummaryQuery(DateOnly.FromDateTime(DateTime.UtcNow), DateOnly.FromDateTime(DateTime.UtcNow.AddDays(-7))));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task GetAdminAiUsage_WithNullDates_NoErrors() {
-        var result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminAiUsageSummaryQuery> result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
             new GetAdminAiUsageSummaryQuery(null, null));
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -140,7 +140,7 @@ public class AdminValidatorTests {
     [InlineData(0)]
     [InlineData(201)]
     public async Task GetAdminMailInboxMessages_WithInvalidLimit_HasError(int limit) {
-        var result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminMailInboxMessagesQuery> result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
             new GetAdminMailInboxMessagesQuery(limit));
 
         result.ShouldHaveValidationErrorFor(query => query.Limit);
@@ -148,7 +148,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task GetAdminMailInboxMessages_WithValidLimit_NoErrors() {
-        var result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminMailInboxMessagesQuery> result = await new GetAdminMailInboxMessagesQueryValidator().TestValidateAsync(
             new GetAdminMailInboxMessagesQuery(50));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -156,7 +156,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task GetAdminMailInboxMessageDetails_WithEmptyId_HasError() {
-        var result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminMailInboxMessageDetailsQuery> result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
             new GetAdminMailInboxMessageDetailsQuery(Guid.Empty));
 
         result.ShouldHaveValidationErrorFor(query => query.Id);
@@ -164,7 +164,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task GetAdminMailInboxMessageDetails_WithValidId_NoErrors() {
-        var result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
+        TestValidationResult<GetAdminMailInboxMessageDetailsQuery> result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
             new GetAdminMailInboxMessageDetailsQuery(Guid.NewGuid()));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -172,7 +172,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithEmptyLessons_HasError() {
-        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+        TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, []));
 
         result.ShouldHaveValidationErrorFor(command => command.Lessons);
@@ -180,7 +180,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithUnsupportedVersion_HasError() {
-        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+        TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(2, [ValidLesson()]));
 
         result.ShouldHaveValidationErrorFor(command => command.Version)
@@ -189,11 +189,11 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithTooManyLessons_HasError() {
-        var lessons = Enumerable.Range(0, 101)
+        ImportAdminLessonItem[] lessons = Enumerable.Range(0, 101)
             .Select(index => ValidLesson(title: $"Lesson {index}"))
             .ToArray();
 
-        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+        TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, lessons));
 
         result.ShouldHaveValidationErrorFor(command => command.Lessons)
@@ -202,7 +202,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithInvalidLessonFields_HasExpectedErrors() {
-        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+        TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, [
                 new ImportAdminLessonItem(
                     Title: "",
@@ -227,7 +227,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task ImportAdminLessons_WithValidLesson_HasNoErrors() {
-        var result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
+        TestValidationResult<ImportAdminLessonsCommand> result = await new ImportAdminLessonsCommandValidator().TestValidateAsync(
             new ImportAdminLessonsCommand(1, [ValidLesson()]));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -235,7 +235,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task SendAdminEmailTemplateTest_WithInvalidEmail_HasError() {
-        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+        TestValidationResult<SendAdminEmailTemplateTestCommand> result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
             new SendAdminEmailTemplateTestCommand("not-email", "welcome", "Subject", "<p>Hi</p>", "Hi"));
 
         result.ShouldHaveValidationErrorFor(c => c.ToEmail);
@@ -243,7 +243,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task SendAdminEmailTemplateTest_WithEmptyTemplateFields_HasErrors() {
-        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+        TestValidationResult<SendAdminEmailTemplateTestCommand> result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
             new SendAdminEmailTemplateTestCommand("admin@example.com", "", "", "", ""));
 
         result.ShouldHaveValidationErrorFor(c => c.Key);
@@ -254,7 +254,7 @@ public class AdminValidatorTests {
 
     [Fact]
     public async Task SendAdminEmailTemplateTest_WithValidData_HasNoErrors() {
-        var result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
+        TestValidationResult<SendAdminEmailTemplateTestCommand> result = await new SendAdminEmailTemplateTestCommandValidator().TestValidateAsync(
             new SendAdminEmailTemplateTestCommand("admin@example.com", "welcome", "Subject", "<p>Hi</p>", "Hi"));
 
         result.ShouldNotHaveAnyValidationErrors();

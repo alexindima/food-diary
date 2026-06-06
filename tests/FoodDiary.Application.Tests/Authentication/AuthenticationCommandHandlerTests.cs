@@ -28,6 +28,8 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
 
@@ -37,7 +39,7 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task AdminSsoStartHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AdminSsoStartCommandHandler(new StubAdminSsoService(), new StubUserRepository());
 
-        var result = await handler.Handle(new AdminSsoStartCommand(Guid.Empty), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -50,7 +52,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var adminSsoService = new StubAdminSsoService();
         var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository(user));
 
-        var result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
@@ -62,7 +64,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var adminSsoService = new StubAdminSsoService();
         var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository());
 
-        var result = await handler.Handle(new AdminSsoStartCommand(Guid.NewGuid()), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
@@ -76,7 +78,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var adminSsoService = new StubAdminSsoService();
         var handler = new AdminSsoStartCommandHandler(adminSsoService, new StubUserRepository(user));
 
-        var result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
+        Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("admin-sso-code", result.Value.Code);
@@ -90,7 +92,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new AdminSsoExchangeCommand("bad-code"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("bad-code"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AdminSsoInvalidCode", result.Error.Code);
@@ -103,7 +105,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("User.NotFound", result.Error.Code);
@@ -120,7 +122,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new DirectUserByIdRepository(user),
             tokenService);
 
-        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -135,7 +137,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
@@ -151,7 +153,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             tokenService);
 
-        var result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("access", result.Value.AccessToken);
@@ -170,7 +172,7 @@ public sealed class AuthenticationCommandHandlerTests {
             tokens,
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new RegisterCommand("new@example.com", "secret", "ru", "https://client.test"),
             CancellationToken.None);
 
@@ -193,7 +195,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new RegisterCommand("email-failure@example.com", "secret", null),
             CancellationToken.None);
 
@@ -211,7 +213,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             tokenService);
 
-        var result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -227,7 +229,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             tokenService);
 
-        var result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("access", result.Value.AccessToken);
@@ -244,7 +246,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
-        var result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(sender.LastPasswordReset);
@@ -253,7 +255,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task RequestPasswordResetHandler_WhenRequestIsInCooldown_ReturnsSuccessWithoutSending() {
         var user = User.Create("cooldown-reset@example.com", "secret");
-        var nowUtc = new StubDateTimeProvider().UtcNow;
+        DateTime nowUtc = new StubDateTimeProvider().UtcNow;
         user.SetPasswordResetToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddSeconds(-30)));
         var sender = new StubEmailSender();
         var handler = new RequestPasswordResetCommandHandler(
@@ -263,7 +265,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
-        var result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(sender.LastPasswordReset);
@@ -280,7 +282,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RequestPasswordResetCommand(user.Email, "https://client.test"),
             CancellationToken.None);
 
@@ -300,7 +302,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
-        var result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
+        Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(user.PasswordResetTokenHash);
@@ -315,7 +317,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new NullAuditLogger());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(Guid.Empty, "token", "StrongPass123"),
             CancellationToken.None);
 
@@ -332,7 +334,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             new StubEmailVerificationNotifier());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(Guid.Empty, "token"),
             CancellationToken.None);
 
@@ -349,7 +351,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             new StubEmailVerificationNotifier());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(Guid.NewGuid(), "token"),
             CancellationToken.None);
 
@@ -367,7 +369,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             new StubEmailVerificationNotifier());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
@@ -383,7 +385,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             new StubEmailVerificationNotifier());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
@@ -401,7 +403,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             new StubEmailVerificationNotifier());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "actual"),
             CancellationToken.None);
 
@@ -421,7 +423,7 @@ public sealed class AuthenticationCommandHandlerTests {
             dateTimeProvider,
             notifier);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
@@ -441,7 +443,7 @@ public sealed class AuthenticationCommandHandlerTests {
             dateTimeProvider,
             new StubEmailVerificationNotifier(throwOnNotify: true));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
@@ -458,7 +460,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ResendEmailVerificationCommand(Guid.Empty),
             CancellationToken.None);
 
@@ -472,9 +474,9 @@ public sealed class AuthenticationCommandHandlerTests {
         var user = User.Create("confirmed@example.com", "secret");
         user.SetEmailConfirmed(true);
         var sender = new StubEmailSender();
-        var handler = CreateResendEmailVerificationHandler(user, sender);
+        ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, sender);
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Null(sender.LastEmailVerification);
@@ -484,9 +486,9 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task ResendEmailVerificationHandler_WhenSentRecently_ReturnsCooldownFailure() {
         var user = User.Create("cooldown@example.com", "secret");
         user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", DateTime.UtcNow.AddHours(1), new StubDateTimeProvider().UtcNow.AddSeconds(-30)));
-        var handler = CreateResendEmailVerificationHandler(user, new StubEmailSender());
+        ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, new StubEmailSender());
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -502,7 +504,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubDateTimeProvider(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(Guid.NewGuid()), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -511,12 +513,12 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenPreviousSendIsOutsideCooldown_SendsMessage() {
         var user = User.Create("cooldown-expired@example.com", "secret");
-        var nowUtc = new StubDateTimeProvider().UtcNow;
+        DateTime nowUtc = new StubDateTimeProvider().UtcNow;
         user.SetEmailConfirmationToken(new UserTokenIssue("old-hash", nowUtc.AddHours(1), nowUtc.AddMinutes(-5)));
         var sender = new StubEmailSender();
-        var handler = CreateResendEmailVerificationHandler(user, sender);
+        ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, sender);
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(sender.LastEmailVerification);
@@ -526,9 +528,9 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task ResendEmailVerificationHandler_WithActiveUnconfirmedUser_UpdatesTokenAndSendsMessage() {
         var user = User.Create("resend@example.com", "secret");
         var sender = new StubEmailSender();
-        var handler = CreateResendEmailVerificationHandler(user, sender);
+        ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, sender);
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value, "https://client.test"), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value, "https://client.test"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.NotNull(user.EmailConfirmationTokenHash);
@@ -540,9 +542,9 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenSenderFails_ReturnsValidationFailure() {
         var user = User.Create("send-fails@example.com", "secret");
-        var handler = CreateResendEmailVerificationHandler(user, new StubEmailSender(throwOnEmailVerification: true));
+        ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, new StubEmailSender(throwOnEmailVerification: true));
 
-        var result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
+        Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -555,7 +557,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubTelegramAuthValidator());
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(Guid.Empty, "init-data"),
             CancellationToken.None);
 
@@ -571,7 +573,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubTelegramAuthValidator(validateFailure: true));
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "bad-init-data"),
             CancellationToken.None);
 
@@ -585,7 +587,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubTelegramAuthValidator());
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(Guid.NewGuid(), "valid-init-data"),
             CancellationToken.None);
 
@@ -600,7 +602,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubTelegramAuthValidator());
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
@@ -617,7 +619,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user, existing),
             new StubTelegramAuthValidator());
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
@@ -632,7 +634,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubTelegramAuthValidator());
 
-        var result = await handler.Handle(
+        Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
@@ -649,7 +651,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new NullAuditLogger());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "StrongPass123"),
             CancellationToken.None);
 
@@ -667,7 +669,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new NullAuditLogger());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
             CancellationToken.None);
 
@@ -686,7 +688,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new NullAuditLogger());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "actual", "StrongPass123"),
             CancellationToken.None);
 
@@ -707,7 +709,7 @@ public sealed class AuthenticationCommandHandlerTests {
             tokenService,
             new NullAuditLogger());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "new-password"),
             CancellationToken.None);
 
@@ -723,7 +725,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramAuthValidator(validateFailure: true),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new TelegramVerifyCommand("bad-init-data"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("bad-init-data"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -736,7 +738,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramAuthValidator(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
@@ -752,7 +754,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramAuthValidator(),
             tokenService);
 
-        var result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("access", result.Value.AccessToken);
@@ -766,7 +768,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramLoginWidgetValidator(validateFailure: true),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new TelegramLoginWidgetCommand(123456, 123, "bad-hash", null, null, null, null),
             CancellationToken.None);
 
@@ -781,7 +783,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramLoginWidgetValidator(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new TelegramLoginWidgetCommand(123456, 123, "hash", null, null, null, null),
             CancellationToken.None);
 
@@ -799,7 +801,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubTelegramLoginWidgetValidator(),
             tokenService);
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new TelegramLoginWidgetCommand(123456, 123, "hash", "alex", "Alex", "User", null),
             CancellationToken.None);
 
@@ -814,7 +816,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
@@ -829,7 +831,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             tokenService);
 
-        var result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("access", result.Value.AccessToken);
@@ -846,7 +848,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand(user.Email, "secret"),
             CancellationToken.None);
 
@@ -863,7 +865,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand("missing@example.com", "secret"),
             CancellationToken.None);
 
@@ -880,7 +882,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService(),
             new StubDateTimeProvider());
 
-        var result = await handler.Handle(
+        Result<AuthenticationModel> result = await handler.Handle(
             new RestoreAccountCommand(user.Email, "secret"),
             CancellationToken.None);
 
@@ -900,7 +902,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             tokenService);
 
-        var result = await handler.Handle(new GoogleLoginCommand("bad-credential"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("bad-credential"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -920,7 +922,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             tokenService);
 
-        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -939,7 +941,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(notificationRepository.Notifications);
@@ -955,10 +957,10 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var notification = Assert.Single(notificationRepository.Notifications);
+        Notification notification = Assert.Single(notificationRepository.Notifications);
         Assert.Equal(NotificationTypes.PasswordSetupSuggested, notification.Type);
         Assert.StartsWith("password-setup:", notification.ReferenceId, StringComparison.Ordinal);
     }
@@ -966,7 +968,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task GoogleLoginHandler_DoesNotDuplicatePasswordSetupNotification() {
         var user = User.Create("google@example.com", "secret", hasPassword: false);
-        var existingNotification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, $"password-setup:{user.Id.Value}");
+        Notification existingNotification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, $"password-setup:{user.Id.Value}");
         var notificationRepository = new StubNotificationRepository(existingNotification);
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
@@ -975,7 +977,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
 
-        var result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
+        Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Single(notificationRepository.Notifications);

@@ -12,9 +12,9 @@ public sealed class WearableOAuthStateServiceTests {
     [Fact]
     public void IsValidState_WithMatchingUserAndProvider_ReturnsTrue() {
         var userId = UserId.New();
-        var service = CreateService();
+        WearableOAuthStateService service = CreateService();
 
-        var state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
+        string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
 
         Assert.True(service.IsValidState(state, userId, WearableProvider.Fitbit));
     }
@@ -22,16 +22,16 @@ public sealed class WearableOAuthStateServiceTests {
     [Fact]
     public void IsValidState_WhenStateIsTampered_ReturnsFalse() {
         var userId = UserId.New();
-        var service = CreateService();
-        var state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
+        WearableOAuthStateService service = CreateService();
+        string state = service.CreateState(userId, WearableProvider.Fitbit, "client-state");
 
         Assert.False(service.IsValidState($"{state}x", userId, WearableProvider.Fitbit));
     }
 
     [Fact]
     public void IsValidState_WhenUserDiffers_ReturnsFalse() {
-        var service = CreateService();
-        var state = service.CreateState(UserId.New(), WearableProvider.Fitbit, "client-state");
+        WearableOAuthStateService service = CreateService();
+        string state = service.CreateState(UserId.New(), WearableProvider.Fitbit, "client-state");
 
         Assert.False(service.IsValidState(state, UserId.New(), WearableProvider.Fitbit));
     }

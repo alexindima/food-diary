@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
+using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 
@@ -13,8 +14,8 @@ public sealed class SendDashboardTestEmailCommandHandler(
     IEmailSender emailSender,
     ILogger<SendDashboardTestEmailCommandHandler> logger) : ICommandHandler<SendDashboardTestEmailCommand, Result> {
     public async Task<Result> Handle(SendDashboardTestEmailCommand command, CancellationToken cancellationToken) {
-        var user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }

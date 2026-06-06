@@ -5,6 +5,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Billing;
 
 namespace FoodDiary.Application.Billing.Commands.CreatePortalSession;
 
@@ -21,23 +23,23 @@ public sealed class CreatePortalSessionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<BillingPortalSessionModel>(accessError);
         }
 
-        var subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (subscription is null || string.IsNullOrWhiteSpace(subscription.ExternalCustomerId)) {
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
         }
 
-        var billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(subscription.Provider);
+        IBillingProviderGateway? billingProvider = billingProviderGatewayAccessor.GetProviderOrDefault(subscription.Provider);
         if (billingProvider is null) {
             return Result.Failure<BillingPortalSessionModel>(Errors.Billing.CustomerPortalUnavailable);
         }
 
-        var sessionResult = await billingProvider.CreatePortalSessionAsync(
+        Result<BillingPortalSessionModel> sessionResult = await billingProvider.CreatePortalSessionAsync(
             new BillingPortalSessionRequestModel(subscription.ExternalCustomerId),
             cancellationToken).ConfigureAwait(false);
         if (sessionResult.IsFailure) {

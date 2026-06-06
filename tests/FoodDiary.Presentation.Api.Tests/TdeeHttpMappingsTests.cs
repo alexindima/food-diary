@@ -1,5 +1,7 @@
 using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Presentation.Api.Features.Tdee.Mappings;
+using FoodDiary.Presentation.Api.Features.Tdee.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -9,7 +11,7 @@ public sealed class TdeeHttpMappingsTests {
     public void ToTdeeQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToTdeeQuery();
+        GetTdeeInsightQuery query = userId.ToTdeeQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -18,7 +20,7 @@ public sealed class TdeeHttpMappingsTests {
     public void TdeeInsightModel_ToHttpResponse_MapsAllFields() {
         var model = new TdeeInsightModel(2200, 2150, 1600, 1800, 2000, -0.3, TdeeConfidence.High, 28, "Reduce by 200 kcal");
 
-        var response = model.ToHttpResponse();
+        TdeeInsightHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(2200, response.EstimatedTdee);
         Assert.Equal(2150, response.AdaptiveTdee);
@@ -35,7 +37,7 @@ public sealed class TdeeHttpMappingsTests {
     public void TdeeInsightModel_ToHttpResponse_WithNullValues() {
         var model = new TdeeInsightModel(null, null, null, null, null, null, TdeeConfidence.None, 0, null);
 
-        var response = model.ToHttpResponse();
+        TdeeInsightHttpResponse response = model.ToHttpResponse();
 
         Assert.Null(response.EstimatedTdee);
         Assert.Null(response.Bmr);

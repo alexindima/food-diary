@@ -25,7 +25,7 @@ public class CreateShoppingListCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ShoppingListModel>(accessError);
         }
@@ -35,7 +35,7 @@ public class CreateShoppingListCommandHandler(
                 Errors.Validation.Required(nameof(command.Name)));
         }
 
-        var itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
+        Result<IReadOnlyList<ShoppingListItemData>> itemsResult = await ShoppingListItemBuilder.BuildItemsAsync(
             command.Items,
             userId,
             productLookupService,
@@ -46,7 +46,7 @@ public class CreateShoppingListCommandHandler(
         }
 
         var list = ShoppingList.Create(userId, command.Name);
-        foreach (var item in itemsResult.Value) {
+        foreach (ShoppingListItemData item in itemsResult.Value) {
             list.AddItem(
                 item.Name,
                 item.ProductId,

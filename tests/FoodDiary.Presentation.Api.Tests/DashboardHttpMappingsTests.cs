@@ -8,6 +8,9 @@ using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
+using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
+using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -19,7 +22,7 @@ public sealed class DashboardHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         var httpQuery = new GetDashboardSnapshotHttpQuery(date, 2, 20, "ru", 14);
 
-        var query = httpQuery.ToQuery(userId);
+        GetDashboardSnapshotQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
@@ -35,7 +38,7 @@ public sealed class DashboardHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         var httpQuery = new GetDailyAdviceHttpQuery(date, "en");
 
-        var query = httpQuery.ToQuery(userId);
+        GetDailyAdviceQuery query = httpQuery.ToQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
@@ -47,7 +50,7 @@ public sealed class DashboardHttpMappingsTests {
         var id = Guid.NewGuid();
         var model = new DailyAdviceModel(id, "en", "Drink more water!", "hydration", 3);
 
-        var response = model.ToHttpResponse();
+        DailyAdviceHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.Equal("en", response.Locale);
@@ -59,7 +62,7 @@ public sealed class DashboardHttpMappingsTests {
     [Fact]
     public void DashboardSnapshotModel_ToHttpResponse_MapsNestedSections() {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
-        var dateTo = date.AddDays(1).AddTicks(-1);
+        DateTime dateTo = date.AddDays(1).AddTicks(-1);
         var cycleId = Guid.NewGuid();
         var cycleDayId = Guid.NewGuid();
         var model = new DashboardSnapshotModel(
@@ -122,7 +125,7 @@ public sealed class DashboardHttpMappingsTests {
                 ],
                 new CyclePredictionsModel(date.AddDays(18), date.AddDays(4), date.AddDays(15))));
 
-        var response = model.ToHttpResponse();
+        DashboardSnapshotHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(model.Date, response.Date);
         Assert.Equal(model.DateTo, response.DateTo);

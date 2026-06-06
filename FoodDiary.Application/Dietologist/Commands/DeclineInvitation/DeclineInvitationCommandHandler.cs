@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 
@@ -18,7 +19,7 @@ public class DeclineInvitationCommandHandler(
     : ICommandHandler<DeclineInvitationCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationCommand command, CancellationToken cancellationToken) {
         var invitationId = new DietologistInvitationId(command.InvitationId);
-        var invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(invitationId, asTracking: true, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);

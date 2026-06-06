@@ -1,5 +1,8 @@
+using System.Reflection;
+using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Ai;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -9,7 +12,7 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task GetSummaryAsync_AggregatesTotalsAndBreakdownsAgainstPostgres() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("ai-summary@example.com", "hash");
         context.Users.Add(user);
 
@@ -26,7 +29,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         var repository = new AiUsageRepository(context);
 
-        var summary = await repository.GetSummaryAsync(
+        AiUsageSummary summary = await repository.GetSummaryAsync(
             new DateTime(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
             CancellationToken.None);
@@ -44,7 +47,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
     }
 
     private static void SetCreatedOnUtc(AiUsage usage, DateTime createdOnUtc) {
-        var method = typeof(AiUsage).BaseType?
+        MethodInfo method = typeof(AiUsage).BaseType?
             .GetMethod(
                 "SetCreated",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic,

@@ -10,6 +10,8 @@ using FoodDiary.Application.FavoriteMeals.Mappings;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.FavoriteMeals;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 
@@ -26,22 +28,22 @@ public sealed class GetConsumptionsOverviewQueryHandler(
         }
 
         var userId = new UserId(request.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ConsumptionOverviewModel>(accessError);
         }
 
-        var sanitizedPage = Math.Max(request.Page, 1);
-        var sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
-        var favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
-        var normalizedFrom = request.DateFrom.HasValue
+        int sanitizedPage = Math.Max(request.Page, 1);
+        int sanitizedLimit = Math.Clamp(request.Limit, 1, 100);
+        int favoriteLimit = Math.Clamp(request.FavoriteLimit, 1, 50);
+        DateTime? normalizedFrom = request.DateFrom.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateFrom.Value)
             : null;
-        var normalizedTo = request.DateTo.HasValue
+        DateTime? normalizedTo = request.DateTo.HasValue
             ? (DateTime?)UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
 
-        var pageData = await mealRepository.GetPagedAsync(
+        (IReadOnlyList<Meal> Items, int TotalItems) pageData = await mealRepository.GetPagedAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
@@ -49,23 +51,23 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             normalizedTo,
             cancellationToken).ConfigureAwait(false);
 
-        var favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteMeal> favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = favorites
             .Take(favoriteLimit)
             .Select(favorite => favorite.ToModel())
             .ToList();
 
-        var mealIds = pageData.Items
+        MealId[] mealIds = pageData.Items
             .Select(meal => meal.Id)
             .Distinct()
             .ToArray();
-        var favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<MealId, FavoriteMeal> favoritesByMealId = await favoriteMealRepository.GetByMealIdsAsync(userId, mealIds, cancellationToken).ConfigureAwait(false);
 
-        var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);
+        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)sanitizedLimit);
         var allConsumptions = new PagedResponse<ConsumptionModel>(
             pageData.Items
                 .Select(meal => {
-                    var favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
+                    FavoriteMeal? favorite = favoritesByMealId.GetValueOrDefault(meal.Id);
                     return meal.ToModel(
                         isFavorite: favorite is not null,
                         favoriteMealId: favorite?.Id.Value);

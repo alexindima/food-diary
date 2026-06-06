@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Infrastructure.Services;
@@ -20,12 +21,12 @@ public sealed class UserCleanupService(
             throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch size must be greater than zero.");
         }
 
-        var reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
-        var thresholdUtc = NormalizeUtc(olderThanUtc);
-        var userIds = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, cancellationToken).ConfigureAwait(false);
-        var removed = 0;
+        UserId? reassignTarget = await ResolveReassignTargetAsync(reassignUserId, cancellationToken).ConfigureAwait(false);
+        DateTime thresholdUtc = NormalizeUtc(olderThanUtc);
+        IReadOnlyList<UserId> userIds = await GetDeletedUserIdsAsync(thresholdUtc, batchSize, cancellationToken).ConfigureAwait(false);
+        int removed = 0;
 
-        foreach (var userId in userIds) {
+        foreach (UserId userId in userIds) {
             try {
                 await CleanupUserAsync(userId, reassignTarget, cancellationToken).ConfigureAwait(false);
                 removed++;
@@ -42,7 +43,7 @@ public sealed class UserCleanupService(
         }
 
         var targetId = new UserId(reassignUserId.Value);
-        var candidate = await dbContext.Users
+        bool candidate = await dbContext.Users
             .AsNoTracking()
             .AnyAsync(
                 u => u.Id == targetId && u.DeletedAt == null && u.IsActive,
@@ -75,7 +76,7 @@ public sealed class UserCleanupService(
     }
 
     private async Task CleanupUserAsync(UserId userId, UserId? reassignTarget, CancellationToken cancellationToken) {
-        var transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
+        IDbContextTransaction transaction = await dbContext.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
         await using (transaction.ConfigureAwait(false)) {
             if (reassignTarget is not null) {
                 await ReassignOwnedContentAsync(userId, reassignTarget.Value, cancellationToken).ConfigureAwait(false);
@@ -91,7 +92,7 @@ public sealed class UserCleanupService(
     }
 
     private async Task ReassignOwnedContentAsync(UserId userId, UserId reassignTarget, CancellationToken cancellationToken) {
-        var assetIds = await GetOwnedContentAssetIdsAsync(userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<ImageAssetId> assetIds = await GetOwnedContentAssetIdsAsync(userId, cancellationToken).ConfigureAwait(false);
         if (assetIds.Count > 0) {
             await dbContext.ImageAssets
                 .Where(a => assetIds.Contains(a.Id))
@@ -108,17 +109,17 @@ public sealed class UserCleanupService(
     }
 
     private async Task<IReadOnlyList<ImageAssetId>> GetOwnedContentAssetIdsAsync(UserId userId, CancellationToken cancellationToken) {
-        var productAssetIds = await dbContext.Products
+        List<ImageAssetId> productAssetIds = await dbContext.Products
             .Where(p => p.UserId == userId && p.ImageAssetId != null)
             .Select(p => p.ImageAssetId!.Value)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var recipeAssetIds = await dbContext.Recipes
+        List<ImageAssetId> recipeAssetIds = await dbContext.Recipes
             .Where(r => r.UserId == userId && r.ImageAssetId != null)
             .Select(r => r.ImageAssetId!.Value)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        var stepAssetIds = await dbContext.RecipeSteps
+        List<ImageAssetId> stepAssetIds = await dbContext.RecipeSteps
             .Where(step => step.Recipe.UserId == userId && step.ImageAssetId != null)
             .Select(step => step.ImageAssetId!.Value)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -153,12 +154,12 @@ public sealed class UserCleanupService(
     }
 
     private async Task DeleteImageAssetsAsync(UserId userId, CancellationToken cancellationToken) {
-        var deletedImageObjectKeys = await dbContext.ImageAssets
+        List<string> deletedImageObjectKeys = await dbContext.ImageAssets
             .Where(asset => asset.UserId == userId)
             .Select(asset => asset.ObjectKey)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        foreach (var objectKey in deletedImageObjectKeys) {
+        foreach (string objectKey in deletedImageObjectKeys) {
             await DeleteImageObjectAsync(objectKey, cancellationToken).ConfigureAwait(false);
         }
 

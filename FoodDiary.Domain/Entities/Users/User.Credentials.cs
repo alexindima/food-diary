@@ -5,7 +5,7 @@ namespace FoodDiary.Domain.Entities.Users;
 public sealed partial class User {
     public void CompletePasswordReset(string hashedPassword) {
         EnsureNotDeleted();
-        var nextState = GetSecurityState()
+        UserSecurityState nextState = GetSecurityState()
             .WithPassword(NormalizeRequiredPasswordHash(hashedPassword))
             .WithoutPasswordResetToken();
         ApplySecurityState(nextState);
@@ -18,9 +18,9 @@ public sealed partial class User {
 
     public void UpdateRefreshToken(UserRefreshTokenUpdate update) {
         EnsureNotDeleted();
-        var normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
-        var effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
-        var nextState = GetSecurityState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
+        string? normalizedRefreshToken = NormalizeOptionalToken(update.RefreshToken);
+        DateTime effectiveChangedAtUtc = NormalizeOptionalAuditTimestamp(update.ChangedAtUtc, nameof(update.ChangedAtUtc));
+        UserSecurityState nextState = GetSecurityState().WithRefreshToken(normalizedRefreshToken, effectiveChangedAtUtc);
         ApplySecurityState(nextState);
 
         SetModified(effectiveChangedAtUtc);
@@ -28,7 +28,7 @@ public sealed partial class User {
 
     public void RecordAuthenticationActivity(DateTime occurredAtUtc) {
         EnsureNotDeleted();
-        var normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));
+        DateTime normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));
         ApplySecurityState(GetSecurityState().WithAuthenticationActivity(normalizedOccurredAtUtc));
         SetModified(normalizedOccurredAtUtc);
     }
@@ -45,11 +45,11 @@ public sealed partial class User {
 
     public void SetEmailConfirmationToken(UserTokenIssue issue) {
         EnsureNotDeleted();
-        var normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
-        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        UserSecurityState nextState = GetSecurityState().WithEmailConfirmationToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
     }
@@ -70,11 +70,11 @@ public sealed partial class User {
 
     public void SetPasswordResetToken(UserTokenIssue issue) {
         EnsureNotDeleted();
-        var normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
-        var normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
+        string normalizedTokenHash = NormalizeRequiredTokenHash(issue.TokenHash, nameof(issue.TokenHash));
+        DateTime normalizedExpiresAtUtc = NormalizeUtcTimestamp(issue.ExpiresAtUtc, nameof(issue.ExpiresAtUtc));
+        DateTime normalizedIssuedAtUtc = NormalizeOptionalAuditTimestamp(issue.IssuedAtUtc, nameof(issue.IssuedAtUtc));
         EnsureFutureUtc(normalizedExpiresAtUtc, nameof(issue.ExpiresAtUtc));
-        var nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
+        UserSecurityState nextState = GetSecurityState().WithPasswordResetToken(normalizedTokenHash, normalizedExpiresAtUtc, normalizedIssuedAtUtc);
         ApplySecurityState(nextState);
         SetModified(normalizedIssuedAtUtc);
     }

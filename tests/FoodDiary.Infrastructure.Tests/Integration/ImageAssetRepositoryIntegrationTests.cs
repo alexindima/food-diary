@@ -2,6 +2,7 @@ using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Images;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
@@ -11,7 +12,7 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task MealAiSessionAsset_IsReportedInUse_AndExcludedFromUnusedCandidates() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("image-ai@example.com", "hash");
         var referencedAsset = ImageAsset.Create(user.Id, "images/ai-referenced.webp", "https://cdn.example.com/ai-referenced.webp");
         var unusedAsset = ImageAsset.Create(user.Id, "images/unused.webp", "https://cdn.example.com/unused.webp");
@@ -31,8 +32,8 @@ public sealed class ImageAssetRepositoryIntegrationTests(PostgresDatabaseFixture
 
         var repository = new ImageAssetRepository(context);
 
-        var isReferencedAssetInUse = await repository.IsAssetInUseAsync(referencedAsset.Id, CancellationToken.None);
-        var unusedCandidates = await repository.GetUnusedOlderThanAsync(
+        bool isReferencedAssetInUse = await repository.IsAssetInUseAsync(referencedAsset.Id, CancellationToken.None);
+        IReadOnlyList<ImageAsset> unusedCandidates = await repository.GetUnusedOlderThanAsync(
             DateTime.UtcNow.AddDays(1),
             batchSize: 10,
             CancellationToken.None);

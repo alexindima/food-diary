@@ -11,7 +11,7 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository 
     public async Task<Result<PagedResponse<AdminBillingPaymentReadModel>>> Handle(
         GetAdminBillingPaymentsQuery query,
         CancellationToken cancellationToken) {
-        var filter = AdminBillingQueryFilters.Create(
+        AdminBillingListFilter filter = AdminBillingQueryFilters.Create(
             query.Page,
             query.Limit,
             query.Provider,
@@ -20,8 +20,8 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository 
             query.Search,
             query.FromUtc,
             query.ToUtc);
-        var pageData = await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
-        var totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
+        (IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems) pageData = await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
+        int totalPages = (int)Math.Ceiling(pageData.TotalItems / (double)filter.Limit);
         return Result.Success(new PagedResponse<AdminBillingPaymentReadModel>(
             pageData.Items,
             filter.Page,

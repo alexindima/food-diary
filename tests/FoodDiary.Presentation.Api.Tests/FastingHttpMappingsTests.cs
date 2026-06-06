@@ -1,6 +1,12 @@
 using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Commands.StartFasting;
+using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
+using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
+using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
+using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -11,7 +17,7 @@ public sealed class FastingHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new StartFastingHttpRequest("F16_8", "Intermittent", 16, null, null, null, null, "Feeling good");
 
-        var command = request.ToCommand(userId);
+        StartFastingCommand command = request.ToCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal("F16_8", command.Protocol);
@@ -25,7 +31,7 @@ public sealed class FastingHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new StartFastingHttpRequest("F18_6");
 
-        var command = request.ToCommand(userId);
+        StartFastingCommand command = request.ToCommand(userId);
 
         Assert.Null(command.PlannedDurationHours);
         Assert.Null(command.Notes);
@@ -34,11 +40,11 @@ public sealed class FastingHttpMappingsTests {
     [Fact]
     public void GetFastingHistoryQuery_MapsDateRange() {
         var userId = Guid.NewGuid();
-        var from = DateTime.UtcNow.AddDays(-30);
-        var to = DateTime.UtcNow;
+        DateTime from = DateTime.UtcNow.AddDays(-30);
+        DateTime to = DateTime.UtcNow;
         var httpQuery = new GetFastingHistoryHttpQuery(from, to);
 
-        var query = httpQuery.ToHistoryQuery(userId);
+        GetFastingHistoryQuery query = httpQuery.ToHistoryQuery(userId);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(from, query.From);
@@ -50,7 +56,7 @@ public sealed class FastingHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new ExtendActiveFastingHttpRequest(24);
 
-        var command = request.ToExtendCommand(userId);
+        ExtendActiveFastingCommand command = request.ToExtendCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(24, command.AdditionalHours);
@@ -61,7 +67,7 @@ public sealed class FastingHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new ReduceActiveFastingTargetHttpRequest(8);
 
-        var command = request.ToReduceCommand(userId);
+        ReduceActiveFastingTargetCommand command = request.ToReduceCommand(userId);
 
         Assert.Equal(userId, command.UserId);
         Assert.Equal(8, command.ReducedHours);
@@ -71,7 +77,7 @@ public sealed class FastingHttpMappingsTests {
     public void OverviewQuery_ToQuery_MapsUserId() {
         var userId = Guid.NewGuid();
 
-        var query = userId.ToOverviewQuery();
+        GetFastingOverviewQuery query = userId.ToOverviewQuery();
 
         Assert.Equal(userId, query.UserId);
     }
@@ -132,7 +138,7 @@ public sealed class FastingHttpMappingsTests {
                     "Hydration was fine")
             ]);
 
-        var response = model.ToHttpResponse();
+        FastingSessionHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal("Interrupted", response.Status);
         Assert.True(response.IsCompleted);
@@ -196,7 +202,7 @@ public sealed class FastingHttpMappingsTests {
                 0,
                 0));
 
-        var response = model.ToHttpResponse();
+        FastingOverviewHttpResponse response = model.ToHttpResponse();
 
         Assert.Equal(sessionId, response.CurrentSession!.Id);
         Assert.Equal(5, response.Stats.TotalCompleted);

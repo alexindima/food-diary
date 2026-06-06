@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Authentication;
@@ -11,10 +12,10 @@ public sealed class AdminSsoServiceTests {
 
     [Fact]
     public async Task CreateCodeAsync_ReturnsNonEmptyCode() {
-        var service = CreateService();
+        AdminSsoService service = CreateService();
         var userId = UserId.New();
 
-        var result = await service.CreateCodeAsync(userId, CancellationToken.None);
+        AdminSsoCode result = await service.CreateCodeAsync(userId, CancellationToken.None);
 
         Assert.False(string.IsNullOrWhiteSpace(result.Code));
         Assert.True(result.ExpiresAtUtc > FixedUtcNow);
@@ -23,11 +24,11 @@ public sealed class AdminSsoServiceTests {
     [Fact]
     public async Task ExchangeCodeAsync_WithValidCode_ReturnsUserId() {
         var cache = new InMemoryDistributedCache();
-        var service = CreateService(cache);
+        AdminSsoService service = CreateService(cache);
         var userId = UserId.New();
 
-        var created = await service.CreateCodeAsync(userId, CancellationToken.None);
-        var exchanged = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
+        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
+        UserId? exchanged = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
 
         Assert.NotNull(exchanged);
         Assert.Equal(userId, exchanged.Value);
@@ -35,18 +36,18 @@ public sealed class AdminSsoServiceTests {
 
     [Fact]
     public async Task ExchangeCodeAsync_WithInvalidCode_ReturnsNull() {
-        var service = CreateService();
+        AdminSsoService service = CreateService();
 
-        var result = await service.ExchangeCodeAsync("invalid-code", CancellationToken.None);
+        UserId? result = await service.ExchangeCodeAsync("invalid-code", CancellationToken.None);
 
         Assert.Null(result);
     }
 
     [Fact]
     public async Task ExchangeCodeAsync_WithEmptyCode_ReturnsNull() {
-        var service = CreateService();
+        AdminSsoService service = CreateService();
 
-        var result = await service.ExchangeCodeAsync("", CancellationToken.None);
+        UserId? result = await service.ExchangeCodeAsync("", CancellationToken.None);
 
         Assert.Null(result);
     }
@@ -54,12 +55,12 @@ public sealed class AdminSsoServiceTests {
     [Fact]
     public async Task ExchangeCodeAsync_ConsumesCode_SecondExchangeFails() {
         var cache = new InMemoryDistributedCache();
-        var service = CreateService(cache);
+        AdminSsoService service = CreateService(cache);
         var userId = UserId.New();
 
-        var created = await service.CreateCodeAsync(userId, CancellationToken.None);
+        AdminSsoCode created = await service.CreateCodeAsync(userId, CancellationToken.None);
         await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
-        var secondExchange = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
+        UserId? secondExchange = await service.ExchangeCodeAsync(created.Code, CancellationToken.None);
 
         Assert.Null(secondExchange);
     }

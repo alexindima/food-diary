@@ -10,8 +10,8 @@ namespace FoodDiary.Application.Tests.Common;
 public class CommonValidationTests {
     [Fact]
     public void UserIdParser_WithNullOrEmpty_ReturnsInvalidToken() {
-        var nullResult = UserIdParser.Parse(null);
-        var emptyResult = UserIdParser.Parse(Guid.Empty);
+        Result<UserId> nullResult = UserIdParser.Parse(null);
+        Result<UserId> emptyResult = UserIdParser.Parse(Guid.Empty);
 
         Assert.True(nullResult.IsFailure);
         Assert.True(emptyResult.IsFailure);
@@ -23,7 +23,7 @@ public class CommonValidationTests {
     public void UserIdParser_WithValue_ReturnsUserId() {
         var value = Guid.NewGuid();
 
-        var result = UserIdParser.Parse(value);
+        Result<UserId> result = UserIdParser.Parse(value);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(new UserId(value), result.Value);
@@ -34,7 +34,7 @@ public class CommonValidationTests {
     [InlineData("")]
     [InlineData(" ")]
     public void StringCodeParser_ParseOptionalLanguage_WithBlankValue_ReturnsNull(string? value) {
-        var result = StringCodeParser.ParseOptionalLanguage(value, "language", "invalid language");
+        Result<string?> result = StringCodeParser.ParseOptionalLanguage(value, "language", "invalid language");
 
         Assert.True(result.IsSuccess);
         Assert.Null(result.Value);
@@ -42,10 +42,10 @@ public class CommonValidationTests {
 
     [Fact]
     public void StringCodeParser_ParseOptionalCodes_WithSupportedValues_ReturnsNormalizedCode() {
-        var language = StringCodeParser.ParseOptionalLanguage("ru", "language", "invalid language");
-        var gender = StringCodeParser.ParseOptionalGender("f", "gender", "invalid gender");
-        var theme = StringCodeParser.ParseOptionalTheme("dark", "theme", "invalid theme");
-        var uiStyle = StringCodeParser.ParseOptionalUiStyle("modern", "uiStyle", "invalid ui style");
+        Result<string?> language = StringCodeParser.ParseOptionalLanguage("ru", "language", "invalid language");
+        Result<string?> gender = StringCodeParser.ParseOptionalGender("f", "gender", "invalid gender");
+        Result<string?> theme = StringCodeParser.ParseOptionalTheme("dark", "theme", "invalid theme");
+        Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("modern", "uiStyle", "invalid ui style");
 
         Assert.True(language.IsSuccess);
         Assert.True(gender.IsSuccess);
@@ -59,10 +59,10 @@ public class CommonValidationTests {
 
     [Fact]
     public void StringCodeParser_ParseOptionalCodes_WithUnsupportedValues_ReturnsValidationFailure() {
-        var language = StringCodeParser.ParseOptionalLanguage("de", "language", "invalid language");
-        var gender = StringCodeParser.ParseOptionalGender("unknown", "gender", "invalid gender");
-        var theme = StringCodeParser.ParseOptionalTheme("neon", "theme", "invalid theme");
-        var uiStyle = StringCodeParser.ParseOptionalUiStyle("retro", "uiStyle", "invalid ui style");
+        Result<string?> language = StringCodeParser.ParseOptionalLanguage("de", "language", "invalid language");
+        Result<string?> gender = StringCodeParser.ParseOptionalGender("unknown", "gender", "invalid gender");
+        Result<string?> theme = StringCodeParser.ParseOptionalTheme("neon", "theme", "invalid theme");
+        Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("retro", "uiStyle", "invalid ui style");
 
         Assert.All([language, gender, theme, uiStyle], result => {
             Assert.True(result.IsFailure);
@@ -72,8 +72,8 @@ public class CommonValidationTests {
 
     [Fact]
     public void StringCodeParser_ParseRequiredLanguage_ReturnsSuccessOrValidationFailure() {
-        var success = StringCodeParser.ParseRequiredLanguage("en", "language", "invalid language");
-        var failure = StringCodeParser.ParseRequiredLanguage("de-DE", "language", "invalid language");
+        Result<string> success = StringCodeParser.ParseRequiredLanguage("en", "language", "invalid language");
+        Result<string> failure = StringCodeParser.ParseRequiredLanguage("de-DE", "language", "invalid language");
 
         Assert.True(success.IsSuccess);
         Assert.Equal("en", success.Value);
@@ -83,9 +83,9 @@ public class CommonValidationTests {
 
     [Fact]
     public void EnumValueParser_ParseOptional_ReturnsNullParsedValueOrFailure() {
-        var blank = EnumValueParser.ParseOptional<MealType>(" ", "mealType", "invalid meal type");
-        var parsed = EnumValueParser.ParseOptional<MealType>("lunch", "mealType", "invalid meal type");
-        var invalid = EnumValueParser.ParseOptional<MealType>("snack-time", "mealType", "invalid meal type");
+        Result<MealType?> blank = EnumValueParser.ParseOptional<MealType>(" ", "mealType", "invalid meal type");
+        Result<MealType?> parsed = EnumValueParser.ParseOptional<MealType>("lunch", "mealType", "invalid meal type");
+        Result<MealType?> invalid = EnumValueParser.ParseOptional<MealType>("snack-time", "mealType", "invalid meal type");
 
         Assert.True(blank.IsSuccess);
         Assert.Null(blank.Value);
@@ -97,8 +97,8 @@ public class CommonValidationTests {
 
     [Fact]
     public void EnumValueParser_ParseRequired_ReturnsParsedValueOrFailure() {
-        var parsed = EnumValueParser.ParseRequired<MealType>("Dinner", "mealType", "invalid meal type");
-        var invalid = EnumValueParser.ParseRequired<MealType>(null, "mealType", "invalid meal type");
+        Result<MealType> parsed = EnumValueParser.ParseRequired<MealType>("Dinner", "mealType", "invalid meal type");
+        Result<MealType> invalid = EnumValueParser.ParseRequired<MealType>(null, "mealType", "invalid meal type");
 
         Assert.True(parsed.IsSuccess);
         Assert.Equal(MealType.Dinner, parsed.Value);
@@ -108,9 +108,9 @@ public class CommonValidationTests {
 
     [Fact]
     public void OptionalEntityIdValidator_OnlyRejectsExplicitEmptyGuid() {
-        var nullResult = OptionalEntityIdValidator.EnsureNotEmpty(null, "productId", "Product id");
-        var valueResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.NewGuid(), "productId", "Product id");
-        var emptyResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.Empty, "productId", "Product id");
+        Result nullResult = OptionalEntityIdValidator.EnsureNotEmpty(null, "productId", "Product id");
+        Result valueResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.NewGuid(), "productId", "Product id");
+        Result emptyResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.Empty, "productId", "Product id");
 
         Assert.True(nullResult.IsSuccess);
         Assert.True(valueResult.IsSuccess);
@@ -121,10 +121,10 @@ public class CommonValidationTests {
 
     [Fact]
     public void ImageAssetIdParser_ReturnsNullParsedValueOrFailure() {
-        var blank = ImageAssetIdParser.ParseOptional(null, "imageAssetId");
+        Result<ImageAssetId?> blank = ImageAssetIdParser.ParseOptional(null, "imageAssetId");
         var id = Guid.NewGuid();
-        var parsed = ImageAssetIdParser.ParseOptional(id, "imageAssetId");
-        var invalid = ImageAssetIdParser.ParseOptional(Guid.Empty, "imageAssetId");
+        Result<ImageAssetId?> parsed = ImageAssetIdParser.ParseOptional(id, "imageAssetId");
+        Result<ImageAssetId?> invalid = ImageAssetIdParser.ParseOptional(Guid.Empty, "imageAssetId");
 
         Assert.True(blank.IsSuccess);
         Assert.Null(blank.Value);
@@ -162,8 +162,8 @@ public class CommonValidationTests {
     public void UtcDateNormalizer_LocalFallbackMethods_ReturnUtcDateBoundaries() {
         var value = new DateTime(2026, 6, 4, 15, 30, 0, DateTimeKind.Utc);
 
-        var start = UtcDateNormalizer.NormalizeDateUsingLocalFallback(value);
-        var end = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(value);
+        DateTime start = UtcDateNormalizer.NormalizeDateUsingLocalFallback(value);
+        DateTime end = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(value);
 
         Assert.Equal(new DateTime(2026, 6, 4, 0, 0, 0, DateTimeKind.Utc), start);
         Assert.Equal(new DateTime(2026, 6, 5, 0, 0, 0, DateTimeKind.Utc).AddTicks(-1), end);
@@ -172,10 +172,10 @@ public class CommonValidationTests {
     [Fact]
     public void UtcDateNormalizer_LocalFallbackMethods_WithLocalValue_UseUniversalDateBoundaries() {
         var value = DateTime.SpecifyKind(new DateTime(2026, 6, 4, 23, 30, 0), DateTimeKind.Local);
-        var utcDate = value.ToUniversalTime().Date;
+        DateTime utcDate = value.ToUniversalTime().Date;
 
-        var start = UtcDateNormalizer.NormalizeDateUsingLocalFallback(value);
-        var end = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(value);
+        DateTime start = UtcDateNormalizer.NormalizeDateUsingLocalFallback(value);
+        DateTime end = UtcDateNormalizer.NormalizeDateEndUsingLocalFallback(value);
 
         Assert.Equal(DateTime.SpecifyKind(utcDate, DateTimeKind.Utc), start);
         Assert.Equal(DateTime.SpecifyKind(utcDate.AddDays(1).AddTicks(-1), DateTimeKind.Utc), end);

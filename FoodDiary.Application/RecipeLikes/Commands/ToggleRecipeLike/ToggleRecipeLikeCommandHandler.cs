@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.RecipeLikes.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
@@ -16,20 +17,20 @@ public class ToggleRecipeLikeCommandHandler(
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         ToggleRecipeLikeCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<RecipeLikeStatusModel>(userIdResult.Error);
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        var recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {
             return Result.Failure<RecipeLikeStatusModel>(Errors.Recipe.NotFound(command.RecipeId));
         }
 
-        var existingLike = await likeRepository.GetByUserAndRecipeAsync(
+        RecipeLike? existingLike = await likeRepository.GetByUserAndRecipeAsync(
             userIdResult.Value, recipeId, cancellationToken).ConfigureAwait(false);
 
         bool isLiked;
@@ -42,7 +43,7 @@ public class ToggleRecipeLikeCommandHandler(
             isLiked = true;
         }
 
-        var totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
+        int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
         return Result.Success(new RecipeLikeStatusModel(isLiked, totalLikes));
     }
 }

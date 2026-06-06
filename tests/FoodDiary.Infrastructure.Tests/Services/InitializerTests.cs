@@ -49,7 +49,7 @@ public sealed class InitializerTests {
 
     [Fact]
     public void InitializerCommandParse_WithMissingConnectionStringValue_Throws() {
-        var ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
             "update",
             "--connection-string",
         ]));
@@ -59,7 +59,7 @@ public sealed class InitializerTests {
 
     [Fact]
     public void InitializerCommandParse_WithUnexpectedArgument_Throws() {
-        var ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => InitializerCommand.Parse([
             "rollback",
             "migration-a",
             "extra",
@@ -70,9 +70,9 @@ public sealed class InitializerTests {
 
     [Fact]
     public async Task UsdaDataSeederSeedAsync_WhenDirectoryMissing_ThrowsBeforeUsingDbContext() {
-        var missingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        string missingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
-        var ex = await Assert.ThrowsAsync<DirectoryNotFoundException>(() =>
+        DirectoryNotFoundException ex = await Assert.ThrowsAsync<DirectoryNotFoundException>(() =>
             UsdaDataSeeder.SeedAsync(dbContext: null!, missingDirectory));
 
         Assert.Contains(missingDirectory, ex.Message, StringComparison.Ordinal);
@@ -80,9 +80,9 @@ public sealed class InitializerTests {
 
     [Fact]
     public async Task UsdaDataSeederForceSeedAsync_WhenDirectoryMissing_ThrowsBeforeUsingDbContext() {
-        var missingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
+        string missingDirectory = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString("N"));
 
-        var ex = await Assert.ThrowsAsync<DirectoryNotFoundException>(() =>
+        DirectoryNotFoundException ex = await Assert.ThrowsAsync<DirectoryNotFoundException>(() =>
             UsdaDataSeeder.ForceSeedAsync(dbContext: null!, missingDirectory));
 
         Assert.Contains(missingDirectory, ex.Message, StringComparison.Ordinal);
@@ -108,32 +108,32 @@ public sealed class InitializerTests {
     [InlineData(" 1 , \"quoted \"\"value\"\"\" ,mg ", new[] { "1", "quoted \"value\"", "mg" })]
     [InlineData("1,,3", new[] { "1", "", "3" })]
     public void UsdaCsvReaderParseLine_ReturnsFields(string line, string[] expectedFields) {
-        var fields = UsdaCsvReader.ParseLine(line);
+        string[] fields = UsdaCsvReader.ParseLine(line);
 
         Assert.Equal(expectedFields, fields);
     }
 
     [Fact]
     public void UsdaCsvReaderTruncate_WhenValueExceedsMaxLength_ReturnsPrefix() {
-        var value = UsdaCsvReader.Truncate("abcdef", 3);
+        string value = UsdaCsvReader.Truncate("abcdef", 3);
 
         Assert.Equal("abc", value);
     }
 
     [Fact]
     public void UsdaCsvReaderTruncate_WhenValueFits_ReturnsOriginalValue() {
-        var value = UsdaCsvReader.Truncate("abc", 3);
+        string value = UsdaCsvReader.Truncate("abc", 3);
 
         Assert.Equal("abc", value);
     }
 
     [Fact]
     public async Task UsdaCsvReaderReadLinesAsync_SkipsHeaderAndBlankLines() {
-        var path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.csv");
+        string path = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.csv");
         await File.WriteAllTextAsync(path, "header\nfirst\n \nsecond\n", CancellationToken.None);
         try {
             var lines = new List<string>();
-            await foreach (var line in UsdaCsvReader.ReadLinesAsync(path)) {
+            await foreach (string line in UsdaCsvReader.ReadLinesAsync(path)) {
                 lines.Add(line);
             }
 

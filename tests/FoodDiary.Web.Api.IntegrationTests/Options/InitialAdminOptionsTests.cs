@@ -11,7 +11,7 @@ public sealed class InitialAdminOptionsTests {
             Password = " ",
         };
 
-        var result = InitialAdminOptions.HasValidConfiguration(options);
+        bool result = InitialAdminOptions.HasValidConfiguration(options);
 
         Assert.True(result);
     }
@@ -23,7 +23,7 @@ public sealed class InitialAdminOptionsTests {
             Password = "StrongPassword123",
         };
 
-        var result = InitialAdminOptions.HasValidConfiguration(options);
+        bool result = InitialAdminOptions.HasValidConfiguration(options);
 
         Assert.True(result);
     }
@@ -39,7 +39,7 @@ public sealed class InitialAdminOptionsTests {
             Password = password,
         };
 
-        var result = InitialAdminOptions.HasValidConfiguration(options);
+        bool result = InitialAdminOptions.HasValidConfiguration(options);
 
         Assert.False(result);
     }

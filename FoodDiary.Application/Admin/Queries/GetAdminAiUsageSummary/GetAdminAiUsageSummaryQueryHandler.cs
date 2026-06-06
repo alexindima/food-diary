@@ -15,8 +15,8 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(
         GetAdminAiUsageSummaryQuery query,
         CancellationToken cancellationToken) {
         var today = DateOnly.FromDateTime(dateTimeProvider.UtcNow);
-        var from = query.From ?? today.AddDays(-29);
-        var to = query.To ?? today.AddDays(1);
+        DateOnly from = query.From ?? today.AddDays(-29);
+        DateOnly to = query.To ?? today.AddDays(1);
         if (from > to) {
             return Result.Failure<AdminAiUsageSummaryModel>(
                 Errors.Validation.Invalid("from/to", "'From' date must be less than or equal to 'To' date."));
@@ -25,7 +25,7 @@ public sealed class GetAdminAiUsageSummaryQueryHandler(
         var fromUtc = from.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
         var toUtc = to.ToDateTime(TimeOnly.MinValue, DateTimeKind.Utc);
 
-        var summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
+        AiUsageSummary summary = await aiUsageRepository.GetSummaryAsync(fromUtc, toUtc, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminAiUsageSummaryModel(
             summary.TotalTokens,

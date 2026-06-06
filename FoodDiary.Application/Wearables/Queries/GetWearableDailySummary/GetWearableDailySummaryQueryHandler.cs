@@ -4,6 +4,8 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 
@@ -12,13 +14,13 @@ public class GetWearableDailySummaryQueryHandler(IWearableSyncRepository syncRep
     public async Task<Result<WearableDailySummaryModel>> Handle(
         GetWearableDailySummaryQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        var entries = await syncRepository.GetDailySummaryAsync(userIdResult.Value, query.Date, cancellationToken).ConfigureAwait(false);
-        var summary = SyncWearableDataCommandHandler.MapToSummary(query.Date, entries);
+        IReadOnlyList<WearableSyncEntry> entries = await syncRepository.GetDailySummaryAsync(userIdResult.Value, query.Date, cancellationToken).ConfigureAwait(false);
+        WearableDailySummaryModel summary = SyncWearableDataCommandHandler.MapToSummary(query.Date, entries);
 
         return Result.Success(summary);
     }

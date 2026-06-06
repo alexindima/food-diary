@@ -14,6 +14,8 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Billing.Models;
+using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Billing;
 
@@ -23,7 +25,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task CreateCheckoutSessionValidator_WithPaddedPlanAndProvider_ReturnsSuccess() {
-        var result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
+        TestValidationResult<CreateCheckoutSessionCommand> result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
             new CreateCheckoutSessionCommand(Guid.NewGuid(), " Monthly ", $" {BillingProviderNames.YooKassa} "));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -31,7 +33,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task CreateCheckoutSessionValidator_WithBlankProvider_ReturnsSuccess() {
-        var result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
+        TestValidationResult<CreateCheckoutSessionCommand> result = await new CreateCheckoutSessionCommandValidator().TestValidateAsync(
             new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", " "));
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -61,18 +63,18 @@ public sealed class BillingFeatureTests {
             accessor,
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, " Monthly ", $" {BillingProviderNames.YooKassa} "),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("https://checkout.example/pay_123", result.Value.Url);
-        var subscription = Assert.Single(subscriptionRepository.Subscriptions);
+        BillingSubscription subscription = Assert.Single(subscriptionRepository.Subscriptions);
         Assert.Equal(BillingProviderNames.YooKassa, subscription.Provider);
         Assert.Equal("customer_123", subscription.ExternalCustomerId);
         Assert.Equal(BillingSubscription.PendingCheckoutStatus, subscription.Status);
 
-        var payment = Assert.Single(paymentRepository.Payments);
+        BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(BillingPaymentKinds.Checkout, payment.Kind);
         Assert.Equal("pay_123", payment.ExternalPaymentId);
         Assert.Equal(subscription.Id, payment.BillingSubscriptionId);
@@ -81,7 +83,7 @@ public sealed class BillingFeatureTests {
     [Fact]
     public async Task CreateCheckoutSession_WithExistingInactiveSubscription_UpdatesCheckoutContext() {
         var user = User.Create("existing-checkout@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             "customer_old",
@@ -109,7 +111,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(gateway),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", null),
             CancellationToken.None);
 
@@ -118,7 +120,7 @@ public sealed class BillingFeatureTests {
         Assert.Equal("customer_new", subscription.ExternalCustomerId);
         Assert.Equal("price_yearly", subscription.ExternalPriceId);
         Assert.Equal("yearly", subscription.Plan);
-        var payment = Assert.Single(paymentRepository.Payments);
+        BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(subscription.Id, payment.BillingSubscriptionId);
         Assert.Equal("session_new", payment.ExternalPaymentId);
     }
@@ -135,7 +137,7 @@ public sealed class BillingFeatureTests {
             new FixedDateTimeProvider(Now));
         Guid? userId = userIdValue is null ? null : Guid.Parse(userIdValue);
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(userId, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
@@ -152,7 +154,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
@@ -166,7 +168,7 @@ public sealed class BillingFeatureTests {
     [InlineData("past_due")]
     public async Task CreateCheckoutSession_WithActivePaidSubscription_ReturnsAlreadyActive(string status) {
         var user = User.Create($"{status}@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             $"customer_{status}",
@@ -185,7 +187,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
@@ -204,7 +206,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", "missing"),
             CancellationToken.None);
 
@@ -226,7 +228,7 @@ public sealed class BillingFeatureTests {
                     checkoutError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "declined"))),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(
+        Result<BillingCheckoutSessionModel> result = await handler.Handle(
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
@@ -242,7 +244,7 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var paymentRepository = new RecordingBillingPaymentRepository();
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        var providerMetadataJson = "{\"payment_id\":\"pay_456\"}";
+        string providerMetadataJson = "{\"payment_id\":\"pay_456\"}";
         var webhookModel = new BillingWebhookEventModel(
             "evt_1",
             "payment.succeeded",
@@ -263,32 +265,32 @@ public sealed class BillingFeatureTests {
             providerMetadataJson,
             user.Id.Value);
         var gateway = new FakeBillingProviderGateway(BillingProviderNames.YooKassa, webhookEvent: webhookModel);
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{\"event\":\"payment.succeeded\"}", string.Empty),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var subscription = Assert.Single(subscriptionRepository.Subscriptions);
+        BillingSubscription subscription = Assert.Single(subscriptionRepository.Subscriptions);
         Assert.Equal("active", subscription.Status);
         Assert.Equal("pay_456", subscription.ExternalSubscriptionId);
         Assert.Equal("pm_456", subscription.ExternalPaymentMethodId);
         Assert.Equal(providerMetadataJson, subscription.ProviderMetadataJson);
 
-        var payment = Assert.Single(paymentRepository.Payments);
+        BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(BillingPaymentKinds.Webhook, payment.Kind);
         Assert.Equal("pay_456", payment.ExternalPaymentId);
         Assert.Equal(7.99m, payment.Amount);
         Assert.Equal("USD", payment.Currency);
         Assert.Equal("evt_1", payment.WebhookEventId);
 
-        var webhookEvent = Assert.Single(webhookEventRepository.Events);
+        BillingWebhookEvent webhookEvent = Assert.Single(webhookEventRepository.Events);
         Assert.Equal("evt_1", webhookEvent.EventId);
         Assert.Equal("processed", webhookEvent.Status);
         Assert.True(user.HasRole(RoleNames.Premium));
@@ -324,14 +326,14 @@ public sealed class BillingFeatureTests {
                 "USD",
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -344,14 +346,14 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenProviderIsUnknown_ReturnsInvalidProvider() {
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(BillingProviderNames.Paddle),
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
             new RecordingBillingWebhookEventRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand("unknown", "{}", string.Empty),
             CancellationToken.None);
 
@@ -361,7 +363,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenProviderRejectsWebhook_ReturnsProviderError() {
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookError: Errors.Billing.WebhookValidationFailed("bad signature")),
@@ -370,7 +372,7 @@ public sealed class BillingFeatureTests {
             new RecordingBillingPaymentRepository(),
             new RecordingBillingWebhookEventRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", "bad"),
             CancellationToken.None);
 
@@ -383,14 +385,14 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository();
         var paymentRepository = new RecordingBillingPaymentRepository();
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(BillingProviderNames.YooKassa),
             new FakeUserRepository(),
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -403,7 +405,7 @@ public sealed class BillingFeatureTests {
     [Fact]
     public async Task ProcessBillingWebhook_WhenSubscriptionAlreadyHandledEvent_ReturnsSuccessWithoutMutation() {
         var user = User.Create("subscription-duplicate-event@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_duplicate_subscription",
@@ -417,7 +419,7 @@ public sealed class BillingFeatureTests {
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var paymentRepository = new RecordingBillingPaymentRepository();
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookEvent: new BillingWebhookEventModel(
@@ -444,7 +446,7 @@ public sealed class BillingFeatureTests {
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -456,7 +458,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task ProcessBillingWebhook_WhenUserCannotBeResolved_ReturnsValidationFailure() {
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookEvent: new BillingWebhookEventModel(
@@ -483,7 +485,7 @@ public sealed class BillingFeatureTests {
             new RecordingBillingPaymentRepository(),
             new RecordingBillingWebhookEventRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -521,14 +523,14 @@ public sealed class BillingFeatureTests {
                 "USD",
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -546,7 +548,7 @@ public sealed class BillingFeatureTests {
             ThrowAlreadyExistsOnAdd = true
         };
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookEvent: new BillingWebhookEventModel(
@@ -573,7 +575,7 @@ public sealed class BillingFeatureTests {
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -584,7 +586,7 @@ public sealed class BillingFeatureTests {
     [Fact]
     public async Task ProcessBillingWebhook_WhenWebhookPaymentAlreadyExists_DoesNotAddDuplicatePayment() {
         var user = User.Create("existing-webhook-payment@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_existing_webhook_payment",
@@ -617,7 +619,7 @@ public sealed class BillingFeatureTests {
         var paymentRepository = new RecordingBillingPaymentRepository();
         paymentRepository.Payments.Add(existingPayment);
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookEvent: CreateWebhookPaymentEvent(user, "evt_existing_webhook_payment", "sub_existing_webhook_payment")),
@@ -626,7 +628,7 @@ public sealed class BillingFeatureTests {
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -664,14 +666,14 @@ public sealed class BillingFeatureTests {
                 "USD",
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -714,14 +716,14 @@ public sealed class BillingFeatureTests {
                 "USD",
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -734,8 +736,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task ProcessBillingWebhook_ForManualPremiumUser_DoesNotRemovePremiumRoleOnCanceledSubscription() {
-        var user = CreatePremiumUser("manual-premium@example.com");
-        var subscription = CreateSubscriptionSnapshot(
+        User user = CreatePremiumUser("manual-premium@example.com");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             "customer_manual",
@@ -771,14 +773,14 @@ public sealed class BillingFeatureTests {
                 null,
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.Paddle, "{}", "signature"),
             CancellationToken.None);
 
@@ -791,7 +793,7 @@ public sealed class BillingFeatureTests {
     public async Task ProcessBillingWebhook_ForDeletedUserSubscription_StoresEventWithoutGrantingPremiumRole() {
         var user = User.Create("deleted-premium@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_deleted",
@@ -827,14 +829,14 @@ public sealed class BillingFeatureTests {
                 "USD",
                 null,
                 user.Id.Value));
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
             userRepository,
             subscriptionRepository,
             paymentRepository,
             webhookEventRepository);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -851,7 +853,7 @@ public sealed class BillingFeatureTests {
     public async Task ProcessBillingWebhook_ForDeletedBillingManagedUser_DisablesManagedPremiumFlag() {
         var user = User.Create("deleted-managed-premium@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_deleted_managed",
@@ -864,7 +866,7 @@ public sealed class BillingFeatureTests {
             Now.AddMonths(-1));
         subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
-        var handler = CreateWebhookHandler(
+        ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
                 BillingProviderNames.YooKassa,
                 webhookEvent: new BillingWebhookEventModel(
@@ -891,7 +893,7 @@ public sealed class BillingFeatureTests {
             new RecordingBillingPaymentRepository(),
             new RecordingBillingWebhookEventRepository());
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
@@ -902,8 +904,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_ForDueSubscription_UpdatesSubscriptionAddsPaymentAndKeepsPremiumRole() {
-        var user = CreatePremiumUser("premium@example.com");
-        var subscription = CreateSubscriptionSnapshot(
+        User user = CreatePremiumUser("premium@example.com");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_renewal",
@@ -925,13 +927,13 @@ public sealed class BillingFeatureTests {
                 "pm_renewal",
                 "evt_renewed",
                 "{\"renewed\":true}"));
-        var service = CreateRenewalService(
+        BillingRenewalService service = CreateRenewalService(
             subscriptionRepository,
             paymentRepository,
             userRepository,
             renewalGateway);
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -940,7 +942,7 @@ public sealed class BillingFeatureTests {
         Assert.Equal(Now.AddMonths(1), subscription.CurrentPeriodEndUtc);
         Assert.Equal("{\"renewed\":true}", subscription.ProviderMetadataJson);
 
-        var payment = Assert.Single(paymentRepository.Payments);
+        BillingPayment payment = Assert.Single(paymentRepository.Payments);
         Assert.Equal(BillingPaymentKinds.Renewal, payment.Kind);
         Assert.Equal("pay_renewed", payment.ExternalPaymentId);
         Assert.Equal("pm_renewal", payment.ExternalPaymentMethodId);
@@ -950,8 +952,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_WhenRenewalPaymentAlreadyExists_ReturnsRenewed() {
-        var user = CreatePremiumUser("renewal-duplicate-payment@example.com");
-        var subscription = CreateSubscriptionSnapshot(
+        User user = CreatePremiumUser("renewal-duplicate-payment@example.com");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_renewal_duplicate",
@@ -965,7 +967,7 @@ public sealed class BillingFeatureTests {
         var paymentRepository = new RecordingBillingPaymentRepository {
             ThrowAlreadyExistsOnAdd = true
         };
-        var service = CreateRenewalService(
+        BillingRenewalService service = CreateRenewalService(
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
             new FakeUserRepository(user),
@@ -976,7 +978,7 @@ public sealed class BillingFeatureTests {
                     "pm_renewal_duplicate",
                     "evt_renewed_duplicate")));
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -986,8 +988,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_WhenRenewalPaymentExists_SkipsAddingPayment() {
-        var user = CreatePremiumUser("renewal-existing-payment@example.com");
-        var subscription = CreateSubscriptionSnapshot(
+        User user = CreatePremiumUser("renewal-existing-payment@example.com");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_renewal_existing",
@@ -1017,7 +1019,7 @@ public sealed class BillingFeatureTests {
             Now,
             "evt_existing_payment",
             null));
-        var service = CreateRenewalService(
+        BillingRenewalService service = CreateRenewalService(
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
             new FakeUserRepository(user),
@@ -1028,7 +1030,7 @@ public sealed class BillingFeatureTests {
                     "pm_renewal_existing",
                     "evt_renewed_existing")));
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(1, result.Renewed);
@@ -1049,7 +1051,7 @@ public sealed class BillingFeatureTests {
                 new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(0, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -1094,7 +1096,7 @@ public sealed class BillingFeatureTests {
             new BillingAccessService(userRepository, subscriptionRepository, new FixedDateTimeProvider(Now)),
             new FixedDateTimeProvider(Now));
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -1107,8 +1109,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingRenewalService_WhenBillingDetailsMissing_MarksPastDueWithoutCallingProvider() {
-        var user = CreatePremiumUser("missing-renewal-details@example.com");
-        var subscription = CreateSubscriptionSnapshot(
+        User user = CreatePremiumUser("missing-renewal-details@example.com");
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_missing_details",
@@ -1128,13 +1130,13 @@ public sealed class BillingFeatureTests {
                 "pay_should_not_be_used",
                 "pm_should_not_be_used",
                 "evt_should_not_be_used"));
-        var service = CreateRenewalService(
+        BillingRenewalService service = CreateRenewalService(
             subscriptionRepository,
             new RecordingBillingPaymentRepository(),
             userRepository,
             renewalGateway);
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -1151,7 +1153,7 @@ public sealed class BillingFeatureTests {
     public async Task BillingRenewalService_ForDeletedUserSubscription_SkipsProviderAndDisablesRenewal() {
         var user = User.Create("deleted-renewal@example.com", "hash");
         user.DeleteAccount(Now.AddDays(-1));
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.YooKassa,
             "customer_deleted_renewal",
@@ -1172,13 +1174,13 @@ public sealed class BillingFeatureTests {
                 "pay_should_not_be_used",
                 "pm_deleted_renewal",
                 "evt_should_not_be_used"));
-        var service = CreateRenewalService(
+        BillingRenewalService service = CreateRenewalService(
             subscriptionRepository,
             paymentRepository,
             userRepository,
             renewalGateway);
 
-        var result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
+        BillingRenewalRunResult result = await service.RenewDueSubscriptionsAsync(BillingProviderNames.YooKassa, 10, CancellationToken.None);
 
         Assert.Equal(1, result.Processed);
         Assert.Equal(0, result.Renewed);
@@ -1223,7 +1225,7 @@ public sealed class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new FixedDateTimeProvider(Now));
 
-        var shouldHavePremium = service.ShouldHavePremiumAccess(" ", Now.AddDays(1));
+        bool shouldHavePremium = service.ShouldHavePremiumAccess(" ", Now.AddDays(1));
 
         Assert.False(shouldHavePremium);
     }
@@ -1244,11 +1246,11 @@ public sealed class BillingFeatureTests {
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new FixedDateTimeProvider(Now));
-        var periodEnd = periodEndOffsetDays.HasValue
+        DateTime? periodEnd = periodEndOffsetDays.HasValue
             ? Now.AddDays(periodEndOffsetDays.Value)
             : (DateTime?)null;
 
-        var shouldHavePremium = service.ShouldHavePremiumAccess(status, periodEnd);
+        bool shouldHavePremium = service.ShouldHavePremiumAccess(status, periodEnd);
 
         Assert.Equal(expected, shouldHavePremium);
     }
@@ -1286,7 +1288,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.IsPremium);
@@ -1330,7 +1332,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.False(result.Value.IsPremium);
@@ -1348,7 +1350,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(Guid.Empty), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1362,7 +1364,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(Guid.NewGuid()), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1371,7 +1373,7 @@ public sealed class BillingFeatureTests {
     [Fact]
     public async Task GetBillingOverview_WithBlankSubscriptionStatus_DoesNotGrantPaidPremium() {
         var user = User.Create("blank-status-overview@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             "customer_blank_status",
@@ -1389,7 +1391,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.False(result.Value.IsPremium);
@@ -1408,8 +1410,8 @@ public sealed class BillingFeatureTests {
         bool expectedPremium,
         bool expectedCanStartTrial) {
         var user = User.Create($"overview-status-{status}-{periodEndOffsetDays ?? 0}@example.com", "hash");
-        var periodEnd = periodEndOffsetDays.HasValue ? Now.AddDays(periodEndOffsetDays.Value) : Now.AddDays(1);
-        var subscription = CreateSubscriptionSnapshot(
+        DateTime periodEnd = periodEndOffsetDays.HasValue ? Now.AddDays(periodEndOffsetDays.Value) : Now.AddDays(1);
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             $"customer_overview_{status}_{periodEndOffsetDays ?? 0}",
@@ -1430,7 +1432,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(expectedPremium, result.Value.IsPremium);
@@ -1456,7 +1458,7 @@ public sealed class BillingFeatureTests {
                 activeProvider: new FakeBillingProviderGateway(BillingProviderNames.YooKassa),
                 paddleGateway));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("https://billing.example/portal", result.Value.Url);
@@ -1469,7 +1471,7 @@ public sealed class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(Guid.Empty), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1482,7 +1484,7 @@ public sealed class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(Guid.NewGuid()), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1496,7 +1498,7 @@ public sealed class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
@@ -1516,7 +1518,7 @@ public sealed class BillingFeatureTests {
             new InMemoryBillingSubscriptionRepository(subscription),
             new FakeBillingProviderGatewayAccessor(new FakeBillingProviderGateway(BillingProviderNames.Paddle)));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
@@ -1539,7 +1541,7 @@ public sealed class BillingFeatureTests {
                     BillingProviderNames.Paddle,
                     portalError: Errors.Billing.ProviderOperationFailed(BillingProviderNames.Paddle, "portal failed"))));
 
-        var result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
@@ -1555,7 +1557,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(Now, user.PremiumTrialStartedAtUtc);
@@ -1579,7 +1581,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.TrialAlreadyUsed", result.Error.Code);
@@ -1593,7 +1595,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(Guid.Empty), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1607,7 +1609,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(Guid.NewGuid()), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1619,7 +1621,7 @@ public sealed class BillingFeatureTests {
     [InlineData("past_due")]
     public async Task StartPremiumTrial_WithActivePaidSubscription_ReturnsAlreadyActive(string status) {
         var user = User.Create($"trial-active-{status}@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             $"customer_trial_{status}",
@@ -1637,7 +1639,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Billing.SubscriptionAlreadyActive", result.Error.Code);
@@ -1650,7 +1652,7 @@ public sealed class BillingFeatureTests {
     [InlineData("canceled", 1)]
     public async Task StartPremiumTrial_WithInactivePaidSubscription_AllowsTrial(string status, int periodEndOffsetDays) {
         var user = User.Create($"trial-inactive-{status}@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             $"customer_trial_inactive_{status}",
@@ -1668,7 +1670,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.PremiumTrialActive);
@@ -1678,7 +1680,7 @@ public sealed class BillingFeatureTests {
     [Fact]
     public async Task StartPremiumTrial_WithBlankSubscriptionStatus_AllowsTrial() {
         var user = User.Create("trial-blank-status@example.com", "hash");
-        var subscription = CreateSubscriptionSnapshot(
+        BillingSubscription subscription = CreateSubscriptionSnapshot(
             user,
             BillingProviderNames.Paddle,
             "customer_trial_blank",
@@ -1697,7 +1699,7 @@ public sealed class BillingFeatureTests {
             new FakeBillingPublicConfigProvider(),
             new FixedDateTimeProvider(Now));
 
-        var result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
+        Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.True(result.Value.PremiumTrialActive);
@@ -1819,7 +1821,7 @@ public sealed class BillingFeatureTests {
             new FixedDateTimeProvider(Now));
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
-        var property = typeof(TTarget).GetProperty(propertyName);
+        PropertyInfo? property = typeof(TTarget).GetProperty(propertyName);
         Assert.NotNull(property);
         property!.SetValue(target, value);
     }

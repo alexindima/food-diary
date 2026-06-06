@@ -16,7 +16,7 @@ public sealed class S3HealthCheckTests {
             CreateS3Client((_, _) => throw new InvalidOperationException("S3 should not be called.")),
             OptionsFactory.Create(new S3Options { Bucket = string.Empty }));
 
-        var result = await check.CheckHealthAsync(new HealthCheckContext());
+        HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
         Assert.Equal(HealthStatus.Healthy, result.Status);
         Assert.Equal("S3 not configured.", result.Description);
@@ -32,7 +32,7 @@ public sealed class S3HealthCheckTests {
             }),
             OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }));
 
-        var result = await check.CheckHealthAsync(new HealthCheckContext());
+        HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
         Assert.Equal(HealthStatus.Healthy, result.Status);
         Assert.NotNull(capturedRequest);
@@ -46,7 +46,7 @@ public sealed class S3HealthCheckTests {
             CreateS3Client((_, _) => throw exception),
             OptionsFactory.Create(new S3Options { Bucket = "food-diary-test" }));
 
-        var result = await check.CheckHealthAsync(new HealthCheckContext());
+        HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext());
 
         Assert.Equal(HealthStatus.Unhealthy, result.Status);
         Assert.Equal("S3 bucket unreachable: food-diary-test", result.Description);
@@ -55,7 +55,7 @@ public sealed class S3HealthCheckTests {
 
     private static IAmazonS3 CreateS3Client(
         Func<GetBucketLocationRequest, CancellationToken, Task<GetBucketLocationResponse>> handler) {
-        var client = DispatchProxy.Create<IAmazonS3, AmazonS3Proxy>();
+        IAmazonS3 client = DispatchProxy.Create<IAmazonS3, AmazonS3Proxy>();
         ((AmazonS3Proxy)(object)client).InvokeHandler = (method, args) => {
             if (string.Equals(method.Name, nameof(IAmazonS3.GetBucketLocationAsync), StringComparison.Ordinal) &&
                 args is [GetBucketLocationRequest request, CancellationToken cancellationToken]) {

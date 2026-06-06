@@ -32,9 +32,9 @@ public static class ShoppingListItemBuilder {
             .Distinct()
             .ToList();
 
-        var products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken).ConfigureAwait(false);
         if (products.Count != normalizedProductIds.Count) {
-            var missing = normalizedProductIds.First(id => !products.ContainsKey(id));
+            ProductId missing = normalizedProductIds.First(id => !products.ContainsKey(id));
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
         }
 
@@ -45,9 +45,9 @@ public static class ShoppingListItemBuilder {
         IReadOnlyList<ShoppingListItemInput> items,
         IReadOnlyDictionary<ProductId, Product> products) {
         var normalized = new List<ShoppingListItemData>(items.Count);
-        for (var index = 0; index < items.Count; index++) {
-            var item = items[index];
-            var itemResult = BuildItem(item, index, products);
+        for (int index = 0; index < items.Count; index++) {
+            ShoppingListItemInput item = items[index];
+            Result<ShoppingListItemData> itemResult = BuildItem(item, index, products);
             if (itemResult.IsFailure) {
                 return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
                     itemResult.Error);
@@ -63,7 +63,7 @@ public static class ShoppingListItemBuilder {
         ShoppingListItemInput item,
         int index,
         IReadOnlyDictionary<ProductId, Product> products) {
-        var amountError = ValidateAmount(item);
+        Error? amountError = ValidateAmount(item);
         if (amountError is not null) {
             return Result.Failure<ShoppingListItemData>(amountError);
         }
@@ -88,7 +88,7 @@ public static class ShoppingListItemBuilder {
         int index,
         IReadOnlyDictionary<ProductId, Product> products) {
         var productId = new ProductId(item.ProductId!.Value);
-        var product = products[productId];
+        Product product = products[productId];
         return new ShoppingListItemData(
             product.Name,
             productId,
@@ -104,7 +104,7 @@ public static class ShoppingListItemBuilder {
             return Result.Failure<ShoppingListItemData>(Errors.Validation.Required(nameof(item.Name)));
         }
 
-        var unitResult = ParseUnit(item.Unit);
+        Result<MeasurementUnit?> unitResult = ParseUnit(item.Unit);
         if (unitResult.IsFailure) {
             return Result.Failure<ShoppingListItemData>(unitResult.Error);
         }
@@ -124,7 +124,7 @@ public static class ShoppingListItemBuilder {
             return Result.Success<MeasurementUnit?>(null);
         }
 
-        return Enum.TryParse<MeasurementUnit>(value, true, out var parsed)
+        return Enum.TryParse<MeasurementUnit>(value, true, out MeasurementUnit parsed)
             ? Result.Success<MeasurementUnit?>(parsed)
             : Result.Failure<MeasurementUnit?>(
                 Errors.Validation.Invalid(nameof(ShoppingListItemInput.Unit), "Unknown measurement unit value."));

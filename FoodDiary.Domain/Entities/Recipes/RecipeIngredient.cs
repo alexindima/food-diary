@@ -23,7 +23,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     internal static RecipeIngredient CreateWithProduct(RecipeStepId recipeStepId, ProductId productId, double amount) {
         EnsureRecipeStepId(recipeStepId);
         EnsureProductId(productId);
-        var normalizedAmount = ValidateAmount(amount, nameof(amount));
+        double normalizedAmount = ValidateAmount(amount, nameof(amount));
 
         var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
@@ -39,7 +39,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     internal static RecipeIngredient CreateWithRecipe(RecipeStepId recipeStepId, RecipeId nestedRecipeId, double servings) {
         EnsureRecipeStepId(recipeStepId);
         EnsureRecipeId(nestedRecipeId);
-        var normalizedServings = ValidateAmount(servings, nameof(servings));
+        double normalizedServings = ValidateAmount(servings, nameof(servings));
 
         var ingredient = new RecipeIngredient {
             Id = RecipeIngredientId.New(),
@@ -53,7 +53,7 @@ public sealed class RecipeIngredient : Entity<RecipeIngredientId> {
     }
 
     public void UpdateAmount(double amount) {
-        var normalizedAmount = ValidateAmount(amount, nameof(amount));
+        double normalizedAmount = ValidateAmount(amount, nameof(amount));
         if (Math.Abs(Amount - normalizedAmount) <= ComparisonEpsilon) {
             return;
         }

@@ -15,10 +15,10 @@ public sealed class GetAdminDashboardSummaryQueryHandler(
     public async Task<Result<AdminDashboardSummaryModel>> Handle(
         GetAdminDashboardSummaryQuery query,
         CancellationToken cancellationToken) {
-        var (totalUsers, activeUsers, premiumUsers, deletedUsers, recentUsers) =
+        (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<Domain.Entities.Users.User>? recentUsers) =
             await userRepository.GetAdminDashboardSummaryAsync(query.RecentLimit, cancellationToken).ConfigureAwait(false);
 
-        var pendingReportsCount = await contentReportRepository.CountByStatusAsync(
+        int pendingReportsCount = await contentReportRepository.CountByStatusAsync(
             ReportStatus.Pending, cancellationToken).ConfigureAwait(false);
 
         var response = new AdminDashboardSummaryModel(

@@ -10,6 +10,7 @@ using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Product = FoodDiary.Domain.Entities.Products.Product;
+using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 
@@ -39,9 +40,9 @@ public sealed class GetProductsOverviewQueryHandler(
             return Result.Failure<ProductOverviewModel>(Errors.Authentication.InvalidToken);
         }
 
-        var options = CreateOptions(query);
+        ProductOverviewOptions options = CreateOptions(query);
 
-        var (items, totalItems) = await productRepository.GetPagedAsync(
+        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await productRepository.GetPagedAsync(
             options.UserId,
             query.IncludePublic,
             options.PageNumber,
@@ -53,15 +54,15 @@ public sealed class GetProductsOverviewQueryHandler(
         var allProducts = items
             .Select(item => ToListItem(item.Product, item.UsageCount, options.UserId))
             .ToList();
-        var allFavorites = await favoriteProductRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<FavoriteProduct> allFavorites = await favoriteProductRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
             .Select(favorite => favorite.ToModel())
             .ToList();
         var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.ProductId);
 
-        var recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
-        var favoriteProductIds = allProducts
+        IReadOnlyList<ProductListItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
+        ProductId[] favoriteProductIds = allProducts
             .Select(x => x.Product.Id)
             .Concat(recentItems.Select(x => x.Product.Id))
             .Distinct()
@@ -70,19 +71,19 @@ public sealed class GetProductsOverviewQueryHandler(
             .Where(pair => favoriteProductIds.Contains(pair.Key))
             .ToDictionary();
 
-        var allPaged = CreatePagedProducts(
+        PagedResponse<ProductModel> allPaged = CreatePagedProducts(
             allProducts,
             favoritesByProductId,
             options,
             totalItems);
-        var recentResponses = ToProductModels(recentItems, favoritesByProductId);
+        ProductModel[] recentResponses = ToProductModels(recentItems, favoritesByProductId);
 
         return Result.Success(new ProductOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
 
     private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query) {
-        var productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse<ProductType>(type, true, out var parsed) ? parsed : (ProductType?)null)
+        ProductType[]? productTypes = query.ProductTypes?
+            .Select(type => Enum.TryParse<ProductType>(type, true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
             .Distinct()
             .ToArray();
@@ -105,7 +106,7 @@ public sealed class GetProductsOverviewQueryHandler(
             return [];
         }
 
-        var recents = await recentItemRepository.GetRecentProductsAsync(
+        IReadOnlyList<RecentProductUsage> recents = await recentItemRepository.GetRecentProductsAsync(
             options.UserId,
             options.RecentLimit,
             cancellationToken).ConfigureAwait(false);
@@ -114,7 +115,7 @@ public sealed class GetProductsOverviewQueryHandler(
         }
 
         var recentIds = recents.Select(x => x.ProductId).ToList();
-        var productsById = await productRepository.GetByIdsWithUsageAsync(
+        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> productsById = await productRepository.GetByIdsWithUsageAsync(
             recentIds,
             options.UserId,
             query.IncludePublic,
@@ -158,7 +159,7 @@ public sealed class GetProductsOverviewQueryHandler(
     private static ProductModel ToProductModel(
         ProductListItem product,
         IReadOnlyDictionary<ProductId, Domain.Entities.FavoriteProducts.FavoriteProduct> favoritesByProductId) {
-        var favorite = favoritesByProductId.GetValueOrDefault(product.Product.Id);
+        FavoriteProduct? favorite = favoritesByProductId.GetValueOrDefault(product.Product.Id);
         return product.Product.ToModel(
             product.UsageCount,
             product.IsOwner,

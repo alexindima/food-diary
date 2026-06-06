@@ -3,6 +3,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
@@ -18,7 +19,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
     }
 
     public async Task<FastingOccurrence?> GetCurrentAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
-        var query = (asTracking
+        IIncludableQueryable<FastingOccurrence, FastingPlan> query = (asTracking
             ? context.FastingOccurrences.AsQueryable()
             : context.FastingOccurrences.AsNoTracking())
             .Include(occurrence => occurrence.Plan);
@@ -43,7 +44,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         FastingPlanId planId,
         bool includeCompleted = true,
         CancellationToken cancellationToken = default) {
-        var query = context.FastingOccurrences
+        IQueryable<FastingOccurrence> query = context.FastingOccurrences
             .Include(occurrence => occurrence.Plan)
             .AsNoTracking()
             .Where(occurrence => occurrence.PlanId == planId);
@@ -67,7 +68,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default) {
-        var query = BuildByUserQuery(userId, from, to, status);
+        IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
 
         return await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
@@ -82,11 +83,11 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         DateTime? to = null,
         FastingOccurrenceStatus? status = null,
         CancellationToken cancellationToken = default) {
-        var normalizedPage = Math.Max(page, 1);
-        var normalizedLimit = Math.Max(limit, 1);
-        var query = BuildByUserQuery(userId, from, to, status);
-        var totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        var items = await query
+        int normalizedPage = Math.Max(page, 1);
+        int normalizedLimit = Math.Max(limit, 1);
+        IQueryable<FastingOccurrence> query = BuildByUserQuery(userId, from, to, status);
+        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+        List<FastingOccurrence> items = await query
             .OrderByDescending(occurrence => occurrence.StartedAtUtc)
             .Skip((normalizedPage - 1) * normalizedLimit)
             .Take(normalizedLimit)
@@ -100,7 +101,7 @@ public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingO
         DateTime? from,
         DateTime? to,
         FastingOccurrenceStatus? status) {
-        var query = context.FastingOccurrences
+        IQueryable<FastingOccurrence> query = context.FastingOccurrences
             .Include(occurrence => occurrence.Plan)
             .AsNoTracking()
             .Where(occurrence => occurrence.UserId == userId);

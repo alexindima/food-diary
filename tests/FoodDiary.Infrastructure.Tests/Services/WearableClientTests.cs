@@ -1,5 +1,6 @@
 using System.Net;
 using System.Text;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Integrations.Options;
 using FoodDiary.Integrations.Wearables;
@@ -20,7 +21,7 @@ public sealed class WearableClientTests {
             }),
             NullLogger<FitbitClient>.Instance);
 
-        var url = client.GetAuthorizationUrl("state value/1");
+        string url = client.GetAuthorizationUrl("state value/1");
 
         Assert.Contains("client_id=fitbit-client", url, StringComparison.Ordinal);
         Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fcallback%3Fprovider%3Dfitbit", url, StringComparison.Ordinal);
@@ -49,7 +50,7 @@ public sealed class WearableClientTests {
             }),
             NullLogger<FitbitClient>.Instance);
 
-        var result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("access", result.AccessToken);
@@ -91,7 +92,7 @@ public sealed class WearableClientTests {
             MsOptions.Create(new FitbitOptions { ClientId = "client", ClientSecret = "secret" }),
             NullLogger<FitbitClient>.Instance);
 
-        var result = await client.FetchDailyDataAsync(
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
             "access-token",
             new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc),
             CancellationToken.None);
@@ -114,7 +115,7 @@ public sealed class WearableClientTests {
             }),
             NullLogger<GoogleFitClient>.Instance);
 
-        var url = client.GetAuthorizationUrl("state value/1");
+        string url = client.GetAuthorizationUrl("state value/1");
 
         Assert.Contains("client_id=google-client", url, StringComparison.Ordinal);
         Assert.Contains("redirect_uri=https%3A%2F%2Fapp.example%2Fauth%2Fgoogle-fit", url, StringComparison.Ordinal);
@@ -145,7 +146,7 @@ public sealed class WearableClientTests {
             }),
             NullLogger<GoogleFitClient>.Instance);
 
-        var result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
+        WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
 
         Assert.NotNull(result);
         Assert.Equal("access", result.AccessToken);
@@ -190,7 +191,7 @@ public sealed class WearableClientTests {
             MsOptions.Create(new GoogleFitOptions { ClientId = "client", ClientSecret = "secret" }),
             NullLogger<GoogleFitClient>.Instance);
 
-        var result = await client.FetchDailyDataAsync(
+        IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
             "access-token",
             new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc),
             CancellationToken.None);

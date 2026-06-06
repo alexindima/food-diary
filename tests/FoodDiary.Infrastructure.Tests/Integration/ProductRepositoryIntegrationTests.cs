@@ -1,6 +1,8 @@
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Products;
 using System.Diagnostics;
 
@@ -14,12 +16,12 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_EscapesLikePatternAndReturnsExactProductMatch() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"products-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var userId = user.Id;
+        UserId userId = user.Id;
         var matchingProduct = Product.Create(
             userId,
             "100% Cocoa",
@@ -49,26 +51,26 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         var repository = new ProductRepository(context);
 
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
             userId,
             includePublic: false,
             page: 0,
             limit: 0,
             search: "100% Cocoa");
 
-        var item = Assert.Single(items);
+        (Product Product, int UsageCount) item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Equal(matchingProduct.Id, item.Product.Id);
     }
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_FirstOwnedPage_StaysWithinLatencyBudget() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"products-perf-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var products = Enumerable.Range(0, PerformanceSeedCount)
+        Product[] products = Enumerable.Range(0, PerformanceSeedCount)
             .Select(index => Product.Create(
                 user.Id,
                 $"Perf Product {index:D4}",
@@ -96,7 +98,7 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
             search: null);
 
         var stopwatch = Stopwatch.StartNew();
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,

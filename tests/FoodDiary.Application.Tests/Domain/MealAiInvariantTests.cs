@@ -59,9 +59,9 @@ public class MealAiInvariantTests {
 
     [Fact]
     public void MealAiItemData_TryCreate_WithValidValues_ReturnsTrue() {
-        var result = MealAiItemData.TryCreate(
+        bool result = MealAiItemData.TryCreate(
             "Chicken", null, 100, "g", 165, 31, 3.6, 0, 0, 0,
-            out var data, out var error);
+            out MealAiItemData? data, out string? error);
 
         Assert.True(result);
         Assert.NotNull(data);
@@ -70,9 +70,9 @@ public class MealAiInvariantTests {
 
     [Fact]
     public void MealAiItemData_TryCreate_WithInvalidValues_ReturnsFalse() {
-        var result = MealAiItemData.TryCreate(
+        bool result = MealAiItemData.TryCreate(
             "   ", null, 100, "g", 165, 31, 3.6, 0, 0, 0,
-            out var data, out var error);
+            out MealAiItemData? data, out string? error);
 
         Assert.False(result);
         Assert.Null(data);

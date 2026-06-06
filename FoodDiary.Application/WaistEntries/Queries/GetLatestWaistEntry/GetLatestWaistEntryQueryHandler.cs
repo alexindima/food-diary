@@ -6,6 +6,7 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
@@ -21,12 +22,12 @@ public class GetLatestWaistEntryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel?>(accessError);
         }
 
-        var entries = await waistEntryRepository.GetEntriesAsync(
+        IReadOnlyList<WaistEntry> entries = await waistEntryRepository.GetEntriesAsync(
             userId,
             dateFrom: null,
             dateTo: null,
@@ -34,7 +35,7 @@ public class GetLatestWaistEntryQueryHandler(
             descending: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        var latest = entries.FirstOrDefault();
+        WaistEntry? latest = entries.FirstOrDefault();
         return Result.Success(latest?.ToModel());
     }
 }

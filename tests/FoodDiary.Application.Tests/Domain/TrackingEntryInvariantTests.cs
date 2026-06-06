@@ -34,7 +34,7 @@ public sealed class TrackingEntryInvariantTests {
 
     [Fact]
     public void HydrationEntry_Update_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var timestamp = DateTime.UtcNow;
+        DateTime timestamp = DateTime.UtcNow;
         var entry = HydrationEntry.Create(UserId.New(), timestamp, 250);
 
         entry.Update(amountMl: 250, timestampUtc: timestamp);
@@ -45,7 +45,7 @@ public sealed class TrackingEntryInvariantTests {
     [Fact]
     public void HydrationEntry_Update_WithDifferentValues_SetsModifiedOnUtc() {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
-        var newTimestamp = DateTime.UtcNow.AddMinutes(5);
+        DateTime newTimestamp = DateTime.UtcNow.AddMinutes(5);
 
         entry.Update(amountMl: 500, timestampUtc: newTimestamp);
 
@@ -119,7 +119,7 @@ public sealed class TrackingEntryInvariantTests {
 
     [Fact]
     public void ExerciseEntry_Update_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var date = DateTime.UtcNow.Date;
+        DateTime date = DateTime.UtcNow.Date;
         var entry = ExerciseEntry.Create(UserId.New(), date, ExerciseType.Cardio, 30, 100, name: "Run", notes: "Easy");
 
         entry.Update(
@@ -136,7 +136,7 @@ public sealed class TrackingEntryInvariantTests {
     [Fact]
     public void ExerciseEntry_Update_WithDifferentValues_SetsModifiedOnUtc() {
         var entry = ExerciseEntry.Create(UserId.New(), DateTime.UtcNow, ExerciseType.Cardio, 30, 100, name: "Run", notes: "Easy");
-        var newDate = DateTime.UtcNow.AddDays(-1);
+        DateTime newDate = DateTime.UtcNow.AddDays(-1);
 
         entry.Update(
             exerciseType: ExerciseType.Strength,

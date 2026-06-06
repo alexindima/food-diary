@@ -14,12 +14,12 @@ public sealed class OpenFoodFactsProductSearchSuggestionProvider(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        var cachedProducts = await productCacheRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         if (cachedProducts.Count >= limit) {
             return cachedProducts.Select(ToSuggestion).ToList();
         }
 
-        var externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         if (externalProducts.Count > 0) {
             await productCacheRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
         }

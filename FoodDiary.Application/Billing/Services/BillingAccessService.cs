@@ -17,13 +17,13 @@ public sealed class BillingAccessService(
         bool shouldHavePremium,
         CancellationToken cancellationToken) {
         var currentRoles = user.GetRoleNames().ToList();
-        var hasPremium = currentRoles.Contains(RoleNames.Premium, StringComparer.Ordinal);
+        bool hasPremium = currentRoles.Contains(RoleNames.Premium, StringComparer.Ordinal);
         if (hasPremium == shouldHavePremium) {
             if (shouldHavePremium && !subscription.PremiumRoleManagedByBilling) {
                 return;
             }
 
-            var wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
+            bool wasManagedByBilling = subscription.PremiumRoleManagedByBilling;
             subscription.MarkPremiumRoleManagedByBilling(shouldHavePremium, dateTimeProvider.UtcNow);
             if (subscription.PremiumRoleManagedByBilling != wasManagedByBilling) {
                 await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
@@ -44,7 +44,7 @@ public sealed class BillingAccessService(
             subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.UtcNow);
         }
 
-        var roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);
         user.ReplaceRoles(roleEntities);
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
     }

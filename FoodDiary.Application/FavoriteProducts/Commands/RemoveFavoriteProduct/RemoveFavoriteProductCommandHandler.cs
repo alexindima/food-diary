@@ -5,6 +5,7 @@ using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 
@@ -15,19 +16,19 @@ public class RemoveFavoriteProductCommandHandler(
     public async Task<Result> Handle(
         RemoveFavoriteProductCommand command,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(command.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(command.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var favoriteProductId = new FavoriteProductId(command.FavoriteProductId);
-        var favorite = await favoriteProductRepository.GetByIdAsync(
+        FavoriteProduct? favorite = await favoriteProductRepository.GetByIdAsync(
             favoriteProductId, userId, asTracking: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (favorite is null) {

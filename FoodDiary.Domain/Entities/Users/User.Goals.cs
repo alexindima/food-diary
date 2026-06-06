@@ -32,7 +32,7 @@ public sealed partial class User {
 
     public void UpdateGoals(UserGoalUpdate update) {
         EnsureNotDeleted();
-        var updatedGoals = GetNutritionGoals().With(
+        UserNutritionGoals updatedGoals = GetNutritionGoals().With(
             dailyCalorieTarget: update.DailyCalorieTarget,
             proteinTarget: update.ProteinTarget,
             fatTarget: update.FatTarget,
@@ -50,7 +50,7 @@ public sealed partial class User {
         EnsureDayCalorieTarget(update.SaturdayCalories, nameof(update.SaturdayCalories));
         EnsureDayCalorieTarget(update.SundayCalories, nameof(update.SundayCalories));
 
-        var state = GetGoalState() with {
+        UserGoalState state = GetGoalState() with {
             DailyCalorieTarget = updatedGoals.DailyCalorieTarget,
             ProteinTarget = updatedGoals.ProteinTarget,
             FatTarget = updatedGoals.FatTarget,
@@ -96,8 +96,8 @@ public sealed partial class User {
     }
 
     private bool ApplyAiTokenLimitChanges(UserAiTokenLimitUpdate update) {
-        var currentState = GetAiQuotaState();
-        var nextState = currentState.WithLimits(update.InputLimit, update.OutputLimit);
+        UserAiQuotaState currentState = GetAiQuotaState();
+        UserAiQuotaState nextState = currentState.WithLimits(update.InputLimit, update.OutputLimit);
         if (nextState == currentState) {
             return false;
         }

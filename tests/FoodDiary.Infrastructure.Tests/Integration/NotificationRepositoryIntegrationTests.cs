@@ -13,7 +13,7 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task DeleteExpiredBatchAsync_WhenReadRecently_KeepsOldCreatedNotification() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("recent-read-notification@example.com", "hash");
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, NotificationPayloads.Empty());
 
@@ -32,7 +32,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.ReadAtUtc, readAfterRetentionCutoff));
 
         var repository = new NotificationRepository(context);
-        var deleted = await repository.DeleteExpiredBatchAsync(
+        int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             transientUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -40,7 +40,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             standardUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             batchSize: 10);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(0, deleted);
         Assert.True(await verificationContext.Notifications.AnyAsync(n => n.Id == notification.Id));
@@ -48,7 +48,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
 
     [RequiresDockerFact]
     public async Task DeleteExpiredBatchAsync_WhenReadBeforeRetentionCutoff_DeletesByReadTimestamp() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create("expired-read-notification@example.com", "hash");
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, NotificationPayloads.Empty());
 
@@ -64,7 +64,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.ReadAtUtc, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc)));
 
         var repository = new NotificationRepository(context);
-        var deleted = await repository.DeleteExpiredBatchAsync(
+        int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             transientUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -72,17 +72,17 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             standardUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             batchSize: 10);
 
-        await using var verificationContext = CreateVerificationContext(context);
+        await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
         Assert.Equal(1, deleted);
         Assert.False(await verificationContext.Notifications.AnyAsync(n => n.Id == notification.Id));
     }
 
     private static FoodDiaryDbContext CreateVerificationContext(FoodDiaryDbContext sourceContext) {
-        var connectionString = sourceContext.Database.GetConnectionString()
+        string connectionString = sourceContext.Database.GetConnectionString()
             ?? throw new InvalidOperationException("Source context does not have a connection string.");
 
-        var options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseNpgsql(new NpgsqlConnectionStringBuilder(connectionString).ConnectionString)
             .Options;
 

@@ -101,7 +101,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
         EnsureCyclicDays(fastDays, eatDays);
         EnsureIntermittentHours(eatDayFastHours, eatDayEatingWindowHours);
 
-        var normalizedAnchorDate = NormalizeDate(anchorDateUtc, nameof(anchorDateUtc));
+        DateTime normalizedAnchorDate = NormalizeDate(anchorDateUtc, nameof(anchorDateUtc));
 
         var plan = new FastingPlan {
             Id = FastingPlanId.New(),
@@ -151,7 +151,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     }
 
     public void Rename(string? title) {
-        var normalizedTitle = NormalizeTitle(title);
+        string? normalizedTitle = NormalizeTitle(title);
         if (string.Equals(Title, normalizedTitle, StringComparison.Ordinal)) {
             return;
         }
@@ -165,7 +165,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             throw new InvalidOperationException("Only cyclic fasting plans can change the next phase date.");
         }
 
-        var normalizedDate = NormalizeDate(nextPhaseDateUtc, nameof(nextPhaseDateUtc));
+        DateTime normalizedDate = NormalizeDate(nextPhaseDateUtc, nameof(nextPhaseDateUtc));
         if (CyclicNextPhaseDateUtc == normalizedDate) {
             return;
         }
@@ -183,7 +183,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
     }
 
     private static DateTime NormalizeDate(DateTime value, string paramName) {
-        var utc = NormalizeTimestamp(value, paramName);
+        DateTime utc = NormalizeTimestamp(value, paramName);
         return DateTime.SpecifyKind(utc.Date, DateTimeKind.Utc);
     }
 
@@ -192,7 +192,7 @@ public sealed class FastingPlan : AggregateRoot<FastingPlanId> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length > TitleMaxLength
             ? throw new ArgumentOutOfRangeException(nameof(value), $"Title must be at most {TitleMaxLength} characters.")
             : trimmed;

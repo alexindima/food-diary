@@ -11,6 +11,9 @@ using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Notifications;
+using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
 
@@ -25,15 +28,15 @@ public sealed class GetProfileOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        var user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        var accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         if (accessError is not null) {
             return Result.Failure<ProfileOverviewModel>(accessError);
         }
 
-        var webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        var acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        var pendingRelationship = acceptedRelationship is null
+        IReadOnlyList<WebPushSubscription> webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitation? pendingRelationship = acceptedRelationship is null
             ? await dietologistInvitationRepository.GetByClientAndStatusAsync(
                 userId,
                 DietologistInvitationStatus.Pending,

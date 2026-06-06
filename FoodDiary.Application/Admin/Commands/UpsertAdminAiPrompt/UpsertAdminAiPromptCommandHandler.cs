@@ -11,14 +11,14 @@ public class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateRepository repos
     public async Task<Result<AdminAiPromptModel>> Handle(
         UpsertAdminAiPromptCommand command,
         CancellationToken cancellationToken) {
-        var key = command.Key.Trim().ToLowerInvariant();
-        var locale = command.Locale.Trim().ToLowerInvariant();
+        string key = command.Key.Trim().ToLowerInvariant();
+        string locale = command.Locale.Trim().ToLowerInvariant();
 
-        var existing = await repository.GetByKeyAsync(key, locale, cancellationToken).ConfigureAwait(false);
+        AiPromptTemplate? existing = await repository.GetByKeyAsync(key, locale, cancellationToken).ConfigureAwait(false);
         AiPromptTemplate template;
 
         if (existing is not null) {
-            var tracked = await repository.GetByIdAsync(existing.Id, asTracking: true, cancellationToken).ConfigureAwait(false);
+            AiPromptTemplate? tracked = await repository.GetByIdAsync(existing.Id, asTracking: true, cancellationToken).ConfigureAwait(false);
             tracked!.Update(command.PromptText, command.IsActive);
             await repository.UpdateAsync(tracked, cancellationToken).ConfigureAwait(false);
             template = tracked;

@@ -7,6 +7,8 @@ using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 
@@ -17,18 +19,18 @@ public class GetCurrentCycleQueryHandler(
     public async Task<Result<CycleModel?>> Handle(
         GetCurrentCycleQuery query,
         CancellationToken cancellationToken) {
-        var userIdResult = UserIdParser.Parse(query.UserId);
+        Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {
             return Result.Failure<CycleModel?>(userIdResult.Error);
         }
 
-        var userId = userIdResult.Value;
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        UserId userId = userIdResult.Value;
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CycleModel?>(accessError);
         }
 
-        var cycle = await cycleRepository.GetLatestAsync(
+        Cycle? cycle = await cycleRepository.GetLatestAsync(
             userId,
             includeDays: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -37,7 +39,7 @@ public class GetCurrentCycleQueryHandler(
             return Result.Success<CycleModel?>(null);
         }
 
-        var predictions = CyclePredictionService.CalculatePredictions(cycle);
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);
         return Result.Success<CycleModel?>(cycle.ToModel(predictions));
     }
 }

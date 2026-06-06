@@ -61,7 +61,7 @@ public static class ResultExtensions {
             return ErrorResult(result.Error, controller.HttpContext.TraceIdentifier);
         }
 
-        var file = result.Value;
+        FileExportResult file = result.Value;
         return controller.File(file.Content, file.ContentType, file.FileName);
     }
 

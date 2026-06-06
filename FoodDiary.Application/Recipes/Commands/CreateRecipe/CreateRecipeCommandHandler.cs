@@ -31,20 +31,20 @@ public class CreateRecipeCommandHandler(
         ImageAsset? ImageAsset);
 
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
-        var valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
+        Result<CreateRecipeValues> valuesResult = await PrepareCreateValuesAsync(command, cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {
             return Result.Failure<RecipeModel>(valuesResult.Error);
         }
 
-        var values = valuesResult.Value;
-        var recipe = CreateRecipe(command, values);
-        var stepsResult = await AddStepsAsync(recipe, command, values.UserId, cancellationToken).ConfigureAwait(false);
+        CreateRecipeValues values = valuesResult.Value;
+        Recipe recipe = CreateRecipe(command, values);
+        Result stepsResult = await AddStepsAsync(recipe, command, values.UserId, cancellationToken).ConfigureAwait(false);
         if (stepsResult.IsFailure) return Result.Failure<RecipeModel>(stepsResult.Error);
 
-        var ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result ingredientsResult = await EnsureIngredientsAccessibleAsync(command.Steps, recipe.Id, values.UserId, cancellationToken).ConfigureAwait(false);
         if (ingredientsResult.IsFailure) return Result.Failure<RecipeModel>(ingredientsResult.Error);
 
-        var nutritionResult = ApplyNutrition(recipe, command);
+        Result nutritionResult = ApplyNutrition(recipe, command);
         if (nutritionResult.IsFailure) return Result.Failure<RecipeModel>(nutritionResult.Error);
 
         return await SaveAndLoadAsync(recipe, values.UserId, cancellationToken).ConfigureAwait(false);
@@ -57,18 +57,18 @@ public class CreateRecipeCommandHandler(
             return Result.Failure<CreateRecipeValues>(Errors.Authentication.InvalidToken);
         }
 
-        var imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
+        Result<ImageAssetId?> imageAssetIdResult = ImageAssetIdParser.ParseOptional(command.ImageAssetId, nameof(command.ImageAssetId));
         if (imageAssetIdResult.IsFailure) {
             return Result.Failure<CreateRecipeValues>(imageAssetIdResult.Error);
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CreateRecipeValues>(accessError);
         }
 
-        var imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+        Result<ImageAsset?> imageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
             imageAssetIdResult.Value,
             userId,
             cancellationToken).ConfigureAwait(false);
@@ -76,7 +76,7 @@ public class CreateRecipeCommandHandler(
             return Result.Failure<CreateRecipeValues>(imageAssetResult.Error);
         }
 
-        var visibilityResult = EnumValueParser.ParseRequired<Visibility>(
+        Result<Visibility> visibilityResult = EnumValueParser.ParseRequired<Visibility>(
             command.Visibility,
             nameof(command.Visibility),
             "Unknown visibility value.");
@@ -111,7 +111,7 @@ public class CreateRecipeCommandHandler(
             return Result.Success();
         }
 
-        var manualNutritionResult = ValidateManualNutrition(
+        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> manualNutritionResult = ValidateManualNutrition(
             command.ManualCalories,
             command.ManualProteins,
             command.ManualFats,
@@ -122,7 +122,7 @@ public class CreateRecipeCommandHandler(
             return manualNutritionResult;
         }
 
-        var manual = manualNutritionResult.Value;
+        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) manual = manualNutritionResult.Value;
         recipe.SetManualNutrition(
             manual.Calories,
             manual.Proteins,
@@ -140,7 +140,7 @@ public class CreateRecipeCommandHandler(
         await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken).ConfigureAwait(false);
 
-        var created = await recipeRepository.GetByIdAsync(
+        Recipe? created = await recipeRepository.GetByIdAsync(
             recipe.Id,
             userId,
             includePublic: false,
@@ -176,12 +176,12 @@ public class CreateRecipeCommandHandler(
             .OrderBy(x => x.Order);
 
         foreach (var entry in orderedSteps) {
-            var stepImageAssetIdResult = ImageAssetIdParser.ParseOptional(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
+            Result<ImageAssetId?> stepImageAssetIdResult = ImageAssetIdParser.ParseOptional(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
             if (stepImageAssetIdResult.IsFailure) {
                 return stepImageAssetIdResult;
             }
 
-            var stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
+            Result<ImageAsset?> stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
                 stepImageAssetIdResult.Value,
                 userId,
                 cancellationToken).ConfigureAwait(false);
@@ -189,14 +189,14 @@ public class CreateRecipeCommandHandler(
                 return stepImageAssetResult;
             }
 
-            var step = recipe.AddStep(
+            RecipeStep step = recipe.AddStep(
                 entry.Order,
                 entry.Step.Description,
                 entry.Step.Title,
                 stepImageAssetResult.Value?.Url ?? entry.Step.ImageUrl,
                 stepImageAssetIdResult.Value);
-            foreach (var ingredient in entry.Step.Ingredients) {
-                var ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
+            foreach (RecipeIngredientInput ingredient in entry.Step.Ingredients) {
+                Result ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
                 if (ingredientIdResult.IsFailure) {
                     return ingredientIdResult;
                 }
@@ -248,12 +248,12 @@ public class CreateRecipeCommandHandler(
     }
 
     private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
-        var productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
+        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
         if (productIdResult.IsFailure) {
             return productIdResult;
         }
 
-        var nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
+        Result nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
             ingredient.NestedRecipeId,
             nameof(ingredient.NestedRecipeId),
             "Nested recipe id");

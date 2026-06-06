@@ -34,6 +34,10 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Email.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.Common.Models;
+using FluentValidation.Results;
+using FoodDiary.Application.Admin.Models;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -67,7 +71,7 @@ public class AdminFeatureTests {
         repository.PaymentsResponse = ([payment], 41);
         var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(
                 Page: 0,
                 Limit: 999,
@@ -99,7 +103,7 @@ public class AdminFeatureTests {
         var repository = new RecordingAdminBillingRepository();
         var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(1, 20, provider, null, null, null, null, null),
             CancellationToken.None);
 
@@ -132,7 +136,7 @@ public class AdminFeatureTests {
         repository.SubscriptionsResponse = ([subscription], 1);
         var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminBillingSubscriptionReadModel>> result = await handler.Handle(
             new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", null, null, null),
             CancellationToken.None);
 
@@ -160,7 +164,7 @@ public class AdminFeatureTests {
         repository.WebhookEventsResponse = ([webhookEvent], 1);
         var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
 
-        var result = await handler.Handle(
+        Result<PagedResponse<AdminBillingWebhookEventReadModel>> result = await handler.Handle(
             new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", null, null),
             CancellationToken.None);
 
@@ -183,7 +187,7 @@ public class AdminFeatureTests {
             AiInputTokenLimit: null,
             AiOutputTokenLimit: null);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Unknown role.", StringComparison.Ordinal));
@@ -191,9 +195,9 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnknownRoleFromRepository_Fails() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
         var command = new UpdateAdminUserCommand(
             user.Id.Value,
             IsActive: null,
@@ -203,7 +207,7 @@ public class AdminFeatureTests {
             AiInputTokenLimit: null,
             AiOutputTokenLimit: null);
 
-        var result = await handler.Handle(command, CancellationToken.None);
+        Result<AdminUserModel> result = await handler.Handle(command, CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -212,13 +216,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 Guid.Empty,
                 IsActive: null,
@@ -236,11 +240,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WhenUserMissing_ReturnsNotFound() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 Guid.NewGuid(),
                 IsActive: null,
@@ -257,11 +261,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithInvalidLanguage_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -279,11 +283,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnknownRequestedRole_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -301,14 +305,14 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithNullRoles_DoesNotChangeRoles() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
-        var beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
+        string[] beforeRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -319,7 +323,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        var afterRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
+        string[] afterRoles = user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal).ToArray();
 
         Assert.True(result.IsSuccess);
         Assert.Equal(beforeRoles, afterRoles);
@@ -327,13 +331,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithEmptyRoles_ClearsRoles() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -350,13 +354,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerRoleForNonOwner_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -375,13 +379,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserWithoutOwnerRole_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -400,13 +404,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserWithoutAdminRole_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -425,13 +429,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserKeepingOwnerAndAdmin_UpdatesRoles() {
-        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -450,13 +454,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithOwnerUserDeactivation_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@fooddiary.club", [RoleNames.Owner, RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Owner, RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: false,
@@ -475,13 +479,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WhenActorRemovesOwnAdminRole_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -501,13 +505,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WhenActorDeactivatesOwnAccount_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: false,
@@ -527,14 +531,14 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithSameRoles_DoesNotSetModifiedOnUtc() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
-        var modifiedBefore = user.ModifiedOnUtc;
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
+        DateTime? modifiedBefore = user.ModifiedOnUtc;
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -553,7 +557,7 @@ public class AdminFeatureTests {
     public async Task UpdateAdminUserHandler_WithRoleChanges_StoresRoleAuditEvents() {
         var actorUserId = UserId.New();
         var timestamp = new DateTime(2026, 3, 26, 11, 0, 0, DateTimeKind.Utc);
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin, RoleNames.Premium]);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
@@ -562,7 +566,7 @@ public class AdminFeatureTests {
             new NullAuditLogger(),
             new FixedDateTimeProvider(timestamp));
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -593,19 +597,19 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         user.SetEmailConfirmed(true);
         user.SetLanguage("en");
         user.UpdateAiTokenLimits(new FoodDiary.Domain.ValueObjects.UserAiTokenLimitUpdate(
             InputLimit: 123,
             OutputLimit: 456));
-        var modifiedBefore = user.ModifiedOnUtc;
+        DateTime? modifiedBefore = user.ModifiedOnUtc;
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: null,
@@ -622,14 +626,14 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithDeletedUserAndActiveToggle_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("deleted-admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("deleted-admin@example.com", [RoleNames.Admin]);
         user.DeleteAccount(DateTime.UtcNow);
         var userRepository = new InMemoryUserRepository(
             user,
             availableRoles: [RoleNames.Admin, RoleNames.Premium, RoleNames.Support]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: true,
@@ -647,12 +651,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithActiveToggleTrue_ActivatesUser() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         user.Deactivate();
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: true,
@@ -669,11 +673,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpdateAdminUserHandler_WithActiveToggleFalse_DeactivatesUser() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var userRepository = new InMemoryUserRepository(user, availableRoles: [RoleNames.Admin]);
-        var handler = CreateUpdateAdminUserHandler(userRepository);
+        UpdateAdminUserCommandHandler handler = CreateUpdateAdminUserHandler(userRepository);
 
-        var result = await handler.Handle(
+        Result<AdminUserModel> result = await handler.Handle(
             new UpdateAdminUserCommand(
                 user.Id.Value,
                 IsActive: false,
@@ -691,12 +695,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithInactiveActor_ReturnsForbidden() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         actor.Deactivate();
-        var target = CreateUserWithRoles("client@example.com", []);
-        var handler = CreateStartImpersonationHandler(actor, target);
+        User target = CreateUserWithRoles("client@example.com", []);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 target.Id.Value,
@@ -711,11 +715,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithEmptyActorUserId_ReturnsValidationFailure() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var target = CreateUserWithRoles("client@example.com", []);
-        var handler = CreateStartImpersonationHandler(actor, target);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", []);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 Guid.Empty,
                 target.Id.Value,
@@ -731,11 +735,11 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithEmptyTargetUserId_ReturnsValidationFailure() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var target = CreateUserWithRoles("client@example.com", []);
-        var handler = CreateStartImpersonationHandler(actor, target);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", []);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 Guid.Empty,
@@ -751,13 +755,13 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithInactiveTarget_ReturnsForbiddenWithoutSession() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var target = CreateUserWithRoles("client@example.com", []);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", []);
         target.Deactivate();
         var sessionRepository = new RecordingImpersonationSessionRepository();
-        var handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 target.Id.Value,
@@ -773,10 +777,10 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithSameActorAndTarget_ReturnsValidationFailure() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var handler = CreateStartImpersonationHandler(actor, actor);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, actor);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 actor.Id.Value,
@@ -791,12 +795,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WhenTargetMissing_ReturnsNotFound() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var target = CreateUserWithRoles("client@example.com", []);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", []);
         var missingTargetId = Guid.NewGuid();
-        var handler = CreateStartImpersonationHandler(actor, target);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 missingTargetId,
@@ -811,12 +815,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task StartAdminImpersonationHandler_WithValidRequest_CreatesSessionAndReturnsToken() {
-        var actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        var target = CreateUserWithRoles("client@example.com", [RoleNames.Premium]);
+        User actor = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User target = CreateUserWithRoles("client@example.com", [RoleNames.Premium]);
         var sessionRepository = new RecordingImpersonationSessionRepository();
-        var handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
+        StartAdminImpersonationCommandHandler handler = CreateStartImpersonationHandler(actor, target, sessionRepository);
 
-        var result = await handler.Handle(
+        Result<AdminImpersonationStartModel> result = await handler.Handle(
             new StartAdminImpersonationCommand(
                 actor.Id.Value,
                 target.Id.Value,
@@ -846,7 +850,7 @@ public class AdminFeatureTests {
             TextBody: "Body",
             IsActive: true);
 
-        var result = await validator.ValidateAsync(command);
+        ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => e.ErrorMessage.Contains("supported codes", StringComparison.OrdinalIgnoreCase));
@@ -856,7 +860,7 @@ public class AdminFeatureTests {
     public async Task UpsertAdminEmailTemplateHandler_WithInvalidLocale_ReturnsValidationFailure() {
         var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
 
-        var result = await handler.Handle(
+        Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
                 Key: "verify_email",
                 Locale: "de",
@@ -875,7 +879,7 @@ public class AdminFeatureTests {
     public async Task UpsertAdminEmailTemplateHandler_WithValidCommand_UpsertsTemplate() {
         var handler = new UpsertAdminEmailTemplateCommandHandler(new InMemoryEmailTemplateRepository());
 
-        var result = await handler.Handle(
+        Result<AdminEmailTemplateModel> result = await handler.Handle(
             new UpsertAdminEmailTemplateCommand(
                 Key: " Verify_Email ",
                 Locale: " EN ",
@@ -902,7 +906,7 @@ public class AdminFeatureTests {
             },
             transport);
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new SendAdminEmailTemplateTestCommand(
                 ToEmail: "admin@example.com",
                 Key: "dietologist_invitation",
@@ -925,7 +929,7 @@ public class AdminFeatureTests {
         var repository = new InMemoryAiPromptTemplateRepository();
         var handler = new UpsertAdminAiPromptCommandHandler(repository);
 
-        var result = await handler.Handle(
+        Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", true),
             CancellationToken.None);
 
@@ -943,7 +947,7 @@ public class AdminFeatureTests {
         var repository = new InMemoryAiPromptTemplateRepository(template);
         var handler = new UpsertAdminAiPromptCommandHandler(repository);
 
-        var result = await handler.Handle(
+        Result<AdminAiPromptModel> result = await handler.Handle(
             new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", false),
             CancellationToken.None);
 
@@ -960,10 +964,10 @@ public class AdminFeatureTests {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", true);
         var handler = new GetAdminAiPromptsQueryHandler(new InMemoryAiPromptTemplateRepository(template));
 
-        var result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
+        Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var model = Assert.Single(result.Value);
+        AdminAiPromptModel model = Assert.Single(result.Value);
         Assert.Equal(template.Id.Value, model.Id);
         Assert.Equal("meal_summary", model.Key);
         Assert.Equal("en", model.Locale);
@@ -976,7 +980,7 @@ public class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryValidator_WithInvalidRange_Fails() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new GetAdminAiUsageSummaryQuery(
                 From: new DateOnly(2026, 2, 10),
                 To: new DateOnly(2026, 2, 1)));
@@ -989,7 +993,7 @@ public class AdminFeatureTests {
     public async Task GetAdminAiUsageSummaryQueryValidator_WithValidRange_Passes() {
         var validator = new GetAdminAiUsageSummaryQueryValidator();
 
-        var result = await validator.ValidateAsync(
+        ValidationResult result = await validator.ValidateAsync(
             new GetAdminAiUsageSummaryQuery(
                 From: new DateOnly(2026, 2, 1),
                 To: new DateOnly(2026, 2, 10)));
@@ -1004,7 +1008,7 @@ public class AdminFeatureTests {
             repository,
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
-        var result = await handler.Handle(
+        Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 4, 1), new DateOnly(2026, 3, 1)),
             CancellationToken.None);
 
@@ -1020,7 +1024,7 @@ public class AdminFeatureTests {
         var aiUsageRepository = new RecordingAiUsageRepository();
         var handler = new GetAdminAiUsageSummaryQueryHandler(aiUsageRepository, dateTimeProvider);
 
-        var result = await handler.Handle(new GetAdminAiUsageSummaryQuery(null, null), CancellationToken.None);
+        Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(null, null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
@@ -1042,28 +1046,28 @@ public class AdminFeatureTests {
             new RecordingAiUsageRepository(summary),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 10, 0, 0, DateTimeKind.Utc)));
 
-        var result = await handler.Handle(
+        Result<AdminAiUsageSummaryModel> result = await handler.Handle(
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(100, result.Value.TotalTokens);
-        var daily = Assert.Single(result.Value.ByDay);
+        AdminAiUsageDailyModel daily = Assert.Single(result.Value.ByDay);
         Assert.Equal(new DateOnly(2026, 3, 26), daily.Date);
         Assert.Equal(10, daily.TotalTokens);
         Assert.Equal("vision", Assert.Single(result.Value.ByOperation).Key);
         Assert.Equal("gpt-test", Assert.Single(result.Value.ByModel).Key);
-        var user = Assert.Single(result.Value.ByUser);
+        AdminAiUsageUserModel user = Assert.Single(result.Value.ByUser);
         Assert.Equal(userId.Value, user.Id);
         Assert.Equal("user@example.com", user.Email);
     }
 
     [Fact]
     public async Task GetAdminUserQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
 
-        var result = await handler.Handle(new GetAdminUserQuery(Guid.Empty), CancellationToken.None);
+        Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(Guid.Empty), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -1071,10 +1075,10 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserQueryHandler_WhenUserMissing_ReturnsNotFound() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
 
-        var result = await handler.Handle(new GetAdminUserQuery(Guid.NewGuid()), CancellationToken.None);
+        Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("User.NotFound", result.Error.Code);
@@ -1082,10 +1086,10 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserQueryHandler_WithExistingUser_ReturnsAdminModel() {
-        var user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
         var handler = new GetAdminUserQueryHandler(new InMemoryUserRepository(user, [RoleNames.Admin]));
 
-        var result = await handler.Handle(new GetAdminUserQuery(user.Id.Value), CancellationToken.None);
+        Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(user.Id.Value, result.Value.Id);
@@ -1105,7 +1109,7 @@ public class AdminFeatureTests {
         var reader = new RecordingAdminMailInboxReader { Messages = [message] };
         var handler = new GetAdminMailInboxMessagesQueryHandler(reader);
 
-        var result = await handler.Handle(new GetAdminMailInboxMessagesQuery(25), CancellationToken.None);
+        Result<IReadOnlyList<AdminMailInboxMessageSummaryModel>> result = await handler.Handle(new GetAdminMailInboxMessagesQuery(25), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(message, Assert.Single(result.Value));
@@ -1117,7 +1121,7 @@ public class AdminFeatureTests {
         var messageId = Guid.NewGuid();
         var handler = new GetAdminMailInboxMessageDetailsQueryHandler(new RecordingAdminMailInboxReader());
 
-        var result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(messageId), CancellationToken.None);
+        Result<AdminMailInboxMessageDetailsModel> result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(messageId), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
@@ -1139,7 +1143,7 @@ public class AdminFeatureTests {
         var reader = new RecordingAdminMailInboxReader { Message = message };
         var handler = new GetAdminMailInboxMessageDetailsQueryHandler(reader);
 
-        var result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(message.Id), CancellationToken.None);
+        Result<AdminMailInboxMessageDetailsModel> result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(message.Id), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(message, result.Value);
@@ -1148,12 +1152,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminDashboardSummaryQueryHandler_ReturnsSummaryWithPendingReports() {
-        var recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
+        User recentUser = CreateUserWithRoles("recent@example.com", [RoleNames.Premium]);
         var userRepository = new SummaryUserRepository((12, 10, 3, 1, [recentUser]));
         var contentReportRepository = new CountingContentReportRepository(4);
         var handler = new GetAdminDashboardSummaryQueryHandler(userRepository, contentReportRepository);
 
-        var result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
+        Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(12, result.Value.TotalUsers);
@@ -1176,13 +1180,13 @@ public class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new GetAdminContentReportsQueryHandler(repository);
 
-        var result = await handler.Handle(new GetAdminContentReportsQuery("Dismissed", 0, 0), CancellationToken.None);
+        Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("Dismissed", 0, 0), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         Assert.Equal(ReportStatus.Dismissed, repository.LastStatus);
-        var model = Assert.Single(result.Value.Data);
+        AdminContentReportModel model = Assert.Single(result.Value.Data);
         Assert.Equal(report.Id.Value, model.Id);
         Assert.Equal(nameof(ReportStatus.Dismissed), model.Status);
         Assert.Equal("resolved", model.AdminNote);
@@ -1193,7 +1197,7 @@ public class AdminFeatureTests {
         var handler = new ReviewContentReportCommandHandler(new CountingContentReportRepository(0));
         var reportId = Guid.NewGuid();
 
-        var result = await handler.Handle(new ReviewContentReportCommand(reportId, "handled"), CancellationToken.None);
+        Result result = await handler.Handle(new ReviewContentReportCommand(reportId, "handled"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
@@ -1209,7 +1213,7 @@ public class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new ReviewContentReportCommandHandler(repository);
 
-        var result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, "  verified  "), CancellationToken.None);
+        Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, "  verified  "), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(ReportStatus.Reviewed, report.Status);
@@ -1222,7 +1226,7 @@ public class AdminFeatureTests {
         var handler = new DismissContentReportCommandHandler(new CountingContentReportRepository(0));
         var reportId = Guid.NewGuid();
 
-        var result = await handler.Handle(new DismissContentReportCommand(reportId, "duplicate"), CancellationToken.None);
+        Result result = await handler.Handle(new DismissContentReportCommand(reportId, "duplicate"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
@@ -1238,7 +1242,7 @@ public class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new DismissContentReportCommandHandler(repository);
 
-        var result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, "  duplicate  "), CancellationToken.None);
+        Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, "  duplicate  "), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(ReportStatus.Dismissed, report.Status);
@@ -1257,10 +1261,10 @@ public class AdminFeatureTests {
             true);
         var handler = new GetAdminEmailTemplatesQueryHandler(new InMemoryEmailTemplateRepository(template));
 
-        var result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
+        Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var model = Assert.Single(result.Value);
+        AdminEmailTemplateModel model = Assert.Single(result.Value);
         Assert.Equal(template.Id, model.Id);
         Assert.Equal("verify_email", model.Key);
         Assert.Equal("Subject", model.Subject);
@@ -1284,7 +1288,7 @@ public class AdminFeatureTests {
         };
         var handler = new GetAdminImpersonationSessionsQueryHandler(repository);
 
-        var result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
+        Result<PagedResponse<AdminImpersonationSessionReadModel>> result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(session, Assert.Single(result.Value.Data));
@@ -1300,7 +1304,7 @@ public class AdminFeatureTests {
             new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
             new RecordingUserRoleAuditRepository());
 
-        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
+        Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -1312,7 +1316,7 @@ public class AdminFeatureTests {
             new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
             new RecordingUserRoleAuditRepository());
 
-        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
+        Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("User.NotFound", result.Error.Code);
@@ -1320,7 +1324,7 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WithExistingUser_ClampsLimitAndReturnsEvents() {
-        var user = CreateUserWithRoles("role-audit@example.com", [RoleNames.Admin]);
+        User user = CreateUserWithRoles("role-audit@example.com", [RoleNames.Admin]);
         var auditEvent = new AdminUserRoleAuditEventReadModel(
             Guid.NewGuid(),
             user.Id.Value,
@@ -1335,7 +1339,7 @@ public class AdminFeatureTests {
             new InMemoryUserRepository(user, [RoleNames.Admin]),
             repository);
 
-        var result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
+        Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(auditEvent, Assert.Single(result.Value));
@@ -1344,7 +1348,7 @@ public class AdminFeatureTests {
 
     private static User CreateUserWithRoles(string email, IReadOnlyList<string> roleNames) {
         var user = User.Create(email, "hash");
-        var roles = roleNames.Select(name => Role.Create(name)).ToArray();
+        Role[] roles = roleNames.Select(name => Role.Create(name)).ToArray();
         user.ReplaceRoles(roles);
         return user;
     }
@@ -1568,7 +1572,7 @@ public class AdminFeatureTests {
             LastStatus = status;
             LastPage = page;
             LastLimit = limit;
-            var filtered = reports ?? [];
+            IReadOnlyList<ContentReport> filtered = reports ?? [];
             return Task.FromResult((filtered, filtered.Count));
         }
     }
@@ -1603,7 +1607,7 @@ public class AdminFeatureTests {
             Subject = message.Subject;
             Body = message.Body;
 
-            foreach (var view in message.AlternateViews) {
+            foreach (AlternateView view in message.AlternateViews) {
                 using var reader = new StreamReader(view.ContentStream);
                 AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
             }

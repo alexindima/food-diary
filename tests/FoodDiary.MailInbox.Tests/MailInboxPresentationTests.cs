@@ -33,7 +33,7 @@ public sealed class MailInboxPresentationTests {
     public void InboundMailHttpMappings_ToQuery_DefaultsLimitToFifty() {
         int? limit = null;
 
-        var query = limit.ToQuery();
+        GetInboundMailMessagesQuery query = limit.ToQuery();
 
         Assert.Equal(50, query.Limit);
     }
@@ -74,7 +74,7 @@ public sealed class MailInboxPresentationTests {
             "Received",
             DateTimeOffset.UtcNow);
 
-        var response = details.ToHttpResponse();
+        InboundMailMessageDetailsHttpResponse response = details.ToHttpResponse();
 
         Assert.Equal(id, response.Id);
         Assert.NotNull(response.DmarcReport);
@@ -94,7 +94,7 @@ public sealed class MailInboxPresentationTests {
             "Received",
             DateTimeOffset.UtcNow);
 
-        var response = summary.ToHttpResponse();
+        InboundMailMessageSummaryHttpResponse response = summary.ToHttpResponse();
 
         Assert.Equal(summary.Id, response.Id);
         Assert.Equal("dmarc-report", response.Category);
@@ -134,7 +134,7 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void MailInboxResponseRecords_ExposeConfiguredValues() {
         var id = Guid.NewGuid();
-        var receivedAtUtc = DateTimeOffset.UtcNow;
+        DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
         var record = new DmarcReportRecordHttpResponse(
             "192.0.2.1",
             2,
@@ -221,14 +221,14 @@ public sealed class MailInboxPresentationTests {
     [InlineData(ErrorKind.ExternalFailure, StatusCodes.Status502BadGateway)]
     [InlineData(ErrorKind.Internal, StatusCodes.Status500InternalServerError)]
     public void MailInboxResultExtensions_ErrorResult_MapsErrorKindToStatusCode(ErrorKind kind, int expectedStatusCode) {
-        var result = MailInboxResultExtensions.ErrorResult(
+        IActionResult result = MailInboxResultExtensions.ErrorResult(
             new MailInboxError("code", "message", kind, new Dictionary<string, string[]>(StringComparer.Ordinal) {
                 ["Request.RawMime"] = ["Required"],
             }),
             "trace-123");
 
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+        MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(expectedStatusCode, objectResult.StatusCode);
         Assert.Equal("code", response.Error);
         Assert.Equal("trace-123", response.TraceId);
@@ -238,12 +238,12 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public void MailInboxResultExtensions_ErrorResult_WhenErrorKindIsUnknown_ReturnsInternalServerError() {
-        var result = MailInboxResultExtensions.ErrorResult(
+        IActionResult result = MailInboxResultExtensions.ErrorResult(
             new MailInboxError("code", "message", (ErrorKind)999, null),
             traceId: null);
 
-        var objectResult = Assert.IsType<ObjectResult>(result);
-        var response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+        MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
         Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
         Assert.Equal("message", response.Message);
         Assert.Null(response.TraceId);
@@ -252,15 +252,15 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public async Task MailInboxControllerBase_HandleOk_WhenCommandSucceeds_ReturnsConfiguredResponse() {
-        var sender = new StubSender()
+        StubSender sender = new StubSender()
             .Register(new TestMailInboxCommand(), Result.Success());
         var controller = new TestMailInboxController(sender) {
             ControllerContext = CreateControllerContext(),
         };
 
-        var result = await controller.HandleCommand(new TestMailInboxCommand());
+        IActionResult result = await controller.HandleCommand(new TestMailInboxCommand());
 
-        var ok = Assert.IsType<OkObjectResult>(result);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Equal("accepted", ok.Value);
     }
 
@@ -282,12 +282,12 @@ public sealed class MailInboxPresentationTests {
             RequireApiKey = true,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
 
         filter.OnAuthorization(context);
 
-        var result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
-        var response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
+        UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(context.Result);
+        MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
         Assert.Equal("MailInbox.Unauthorized", response.Error);
     }
 
@@ -297,7 +297,7 @@ public sealed class MailInboxPresentationTests {
             RequireApiKey = false,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
 
         filter.OnAuthorization(context);
@@ -311,7 +311,7 @@ public sealed class MailInboxPresentationTests {
             RequireApiKey = true,
             ApiKey = "secret"
         }));
-        var context = CreateAuthorizationContext();
+        AuthorizationFilterContext context = CreateAuthorizationContext();
         context.HttpContext.Request.Headers["X-MailInbox-Api-Key"] = "secret";
 
         filter.OnAuthorization(context);
@@ -322,7 +322,7 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void AddMailInboxPresentation_ConfiguresApiBehaviorValidationResponse() {
         var services = new ServiceCollection();
-        var configuration = new ConfigurationBuilder()
+        IConfigurationRoot configuration = new ConfigurationBuilder()
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailInboxHttp:RequireApiKey"] = "true",
                 ["MailInboxHttp:ApiKey"] = "secret",
@@ -331,15 +331,15 @@ public sealed class MailInboxPresentationTests {
         services.AddLogging();
 
         services.AddMailInboxPresentation(configuration);
-        using var provider = services.BuildServiceProvider();
+        using ServiceProvider provider = services.BuildServiceProvider();
 
-        var options = provider.GetRequiredService<IOptions<ApiBehaviorOptions>>().Value;
+        ApiBehaviorOptions options = provider.GetRequiredService<IOptions<ApiBehaviorOptions>>().Value;
         var context = new ActionContext(new DefaultHttpContext(), new RouteData(), new ActionDescriptor());
         context.ModelState.AddModelError("Request.RawMime", "");
         context.HttpContext.TraceIdentifier = "trace-presentation";
 
-        var result = Assert.IsType<BadRequestObjectResult>(options.InvalidModelStateResponseFactory(context));
-        var response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
+        BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(options.InvalidModelStateResponseFactory(context));
+        MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
         Assert.Equal("Validation.Invalid", response.Error);
         Assert.Equal("trace-presentation", response.TraceId);
         Assert.Equal(["The value is invalid."], response.Errors!["request.rawMime"]);
@@ -347,36 +347,36 @@ public sealed class MailInboxPresentationTests {
 
     [Fact]
     public void MapMailInboxPresentation_ReturnsEndpointRouteBuilder() {
-        var builder = WebApplication.CreateBuilder();
+        WebApplicationBuilder builder = WebApplication.CreateBuilder();
         builder.Services.AddControllers().AddApplicationPart(typeof(MailInboxMessagesController).Assembly);
-        using var app = builder.Build();
+        using WebApplication app = builder.Build();
 
-        var result = app.MapMailInboxPresentation();
+        IEndpointRouteBuilder result = app.MapMailInboxPresentation();
 
         Assert.Same(app, result);
     }
 
     [Fact]
     public void MailInboxHealthController_GetHealth_ReturnsOkHealthResponse() {
-        var controller = CreateHealthController(new StubSender());
+        MailInboxHealthController controller = CreateHealthController(new StubSender());
 
-        var result = controller.GetHealth();
+        IActionResult result = controller.GetHealth();
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        var response = Assert.IsType<MailInboxHealthHttpResponse>(ok.Value);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        MailInboxHealthHttpResponse response = Assert.IsType<MailInboxHealthHttpResponse>(ok.Value);
         Assert.Equal("ok", response.Status);
     }
 
     [Fact]
     public async Task MailInboxHealthController_GetReady_UsesSenderAndReturnsReadyResponse() {
-        var sender = new StubSender()
+        StubSender sender = new StubSender()
             .Register(new CheckMailInboxReadinessQuery(), Result.Success());
-        var controller = CreateHealthController(sender);
+        MailInboxHealthController controller = CreateHealthController(sender);
 
-        var result = await controller.GetReady();
+        IActionResult result = await controller.GetReady();
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        var response = Assert.IsType<MailInboxHealthHttpResponse>(ok.Value);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        MailInboxHealthHttpResponse response = Assert.IsType<MailInboxHealthHttpResponse>(ok.Value);
         Assert.Equal("ready", response.Status);
         Assert.IsType<CheckMailInboxReadinessQuery>(sender.LastRequest);
     }
@@ -391,27 +391,27 @@ public sealed class MailInboxPresentationTests {
             InboundMailMessageCategories.General,
             "Received",
             DateTimeOffset.UtcNow);
-        var sender = new StubSender()
+        StubSender sender = new StubSender()
             .Register(new GetInboundMailMessagesQuery(25), Result<IReadOnlyList<InboundMailMessageSummary>>.Success([summary]));
-        var controller = CreateMessagesController(sender);
+        MailInboxMessagesController controller = CreateMessagesController(sender);
 
-        var result = await controller.Get(25);
+        IActionResult result = await controller.Get(25);
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        var response = Assert.IsAssignableFrom<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(ok.Value);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        IReadOnlyList<InboundMailMessageSummaryHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<InboundMailMessageSummaryHttpResponse>>(ok.Value);
         Assert.Equal(summary.Id, response.Single().Id);
     }
 
     [Fact]
     public async Task MailInboxMessagesController_GetById_WhenMissing_ReturnsNotFound() {
         var id = Guid.NewGuid();
-        var sender = new StubSender()
+        StubSender sender = new StubSender()
             .Register(new GetInboundMailMessageDetailsQuery(id), Result<InboundMailMessageDetails>.Failure(MailInboxErrors.MessageNotFound(id)));
-        var controller = CreateMessagesController(sender);
+        MailInboxMessagesController controller = CreateMessagesController(sender);
 
-        var result = await controller.GetById(id);
+        IActionResult result = await controller.GetById(id);
 
-        var objectResult = Assert.IsType<ObjectResult>(result);
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
         Assert.Equal(StatusCodes.Status404NotFound, objectResult.StatusCode);
     }
 
@@ -431,14 +431,14 @@ public sealed class MailInboxPresentationTests {
             DmarcReport: null,
             "received",
             DateTimeOffset.UtcNow);
-        var sender = new StubSender()
+        StubSender sender = new StubSender()
             .Register(new GetInboundMailMessageDetailsQuery(id), Result<InboundMailMessageDetails>.Success(details));
-        var controller = CreateMessagesController(sender);
+        MailInboxMessagesController controller = CreateMessagesController(sender);
 
-        var result = await controller.GetById(id);
+        IActionResult result = await controller.GetById(id);
 
-        var ok = Assert.IsType<OkObjectResult>(result);
-        var response = Assert.IsType<InboundMailMessageDetailsHttpResponse>(ok.Value);
+        OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
+        InboundMailMessageDetailsHttpResponse response = Assert.IsType<InboundMailMessageDetailsHttpResponse>(ok.Value);
         Assert.Equal(id, response.Id);
         Assert.Equal("raw", response.RawMime);
     }

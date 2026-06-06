@@ -20,7 +20,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         };
 
     private static DateTime NormalizeInclusiveEndInstant(DateTime value) {
-        var utc = NormalizeUtcInstant(value);
+        DateTime utc = NormalizeUtcInstant(value);
         return utc.TimeOfDay == TimeSpan.Zero
             ? DateTime.SpecifyKind(utc.Date.AddDays(1).AddTicks(-1), DateTimeKind.Utc)
             : utc;
@@ -38,7 +38,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
-        var tracked = await context.Meals.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
+        Meal? tracked = await context.Meals.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Meals.Remove(tracked);
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
@@ -82,27 +82,27 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         DateTime? dateFrom,
         DateTime? dateTo,
         CancellationToken cancellationToken = default) {
-        var pageNumber = Math.Max(page, 1);
-        var pageSize = Math.Max(limit, 1);
+        int pageNumber = Math.Max(page, 1);
+        int pageSize = Math.Max(limit, 1);
 
-        var filteredQuery = context.Meals
+        IQueryable<Meal> filteredQuery = context.Meals
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
         if (dateFrom.HasValue) {
-            var from = NormalizeUtcInstant(dateFrom.Value);
+            DateTime from = NormalizeUtcInstant(dateFrom.Value);
             filteredQuery = filteredQuery.Where(m => m.Date >= from);
         }
 
         if (dateTo.HasValue) {
-            var to = NormalizeInclusiveEndInstant(dateTo.Value);
+            DateTime to = NormalizeInclusiveEndInstant(dateTo.Value);
             filteredQuery = filteredQuery.Where(m => m.Date <= to);
         }
 
-        var totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
-        var skip = (pageNumber - 1) * pageSize;
+        int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
+        int skip = (pageNumber - 1) * pageSize;
 
-        var itemsQuery = filteredQuery
+        IOrderedQueryable<Meal> itemsQuery = filteredQuery
             .AsSplitQuery()
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
@@ -115,7 +115,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .OrderByDescending(m => m.Date)
             .ThenByDescending(m => m.CreatedOnUtc);
 
-        var items = await itemsQuery
+        List<Meal> items = await itemsQuery
             .Skip(skip)
             .Take(pageSize)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -128,8 +128,8 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        var from = StartOfUtcDay(dateFrom);
-        var toExclusive = StartOfNextUtcDay(dateTo);
+        DateTime from = StartOfUtcDay(dateFrom);
+        DateTime toExclusive = StartOfNextUtcDay(dateTo);
 
         return await context.Meals
             .AsNoTracking()
@@ -153,8 +153,8 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         DateTime dateFrom,
         DateTime dateTo,
         CancellationToken cancellationToken = default) {
-        var from = StartOfUtcDay(dateFrom);
-        var toExclusive = StartOfNextUtcDay(dateTo);
+        DateTime from = StartOfUtcDay(dateFrom);
+        DateTime toExclusive = StartOfNextUtcDay(dateTo);
 
         return await context.Meals
             .AsNoTracking()
@@ -177,8 +177,8 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default) {
-        var from = StartOfUtcDay(date);
-        var toExclusive = StartOfNextUtcDay(date);
+        DateTime from = StartOfUtcDay(date);
+        DateTime toExclusive = StartOfNextUtcDay(date);
 
         return await context.Meals
             .AsNoTracking()

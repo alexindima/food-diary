@@ -19,7 +19,7 @@ public sealed class SmtpRelayDeliveryTransport(
         message.From.Add(new MailboxAddress(request.FromName, request.FromAddress));
         message.Subject = request.Subject;
 
-        foreach (var recipient in request.To) {
+        foreach (string recipient in request.To) {
             message.To.Add(MailboxAddress.Parse(recipient));
         }
 
@@ -32,7 +32,7 @@ public sealed class SmtpRelayDeliveryTransport(
         }
 
         using var client = new SmtpClient();
-        var secureSocketOptions = _options.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None;
+        SecureSocketOptions secureSocketOptions = _options.UseSsl ? SecureSocketOptions.StartTls : SecureSocketOptions.None;
         await client.ConnectAsync(_options.Host, _options.Port, secureSocketOptions, cancellationToken).ConfigureAwait(false);
 
         if (!string.IsNullOrWhiteSpace(_options.User)) {
@@ -62,7 +62,7 @@ public sealed class SmtpRelayDeliveryTransport(
             return string.Empty;
         }
 
-        var withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
+        string withoutTags = Regex.Replace(htmlBody, "<[^>]+>", " ", RegexOptions.None, HtmlToTextRegexTimeout);
         return WebUtility.HtmlDecode(withoutTags);
     }
 }

@@ -16,9 +16,9 @@ public sealed class MailRelayMessageProcessorTests {
             SuppressedRecipients = ["user@example.com"]
         };
         var transport = new RecordingTransport();
-        var processor = CreateProcessor(store, transport);
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
 
-        var result = await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
+        MailRelayProcessResult result = await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
 
         Assert.False(result.Succeeded);
         Assert.True(result.IsTerminalFailure);
@@ -30,9 +30,9 @@ public sealed class MailRelayMessageProcessorTests {
     public async Task ProcessAsync_WhenTransportSucceeds_MarksMessageSent() {
         var store = new RecordingQueueStore();
         var transport = new RecordingTransport();
-        var processor = CreateProcessor(store, transport);
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
 
-        var result = await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
+        MailRelayProcessResult result = await processor.ProcessAsync(CreateMessage(), CancellationToken.None);
 
         Assert.True(result.Succeeded);
         Assert.False(result.IsTerminalFailure);
@@ -52,9 +52,9 @@ public sealed class MailRelayMessageProcessorTests {
         var transport = new RecordingTransport {
             Exception = new InvalidOperationException("SMTP failed")
         };
-        var processor = CreateProcessor(store, transport);
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
 
-        var result = await processor.ProcessAsync(CreateMessage(attemptCount, maxAttempts), CancellationToken.None);
+        MailRelayProcessResult result = await processor.ProcessAsync(CreateMessage(attemptCount, maxAttempts), CancellationToken.None);
 
         Assert.False(result.Succeeded);
         Assert.Equal(expectedTerminalFailure, result.IsTerminalFailure);

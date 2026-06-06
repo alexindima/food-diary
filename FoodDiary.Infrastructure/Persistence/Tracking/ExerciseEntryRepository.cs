@@ -26,7 +26,7 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
         UserId userId,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        var query = asTracking
+        IQueryable<ExerciseEntry> query = asTracking
             ? context.Set<ExerciseEntry>().AsTracking()
             : context.Set<ExerciseEntry>().AsNoTracking();
 

@@ -13,9 +13,9 @@ if (command is null) {
     return 1;
 }
 
-var builder = Host.CreateApplicationBuilder(args);
+HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
-var webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.MailInbox.WebApi");
+string webApiSettingsPath = Path.Combine(Directory.GetCurrentDirectory(), "FoodDiary.MailInbox.WebApi");
 if (Directory.Exists(webApiSettingsPath)) {
     builder.Configuration
         .AddJsonFile(Path.Combine(webApiSettingsPath, "appsettings.json"), optional: true, reloadOnChange: false)
@@ -39,7 +39,7 @@ if (!string.IsNullOrWhiteSpace(command.ConnectionString)) {
     });
 }
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+string? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 if (string.IsNullOrWhiteSpace(connectionString)) {
     Console.Error.WriteLine(
         "MailInbox initializer failed: DefaultConnection is not configured. Pass --connection-string, set ConnectionStrings__DefaultConnection, set FOODDIARY_ConnectionStrings__DefaultConnection, set MAILINBOX_ConnectionStrings__DefaultConnection, or provide appsettings in FoodDiary.MailInbox.WebApi.");
@@ -51,10 +51,10 @@ builder.Services.AddSingleton<DmarcReportParser>();
 builder.Services.AddSingleton<NpgsqlInboundMailStore>();
 builder.Services.AddSingleton<IMailInboxSchemaInitializer>(sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
 
-using var host = builder.Build();
-using var scope = host.Services.CreateScope();
-var dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
-var schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
+using IHost host = builder.Build();
+using IServiceScope scope = host.Services.CreateScope();
+NpgsqlDataSource dataSource = scope.ServiceProvider.GetRequiredService<NpgsqlDataSource>();
+IMailInboxSchemaInitializer schemaInitializer = scope.ServiceProvider.GetRequiredService<IMailInboxSchemaInitializer>();
 
 try {
     await ExecuteAsync(command, dataSource, schemaInitializer).ConfigureAwait(false);
@@ -83,9 +83,9 @@ static async Task ExecuteAsync(
 }
 
 static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
-    var connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
+    NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
     await using (connection.ConfigureAwait(false)) {
-        var requiredTables = new[] {
+        string[] requiredTables = new[] {
         "mailinbox_messages"
     };
         var existingTables = new HashSet<string>(StringComparer.Ordinal);
@@ -100,7 +100,7 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
         var command = new NpgsqlCommand(sql, connection);
         await using (command.ConfigureAwait(false)) {
             command.Parameters.AddWithValue("tableNames", requiredTables);
-            using var reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
+            using NpgsqlDataReader reader = await command.ExecuteReaderAsync().ConfigureAwait(false);
             while (await reader.ReadAsync().ConfigureAwait(false)) {
                 existingTables.Add(reader.GetString(0));
             }
@@ -109,8 +109,8 @@ static async Task PrintStatusAsync(NpgsqlDataSource dataSource) {
             Console.WriteLine($"Required tables:   {requiredTables.Length}");
             Console.WriteLine($"Existing tables:   {existingTables.Count}");
 
-            foreach (var table in requiredTables) {
-                var state = existingTables.Contains(table) ? "present" : "missing";
+            foreach (string? table in requiredTables) {
+                string state = existingTables.Contains(table) ? "present" : "missing";
                 Console.WriteLine($"{state,-8} {table}");
             }
         }
@@ -146,8 +146,8 @@ namespace FoodDiary.MailInbox.Initializer {
             string? name = null;
             string? connectionString = null;
 
-            for (var index = 0; index < args.Length; index++) {
-                var argument = args[index];
+            for (int index = 0; index < args.Length; index++) {
+                string argument = args[index];
 
                 if (argument is "--connection-string" or "-c") {
                     index++;

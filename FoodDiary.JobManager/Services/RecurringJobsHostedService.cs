@@ -15,14 +15,14 @@ public sealed class RecurringJobsHostedService(
     NotificationCleanupJob notificationCleanupJob,
     UserCleanupJob userCleanupJob) : IHostedService {
     public Task StartAsync(CancellationToken cancellationToken) {
-        var settings = options.Value;
-        var billingRenewalSettings = billingRenewalOptions.Value;
-        var notificationSettings = notificationCleanupOptions.Value;
-        var userSettings = userCleanupOptions.Value;
-        var imageCron = string.IsNullOrWhiteSpace(settings.Cron) ? "0 * * * *" : settings.Cron;
-        var billingRenewalCron = string.IsNullOrWhiteSpace(billingRenewalSettings.Cron) ? "15 * * * *" : billingRenewalSettings.Cron;
-        var notificationCron = string.IsNullOrWhiteSpace(notificationSettings.Cron) ? "0 4 * * *" : notificationSettings.Cron;
-        var userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
+        ImageCleanupOptions settings = options.Value;
+        BillingRenewalOptions billingRenewalSettings = billingRenewalOptions.Value;
+        NotificationCleanupOptions notificationSettings = notificationCleanupOptions.Value;
+        UserCleanupOptions userSettings = userCleanupOptions.Value;
+        string imageCron = string.IsNullOrWhiteSpace(settings.Cron) ? "0 * * * *" : settings.Cron;
+        string billingRenewalCron = string.IsNullOrWhiteSpace(billingRenewalSettings.Cron) ? "15 * * * *" : billingRenewalSettings.Cron;
+        string notificationCron = string.IsNullOrWhiteSpace(notificationSettings.Cron) ? "0 4 * * *" : notificationSettings.Cron;
+        string userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
             () => imageCleanupJob.Execute(CancellationToken.None),

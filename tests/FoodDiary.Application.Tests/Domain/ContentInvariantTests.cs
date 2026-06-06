@@ -87,7 +87,7 @@ public class ContentInvariantTests {
 
     [Fact]
     public void NutritionLesson_Create_TruncatesLongSummary() {
-        var longSummary = new string('s', 600);
+        string longSummary = new('s', 600);
         var lesson = NutritionLesson.Create(
             "Title", "Content", longSummary, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);

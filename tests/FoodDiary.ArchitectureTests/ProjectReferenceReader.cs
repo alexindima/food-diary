@@ -18,7 +18,7 @@ internal static class ProjectReferenceReader {
             .ToArray();
 
     public static string[] ReadProjectReferences(string relativeProjectPath) {
-        var projectPath = ArchitectureTestPaths.FromRoot(
+        string projectPath = ArchitectureTestPaths.FromRoot(
             relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
         var document = XDocument.Load(projectPath);
 
@@ -40,8 +40,8 @@ internal static class ProjectReferenceReader {
         Path.GetFileNameWithoutExtension(projectPath);
 
     private static string GetProjectNameFromReference(string includeValue) {
-        var normalized = includeValue.Replace('\\', '/');
-        var fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
+        string normalized = includeValue.Replace('\\', '/');
+        string fileName = normalized.Split('/', StringSplitOptions.RemoveEmptyEntries).Last();
         return Path.GetFileNameWithoutExtension(fileName);
     }
 }

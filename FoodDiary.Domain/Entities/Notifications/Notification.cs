@@ -36,9 +36,9 @@ public sealed class Notification : AggregateRoot<NotificationId> {
             throw new ArgumentException("Notification payload is required.", nameof(payloadJson));
         }
 
-        var normalizedType = type.Trim();
-        var normalizedPayloadJson = payloadJson.Trim();
-        var normalizedReferenceId = NormalizeOptional(referenceId, ReferenceIdMaxLength, nameof(referenceId));
+        string normalizedType = type.Trim();
+        string normalizedPayloadJson = payloadJson.Trim();
+        string? normalizedReferenceId = NormalizeOptional(referenceId, ReferenceIdMaxLength, nameof(referenceId));
 
         var notification = new Notification {
             Id = NotificationId.New(),

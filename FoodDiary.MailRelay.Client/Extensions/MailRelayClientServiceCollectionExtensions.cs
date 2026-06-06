@@ -17,7 +17,7 @@ public static class MailRelayClientServiceCollectionExtensions {
             .ValidateOnStart();
 
         services.AddHttpClient<IMailRelayClient, MailRelayClient>((sp, client) => {
-            var options = sp.GetRequiredService<IOptions<MailRelayClientOptions>>().Value;
+            MailRelayClientOptions options = sp.GetRequiredService<IOptions<MailRelayClientOptions>>().Value;
             if (!string.IsNullOrWhiteSpace(options.BaseUrl)) {
                 client.BaseAddress = new Uri(options.BaseUrl, UriKind.Absolute);
             }

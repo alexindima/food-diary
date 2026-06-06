@@ -1,4 +1,6 @@
+using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,30 +11,30 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
     [RequiresDockerFact]
     public async Task DeleteOlderThanAsync_DeletesOnlyExpiredEventsWithinBatch() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"login-delete-{Guid.NewGuid():N}@example.com", "hash");
         var cutoffUtc = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
-        var oldest = CreateLoginEvent(user, cutoffUtc.AddDays(-3), "Chrome", "Windows", "Desktop");
-        var older = CreateLoginEvent(user, cutoffUtc.AddDays(-2), "Firefox", "Linux", "Desktop");
-        var fresh = CreateLoginEvent(user, cutoffUtc.AddMinutes(1), "Safari", "iOS", "Mobile");
+        UserLoginEvent oldest = CreateLoginEvent(user, cutoffUtc.AddDays(-3), "Chrome", "Windows", "Desktop");
+        UserLoginEvent older = CreateLoginEvent(user, cutoffUtc.AddDays(-2), "Firefox", "Linux", "Desktop");
+        UserLoginEvent fresh = CreateLoginEvent(user, cutoffUtc.AddMinutes(1), "Safari", "iOS", "Mobile");
         context.Users.Add(user);
         context.UserLoginEvents.AddRange(oldest, older, fresh);
         await context.SaveChangesAsync();
 
         var repository = new UserLoginEventRepository(context);
 
-        var firstDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 1);
-        var secondDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 10);
+        int firstDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 1);
+        int secondDeletedCount = await repository.DeleteOlderThanAsync(cutoffUtc, batchSize: 10);
 
         Assert.Equal(1, firstDeletedCount);
         Assert.Equal(1, secondDeletedCount);
-        var remaining = await context.UserLoginEvents.AsNoTracking().SingleAsync();
+        UserLoginEvent remaining = await context.UserLoginEvents.AsNoTracking().SingleAsync();
         Assert.Equal(fresh.Id, remaining.Id);
     }
 
     [RequiresDockerFact]
     public async Task GetPagedAsync_FiltersSearchAndReturnsUserMetadata() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var matchingUser = User.Create($"login-search-{Guid.NewGuid():N}@example.com", "hash");
         var otherUser = User.Create($"login-other-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.AddRange(matchingUser, otherUser);
@@ -43,13 +45,13 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
 
         var repository = new UserLoginEventRepository(context);
 
-        var (items, totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<UserLoginEventReadModel>? items, int totalItems) = await repository.GetPagedAsync(
             page: 1,
             limit: 10,
             userId: null,
             search: "windows");
 
-        var item = Assert.Single(items);
+        UserLoginEventReadModel item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Equal(matchingUser.Id.Value, item.UserId);
         Assert.Equal(matchingUser.Email, item.UserEmail);
@@ -59,7 +61,7 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
 
     [RequiresDockerFact]
     public async Task GetDeviceSummaryAsync_AggregatesWithinDateRange() {
-        await using var context = await databaseFixture.CreateDbContextAsync();
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"login-summary-{Guid.NewGuid():N}@example.com", "hash");
         var fromUtc = new DateTime(2030, 3, 1, 0, 0, 0, DateTimeKind.Utc);
         var toUtc = new DateTime(2030, 3, 31, 23, 59, 59, DateTimeKind.Utc);
@@ -74,9 +76,9 @@ public sealed class UserLoginEventRepositoryIntegrationTests(PostgresDatabaseFix
 
         var repository = new UserLoginEventRepository(context);
 
-        var summary = await repository.GetDeviceSummaryAsync(fromUtc, toUtc);
+        IReadOnlyList<UserLoginDeviceSummaryModel> summary = await repository.GetDeviceSummaryAsync(fromUtc, toUtc);
 
-        var desktop = Assert.Single(summary, item => string.Equals(item.Key, "device:Desktop", StringComparison.Ordinal));
+        UserLoginDeviceSummaryModel desktop = Assert.Single(summary, item => string.Equals(item.Key, "device:Desktop", StringComparison.Ordinal));
         Assert.Equal(2, desktop.Count);
         Assert.Equal(latestDesktopAtUtc, desktop.LastSeenAtUtc);
         Assert.Contains(summary, item => string.Equals(item.Key, "browser:Chrome", StringComparison.Ordinal) && item.Count == 2);

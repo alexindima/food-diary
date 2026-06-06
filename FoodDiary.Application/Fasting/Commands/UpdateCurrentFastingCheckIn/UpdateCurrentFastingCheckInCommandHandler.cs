@@ -26,19 +26,19 @@ public class UpdateCurrentFastingCheckInCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FastingSessionModel>(accessError);
         }
 
-        var current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
+        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, asTracking: true, cancellationToken).ConfigureAwait(false);
         if (current is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
 
         FastingCheckIn checkIn;
         try {
-            var checkedInAtUtc = dateTimeProvider.UtcNow;
+            DateTime checkedInAtUtc = dateTimeProvider.UtcNow;
             checkIn = FastingCheckIn.Create(
                 current.Id,
                 userId,

@@ -1,4 +1,6 @@
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -311,7 +313,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateCoreIdentity_WithClearConflicts_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentException>(() => product.UpdateCoreIdentity(barcode: "123", clearBarcode: true));
         Assert.Throws<ArgumentException>(() => product.UpdateCoreIdentity(brand: "Brand", clearBrand: true));
@@ -359,7 +361,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateCoreIdentity_WithPaddedNameAndBrand_NormalizesValues() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateCoreIdentity(name: "  Green Apple  ", brand: "  Farm  ");
 
@@ -369,7 +371,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateCoreIdentity_WithBarcode_NormalizesBarcode() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateCoreIdentity(barcode: "  123456  ");
 
@@ -403,7 +405,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateDescriptiveIdentity_WithCategoryAndDescription_NormalizesValues() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateDescriptiveIdentity(category: "  Fruit  ", description: "  Fresh apple  ");
 
@@ -440,7 +442,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateDescriptiveIdentity_WithClearConflicts_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentException>(() => product.UpdateDescriptiveIdentity(category: "Fruit", clearCategory: true));
         Assert.Throws<ArgumentException>(() => product.UpdateDescriptiveIdentity(description: "Fresh", clearDescription: true));
@@ -468,7 +470,7 @@ public class ProductInvariantTests {
     [Fact]
     public void UpdateMedia_WithNewValuesAndClears_UpdatesMediaState() {
         var imageAssetId = ImageAssetId.New();
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateMedia(imageUrl: "  https://img.example/apple.jpg  ", imageAssetId: imageAssetId);
 
@@ -505,7 +507,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateMeasurement_WithNonCanonicalBaseAmountForPcs_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             product.UpdateMeasurement(baseUnit: MeasurementUnit.Pcs, baseAmount: 2));
@@ -531,7 +533,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateMeasurement_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateMeasurement(baseAmount: 100, defaultPortionAmount: 100);
 
@@ -540,7 +542,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateMeasurement_WithDifferentDefaultPortion_SetsModifiedOnUtc() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateMeasurement(defaultPortionAmount: 150);
 
@@ -550,7 +552,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateNutrition_WithNegativeValue_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             product.UpdateNutrition(proteinsPerBase: -0.1));
@@ -558,7 +560,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateNutrition_WithPartialUpdate_PreservesOtherValues() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateNutrition(proteinsPerBase: 1.5);
 
@@ -572,7 +574,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateNutrition_WithSameValues_DoesNotSetModifiedOnUtc() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UpdateNutrition(
             caloriesPerBase: 52,
@@ -587,7 +589,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void UpdateNutrition_WithNonFiniteValue_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             product.UpdateNutrition(caloriesPerBase: double.PositiveInfinity));
@@ -595,7 +597,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void LinkAndUnlinkUsdaFood_UpdateOnlyWhenValueChanges() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.LinkToUsdaFood(123);
 
@@ -610,14 +612,14 @@ public class ProductInvariantTests {
 
     [Fact]
     public void LinkToUsdaFood_WithInvalidFdcId_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentOutOfRangeException>(() => product.LinkToUsdaFood(0));
     }
 
     [Fact]
     public void UnlinkUsdaFood_WhenNotLinked_DoesNotSetModifiedOnUtc() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.UnlinkUsdaFood();
 
@@ -626,16 +628,16 @@ public class ProductInvariantTests {
 
     [Fact]
     public void GetQualityScore_ReturnsScoreForProductNutrition() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
-        var score = product.GetQualityScore();
+        FoodQualityScore score = product.GetQualityScore();
 
         Assert.InRange(score.Score, 0, 100);
     }
 
     [Fact]
     public void UpdateMedia_WithClearImageAssetIdAndValue_Throws() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         Assert.Throws<ArgumentException>(() =>
             product.UpdateMedia(imageAssetId: ImageAssetId.New(), clearImageAssetId: true));
@@ -664,7 +666,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void ChangeVisibility_WithSameValue_DoesNotSetModifiedOnUtc() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.ChangeVisibility(Visibility.Public);
 
@@ -673,7 +675,7 @@ public class ProductInvariantTests {
 
     [Fact]
     public void ChangeVisibility_WithDifferentValue_UpdatesVisibility() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
         product.ChangeVisibility(Visibility.Private);
 
@@ -683,10 +685,10 @@ public class ProductInvariantTests {
 
     [Fact]
     public void NavigationCollections_AreExposedAsReadOnly() {
-        var product = CreateValidProduct();
+        Product product = CreateValidProduct();
 
-        var mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(product.MealItems);
-        var recipeIngredients = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.RecipeIngredient>>(product.RecipeIngredients);
+        ICollection<MealItem> mealItems = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.MealItem>>(product.MealItems);
+        ICollection<RecipeIngredient> recipeIngredients = Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.RecipeIngredient>>(product.RecipeIngredients);
 
         Assert.True(mealItems.IsReadOnly);
         Assert.True(recipeIngredients.IsReadOnly);

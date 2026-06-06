@@ -7,6 +7,7 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
@@ -27,13 +28,13 @@ public class UpdateWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel>(accessError);
         }
 
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
-        var entry = await waistEntryRepository.GetByIdAsync(
+        WaistEntry? entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,
             userId,
             asTracking: true,
@@ -43,8 +44,8 @@ public class UpdateWaistEntryCommandHandler(
             return Result.Failure<WaistEntryModel>(Errors.WaistEntry.NotFound(command.WaistEntryId));
         }
 
-        var normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
-        var existing = await waistEntryRepository.GetByDateAsync(
+        DateTime normalizedDate = UtcDateNormalizer.NormalizeDatePreservingUnspecifiedAsUtc(command.Date);
+        WaistEntry? existing = await waistEntryRepository.GetByDateAsync(
             userId,
             normalizedDate,
             cancellationToken).ConfigureAwait(false);

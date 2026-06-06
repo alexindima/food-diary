@@ -18,10 +18,10 @@ public sealed class SmtpInboundMessageStore(
         IMessageTransaction transaction,
         ReadOnlySequence<byte> buffer,
         CancellationToken cancellationToken) {
-        var rawBytes = buffer.ToArray();
-        var rawMime = Encoding.UTF8.GetString(rawBytes);
-        var message = await ParseMessageAsync(rawBytes, cancellationToken).ConfigureAwait(false);
-        var recipients = message.To.Mailboxes
+        byte[] rawBytes = buffer.ToArray();
+        string rawMime = Encoding.UTF8.GetString(rawBytes);
+        MimeMessage message = await ParseMessageAsync(rawBytes, cancellationToken).ConfigureAwait(false);
+        string[] recipients = message.To.Mailboxes
             .Select(static mailbox => mailbox.Address)
             .Where(static address => !string.IsNullOrWhiteSpace(address))
             .ToArray();
@@ -42,7 +42,7 @@ public sealed class SmtpInboundMessageStore(
             rawMime,
             DateTimeOffset.UtcNow);
 
-        var id = await store.SaveAsync(inboundMessage, cancellationToken).ConfigureAwait(false);
+        Guid id = await store.SaveAsync(inboundMessage, cancellationToken).ConfigureAwait(false);
 
         logger.LogInformation(
             "Received inbound email {MessageId}. StoredId={StoredId}; From={From}; RecipientCount={RecipientCount}",

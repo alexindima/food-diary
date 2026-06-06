@@ -10,9 +10,9 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
     : IClassFixture<ApiWebApplicationFactory> {
     [Fact]
     public async Task LogsEndpoint_WithValidTelemetryPayload_ReturnsNoContent() {
-        var client = apiFactory.CreateClient();
+        HttpClient client = apiFactory.CreateClient();
 
-        var response = await client.PostAsJsonAsync(
+        HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/logs",
             new ClientTelemetryLogHttpRequest(
                 Category: "http_request",

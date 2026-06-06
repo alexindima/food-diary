@@ -22,12 +22,12 @@ public sealed class ScheduleTestNotificationCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<ScheduledNotificationModel>(accessError);
         }
 
-        var scheduled = await notificationTestScheduler.ScheduleAsync(
+        ScheduledNotificationData scheduled = await notificationTestScheduler.ScheduleAsync(
             userId.Value,
             command.DelaySeconds,
             command.Type,

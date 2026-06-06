@@ -1,3 +1,4 @@
+using FoodDiary.MailRelay.Application.Emails.Models;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Options;
@@ -14,18 +15,18 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     [RequiresDockerFact]
     public async Task EnqueueClaimAndMarkSentAsync_UpdatesMessageLifecycle() {
         fixture.EnsureAvailable();
-        await using var dataSource = await CreateDataSourceAsync();
-        var store = CreateStore(dataSource);
-        var id = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        Guid id = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
 
-        var claimed = await store.ClaimDueBatchAsync(CancellationToken.None);
+        IReadOnlyList<QueuedEmailMessage> claimed = await store.ClaimDueBatchAsync(CancellationToken.None);
         Assert.Single(claimed);
         Assert.Equal(id, claimed[0].Id);
         Assert.Equal(1, claimed[0].AttemptCount);
 
         await store.MarkSentAsync(id, CancellationToken.None);
 
-        var details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
+        MailRelayMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
         Assert.NotNull(details);
         Assert.Equal(QueuedEmailStatus.Sent, details.Status);
         Assert.NotNull(details.SentAtUtc);
@@ -34,16 +35,16 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     [RequiresDockerFact]
     public async Task MarkFailedAttemptAsync_WhenDecisionIsRetry_StoresRetryStateAndError() {
         fixture.EnsureAvailable();
-        await using var dataSource = await CreateDataSourceAsync();
-        var store = CreateStore(dataSource);
-        var id = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
-        var message = (await store.ClaimDueBatchAsync(CancellationToken.None)).Single();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        Guid id = await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
+        QueuedEmailMessage message = (await store.ClaimDueBatchAsync(CancellationToken.None)).Single();
 
         await store.MarkFailedAttemptAsync(
             new QueuedEmailFailureDecision((QueuedEmailId)id, message.AttemptCount, QueuedEmailStatus.Retry, false, "SMTP failed"),
             CancellationToken.None);
 
-        var details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
+        MailRelayMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);
         Assert.NotNull(details);
         Assert.Equal(QueuedEmailStatus.Retry, details.Status);
         Assert.Contains("SMTP failed", details.LastError, StringComparison.Ordinal);
@@ -52,20 +53,20 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     [RequiresDockerFact]
     public async Task SuppressionsAndDeliveryEvents_AreStoredAndQueried() {
         fixture.EnsureAvailable();
-        await using var dataSource = await CreateDataSourceAsync();
-        var store = CreateStore(dataSource);
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
 
         await store.UpsertSuppressionAsync(
             new CreateSuppressionRequest("USER@Example.COM", "hard-bounce", "test"),
             CancellationToken.None);
-        var suppressions = await store.GetSuppressionsAsync("user@example.com", CancellationToken.None);
+        IReadOnlyList<MailRelaySuppressionEntry> suppressions = await store.GetSuppressionsAsync("user@example.com", CancellationToken.None);
         Assert.Single(suppressions);
         Assert.Equal("user@example.com", suppressions[0].Email);
 
-        var deliveryEvent = await store.RecordDeliveryEventAsync(
+        MailRelayDeliveryEventEntry deliveryEvent = await store.RecordDeliveryEventAsync(
             new IngestMailEventRequest("bounce", "user@example.com", "test", "hard", "provider-id", "hard-bounce"),
             CancellationToken.None);
-        var deliveryEvents = await store.GetDeliveryEventsAsync("user@example.com", CancellationToken.None);
+        IReadOnlyList<MailRelayDeliveryEventEntry> deliveryEvents = await store.GetDeliveryEventsAsync("user@example.com", CancellationToken.None);
 
         Assert.Equal("bounce", deliveryEvent.EventType);
         Assert.Single(deliveryEvents);
@@ -76,7 +77,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     private async Task<NpgsqlDataSource> CreateDataSourceAsync() {
-        var connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
+        string connectionString = await fixture.CreateIsolatedDatabaseAsync().ConfigureAwait(false);
         var dataSource = NpgsqlDataSource.Create(connectionString);
         await CreateStore(dataSource).EnsureSchemaAsync(CancellationToken.None).ConfigureAwait(false);
         return dataSource;

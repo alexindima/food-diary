@@ -31,8 +31,8 @@ public sealed class YooKassaBillingGateway(
 
         ConfigureClient();
 
-        var amount = ResolveAmount(request.Plan);
-        var paymentResponse = await SendAsync<YooKassaPayment>(
+        string amount = ResolveAmount(request.Plan);
+        Result<YooKassaPayment> paymentResponse = await SendAsync<YooKassaPayment>(
             HttpMethod.Post,
             "payments",
             new CreatePaymentRequest(
@@ -51,7 +51,7 @@ public sealed class YooKassaBillingGateway(
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);
         }
 
-        var payment = paymentResponse.Value;
+        YooKassaPayment payment = paymentResponse.Value;
         if (string.IsNullOrWhiteSpace(payment.Confirmation?.ConfirmationUrl)) {
             return Result.Failure<BillingCheckoutSessionModel>(
                 Errors.Billing.ProviderOperationFailed(Provider, "YooKassa confirmation URL is missing."));
@@ -84,8 +84,8 @@ public sealed class YooKassaBillingGateway(
 
         ConfigureClient();
 
-        var amount = ResolveAmount(request.Plan);
-        var paymentResponse = await SendAsync<YooKassaPayment>(
+        string amount = ResolveAmount(request.Plan);
+        Result<YooKassaPayment> paymentResponse = await SendAsync<YooKassaPayment>(
             HttpMethod.Post,
             "payments",
             new CreateRecurringPaymentRequest(
@@ -104,13 +104,13 @@ public sealed class YooKassaBillingGateway(
             return Result.Failure<BillingRecurringPaymentModel>(paymentResponse.Error);
         }
 
-        var payment = paymentResponse.Value;
-        var status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
+        YooKassaPayment payment = paymentResponse.Value;
+        string status = payment.Paid && string.Equals(payment.Status, "succeeded", StringComparison.OrdinalIgnoreCase)
             ? "active"
             : "past_due";
-        var periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
+        DateTime? periodStart = string.Equals(status, "active", StringComparison.Ordinal) ? request.CurrentPeriodEndUtc ?? payment.CapturedAt ?? payment.CreatedAt
             : null;
-        var periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
+        DateTime? periodEnd = ResolvePeriodEnd(periodStart, request.Plan);
 
         return Result.Success(new BillingRecurringPaymentModel(
             payment.Id,
@@ -152,12 +152,12 @@ public sealed class YooKassaBillingGateway(
             return Result.Success<BillingWebhookEventModel?>(null);
         }
 
-        var paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
+        Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
         if (paymentResult.IsFailure) {
             return Result.Failure<BillingWebhookEventModel?>(paymentResult.Error);
         }
 
-        var payment = paymentResult.Value;
+        YooKassaPayment payment = paymentResult.Value;
         if (!string.Equals(payment.Id, notification.Object.Id, StringComparison.Ordinal)) {
             return Result.Failure<BillingWebhookEventModel?>(
                 Errors.Billing.WebhookValidationFailed("YooKassa payment verification returned a different payment."));
@@ -167,14 +167,14 @@ public sealed class YooKassaBillingGateway(
     }
 
     private static BillingWebhookEventModel CreateWebhookEvent(YooKassaPayment payment) {
-        var metadata = payment.Metadata;
-        var userId = ParseUserId(ReadMetadata(metadata, "user_id"));
-        var plan = ReadMetadata(metadata, "plan");
-        var periodStart = payment.CapturedAt ?? payment.CreatedAt;
-        var periodEnd = ResolvePeriodEnd(periodStart, plan);
-        var verifiedEventType = ResolveVerifiedEventType(payment);
-        var status = MapStatus(payment);
-        var paymentMethodId = payment.PaymentMethod?.Id;
+        IReadOnlyDictionary<string, string>? metadata = payment.Metadata;
+        Guid? userId = ParseUserId(ReadMetadata(metadata, "user_id"));
+        string? plan = ReadMetadata(metadata, "plan");
+        DateTime? periodStart = payment.CapturedAt ?? payment.CreatedAt;
+        DateTime? periodEnd = ResolvePeriodEnd(periodStart, plan);
+        string verifiedEventType = ResolveVerifiedEventType(payment);
+        string status = MapStatus(payment);
+        string? paymentMethodId = payment.PaymentMethod?.Id;
 
         return new BillingWebhookEventModel(
             $"{verifiedEventType}:{payment.Id}:{payment.Status}",
@@ -217,15 +217,15 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
             request.Content = JsonContent.Create(body, options: JsonOptions);
         }
 
-        using var response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
         if (!response.IsSuccessStatusCode) {
-            var error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            string error = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
             return Result.Failure<TResponse>(Errors.Billing.ProviderOperationFailed(
                 Provider,
                 $"{(int)response.StatusCode} {response.ReasonPhrase}: {error}".Trim()));
         }
 
-        var result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
+        TResponse? result = await response.Content.ReadFromJsonAsync<TResponse>(JsonOptions, cancellationToken).ConfigureAwait(false);
         if (result is null) {
             return Result.Failure<TResponse>(
                 Errors.Billing.ProviderOperationFailed(Provider, "YooKassa returned an empty response."));
@@ -236,7 +236,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
 
     private void ConfigureClient() {
         httpClient.BaseAddress = new Uri(_options.ApiBaseUrl.TrimEnd('/') + "/", UriKind.Absolute);
-        var authBytes = Encoding.UTF8.GetBytes($"{_options.ShopId}:{_options.SecretKey}");
+        byte[] authBytes = Encoding.UTF8.GetBytes($"{_options.ShopId}:{_options.SecretKey}");
         httpClient.DefaultRequestHeaders.Authorization =
             new AuthenticationHeaderValue("Basic", Convert.ToBase64String(authBytes));
         httpClient.DefaultRequestHeaders.Accept.Clear();
@@ -289,7 +289,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
     }
 
     private static string? ReadMetadata(IReadOnlyDictionary<string, string>? metadata, string key) {
-        if (metadata is null || !metadata.TryGetValue(key, out var value) || string.IsNullOrWhiteSpace(value)) {
+        if (metadata is null || !metadata.TryGetValue(key, out string? value) || string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
@@ -297,13 +297,13 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
     }
 
     private static Guid? ParseUserId(string? value) {
-        return Guid.TryParse(value, out var parsed) && parsed != Guid.Empty
+        return Guid.TryParse(value, out Guid parsed) && parsed != Guid.Empty
             ? parsed
             : null;
     }
 
     private static decimal? ParseAmount(string? value) {
-        return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out var amount)
+        return decimal.TryParse(value, NumberStyles.Number, CultureInfo.InvariantCulture, out decimal amount)
             ? amount
             : null;
     }

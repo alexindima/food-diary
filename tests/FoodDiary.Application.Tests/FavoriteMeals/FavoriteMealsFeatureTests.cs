@@ -11,6 +11,8 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Result;
+using FoodDiary.Application.FavoriteMeals.Models;
 
 namespace FoodDiary.Application.Tests.FavoriteMeals;
 
@@ -21,7 +23,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new AddFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(null, Guid.NewGuid(), null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -32,7 +34,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new AddFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -44,7 +46,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new AddFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -61,7 +63,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new AddFavoriteMealCommandHandler(
             favRepo, new StubMealRepository(meal), new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -73,7 +75,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new RemoveFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(), new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -85,7 +87,7 @@ public class FavoriteMealsFeatureTests {
         var handler = new RemoveFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(), new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -98,7 +100,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -112,7 +114,7 @@ public class FavoriteMealsFeatureTests {
 
         var handler = new RemoveFavoriteMealCommandHandler(favRepo, new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, favorite.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -128,7 +130,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(existingByMealId: favorite),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, meal.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -142,7 +144,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(
+        Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -155,7 +157,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -167,7 +169,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(
+        Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -198,10 +200,10 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(favorites: [favorite]),
             new StubUserRepository(user));
 
-        var result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
+        Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        var model = Assert.Single(result.Value);
+        FavoriteMealModel model = Assert.Single(result.Value);
         Assert.Equal(favorite.Id.Value, model.Id);
         Assert.Equal(meal.Id.Value, model.MealId);
         Assert.Equal("Work lunch", model.Name);
@@ -220,7 +222,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
+        Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -231,7 +233,7 @@ public class FavoriteMealsFeatureTests {
             new StubFavoriteMealRepository(),
             new StubUserRepository(null));
 
-        var result = await handler.Handle(new GetFavoriteMealsQuery(null), CancellationToken.None);
+        Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

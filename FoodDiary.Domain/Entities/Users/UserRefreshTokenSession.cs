@@ -34,7 +34,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             throw new ArgumentException("User id must not be empty.", nameof(userId));
         }
 
-        var normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
         var session = new UserRefreshTokenSession {
             Id = id,
             UserId = userId,
@@ -57,7 +57,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             throw new InvalidOperationException("Revoked refresh token session cannot be rotated.");
         }
 
-        var normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
         RefreshTokenHash = NormalizeRequiredText(refreshTokenHash, nameof(refreshTokenHash), 512);
         RememberMe = rememberMe;
         LastRotatedAtUtc = normalizedNow;
@@ -69,7 +69,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             return;
         }
 
-        var normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
         RevokedAtUtc = normalizedNow;
         SetModified(normalizedNow);
     }
@@ -79,7 +79,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             throw new ArgumentException("Value is required.", paramName);
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 
@@ -88,7 +88,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
             return null;
         }
 
-        var trimmed = value.Trim();
+        string trimmed = value.Trim();
         return trimmed.Length <= maxLength ? trimmed : trimmed[..maxLength];
     }
 

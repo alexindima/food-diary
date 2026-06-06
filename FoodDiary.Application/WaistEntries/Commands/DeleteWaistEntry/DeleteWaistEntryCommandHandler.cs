@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
@@ -21,13 +22,13 @@ public class DeleteWaistEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        var accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }
 
         var waistEntryId = new WaistEntryId(command.WaistEntryId);
-        var entry = await waistEntryRepository.GetByIdAsync(
+        WaistEntry? entry = await waistEntryRepository.GetByIdAsync(
             waistEntryId,
             userId,
             asTracking: true,

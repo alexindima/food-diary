@@ -15,12 +15,12 @@ internal sealed partial class DiaryPdfGenerator {
             const double top = 18;
             const double bottom = 34;
 
-            var plotWidth = width - left - right;
-            var plotHeight = height - top - bottom;
-            var maxValue = NiceMax(values.DefaultIfEmpty(0).Max());
-            var points = BuildPoints(values, left, top, plotWidth, plotHeight, maxValue);
-            var linePath = BuildSmoothPath(points);
-            var areaPath = BuildAreaPath(points, top + plotHeight);
+            double plotWidth = width - left - right;
+            double plotHeight = height - top - bottom;
+            double maxValue = NiceMax(values.DefaultIfEmpty(0).Max());
+            IReadOnlyList<Point> points = BuildPoints(values, left, top, plotWidth, plotHeight, maxValue);
+            string linePath = BuildSmoothPath(points);
+            string areaPath = BuildAreaPath(points, top + plotHeight);
             var sb = new StringBuilder();
 
             sb.Append(CultureInfo.InvariantCulture, $"""
@@ -28,18 +28,18 @@ internal sealed partial class DiaryPdfGenerator {
                   <rect width="{width}" height="{height}" fill="{PanelBackground}"/>
                 """);
 
-            for (var tick = 0; tick <= 4; tick++) {
-                var y = top + plotHeight - plotHeight * tick / 4;
-                var value = maxValue * tick / 4;
+            for (int tick = 0; tick <= 4; tick++) {
+                double y = top + plotHeight - plotHeight * tick / 4;
+                double value = maxValue * tick / 4;
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{left - 10}" y="{y + 4}" text-anchor="end" fill="{MutedTextColor}" font-size="11" font-family="Arial">{FormatAxis(value)}</text>
                 """);
             }
 
-            var labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
-            for (var index = 0; index < labels.Count; index += labelStep) {
-                var x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
+            int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
+            for (int index = 0; index < labels.Count; index += labelStep) {
+                double x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>
@@ -51,7 +51,7 @@ internal sealed partial class DiaryPdfGenerator {
                   <path d="{linePath}" fill="none" stroke="{lineColor}" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
                 """);
 
-            foreach (var point in points) {
+            foreach (Point point in points) {
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <circle cx="{point.X}" cy="{point.Y}" r="4" fill="{PanelBackground}" stroke="{lineColor}" stroke-width="3"/>
                 """);
@@ -69,9 +69,9 @@ internal sealed partial class DiaryPdfGenerator {
             const double top = 32;
             const double bottom = 34;
 
-            var plotWidth = width - left - right;
-            var plotHeight = height - top - bottom;
-            var maxValue = NiceMax(series.SelectMany(item => item.Values).DefaultIfEmpty(0).Max());
+            double plotWidth = width - left - right;
+            double plotHeight = height - top - bottom;
+            double maxValue = NiceMax(series.SelectMany(item => item.Values).DefaultIfEmpty(0).Max());
             var sb = new StringBuilder();
 
             sb.Append(CultureInfo.InvariantCulture, $"""
@@ -79,29 +79,29 @@ internal sealed partial class DiaryPdfGenerator {
                   <rect width="{width}" height="{height}" fill="{PanelBackground}"/>
                 """);
 
-            for (var tick = 0; tick <= 4; tick++) {
-                var y = top + plotHeight - plotHeight * tick / 4;
-                var value = maxValue * tick / 4;
+            for (int tick = 0; tick <= 4; tick++) {
+                double y = top + plotHeight - plotHeight * tick / 4;
+                double value = maxValue * tick / 4;
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{left}" y1="{y}" x2="{width - right}" y2="{y}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{left - 10}" y="{y + 4}" text-anchor="end" fill="{MutedTextColor}" font-size="11" font-family="Arial">{FormatAxis(value)}</text>
                 """);
             }
 
-            var labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
-            for (var index = 0; index < labels.Count; index += labelStep) {
-                var x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
+            int labelStep = Math.Max(1, (int)Math.Ceiling(labels.Count / 8d));
+            for (int index = 0; index < labels.Count; index += labelStep) {
+                double x = labels.Count <= 1 ? left : left + plotWidth * index / (labels.Count - 1);
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <line x1="{x}" y1="{top}" x2="{x}" y2="{top + plotHeight}" stroke="{GridColor}" stroke-width="1"/>
                     <text x="{x}" y="{height - 10}" text-anchor="middle" fill="{MutedTextColor}" font-size="11" font-family="Arial">{Escape(labels[index])}</text>
                 """);
             }
 
-            for (var index = 0; index < series.Count; index++) {
-                var item = series[index];
-                var points = BuildPoints(item.Values, left, top, plotWidth, plotHeight, maxValue);
-                var linePath = BuildSmoothPath(points);
-                var legendX = left + index * 155;
+            for (int index = 0; index < series.Count; index++) {
+                ChartSeries item = series[index];
+                IReadOnlyList<Point> points = BuildPoints(item.Values, left, top, plotWidth, plotHeight, maxValue);
+                string linePath = BuildSmoothPath(points);
+                double legendX = left + index * 155;
 
                 sb.Append(CultureInfo.InvariantCulture, $"""
                     <circle cx="{legendX}" cy="14" r="5" fill="{item.Color}"/>
@@ -137,10 +137,10 @@ internal sealed partial class DiaryPdfGenerator {
             double width,
             double height,
             double padding) {
-            var maxValue = Math.Max(1, values.DefaultIfEmpty(0).Max());
-            var points = BuildPoints(values, padding, padding, width - padding * 2, height - padding * 2, maxValue);
-            var linePath = BuildSmoothPath(points);
-            var areaPath = BuildAreaPath(points, height - padding);
+            double maxValue = Math.Max(1, values.DefaultIfEmpty(0).Max());
+            IReadOnlyList<Point> points = BuildPoints(values, padding, padding, width - padding * 2, height - padding * 2, maxValue);
+            string linePath = BuildSmoothPath(points);
+            string areaPath = BuildAreaPath(points, height - padding);
 
             return $$"""
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {{width.ToString(CultureInfo.InvariantCulture)}} {{height.ToString(CultureInfo.InvariantCulture)}}" preserveAspectRatio="none">
@@ -163,8 +163,8 @@ internal sealed partial class DiaryPdfGenerator {
 
             return values
                 .Select((value, index) => {
-                    var x = values.Count <= 1 ? left + plotWidth / 2 : left + plotWidth * index / (values.Count - 1);
-                    var y = top + plotHeight - plotHeight * Math.Clamp(value, 0, maxValue) / maxValue;
+                    double x = values.Count <= 1 ? left + plotWidth / 2 : left + plotWidth * index / (values.Count - 1);
+                    double y = top + plotHeight - plotHeight * Math.Clamp(value, 0, maxValue) / maxValue;
                     return new Point(x, y);
                 })
                 .ToArray();
@@ -182,10 +182,10 @@ internal sealed partial class DiaryPdfGenerator {
             var sb = new StringBuilder();
             sb.Append(CultureInfo.InvariantCulture, $"M {points[0].X} {points[0].Y}");
 
-            for (var index = 0; index < points.Count - 1; index++) {
-                var current = points[index];
-                var next = points[index + 1];
-                var controlOffset = (next.X - current.X) / 2;
+            for (int index = 0; index < points.Count - 1; index++) {
+                Point current = points[index];
+                Point next = points[index + 1];
+                double controlOffset = (next.X - current.X) / 2;
                 sb.Append(CultureInfo.InvariantCulture, $" C {current.X + controlOffset} {current.Y}, {next.X - controlOffset} {next.Y}, {next.X} {next.Y}");
             }
 
@@ -197,9 +197,9 @@ internal sealed partial class DiaryPdfGenerator {
                 return "";
             }
 
-            var linePath = BuildSmoothPath(points);
-            var first = points[0];
-            var last = points[^1];
+            string linePath = BuildSmoothPath(points);
+            Point first = points[0];
+            Point last = points[^1];
             return FormattableString.Invariant($"{linePath} L {last.X} {baseline} L {first.X} {baseline} Z");
         }
 
@@ -208,9 +208,9 @@ internal sealed partial class DiaryPdfGenerator {
                 return 1;
             }
 
-            var magnitude = Math.Pow(10, Math.Floor(Math.Log10(value)));
-            var normalized = value / magnitude;
-            var nice = normalized <= 1
+            double magnitude = Math.Pow(10, Math.Floor(Math.Log10(value)));
+            double normalized = value / magnitude;
+            int nice = normalized <= 1
                 ? 1
                 : normalized <= 2
                     ? 2

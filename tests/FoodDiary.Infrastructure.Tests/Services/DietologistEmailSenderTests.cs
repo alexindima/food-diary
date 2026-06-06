@@ -17,8 +17,8 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_SendsEmailToRecipient() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
-        var message = CreateMessage("diet@example.com");
+        DietologistEmailSender sender = CreateSender(transport);
+        DietologistInvitationMessage message = CreateMessage("diet@example.com");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
@@ -29,8 +29,8 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_WithEnglishLocale_HasEnglishSubject() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
-        var message = CreateMessage("diet@example.com", language: "en");
+        DietologistEmailSender sender = CreateSender(transport);
+        DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
@@ -40,8 +40,8 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_WithRussianLocale_HasRussianSubject() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
-        var message = CreateMessage("diet@example.com", language: "ru");
+        DietologistEmailSender sender = CreateSender(transport);
+        DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "ru");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
@@ -51,7 +51,7 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesInvitationLink() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
+        DietologistEmailSender sender = CreateSender(transport);
         var invitationId = Guid.NewGuid();
         var message = new DietologistInvitationMessage(
             "diet@example.com", invitationId, "test-token", "John", "Doe", "en");
@@ -66,7 +66,7 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesClientName() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
+        DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "\u0410\u043b\u0435\u043a\u0441\u0435\u0439", "\u0418\u0432\u0430\u043d\u043e\u0432", "ru");
 
@@ -78,7 +78,7 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullClientName_UsesDefaultName() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
+        DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", null, null, "en");
 
@@ -90,7 +90,7 @@ public sealed class DietologistEmailSenderTests {
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullLanguage_DefaultsToEnglish() {
         var transport = new RecordingEmailTransport();
-        var sender = CreateSender(transport);
+        DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", null, null);
 
@@ -106,7 +106,7 @@ public sealed class DietologistEmailSenderTests {
             "Invite {{clientName}} to {{brand}}",
             "<p>{{clientName}}</p><a href=\"{{link}}\">{{brand}}</a>",
             "{{clientName}} {{link}} {{brand}}"));
-        var sender = CreateSender(transport, templateProvider: templateProvider);
+        DietologistEmailSender sender = CreateSender(transport, templateProvider: templateProvider);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", "Doe", "en");
 

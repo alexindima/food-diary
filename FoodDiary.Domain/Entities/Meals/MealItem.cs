@@ -25,7 +25,7 @@ public class MealItem : Entity<MealItemId> {
     internal static MealItem CreateWithProduct(MealId mealId, ProductId productId, double amount) {
         EnsureMealId(mealId);
         EnsureProductId(productId);
-        var normalizedAmount = ValidateAmount(amount, nameof(amount));
+        double normalizedAmount = ValidateAmount(amount, nameof(amount));
 
         var item = new MealItem {
             Id = MealItemId.New(),
@@ -41,7 +41,7 @@ public class MealItem : Entity<MealItemId> {
     internal static MealItem CreateWithRecipe(MealId mealId, RecipeId recipeId, double servings) {
         EnsureMealId(mealId);
         EnsureRecipeId(recipeId);
-        var normalizedServings = ValidateAmount(servings, nameof(servings));
+        double normalizedServings = ValidateAmount(servings, nameof(servings));
 
         var item = new MealItem {
             Id = MealItemId.New(),
@@ -55,7 +55,7 @@ public class MealItem : Entity<MealItemId> {
     }
 
     public void UpdateAmount(double amount) {
-        var normalizedAmount = ValidateAmount(amount, nameof(amount));
+        double normalizedAmount = ValidateAmount(amount, nameof(amount));
         if (Math.Abs(Amount - normalizedAmount) <= ComparisonEpsilon) {
             return;
         }

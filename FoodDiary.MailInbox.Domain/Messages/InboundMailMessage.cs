@@ -49,7 +49,7 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
             throw new ArgumentException("Raw MIME content is required.", nameof(rawMime));
         }
 
-        var normalizedReceivedAtUtc = receivedAtUtc.ToUniversalTime();
+        DateTimeOffset normalizedReceivedAtUtc = receivedAtUtc.ToUniversalTime();
         var message = new InboundMailMessage(InboundMailMessageId.New()) {
             MessageId = NullIfWhiteSpace(messageId),
             FromAddress = NullIfWhiteSpace(fromAddress),

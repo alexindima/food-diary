@@ -8,7 +8,7 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRepository {
     public async Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
-        var query = asTracking
+        IQueryable<FastingPlan> query = asTracking
             ? context.FastingPlans.AsQueryable()
             : context.FastingPlans.AsNoTracking();
 
@@ -32,7 +32,7 @@ public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRep
         FastingPlanType? type = null,
         FastingPlanStatus? status = null,
         CancellationToken cancellationToken = default) {
-        var query = context.FastingPlans
+        IQueryable<FastingPlan> query = context.FastingPlans
             .AsNoTracking()
             .Where(plan => plan.UserId == userId);
 
