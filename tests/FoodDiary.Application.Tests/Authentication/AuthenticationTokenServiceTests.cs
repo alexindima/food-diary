@@ -3,8 +3,8 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Services;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -17,8 +17,9 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
         var loginEvents = new InMemoryUserLoginEventRepository();
+        var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(repository, loginEvents, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, loginEvents, sessions, jwt, new StubDateTimeProvider());
 
         var result = await service.IssueAndStoreAsync(user, CancellationToken.None);
 
@@ -26,8 +27,9 @@ public class AuthenticationTokenServiceTests {
         Assert.Equal("refresh-token", result.RefreshToken);
         Assert.Equal(
             $"sha256:{SecurityTokenGenerator.NormalizeForSecureHashing("refresh-token")}",
-            user.RefreshToken);
+            Assert.Single(sessions.Items).RefreshTokenHash);
         Assert.True(repository.Updated);
+        Assert.Equal(new StubDateTimeProvider().UtcNow, user.LastLoginAtUtc);
         Assert.Empty(loginEvents.Items);
     }
 
@@ -36,8 +38,9 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com");
         var repository = new InMemoryUserRepository(user);
         var loginEvents = new InMemoryUserLoginEventRepository();
+        var sessions = new InMemoryRefreshTokenSessionRepository();
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(repository, loginEvents, jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(repository, loginEvents, sessions, jwt, new StubDateTimeProvider());
 
         await service.IssueAndStoreAsync(
             user,
@@ -61,7 +64,12 @@ public class AuthenticationTokenServiceTests {
         var user = CreateUser("user@example.com", "Admin", "Support");
         var repository = new InMemoryUserRepository(user);
         var jwt = new FakeJwtTokenGenerator();
-        var service = new AuthenticationTokenService(repository, new InMemoryUserLoginEventRepository(), jwt, new StubDateTimeProvider());
+        var service = new AuthenticationTokenService(
+            repository,
+            new InMemoryUserLoginEventRepository(),
+            new InMemoryRefreshTokenSessionRepository(),
+            jwt,
+            new StubDateTimeProvider());
 
         var token = service.IssueAccessToken(user);
 
@@ -82,6 +90,7 @@ public class AuthenticationTokenServiceTests {
         var service = new AuthenticationTokenService(
             repository,
             new InMemoryUserLoginEventRepository(),
+            new InMemoryRefreshTokenSessionRepository(),
             jwt,
             new StubDateTimeProvider(now));
 
@@ -164,11 +173,34 @@ public class AuthenticationTokenServiceTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class InMemoryRefreshTokenSessionRepository : IRefreshTokenSessionRepository {
+        public List<UserRefreshTokenSession> Items { get; } = [];
+
+        public Task<UserRefreshTokenSession?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default) =>
+            Task.FromResult<UserRefreshTokenSession?>(Items.FirstOrDefault(item => item.Id == id));
+
+        public Task<IReadOnlyList<UserRefreshTokenSession>> GetActiveByUserIdAsync(
+            UserId userId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<UserRefreshTokenSession>>(
+                Items.Where(item => item.UserId == userId && item.IsActive).ToList());
+
+        public Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
+            Items.Add(session);
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class FakeJwtTokenGenerator : IJwtTokenGenerator {
         public UserId LastAccessUserId { get; private set; }
         public string LastAccessEmail { get; private set; } = string.Empty;
         public IReadOnlyCollection<string> LastAccessRoles { get; private set; } = [];
         public DateTime? LastAccessExpiresAtUtc { get; private set; }
+        public bool LastRefreshRememberMe { get; private set; }
 
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) {
             LastAccessUserId = userId;
@@ -201,11 +233,17 @@ public class AuthenticationTokenServiceTests {
             return "impersonation-access-token";
         }
 
-        public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) {
+        public string GenerateRefreshToken(
+            UserId userId,
+            string email,
+            IReadOnlyCollection<string> roles,
+            bool rememberMe = false,
+            Guid? refreshSessionId = null) {
+            LastRefreshRememberMe = rememberMe;
             return "refresh-token";
         }
 
-        public (UserId userId, string email)? ValidateToken(string token) => null;
+        public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
     }
 
     [ExcludeFromCodeCoverage]

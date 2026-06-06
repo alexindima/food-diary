@@ -28,6 +28,7 @@ public sealed class TestAuthApiWebApplicationFactory : WebApplicationFactory<Pro
                 ["Jwt:Audience"] = "fooddiary-tests",
                 ["Jwt:ExpirationMinutes"] = "60",
                 ["Jwt:RefreshTokenExpirationDays"] = "30",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
                 ["S3:AccessKeyId"] = "test-access-key",
                 ["S3:SecretAccessKey"] = "test-secret-key",
                 ["S3:Region"] = "us-east-1",

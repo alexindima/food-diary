@@ -7,6 +7,8 @@ public interface IAuthenticationTokenService {
     Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
         User user,
         CancellationToken cancellationToken,
-        AuthenticationClientContext? clientContext = null);
+        AuthenticationClientContext? clientContext = null,
+        bool rememberMe = false,
+        Guid? refreshSessionId = null);
     string IssueAccessToken(User user);
 }

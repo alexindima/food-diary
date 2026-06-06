@@ -122,6 +122,8 @@ public static class DependencyInjection {
                 $"{JwtOptions.SectionName}:ExpirationMinutes must be greater than zero.")
             .Validate(static options => options.RefreshTokenExpirationDays > 0,
                 $"{JwtOptions.SectionName}:RefreshTokenExpirationDays must be greater than zero.")
+            .Validate(static options => options.RememberMeRefreshTokenExpirationDays > 0,
+                $"{JwtOptions.SectionName}:RememberMeRefreshTokenExpirationDays must be greater than zero.")
             .ValidateOnStart();
         services.AddOptions<EmailOptions>()
             .Bind(configuration.GetSection(EmailOptions.SectionName))
@@ -138,6 +140,7 @@ public static class DependencyInjection {
 
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
+        services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();
         services.AddScoped<IBillingSubscriptionRepository, BillingSubscriptionRepository>();
         services.AddScoped<IBillingPaymentRepository, BillingPaymentRepository>();
         services.AddScoped<IBillingWebhookEventRepository, BillingWebhookEventRepository>();

@@ -14,6 +14,11 @@ public interface IJwtTokenGenerator {
         string email,
         IReadOnlyCollection<string> roles,
         JwtImpersonationContext impersonation);
-    string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles);
-    (UserId userId, string email)? ValidateToken(string token);
+    string GenerateRefreshToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        bool rememberMe = false,
+        Guid? refreshSessionId = null);
+    (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token);
 }

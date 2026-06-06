@@ -21,6 +21,7 @@ public sealed class JwtTokenGeneratorTests {
         Assert.NotNull(validated);
         Assert.Equal(userId, validated.Value.userId);
         Assert.Equal(email, validated.Value.email);
+        Assert.False(validated.Value.rememberMe);
     }
 
     [Fact]
@@ -42,6 +43,21 @@ public sealed class JwtTokenGeneratorTests {
 
         Assert.NotNull(validated);
         Assert.Equal(userId, validated.Value.userId);
+    }
+
+    [Fact]
+    public void GenerateRefreshToken_WithRememberMe_UsesPersistentLifetimeAndClaim() {
+        var now = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
+        var generator = new JwtTokenGenerator(CreateOptions(refreshDays: 30, rememberMeRefreshDays: 90), new StubDateTimeProvider(now));
+        var userId = UserId.New();
+
+        var token = generator.GenerateRefreshToken(userId, "remember@example.com", [], rememberMe: true);
+        var jwt = new JwtSecurityTokenHandler().ReadJwtToken(token);
+        var validated = generator.ValidateToken(token);
+
+        Assert.Equal(now.AddDays(90), jwt.ValidTo);
+        Assert.NotNull(validated);
+        Assert.True(validated.Value.rememberMe);
     }
 
     [Fact]
@@ -76,12 +92,14 @@ public sealed class JwtTokenGeneratorTests {
             SecretKey = secretKey,
             ExpirationMinutes = 60,
             RefreshTokenExpirationDays = 7,
+            RememberMeRefreshTokenExpirationDays = 90,
         }));
     }
 
     private static IOptions<JwtOptions> CreateOptions(
         int expirationMinutes = 60,
         int refreshDays = 7,
+        int rememberMeRefreshDays = 90,
         bool includeSecret = true) {
         return Microsoft.Extensions.Options.Options.Create(new JwtOptions {
             Issuer = "FoodDiary",
@@ -89,6 +107,7 @@ public sealed class JwtTokenGeneratorTests {
             SecretKey = includeSecret ? "super-secret-key-for-tests-only-123456789" : string.Empty,
             ExpirationMinutes = expirationMinutes,
             RefreshTokenExpirationDays = refreshDays,
+            RememberMeRefreshTokenExpirationDays = rememberMeRefreshDays,
         });
     }
 

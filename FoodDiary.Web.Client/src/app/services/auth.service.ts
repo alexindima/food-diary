@@ -130,7 +130,7 @@ export class AuthService extends ApiService {
         const loginData = {
             email: data.email,
             password: data.password,
-            rememberMe: undefined,
+            rememberMe: data.rememberMe,
         };
         return this.post<AuthResponse>('login', loginData).pipe(
             tap(response => {
@@ -170,7 +170,11 @@ export class AuthService extends ApiService {
     }
 
     public restoreAccount(data: RestoreAccountRequest, rememberMe = false): Observable<AuthResponse> {
-        return this.post<AuthResponse>('restore', data).pipe(
+        return this.post<AuthResponse>('restore', {
+            email: data.email,
+            password: data.password,
+            rememberMe,
+        }).pipe(
             tap(response => {
                 this.onLogin(response, rememberMe);
             }),

@@ -1472,8 +1472,13 @@ public class AdminFeatureTests {
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "access-token";
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, DateTime? expiresAtUtc) => "access-token";
         public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles, JwtImpersonationContext impersonation) => "impersonation-token";
-        public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) => "refresh-token";
-        public (UserId userId, string email)? ValidateToken(string token) => null;
+        public string GenerateRefreshToken(
+            UserId userId,
+            string email,
+            IReadOnlyCollection<string> roles,
+            bool rememberMe = false,
+            Guid? refreshSessionId = null) => "refresh-token";
+        public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) => null;
     }
 
     [ExcludeFromCodeCoverage]

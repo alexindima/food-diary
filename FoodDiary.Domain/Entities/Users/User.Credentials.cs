@@ -26,6 +26,13 @@ public sealed partial class User {
         SetModified(effectiveChangedAtUtc);
     }
 
+    public void RecordAuthenticationActivity(DateTime occurredAtUtc) {
+        EnsureNotDeleted();
+        var normalizedOccurredAtUtc = NormalizeUtcTimestamp(occurredAtUtc, nameof(occurredAtUtc));
+        ApplySecurityState(GetSecurityState().WithAuthenticationActivity(normalizedOccurredAtUtc));
+        SetModified(normalizedOccurredAtUtc);
+    }
+
     public void UpdatePassword(string hashedPassword) {
         EnsureNotDeleted();
         ApplySecurityState(GetSecurityState().WithPassword(NormalizeRequiredPasswordHash(hashedPassword)));

@@ -41,6 +41,12 @@ public readonly record struct UserSecurityState(
         };
     }
 
+    public UserSecurityState WithAuthenticationActivity(DateTime nowUtc) {
+        return this with {
+            LastLoginAtUtc = nowUtc
+        };
+    }
+
     public UserSecurityState WithEmailConfirmationToken(string tokenHash, DateTime expiresAtUtc, DateTime nowUtc) {
         return this with {
             EmailConfirmationTokenHash = tokenHash,

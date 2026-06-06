@@ -44,6 +44,7 @@ public sealed class WearableOAuthStateServiceTests {
                 Audience = "FoodDiaryClients",
                 ExpirationMinutes = 60,
                 RefreshTokenExpirationDays = 7,
+                RememberMeRefreshTokenExpirationDays = 90,
             }),
             new StubDateTimeProvider(utcNow ?? new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc)));
 

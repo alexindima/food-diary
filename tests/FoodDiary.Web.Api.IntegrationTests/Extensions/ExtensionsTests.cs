@@ -183,6 +183,7 @@ public sealed class ExtensionsTests {
             ["Jwt:Audience"] = "FoodDiaryClient",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["TelegramBot:ApiSecret"] = "",
             ["Cors:Origins:0"] = "http://localhost:4200",
         });

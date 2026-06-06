@@ -21,6 +21,9 @@ public sealed class JwtOptions {
     [Range(1, int.MaxValue)]
     public int RefreshTokenExpirationDays { get; init; }
 
+    [Range(1, int.MaxValue)]
+    public int RememberMeRefreshTokenExpirationDays { get; init; }
+
     public static bool HasValidSecretKey(JwtOptions options) {
         var value = options.SecretKey.Trim();
         return value.Length >= 32 &&
@@ -36,4 +39,7 @@ public sealed class JwtOptions {
     public static bool HasValidExpirationMinutes(JwtOptions options) => options.ExpirationMinutes > 0;
 
     public static bool HasValidRefreshTokenExpirationDays(JwtOptions options) => options.RefreshTokenExpirationDays > 0;
+
+    public static bool HasValidRememberMeRefreshTokenExpirationDays(JwtOptions options) =>
+        options.RememberMeRefreshTokenExpirationDays > 0;
 }

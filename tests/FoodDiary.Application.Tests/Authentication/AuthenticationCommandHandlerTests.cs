@@ -1058,7 +1058,9 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
             User user,
             CancellationToken cancellationToken,
-            AuthenticationClientContext? clientContext = null) {
+            AuthenticationClientContext? clientContext = null,
+            bool rememberMe = false,
+            Guid? refreshSessionId = null) {
             LastUser = user;
             return Task.FromResult(new IssuedAuthenticationTokens("access", "refresh"));
         }

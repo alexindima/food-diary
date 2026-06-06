@@ -17,6 +17,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly SymmetricSecurityKey _signingKey;
     private readonly int _accessTokenExpirationMinutes;
     private readonly int _refreshTokenExpirationMinutes;
+    private readonly int _rememberMeRefreshTokenExpirationMinutes;
 
     public JwtTokenGenerator(IOptions<JwtOptions> options, IDateTimeProvider dateTimeProvider) {
         var jwtOptions = options.Value;
@@ -41,6 +42,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         _accessTokenExpirationMinutes = jwtOptions.ExpirationMinutes > 0 ? jwtOptions.ExpirationMinutes : 60;
         var refreshDays = jwtOptions.RefreshTokenExpirationDays > 0 ? jwtOptions.RefreshTokenExpirationDays : 7;
         _refreshTokenExpirationMinutes = refreshDays * 1440;
+        var rememberMeRefreshDays = jwtOptions.RememberMeRefreshTokenExpirationDays > 0
+            ? jwtOptions.RememberMeRefreshTokenExpirationDays
+            : 90;
+        _rememberMeRefreshTokenExpirationMinutes = rememberMeRefreshDays * 1440;
     }
 
     public string GenerateAccessToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
@@ -60,10 +65,23 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         JwtImpersonationContext impersonation) =>
         GenerateToken(userId, email, roles, _accessTokenExpirationMinutes, expiresAtUtc: null, impersonation);
 
-    public string GenerateRefreshToken(UserId userId, string email, IReadOnlyCollection<string> roles) =>
-        GenerateToken(userId, email, roles, _refreshTokenExpirationMinutes, expiresAtUtc: null, impersonation: null);
+    public string GenerateRefreshToken(
+        UserId userId,
+        string email,
+        IReadOnlyCollection<string> roles,
+        bool rememberMe = false,
+        Guid? refreshSessionId = null) =>
+        GenerateToken(
+            userId,
+            email,
+            roles,
+            rememberMe ? _rememberMeRefreshTokenExpirationMinutes : _refreshTokenExpirationMinutes,
+            expiresAtUtc: null,
+            impersonation: null,
+            rememberMe,
+            refreshSessionId);
 
-    public (UserId userId, string email)? ValidateToken(string token) {
+    public (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? ValidateToken(string token) {
         try {
             var tokenHandler = new JwtSecurityTokenHandler();
             tokenHandler.ValidateToken(token, new TokenValidationParameters {
@@ -80,8 +98,16 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             var jwtToken = (JwtSecurityToken)validatedToken;
             var userIdValue = Guid.Parse(jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.NameIdentifier, StringComparison.Ordinal)).Value);
             var email = jwtToken.Claims.First(x => string.Equals(x.Type, ClaimTypes.Email, StringComparison.Ordinal)).Value;
+            var rememberMe = jwtToken.Claims.Any(static x =>
+                string.Equals(x.Type, JwtClaimNames.RememberMe, StringComparison.Ordinal) &&
+                string.Equals(x.Value, "true", StringComparison.OrdinalIgnoreCase));
+            var refreshSessionIdClaim = jwtToken.Claims.FirstOrDefault(static x =>
+                string.Equals(x.Type, JwtClaimNames.RefreshSessionId, StringComparison.Ordinal))?.Value;
+            var refreshSessionId = Guid.TryParse(refreshSessionIdClaim, out var parsedRefreshSessionId)
+                ? parsedRefreshSessionId
+                : (Guid?)null;
 
-            return (new UserId(userIdValue), email);
+            return (new UserId(userIdValue), email, rememberMe, refreshSessionId);
         } catch (Exception ex) when (ex is SecurityTokenException or ArgumentException or FormatException or InvalidOperationException) {
             return null;
         }
@@ -93,7 +119,9 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
         IReadOnlyCollection<string> roles,
         int expirationMinutes,
         DateTime? expiresAtUtc,
-        JwtImpersonationContext? impersonation) {
+        JwtImpersonationContext? impersonation,
+        bool rememberMe = false,
+        Guid? refreshSessionId = null) {
         var credentials = new SigningCredentials(_signingKey, SecurityAlgorithms.HmacSha256);
 
         var claims = new List<Claim> {
@@ -106,6 +134,14 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             claims.Add(new Claim(JwtImpersonationClaimNames.IsImpersonation, "true"));
             claims.Add(new Claim(JwtImpersonationClaimNames.ActorUserId, impersonation.ActorUserId.Value.ToString()));
             claims.Add(new Claim(JwtImpersonationClaimNames.Reason, impersonation.Reason));
+        }
+
+        if (rememberMe) {
+            claims.Add(new Claim(JwtClaimNames.RememberMe, "true"));
+        }
+
+        if (refreshSessionId.HasValue) {
+            claims.Add(new Claim(JwtClaimNames.RefreshSessionId, refreshSessionId.Value.ToString()));
         }
 
         foreach (var role in roles) {
@@ -125,5 +161,10 @@ public class JwtTokenGenerator : IJwtTokenGenerator {
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private static class JwtClaimNames {
+        public const string RememberMe = "remember_me";
+        public const string RefreshSessionId = "refresh_session_id";
     }
 }

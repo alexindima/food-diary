@@ -8,5 +8,6 @@ namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
 public record RestoreAccountCommand(
     string Email,
     string Password,
+    bool RememberMe = false,
     AuthenticationClientContext? ClientContext = null
 ) : ICommand<Result<AuthenticationModel>>;

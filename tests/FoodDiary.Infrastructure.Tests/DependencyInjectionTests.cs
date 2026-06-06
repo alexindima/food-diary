@@ -27,6 +27,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["Email:FrontendBaseUrl"] = "not-a-url"
         });
 
@@ -47,6 +48,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["Email:FrontendBaseUrl"] = "https://fooddiary.club",
             ["Email:AllowedFrontendBaseUrls:0"] = "not-a-url"
         });
@@ -68,6 +70,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["MailRelayClient:BaseUrl"] = "not-a-url"
         });
 
@@ -88,6 +91,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["S3:ServiceUrl"] = "invalid-url"
         });
 
@@ -107,7 +111,8 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Issuer"] = "FoodDiary",
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
-            ["Jwt:RefreshTokenExpirationDays"] = "7"
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90"
         });
 
         services.AddInfrastructure(configuration);
@@ -127,7 +132,8 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Issuer"] = "FoodDiary",
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
-            ["Jwt:RefreshTokenExpirationDays"] = "7"
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90"
         });
 
         services.AddSingleton<IDiaryPdfReportTextProvider, TestDiaryPdfReportTextProvider>();
@@ -149,6 +155,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["Database:EnableRetries"] = "true",
             ["Database:MaxRetryCount"] = "0"
         });
@@ -170,6 +177,7 @@ public sealed class DependencyInjectionTests {
             ["Jwt:Audience"] = "FoodDiaryClients",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["Database:EnableRetries"] = "true",
             ["Database:MaxRetryCount"] = "4",
             ["Database:MaxRetryDelaySeconds"] = "7"

@@ -40,36 +40,43 @@ public static class AuthHttpMappings {
     public static RestoreAccountCommand ToCommand(this RestoreAccountHttpRequest request) {
         return new RestoreAccountCommand(
             Email: request.Email,
-            Password: request.Password);
+            Password: request.Password,
+            RememberMe: request.RememberMe);
     }
 
     public static RestoreAccountCommand ToCommand(this RestoreAccountHttpRequest request, HttpContext httpContext) {
         return new RestoreAccountCommand(
             Email: request.Email,
             Password: request.Password,
+            RememberMe: request.RememberMe,
             ClientContext: httpContext.ToAuthenticationClientContext("password-restore"));
     }
 
     public static LoginCommand ToCommand(this LoginHttpRequest request) {
         return new LoginCommand(
             Email: request.Email,
-            Password: request.Password);
+            Password: request.Password,
+            RememberMe: request.RememberMe);
     }
 
     public static LoginCommand ToCommand(this LoginHttpRequest request, HttpContext httpContext) {
         return new LoginCommand(
             Email: request.Email,
             Password: request.Password,
+            RememberMe: request.RememberMe,
             ClientContext: httpContext.ToAuthenticationClientContext("password"));
     }
 
     public static GoogleLoginCommand ToCommand(this GoogleLoginHttpRequest request) {
-        return new GoogleLoginCommand(Credential: request.Credential);
+        return new GoogleLoginCommand(
+            Credential: request.Credential,
+            RememberMe: request.RememberMe);
     }
 
     public static GoogleLoginCommand ToCommand(this GoogleLoginHttpRequest request, HttpContext httpContext) {
         return new GoogleLoginCommand(
             Credential: request.Credential,
+            RememberMe: request.RememberMe,
             ClientContext: httpContext.ToAuthenticationClientContext("google"));
     }
 

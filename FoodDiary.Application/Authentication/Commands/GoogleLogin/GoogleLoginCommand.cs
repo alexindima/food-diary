@@ -7,4 +7,5 @@ namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed record GoogleLoginCommand(
     string Credential,
+    bool RememberMe = false,
     AuthenticationClientContext? ClientContext = null) : ICommand<Result<AuthenticationModel>>;

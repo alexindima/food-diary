@@ -34,7 +34,9 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand, Result<Authenti
             return Result.Failure<AuthenticationModel>(accessError);
         }
 
-        var tokens = await _authenticationTokenService.IssueAndStoreAsync(user, cancellationToken, command.ClientContext).ConfigureAwait(false);
+        var tokens = await _authenticationTokenService
+            .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
+            .ConfigureAwait(false);
         return Result.Success(user.ToAuthenticationModel(tokens));
     }
 }

@@ -59,6 +59,7 @@ public sealed class OpenTelemetryConfigurationTests {
             ["Jwt:Audience"] = "FoodDiaryClient",
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
             ["TelegramBot:ApiSecret"] = "",
             ["OpenTelemetry:Otlp:Endpoint"] = otlpEndpoint,
         };

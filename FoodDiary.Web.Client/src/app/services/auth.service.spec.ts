@@ -135,6 +135,11 @@ describe('login', () => {
 
         const req = httpMock.expectOne(`${authBaseUrl}/login`);
         expect(req.request.method).toBe('POST');
+        expect(req.request.body).toEqual({
+            email: 'test@example.com',
+            password: 'password123',
+            rememberMe: true,
+        });
         req.flush(loginAuthResponse);
     });
 
