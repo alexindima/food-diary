@@ -35,12 +35,12 @@ public sealed class InboundMailMessageTests {
     [Fact]
     public void Archive_WhenMessageIsReceived_ChangesStatus() {
         var message = InboundMailMessage.Receive(
-            null,
-            null,
+            messageId: null,
+            fromAddress: null,
             ["admin@fooddiary.club"],
-            null,
-            null,
-            null,
+            subject: null,
+            textBody: null,
+            htmlBody: null,
             "raw",
             DateTimeOffset.UtcNow);
 
@@ -66,12 +66,12 @@ public sealed class InboundMailMessageTests {
     [Fact]
     public void Receive_WhenRecipientsAreEmpty_Throws() {
         Assert.Throws<ArgumentException>(() => InboundMailMessage.Receive(
-            null,
-            null,
+            messageId: null,
+            fromAddress: null,
             [],
-            null,
-            null,
-            null,
+            subject: null,
+            textBody: null,
+            htmlBody: null,
             "raw",
             DateTimeOffset.UtcNow));
     }
@@ -79,12 +79,12 @@ public sealed class InboundMailMessageTests {
     [Fact]
     public void Receive_WhenRecipientIsWhiteSpace_Throws() {
         Assert.Throws<ArgumentException>(() => InboundMailMessage.Receive(
-            null,
-            null,
+            messageId: null,
+            fromAddress: null,
             [" "],
-            null,
-            null,
-            null,
+            subject: null,
+            textBody: null,
+            htmlBody: null,
             "raw",
             DateTimeOffset.UtcNow));
     }
@@ -92,12 +92,12 @@ public sealed class InboundMailMessageTests {
     [Fact]
     public void Receive_WhenRawMimeIsWhiteSpace_Throws() {
         Assert.Throws<ArgumentException>(() => InboundMailMessage.Receive(
-            null,
-            null,
+            messageId: null,
+            fromAddress: null,
             ["admin@fooddiary.club"],
-            null,
-            null,
-            null,
+            subject: null,
+            textBody: null,
+            htmlBody: null,
             " ",
             DateTimeOffset.UtcNow));
     }
@@ -111,8 +111,8 @@ public sealed class InboundMailMessageTests {
             " ",
             ["admin@fooddiary.club"],
             " ",
-            null,
-            null,
+            textBody: null,
+            htmlBody: null,
             "raw",
             receivedAt);
 
@@ -183,7 +183,7 @@ public sealed class InboundMailMessageTests {
         Assert.False(first != second);
         Assert.False(first.Equals(different));
         Assert.False(first.Equals(otherType));
-        Assert.False(first.Equals(null));
+        Assert.False(first.Equals(other: null));
         Assert.False(first.Equals(new object()));
         Assert.Equal(first.GetHashCode(), second.GetHashCode());
     }
@@ -218,7 +218,7 @@ public sealed class InboundMailMessageTests {
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, id);
         entityType.GetField(
             "_cachedHashCode",
-            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, null);
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!.SetValue(entity, value: null);
 
         int hashCode = entity.GetHashCode();
 
@@ -306,12 +306,12 @@ public sealed class InboundMailMessageTests {
 
     private static InboundMailMessage CreateMessage() =>
         InboundMailMessage.Receive(
-            null,
-            null,
+            messageId: null,
+            fromAddress: null,
             ["admin@fooddiary.club"],
-            null,
-            null,
-            null,
+            subject: null,
+            textBody: null,
+            htmlBody: null,
             "raw",
             DateTimeOffset.UtcNow);
 

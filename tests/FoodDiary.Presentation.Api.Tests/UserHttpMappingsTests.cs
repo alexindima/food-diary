@@ -191,7 +191,7 @@ public sealed class UserHttpMappingsTests {
         var relationshipId = Guid.NewGuid();
         var dietologistUserId = Guid.NewGuid();
         var model = new ProfileOverviewModel(
-            CreateUserModel(userId, null, null, null, null),
+            CreateUserModel(userId, profileImageAssetId: null, birthDate: null, lastLoginAtUtc: null, aiConsentAcceptedAt: null),
             new NotificationPreferencesModel(
                 PushNotificationsEnabled: true,
                 FastingPushNotificationsEnabled: false,

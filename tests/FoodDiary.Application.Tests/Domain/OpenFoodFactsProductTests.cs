@@ -83,14 +83,14 @@ public sealed class OpenFoodFactsProductTests {
         var product = OpenFoodFactsProduct.Create(
             "4600000000001",
             "Milk",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            brand: null,
+            category: null,
+            imageUrl: null,
+            caloriesPer100G: null,
+            proteinsPer100G: null,
+            fatsPer100G: null,
+            carbsPer100G: null,
+            fiberPer100G: null,
             DateTime.UtcNow.AddDays(-1));
         DateTime seenAt = DateTime.UtcNow;
 
@@ -105,7 +105,7 @@ public sealed class OpenFoodFactsProductTests {
     [InlineData(" ")]
     public void Create_WithMissingBarcode_Throws(string barcode) {
         Assert.Throws<ArgumentException>(() =>
-            OpenFoodFactsProduct.Create(barcode, "Milk", null, null, null, null, null, null, null, null, DateTime.UtcNow));
+            OpenFoodFactsProduct.Create(barcode, "Milk", brand: null, category: null, imageUrl: null, caloriesPer100G: null, proteinsPer100G: null, fatsPer100G: null, carbsPer100G: null, fiberPer100G: null, DateTime.UtcNow));
     }
 
     [Theory]
@@ -113,6 +113,6 @@ public sealed class OpenFoodFactsProductTests {
     [InlineData(" ")]
     public void Create_WithMissingName_Throws(string name) {
         Assert.Throws<ArgumentException>(() =>
-            OpenFoodFactsProduct.Create("4600000000001", name, null, null, null, null, null, null, null, null, DateTime.UtcNow));
+            OpenFoodFactsProduct.Create("4600000000001", name, brand: null, category: null, imageUrl: null, caloriesPer100G: null, proteinsPer100G: null, fatsPer100G: null, carbsPer100G: null, fiberPer100G: null, DateTime.UtcNow));
     }
 }

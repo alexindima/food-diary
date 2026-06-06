@@ -68,7 +68,7 @@ public sealed class MailRelayDomainTests {
             ["user@example.com"],
             "Subject",
             "<p>Body</p>",
-            null,
+            TextBody: null,
             "correlation",
             attemptCount,
             maxAttempts));
@@ -129,7 +129,7 @@ public sealed class MailRelayDomainTests {
         var entity = new TestEntity(id);
 
         Assert.True(entity.Equals((object)entity));
-        Assert.False(entity.Equals(null));
+        Assert.False(entity.Equals(other: null));
         Assert.False(entity.Equals(new DifferentTestEntity(id)));
         Assert.False(new TestEntity().Equals(new TestEntity()));
         Assert.True(entity == new TestEntity(id));

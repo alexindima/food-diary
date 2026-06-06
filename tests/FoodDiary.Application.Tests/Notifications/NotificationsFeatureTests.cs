@@ -95,7 +95,7 @@ public class NotificationsFeatureTests {
             new RecordingNotificationPusher());
 
         Result result = await handler.Handle(
-            new MarkNotificationReadCommand(null, Guid.NewGuid()),
+            new MarkNotificationReadCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -146,7 +146,7 @@ public class NotificationsFeatureTests {
             new RecordingNotificationPusher());
 
         Result result = await handler.Handle(
-            new MarkAllNotificationsReadCommand(null),
+            new MarkAllNotificationsReadCommand(UserId: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -189,7 +189,7 @@ public class NotificationsFeatureTests {
             new InMemoryNotificationRepository(),
             new SingleUserRepository(CreateUser()));
 
-        Result<int> result = await handler.Handle(new GetUnreadCountQuery(null), CancellationToken.None);
+        Result<int> result = await handler.Handle(new GetUnreadCountQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -235,7 +235,7 @@ public class NotificationsFeatureTests {
         var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
-            new UpdateNotificationPreferencesCommand(user.Id.Value, true, false, true, 12, 20),
+            new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -260,7 +260,7 @@ public class NotificationsFeatureTests {
         var handler = new UpdateNotificationPreferencesCommandHandler(new SingleUserRepository(user), auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
-            new UpdateNotificationPreferencesCommand(user.Id.Value, null, null, null, 20, null),
+            new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 20, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -277,7 +277,7 @@ public class NotificationsFeatureTests {
             new RecordingAuditLogger());
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
-            new UpdateNotificationPreferencesCommand(Guid.Empty, true, null, null, null, null),
+            new UpdateNotificationPreferencesCommand(Guid.Empty, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -293,7 +293,7 @@ public class NotificationsFeatureTests {
             auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
-            new UpdateNotificationPreferencesCommand(userId.Value, true, null, null, null, null),
+            new UpdateNotificationPreferencesCommand(userId.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -427,7 +427,7 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task GetWebPushConfiguration_ReturnsClientConfiguration() {
         var handler = new GetWebPushConfigurationQueryHandler(
-            new StaticWebPushConfigurationProvider(new WebPushClientConfiguration(true, "public-key")));
+            new StaticWebPushConfigurationProvider(new WebPushClientConfiguration(Enabled: true, "public-key")));
 
         Result<WebPushConfigurationModel> result = await handler.Handle(new GetWebPushConfigurationQuery(), CancellationToken.None);
 
@@ -449,7 +449,7 @@ public class NotificationsFeatureTests {
                 "https://push.example.com/new",
                 "p256",
                 "auth",
-                null,
+                ExpirationTimeUtc: null,
                 "en",
                 "Chrome"),
             CancellationToken.None);
@@ -476,7 +476,7 @@ public class NotificationsFeatureTests {
                 "https://push.example.com/new",
                 "p256",
                 "auth",
-                null,
+                ExpirationTimeUtc: null,
                 "en",
                 "Chrome"),
             CancellationToken.None);
@@ -500,7 +500,7 @@ public class NotificationsFeatureTests {
                 "https://push.example.com/new",
                 "p256",
                 "auth",
-                null,
+                ExpirationTimeUtc: null,
                 "en",
                 "Chrome"),
             CancellationToken.None);
@@ -518,7 +518,7 @@ public class NotificationsFeatureTests {
             "https://push.example.com/existing",
             "old-p256",
             "old-auth",
-            null,
+            expirationTimeUtc: null,
             "ru",
             "OldBrowser");
         var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
@@ -962,7 +962,7 @@ public class NotificationsFeatureTests {
         public List<string> RenderedTypes { get; } = [];
 
         public NotificationText Render(string type, string? locale = null, params object[] arguments) =>
-            new(type, null);
+            new(type, Body: null);
 
         public NotificationText RenderFromPayload(string type, string payloadJson, string? locale = null) {
             RenderedTypes.Add(type);

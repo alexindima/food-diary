@@ -37,28 +37,28 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
             new CreateRecipeHttpRequest(
                 "Created Recipe",
                 "Contract recipe",
-                null,
+                Comment: null,
                 "Dinner",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 10,
                 20,
                 2,
                 "Private",
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 [
                     new RecipeStepHttpRequest(
                         "Cook",
                         "Boil ingredients",
-                        [new RecipeIngredientHttpRequest(productId, null, 200)],
-                        null,
-                        null),
+                        [new RecipeIngredientHttpRequest(productId, NestedRecipeId: null, 200)],
+                        ImageUrl: null,
+                        ImageAssetId: null),
                 ]));
 
         RecipePayload? payload = await response.Content.ReadFromJsonAsync<RecipePayload>(JsonOptions);
@@ -86,10 +86,10 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
             new CreateConsumptionHttpRequest(
                 DateTime.UtcNow.Date,
                 "Dinner",
-                null,
-                null,
-                null,
-                [new ConsumptionItemHttpRequest(null, favoriteRecipeId, 250)]));
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemHttpRequest(ProductId: null, favoriteRecipeId, 250)]));
         consumptionResponse.EnsureSuccessStatusCode();
 
         HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/recipes/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
@@ -154,9 +154,9 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                     new RecipeStepHttpRequest(
                         "Update",
                         "Updated step",
-                        [new RecipeIngredientHttpRequest(ingredientId, null, 180)],
-                        null,
-                        null),
+                        [new RecipeIngredientHttpRequest(ingredientId, NestedRecipeId: null, 180)],
+                        ImageUrl: null,
+                        ImageAssetId: null),
                 ]));
         updateResponse.EnsureSuccessStatusCode();
 
@@ -221,15 +221,15 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 name,
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -255,26 +255,26 @@ public sealed class AuthAndRecipesFlowTests(ApiWebApplicationFactory factory)
                 "Recipe description",
                 "Recipe comment",
                 "Dinner",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 10,
                 20,
                 2,
                 "Private",
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                CalculateNutritionAutomatically: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 [
                     new RecipeStepHttpRequest(
                         "Cook",
                         "Cook recipe",
-                        [new RecipeIngredientHttpRequest(ingredientId, null, 200)],
-                        null,
-                        null),
+                        [new RecipeIngredientHttpRequest(ingredientId, NestedRecipeId: null, 200)],
+                        ImageUrl: null,
+                        ImageAssetId: null),
                 ])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 

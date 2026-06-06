@@ -62,7 +62,7 @@ public class UpdateProductCommandHandler(
             cancellationToken).ConfigureAwait(false);
 
         int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        return Result.Success(product.ToModel(usageCount, true));
+        return Result.Success(product.ToModel(usageCount, isOwnedByCurrentUser: true));
     }
 
     private async Task<Result<UpdateProductValues>> PrepareUpdateValuesAsync(
@@ -155,7 +155,7 @@ public class UpdateProductCommandHandler(
         string errorMessage)
         where TEnum : struct, Enum {
         if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<TEnum?>(null);
+            return Result.Success<TEnum?>(value: null);
         }
 
         return EnumValueParser.ParseOptional<TEnum>(value, propertyName, errorMessage);

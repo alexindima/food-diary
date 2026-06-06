@@ -158,7 +158,7 @@ public sealed class TelegramAuthValidatorsTests {
     public void ValidateLoginWidget_WithInvalidRequiredFields_ReturnsFailure() {
         TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
-        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(0, 0, "", null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(0, 0, "", Username: null, FirstName: null, LastName: null, PhotoUrl: null));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
@@ -170,7 +170,7 @@ public sealed class TelegramAuthValidatorsTests {
             MsOptions.Create(new TelegramAuthOptions { BotToken = "" }),
             new FixedDateTimeProvider(NowUtc));
 
-        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, 1, "hash", null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, 1, "hash", Username: null, FirstName: null, LastName: null, PhotoUrl: null));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramNotConfigured", result.Error.Code);
@@ -187,7 +187,7 @@ public sealed class TelegramAuthValidatorsTests {
         string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
         TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
-        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, authDate, hash, null, null, null, null));
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(42, authDate, hash, Username: null, FirstName: null, LastName: null, PhotoUrl: null));
 
         Assert.True(result.IsSuccess);
         Assert.Equal(42, result.Value.UserId);

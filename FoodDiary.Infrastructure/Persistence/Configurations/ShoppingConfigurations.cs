@@ -62,7 +62,7 @@ internal sealed class ShoppingListItemConfiguration : IEntityTypeConfiguration<S
             .HasMaxLength(128);
 
         entity.Property(e => e.IsChecked)
-            .HasDefaultValue(false);
+            .HasDefaultValue(value: false);
 
         entity.Property(e => e.SortOrder)
             .HasDefaultValue(0);

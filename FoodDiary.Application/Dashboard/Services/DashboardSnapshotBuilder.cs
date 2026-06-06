@@ -170,7 +170,7 @@ public class DashboardSnapshotBuilder(
         CancellationToken cancellationToken) {
         if (!context.Sections.IncludeStatistics) {
             return Result.Success(new DashboardStatisticsSection(
-                new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null),
+                new DashboardStatisticsModel(0, 0, 0, 0, 0, ProteinGoal: null, FatGoal: null, CarbGoal: null, FiberGoal: null),
                 []));
         }
 
@@ -219,11 +219,11 @@ public class DashboardSnapshotBuilder(
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
         if (!context.Sections.IncludeWeight) {
-            return (new DashboardWeightModel(null, null, null), []);
+            return (new DashboardWeightModel(Latest: null, Previous: null, Desired: null), []);
         }
 
         IReadOnlyList<WeightEntry> weightEntries = await weightEntryRepository.GetEntriesAsync(
-            context.UserId, null, context.DayEndStart, 2, true, cancellationToken).ConfigureAwait(false);
+            context.UserId, dateFrom: null, context.DayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false);
         Result<IReadOnlyList<WeightEntrySummaryModel>> weightTrendResult = await sender.Send(
             new GetWeightSummariesQuery(context.UserId, context.TrendStart, context.DayStart, 1), cancellationToken).ConfigureAwait(false);
         return (
@@ -235,11 +235,11 @@ public class DashboardSnapshotBuilder(
         DashboardBuildContext context,
         CancellationToken cancellationToken) {
         if (!context.Sections.IncludeWaist) {
-            return (new DashboardWaistModel(null, null, null), []);
+            return (new DashboardWaistModel(Latest: null, Previous: null, Desired: null), []);
         }
 
         IReadOnlyList<WaistEntry> waistEntries = await waistEntryRepository.GetEntriesAsync(
-            context.UserId, null, context.DayEndStart, 2, true, cancellationToken).ConfigureAwait(false);
+            context.UserId, dateFrom: null, context.DayEndStart, 2, descending: true, cancellationToken).ConfigureAwait(false);
         Result<IReadOnlyList<WaistEntrySummaryModel>> waistTrendResult = await sender.Send(
             new GetWaistSummariesQuery(context.UserId, context.TrendStart, context.DayStart, 1), cancellationToken).ConfigureAwait(false);
         return (

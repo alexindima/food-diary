@@ -24,7 +24,7 @@ internal sealed class RecipeConfiguration : IEntityTypeConfiguration<Recipe> {
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
         entity.Property(e => e.Visibility).HasDefaultValue(Visibility.Public);
-        entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
+        entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
         entity.Ignore(e => e.UsageCount);
 
         entity.HasOne(e => e.User)

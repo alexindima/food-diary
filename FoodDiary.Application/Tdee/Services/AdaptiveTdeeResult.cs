@@ -7,7 +7,7 @@ public sealed record AdaptiveTdeeResult(
     TdeeConfidence Confidence,
     int DataDaysUsed,
     double? WeightTrendPerWeek) {
-    public static readonly AdaptiveTdeeResult Insufficient = new(null, TdeeConfidence.None, 0, null);
+    public static readonly AdaptiveTdeeResult Insufficient = new(AdaptiveTdee: null, TdeeConfidence.None, 0, WeightTrendPerWeek: null);
 
     public bool HasData => AdaptiveTdee.HasValue;
 }

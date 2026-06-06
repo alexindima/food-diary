@@ -41,7 +41,7 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
         QueuedEmailMessage message = (await store.ClaimDueBatchAsync(CancellationToken.None)).Single();
 
         await store.MarkFailedAttemptAsync(
-            new QueuedEmailFailureDecision((QueuedEmailId)id, message.AttemptCount, QueuedEmailStatus.Retry, false, "SMTP failed"),
+            new QueuedEmailFailureDecision((QueuedEmailId)id, message.AttemptCount, QueuedEmailStatus.Retry, IsTerminalFailure: false, "SMTP failed"),
             CancellationToken.None);
 
         MailRelayMessageDetails? details = await store.GetMessageDetailsAsync(id, CancellationToken.None);

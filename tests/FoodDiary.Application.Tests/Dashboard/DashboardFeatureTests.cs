@@ -62,7 +62,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
-        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(null, null);
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response: null, user: null);
 
         Assert.Equal(0, dto.TotalCalories);
         Assert.Equal(0, dto.AverageProteins);
@@ -242,7 +242,7 @@ public class DashboardFeatureTests {
     public async Task SendDashboardTestEmail_WhenUserMissing_ReturnsInvalidToken() {
         var emailSender = new RecordingEmailSender();
         var handler = new SendDashboardTestEmailCommandHandler(
-            new SingleUserRepository(null),
+            new SingleUserRepository(user: null),
             emailSender,
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 

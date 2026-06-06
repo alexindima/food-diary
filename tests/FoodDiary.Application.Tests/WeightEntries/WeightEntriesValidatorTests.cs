@@ -13,7 +13,7 @@ public class WeightEntriesValidatorTests {
     [Fact]
     public async Task CreateWeight_WithNullUserId_HasError() {
         TestValidationResult<CreateWeightEntryCommand> result = await new CreateWeightEntryCommandValidator().TestValidateAsync(
-            new CreateWeightEntryCommand(null, DateTime.UtcNow, 75));
+            new CreateWeightEntryCommand(UserId: null, DateTime.UtcNow, 75));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -48,7 +48,7 @@ public class WeightEntriesValidatorTests {
     [Fact]
     public async Task GetLatestWeight_WithNullUserId_HasError() {
         TestValidationResult<GetLatestWeightEntryQuery> result = await new GetLatestWeightEntryQueryValidator().TestValidateAsync(
-            new GetLatestWeightEntryQuery(null));
+            new GetLatestWeightEntryQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -69,14 +69,14 @@ public class WeightEntriesValidatorTests {
     [Fact]
     public async Task GetWeightEntries_WithZeroLimit_HasError() {
         TestValidationResult<GetWeightEntriesQuery> result = await new GetWeightEntriesQueryValidator().TestValidateAsync(
-            new GetWeightEntriesQuery(Guid.NewGuid(), null, null, 0, false));
+            new GetWeightEntriesQuery(Guid.NewGuid(), DateFrom: null, DateTo: null, 0, Descending: false));
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
     [Fact]
     public async Task GetWeightEntries_WithInvertedDates_HasError() {
         TestValidationResult<GetWeightEntriesQuery> result = await new GetWeightEntriesQueryValidator().TestValidateAsync(
-            new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), null, false));
+            new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), Limit: null, Descending: false));
         Assert.NotEmpty(result.Errors);
     }
 

@@ -16,7 +16,7 @@ public class GetDashboardSnapshotQueryHandler(IDashboardSnapshotBuilder snapshot
             new DashboardSnapshotRequest(
                 query.UserId.Value,
                 query.Date,
-                null,
+                DateTo: null,
                 query.Locale,
                 query.TrendDays,
                 query.Page,

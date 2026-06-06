@@ -72,7 +72,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         Socket socket = await ConnectToAllowedMxEndpointAsync(mxHost, linkedToken.Token).ConfigureAwait(false);
         await client.ConnectAsync(socket, mxHost, _options.Port, secureSocketOptions, linkedToken.Token).ConfigureAwait(false);
         await client.SendAsync(CreateMessage(request, recipients), linkedToken.Token).ConfigureAwait(false);
-        await client.DisconnectAsync(true, linkedToken.Token).ConfigureAwait(false);
+        await client.DisconnectAsync(quit: true, linkedToken.Token).ConfigureAwait(false);
     }
 
     private async Task<Socket> ConnectToAllowedMxEndpointAsync(string mxHost, CancellationToken cancellationToken) {

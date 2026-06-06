@@ -60,7 +60,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsOverviewQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetProductsOverviewQueryValidator();
-        var query = new GetProductsOverviewQuery(Guid.Empty, 1, 10, null, true);
+        var query = new GetProductsOverviewQuery(Guid.Empty, 1, 10, Search: null, IncludePublic: true);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -70,7 +70,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetRecentProductsQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecentProductsQueryValidator();
-        var query = new GetRecentProductsQuery(Guid.NewGuid(), 10, true);
+        var query = new GetRecentProductsQuery(Guid.NewGuid(), 10, IncludePublic: true);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -80,7 +80,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        var query = new GetProductsQuery(null, 1, 10, null, true);
+        var query = new GetProductsQuery(UserId: null, 1, 10, Search: null, IncludePublic: true);
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(query, CancellationToken.None);
 
@@ -302,7 +302,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(User.Create("delete-product-invalid-token@example.com", "hash")));
 
         Result result = await handler.Handle(
-            new DeleteProductCommand(null, ProductId.New().Value),
+            new DeleteProductCommand(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -411,7 +411,7 @@ public class ProductsFeatureTests {
             new StubUserRepository(User.Create("product-by-id-invalid-token@example.com", "hash")));
 
         Result<ProductModel> result = await handler.Handle(
-            new GetProductByIdQuery(null, ProductId.New().Value),
+            new GetProductByIdQuery(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -452,7 +452,7 @@ public class ProductsFeatureTests {
         var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
 
         Result<ProductModel> result = await handler.Handle(
-            new DuplicateProductCommand(null, ProductId.New().Value),
+            new DuplicateProductCommand(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -765,7 +765,7 @@ public class ProductsFeatureTests {
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<ProductModel> result = await handler.Handle(
-            CreateUpdateProductCommand(null, ProductId.New().Value),
+            CreateUpdateProductCommand(userId: null, ProductId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -852,7 +852,7 @@ public class ProductsFeatureTests {
         var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(user));
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
-            new GetProductsQuery(user.Id.Value, 1, 10, null, true),
+            new GetProductsQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -876,7 +876,7 @@ public class ProductsFeatureTests {
                 "Fresh apple",
                 "Owner note",
                 "https://cdn.test/apple.png",
-                null,
+                ImageAssetId: null,
                 "G",
                 100,
                 120,
@@ -1147,7 +1147,7 @@ public class ProductsFeatureTests {
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
         Result<ProductOverviewModel> result = await handler.Handle(
-            new GetProductsOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1186,7 +1186,7 @@ public class ProductsFeatureTests {
         var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
         Result<ProductOverviewModel> result = await handler.Handle(
-            new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", true, 10, 10),
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1202,7 +1202,7 @@ public class ProductsFeatureTests {
             new StubFavoriteProductRepository([]));
 
         Result<ProductOverviewModel> result = await handler.Handle(
-            new GetProductsOverviewQuery(null, 1, 10, null, true),
+            new GetProductsOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1232,7 +1232,7 @@ public class ProductsFeatureTests {
             new StubFavoriteProductRepository([]));
 
         Result<ProductOverviewModel> result = await handler.Handle(
-            new GetProductsOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1296,7 +1296,7 @@ public class ProductsFeatureTests {
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new NoopProductRepository());
 
-        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(null, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1308,7 +1308,7 @@ public class ProductsFeatureTests {
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetRecentProductsQueryHandler(recentRepository, new NoopProductRepository());
 
-        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
@@ -1357,7 +1357,7 @@ public class ProductsFeatureTests {
         ]);
         var handler = new GetRecentProductsQueryHandler(recentRepository, repository);
 
-        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, true), CancellationToken.None);
+        Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
@@ -1479,8 +1479,8 @@ public class ProductsFeatureTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
             return Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(true)
-                : new DeleteImageAssetResult(false, errorCode));
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode));
         }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>

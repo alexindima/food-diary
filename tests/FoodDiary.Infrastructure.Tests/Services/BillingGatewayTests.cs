@@ -708,7 +708,7 @@ public sealed class BillingGatewayTests {
             }));
 
         Result<BillingRecurringPaymentModel> result = await gateway.CreateRecurringPaymentAsync(
-            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "", "monthly", null, "renewal"),
+            new BillingRecurringPaymentRequestModel(Guid.NewGuid(), Guid.NewGuid(), "customer", "", "monthly", CurrentPeriodEndUtc: null, "renewal"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

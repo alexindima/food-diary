@@ -19,7 +19,7 @@ public class ExercisesFeatureTests {
         var handler = new CreateExerciseEntryCommandHandler(repo);
 
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 250, "Jog", null),
+            new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 250, "Jog", Notes: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -34,7 +34,7 @@ public class ExercisesFeatureTests {
         var handler = new CreateExerciseEntryCommandHandler(repo);
 
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "UnknownType", 30, 100, null, null),
+            new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "UnknownType", 30, 100, Name: null, Notes: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -46,7 +46,7 @@ public class ExercisesFeatureTests {
         var handler = new CreateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new CreateExerciseEntryCommand(null, DateTime.UtcNow, "Running", 30, 100, null, null),
+            new CreateExerciseEntryCommand(UserId: null, DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -82,7 +82,7 @@ public class ExercisesFeatureTests {
         var handler = new DeleteExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
         Result result = await handler.Handle(
-            new DeleteExerciseEntryCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new DeleteExerciseEntryCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -96,7 +96,7 @@ public class ExercisesFeatureTests {
 
         var handler = new UpdateExerciseEntryCommandHandler(repo);
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new UpdateExerciseEntryCommand(userId.Value, entry.Id.Value, "Swimming", 45, null, null, false, null, false, null),
+            new UpdateExerciseEntryCommand(userId.Value, entry.Id.Value, "Swimming", 45, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -108,7 +108,7 @@ public class ExercisesFeatureTests {
         var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), null, null, null, null, false, null, false, null),
+            new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -119,7 +119,7 @@ public class ExercisesFeatureTests {
         var handler = new UpdateExerciseEntryCommandHandler(new InMemoryExerciseEntryRepository());
 
         Result<ExerciseEntryModel> result = await handler.Handle(
-            new UpdateExerciseEntryCommand(null, Guid.NewGuid(), null, null, null, null, false, null, false, null),
+            new UpdateExerciseEntryCommand(UserId: null, Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -146,7 +146,7 @@ public class ExercisesFeatureTests {
         var handler = new GetExerciseEntriesQueryHandler(new InMemoryExerciseEntryRepository());
 
         Result<IReadOnlyList<ExerciseEntryModel>> result = await handler.Handle(
-            new GetExerciseEntriesQuery(null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),
+            new GetExerciseEntriesQuery(UserId: null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

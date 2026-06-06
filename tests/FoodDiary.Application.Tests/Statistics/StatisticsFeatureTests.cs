@@ -85,7 +85,7 @@ public class StatisticsFeatureTests {
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 2, 23, 59, 59, DateTimeKind.Utc);
         var meal = Meal.Create(user.Id, from.AddHours(12), MealType.Lunch);
-        meal.ApplyNutrition(new MealNutritionUpdate(1000, 100, 50, 200, 20, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(1000, 100, 50, 200, 20, 0, IsAutoCalculated: true));
         var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]), new SingleUserRepository(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 2);
 
@@ -110,9 +110,9 @@ public class StatisticsFeatureTests {
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
         var includedMeal = Meal.Create(user.Id, localDayStartUtc.AddMinutes(30), MealType.Snack);
-        includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, true));
+        includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, IsAutoCalculated: true));
         var nextLocalDayMeal = Meal.Create(user.Id, localDayEndUtc.AddMinutes(1), MealType.Snack);
-        nextLocalDayMeal.ApplyNutrition(new MealNutritionUpdate(41, 1, 0, 10, 3, 0, true));
+        nextLocalDayMeal.ApplyNutrition(new MealNutritionUpdate(41, 1, 0, 10, 3, 0, IsAutoCalculated: true));
         var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]), new SingleUserRepository(user));
         var query = new GetStatisticsQuery(user.Id.Value, localDayStartUtc, localDayEndUtc, 1);
 

@@ -123,7 +123,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
                 "customer.subscription.deleted" => Result.Success<BillingWebhookEventModel?>(MapSubscriptionEvent((Subscription)stripeEvent.Data.Object!, stripeEvent)),
                 "checkout.session.completed" => Result.Success<BillingWebhookEventModel?>(
                     await MapCheckoutCompletedEventAsync((CheckoutSession)stripeEvent.Data.Object!, stripeEvent, cancellationToken).ConfigureAwait(false)),
-                _ => Result.Success<BillingWebhookEventModel?>(null),
+                _ => Result.Success<BillingWebhookEventModel?>(value: null),
             };
         } catch (Exception ex) when (ex is StripeException or InvalidCastException or InvalidOperationException or NullReferenceException) {
             return Result.Failure<BillingWebhookEventModel?>(Errors.Billing.WebhookValidationFailed(ex.Message));
@@ -159,7 +159,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             stripeEvent.Type,
             subscription.CustomerId,
             subscription.Id,
-            null,
+            ExternalPaymentMethodId: null,
             firstItem?.Price?.Id,
             plan,
             subscription.Status,
@@ -169,9 +169,9 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             subscription.CanceledAt,
             subscription.TrialStart,
             subscription.TrialEnd,
-            null,
-            null,
-            null,
+            Amount: null,
+            Currency: null,
+            ProviderMetadataJson: null,
             ParseUserId(ReadMetadata(metadata, "user_id")));
     }
 

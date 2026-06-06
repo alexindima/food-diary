@@ -42,7 +42,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("missing-favorite-recipe@example.com", "hash");
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleRecipeRepository(null),
+            new SingleRecipeRepository(recipe: null),
             new SingleUserRepository(user));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
@@ -76,7 +76,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task AddFavoriteRecipe_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleRecipeRepository(null),
+            new SingleRecipeRepository(recipe: null),
             new SingleUserRepository(User.Create("invalid-add-favorite-recipe@example.com", "hash")));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
@@ -111,7 +111,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe),
             new SingleRecipeRepository(recipe),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(Guid.NewGuid(), recipe.Id.Value, "Dinner"),
@@ -168,7 +168,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task GetFavoriteRecipes_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -211,7 +211,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task IsRecipeFavorite_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new IsRecipeFavoriteQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
@@ -309,7 +309,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var favorite = FavoriteRecipe.Create(new UserId(userId), recipe.Id, "Dessert");
         SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(null));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(userId, favorite.Id.Value),

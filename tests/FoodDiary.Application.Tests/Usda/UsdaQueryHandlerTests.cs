@@ -103,9 +103,9 @@ public sealed class UsdaQueryHandlerTests {
                 20,
                 "Branded yogurt",
                 "Branded",
-                [new MicronutrientModel(203, "Protein", "g", 10, null, null)],
+                [new MicronutrientModel(203, "Protein", "g", 10, DailyValue: null, PercentDailyValue: null)],
                 [],
-                null),
+                HealthScores: null),
         };
         var handler = new GetMicronutrientsQueryHandler(repository, branded);
 
@@ -137,7 +137,7 @@ public sealed class UsdaQueryHandlerTests {
             "Spinach",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             caloriesPerBase: 23,
             proteinsPerBase: 2.9,
             fatsPerBase: 0.4,
@@ -150,7 +150,7 @@ public sealed class UsdaQueryHandlerTests {
             "Rice",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             caloriesPerBase: 130,
             proteinsPerBase: 2.7,
             fatsPerBase: 0.3,
@@ -200,7 +200,7 @@ public sealed class UsdaQueryHandlerTests {
             "Rice",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             caloriesPerBase: 130,
             proteinsPerBase: 2.7,
             fatsPerBase: 0.3,
@@ -227,7 +227,7 @@ public sealed class UsdaQueryHandlerTests {
         var handler = new GetDailyMicronutrientsQueryHandler(new StubMealRepository(), new StubUsdaFoodRepository());
 
         Result<DailyMicronutrientSummaryModel> result = await handler.Handle(
-            new GetDailyMicronutrientsQuery(null, new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc)),
+            new GetDailyMicronutrientsQuery(UserId: null, new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc)),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -242,7 +242,7 @@ public sealed class UsdaQueryHandlerTests {
             "Spinach",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             caloriesPerBase: 23,
             proteinsPerBase: 2.9,
             fatsPerBase: 0.4,

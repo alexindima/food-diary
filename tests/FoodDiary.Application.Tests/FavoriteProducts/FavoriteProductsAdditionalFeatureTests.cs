@@ -42,7 +42,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("missing-favorite-product@example.com", "hash");
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleProductRepository(null),
+            new SingleProductRepository(product: null),
             new SingleUserRepository(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
@@ -76,7 +76,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task AddFavoriteProduct_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleProductRepository(null),
+            new SingleProductRepository(product: null),
             new SingleUserRepository(User.Create("invalid-add-favorite-product@example.com", "hash")));
 
         Result<FavoriteProductModel> result = await handler.Handle(
@@ -93,7 +93,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(product),
             new SingleProductRepository(product),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack"),
@@ -136,7 +136,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task GetFavoriteProducts_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -207,7 +207,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task IsProductFavorite_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new IsProductFavoriteQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(null));
+            new SingleUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsProductFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
@@ -272,7 +272,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var favorite = FavoriteProduct.Create(new UserId(userId), product.Id, "Snack");
         SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(null));
+        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteProductCommand(userId, favorite.Id.Value),

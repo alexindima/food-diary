@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Tests.Dietologist;
 public class DietologistAccessPolicyTests {
     [Fact]
     public async Task EnsureCanAccessClientAsync_WithNoActiveInvitation_ReturnsFailure() {
-        var repo = new StubInvitationRepository(null);
+        var repo = new StubInvitationRepository(invitation: null);
 
         Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, UserId.New(), UserId.New(), CancellationToken.None);
@@ -48,7 +48,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenPermissionGranted_ReturnsNull() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, true, true);
+        var perms = new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true);
 
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Profile"));
         Assert.Null(DietologistAccessPolicy.EnsurePermission(perms, "Meals"));
@@ -62,7 +62,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenMealsDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(false, true, true, true, true, true, true, true);
+        var perms = new DietologistPermissionsModel(ShareMeals: false, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true);
 
         Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Meals");
 
@@ -72,7 +72,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenHydrationDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, false, true, true);
+        var perms = new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: true);
 
         Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Hydration");
 
@@ -86,10 +86,10 @@ public class DietologistAccessPolicyTests {
     [InlineData("Goals")]
     public void EnsurePermission_WhenSpecificPermissionDenied_ReturnsError(string category) {
         DietologistPermissionsModel perms = category switch {
-            "Statistics" => new DietologistPermissionsModel(true, false, true, true, true, true, true, true),
-            "Weight" => new DietologistPermissionsModel(true, true, false, true, true, true, true, true),
-            "Waist" => new DietologistPermissionsModel(true, true, true, false, true, true, true, true),
-            "Goals" => new DietologistPermissionsModel(true, true, true, true, false, true, true, true),
+            "Statistics" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
+            "Weight" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: false, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
+            "Waist" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: true),
+            "Goals" => new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: false, ShareHydration: true, ShareProfile: true, ShareFasting: true),
             _ => throw new ArgumentOutOfRangeException(nameof(category)),
         };
 
@@ -101,7 +101,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenProfileDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, false, true);
+        var perms = new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: false, ShareFasting: true);
 
         Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Profile");
 
@@ -110,7 +110,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WhenFastingDenied_ReturnsError() {
-        var perms = new DietologistPermissionsModel(true, true, true, true, true, true, true, false);
+        var perms = new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true, ShareProfile: true, ShareFasting: false);
 
         Error? error = DietologistAccessPolicy.EnsurePermission(perms, "Fasting");
 
@@ -119,7 +119,7 @@ public class DietologistAccessPolicyTests {
 
     [Fact]
     public void EnsurePermission_WithUnknownCategory_ReturnsError() {
-        var perms = new DietologistPermissionsModel(false, false, false, false, false, false, false, false);
+        var perms = new DietologistPermissionsModel(ShareMeals: false, ShareStatistics: false, ShareWeight: false, ShareWaist: false, ShareGoals: false, ShareHydration: false, ShareProfile: false, ShareFasting: false);
 
         Assert.NotNull(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }

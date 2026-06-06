@@ -98,7 +98,7 @@ public class CommonValidationTests {
     [Fact]
     public void EnumValueParser_ParseRequired_ReturnsParsedValueOrFailure() {
         Result<MealType> parsed = EnumValueParser.ParseRequired<MealType>("Dinner", "mealType", "invalid meal type");
-        Result<MealType> invalid = EnumValueParser.ParseRequired<MealType>(null, "mealType", "invalid meal type");
+        Result<MealType> invalid = EnumValueParser.ParseRequired<MealType>(value: null, "mealType", "invalid meal type");
 
         Assert.True(parsed.IsSuccess);
         Assert.Equal(MealType.Dinner, parsed.Value);
@@ -108,7 +108,7 @@ public class CommonValidationTests {
 
     [Fact]
     public void OptionalEntityIdValidator_OnlyRejectsExplicitEmptyGuid() {
-        Result nullResult = OptionalEntityIdValidator.EnsureNotEmpty(null, "productId", "Product id");
+        Result nullResult = OptionalEntityIdValidator.EnsureNotEmpty(value: null, "productId", "Product id");
         Result valueResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.NewGuid(), "productId", "Product id");
         Result emptyResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.Empty, "productId", "Product id");
 
@@ -121,7 +121,7 @@ public class CommonValidationTests {
 
     [Fact]
     public void ImageAssetIdParser_ReturnsNullParsedValueOrFailure() {
-        Result<ImageAssetId?> blank = ImageAssetIdParser.ParseOptional(null, "imageAssetId");
+        Result<ImageAssetId?> blank = ImageAssetIdParser.ParseOptional(value: null, "imageAssetId");
         var id = Guid.NewGuid();
         Result<ImageAssetId?> parsed = ImageAssetIdParser.ParseOptional(id, "imageAssetId");
         Result<ImageAssetId?> invalid = ImageAssetIdParser.ParseOptional(Guid.Empty, "imageAssetId");

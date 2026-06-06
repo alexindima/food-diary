@@ -110,18 +110,18 @@ public sealed class CreateCheckoutSessionCommandHandler(
             provider,
             session.SessionId,
             session.CustomerId,
-            null,
-            null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
             session.PriceId,
             session.Plan,
             BillingSubscription.PendingCheckoutStatus,
             BillingPaymentKinds.Checkout,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null);
+            amount: null,
+            currency: null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            webhookEventId: null,
+            providerMetadataJson: null);
         await billingPaymentRepository.AddAsync(payment, cancellationToken).ConfigureAwait(false);
     }
 }

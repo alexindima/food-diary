@@ -18,7 +18,7 @@ namespace FoodDiary.Application.Tests.Products;
 [ExcludeFromCodeCoverage]
 public class ProductsValidatorTests {
     private static CreateProductCommand ValidCreateProduct(Guid? userId = null) =>
-        new(userId ?? Guid.NewGuid(), null, "Chicken", null, "Other", null, null, null, null, null,
+        new(userId ?? Guid.NewGuid(), Barcode: null, "Chicken", Brand: null, "Other", Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null,
             "g", 100, 100, 165, 31, 3.6, 0, 0, 0, "Private");
 
     private static UpdateProductCommand ValidUpdateProduct(Guid? userId = null, Guid? productId = null) =>
@@ -107,7 +107,7 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task DuplicateProduct_WithNullUserId_HasError() {
         TestValidationResult<DuplicateProductCommand> result = await new DuplicateProductCommandValidator().TestValidateAsync(
-            new DuplicateProductCommand(null, Guid.NewGuid()));
+            new DuplicateProductCommand(UserId: null, Guid.NewGuid()));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -123,7 +123,7 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task GetProductById_WithNullUserId_HasError() {
         TestValidationResult<GetProductByIdQuery> result = await new GetProductByIdQueryValidator().TestValidateAsync(
-            new GetProductByIdQuery(null, Guid.NewGuid()));
+            new GetProductByIdQuery(UserId: null, Guid.NewGuid()));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -139,14 +139,14 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task GetProducts_WithZeroPage_HasError() {
         TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
-            new GetProductsQuery(Guid.NewGuid(), 0, 10, null, false));
+            new GetProductsQuery(Guid.NewGuid(), 0, 10, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.Page);
     }
 
     [Fact]
     public async Task GetProducts_WithZeroLimit_HasError() {
         TestValidationResult<GetProductsQuery> result = await new GetProductsQueryValidator().TestValidateAsync(
-            new GetProductsQuery(Guid.NewGuid(), 1, 0, null, false));
+            new GetProductsQuery(Guid.NewGuid(), 1, 0, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
@@ -155,7 +155,7 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task GetProductsOverview_WithNullUserId_HasError() {
         TestValidationResult<GetProductsOverviewQuery> result = await new GetProductsOverviewQueryValidator().TestValidateAsync(
-            new GetProductsOverviewQuery(null, 1, 10, null, false));
+            new GetProductsOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -164,7 +164,7 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task GetRecentProducts_WithNullUserId_HasError() {
         TestValidationResult<GetRecentProductsQuery> result = await new GetRecentProductsQueryValidator().TestValidateAsync(
-            new GetRecentProductsQuery(null, 10, false));
+            new GetRecentProductsQuery(UserId: null, 10, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -307,7 +307,7 @@ public class ProductsValidatorTests {
     [Fact]
     public async Task DeleteProduct_WithNullUserId_HasInvalidTokenError() {
         TestValidationResult<DeleteProductCommand> result = await new DeleteProductCommandValidator(new ProductRepositoryStub()).TestValidateAsync(
-            new DeleteProductCommand(null, Guid.NewGuid()));
+            new DeleteProductCommand(UserId: null, Guid.NewGuid()));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId)
             .WithErrorCode("Authentication.InvalidToken");

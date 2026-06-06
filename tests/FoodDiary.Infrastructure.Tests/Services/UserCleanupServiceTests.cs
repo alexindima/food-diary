@@ -32,6 +32,6 @@ public sealed class UserCleanupServiceTests {
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
             string objectKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(true));
+            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
     }
 }

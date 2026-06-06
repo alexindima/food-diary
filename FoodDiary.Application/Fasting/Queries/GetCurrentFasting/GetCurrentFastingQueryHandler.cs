@@ -29,7 +29,7 @@ public class GetCurrentFastingQueryHandler(
 
         FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         if (current is null) {
-            return Result.Success<FastingSessionModel?>(null);
+            return Result.Success<FastingSessionModel?>(value: null);
         }
 
         IReadOnlyList<FastingCheckIn> checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken).ConfigureAwait(false);

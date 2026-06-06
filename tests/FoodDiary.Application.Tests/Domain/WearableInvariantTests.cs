@@ -10,21 +10,21 @@ public class WearableInvariantTests {
     public void WearableConnection_Create_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
             WearableConnection.Create(
-                UserId.Empty, WearableProvider.Fitbit, "ext-123", "token", null, null));
+                UserId.Empty, WearableProvider.Fitbit, "ext-123", "token", refreshToken: null, tokenExpiresAtUtc: null));
     }
 
     [Fact]
     public void WearableConnection_Create_WithBlankExternalUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
             WearableConnection.Create(
-                UserId.New(), WearableProvider.Fitbit, "   ", "token", null, null));
+                UserId.New(), WearableProvider.Fitbit, "   ", "token", refreshToken: null, tokenExpiresAtUtc: null));
     }
 
     [Fact]
     public void WearableConnection_Create_WithBlankAccessToken_Throws() {
         Assert.Throws<ArgumentException>(() =>
             WearableConnection.Create(
-                UserId.New(), WearableProvider.Fitbit, "ext-123", "   ", null, null));
+                UserId.New(), WearableProvider.Fitbit, "ext-123", "   ", refreshToken: null, tokenExpiresAtUtc: null));
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class WearableInvariantTests {
     public void WearableConnection_UpdateTokens_WithBlankAccessToken_Throws() {
         WearableConnection conn = CreateConnection();
 
-        Assert.Throws<ArgumentException>(() => conn.UpdateTokens("  ", null, null));
+        Assert.Throws<ArgumentException>(() => conn.UpdateTokens("  ", refreshToken: null, tokenExpiresAtUtc: null));
     }
 
     [Fact]
@@ -66,9 +66,9 @@ public class WearableInvariantTests {
     [Fact]
     public void WearableConnection_UpdateTokens_WithNullRefreshToken_KeepsExisting() {
         var conn = WearableConnection.Create(
-            UserId.New(), WearableProvider.Fitbit, "ext", "token", "original-refresh", null);
+            UserId.New(), WearableProvider.Fitbit, "ext", "token", "original-refresh", tokenExpiresAtUtc: null);
 
-        conn.UpdateTokens("new-token", null, null);
+        conn.UpdateTokens("new-token", refreshToken: null, tokenExpiresAtUtc: null);
 
         Assert.Equal("original-refresh", conn.RefreshToken);
     }
@@ -108,7 +108,7 @@ public class WearableInvariantTests {
     [Fact]
     public void WearableConnection_IsTokenExpired_WhenExpired_ReturnsTrue() {
         var conn = WearableConnection.Create(
-            UserId.New(), WearableProvider.Fitbit, "ext", "token", null,
+            UserId.New(), WearableProvider.Fitbit, "ext", "token", refreshToken: null,
             DateTime.UtcNow.AddMinutes(-1));
 
         Assert.True(conn.IsTokenExpired());
@@ -117,7 +117,7 @@ public class WearableInvariantTests {
     [Fact]
     public void WearableConnection_IsTokenExpired_WhenNoExpiry_ReturnsFalse() {
         var conn = WearableConnection.Create(
-            UserId.New(), WearableProvider.Fitbit, "ext", "token", null, null);
+            UserId.New(), WearableProvider.Fitbit, "ext", "token", refreshToken: null, tokenExpiresAtUtc: null);
 
         Assert.False(conn.IsTokenExpired());
     }

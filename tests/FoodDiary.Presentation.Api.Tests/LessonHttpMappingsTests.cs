@@ -61,7 +61,7 @@ public sealed class LessonHttpMappingsTests {
     [Fact]
     public void LessonDetailModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
-        var model = new LessonDetailModel(id, "Title", "Full content", "Summary", "nutrition", "beginner", 5, true);
+        var model = new LessonDetailModel(id, "Title", "Full content", "Summary", "nutrition", "beginner", 5, IsRead: true);
 
         LessonDetailHttpResponse response = model.ToHttpResponse();
 

@@ -195,7 +195,7 @@ public sealed class AuthenticationCommandHandlerTests {
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new RegisterCommand("email-failure@example.com", "secret", null),
+            new RegisterCommand("email-failure@example.com", "secret", Language: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -361,7 +361,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task VerifyEmailHandler_WhenAlreadyConfirmed_ReturnsSuccess() {
         var user = User.Create("confirmed-verify@example.com", "secret");
-        user.SetEmailConfirmed(true);
+        user.SetEmailConfirmed(isConfirmed: true);
         var handler = new VerifyEmailCommandHandler(
             new StubUserRepository(user),
             new StubPasswordHasher(),
@@ -471,7 +471,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task ResendEmailVerificationHandler_WhenEmailAlreadyConfirmed_ReturnsSuccessWithoutSending() {
         var user = User.Create("confirmed@example.com", "secret");
-        user.SetEmailConfirmed(true);
+        user.SetEmailConfirmed(isConfirmed: true);
         var sender = new StubEmailSender();
         ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, sender);
 
@@ -768,7 +768,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new TelegramLoginWidgetCommand(123456, 123, "bad-hash", null, null, null, null),
+            new TelegramLoginWidgetCommand(123456, 123, "bad-hash", Username: null, FirstName: null, LastName: null, PhotoUrl: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -783,7 +783,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubAuthenticationTokenService());
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new TelegramLoginWidgetCommand(123456, 123, "hash", null, null, null, null),
+            new TelegramLoginWidgetCommand(123456, 123, "hash", Username: null, FirstName: null, LastName: null, PhotoUrl: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -801,7 +801,7 @@ public sealed class AuthenticationCommandHandlerTests {
             tokenService);
 
         Result<AuthenticationModel> result = await handler.Handle(
-            new TelegramLoginWidgetCommand(123456, 123, "hash", "alex", "Alex", "User", null),
+            new TelegramLoginWidgetCommand(123456, 123, "hash", "alex", "Alex", "User", PhotoUrl: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1155,7 +1155,7 @@ public sealed class AuthenticationCommandHandlerTests {
                 ? FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("initData", "Invalid Telegram init data."))
                 : FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Success(
-                    new TelegramInitData(123456, "alex", "Alex", "User", null, "en", DateTime.UtcNow));
+                    new TelegramInitData(123456, "alex", "Alex", "User", PhotoUrl: null, "en", DateTime.UtcNow));
     }
 
     [ExcludeFromCodeCoverage]
@@ -1165,7 +1165,7 @@ public sealed class AuthenticationCommandHandlerTests {
                 ? FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Failure<TelegramInitData>(
                     Errors.Validation.Invalid("hash", "Invalid Telegram login widget hash."))
                 : FoodDiary.Application.Abstractions.Common.Abstractions.Results.Result.Success(
-                    new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, null, DateTime.UtcNow));
+                    new TelegramInitData(data.Id, data.Username, data.FirstName, data.LastName, data.PhotoUrl, LanguageCode: null, DateTime.UtcNow));
     }
 
     [ExcludeFromCodeCoverage]

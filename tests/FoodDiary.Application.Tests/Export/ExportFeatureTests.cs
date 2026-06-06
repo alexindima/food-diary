@@ -177,7 +177,7 @@ public class ExportFeatureTests {
         ExportDiaryQueryHandler handler = CreateHandler([]);
 
         Result<FileExportResult> result = await handler.Handle(
-            new ExportDiaryQuery(null, TestDate, TestDate.AddDays(1)),
+            new ExportDiaryQuery(UserId: null, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

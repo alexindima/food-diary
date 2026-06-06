@@ -9,19 +9,19 @@ public class MealPlanInvariantTests {
     [Fact]
     public void CreateCurated_WithBlankName_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            MealPlan.CreateCurated("   ", null, DietType.Balanced, 7, null));
+            MealPlan.CreateCurated("   ", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null));
     }
 
     [Fact]
     public void CreateCurated_WithTooLongName_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealPlan.CreateCurated(new string('n', 257), null, DietType.Balanced, 7, null));
+            MealPlan.CreateCurated(new string('n', 257), description: null, DietType.Balanced, 7, targetCaloriesPerDay: null));
     }
 
     [Fact]
     public void CreateCurated_WithTooLongDescription_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealPlan.CreateCurated("Plan", new string('d', 2049), DietType.Balanced, 7, null));
+            MealPlan.CreateCurated("Plan", new string('d', 2049), DietType.Balanced, 7, targetCaloriesPerDay: null));
     }
 
     [Theory]
@@ -30,7 +30,7 @@ public class MealPlanInvariantTests {
     [InlineData(32)]
     public void CreateCurated_WithInvalidDuration_Throws(int duration) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealPlan.CreateCurated("Plan", null, DietType.Balanced, duration, null));
+            MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, duration, targetCaloriesPerDay: null));
     }
 
     [Fact]
@@ -47,7 +47,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void CreateCurated_WithWhitespaceDescription_SetsNull() {
-        var plan = MealPlan.CreateCurated("Plan", "   ", DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", "   ", DietType.Balanced, 7, targetCaloriesPerDay: null);
 
         Assert.Null(plan.Description);
     }
@@ -55,13 +55,13 @@ public class MealPlanInvariantTests {
     [Fact]
     public void CreateForUser_WithEmptyUserId_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            MealPlan.CreateForUser(UserId.Empty, "Plan", null, DietType.Balanced, 7, null));
+            MealPlan.CreateForUser(UserId.Empty, "Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null));
     }
 
     [Fact]
     public void CreateForUser_SetsUserIdAndNotCurated() {
         var userId = UserId.New();
-        var plan = MealPlan.CreateForUser(userId, "My Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateForUser(userId, "My Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
 
         Assert.Equal(userId, plan.UserId);
         Assert.False(plan.IsCurated);
@@ -69,7 +69,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void AddDay_ReturnsDayWithCorrectNumber() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
 
         MealPlanDay day = plan.AddDay(1);
 
@@ -81,14 +81,14 @@ public class MealPlanInvariantTests {
     [InlineData(0)]
     [InlineData(32)]
     public void AddDay_WithInvalidDayNumber_Throws(int dayNumber) {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => plan.AddDay(dayNumber));
     }
 
     [Fact]
     public void AddDay_WithDuplicateDayNumber_Throws() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         plan.AddDay(1);
 
         Assert.Throws<InvalidOperationException>(() => plan.AddDay(1));
@@ -96,7 +96,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_WithZeroServings_Throws() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         MealPlanDay day = plan.AddDay(1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -105,7 +105,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_WithNegativeServings_Throws() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         MealPlanDay day = plan.AddDay(1);
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
@@ -114,7 +114,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void AddDay_MealPlanDay_AddMeal_Succeeds() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         MealPlanDay day = plan.AddDay(1);
         var recipeId = RecipeId.New();
 
@@ -128,7 +128,7 @@ public class MealPlanInvariantTests {
 
     [Fact]
     public void Adopt_WithEmptyUserId_Throws() {
-        var plan = MealPlan.CreateCurated("Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateCurated("Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
 
         Assert.Throws<ArgumentException>(() => plan.Adopt(UserId.Empty));
     }

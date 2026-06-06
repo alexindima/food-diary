@@ -48,11 +48,11 @@ public class CreateRecipeCommentCommandHandler(
             comment.Id.Value,
             comment.RecipeId.Value,
             comment.UserId.Value,
-            null,
-            null,
+            AuthorUsername: null,
+            AuthorFirstName: null,
             comment.Text,
             comment.CreatedOnUtc,
             comment.ModifiedOnUtc,
-            true));
+            IsOwnedByCurrentUser: true));
     }
 }

@@ -26,7 +26,7 @@ public sealed class DietologistHttpMappingsTests {
         var userId = Guid.NewGuid();
         var request = new InviteDietologistHttpRequest(
             "diet@example.com",
-            new DietologistPermissionsHttpRequest(true, false, true, false, true, false, true, false));
+            new DietologistPermissionsHttpRequest(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false));
 
         InviteDietologistCommand command = request.ToCommand(userId);
 

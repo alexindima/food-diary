@@ -20,14 +20,14 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     public void RecordStarted(string jobName, DateTime utcNow) {
         snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, null, null, 0),
+            _ => new JobExecutionStateSnapshot(utcNow, LastSucceededAtUtc: null, LastFailedAtUtc: null, 0),
             (_, current) => current with { LastStartedAtUtc = utcNow });
     }
 
     public void RecordSuccess(string jobName, DateTime utcNow) {
         snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, utcNow, null, 0),
+            _ => new JobExecutionStateSnapshot(utcNow, utcNow, LastFailedAtUtc: null, 0),
             (_, current) => current with {
                 LastStartedAtUtc = current.LastStartedAtUtc ?? utcNow,
                 LastSucceededAtUtc = utcNow,
@@ -38,7 +38,7 @@ public sealed class JobExecutionStateTracker : IJobExecutionStateTracker, IDispo
     public void RecordFailure(string jobName, DateTime utcNow) {
         snapshots.AddOrUpdate(
             jobName,
-            _ => new JobExecutionStateSnapshot(utcNow, null, utcNow, 1),
+            _ => new JobExecutionStateSnapshot(utcNow, LastSucceededAtUtc: null, utcNow, 1),
             (_, current) => current with {
                 LastStartedAtUtc = current.LastStartedAtUtc ?? utcNow,
                 LastFailedAtUtc = utcNow,

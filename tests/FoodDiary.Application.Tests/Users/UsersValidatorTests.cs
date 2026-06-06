@@ -21,7 +21,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task ChangePassword_WithNullUserId_HasError() {
         var v = new ChangePasswordCommandValidator();
-        TestValidationResult<ChangePasswordCommand> result = await v.TestValidateAsync(new ChangePasswordCommand(null, "old", "newpass"));
+        TestValidationResult<ChangePasswordCommand> result = await v.TestValidateAsync(new ChangePasswordCommand(UserId: null, "old", "newpass"));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -58,7 +58,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task DeleteUser_WithNullUserId_HasError() {
         var v = new DeleteUserCommandValidator();
-        TestValidationResult<DeleteUserCommand> result = await v.TestValidateAsync(new DeleteUserCommand(null));
+        TestValidationResult<DeleteUserCommand> result = await v.TestValidateAsync(new DeleteUserCommand(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -79,7 +79,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateDesiredWaist_WithNullUserId_HasError() {
         var v = new UpdateDesiredWaistCommandValidator();
-        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(null, 80));
+        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(UserId: null, 80));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -93,7 +93,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateDesiredWaist_WithNull_NoErrors() {
         var v = new UpdateDesiredWaistCommandValidator();
-        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(Guid.NewGuid(), null));
+        TestValidationResult<UpdateDesiredWaistCommand> result = await v.TestValidateAsync(new UpdateDesiredWaistCommand(Guid.NewGuid(), DesiredWaist: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -111,21 +111,21 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUser_WithNullUserId_HasError() {
         var v = new UpdateUserCommandValidator();
-        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(UserId: null, Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, Weight: null, Height: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateUser_WithNegativeWeight_HasError() {
         var v = new UpdateUserCommandValidator();
-        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), null, null, null, null, null, -1, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+        TestValidationResult<UpdateUserCommand> result = await v.TestValidateAsync(new UpdateUserCommand(Guid.NewGuid(), Username: null, FirstName: null, LastName: null, BirthDate: null, Gender: null, -1, Height: null, ActivityLevel: null, StepGoal: null, HydrationGoal: null, Language: null, Theme: null, UiStyle: null, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, ProfileImage: null, ProfileImageAssetId: null, DashboardLayout: null, IsActive: null));
         result.ShouldHaveValidationErrorFor(c => c.Weight);
     }
 
     [Fact]
     public async Task SetPassword_WithNullUserId_HasError() {
         TestValidationResult<SetPasswordCommand> result = await new SetPasswordCommandValidator().TestValidateAsync(
-            new SetPasswordCommand(null, "new-password"));
+            new SetPasswordCommand(UserId: null, "new-password"));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -149,7 +149,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUserAppearance_WithNullUserId_HasError() {
         TestValidationResult<UpdateUserAppearanceCommand> result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
-            new UpdateUserAppearanceCommand(null, "dark", null));
+            new UpdateUserAppearanceCommand(UserId: null, "dark", UiStyle: null));
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
@@ -157,7 +157,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUserAppearance_WithNoAppearanceFields_HasError() {
         TestValidationResult<UpdateUserAppearanceCommand> result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
-            new UpdateUserAppearanceCommand(Guid.NewGuid(), null, null));
+            new UpdateUserAppearanceCommand(Guid.NewGuid(), Theme: null, UiStyle: null));
 
         result.ShouldHaveValidationErrorFor(c => c);
     }
@@ -165,7 +165,7 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateUserAppearance_WithThemeOnly_HasNoErrors() {
         TestValidationResult<UpdateUserAppearanceCommand> result = await new UpdateUserAppearanceCommandValidator().TestValidateAsync(
-            new UpdateUserAppearanceCommand(Guid.NewGuid(), "dark", null));
+            new UpdateUserAppearanceCommand(Guid.NewGuid(), "dark", UiStyle: null));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -175,28 +175,28 @@ public class UsersValidatorTests {
     [Fact]
     public async Task UpdateGoals_WithNullUserId_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(UserId: null, DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateGoals_WithNegativeCalorieTarget_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), -1, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), -1, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.DailyCalorieTarget);
     }
 
     [Fact]
     public async Task UpdateGoals_WithValidTargets_NoErrors() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), 2000, 150, 70, 250, 30, 2500, 75, 80, null, null, null, null, null, null, null, null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), 2000, 150, 70, 250, 30, 2500, 75, 80, CalorieCyclingEnabled: null, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task UpdateGoals_WithNegativeMondayCalories_HasError() {
         var v = new UpdateGoalsCommandValidator();
-        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), null, null, null, null, null, null, null, null, null, -100, null, null, null, null, null, null));
+        TestValidationResult<UpdateGoalsCommand> result = await v.TestValidateAsync(new UpdateGoalsCommand(Guid.NewGuid(), DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null, CalorieCyclingEnabled: null, -100, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null));
         result.ShouldHaveValidationErrorFor(c => c.MondayCalories);
     }
 
@@ -239,25 +239,25 @@ public class UsersValidatorTests {
 
     [Fact]
     public async Task GetDesiredWaist_WithNullUserId_HasError() {
-        TestValidationResult<GetDesiredWaistQuery> result = await new GetDesiredWaistQueryValidator().TestValidateAsync(new GetDesiredWaistQuery(null));
+        TestValidationResult<GetDesiredWaistQuery> result = await new GetDesiredWaistQueryValidator().TestValidateAsync(new GetDesiredWaistQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task GetDesiredWeight_WithNullUserId_HasError() {
-        TestValidationResult<GetDesiredWeightQuery> result = await new GetDesiredWeightQueryValidator().TestValidateAsync(new GetDesiredWeightQuery(null));
+        TestValidationResult<GetDesiredWeightQuery> result = await new GetDesiredWeightQueryValidator().TestValidateAsync(new GetDesiredWeightQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task GetUserById_WithNullUserId_HasError() {
-        TestValidationResult<GetUserByIdQuery> result = await new GetUserByIdQueryValidator().TestValidateAsync(new GetUserByIdQuery(null));
+        TestValidationResult<GetUserByIdQuery> result = await new GetUserByIdQueryValidator().TestValidateAsync(new GetUserByIdQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task GetUserGoals_WithNullUserId_HasError() {
-        TestValidationResult<GetUserGoalsQuery> result = await new GetUserGoalsQueryValidator().TestValidateAsync(new GetUserGoalsQuery(null));
+        TestValidationResult<GetUserGoalsQuery> result = await new GetUserGoalsQueryValidator().TestValidateAsync(new GetUserGoalsQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 }

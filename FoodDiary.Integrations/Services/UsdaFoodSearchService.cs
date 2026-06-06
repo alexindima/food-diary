@@ -85,8 +85,8 @@ internal sealed class UsdaFoodSearchService(
                     n.Nutrient.Name,
                     n.Nutrient.UnitName,
                     n.Amount!.Value,
-                    null,
-                    null))
+                    DailyValue: null,
+                    PercentDailyValue: null))
                 .ToList();
 
             var portions = food.FoodPortions
@@ -105,7 +105,7 @@ internal sealed class UsdaFoodSearchService(
                 food.FoodCategory?.Description ?? food.FoodCategoryDescription ?? food.BrandName,
                 nutrients,
                 portions,
-                null);
+                HealthScores: null);
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "USDA food detail lookup failed for FDC ID {FdcId}", fdcId);
             return null;

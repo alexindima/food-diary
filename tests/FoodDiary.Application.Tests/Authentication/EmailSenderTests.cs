@@ -144,8 +144,8 @@ public sealed class EmailSenderTests {
                 "dietologist@example.com",
                 Guid.NewGuid(),
                 "token",
-                null,
-                null,
+                ClientFirstName: null,
+                ClientLastName: null,
                 "ru"),
             CancellationToken.None);
 

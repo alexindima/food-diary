@@ -23,7 +23,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
 
@@ -45,7 +45,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             user.Id,
             CancellationToken.None);
 
@@ -66,7 +66,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             userId,
             CancellationToken.None);
 
@@ -87,7 +87,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
 
@@ -111,7 +111,7 @@ public sealed class OpenAiFoodServiceTests {
             new StubAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             UserId.New(),
             CancellationToken.None);
 
@@ -134,7 +134,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -158,7 +158,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -181,7 +181,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             userId,
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -203,7 +203,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -228,7 +228,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -257,7 +257,7 @@ public sealed class OpenAiFoodServiceTests {
             "https://cdn.example.com/meal.webp",
             "en",
             UserId.New(),
-            null,
+            description: null,
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -322,7 +322,7 @@ public sealed class OpenAiFoodServiceTests {
 
     private static FoodVisionModel CreateVisionModel() =>
         new([
-            new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m),
+            new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m),
         ]);
 
     [ExcludeFromCodeCoverage]

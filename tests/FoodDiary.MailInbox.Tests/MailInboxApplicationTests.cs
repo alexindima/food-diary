@@ -114,7 +114,7 @@ public sealed class MailInboxApplicationTests {
         var validator = new ReceiveInboundMailCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(new ReceiveInboundMailCommand(
-            new ReceiveInboundMailRequest(null, null, [], null, null, null, "", DateTimeOffset.UtcNow)));
+            new ReceiveInboundMailRequest(MessageId: null, FromAddress: null, [], Subject: null, TextBody: null, HtmlBody: null, "", DateTimeOffset.UtcNow)));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Request.ToRecipients", StringComparison.Ordinal));

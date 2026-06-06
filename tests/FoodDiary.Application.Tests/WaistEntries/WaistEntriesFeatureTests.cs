@@ -30,7 +30,7 @@ public class WaistEntriesFeatureTests {
     [Fact]
     public async Task GetWaistEntriesQueryValidator_WithInvalidDateRange_Fails() {
         var validator = new GetWaistEntriesQueryValidator();
-        var query = new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
+        var query = new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, Descending: true);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -115,7 +115,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(User.Create("waist-summary-missing-user@example.com", "hash")));
 
         Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(
-            new GetWaistSummariesQuery(null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
+            new GetWaistSummariesQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -214,7 +214,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(User.Create("delete-waist-missing-user@example.com", "hash")));
 
         Result result = await handler.Handle(
-            new DeleteWaistEntryCommand(null, WaistEntryId.New().Value),
+            new DeleteWaistEntryCommand(UserId: null, WaistEntryId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -276,7 +276,7 @@ public class WaistEntriesFeatureTests {
         var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
         Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
-            new GetWaistEntriesQuery(user.Id.Value, from, to, 10, true),
+            new GetWaistEntriesQuery(user.Id.Value, from, to, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -300,7 +300,7 @@ public class WaistEntriesFeatureTests {
         var handler = new GetWaistEntriesQueryHandler(repository, new StubUserRepository(user));
 
         Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
-            new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
+            new GetWaistEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -323,7 +323,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(User.Create("waist-list-missing-user@example.com", "hash")));
 
         Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
-            new GetWaistEntriesQuery(null, null, null, 10, true),
+            new GetWaistEntriesQuery(UserId: null, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -352,7 +352,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(User.Create("waist-update-missing-user@example.com", "hash")));
 
         Result<WaistEntryModel> result = await handler.Handle(
-            new UpdateWaistEntryCommand(null, WaistEntryId.New().Value, DateTime.UtcNow, 82),
+            new UpdateWaistEntryCommand(UserId: null, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -440,7 +440,7 @@ public class WaistEntriesFeatureTests {
             new StubUserRepository(user));
 
         Result<IReadOnlyList<WaistEntryModel>> result = await handler.Handle(
-            new GetWaistEntriesQuery(user.Id.Value, null, null, 10, true),
+            new GetWaistEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -469,7 +469,7 @@ public class WaistEntriesFeatureTests {
             new InMemoryWaistEntryRepository(),
             new StubUserRepository(User.Create("latest-waist@example.com", "hash")));
 
-        Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(null), CancellationToken.None);
+        Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);

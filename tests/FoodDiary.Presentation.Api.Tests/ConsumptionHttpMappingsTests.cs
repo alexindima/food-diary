@@ -35,7 +35,7 @@ public sealed class ConsumptionHttpMappingsTests {
         DateTime date = DateTime.UtcNow;
         var productId = Guid.NewGuid();
         var request = new CreateConsumptionHttpRequest(
-            date, "Breakfast", "Tasty", null, null,
+            date, "Breakfast", "Tasty", ImageUrl: null, ImageAssetId: null,
             new List<ConsumptionItemHttpRequest> {
                 new(productId, null, 150),
             },
@@ -61,7 +61,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var assetId = Guid.NewGuid();
         DateTime recognizedAt = DateTime.UtcNow;
         var request = new CreateConsumptionHttpRequest(
-            DateTime.UtcNow, null, null, null, null,
+            DateTime.UtcNow, MealType: null, Comment: null, ImageUrl: null, ImageAssetId: null,
             [],
             new List<ConsumptionAiSessionHttpRequest> {
                 new(assetId, "Photo", recognizedAt, "AI notes", new List<ConsumptionAiItemHttpRequest> {
@@ -84,7 +84,7 @@ public sealed class ConsumptionHttpMappingsTests {
 
     [Fact]
     public void CreateRequest_ToCommand_WithNullAiSessions_MapsToEmptyList() {
-        var request = new CreateConsumptionHttpRequest(DateTime.UtcNow, null, null, null, null, []);
+        var request = new CreateConsumptionHttpRequest(DateTime.UtcNow, MealType: null, Comment: null, ImageUrl: null, ImageAssetId: null, []);
 
         CreateConsumptionCommand command = request.ToCommand(Guid.NewGuid());
 
@@ -96,7 +96,7 @@ public sealed class ConsumptionHttpMappingsTests {
         var userId = Guid.NewGuid();
         var consumptionId = Guid.NewGuid();
         var request = new UpdateConsumptionHttpRequest(
-            DateTime.UtcNow, "Lunch", null, null, null,
+            DateTime.UtcNow, "Lunch", Comment: null, ImageUrl: null, ImageAssetId: null,
             new List<ConsumptionItemHttpRequest> { new(null, Guid.NewGuid(), 2) },
             ManualCalories: 500, ManualProteins: 30, ManualFats: 20, ManualCarbs: 60,
             ManualFiber: 5, ManualAlcohol: 0, IsNutritionAutoCalculated: false);
@@ -182,9 +182,9 @@ public sealed class ConsumptionHttpMappingsTests {
         var id = Guid.NewGuid();
         DateTime date = DateTime.UtcNow;
         var model = new ConsumptionModel(
-            id, date, "Breakfast", "Comment", null, null,
-            500, 30, 20, 60, 5, 0, true, null, null, null, null, null, null,
-            3, 4, 72, "green", false, null, [], []);
+            id, date, "Breakfast", "Comment", ImageUrl: null, ImageAssetId: null,
+            500, 30, 20, 60, 5, 0, IsNutritionAutoCalculated: true, ManualCalories: null, ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
+            3, 4, 72, "green", IsFavorite: false, FavoriteMealId: null, [], []);
 
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
@@ -246,9 +246,9 @@ public sealed class ConsumptionHttpMappingsTests {
         };
 
         var model = new ConsumptionModel(
-            consumptionId, DateTime.UtcNow, null, null, null, null,
-            425, 36, 4.2, 56, 0.4, 0, true, null, null, null, null, null, null,
-            0, 0, 61, "yellow", false, null, items, sessions);
+            consumptionId, DateTime.UtcNow, MealType: null, Comment: null, ImageUrl: null, ImageAssetId: null,
+            425, 36, 4.2, 56, 0.4, 0, IsNutritionAutoCalculated: true, ManualCalories: null, ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
+            0, 0, 61, "yellow", IsFavorite: false, FavoriteMealId: null, items, sessions);
 
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
@@ -271,9 +271,9 @@ public sealed class ConsumptionHttpMappingsTests {
     [Fact]
     public void ConsumptionModel_ToHttpResponse_WithManualNutrition() {
         var model = new ConsumptionModel(
-            Guid.NewGuid(), DateTime.UtcNow, null, null, null, null,
-            0, 0, 0, 0, 0, 0, false, 500, 30, 20, 60, 5, 0,
-            0, 0, 55, "yellow", false, null, [], []);
+            Guid.NewGuid(), DateTime.UtcNow, MealType: null, Comment: null, ImageUrl: null, ImageAssetId: null,
+            0, 0, 0, 0, 0, 0, IsNutritionAutoCalculated: false, 500, 30, 20, 60, 5, 0,
+            0, 0, 55, "yellow", IsFavorite: false, FavoriteMealId: null, [], []);
 
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
@@ -290,26 +290,26 @@ public sealed class ConsumptionHttpMappingsTests {
             DateTime.UtcNow,
             "Dinner",
             "Comment",
-            null,
-            null,
+            ImageUrl: null,
+            ImageAssetId: null,
             500,
             30,
             20,
             60,
             5,
             0,
-            true,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
             3,
             7,
             70,
             "green",
-            true,
+            IsFavorite: true,
             favoriteMealId,
             [],
             []);
@@ -326,28 +326,28 @@ public sealed class ConsumptionHttpMappingsTests {
             Guid.NewGuid(),
             DateTime.UtcNow,
             "Breakfast",
-            null,
-            null,
-            null,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
             350,
             20,
             12,
             30,
             4,
             0,
-            true,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
             2,
             6,
             66,
             "yellow",
-            false,
-            null,
+            IsFavorite: false,
+            FavoriteMealId: null,
             [],
             []);
         var favorite = new FavoriteMealModel(

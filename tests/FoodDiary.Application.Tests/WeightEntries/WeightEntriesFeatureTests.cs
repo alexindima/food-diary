@@ -30,7 +30,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task GetWeightEntriesQueryValidator_WithInvalidDateRange_Fails() {
         var validator = new GetWeightEntriesQueryValidator();
-        var query = new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, true);
+        var query = new GetWeightEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 10, Descending: true);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -115,7 +115,7 @@ public class WeightEntriesFeatureTests {
             new StubUserRepository(User.Create("weight-summary-missing-user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
-            new GetWeightSummariesQuery(null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
+            new GetWeightSummariesQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -199,7 +199,7 @@ public class WeightEntriesFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
-            new GetWeightEntriesQuery(Guid.Empty, null, null, 10, true),
+            new GetWeightEntriesQuery(Guid.Empty, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -215,7 +215,7 @@ public class WeightEntriesFeatureTests {
         var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
-            new GetWeightEntriesQuery(user.Id.Value, from, to, 10, true),
+            new GetWeightEntriesQuery(user.Id.Value, from, to, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -239,7 +239,7 @@ public class WeightEntriesFeatureTests {
         var handler = new GetWeightEntriesQueryHandler(repository, new StubUserRepository(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
-            new GetWeightEntriesQuery(user.Id.Value, null, null, 10, true),
+            new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -277,7 +277,7 @@ public class WeightEntriesFeatureTests {
             new StubUserRepository(User.Create("delete-weight-missing-user@example.com", "hash")));
 
         Result result = await handler.Handle(
-            new DeleteWeightEntryCommand(null, WeightEntryId.New().Value),
+            new DeleteWeightEntryCommand(UserId: null, WeightEntryId.New().Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -356,7 +356,7 @@ public class WeightEntriesFeatureTests {
             new StubUserRepository(User.Create("weight-update-missing-user@example.com", "hash")));
 
         Result<WeightEntryModel> result = await handler.Handle(
-            new UpdateWeightEntryCommand(null, WeightEntryId.New().Value, DateTime.UtcNow, 82),
+            new UpdateWeightEntryCommand(UserId: null, WeightEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -440,7 +440,7 @@ public class WeightEntriesFeatureTests {
             new StubUserRepository(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
-            new GetWeightEntriesQuery(user.Id.Value, null, null, 10, true),
+            new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

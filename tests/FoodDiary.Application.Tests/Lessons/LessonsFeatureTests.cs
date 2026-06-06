@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Tests.Lessons;
 public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WhenLessonExists_Succeeds() {
-        var lesson = NutritionLesson.Create("Proteins", "Content", null, "en",
+        var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         var repo = new StubLessonRepository(lesson, hasProgress: false);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
@@ -29,7 +29,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task MarkLessonRead_WhenAlreadyRead_ReturnsSuccessWithoutDuplicate() {
-        var lesson = NutritionLesson.Create("Proteins", "Content", null, "en",
+        var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         var repo = new StubLessonRepository(lesson, hasProgress: true);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
@@ -43,7 +43,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task MarkLessonRead_WhenLessonNotFound_ReturnsFailure() {
-        var repo = new StubLessonRepository(null, hasProgress: false);
+        var repo = new StubLessonRepository(lesson: null, hasProgress: false);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
@@ -56,10 +56,10 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkLessonReadCommandHandler(
-            new StubLessonRepository(null, false), new FixedDateTimeProvider());
+            new StubLessonRepository(lesson: null, hasProgress: false), new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
-            new MarkLessonReadCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -103,7 +103,7 @@ public class LessonsFeatureTests {
         var handler = new GetLessonsQueryHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
-            new GetLessonsQuery(userId.Value, "fr", null), CancellationToken.None);
+            new GetLessonsQuery(userId.Value, "fr", Category: null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         LessonSummaryModel lesson = Assert.Single(result.Value);
@@ -129,7 +129,7 @@ public class LessonsFeatureTests {
         var handler = new GetLessonsQueryHandler(new StubLessonRepository([], []));
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
-            new GetLessonsQuery(null, "en", null), CancellationToken.None);
+            new GetLessonsQuery(UserId: null, "en", Category: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -166,7 +166,7 @@ public class LessonsFeatureTests {
         var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
 
         Result<LessonDetailModel> result = await handler.Handle(
-            new GetLessonByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
+            new GetLessonByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

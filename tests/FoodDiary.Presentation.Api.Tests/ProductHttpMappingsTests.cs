@@ -284,7 +284,7 @@ public sealed class ProductHttpMappingsTests {
             "High protein yogurt",
             "Owner note",
             "https://cdn.example/yogurt.png",
-            null,
+            ImageAssetId: null,
             "G",
             100,
             150,
@@ -297,11 +297,11 @@ public sealed class ProductHttpMappingsTests {
             12,
             "Private",
             DateTime.UtcNow,
-            true,
+            IsOwnedByCurrentUser: true,
             88,
             "green",
             123456,
-            true,
+            IsFavorite: true,
             favoriteProductId);
 
         ProductHttpResponse response = model.ToHttpResponse();
@@ -317,15 +317,15 @@ public sealed class ProductHttpMappingsTests {
     public void ProductOverviewModel_ToHttpResponse_MapsNestedCollections() {
         var product = new ProductModel(
             Guid.NewGuid(),
-            null,
+            Barcode: null,
             "Protein Bar",
-            null,
+            Brand: null,
             "Food",
-            null,
-            null,
-            null,
-            null,
-            null,
+            Category: null,
+            Description: null,
+            Comment: null,
+            ImageUrl: null,
+            ImageAssetId: null,
             "G",
             100,
             60,
@@ -338,12 +338,12 @@ public sealed class ProductHttpMappingsTests {
             4,
             "Private",
             DateTime.UtcNow,
-            true,
+            IsOwnedByCurrentUser: true,
             64,
             "yellow",
-            null,
-            false,
-            null);
+            UsdaFdcId: null,
+            IsFavorite: false,
+            FavoriteProductId: null);
         var favorite = new FavoriteProductModel(
             Guid.NewGuid(),
             product.Id,

@@ -107,7 +107,7 @@ public class CommonAbstractionsTests {
 
     [Fact]
     public void ErrorKindResolver_ResolvesKnownFallbackPatterns() {
-        Assert.Null(ErrorKindResolver.Resolve(null));
+        Assert.Null(ErrorKindResolver.Resolve(errorCode: null));
         Assert.Null(ErrorKindResolver.Resolve(" "));
         Assert.Equal(ErrorKind.Forbidden, ErrorKindResolver.Resolve("Authentication.AdminSsoForbidden"));
         Assert.Equal(ErrorKind.Unauthorized, ErrorKindResolver.Resolve("Authentication.Unknown"));
@@ -376,7 +376,7 @@ public class CommonAbstractionsTests {
         var command = new UnsupportedResultCommand("");
 
         InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            behavior.Handle(command, _ => Task.FromResult(new TestResult(true, Error.None)), CancellationToken.None));
+            behavior.Handle(command, _ => Task.FromResult(new TestResult(isSuccess: true, Error.None)), CancellationToken.None));
 
         Assert.Contains(nameof(TestResult), exception.Message, StringComparison.Ordinal);
     }

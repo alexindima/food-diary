@@ -9,7 +9,7 @@ public class TdeeValidatorTests {
 
     [Fact]
     public async Task Validate_WithEmptyUserId_HasError() {
-        var query = new GetTdeeInsightQuery(null);
+        var query = new GetTdeeInsightQuery(UserId: null);
         TestValidationResult<GetTdeeInsightQuery> result = await _validator.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.UserId);

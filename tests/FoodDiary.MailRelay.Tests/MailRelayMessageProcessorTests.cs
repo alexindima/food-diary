@@ -119,7 +119,7 @@ public sealed class MailRelayMessageProcessorTests {
             string consumerName,
             string messageKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new MailRelayInboxClaimResult(true, Guid.NewGuid()));
+            Task.FromResult(new MailRelayInboxClaimResult(Claimed: true, Guid.NewGuid()));
 
         public Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
 

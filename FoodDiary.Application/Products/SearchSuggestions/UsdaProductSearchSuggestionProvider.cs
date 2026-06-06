@@ -34,14 +34,14 @@ public sealed class UsdaProductSearchSuggestionProvider(
         new(
             Source,
             food.Description,
-            null,
+            Brand: null,
             food.FoodCategory,
-            null,
+            Barcode: null,
             food.FdcId,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null);
+            ImageUrl: null,
+            CaloriesPer100G: null,
+            ProteinsPer100G: null,
+            FatsPer100G: null,
+            CarbsPer100G: null,
+            FiberPer100G: null);
 }

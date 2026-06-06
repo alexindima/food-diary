@@ -83,7 +83,7 @@ public sealed class WearableHttpMappingsTests {
     public void WearableConnectionModel_ToHttpResponse_MapsAllFields() {
         DateTime syncedAt = DateTime.UtcNow;
         DateTime connectedAt = DateTime.UtcNow.AddDays(-30);
-        var model = new WearableConnectionModel("fitbit", "ext-user-1", true, syncedAt, connectedAt);
+        var model = new WearableConnectionModel("fitbit", "ext-user-1", IsActive: true, syncedAt, connectedAt);
 
         WearableConnectionHttpResponse response = model.ToHttpResponse();
 

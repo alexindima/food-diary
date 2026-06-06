@@ -14,7 +14,7 @@ public sealed class AllowImageAssetAccessService : IImageAssetAccessService {
         UserId userId,
         CancellationToken cancellationToken = default) {
         if (!assetId.HasValue) {
-            return Task.FromResult(Result.Success<ImageAsset?>(null));
+            return Task.FromResult(Result.Success<ImageAsset?>(value: null));
         }
 
         var asset = ImageAsset.Create(

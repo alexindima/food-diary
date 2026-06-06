@@ -10,70 +10,70 @@ public class CyclesValidatorTests {
     [Fact]
     public async Task CreateCycle_WithNullUserId_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            new CreateCycleCommand(null, DateTime.UtcNow, null, null, null));
+            new CreateCycleCommand(UserId: null, DateTime.UtcNow, AverageLength: null, LutealLength: null, Notes: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task CreateCycle_WithAverageLengthOutOfRange_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, 10, null, null));
+            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, 10, LutealLength: null, Notes: null));
         result.ShouldHaveValidationErrorFor(c => c.AverageLength);
     }
 
     [Fact]
     public async Task CreateCycle_WithLutealLengthOutOfRange_HasError() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, null, 5, null));
+            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, AverageLength: null, 5, Notes: null));
         result.ShouldHaveValidationErrorFor(c => c.LutealLength);
     }
 
     [Fact]
     public async Task CreateCycle_WithValidData_NoErrors() {
         TestValidationResult<CreateCycleCommand> result = await new CreateCycleCommandValidator().TestValidateAsync(
-            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, 28, 14, null));
+            new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, 28, 14, Notes: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithNullUserId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(null, Guid.NewGuid(), DateTime.UtcNow, false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), null, false));
+            new UpsertCycleDayCommand(UserId: null, Guid.NewGuid(), DateTime.UtcNow, IsPeriod: false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), Notes: null, ClearNotes: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithEmptyCycleId_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), null, false));
+            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, IsPeriod: false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), Notes: null, ClearNotes: false));
         result.ShouldHaveValidationErrorFor(c => c.CycleId);
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithNullSymptoms_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, false, null!, null, false));
+            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, IsPeriod: false, null!, Notes: null, ClearNotes: false));
         result.ShouldHaveValidationErrorFor(c => c.Symptoms);
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithClearNotesAndNotes_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), "notes", true));
+            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, IsPeriod: false, new DailySymptomsModel(0, 0, 0, 0, 0, 0, 0), "notes", ClearNotes: true));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithSymptomOutOfRange_HasError() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, false, new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0), null, false));
+            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, IsPeriod: false, new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0), Notes: null, ClearNotes: false));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task UpsertCycleDay_WithValidData_NoErrors() {
         TestValidationResult<UpsertCycleDayCommand> result = await new UpsertCycleDayCommandValidator().TestValidateAsync(
-            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, true, new DailySymptomsModel(3, 5, 2, 1, 4, 7, 3), "notes", false));
+            new UpsertCycleDayCommand(Guid.NewGuid(), Guid.NewGuid(), DateTime.UtcNow, IsPeriod: true, new DailySymptomsModel(3, 5, 2, 1, 4, 7, 3), "notes", ClearNotes: false));
         result.ShouldNotHaveAnyValidationErrors();
     }
 }

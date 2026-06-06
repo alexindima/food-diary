@@ -59,15 +59,15 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpResponseMessage productResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 "Recipe Contract Product",
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -87,15 +87,15 @@ public sealed class PresentationPayloadContractIntegrationTests(
         var createRequest = new CreateRecipeHttpRequest(
             "Integration Recipe",
             "Contract test recipe",
-            null,
+            Comment: null,
             "Dinner",
-            null,
-            null,
+            ImageUrl: null,
+            ImageAssetId: null,
             10,
             20,
             2,
             "private",
-            false,
+            CalculateNutritionAutomatically: false,
             420,
             25,
             15,
@@ -107,10 +107,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
                     "Prepare",
                     "Mix all ingredients.",
                     [
-                        new RecipeIngredientHttpRequest(productId, null, 2.5),
+                        new RecipeIngredientHttpRequest(productId, NestedRecipeId: null, 2.5),
                     ],
-                    null,
-                    null),
+                    ImageUrl: null,
+                    ImageAssetId: null),
             ]);
 
         HttpResponseMessage createResponse = await client.PostAsJsonAsync("/api/v1/recipes", createRequest);
@@ -158,12 +158,12 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 "Weekend Shopping",
                 [
                     new ShoppingListItemHttpRequest(
-                        null,
+                        ProductId: null,
                         "Milk",
                         2,
                         "Ml",
                         "Dairy",
-                        false,
+                        IsChecked: false,
                         1),
                 ]));
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);

@@ -11,7 +11,7 @@ public class MealPlansValidatorTests {
     [Fact]
     public async Task AdoptMealPlan_WithEmptyUserId_HasError() {
         var validator = new AdoptMealPlanCommandValidator();
-        var command = new AdoptMealPlanCommand(null, Guid.NewGuid());
+        var command = new AdoptMealPlanCommand(UserId: null, Guid.NewGuid());
         TestValidationResult<AdoptMealPlanCommand> result = await validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -47,7 +47,7 @@ public class MealPlansValidatorTests {
     [Fact]
     public async Task GetMealPlans_WithEmptyUserId_HasError() {
         var validator = new GetMealPlansQueryValidator();
-        var query = new GetMealPlansQuery(null, null);
+        var query = new GetMealPlansQuery(UserId: null, DietType: null);
         TestValidationResult<GetMealPlansQuery> result = await validator.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.UserId);

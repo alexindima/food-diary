@@ -239,7 +239,7 @@ public sealed class MailInboxPresentationTests {
     [Fact]
     public void MailInboxResultExtensions_ErrorResult_WhenErrorKindIsUnknown_ReturnsInternalServerError() {
         IActionResult result = MailInboxResultExtensions.ErrorResult(
-            new MailInboxError("code", "message", (ErrorKind)999, null),
+            new MailInboxError("code", "message", (ErrorKind)999, Details: null),
             traceId: null);
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);

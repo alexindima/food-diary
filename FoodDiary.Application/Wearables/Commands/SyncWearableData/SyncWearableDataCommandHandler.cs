@@ -22,7 +22,7 @@ public class SyncWearableDataCommandHandler(
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out WearableProvider provider)) {
+        if (!Enum.TryParse<WearableProvider>(command.Provider, ignoreCase: true, out WearableProvider provider)) {
             return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.InvalidProvider(command.Provider));
         }
 

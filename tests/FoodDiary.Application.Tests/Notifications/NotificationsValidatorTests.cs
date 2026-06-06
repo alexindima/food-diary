@@ -12,7 +12,7 @@ public sealed class NotificationsValidatorTests {
         var validator = new UpsertWebPushSubscriptionCommandValidator();
 
         TestValidationResult<UpsertWebPushSubscriptionCommand> result = await validator.TestValidateAsync(
-            new UpsertWebPushSubscriptionCommand(null, "", "", "", null, null, null));
+            new UpsertWebPushSubscriptionCommand(UserId: null, "", "", "", ExpirationTimeUtc: null, Locale: null, UserAgent: null));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
         result.ShouldHaveValidationErrorFor(command => command.Endpoint);
@@ -30,7 +30,7 @@ public sealed class NotificationsValidatorTests {
                 new string('e', 2049),
                 new string('p', 513),
                 new string('a', 513),
-                null,
+                ExpirationTimeUtc: null,
                 new string('l', 17),
                 new string('u', 513)));
 
@@ -51,7 +51,7 @@ public sealed class NotificationsValidatorTests {
                 "https://push.example/sub",
                 "p256dh",
                 "auth",
-                null,
+                ExpirationTimeUtc: null,
                 "en",
                 "Browser"));
 
@@ -63,7 +63,7 @@ public sealed class NotificationsValidatorTests {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
         TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
-            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), null, null, null, 0, 169));
+            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 0, 169));
 
         result.ShouldHaveValidationErrorFor(command => command.FastingCheckInReminderHours);
         result.ShouldHaveValidationErrorFor(command => command.FastingCheckInFollowUpReminderHours);
@@ -74,7 +74,7 @@ public sealed class NotificationsValidatorTests {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
         TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
-            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), null, null, null, 12, 12));
+            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 12, 12));
 
         result.ShouldHaveValidationErrorFor(command => command);
     }
@@ -84,7 +84,7 @@ public sealed class NotificationsValidatorTests {
         var validator = new UpdateNotificationPreferencesCommandValidator();
 
         TestValidationResult<UpdateNotificationPreferencesCommand> result = await validator.TestValidateAsync(
-            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), true, true, false, 12, 18));
+            new UpdateNotificationPreferencesCommand(Guid.NewGuid(), PushNotificationsEnabled: true, FastingPushNotificationsEnabled: true, SocialPushNotificationsEnabled: false, 12, 18));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -94,7 +94,7 @@ public sealed class NotificationsValidatorTests {
         var validator = new ScheduleTestNotificationCommandValidator();
 
         TestValidationResult<ScheduleTestNotificationCommand> result = await validator.TestValidateAsync(
-            new ScheduleTestNotificationCommand(null, 15, "test"));
+            new ScheduleTestNotificationCommand(UserId: null, 15, "test"));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId);
     }

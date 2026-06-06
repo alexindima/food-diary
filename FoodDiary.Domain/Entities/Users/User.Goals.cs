@@ -50,24 +50,23 @@ public sealed partial class User {
         EnsureDayCalorieTarget(update.SaturdayCalories, nameof(update.SaturdayCalories));
         EnsureDayCalorieTarget(update.SundayCalories, nameof(update.SundayCalories));
 
-        UserGoalState state = GetGoalState() with {
-            DailyCalorieTarget = updatedGoals.DailyCalorieTarget,
-            ProteinTarget = updatedGoals.ProteinTarget,
-            FatTarget = updatedGoals.FatTarget,
-            CarbTarget = updatedGoals.CarbTarget,
-            FiberTarget = updatedGoals.FiberTarget,
-            WaterGoal = updatedGoals.WaterGoal,
-            DesiredWeight = update.DesiredWeight ?? DesiredWeight,
-            DesiredWaist = update.DesiredWaist ?? DesiredWaist,
-            CalorieCyclingEnabled = update.CalorieCyclingEnabled ?? CalorieCyclingEnabled,
-            MondayCalories = update.MondayCalories ?? MondayCalories,
-            TuesdayCalories = update.TuesdayCalories ?? TuesdayCalories,
-            WednesdayCalories = update.WednesdayCalories ?? WednesdayCalories,
-            ThursdayCalories = update.ThursdayCalories ?? ThursdayCalories,
-            FridayCalories = update.FridayCalories ?? FridayCalories,
-            SaturdayCalories = update.SaturdayCalories ?? SaturdayCalories,
-            SundayCalories = update.SundayCalories ?? SundayCalories,
-        };
+        UserGoalState state = new(
+            DailyCalorieTarget: updatedGoals.DailyCalorieTarget,
+            ProteinTarget: updatedGoals.ProteinTarget,
+            FatTarget: updatedGoals.FatTarget,
+            CarbTarget: updatedGoals.CarbTarget,
+            FiberTarget: updatedGoals.FiberTarget,
+            WaterGoal: updatedGoals.WaterGoal,
+            DesiredWeight: update.DesiredWeight ?? DesiredWeight,
+            DesiredWaist: update.DesiredWaist ?? DesiredWaist,
+            CalorieCyclingEnabled: update.CalorieCyclingEnabled ?? CalorieCyclingEnabled,
+            MondayCalories: update.MondayCalories ?? MondayCalories,
+            TuesdayCalories: update.TuesdayCalories ?? TuesdayCalories,
+            WednesdayCalories: update.WednesdayCalories ?? WednesdayCalories,
+            ThursdayCalories: update.ThursdayCalories ?? ThursdayCalories,
+            FridayCalories: update.FridayCalories ?? FridayCalories,
+            SaturdayCalories: update.SaturdayCalories ?? SaturdayCalories,
+            SundayCalories: update.SundayCalories ?? SundayCalories);
 
         ApplyGoalState(state);
 

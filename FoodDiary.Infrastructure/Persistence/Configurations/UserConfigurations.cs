@@ -27,9 +27,9 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
             value => value.HasValue ? new ImageAssetId(value.Value) : null);
 
         entity.HasIndex(e => e.Email).IsUnique();
-        entity.Property(e => e.IsActive).HasDefaultValue(true);
-        entity.Property(e => e.IsEmailConfirmed).HasDefaultValue(false);
-        entity.Property(e => e.HasPassword).HasDefaultValue(true);
+        entity.Property(e => e.IsActive).HasDefaultValue(value: true);
+        entity.Property(e => e.IsEmailConfirmed).HasDefaultValue(value: false);
+        entity.Property(e => e.HasPassword).HasDefaultValue(value: true);
         entity.Property(e => e.EmailConfirmationTokenExpiresAtUtc)
             .HasColumnType("timestamp with time zone");
         entity.Property(e => e.EmailConfirmationSentAtUtc)
@@ -58,11 +58,11 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User> {
         entity.Property(e => e.UiStyle)
             .HasDefaultValue("classic");
         entity.Property(e => e.PushNotificationsEnabled)
-            .HasDefaultValue(false);
+            .HasDefaultValue(value: false);
         entity.Property(e => e.FastingPushNotificationsEnabled)
-            .HasDefaultValue(true);
+            .HasDefaultValue(value: true);
         entity.Property(e => e.SocialPushNotificationsEnabled)
-            .HasDefaultValue(true);
+            .HasDefaultValue(value: true);
         entity.Property(e => e.FastingCheckInReminderHours)
             .HasDefaultValue(12);
         entity.Property(e => e.FastingCheckInFollowUpReminderHours)

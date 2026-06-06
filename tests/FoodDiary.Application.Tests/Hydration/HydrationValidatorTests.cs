@@ -12,7 +12,7 @@ public class HydrationValidatorTests {
     [Fact]
     public async Task CreateHydration_WithNullUserId_HasError() {
         TestValidationResult<CreateHydrationEntryCommand> result = await new CreateHydrationEntryCommandValidator().TestValidateAsync(
-            new CreateHydrationEntryCommand(null, DateTime.UtcNow, 500));
+            new CreateHydrationEntryCommand(UserId: null, DateTime.UtcNow, 500));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -47,28 +47,28 @@ public class HydrationValidatorTests {
     [Fact]
     public async Task UpdateHydration_WithNullUserId_HasError() {
         TestValidationResult<UpdateHydrationEntryCommand> result = await new UpdateHydrationEntryCommandValidator().TestValidateAsync(
-            new UpdateHydrationEntryCommand(null, Guid.NewGuid(), null, null));
+            new UpdateHydrationEntryCommand(UserId: null, Guid.NewGuid(), TimestampUtc: null, AmountMl: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateHydration_WithOverLimitAmount_HasError() {
         TestValidationResult<UpdateHydrationEntryCommand> result = await new UpdateHydrationEntryCommandValidator().TestValidateAsync(
-            new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.NewGuid(), null, 10001));
+            new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.NewGuid(), TimestampUtc: null, 10001));
         result.ShouldHaveValidationErrorFor(c => c.AmountMl);
     }
 
     [Fact]
     public async Task GetHydrationDailyTotal_WithNullUserId_HasError() {
         TestValidationResult<GetHydrationDailyTotalQuery> result = await new GetHydrationDailyTotalQueryValidator().TestValidateAsync(
-            new GetHydrationDailyTotalQuery(null, DateTime.UtcNow));
+            new GetHydrationDailyTotalQuery(UserId: null, DateTime.UtcNow));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task GetHydrationEntries_WithNullUserId_HasError() {
         TestValidationResult<GetHydrationEntriesQuery> result = await new GetHydrationEntriesQueryValidator().TestValidateAsync(
-            new GetHydrationEntriesQuery(null, DateTime.UtcNow));
+            new GetHydrationEntriesQuery(UserId: null, DateTime.UtcNow));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 }

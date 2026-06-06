@@ -55,7 +55,7 @@ public sealed partial class User {
     }
 
     public void CompleteEmailVerification() {
-        SetEmailConfirmed(true);
+        SetEmailConfirmed(isConfirmed: true);
     }
 
     public void SetEmailConfirmed(bool isConfirmed) {

@@ -304,12 +304,12 @@ public class FastingOccurrenceInvariantTests {
     public void UpdateCheckIn_WithInvalidValues_Throws() {
         var occurrence = FastingOccurrence.Create(FastingPlanId.New(), UserId.New(), FastingOccurrenceKind.FastDay, DateTime.UtcNow, 1);
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(0, 2, 3, null, null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 6, 3, null, null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 6, null, null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, Enumerable.Range(0, 9).Select(i => string.Create(CultureInfo.InvariantCulture, $"s{i}")), null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, [new string('s', 201)], null, DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, null, new string('n', 501), DateTime.UtcNow));
-        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, null, null, new DateTime(2026, 3, 27)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(0, 2, 3, symptoms: null, checkInNotes: null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 6, 3, symptoms: null, checkInNotes: null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 6, symptoms: null, checkInNotes: null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, Enumerable.Range(0, 9).Select(i => string.Create(CultureInfo.InvariantCulture, $"s{i}")), checkInNotes: null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, [new string('s', 201)], checkInNotes: null, DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, symptoms: null, new string('n', 501), DateTime.UtcNow));
+        Assert.Throws<ArgumentOutOfRangeException>(() => occurrence.UpdateCheckIn(1, 2, 3, symptoms: null, checkInNotes: null, new DateTime(2026, 3, 27)));
     }
 }

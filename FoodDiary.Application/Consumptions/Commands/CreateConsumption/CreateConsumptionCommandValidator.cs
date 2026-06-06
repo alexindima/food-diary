@@ -25,7 +25,7 @@ public class CreateConsumptionCommandValidator : AbstractValidator<CreateConsump
 
     private void ConfigureMealRules() {
         RuleFor(c => c.MealType)
-            .Must(mealType => string.IsNullOrWhiteSpace(mealType) || Enum.TryParse<MealType>(mealType, true, out _))
+            .Must(mealType => string.IsNullOrWhiteSpace(mealType) || Enum.TryParse<MealType>(mealType, ignoreCase: true, out _))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown meal type value.");
 

@@ -39,7 +39,7 @@ public sealed class TelegramLoginWidgetValidator(IOptions<TelegramAuthOptions> o
             data.FirstName,
             data.LastName,
             data.PhotoUrl,
-            null,
+            LanguageCode: null,
             authDateUtc);
 
         return Result.Success(telegramInitData);

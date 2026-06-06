@@ -16,7 +16,7 @@ public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReposi
             query.Limit,
             query.Provider,
             query.Status,
-            null,
+            kind: null,
             query.Search,
             query.FromUtc,
             query.ToUtc);

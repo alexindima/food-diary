@@ -45,8 +45,8 @@ public sealed class WeeklyCheckInHttpMappingsTests {
 
     [Fact]
     public void WeeklyCheckInModel_ToHttpResponse_WithNullWeightAndWaist() {
-        var summary = new WeekSummaryModel(0, 0, 0, 0, 0, 0, 0, null, null, null, null, 0, 0);
-        var trends = new WeekTrendModel(0, 0, 0, 0, null, null, 0, 0);
+        var summary = new WeekSummaryModel(0, 0, 0, 0, 0, 0, 0, WeightStart: null, WeightEnd: null, WaistStart: null, WaistEnd: null, 0, 0);
+        var trends = new WeekTrendModel(0, 0, 0, 0, WeightChange: null, WaistChange: null, 0, 0);
         var model = new WeeklyCheckInModel(summary, summary, trends, []);
 
         WeeklyCheckInHttpResponse response = model.ToHttpResponse();

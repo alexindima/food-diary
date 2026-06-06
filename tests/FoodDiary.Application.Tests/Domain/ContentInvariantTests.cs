@@ -10,35 +10,35 @@ public class ContentInvariantTests {
     [Fact]
     public void NutritionLesson_Create_WithBlankTitle_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            NutritionLesson.Create("   ", "Content", null, "en",
+            NutritionLesson.Create("   ", "Content", summary: null, "en",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
     [Fact]
     public void NutritionLesson_Create_WithBlankContent_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            NutritionLesson.Create("Title", "   ", null, "en",
+            NutritionLesson.Create("Title", "   ", summary: null, "en",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
     [Fact]
     public void NutritionLesson_Create_WithBlankLocale_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            NutritionLesson.Create("Title", "Content", null, "   ",
+            NutritionLesson.Create("Title", "Content", summary: null, "   ",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
     [Fact]
     public void NutritionLesson_Create_WithTooLongTitle_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            NutritionLesson.Create(new string('t', 257), "Content", null, "en",
+            NutritionLesson.Create(new string('t', 257), "Content", summary: null, "en",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
     [Fact]
     public void NutritionLesson_Create_WithTooLongContent_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            NutritionLesson.Create("Title", new string('c', 65537), null, "en",
+            NutritionLesson.Create("Title", new string('c', 65537), summary: null, "en",
                 LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5));
     }
 
@@ -61,7 +61,7 @@ public class ContentInvariantTests {
     [Fact]
     public void NutritionLesson_Create_WithZeroEstimatedReadMinutes_ClampsTo1() {
         var lesson = NutritionLesson.Create(
-            "Title", "Content", null, "en",
+            "Title", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 0);
 
         Assert.Equal(1, lesson.EstimatedReadMinutes);
@@ -70,7 +70,7 @@ public class ContentInvariantTests {
     [Fact]
     public void NutritionLesson_Create_WithNegativeSortOrder_ClampsTo0() {
         var lesson = NutritionLesson.Create(
-            "Title", "Content", null, "en",
+            "Title", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, -1);
 
         Assert.Equal(0, lesson.SortOrder);
@@ -125,7 +125,7 @@ public class ContentInvariantTests {
         var lesson = NutritionLesson.Create(
             "Title",
             "Content",
-            null,
+            summary: null,
             "en",
             LessonCategory.Macronutrients,
             LessonDifficulty.Beginner,
@@ -158,17 +158,17 @@ public class ContentInvariantTests {
         var lesson = NutritionLesson.Create(
             "Title",
             "Content",
-            null,
+            summary: null,
             "en",
             LessonCategory.Macronutrients,
             LessonDifficulty.Beginner,
             5);
 
-        Assert.Throws<ArgumentException>(() => lesson.Update(" ", "Content", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
-        Assert.Throws<ArgumentException>(() => lesson.Update("Title", " ", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
-        Assert.Throws<ArgumentException>(() => lesson.Update("Title", "Content", null, " ", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
-        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update(new string('t', 257), "Content", null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
-        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update("Title", new string('c', 65537), null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentException>(() => lesson.Update(" ", "Content", summary: null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentException>(() => lesson.Update("Title", " ", summary: null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentException>(() => lesson.Update("Title", "Content", summary: null, " ", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update(new string('t', 257), "Content", summary: null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => lesson.Update("Title", new string('c', 65537), summary: null, "en", LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5, 0));
     }
 
     [Fact]
@@ -309,7 +309,7 @@ public class ContentInvariantTests {
     public void FavoriteMeal_UpdateName_WithNull_ClearsName() {
         var fav = FavoriteMeal.Create(UserId.New(), MealId.New(), "Name");
 
-        fav.UpdateName(null);
+        fav.UpdateName(name: null);
 
         Assert.Null(fav.Name);
         Assert.NotNull(fav.ModifiedOnUtc);

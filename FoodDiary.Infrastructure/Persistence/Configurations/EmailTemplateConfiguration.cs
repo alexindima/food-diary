@@ -27,7 +27,7 @@ internal sealed class EmailTemplateConfiguration : IEntityTypeConfiguration<Emai
             .HasColumnType("text");
 
         entity.Property(e => e.IsActive)
-            .HasDefaultValue(true);
+            .HasDefaultValue(value: true);
 
         entity.HasIndex(e => new { e.Key, e.Locale })
             .IsUnique();

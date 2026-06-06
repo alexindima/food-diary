@@ -11,28 +11,28 @@ public class RegisterCommandValidatorTests {
     [Fact]
     public async Task Register_WithEmptyEmail_HasError() {
         var validator = new RegisterCommandValidator(new StubUserRepository());
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("", "password1", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("", "password1", Language: null));
         result.ShouldHaveValidationErrorFor(c => c.Email);
     }
 
     [Fact]
     public async Task Register_WithInvalidEmail_HasError() {
         var validator = new RegisterCommandValidator(new StubUserRepository());
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("not-email", "password1", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("not-email", "password1", Language: null));
         result.ShouldHaveValidationErrorFor(c => c.Email);
     }
 
     [Fact]
     public async Task Register_WithEmptyPassword_HasError() {
         var validator = new RegisterCommandValidator(new StubUserRepository());
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("user@test.com", "", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("user@test.com", "", Language: null));
         result.ShouldHaveValidationErrorFor(c => c.Password);
     }
 
     [Fact]
     public async Task Register_WithShortPassword_HasError() {
         var validator = new RegisterCommandValidator(new StubUserRepository());
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("user@test.com", "12345", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("user@test.com", "12345", Language: null));
         result.ShouldHaveValidationErrorFor(c => c.Password);
     }
 
@@ -50,7 +50,7 @@ public class RegisterCommandValidatorTests {
         repo.SeedIncludingDeleted(existingUser);
 
         var validator = new RegisterCommandValidator(repo);
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("taken@test.com", "password1", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("taken@test.com", "password1", Language: null));
 
         result.ShouldHaveValidationErrorFor(c => c.Email)
             .WithErrorCode("Validation.Conflict");
@@ -64,7 +64,7 @@ public class RegisterCommandValidatorTests {
         repo.SeedIncludingDeleted(deletedUser);
 
         var validator = new RegisterCommandValidator(repo);
-        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("deleted@test.com", "password1", null));
+        TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("deleted@test.com", "password1", Language: null));
 
         result.ShouldHaveValidationErrorFor(c => c.Email)
             .WithErrorCode("Authentication.AccountDeleted");

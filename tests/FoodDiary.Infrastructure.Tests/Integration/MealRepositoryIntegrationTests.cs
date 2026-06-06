@@ -182,10 +182,10 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             user.Id,
             new DateTime(2026, 5, 4, 13, 45, 0, DateTimeKind.Utc));
         meal.AddAiSession(
-            null,
+            imageAssetId: null,
             AiRecognitionSource.Text,
             new DateTime(2026, 5, 4, 13, 46, 0, DateTimeKind.Utc),
-            null,
+            notes: null,
             [
                 MealAiItemData.Create("Rice", "Ð Ð¸Ñ", 445, "g", 905, 58, 45, 66, 4, 0),
             ]);

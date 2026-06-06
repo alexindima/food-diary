@@ -10,43 +10,43 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void MealAiItemState_Create_WithBlankNameEn_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            MealAiItemState.Create("   ", null, 100, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("   ", nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithTooLongNameEn_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create(new string('a', 257), null, 100, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemState.Create(new string('a', 257), nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithZeroAmount_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create("Chicken", null, 0, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("Chicken", nameLocal: null, 0, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithNegativeAmount_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create("Chicken", null, -1, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("Chicken", nameLocal: null, -1, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithNaNAmount_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create("Chicken", null, double.NaN, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("Chicken", nameLocal: null, double.NaN, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithNegativeNutrition_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create("Chicken", null, 100, "g", -1, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("Chicken", nameLocal: null, 100, "g", -1, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemState_Create_WithInfiniteNutrition_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemState.Create("Chicken", null, 100, "g", double.PositiveInfinity, 10, 5, 20, 3, 0));
+            MealAiItemState.Create("Chicken", nameLocal: null, 100, "g", double.PositiveInfinity, 10, 5, 20, 3, 0));
     }
 
     [Fact]
@@ -466,7 +466,7 @@ public class AdditionalValueObjectsInvariantTests {
         DateTime loginTime = DateTime.UtcNow;
         UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithRefreshToken("token", loginTime)
-            .WithRefreshToken(null, DateTime.UtcNow.AddHours(1));
+            .WithRefreshToken(refreshToken: null, DateTime.UtcNow.AddHours(1));
 
         Assert.Null(state.RefreshToken);
         Assert.Equal(loginTime, state.LastLoginAtUtc);
@@ -476,7 +476,7 @@ public class AdditionalValueObjectsInvariantTests {
     public void UserSecurityState_AsEmailConfirmed_ClearsConfirmationTokens() {
         UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithEmailConfirmationToken("token-hash", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
-            .AsEmailConfirmed(true);
+            .AsEmailConfirmed(isConfirmed: true);
 
         Assert.True(state.IsEmailConfirmed);
         Assert.Null(state.EmailConfirmationTokenHash);
@@ -562,12 +562,12 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void RecipeNutrition_Create_WithNegativeValue_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            RecipeNutrition.Create(-1, null, null, null, null, null));
+            RecipeNutrition.Create(-1, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null));
     }
 
     [Fact]
     public void RecipeNutrition_Create_WithNullValues_Succeeds() {
-        var nutrition = RecipeNutrition.Create(null, null, null, null, null, null);
+        var nutrition = RecipeNutrition.Create(calories: null, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null);
 
         Assert.Null(nutrition.Calories);
         Assert.Null(nutrition.Proteins);
@@ -590,7 +590,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData(double.NegativeInfinity)]
     public void RecipeNutrition_Create_WithInfiniteValue_Throws(double value) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            RecipeNutrition.Create(value, null, null, null, null, null));
+            RecipeNutrition.Create(value, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null));
     }
 
     // --- UserNutritionGoals.With ---
@@ -615,7 +615,7 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void UserNutritionGoals_Create_WithNegativeValue_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserNutritionGoals.Create(-1, null, null, null, null, null));
+            UserNutritionGoals.Create(-1, proteinTarget: null, fatTarget: null, carbTarget: null, fiberTarget: null, waterGoal: null));
     }
 
     // --- UserActivityGoals ---
@@ -623,13 +623,13 @@ public class AdditionalValueObjectsInvariantTests {
     [Fact]
     public void UserActivityGoals_Create_WithNegativeStepGoal_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserActivityGoals.Create(-1, null));
+            UserActivityGoals.Create(-1, hydrationGoal: null));
     }
 
     [Fact]
     public void UserActivityGoals_Create_WithNegativeHydrationGoal_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserActivityGoals.Create(null, -1));
+            UserActivityGoals.Create(stepGoal: null, -1));
     }
 
     [Theory]
@@ -637,7 +637,7 @@ public class AdditionalValueObjectsInvariantTests {
     [InlineData(double.NegativeInfinity)]
     public void UserActivityGoals_Create_WithInfiniteHydrationGoal_Throws(double value) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserActivityGoals.Create(null, value));
+            UserActivityGoals.Create(stepGoal: null, value));
     }
 
     [Fact]
@@ -668,7 +668,7 @@ public class AdditionalValueObjectsInvariantTests {
 
     [Fact]
     public void UserActivityGoals_Create_WithNullValues_Succeeds() {
-        var goals = UserActivityGoals.Create(null, null);
+        var goals = UserActivityGoals.Create(stepGoal: null, hydrationGoal: null);
 
         Assert.Null(goals.StepGoal);
         Assert.Null(goals.HydrationGoal);
@@ -728,7 +728,7 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.True(first.Equals(first));
         Assert.True(first.Equals(same));
         Assert.False(first.Equals(different));
-        Assert.False(first.Equals(null));
+        Assert.False(first.Equals(other: null));
         Assert.True(first.Equals((object)same));
         Assert.False(first.Equals(new object()));
         Assert.Equal(first.GetHashCode(), same.GetHashCode());

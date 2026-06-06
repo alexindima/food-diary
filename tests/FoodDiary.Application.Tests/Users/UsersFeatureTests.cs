@@ -88,11 +88,11 @@ public class UsersFeatureTests {
         var user = User.Create("mapped@example.com", "hash");
         user.UpdatePersonalInfo("mapped", "Alex", "Tester", new DateTime(1990, 1, 2), "M", 82, 181);
         user.UpdateActivity(ActivityLevel.High, stepGoal: 9000, hydrationGoal: 2.4);
-        user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, 78, 84, true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
+        user.UpdateGoals(new UserGoalUpdate(2200, 130, 70, 240, 32, 2.5, 78, 84, CalorieCyclingEnabled: true, 2100, 2150, 2200, 2250, 2300, 2350, 2050));
         string layoutJson = JsonSerializer.Serialize(new DashboardLayoutModel(["meals", "weight"], ["summary"]));
-        user.UpdatePreferences(new UserPreferenceUpdate(layoutJson, "ru", "dark", "modern", true, false, false, 10, 18));
+        user.UpdatePreferences(new UserPreferenceUpdate(layoutJson, "ru", "dark", "modern", PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: false, 10, 18));
         user.ReplaceRoles([Role.Create(RoleNames.Admin), Role.Create(RoleNames.Support)]);
-        user.SetEmailConfirmed(true);
+        user.SetEmailConfirmed(isConfirmed: true);
         user.LinkTelegram(123456);
         user.UpdateAiTokenLimits(1000, 2000);
         user.AcceptAiConsent();
@@ -288,7 +288,7 @@ public class UsersFeatureTests {
     public async Task UpdateUserAppearanceHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(User.Create("user@example.com", "hash")));
 
-        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(null, "dark", null), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(UserId: null, "dark", UiStyle: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -300,7 +300,7 @@ public class UsersFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
 
-        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", null), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", UiStyle: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -311,7 +311,7 @@ public class UsersFeatureTests {
         var user = User.Create("appearance-theme@example.com", "hash");
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
 
-        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "invalid", null), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "invalid", UiStyle: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -323,7 +323,7 @@ public class UsersFeatureTests {
         var user = User.Create("appearance-style@example.com", "hash");
         var handler = new UpdateUserAppearanceCommandHandler(new SingleUserRepository(user));
 
-        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, null, "invalid"), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, Theme: null, "invalid"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -346,7 +346,7 @@ public class UsersFeatureTests {
     public async Task UpdateDesiredWeightHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateDesiredWeightCommandHandler(new SingleUserRepository(User.Create("desired-weight@example.com", "hash")));
 
-        Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(null, 75), CancellationToken.None);
+        Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(UserId: null, 75), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -555,7 +555,7 @@ public class UsersFeatureTests {
             "dietologist@example.com",
             "token-hash",
             DateTime.UtcNow.AddDays(7),
-            new DietologistPermissions(true, false, true, false, true, false, true, true));
+            new DietologistPermissions(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: true));
         var subscription = WebPushSubscription.Create(
             user.Id,
             "https://push.example.com/subscriptions/current",
@@ -589,9 +589,9 @@ public class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new SingleUserRepository(user),
             new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(null));
+            new FixedDietologistInvitationRepository(invitation: null));
 
-        Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(null), CancellationToken.None);
+        Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -604,7 +604,7 @@ public class UsersFeatureTests {
         var handler = new GetProfileOverviewQueryHandler(
             new SingleUserRepository(user),
             new FixedWebPushSubscriptionRepository([]),
-            new FixedDietologistInvitationRepository(null));
+            new FixedDietologistInvitationRepository(invitation: null));
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -623,7 +623,7 @@ public class UsersFeatureTests {
     [Fact]
     public async Task GetDesiredWeightQueryValidator_WithNullUserId_Fails() {
         var validator = new GetDesiredWeightQueryValidator();
-        ValidationResult result = await validator.ValidateAsync(new GetDesiredWeightQuery(null));
+        ValidationResult result = await validator.ValidateAsync(new GetDesiredWeightQuery(UserId: null));
 
         Assert.False(result.IsValid);
     }
@@ -632,7 +632,7 @@ public class UsersFeatureTests {
     public async Task GetDesiredWeightHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetDesiredWeightQueryHandler(new SingleUserRepository(User.Create("desired-weight-query@example.com", "hash")));
 
-        Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(null), CancellationToken.None);
+        Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);

@@ -18,7 +18,7 @@ public class DisconnectWearableCommandHandler(IWearableConnectionRepository conn
             return Result.Failure(userIdResult.Error);
         }
 
-        if (!Enum.TryParse<WearableProvider>(command.Provider, true, out WearableProvider provider)) {
+        if (!Enum.TryParse<WearableProvider>(command.Provider, ignoreCase: true, out WearableProvider provider)) {
             return Result.Failure(Errors.Wearable.InvalidProvider(command.Provider));
         }
 

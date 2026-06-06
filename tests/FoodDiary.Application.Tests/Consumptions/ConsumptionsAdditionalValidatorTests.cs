@@ -13,14 +13,14 @@ public class ConsumptionsAdditionalValidatorTests {
     [Fact]
     public async Task RepeatMeal_WithNullUserId_HasError() {
         TestValidationResult<RepeatMealCommand> result = await new RepeatMealCommandValidator().TestValidateAsync(
-            new RepeatMealCommand(null, Guid.NewGuid(), DateTime.UtcNow, null));
+            new RepeatMealCommand(UserId: null, Guid.NewGuid(), DateTime.UtcNow, MealType: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task RepeatMeal_WithEmptyMealId_HasError() {
         TestValidationResult<RepeatMealCommand> result = await new RepeatMealCommandValidator().TestValidateAsync(
-            new RepeatMealCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, null));
+            new RepeatMealCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, MealType: null));
         result.ShouldHaveValidationErrorFor(c => c.MealId);
     }
 
@@ -28,7 +28,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ConsumptionItem_WithNoProductOrRecipe_ReturnsFailure() {
-        var item = new ConsumptionItemInput(null, null, 100);
+        var item = new ConsumptionItemInput(ProductId: null, RecipeId: null, 100);
         Result result = ConsumptionItemValidator.Validate(item);
         Assert.True(result.IsFailure);
     }
@@ -42,7 +42,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ConsumptionItem_WithZeroAmount_ReturnsFailure() {
-        var item = new ConsumptionItemInput(Guid.NewGuid(), null, 0);
+        var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 0);
         Result result = ConsumptionItemValidator.Validate(item);
         Assert.True(result.IsFailure);
     }
@@ -52,7 +52,7 @@ public class ConsumptionsAdditionalValidatorTests {
     [InlineData(double.PositiveInfinity)]
     [InlineData(double.NegativeInfinity)]
     public void ConsumptionItem_WithNonFiniteAmount_ReturnsFailure(double amount) {
-        var item = new ConsumptionItemInput(Guid.NewGuid(), null, amount);
+        var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, amount);
 
         Result result = ConsumptionItemValidator.Validate(item);
 
@@ -62,7 +62,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ConsumptionItem_WithTooLargeAmount_ReturnsFailure() {
-        var item = new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_000.01d);
+        var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 1_000_000.01d);
 
         Result result = ConsumptionItemValidator.Validate(item);
 
@@ -72,7 +72,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ConsumptionItem_WithValidProductAndAmount_ReturnsSuccess() {
-        var item = new ConsumptionItemInput(Guid.NewGuid(), null, 150);
+        var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 150);
         Result result = ConsumptionItemValidator.Validate(item);
         Assert.True(result.IsSuccess);
     }
@@ -81,7 +81,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ManualNutrition_WithNullCalories_ReturnsFailure() {
-        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(null, 30, 10, 50, 5, 0);
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(calories: null, 30, 10, 50, 5, 0);
         Assert.True(result.IsFailure);
     }
 
@@ -127,7 +127,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void ManualNutrition_WithNullAlcohol_DefaultsToZero() {
-        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, null);
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, alcohol: null);
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Alcohol);
     }
@@ -154,7 +154,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
     [Fact]
     public void SatietyLevel_WithNullValues_ReturnsSuccess() {
-        Result result = SatietyLevelValidator.Validate(null, null);
+        Result result = SatietyLevelValidator.Validate(preMealSatietyLevel: null, postMealSatietyLevel: null);
         Assert.True(result.IsSuccess);
     }
 }

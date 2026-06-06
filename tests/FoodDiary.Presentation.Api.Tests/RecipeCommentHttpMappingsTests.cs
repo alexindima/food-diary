@@ -40,7 +40,7 @@ public sealed class RecipeCommentHttpMappingsTests {
         var model = new RecipeCommentModel(
             Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid(),
             "johndoe", "John", "Looks delicious!",
-            DateTime.UtcNow, DateTime.UtcNow, true);
+            DateTime.UtcNow, DateTime.UtcNow, IsOwnedByCurrentUser: true);
 
         RecipeCommentHttpResponse response = model.ToHttpResponse();
 

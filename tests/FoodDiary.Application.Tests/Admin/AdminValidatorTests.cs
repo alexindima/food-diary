@@ -16,7 +16,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithEmptyActorUserId_HasError() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", null, null));
+            new StartAdminImpersonationCommand(Guid.Empty, Guid.NewGuid(), "Valid support reason", ActorIpAddress: null, ActorUserAgent: null));
 
         result.ShouldHaveValidationErrorFor(command => command.ActorUserId);
     }
@@ -24,7 +24,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithEmptyTargetUserId_HasError() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", null, null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.Empty, "Valid support reason", ActorIpAddress: null, ActorUserAgent: null));
 
         result.ShouldHaveValidationErrorFor(command => command.TargetUserId);
     }
@@ -34,7 +34,7 @@ public class AdminValidatorTests {
     [InlineData("short")]
     public async Task StartAdminImpersonation_WithInvalidReason_HasError(string reason) {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, null, null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), reason, ActorIpAddress: null, ActorUserAgent: null));
 
         result.ShouldHaveValidationErrorFor(command => command.Reason);
     }
@@ -42,7 +42,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task StartAdminImpersonation_WithValidData_NoErrors() {
         TestValidationResult<StartAdminImpersonationCommand> result = await new StartAdminImpersonationCommandValidator().TestValidateAsync(
-            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", null, null));
+            new StartAdminImpersonationCommand(Guid.NewGuid(), Guid.NewGuid(), "Investigating support ticket", ActorIpAddress: null, ActorUserAgent: null));
 
         result.ShouldNotHaveAnyValidationErrors();
     }
@@ -52,42 +52,42 @@ public class AdminValidatorTests {
     [Fact]
     public async Task UpdateAdminUser_WithEmptyUserId_HasError() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.Empty, null, null, null, null, null, null));
+            new UpdateAdminUserCommand(Guid.Empty, IsActive: null, IsEmailConfirmed: null, Roles: null, Language: null, AiInputTokenLimit: null, AiOutputTokenLimit: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithNegativeAiTokenLimit_HasError() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, null, null, -1, null));
+            new UpdateAdminUserCommand(Guid.NewGuid(), IsActive: null, IsEmailConfirmed: null, Roles: null, Language: null, -1, AiOutputTokenLimit: null));
         result.ShouldHaveValidationErrorFor(c => c.AiInputTokenLimit);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithInvalidLanguage_HasError() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, null, "invalid-lang", null, null));
+            new UpdateAdminUserCommand(Guid.NewGuid(), IsActive: null, IsEmailConfirmed: null, Roles: null, "invalid-lang", AiInputTokenLimit: null, AiOutputTokenLimit: null));
         result.ShouldHaveValidationErrorFor(c => c.Language);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithUnknownRole_HasError() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "UnknownRole" }, null, null, null));
+            new UpdateAdminUserCommand(Guid.NewGuid(), IsActive: null, IsEmailConfirmed: null, new[] { "UnknownRole" }, Language: null, AiInputTokenLimit: null, AiOutputTokenLimit: null));
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithValidAdminRole_NoErrors() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "Admin" }, null, null, null));
+            new UpdateAdminUserCommand(Guid.NewGuid(), IsActive: null, IsEmailConfirmed: null, new[] { "Admin" }, Language: null, AiInputTokenLimit: null, AiOutputTokenLimit: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
     [Fact]
     public async Task UpdateAdminUser_WithValidOwnerRole_NoErrors() {
         TestValidationResult<UpdateAdminUserCommand> result = await new UpdateAdminUserCommandValidator().TestValidateAsync(
-            new UpdateAdminUserCommand(Guid.NewGuid(), null, null, new[] { "Owner", "Admin" }, null, null, null));
+            new UpdateAdminUserCommand(Guid.NewGuid(), IsActive: null, IsEmailConfirmed: null, new[] { "Owner", "Admin" }, Language: null, AiInputTokenLimit: null, AiOutputTokenLimit: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -96,28 +96,28 @@ public class AdminValidatorTests {
     [Fact]
     public async Task UpsertEmailTemplate_WithEmptyKey_HasError() {
         TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
-            new UpsertAdminEmailTemplateCommand("", "en", "Subject", "<p>Body</p>", "Body", true));
+            new UpsertAdminEmailTemplateCommand("", "en", "Subject", "<p>Body</p>", "Body", IsActive: true));
         result.ShouldHaveValidationErrorFor(c => c.Key);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithInvalidLocale_HasError() {
         TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
-            new UpsertAdminEmailTemplateCommand("key", "xx", "Subject", "<p>Body</p>", "Body", true));
+            new UpsertAdminEmailTemplateCommand("key", "xx", "Subject", "<p>Body</p>", "Body", IsActive: true));
         result.ShouldHaveValidationErrorFor(c => c.Locale);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithEmptySubject_HasError() {
         TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
-            new UpsertAdminEmailTemplateCommand("key", "en", "", "<p>Body</p>", "Body", true));
+            new UpsertAdminEmailTemplateCommand("key", "en", "", "<p>Body</p>", "Body", IsActive: true));
         result.ShouldHaveValidationErrorFor(c => c.Subject);
     }
 
     [Fact]
     public async Task UpsertEmailTemplate_WithValidData_NoErrors() {
         TestValidationResult<UpsertAdminEmailTemplateCommand> result = await new UpsertAdminEmailTemplateCommandValidator().TestValidateAsync(
-            new UpsertAdminEmailTemplateCommand("welcome", "en", "Welcome!", "<p>Hi</p>", "Hi", true));
+            new UpsertAdminEmailTemplateCommand("welcome", "en", "Welcome!", "<p>Hi</p>", "Hi", IsActive: true));
         result.ShouldNotHaveAnyValidationErrors();
     }
 
@@ -133,7 +133,7 @@ public class AdminValidatorTests {
     [Fact]
     public async Task GetAdminAiUsage_WithNullDates_NoErrors() {
         TestValidationResult<GetAdminAiUsageSummaryQuery> result = await new GetAdminAiUsageSummaryQueryValidator().TestValidateAsync(
-            new GetAdminAiUsageSummaryQuery(null, null));
+            new GetAdminAiUsageSummaryQuery(From: null, To: null));
         result.ShouldNotHaveAnyValidationErrors();
     }
 

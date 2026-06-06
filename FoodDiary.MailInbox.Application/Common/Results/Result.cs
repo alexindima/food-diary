@@ -14,17 +14,17 @@ public class Result {
     public bool IsFailure => !IsSuccess;
     public MailInboxError? Error { get; }
 
-    public static Result Success() => new(true, null);
+    public static Result Success() => new(isSuccess: true, error: null);
 
-    public static Result Failure(MailInboxError error) => new(false, error);
+    public static Result Failure(MailInboxError error) => new(isSuccess: false, error);
 }
 
 public sealed class Result<T> : Result {
-    private Result(T value) : base(true, null) {
+    private Result(T value) : base(isSuccess: true, error: null) {
         Value = value;
     }
 
-    private Result(MailInboxError error) : base(false, error) {
+    private Result(MailInboxError error) : base(isSuccess: false, error) {
     }
 
     public T Value => IsSuccess

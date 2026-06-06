@@ -33,14 +33,14 @@ public sealed class BillingAccessService(
 
         if (shouldHavePremium) {
             currentRoles.Add(RoleNames.Premium);
-            subscription.MarkPremiumRoleManagedByBilling(true, dateTimeProvider.GetUtcNow().UtcDateTime);
+            subscription.MarkPremiumRoleManagedByBilling(value: true, dateTimeProvider.GetUtcNow().UtcDateTime);
         } else {
             if (!subscription.PremiumRoleManagedByBilling) {
                 return;
             }
 
             currentRoles.RemoveAll(role => string.Equals(role, RoleNames.Premium, StringComparison.Ordinal));
-            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.GetUtcNow().UtcDateTime);
+            subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
         }
 
         IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);

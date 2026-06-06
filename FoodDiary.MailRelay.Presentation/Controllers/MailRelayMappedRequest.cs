@@ -7,8 +7,8 @@ public sealed record MailRelayMappedRequest<TResponse>(IRequest<Result<TResponse
     public bool IsSuccess => Request is not null;
 
     public static MailRelayMappedRequest<TResponse> Success(IRequest<Result<TResponse>> request) =>
-        new(request, null);
+        new(request, Error: null);
 
     public static MailRelayMappedRequest<TResponse> Failure(string? error) =>
-        new(null, error);
+        new(Request: null, error);
 }

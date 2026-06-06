@@ -49,7 +49,7 @@ public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WhenRecipeNotFound_ReturnsFailure() {
         var repo = new InMemoryRecipeLikeRepository();
-        var recipeRepo = new StubRecipeRepository(null);
+        var recipeRepo = new StubRecipeRepository(recipe: null);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
@@ -62,10 +62,10 @@ public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WithNullUserId_ReturnsFailure() {
         var handler = new ToggleRecipeLikeCommandHandler(
-            new InMemoryRecipeLikeRepository(), new StubRecipeRepository(null));
+            new InMemoryRecipeLikeRepository(), new StubRecipeRepository(recipe: null));
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new ToggleRecipeLikeCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -104,7 +104,7 @@ public class RecipeLikesFeatureTests {
         var handler = new GetRecipeLikeStatusQueryHandler(new InMemoryRecipeLikeRepository());
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
-            new GetRecipeLikeStatusQuery(null, Guid.NewGuid()), CancellationToken.None);
+            new GetRecipeLikeStatusQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

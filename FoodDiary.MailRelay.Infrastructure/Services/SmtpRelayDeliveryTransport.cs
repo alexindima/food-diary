@@ -40,7 +40,7 @@ public sealed class SmtpRelayDeliveryTransport(
         }
 
         await client.SendAsync(message, cancellationToken).ConfigureAwait(false);
-        await client.DisconnectAsync(true, cancellationToken).ConfigureAwait(false);
+        await client.DisconnectAsync(quit: true, cancellationToken).ConfigureAwait(false);
     }
 
     private static MimeEntity CreateBody(RelayEmailMessageRequest request) {

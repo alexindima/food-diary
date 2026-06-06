@@ -255,7 +255,7 @@ public class UpdateRecipeCommandHandlerTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        Result<RecipeModel> result = await handler.Handle(UpdateCommand(null, recipeId.Value), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId: null, recipeId.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1024,13 +1024,13 @@ public class UpdateRecipeCommandHandlerTests {
             Task.FromResult(
                 assetId.HasValue
                     ? Result.Failure<ImageAsset?>(error)
-                    : Result.Success<ImageAsset?>(null));
+                    : Result.Success<ImageAsset?>(value: null));
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopImageAssetCleanupService : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new DeleteImageAssetResult(true));
+            Task.FromResult(new DeleteImageAssetResult(Deleted: true));
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
@@ -1042,7 +1042,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
-            return Task.FromResult(new DeleteImageAssetResult(true));
+            return Task.FromResult(new DeleteImageAssetResult(Deleted: true));
         }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
@@ -1070,7 +1070,7 @@ public class UpdateRecipeCommandHandlerTests {
     }
 
     private static Product CreateProduct(UserId userId, ProductId productId) {
-        var product = Product.Create(userId, "Ingredient", MeasurementUnit.G, 100, null, 100, 1, 1, 1, 1, 0);
+        var product = Product.Create(userId, "Ingredient", MeasurementUnit.G, 100, defaultPortionAmount: null, 100, 1, 1, 1, 1, 0);
         typeof(Product)
             .GetProperty(nameof(Product.Id))!
             .SetValue(product, productId);

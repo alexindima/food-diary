@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Tests.Authentication;
 public sealed class AuthenticationUserAccessPolicyTests {
     [Fact]
     public void EnsureCanAuthenticate_WithNullUser_ReturnsInvalidCredentials() {
-        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(null);
+        Error? error = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user: null);
 
         Assert.NotNull(error);
         Assert.Equal("Authentication.InvalidCredentials", error!.Code);
@@ -54,7 +54,7 @@ public sealed class AuthenticationUserAccessPolicyTests {
         deletedUser.DeleteAccount(DateTime.UtcNow);
 
         Assert.True(AuthenticationUserAccessPolicy.CanRequestPasswordReset(activeUser));
-        Assert.False(AuthenticationUserAccessPolicy.CanRequestPasswordReset(null));
+        Assert.False(AuthenticationUserAccessPolicy.CanRequestPasswordReset(user: null));
         Assert.False(AuthenticationUserAccessPolicy.CanRequestPasswordReset(inactiveUser));
         Assert.False(AuthenticationUserAccessPolicy.CanRequestPasswordReset(deletedUser));
     }

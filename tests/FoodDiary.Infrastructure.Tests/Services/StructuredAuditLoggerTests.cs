@@ -26,7 +26,7 @@ public sealed class StructuredAuditLoggerTests {
         var auditLogger = new StructuredAuditLogger(logger, new StubDateTimeProvider());
         var actorId = UserId.New();
 
-        auditLogger.Log("user.deleted", actorId, "User", "123", null);
+        auditLogger.Log("user.deleted", actorId, "User", "123", details: null);
 
         Assert.Contains("user.deleted", logger.LastMessage, StringComparison.Ordinal);
         Assert.Contains(actorId.Value.ToString(), logger.LastMessage, StringComparison.Ordinal);
@@ -38,7 +38,7 @@ public sealed class StructuredAuditLoggerTests {
         var auditLogger = new StructuredAuditLogger(logger, new StubDateTimeProvider());
         var actorId = UserId.New();
 
-        auditLogger.Log("test.action", actorId, null, null, null);
+        auditLogger.Log("test.action", actorId, targetType: null, targetId: null, details: null);
 
         Assert.Contains("-", logger.LastMessage, StringComparison.Ordinal);
     }

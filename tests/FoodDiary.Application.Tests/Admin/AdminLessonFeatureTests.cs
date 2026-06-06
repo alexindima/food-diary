@@ -90,7 +90,7 @@ public class AdminLessonFeatureTests {
 
     [Fact]
     public async Task UpdateAdminLessonHandler_WithValidData_UpdatesLesson() {
-        var lesson = NutritionLesson.Create("Old Title", "Old Content", null, "en",
+        var lesson = NutritionLesson.Create("Old Title", "Old Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
@@ -143,7 +143,7 @@ public class AdminLessonFeatureTests {
 
     [Fact]
     public async Task UpdateAdminLessonHandler_WithInvalidCategory_ReturnsFailure() {
-        var lesson = NutritionLesson.Create("Title", "Content", null, "en",
+        var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
@@ -167,7 +167,7 @@ public class AdminLessonFeatureTests {
 
     [Fact]
     public async Task UpdateAdminLessonHandler_WithInvalidDifficulty_ReturnsFailure() {
-        var lesson = NutritionLesson.Create("Title", "Content", null, "en",
+        var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new UpdateAdminLessonCommandHandler(repo);
@@ -192,7 +192,7 @@ public class AdminLessonFeatureTests {
 
     [Fact]
     public async Task DeleteAdminLessonHandler_WhenLessonExists_Succeeds() {
-        var lesson = NutritionLesson.Create("Title", "Content", null, "en",
+        var lesson = NutritionLesson.Create("Title", "Content", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var repo = new InMemoryLessonRepository(lesson);
         var handler = new DeleteAdminLessonCommandHandler(repo);
@@ -220,7 +220,7 @@ public class AdminLessonFeatureTests {
 
     [Fact]
     public async Task GetAdminLessonsHandler_ReturnsAllLessons() {
-        var lesson1 = NutritionLesson.Create("Lesson 1", "Content 1", null, "en",
+        var lesson1 = NutritionLesson.Create("Lesson 1", "Content 1", summary: null, "en",
             LessonCategory.NutritionBasics, LessonDifficulty.Beginner, 3);
         var lesson2 = NutritionLesson.Create("Lesson 2", "Content 2", "Summary", "ru",
             LessonCategory.Macronutrients, LessonDifficulty.Advanced, 10);
@@ -254,7 +254,7 @@ public class AdminLessonFeatureTests {
                 Version: 1,
                 Lessons: [
                     new ImportAdminLessonItem(" Intro ", " Content ", " Summary ", "EN", "NutritionBasics", "Beginner", 3, 2),
-                    new ImportAdminLessonItem("Advanced", "Details", null, "ru", "Macronutrients", "Advanced", 8, 4),
+                    new ImportAdminLessonItem("Advanced", "Details", Summary: null, "ru", "Macronutrients", "Advanced", 8, 4),
                 ]),
             CancellationToken.None);
 
@@ -273,7 +273,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem("Title", "Content", null, "en", "Unknown", "Beginner", 3, 0),
+                    new ImportAdminLessonItem("Title", "Content", Summary: null, "en", "Unknown", "Beginner", 3, 0),
                 ]),
             CancellationToken.None);
 
@@ -290,7 +290,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem("Title", "Content", null, "en", "NutritionBasics", "Expert", 3, 0),
+                    new ImportAdminLessonItem("Title", "Content", Summary: null, "en", "NutritionBasics", "Expert", 3, 0),
                 ]),
             CancellationToken.None);
 
@@ -307,7 +307,7 @@ public class AdminLessonFeatureTests {
             new ImportAdminLessonsCommand(
                 Version: 1,
                 Lessons: [
-                    new ImportAdminLessonItem(" ", "Content", null, "en", "NutritionBasics", "Beginner", 3, 0),
+                    new ImportAdminLessonItem(" ", "Content", Summary: null, "en", "NutritionBasics", "Beginner", 3, 0),
                 ]),
             CancellationToken.None);
 
@@ -321,7 +321,7 @@ public class AdminLessonFeatureTests {
         var validator = new CreateAdminLessonCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(
-            new CreateAdminLessonCommand("", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
+            new CreateAdminLessonCommand("", "Content", Summary: null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Title", StringComparison.Ordinal));
@@ -332,7 +332,7 @@ public class AdminLessonFeatureTests {
         var validator = new CreateAdminLessonCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(
-            new CreateAdminLessonCommand("Title", "", null, "en", "NutritionBasics", "Beginner", 5, 0));
+            new CreateAdminLessonCommand("Title", "", Summary: null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Content", StringComparison.Ordinal));
@@ -343,7 +343,7 @@ public class AdminLessonFeatureTests {
         var validator = new CreateAdminLessonCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(
-            new CreateAdminLessonCommand("Title", "Content", null, "en", "NutritionBasics", "Beginner", 0, 0));
+            new CreateAdminLessonCommand("Title", "Content", Summary: null, "en", "NutritionBasics", "Beginner", 0, 0));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "EstimatedReadMinutes", StringComparison.Ordinal));
@@ -364,7 +364,7 @@ public class AdminLessonFeatureTests {
         var validator = new UpdateAdminLessonCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(
-            new UpdateAdminLessonCommand(Guid.Empty, "Title", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
+            new UpdateAdminLessonCommand(Guid.Empty, "Title", "Content", Summary: null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, "Id", StringComparison.Ordinal));
@@ -375,7 +375,7 @@ public class AdminLessonFeatureTests {
         var validator = new UpdateAdminLessonCommandValidator();
 
         ValidationResult result = await validator.ValidateAsync(
-            new UpdateAdminLessonCommand(Guid.NewGuid(), "Title", "Content", null, "en", "NutritionBasics", "Beginner", 5, 0));
+            new UpdateAdminLessonCommand(Guid.NewGuid(), "Title", "Content", Summary: null, "en", "NutritionBasics", "Beginner", 5, 0));
 
         Assert.True(result.IsValid);
     }

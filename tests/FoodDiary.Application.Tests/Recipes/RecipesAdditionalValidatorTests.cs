@@ -14,7 +14,7 @@ public class RecipesAdditionalValidatorTests {
     [Fact]
     public async Task DuplicateRecipe_WithNullUserId_HasError() {
         TestValidationResult<DuplicateRecipeCommand> result = await new DuplicateRecipeCommandValidator().TestValidateAsync(
-            new DuplicateRecipeCommand(null, Guid.NewGuid()));
+            new DuplicateRecipeCommand(UserId: null, Guid.NewGuid()));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -30,14 +30,14 @@ public class RecipesAdditionalValidatorTests {
     [Fact]
     public async Task GetRecipeById_WithNullUserId_HasError() {
         TestValidationResult<GetRecipeByIdQuery> result = await new GetRecipeByIdQueryValidator().TestValidateAsync(
-            new GetRecipeByIdQuery(null, Guid.NewGuid(), false));
+            new GetRecipeByIdQuery(UserId: null, Guid.NewGuid(), IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
     [Fact]
     public async Task GetRecipeById_WithEmptyRecipeId_HasError() {
         TestValidationResult<GetRecipeByIdQuery> result = await new GetRecipeByIdQueryValidator().TestValidateAsync(
-            new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false));
+            new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.RecipeId);
     }
 
@@ -46,14 +46,14 @@ public class RecipesAdditionalValidatorTests {
     [Fact]
     public async Task GetRecipes_WithZeroPage_HasError() {
         TestValidationResult<GetRecipesQuery> result = await new GetRecipesQueryValidator().TestValidateAsync(
-            new GetRecipesQuery(Guid.NewGuid(), 0, 10, null, false));
+            new GetRecipesQuery(Guid.NewGuid(), 0, 10, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.Page);
     }
 
     [Fact]
     public async Task GetRecipes_WithZeroLimit_HasError() {
         TestValidationResult<GetRecipesQuery> result = await new GetRecipesQueryValidator().TestValidateAsync(
-            new GetRecipesQuery(Guid.NewGuid(), 1, 0, null, false));
+            new GetRecipesQuery(Guid.NewGuid(), 1, 0, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
@@ -62,7 +62,7 @@ public class RecipesAdditionalValidatorTests {
     [Fact]
     public async Task GetRecentRecipes_WithNullUserId_HasError() {
         TestValidationResult<GetRecentRecipesQuery> result = await new GetRecentRecipesQueryValidator().TestValidateAsync(
-            new GetRecentRecipesQuery(null, 10, false));
+            new GetRecentRecipesQuery(UserId: null, 10, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -71,7 +71,7 @@ public class RecipesAdditionalValidatorTests {
     [Fact]
     public async Task GetRecipesOverview_WithNullUserId_HasError() {
         TestValidationResult<GetRecipesOverviewQuery> result = await new GetRecipesOverviewQueryValidator().TestValidateAsync(
-            new GetRecipesOverviewQuery(null, 1, 10, null, false));
+            new GetRecipesOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: false));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 }

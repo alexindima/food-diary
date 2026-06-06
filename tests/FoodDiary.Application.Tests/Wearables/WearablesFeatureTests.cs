@@ -81,7 +81,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task ConnectWearable_WhenAuthFails_ReturnsFailure() {
-        var client = new StubWearableClient(WearableProvider.Fitbit, null);
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null);
         var userId = UserId.New();
         var stateService = new StubWearableOAuthStateService();
         string state = stateService.CreateState(userId, WearableProvider.Fitbit, "state-123");
@@ -99,7 +99,7 @@ public class WearablesFeatureTests {
     public async Task ConnectWearable_WithExistingConnection_UpdatesTokens() {
         var userId = UserId.New();
         var existing = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext-user", "old-token", "old-refresh", null);
+            userId, WearableProvider.Fitbit, "ext-user", "old-token", "old-refresh", tokenExpiresAtUtc: null);
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(existing);
 
@@ -120,7 +120,7 @@ public class WearablesFeatureTests {
     public async Task ConnectWearable_WithInactiveExistingConnection_ReplacesConnectionInResult() {
         var userId = UserId.New();
         var existing = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "old-ext-user", "old-token", "old-refresh", null);
+            userId, WearableProvider.Fitbit, "old-ext-user", "old-token", "old-refresh", tokenExpiresAtUtc: null);
         existing.Deactivate();
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(existing);
@@ -164,7 +164,7 @@ public class WearablesFeatureTests {
     public async Task DisconnectWearable_WithActiveConnection_Succeeds() {
         var userId = UserId.New();
         var connection = WearableConnection.Create(
-            userId, WearableProvider.Fitbit, "ext", "token", null, null);
+            userId, WearableProvider.Fitbit, "ext", "token", refreshToken: null, tokenExpiresAtUtc: null);
         var repo = new InMemoryWearableConnectionRepository();
         repo.Seed(connection);
 
@@ -214,7 +214,7 @@ public class WearablesFeatureTests {
 
     [Fact]
     public async Task GetWearableAuthUrl_WithConfiguredProvider_ReturnsClientUrl() {
-        var client = new StubWearableClient(WearableProvider.Fitbit, null);
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null);
         var userId = UserId.New();
         var handler = new GetWearableAuthUrlQueryHandler([client], new StubWearableOAuthStateService());
 
@@ -239,7 +239,7 @@ public class WearablesFeatureTests {
     [Fact]
     public async Task GetWearableAuthUrl_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWearableAuthUrlQueryHandler(
-            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             new StubWearableOAuthStateService());
 
         Result<string> result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.Empty, "Fitbit", "state"), CancellationToken.None);
@@ -251,7 +251,7 @@ public class WearablesFeatureTests {
     [Fact]
     public async Task GetWearableAuthUrl_WithInvalidProvider_ReturnsInvalidProvider() {
         var handler = new GetWearableAuthUrlQueryHandler(
-            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             new StubWearableOAuthStateService());
 
         Result<string> result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Unknown", "state"), CancellationToken.None);
@@ -331,7 +331,7 @@ public class WearablesFeatureTests {
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var syncRepository = new InMemoryWearableSyncRepository();
-        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             DataPoints = [
                 new WearableDataPoint(WearableDataType.Steps, 5000),
                 new WearableDataPoint(WearableDataType.CaloriesBurned, 250),
@@ -383,7 +383,7 @@ public class WearablesFeatureTests {
     [Fact]
     public async Task SyncWearableData_WhenConnectionMissing_ReturnsNotConnected() {
         var handler = new SyncWearableDataCommandHandler(
-            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             new InMemoryWearableConnectionRepository(),
             new InMemoryWearableSyncRepository());
 
@@ -404,7 +404,7 @@ public class WearablesFeatureTests {
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         var handler = new SyncWearableDataCommandHandler(
-            [new StubWearableClient(WearableProvider.Fitbit, null)],
+            [new StubWearableClient(WearableProvider.Fitbit, tokenResult: null)],
             connectionRepository,
             new InMemoryWearableSyncRepository());
 
@@ -444,7 +444,7 @@ public class WearablesFeatureTests {
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
         DateTime refreshExpiresAtUtc = DateTime.UtcNow.AddHours(2);
-        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             RefreshTokenResult = new WearableTokenResult("new-access", "new-refresh", "ext", refreshExpiresAtUtc),
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository());
@@ -469,7 +469,7 @@ public class WearablesFeatureTests {
         connectionRepository.Seed(connection);
         var syncRepository = new InMemoryWearableSyncRepository();
         syncRepository.Seed(WearableSyncEntry.Create(userId, WearableProvider.Fitbit, WearableDataType.ActiveMinutes, date, 10));
-        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             DataPoints = [
                 new WearableDataPoint(WearableDataType.HeartRate, 72),
                 new WearableDataPoint(WearableDataType.ActiveMinutes, 20),
@@ -497,7 +497,7 @@ public class WearablesFeatureTests {
             userId, WearableProvider.Fitbit, "ext", "access", "refresh", DateTime.UtcNow.AddMinutes(-1));
         var connectionRepository = new InMemoryWearableConnectionRepository();
         connectionRepository.Seed(connection);
-        var client = new StubWearableClient(WearableProvider.Fitbit, null) {
+        var client = new StubWearableClient(WearableProvider.Fitbit, tokenResult: null) {
             RefreshTokenResult = null,
         };
         var handler = new SyncWearableDataCommandHandler([client], connectionRepository, new InMemoryWearableSyncRepository());

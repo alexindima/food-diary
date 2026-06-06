@@ -68,7 +68,7 @@ public sealed class GoogleLoginCommandHandler(
 
     private static void ApplyGoogleProfile(User user, GoogleIdentityPayload payload) {
         if (!user.IsEmailConfirmed) {
-            user.SetEmailConfirmed(true);
+            user.SetEmailConfirmed(isConfirmed: true);
         }
 
         if (!string.IsNullOrWhiteSpace(payload.Locale)) {

@@ -79,30 +79,30 @@ public sealed class S3ImageStorageService(
         string objectKey,
         CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(objectKey)) {
-            return new ImageObjectValidationResult(false, "invalid_key", "Image object key is required.");
+            return new ImageObjectValidationResult(IsValid: false, "invalid_key", "Image object key is required.");
         }
 
         try {
             StoredObjectInfo? info = await storageClient.GetObjectInfoAsync(_options.Bucket, objectKey, cancellationToken).ConfigureAwait(false);
             if (info is null) {
-                return new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.");
+                return new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.");
             }
 
             if (info.SizeBytes <= 0) {
-                return new ImageObjectValidationResult(false, "empty", "Image file is empty.");
+                return new ImageObjectValidationResult(IsValid: false, "empty", "Image file is empty.");
             }
 
             if (info.SizeBytes > _options.MaxUploadSizeBytes) {
-                return new ImageObjectValidationResult(false, "too_large",
+                return new ImageObjectValidationResult(IsValid: false, "too_large",
                     string.Create(CultureInfo.InvariantCulture, $"File is too large. Max allowed size: {_options.MaxUploadSizeBytes} bytes."));
             }
 
             if (string.IsNullOrWhiteSpace(info.ContentType) || !AllowedContentTypes.Contains(info.ContentType)) {
-                return new ImageObjectValidationResult(false, "unsupported_type",
+                return new ImageObjectValidationResult(IsValid: false, "unsupported_type",
                     $"Unsupported content type: {info.ContentType ?? "unknown"}.");
             }
 
-            return new ImageObjectValidationResult(true);
+            return new ImageObjectValidationResult(IsValid: true);
         } catch (Exception ex) {
             IntegrationsTelemetry.RecordStorageOperation("head", "failure", ex.GetType().Name);
             throw;

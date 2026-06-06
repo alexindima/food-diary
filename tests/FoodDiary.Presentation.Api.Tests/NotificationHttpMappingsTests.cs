@@ -60,7 +60,7 @@ public sealed class NotificationHttpMappingsTests {
     public void NotificationModel_ToHttpResponse_MapsAllFields() {
         var id = Guid.NewGuid();
         DateTime createdAt = DateTime.UtcNow;
-        var model = new NotificationModel(id, "NewRecommendation", "New recommendation", "Details here", "/dietologist", "ref-123", false, createdAt);
+        var model = new NotificationModel(id, "NewRecommendation", "New recommendation", "Details here", "/dietologist", "ref-123", IsRead: false, createdAt);
 
         NotificationHttpResponse response = model.ToHttpResponse();
 
@@ -76,7 +76,7 @@ public sealed class NotificationHttpMappingsTests {
 
     [Fact]
     public void NotificationModel_ToHttpResponse_WithNullOptionalFields() {
-        var model = new NotificationModel(Guid.NewGuid(), "info", "Title", null, null, null, true, DateTime.UtcNow);
+        var model = new NotificationModel(Guid.NewGuid(), "info", "Title", Body: null, TargetUrl: null, ReferenceId: null, IsRead: true, DateTime.UtcNow);
 
         NotificationHttpResponse response = model.ToHttpResponse();
 
@@ -98,7 +98,7 @@ public sealed class NotificationHttpMappingsTests {
     [Fact]
     public void UpdateNotificationPreferencesRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
-        var request = new UpdateNotificationPreferencesHttpRequest(true, false, true, 12, 20);
+        var request = new UpdateNotificationPreferencesHttpRequest(PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20);
 
         UpdateNotificationPreferencesCommand command = request.ToCommand(userId);
 
@@ -112,7 +112,7 @@ public sealed class NotificationHttpMappingsTests {
 
     [Fact]
     public void NotificationPreferencesModel_ToHttpResponse_MapsAllFields() {
-        var model = new NotificationPreferencesModel(true, false, true, 12, 20);
+        var model = new NotificationPreferencesModel(PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20);
 
         NotificationPreferencesHttpResponse response = model.ToHttpResponse();
 
@@ -184,7 +184,7 @@ public sealed class NotificationHttpMappingsTests {
         var model = new WebPushSubscriptionModel(
             "not-a-uri",
             "not-a-uri",
-            null,
+            ExpirationTimeUtc: null,
             "en",
             "Chrome",
             createdAtUtc,
@@ -205,7 +205,7 @@ public sealed class NotificationHttpMappingsTests {
     public void ScheduledAndConfigurationModels_ToHttpResponse_MapAllFields() {
         DateTime scheduledAtUtc = DateTime.UtcNow.AddMinutes(1);
         var scheduled = new ScheduledNotificationModel("fasting.completed", 45, scheduledAtUtc);
-        var configuration = new WebPushConfigurationModel(true, "public-key");
+        var configuration = new WebPushConfigurationModel(Enabled: true, "public-key");
 
         ScheduledNotificationHttpResponse scheduledResponse = scheduled.ToHttpResponse();
         WebPushConfigurationHttpResponse configurationResponse = configuration.ToHttpResponse();

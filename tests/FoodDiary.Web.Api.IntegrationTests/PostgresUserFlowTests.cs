@@ -25,7 +25,7 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         HttpClient client = await CreateAuthenticatedClientAsync();
 
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
-            null, "Integration Apple", null, "Unknown", null, null, null, null, null,
+            Barcode: null, "Integration Apple", Brand: null, "Unknown", Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null,
             "G", 100, 100, 52, 0.3, 0.2, 14, 2.4, 0, "Private"));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
         IdPayload? product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
@@ -33,8 +33,8 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
 
         DateTime today = DateTime.UtcNow.Date;
         HttpResponseMessage createConsumptionResponse = await client.PostAsJsonAsync("/api/v1/consumptions", new CreateConsumptionHttpRequest(
-            today, "Lunch", null, null, null,
-            [new ConsumptionItemHttpRequest(product.Id, null, 200)],
+            today, "Lunch", Comment: null, ImageUrl: null, ImageAssetId: null,
+            [new ConsumptionItemHttpRequest(product.Id, RecipeId: null, 200)],
             IsNutritionAutoCalculated: true));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse);
 
@@ -85,17 +85,17 @@ public sealed class PostgresUserFlowTests(PostgresApiWebApplicationFactory facto
         HttpClient client = await CreateAuthenticatedClientAsync();
 
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync("/api/v1/products", new CreateProductHttpRequest(
-            null, "Recipe Ingredient", null, "Unknown", null, null, null, null, null,
+            Barcode: null, "Recipe Ingredient", Brand: null, "Unknown", Category: null, Description: null, Comment: null, ImageUrl: null, ImageAssetId: null,
             "G", 100, 100, 100, 5, 3, 15, 1, 0, "Private"));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createProductResponse);
         IdPayload? product = await createProductResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(product);
 
         HttpResponseMessage createRecipeResponse = await client.PostAsJsonAsync("/api/v1/recipes", new CreateRecipeHttpRequest(
-            "Original Soup", "Test recipe", null, "Dinner", null, null,
-            15, 30, 2, "private", true, null, null, null, null, null, null,
+            "Original Soup", "Test recipe", Comment: null, "Dinner", ImageUrl: null, ImageAssetId: null,
+            15, 30, 2, "private", CalculateNutritionAutomatically: true, ManualCalories: null, ManualProteins: null, ManualFats: null, ManualCarbs: null, ManualFiber: null, ManualAlcohol: null,
             [new RecipeStepHttpRequest("Boil", "Boil water",
-                [new RecipeIngredientHttpRequest(product.Id, null, 200)], null, null)]));
+                [new RecipeIngredientHttpRequest(product.Id, NestedRecipeId: null, 200)], ImageUrl: null, ImageAssetId: null)]));
         await AssertStatusCodeAsync(HttpStatusCode.Created, createRecipeResponse);
         IdPayload? recipe = await createRecipeResponse.Content.ReadFromJsonAsync<IdPayload>(JsonOptions);
         Assert.NotNull(recipe);

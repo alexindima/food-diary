@@ -8,7 +8,7 @@ public sealed class ConsumptionAiSessionInputValidator : AbstractValidator<Consu
 
     public ConsumptionAiSessionInputValidator() {
         RuleFor(x => x.Source)
-            .Must(source => string.IsNullOrWhiteSpace(source) || Enum.TryParse<AiRecognitionSource>(source, true, out _))
+            .Must(source => string.IsNullOrWhiteSpace(source) || Enum.TryParse<AiRecognitionSource>(source, ignoreCase: true, out _))
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown AI recognition source value.");
 

@@ -20,7 +20,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithNullUserId_HasError() {
-        var command = new StartFastingCommand(null, "F16_8", null, null, null, null, null, null, null);
+        var command = new StartFastingCommand(UserId: null, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -28,7 +28,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithEmptyUserId_HasError() {
-        var command = new StartFastingCommand(Guid.Empty, "F16_8", null, null, null, null, null, null, null);
+        var command = new StartFastingCommand(Guid.Empty, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -36,7 +36,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithEmptyProtocol_HasError() {
-        var command = new StartFastingCommand(Guid.NewGuid(), "", null, null, null, null, null, null, null);
+        var command = new StartFastingCommand(Guid.NewGuid(), "", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.Protocol);
@@ -44,7 +44,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithValidCommand_NoErrors() {
-        var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", null, 16, null, null, null, null, null);
+        var command = new StartFastingCommand(Guid.NewGuid(), "F16_8", PlanType: null, 16, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -52,7 +52,7 @@ public class FastingValidatorTests {
 
     [Fact]
     public async Task StartFasting_WithCyclicPlanType_WithoutProtocol_NoErrors() {
-        var command = new StartFastingCommand(Guid.NewGuid(), null, "Cyclic", null, 1, 3, 16, 8, null);
+        var command = new StartFastingCommand(Guid.NewGuid(), Protocol: null, "Cyclic", PlannedDurationHours: null, 1, 3, 16, 8, Notes: null);
         TestValidationResult<StartFastingCommand> result = await _validator.TestValidateAsync(command);
 
         result.ShouldNotHaveValidationErrorFor(c => c.Protocol);
@@ -69,7 +69,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task SkipCyclicDay_WithNullUserId_HasError() {
         var validator = new SkipCyclicDayCommandValidator();
-        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(null));
+        TestValidationResult<SkipCyclicDayCommand> result = await validator.TestValidateAsync(new SkipCyclicDayCommand(UserId: null));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -101,7 +101,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task ExtendActiveFasting_WithNullUserId_HasInvalidTokenError() {
         var validator = new ExtendActiveFastingCommandValidator();
-        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(null, 4));
+        TestValidationResult<ExtendActiveFastingCommand> result = await validator.TestValidateAsync(new ExtendActiveFastingCommand(UserId: null, 4));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId)
             .WithErrorCode("Authentication.InvalidToken");
@@ -127,7 +127,7 @@ public class FastingValidatorTests {
     [Fact]
     public async Task GetCurrentFasting_WithNullUserId_HasError() {
         var validator = new GetCurrentFastingQueryValidator();
-        TestValidationResult<GetCurrentFastingQuery> result = await validator.TestValidateAsync(new GetCurrentFastingQuery(null));
+        TestValidationResult<GetCurrentFastingQuery> result = await validator.TestValidateAsync(new GetCurrentFastingQuery(UserId: null));
 
         result.ShouldHaveValidationErrorFor(x => x.UserId);
     }
@@ -185,7 +185,7 @@ public class FastingValidatorTests {
     public async Task UpdateCurrentFastingCheckIn_WithNullUserId_HasInvalidTokenError() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
         TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
-            new UpdateCurrentFastingCheckInCommand(null, 3, 3, 3, null, null));
+            new UpdateCurrentFastingCheckInCommand(UserId: null, 3, 3, 3, Symptoms: null, CheckInNotes: null));
 
         result.ShouldHaveValidationErrorFor(command => command.UserId)
             .WithErrorCode("Authentication.InvalidToken");
@@ -195,7 +195,7 @@ public class FastingValidatorTests {
     public async Task UpdateCurrentFastingCheckIn_WithInvalidLevels_HasErrors() {
         var validator = new UpdateCurrentFastingCheckInCommandValidator();
         TestValidationResult<UpdateCurrentFastingCheckInCommand> result = await validator.TestValidateAsync(
-            new UpdateCurrentFastingCheckInCommand(Guid.NewGuid(), 0, 6, 0, null, null));
+            new UpdateCurrentFastingCheckInCommand(Guid.NewGuid(), 0, 6, 0, Symptoms: null, CheckInNotes: null));
 
         result.ShouldHaveValidationErrorFor(command => command.HungerLevel);
         result.ShouldHaveValidationErrorFor(command => command.EnergyLevel);

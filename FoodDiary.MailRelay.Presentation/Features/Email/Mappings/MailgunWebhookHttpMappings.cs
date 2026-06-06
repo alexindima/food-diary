@@ -21,7 +21,7 @@ public static class MailgunWebhookHttpMappings {
                 "complaint",
                 request.EventData.Recipient,
                 "mailgun-webhook",
-                null,
+                Classification: null,
                 request.EventData.Id,
                 request.EventData.Reason ?? "complaint"),
             "failed" or "bounced" => new IngestMailEventRequest(

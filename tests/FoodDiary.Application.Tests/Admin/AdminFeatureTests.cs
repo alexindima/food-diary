@@ -66,7 +66,7 @@ public class AdminFeatureTests {
             "evt_123",
             "{\"ok\":true}",
             DateTime.UtcNow,
-            null);
+            ModifiedOnUtc: null);
         repository.PaymentsResponse = ([payment], 41);
         var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
@@ -103,7 +103,7 @@ public class AdminFeatureTests {
         var handler = new GetAdminBillingPaymentsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
-            new GetAdminBillingPaymentsQuery(1, 20, provider, null, null, null, null, null),
+            new GetAdminBillingPaymentsQuery(1, 20, provider, Status: null, Kind: null, Search: null, FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -126,17 +126,17 @@ public class AdminFeatureTests {
             "active",
             DateTime.UtcNow.AddYears(-1),
             DateTime.UtcNow,
-            false,
+            CancelAtPeriodEnd: false,
             DateTime.UtcNow,
             "evt_123",
             DateTime.UtcNow,
             DateTime.UtcNow,
-            null);
+            ModifiedOnUtc: null);
         repository.SubscriptionsResponse = ([subscription], 1);
         var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingSubscriptionReadModel>> result = await handler.Handle(
-            new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", null, null, null),
+            new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", Search: null, FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -157,14 +157,14 @@ public class AdminFeatureTests {
             "processed",
             DateTime.UtcNow,
             "{\"event_id\":\"evt_123\"}",
-            null,
+            ErrorMessage: null,
             DateTime.UtcNow,
-            null);
+            ModifiedOnUtc: null);
         repository.WebhookEventsResponse = ([webhookEvent], 1);
         var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
 
         Result<PagedResponse<AdminBillingWebhookEventReadModel>> result = await handler.Handle(
-            new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", null, null),
+            new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -597,7 +597,7 @@ public class AdminFeatureTests {
     [Fact]
     public async Task UpdateAdminUserHandler_WithUnchangedAdminAccountFields_DoesNotSetModifiedOnUtc() {
         User user = CreateUserWithRoles("admin@example.com", [RoleNames.Admin]);
-        user.SetEmailConfirmed(true);
+        user.SetEmailConfirmed(isConfirmed: true);
         user.SetLanguage("en");
         user.UpdateAiTokenLimits(new FoodDiary.Domain.ValueObjects.UserAiTokenLimitUpdate(
             InputLimit: 123,
@@ -929,7 +929,7 @@ public class AdminFeatureTests {
         var handler = new UpsertAdminAiPromptCommandHandler(repository);
 
         Result<AdminAiPromptModel> result = await handler.Handle(
-            new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", true),
+            new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", IsActive: true),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -942,12 +942,12 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task UpsertAdminAiPromptHandler_WhenPromptExists_UpdatesTrackedTemplate() {
-        var template = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", true);
+        var template = AiPromptTemplate.Create("meal_summary", "en", "Old prompt", isActive: true);
         var repository = new InMemoryAiPromptTemplateRepository(template);
         var handler = new UpsertAdminAiPromptCommandHandler(repository);
 
         Result<AdminAiPromptModel> result = await handler.Handle(
-            new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", false),
+            new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", IsActive: false),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -960,7 +960,7 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
-        var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", true);
+        var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
         var handler = new GetAdminAiPromptsQueryHandler(new InMemoryAiPromptTemplateRepository(template));
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
@@ -1023,7 +1023,7 @@ public class AdminFeatureTests {
         var aiUsageRepository = new RecordingAiUsageRepository();
         var handler = new GetAdminAiUsageSummaryQueryHandler(aiUsageRepository, dateTimeProvider);
 
-        Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(null, null), CancellationToken.None);
+        Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
@@ -1257,7 +1257,7 @@ public class AdminFeatureTests {
             "Subject",
             "<b>Body</b>",
             "Body",
-            true);
+            isActive: true);
         var handler = new GetAdminEmailTemplatesQueryHandler(new InMemoryEmailTemplateRepository(template));
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
@@ -1329,8 +1329,8 @@ public class AdminFeatureTests {
             user.Id.Value,
             RoleNames.Admin,
             UserRoleAuditAction.Added.ToString(),
-            null,
-            null,
+            ActorUserId: null,
+            ActorEmail: null,
             "test",
             DateTime.UtcNow);
         var repository = new RecordingUserRoleAuditRepository([auditEvent]);
@@ -1368,19 +1368,21 @@ public class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class NullAuditLogger : IAuditLogger {
-        public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) { }
+        public void Log(string action, UserId actorId, string? targetType = null, string? targetId = null, string? details = null) {
+        }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository {
         private readonly User _user = user;
+
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
-                name => name,
-                name => user.UserRoles
-                    .Select(userRole => userRole.Role)
-                    .FirstOrDefault(role => string.Equals(role.Name, name, StringComparison.Ordinal))
+            name => name,
+            name => user.UserRoles
+                        .Select(userRole => userRole.Role)
+                        .FirstOrDefault(role => string.Equals(role.Name, name, StringComparison.Ordinal))
                     ?? Role.Create(name),
-                StringComparer.Ordinal);
+            StringComparer.Ordinal);
 
         public List<UserRoleAuditEvent> RoleAuditEvents { get; } = [];
 

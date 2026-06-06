@@ -80,7 +80,7 @@ internal sealed class BillingSubscriptionConfiguration : IEntityTypeConfiguratio
             .HasColumnType("timestamp with time zone");
 
         entity.Property(e => e.PremiumRoleManagedByBilling)
-            .HasDefaultValue(false);
+            .HasDefaultValue(value: false);
     }
 
     private static void ConfigureIndexes(EntityTypeBuilder<BillingSubscription> entity) {

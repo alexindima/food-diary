@@ -698,7 +698,7 @@ public sealed class JobsTests {
         public List<DateTime> OlderThanValues { get; } = [];
 
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(Domain.ValueObjects.Ids.ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(new DeleteImageAssetResult(false));
+            Task.FromResult(new DeleteImageAssetResult(Deleted: false));
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
             OlderThanValues.Add(olderThanUtc);
@@ -768,10 +768,10 @@ public sealed class JobsTests {
             status,
             periodStartUtc,
             periodEndUtc,
-            false,
-            null,
-            null,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             eventId,
             eventCreatedAtUtc);
         return subscription;

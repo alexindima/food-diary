@@ -93,7 +93,7 @@ public class MealNutritionServiceTests {
             source: AiRecognitionSource.Text,
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
-            items: [MealAiItemData.Create("Cookie", null, 50, "g", 250, 3, 12, 34, 1, 0)]);
+            items: [MealAiItemData.Create("Cookie", nameLocal: null, 50, "g", 250, 3, 12, 34, 1, 0)]);
 
         MealNutritionService service = CreateService();
 

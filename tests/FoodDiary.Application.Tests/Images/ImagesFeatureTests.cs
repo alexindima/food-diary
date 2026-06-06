@@ -335,7 +335,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(
             repo,
-            new FakeImageStorageService(new ImageObjectValidationResult(false, "not_found", "Image upload has not completed.")));
+            new FakeImageStorageService(new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.")));
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
@@ -348,8 +348,8 @@ public class ImagesFeatureTests {
     private sealed class FakeCleanupService(string? errorCode = null) : IImageAssetCleanupService {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
             Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(true)
-                : new DeleteImageAssetResult(false, errorCode));
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode));
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
             Task.FromResult(0);
@@ -376,7 +376,7 @@ public class ImagesFeatureTests {
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
             string objectKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(validationResult ?? new ImageObjectValidationResult(true));
+            Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true));
     }
 
     [ExcludeFromCodeCoverage]
@@ -414,7 +414,7 @@ public class ImagesFeatureTests {
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
             string objectKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(true));
+            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
     }
 
     [ExcludeFromCodeCoverage]

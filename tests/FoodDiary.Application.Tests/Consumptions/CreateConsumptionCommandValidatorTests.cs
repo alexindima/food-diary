@@ -66,7 +66,7 @@ public class CreateConsumptionCommandValidatorTests {
 
     [Fact]
     public async Task Validate_WhenItemHasNeitherProductNorRecipe_HasError() {
-        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(null, null, 100)]);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(ProductId: null, RecipeId: null, 100)]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
@@ -80,14 +80,14 @@ public class CreateConsumptionCommandValidatorTests {
 
     [Fact]
     public async Task Validate_WhenItemAmountIsZero_HasError() {
-        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 0)]);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 0)]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
 
     [Fact]
     public async Task Validate_WhenItemAmountIsTooLarge_HasError() {
-        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
+        CreateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 1_000_001)]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
@@ -96,8 +96,8 @@ public class CreateConsumptionCommandValidatorTests {
     public async Task Validate_WhenAiItemNameIsBlank_HasError() {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
-            aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0),
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                new ConsumptionAiItemInput("", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -107,8 +107,8 @@ public class CreateConsumptionCommandValidatorTests {
     public async Task Validate_WhenAiItemNutritionIsNegative_HasError() {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
-            aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("Apple", null, 100, "g", -1, 10, 5, 20, 3, 0),
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                new ConsumptionAiItemInput("Apple", NameLocal: null, 100, "g", -1, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -118,8 +118,8 @@ public class CreateConsumptionCommandValidatorTests {
     public async Task Validate_WhenAiSessionRecognizedAtIsUnspecified_HasError() {
         CreateConsumptionCommand command = CreateCommand(
             items: [],
-            aiSessions: [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 12, 0, 0), null, [
-                new ConsumptionAiItemInput("Apple", null, 100, "g", 100, 10, 5, 20, 3, 0),
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", new DateTime(2026, 3, 26, 12, 0, 0), Notes: null, [
+                new ConsumptionAiItemInput("Apple", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -184,7 +184,7 @@ public class CreateConsumptionCommandValidatorTests {
             Comment: null,
             ImageUrl: null,
             ImageAssetId: null,
-            Items: items ?? [new ConsumptionItemInput(Guid.NewGuid(), null, 100)],
+            Items: items ?? [new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 100)],
             AiSessions: aiSessions ?? [],
             IsNutritionAutoCalculated: isAutoCalculated,
             ManualCalories: manualCalories,

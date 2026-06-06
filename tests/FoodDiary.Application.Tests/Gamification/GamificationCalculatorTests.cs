@@ -145,7 +145,7 @@ public class GamificationCalculatorTests {
         for (int i = 0; i < 7; i++) {
             DateTime date = Today.AddDays(-i);
             var meal = Meal.Create(userId, date, MealType.Lunch);
-            meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, true));
+            meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, IsAutoCalculated: true));
             meals.Add(meal);
         }
 
@@ -159,7 +159,7 @@ public class GamificationCalculatorTests {
     public void CalculateWeeklyAdherence_WithNoGoal_AndMealsExist_Returns1() {
         var userId = UserId.New();
         var meal = Meal.Create(userId, Today, MealType.Lunch);
-        meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(2000, 100, 70, 230, 25, 0, IsAutoCalculated: true));
 
         double adherence = GamificationCalculator.CalculateWeeklyAdherence(
             [meal], _ => null, Today);

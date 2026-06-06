@@ -21,7 +21,7 @@ public class GetLessonsQueryHandler(INutritionLessonRepository repository)
         }
 
         LessonCategory? categoryFilter = null;
-        if (!string.IsNullOrWhiteSpace(query.Category) && Enum.TryParse<LessonCategory>(query.Category, true, out LessonCategory parsed)) {
+        if (!string.IsNullOrWhiteSpace(query.Category) && Enum.TryParse<LessonCategory>(query.Category, ignoreCase: true, out LessonCategory parsed)) {
             categoryFilter = parsed;
         }
 

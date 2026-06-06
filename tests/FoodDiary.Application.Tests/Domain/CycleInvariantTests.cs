@@ -87,13 +87,13 @@ public class CycleInvariantTests {
     public void CycleDay_Create_WithEmptyCycleId_Throws() {
         var symptoms = DailySymptoms.Create(0, 0, 0, 0, 0, 0, 0);
 
-        Assert.Throws<ArgumentException>(() => CycleDay.Create(CycleId.Empty, DateTime.UtcNow, true, symptoms, null));
+        Assert.Throws<ArgumentException>(() => CycleDay.Create(CycleId.Empty, DateTime.UtcNow, isPeriod: true, symptoms, notes: null));
     }
 
     [Fact]
     public void CycleDay_Update_WithSameValues_DoesNotSetModifiedOnUtc() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
-        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "note");
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, symptoms, "note");
 
         day.Update(isPeriod: true, symptoms: symptoms, notes: "  note  ");
 
@@ -135,7 +135,7 @@ public class CycleInvariantTests {
     public void CycleDay_Update_WithChangedValues_UpdatesState() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
         var updatedSymptoms = DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2);
-        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "note");
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, symptoms, "note");
 
         day.Update(isPeriod: false, symptoms: updatedSymptoms, notes: " updated ");
 
@@ -148,7 +148,7 @@ public class CycleInvariantTests {
     [Fact]
     public void CycleDay_Update_WithClearNotesAndValue_Throws() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
-        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "note");
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, symptoms, "note");
 
         Assert.Throws<ArgumentException>(() => day.Update(notes: "next", clearNotes: true));
     }
@@ -156,7 +156,7 @@ public class CycleInvariantTests {
     [Fact]
     public void CycleDay_Create_WithNullSymptoms_Throws() {
         Assert.Throws<ArgumentNullException>(() =>
-            CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, null!, null));
+            CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, null!, notes: null));
     }
 
     [Fact]
@@ -180,7 +180,7 @@ public class CycleInvariantTests {
     public void CycleDay_Create_WithUnspecifiedDate_TreatsItAsUtcDateOnly() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
 
-        var day = CycleDay.Create(CycleId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified), true, symptoms, null);
+        var day = CycleDay.Create(CycleId.New(), new DateTime(2026, 3, 27, 18, 45, 0, DateTimeKind.Unspecified), isPeriod: true, symptoms, notes: null);
 
         Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), day.Date);
     }
@@ -189,7 +189,7 @@ public class CycleInvariantTests {
     public void CycleDay_Create_WithWhitespaceNotes_NormalizesToNull() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
 
-        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, "   ");
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, symptoms, "   ");
 
         Assert.Null(day.Notes);
     }
@@ -197,7 +197,7 @@ public class CycleInvariantTests {
     [Fact]
     public void CycleDay_Update_WithClearNotesWhenAlreadyNull_DoesNotSetModifiedOnUtc() {
         var symptoms = DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1);
-        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, true, symptoms, null);
+        var day = CycleDay.Create(CycleId.New(), DateTime.UtcNow, isPeriod: true, symptoms, notes: null);
 
         day.Update(clearNotes: true);
 

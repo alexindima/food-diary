@@ -105,15 +105,15 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 "Created Product",
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -140,15 +140,15 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 "Invalid Product Type",
-                null,
+                Brand: null,
                 "NotAProductType",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -179,10 +179,10 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
             new CreateConsumptionHttpRequest(
                 DateTime.UtcNow.Date,
                 "Lunch",
-                null,
-                null,
-                null,
-                [new ConsumptionItemHttpRequest(favoriteProductId, null, 200)]));
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemHttpRequest(favoriteProductId, RecipeId: null, 200)]));
         consumptionResponse.EnsureSuccessStatusCode();
 
         HttpResponseMessage overviewResponse = await client.GetAsync("/api/v1/products/overview?page=1&limit=10&includePublic=true&recentLimit=10&favoriteLimit=10");
@@ -345,15 +345,15 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 name,
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,

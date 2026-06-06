@@ -21,10 +21,10 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task AddFavoriteMeal_WithNullUserId_ReturnsFailure() {
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(null));
+            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user: null));
 
         Result<FavoriteMealModel> result = await handler.Handle(
-            new AddFavoriteMealCommand(null, Guid.NewGuid(), null), CancellationToken.None);
+            new AddFavoriteMealCommand(UserId: null, Guid.NewGuid(), Name: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -32,10 +32,10 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task AddFavoriteMeal_WhenUserNotFound_ReturnsFailure() {
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(null));
+            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user: null));
 
         Result<FavoriteMealModel> result = await handler.Handle(
-            new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), null), CancellationToken.None);
+            new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -44,10 +44,10 @@ public class FavoriteMealsFeatureTests {
     public async Task AddFavoriteMeal_WhenMealNotFound_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(null), new StubUserRepository(user));
+            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user));
 
         Result<FavoriteMealModel> result = await handler.Handle(
-            new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), null), CancellationToken.None);
+            new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), Name: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
@@ -64,7 +64,7 @@ public class FavoriteMealsFeatureTests {
             favRepo, new StubMealRepository(meal), new StubUserRepository(user));
 
         Result<FavoriteMealModel> result = await handler.Handle(
-            new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, null), CancellationToken.None);
+            new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, Name: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Contains("AlreadyExists", result.Error.Code, StringComparison.Ordinal);
@@ -73,10 +73,10 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task RemoveFavoriteMeal_WithNullUserId_ReturnsFailure() {
         var handler = new RemoveFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubUserRepository(null));
+            new StubFavoriteMealRepository(), new StubUserRepository(user: null));
 
         Result result = await handler.Handle(
-            new RemoveFavoriteMealCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new RemoveFavoriteMealCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -98,7 +98,7 @@ public class FavoriteMealsFeatureTests {
     public async Task RemoveFavoriteMeal_WhenUserNotFound_ReturnsFailure() {
         var handler = new RemoveFavoriteMealCommandHandler(
             new StubFavoriteMealRepository(),
-            new StubUserRepository(null));
+            new StubUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -155,7 +155,7 @@ public class FavoriteMealsFeatureTests {
     public async Task IsMealFavorite_WhenUserNotFound_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
             new StubFavoriteMealRepository(),
-            new StubUserRepository(null));
+            new StubUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -167,10 +167,10 @@ public class FavoriteMealsFeatureTests {
     public async Task IsMealFavorite_WithNullUserId_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
             new StubFavoriteMealRepository(),
-            new StubUserRepository(null));
+            new StubUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
-            new IsMealFavoriteQuery(null, Guid.NewGuid()), CancellationToken.None);
+            new IsMealFavoriteQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -220,7 +220,7 @@ public class FavoriteMealsFeatureTests {
     public async Task GetFavoriteMeals_WhenUserIsMissing_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
             new StubFavoriteMealRepository(),
-            new StubUserRepository(null));
+            new StubUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -231,9 +231,9 @@ public class FavoriteMealsFeatureTests {
     public async Task GetFavoriteMeals_WithNullUserId_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
             new StubFavoriteMealRepository(),
-            new StubUserRepository(null));
+            new StubUserRepository(user: null));
 
-        Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(null), CancellationToken.None);
+        Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

@@ -24,7 +24,7 @@ public sealed class DiaryPdfGeneratorTests {
             meals,
             new DateTime(2026, 5, 1, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
             "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„",
             CancellationToken.None);
@@ -47,7 +47,7 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
             "https://fooddiary.club",
             CancellationToken.None);
@@ -69,9 +69,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
-            null,
+            reportOrigin: null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -94,9 +94,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
-            null,
+            reportOrigin: null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -130,10 +130,10 @@ public sealed class DiaryPdfGeneratorTests {
         var userId = UserId.New();
         Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 946, 59, 45, 76, 7);
         meal.AddAiSession(
-            null,
+            imageAssetId: null,
             AiRecognitionSource.Text,
             new DateTime(2026, 5, 4, 15, 3, 0, DateTimeKind.Utc),
-            null,
+            notes: null,
             [
                 MealAiItemData.Create("carrot", "Ð¼Ð¾Ñ€ÐºÐ¾Ð²ÑŒ", 100, "g", 41, 1, 0, 10, 3, 0),
                 MealAiItemData.Create("rice", "Ñ€Ð¸Ñ", 445, "g", 905, 58, 45, 66, 4, 0),
@@ -146,7 +146,7 @@ public sealed class DiaryPdfGeneratorTests {
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
             "ru",
             240,
-            null,
+            reportOrigin: null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -166,9 +166,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 4, 20, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
-            null,
+            reportOrigin: null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -188,9 +188,9 @@ public sealed class DiaryPdfGeneratorTests {
             [meal],
             new DateTime(2026, 5, 3, 20, 0, 0, DateTimeKind.Utc),
             new DateTime(2026, 5, 5, 19, 59, 59, DateTimeKind.Utc),
-            null,
+            locale: null,
             240,
-            null,
+            reportOrigin: null,
             CancellationToken.None);
 
         Assert.True(pdf.Length > 1024);
@@ -239,9 +239,9 @@ public sealed class DiaryPdfGeneratorTests {
             asset.Id,
             AiRecognitionSource.Photo,
             DateTime.UtcNow,
-            null,
+            notes: null,
             [
-                MealAiItemData.Create("rice", null, 100, "g", 120, 3, 1, 20, 2, 0),
+                MealAiItemData.Create("rice", nameLocal: null, 100, "g", 120, 3, 1, 20, 2, 0),
             ]);
         typeof(MealAiSession)
             .GetProperty(nameof(MealAiSession.ImageAsset))!

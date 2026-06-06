@@ -18,49 +18,49 @@ public class MealAiInvariantTests {
     [Fact]
     public void MealAiItemData_Create_WithBlankNameEn_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            MealAiItemData.Create("   ", null, 100, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("   ", nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithZeroAmount_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemData.Create("Chicken", null, 0, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("Chicken", nameLocal: null, 0, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithNegativeCalories_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemData.Create("Chicken", null, 100, "g", -1, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("Chicken", nameLocal: null, 100, "g", -1, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithNaNCalories_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemData.Create("Chicken", null, 100, "g", double.NaN, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("Chicken", nameLocal: null, 100, "g", double.NaN, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithBlankUnit_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            MealAiItemData.Create("Chicken", null, 100, "   ", 100, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("Chicken", nameLocal: null, 100, "   ", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithTooLongNameEn_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemData.Create(new string('a', 257), null, 100, "g", 100, 10, 5, 20, 3, 0));
+            MealAiItemData.Create(new string('a', 257), nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_Create_WithTooLongUnit_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            MealAiItemData.Create("Chicken", null, 100, new string('u', 33), 100, 10, 5, 20, 3, 0));
+            MealAiItemData.Create("Chicken", nameLocal: null, 100, new string('u', 33), 100, 10, 5, 20, 3, 0));
     }
 
     [Fact]
     public void MealAiItemData_TryCreate_WithValidValues_ReturnsTrue() {
         bool result = MealAiItemData.TryCreate(
-            "Chicken", null, 100, "g", 165, 31, 3.6, 0, 0, 0,
+            "Chicken", nameLocal: null, 100, "g", 165, 31, 3.6, 0, 0, 0,
             out MealAiItemData? data, out string? error);
 
         Assert.True(result);
@@ -71,7 +71,7 @@ public class MealAiInvariantTests {
     [Fact]
     public void MealAiItemData_TryCreate_WithInvalidValues_ReturnsFalse() {
         bool result = MealAiItemData.TryCreate(
-            "   ", null, 100, "g", 165, 31, 3.6, 0, 0, 0,
+            "   ", nameLocal: null, 100, "g", 165, 31, 3.6, 0, 0, 0,
             out MealAiItemData? data, out string? error);
 
         Assert.False(result);

@@ -81,7 +81,7 @@ public class SocialInvariantTests {
         var report = ContentReport.Create(
             UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "spam");
 
-        report.MarkDismissed(null);
+        report.MarkDismissed(adminNote: null);
 
         Assert.Equal(ReportStatus.Dismissed, report.Status);
         Assert.Null(report.AdminNote);

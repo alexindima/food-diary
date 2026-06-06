@@ -21,7 +21,7 @@ public class GetMealPlansQueryHandler(IMealPlanRepository mealPlanRepository)
         }
 
         DietType? dietTypeFilter = null;
-        if (!string.IsNullOrWhiteSpace(query.DietType) && Enum.TryParse<DietType>(query.DietType, true, out DietType parsed)) {
+        if (!string.IsNullOrWhiteSpace(query.DietType) && Enum.TryParse<DietType>(query.DietType, ignoreCase: true, out DietType parsed)) {
             dietTypeFilter = parsed;
         }
 

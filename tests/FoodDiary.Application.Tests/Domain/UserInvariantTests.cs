@@ -72,14 +72,14 @@ public class UserInvariantTests {
     public void UpdateAiTokenLimits_WithNegativeInput_Throws() {
         var user = User.Create("test@example.com", "hash");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateAiTokenLimits(-1, null));
+        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateAiTokenLimits(-1, outputLimit: null));
     }
 
     [Fact]
     public void UpdateAiTokenLimits_WithNegativeOutput_Throws() {
         var user = User.Create("test@example.com", "hash");
 
-        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateAiTokenLimits(null, -1));
+        Assert.Throws<ArgumentOutOfRangeException>(() => user.UpdateAiTokenLimits(inputLimit: null, -1));
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class UserInvariantTests {
     public void UpdateRefreshToken_WithNull_DoesNotSetLastLogin() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateRefreshToken(null);
+        user.UpdateRefreshToken(refreshToken: null);
 
         Assert.Null(user.LastLoginAtUtc);
     }
@@ -613,7 +613,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
         user.UpdateDesiredWeight(80);
 
-        user.UpdateDesiredWeight(null);
+        user.UpdateDesiredWeight(desiredWeight: null);
 
         Assert.Null(user.DesiredWeight);
     }
@@ -623,7 +623,7 @@ public class UserInvariantTests {
         var user = User.Create("test@example.com", "hash");
         user.UpdateDesiredWaist(90);
 
-        user.UpdateDesiredWaist(null);
+        user.UpdateDesiredWaist(desiredWaist: null);
 
         Assert.Null(user.DesiredWaist);
     }
@@ -875,7 +875,7 @@ public class UserInvariantTests {
     public void UpdateAiTokenLimits_WithNullLimits_DoesNotSetModifiedOnUtc() {
         var user = User.Create("test@example.com", "hash");
 
-        user.UpdateAiTokenLimits(null, null);
+        user.UpdateAiTokenLimits(inputLimit: null, outputLimit: null);
 
         Assert.Equal(5_000_000, user.AiInputTokenLimit);
         Assert.Equal(1_000_000, user.AiOutputTokenLimit);

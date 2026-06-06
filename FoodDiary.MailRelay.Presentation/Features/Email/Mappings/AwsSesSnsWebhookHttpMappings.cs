@@ -84,7 +84,7 @@ public static class AwsSesSnsWebhookHttpMappings {
                          "complaint",
                          recipient.EmailAddress,
                          "aws-ses-sns",
-                         null,
+                         Classification: null,
                          notification.Mail.MessageId,
                          "complaint"))
                      .ToArray()

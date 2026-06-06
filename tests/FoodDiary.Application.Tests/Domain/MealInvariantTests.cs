@@ -93,7 +93,7 @@ public class MealInvariantTests {
     public void UpdateImage_WithTrimmedSameImageAndNoAssetChange_DoesNotSetModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, imageUrl: "https://img", imageAssetId: ImageAssetId.New());
 
-        meal.UpdateImage("  https://img  ", null);
+        meal.UpdateImage("  https://img  ", imageAssetId: null);
 
         Assert.Null(meal.ModifiedOnUtc);
     }
@@ -308,7 +308,7 @@ public class MealInvariantTests {
     [Fact]
     public void ClearAiSessions_WithExistingSession_RemovesSessionsAndSetsModifiedOnUtc() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.AddAiSession(null, AiRecognitionSource.Text, DateTime.UtcNow, null, []);
+        meal.AddAiSession(imageAssetId: null, AiRecognitionSource.Text, DateTime.UtcNow, notes: null, []);
 
         meal.ClearAiSessions();
 
@@ -361,7 +361,7 @@ public class MealInvariantTests {
     public void ApplyNutrition_WithDefaultAutoValues_DoesNotSetModifiedOrEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
 
-        meal.ApplyNutrition(new MealNutritionUpdate(0, 0, 0, 0, 0, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(0, 0, 0, 0, 0, 0, IsAutoCalculated: true));
 
         Assert.Null(meal.ModifiedOnUtc);
         Assert.Empty(meal.DomainEvents);
@@ -397,11 +397,11 @@ public class MealInvariantTests {
     [Fact]
     public void ApplyNutrition_WithSameValues_DoesNotRaiseDuplicateEvent() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
-        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, IsAutoCalculated: true));
         int eventCount = meal.DomainEvents.Count;
         DateTime? modified = meal.ModifiedOnUtc;
 
-        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(500, 30, 20, 40, 8, 0, IsAutoCalculated: true));
 
         Assert.Equal(eventCount, meal.DomainEvents.Count);
         Assert.Equal(modified, meal.ModifiedOnUtc);

@@ -239,15 +239,15 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
         HttpResponseMessage createProductResponse = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 "Perf Consumption Product",
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -272,9 +272,9 @@ public sealed class PostgresPerformanceBaselineTests(PostgresApiWebApplicationFa
                     startDate.AddDays(index),
                     mealTypes[index % mealTypes.Length].ToString(),
                     string.Create(CultureInfo.InvariantCulture, $"Perf Meal {index:D4}"),
-                    null,
-                    null,
-                    [new ConsumptionItemHttpRequest(product.Id, null, 100)],
+                    ImageUrl: null,
+                    ImageAssetId: null,
+                    [new ConsumptionItemHttpRequest(product.Id, RecipeId: null, 100)],
                     IsNutritionAutoCalculated: true)).ConfigureAwait(false);
             await AssertStatusCodeAsync(HttpStatusCode.Created, createConsumptionResponse).ConfigureAwait(false);
         }

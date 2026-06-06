@@ -45,7 +45,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 Guid.Empty,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
-                null,
+                DateTo: null,
                 "en",
                 7,
                 1,
@@ -103,7 +103,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 Guid.NewGuid(),
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
-                null,
+                DateTo: null,
                 "en",
                 7,
                 1,
@@ -132,7 +132,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 user.Id.Value,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
-                null,
+                DateTo: null,
                 "",
                 TrendDays: 0,
                 Page: 0,
@@ -187,7 +187,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 userId.Value,
                 selectedDate,
-                null,
+                DateTo: null,
                 "en",
                 7,
                 1,
@@ -233,7 +233,7 @@ public sealed class DashboardSnapshotBuilderTests {
             new DashboardSnapshotRequest(
                 user.Id.Value,
                 new DateTime(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc),
-                null,
+                DateTo: null,
                 "en",
                 7,
                 Page: 0,

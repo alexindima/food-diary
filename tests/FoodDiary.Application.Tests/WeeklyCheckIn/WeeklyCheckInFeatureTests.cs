@@ -22,7 +22,7 @@ public class WeeklyCheckInFeatureTests {
         GetWeeklyCheckInQueryHandler handler = CreateHandler();
 
         Result<WeeklyCheckInModel> result = await handler.Handle(
-            new GetWeeklyCheckInQuery(null), CancellationToken.None);
+            new GetWeeklyCheckInQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

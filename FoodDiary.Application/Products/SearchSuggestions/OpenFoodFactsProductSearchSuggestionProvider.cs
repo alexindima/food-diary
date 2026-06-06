@@ -39,7 +39,7 @@ public sealed class OpenFoodFactsProductSearchSuggestionProvider(
             product.Brand,
             product.Category,
             product.Barcode,
-            null,
+            UsdaFdcId: null,
             product.ImageUrl,
             product.CaloriesPer100G,
             product.ProteinsPer100G,

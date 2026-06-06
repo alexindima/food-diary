@@ -68,9 +68,9 @@ public class FastingCheckInInvariantTests {
     [Fact]
     public void Create_WithEmptyIds_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            FastingCheckIn.Create(FastingOccurrenceId.Empty, UserId.New(), 1, 2, 3, null, null, DateTime.UtcNow));
+            FastingCheckIn.Create(FastingOccurrenceId.Empty, UserId.New(), 1, 2, 3, symptoms: null, notes: null, DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
-            FastingCheckIn.Create(FastingOccurrenceId.New(), UserId.Empty, 1, 2, 3, null, null, DateTime.UtcNow));
+            FastingCheckIn.Create(FastingOccurrenceId.New(), UserId.Empty, 1, 2, 3, symptoms: null, notes: null, DateTime.UtcNow));
     }
 
     [Theory]
@@ -88,8 +88,8 @@ public class FastingCheckInInvariantTests {
                 hungerLevel,
                 energyLevel,
                 moodLevel,
-                null,
-                null,
+                symptoms: null,
+                notes: null,
                 DateTime.UtcNow));
     }
 

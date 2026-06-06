@@ -66,7 +66,7 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
         await context.Notifications
             .Where(n => n.UserId == userId && !n.IsRead)
             .ExecuteUpdateAsync(s => s
-                .SetProperty(n => n.IsRead, true)
+                .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, DateTime.UtcNow)
                 .SetProperty(n => n.ModifiedOnUtc, DateTime.UtcNow),
                 cancellationToken).ConfigureAwait(false);

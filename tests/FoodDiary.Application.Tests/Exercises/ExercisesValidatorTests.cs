@@ -12,7 +12,7 @@ public class ExercisesValidatorTests {
     [Fact]
     public async Task CreateExerciseEntry_WithEmptyUserId_HasError() {
         var command = new CreateExerciseEntryCommand(
-            null, DateTime.UtcNow, "Running", 30, 200, null, null);
+            UserId: null, DateTime.UtcNow, "Running", 30, 200, Name: null, Notes: null);
         TestValidationResult<CreateExerciseEntryCommand> result = await _createValidator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -21,7 +21,7 @@ public class ExercisesValidatorTests {
     [Fact]
     public async Task CreateExerciseEntry_WithZeroDuration_HasError() {
         var command = new CreateExerciseEntryCommand(
-            Guid.NewGuid(), DateTime.UtcNow, "Running", 0, 200, null, null);
+            Guid.NewGuid(), DateTime.UtcNow, "Running", 0, 200, Name: null, Notes: null);
         TestValidationResult<CreateExerciseEntryCommand> result = await _createValidator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.DurationMinutes);
@@ -30,7 +30,7 @@ public class ExercisesValidatorTests {
     [Fact]
     public async Task CreateExerciseEntry_WithNegativeCalories_HasError() {
         var command = new CreateExerciseEntryCommand(
-            Guid.NewGuid(), DateTime.UtcNow, "Running", 30, -1, null, null);
+            Guid.NewGuid(), DateTime.UtcNow, "Running", 30, -1, Name: null, Notes: null);
         TestValidationResult<CreateExerciseEntryCommand> result = await _createValidator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.CaloriesBurned);
@@ -39,7 +39,7 @@ public class ExercisesValidatorTests {
     [Fact]
     public async Task CreateExerciseEntry_WithValidCommand_NoErrors() {
         var command = new CreateExerciseEntryCommand(
-            Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 200, "Jog", null);
+            Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 200, "Jog", Notes: null);
         TestValidationResult<CreateExerciseEntryCommand> result = await _createValidator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();
@@ -48,7 +48,7 @@ public class ExercisesValidatorTests {
     [Fact]
     public async Task GetExerciseEntries_WithEmptyUserId_HasError() {
         var query = new GetExerciseEntriesQuery(
-            null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
+            UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow);
         TestValidationResult<GetExerciseEntriesQuery> result = await _getValidator.TestValidateAsync(query);
 
         result.ShouldHaveValidationErrorFor(q => q.UserId);

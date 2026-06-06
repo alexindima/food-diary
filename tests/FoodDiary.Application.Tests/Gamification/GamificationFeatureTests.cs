@@ -19,7 +19,7 @@ public class GamificationFeatureTests {
             new StubMealRepository(), new InMemoryUserRepository(), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
-            new GetGamificationQuery(null), CancellationToken.None);
+            new GetGamificationQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

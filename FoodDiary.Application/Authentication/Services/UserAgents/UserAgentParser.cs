@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Authentication.Services.UserAgents;
 internal static class UserAgentParser {
     public static ParsedUserAgent Parse(string? userAgent) {
         if (string.IsNullOrWhiteSpace(userAgent)) {
-            return new ParsedUserAgent(null, null, null, null);
+            return new ParsedUserAgent(BrowserName: null, BrowserVersion: null, OperatingSystem: null, DeviceType: null);
         }
 
         string value = userAgent.Trim();

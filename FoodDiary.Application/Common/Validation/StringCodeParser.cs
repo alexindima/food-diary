@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Common.Validation;
 public static class StringCodeParser {
     public static Result<string?> ParseOptionalLanguage(string? value, string fieldName, string message) {
         if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
+            return Result.Success<string?>(value: null);
         }
 
         return LanguageCode.TryParse(value, out LanguageCode language)
@@ -16,7 +16,7 @@ public static class StringCodeParser {
 
     public static Result<string?> ParseOptionalGender(string? value, string fieldName, string message) {
         if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
+            return Result.Success<string?>(value: null);
         }
 
         return GenderCode.TryParse(value, out GenderCode gender)
@@ -26,7 +26,7 @@ public static class StringCodeParser {
 
     public static Result<string?> ParseOptionalTheme(string? value, string fieldName, string message) {
         if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
+            return Result.Success<string?>(value: null);
         }
 
         return ThemeCode.TryParse(value, out ThemeCode theme)
@@ -36,7 +36,7 @@ public static class StringCodeParser {
 
     public static Result<string?> ParseOptionalUiStyle(string? value, string fieldName, string message) {
         if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<string?>(null);
+            return Result.Success<string?>(value: null);
         }
 
         return UiStyleCode.TryParse(value, out UiStyleCode uiStyle)

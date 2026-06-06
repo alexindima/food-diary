@@ -183,7 +183,7 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
             "complained",
             "user@example.com",
             "mailgun-1",
-            null,
+            Severity: null,
             "spam-complaint"));
 
         bool mapped = payload.TryMapToDeliveryEvent(out IngestMailEventRequest? deliveryEvent, out string? error);

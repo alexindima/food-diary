@@ -72,10 +72,10 @@ public sealed class MailRelayApplicationFeatureTests {
             3,
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow,
-            null,
+            LockedAtUtc: null,
             DateTimeOffset.UtcNow,
-            null,
-            null);
+            LastError: null,
+            SuppressedRecipients: null);
         var handler = new GetMailRelayMessageDetailsQueryHandler(CreateUseCases(new RecordingQueueStore {
             MessageDetails = details,
         }));
@@ -94,14 +94,14 @@ public sealed class MailRelayApplicationFeatureTests {
             "test",
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow,
-            null);
+            ExpiresAtUtc: null);
         var deliveryEvent = new MailRelayDeliveryEventEntry(
             Guid.NewGuid(),
             MailRelayDeliveryEventType.Complaint,
             "user@example.com",
             "test",
-            null,
-            null,
+            Classification: null,
+            ProviderMessageId: null,
             "complaint",
             DateTimeOffset.UtcNow,
             DateTimeOffset.UtcNow);
@@ -268,7 +268,7 @@ public sealed class MailRelayApplicationFeatureTests {
             string consumerName,
             string messageKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new MailRelayInboxClaimResult(true, Guid.NewGuid()));
+            Task.FromResult(new MailRelayInboxClaimResult(Claimed: true, Guid.NewGuid()));
 
         public Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
 

@@ -14,17 +14,17 @@ public class Result {
     public bool IsFailure => !IsSuccess;
     public MailRelayError? Error { get; }
 
-    public static Result Success() => new(true, null);
+    public static Result Success() => new(isSuccess: true, error: null);
 
-    public static Result Failure(MailRelayError error) => new(false, error);
+    public static Result Failure(MailRelayError error) => new(isSuccess: false, error);
 }
 
 public sealed class Result<T> : Result {
-    private Result(T value) : base(true, null) {
+    private Result(T value) : base(isSuccess: true, error: null) {
         Value = value;
     }
 
-    private Result(MailRelayError error) : base(false, error) {
+    private Result(MailRelayError error) : base(isSuccess: false, error) {
     }
 
     public T Value => IsSuccess

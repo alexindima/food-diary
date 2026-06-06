@@ -29,7 +29,7 @@ public sealed class ExerciseHttpMappingsTests {
     public void UpdateExerciseEntryRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
-        var request = new UpdateExerciseEntryHttpRequest("Swimming", 45, 300, null, true, "Pool", false, null);
+        var request = new UpdateExerciseEntryHttpRequest("Swimming", 45, 300, Name: null, ClearName: true, "Pool", ClearNotes: false, Date: null);
 
         UpdateExerciseEntryCommand command = request.ToCommand(userId, entryId);
 

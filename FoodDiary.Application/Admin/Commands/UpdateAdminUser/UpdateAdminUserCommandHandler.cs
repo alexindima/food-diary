@@ -92,7 +92,7 @@ public sealed class UpdateAdminUserCommandHandler(
         UpdateAdminUserCommand command,
         CancellationToken cancellationToken) {
         if (command.Roles is null) {
-            return Result.Success<RoleUpdate?>(null);
+            return Result.Success<RoleUpdate?>(value: null);
         }
 
         string[] requestedRoles = [.. command.Roles

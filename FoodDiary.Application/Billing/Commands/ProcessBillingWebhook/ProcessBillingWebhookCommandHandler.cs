@@ -283,7 +283,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         }
 
         if (subscription.PremiumRoleManagedByBilling) {
-            subscription.MarkPremiumRoleManagedByBilling(false, dateTimeProvider.GetUtcNow().UtcDateTime);
+            subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
     }

@@ -19,7 +19,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageValidator_WithEmptyIds_Fails() {
         var validator = new AnalyzeFoodImageCommandValidator();
-        var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, null);
+        var command = new AnalyzeFoodImageCommand(Guid.Empty, Guid.Empty, Description: null);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -56,7 +56,7 @@ public class AiValidatorsTests {
             new StubImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, null),
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -73,7 +73,7 @@ public class AiValidatorsTests {
             new StubImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), null),
+            new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -91,7 +91,7 @@ public class AiValidatorsTests {
             new StubImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), null),
+            new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -110,7 +110,7 @@ public class AiValidatorsTests {
             new StubImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, null),
+            new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -128,7 +128,7 @@ public class AiValidatorsTests {
             new StubImageStorageService(isValid: false, message: "upload incomplete"));
 
         Result<FoodVisionModel> result = await handler.Handle(
-            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, null),
+            new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -143,7 +143,7 @@ public class AiValidatorsTests {
         var openAiFoodService = new StubOpenAiFoodService();
         var handler = new AnalyzeFoodImageCommandHandler(
             new StubImageAssetRepository(asset),
-            new StubUserRepository(null),
+            new StubUserRepository(user: null),
             openAiFoodService,
             new StubImageStorageService());
 
@@ -194,7 +194,7 @@ public class AiValidatorsTests {
         var validator = new CalculateFoodNutritionCommandValidator();
         var command = new CalculateFoodNutritionCommand(
             Guid.NewGuid(),
-            [new FoodVisionItemModel("", null, 0, "", -1)]);
+            [new FoodVisionItemModel("", NameLocal: null, 0, "", -1)]);
 
         ValidationResult result = await validator.ValidateAsync(command);
 
@@ -327,7 +327,7 @@ public class AiValidatorsTests {
     [Fact]
     public async Task ParseFoodTextHandler_WhenUserMissing_ReturnsInvalidToken() {
         var openAiFoodService = new StubOpenAiFoodService();
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(null));
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(user: null));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
 
@@ -440,7 +440,7 @@ public class AiValidatorsTests {
             LastDescription = description;
             return Task.FromResult(Result.Success(new FoodVisionModel(
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                null)));
+                Notes: null)));
         }
 
         public Task<Result<FoodVisionModel>> ParseFoodTextAsync(
@@ -453,7 +453,7 @@ public class AiValidatorsTests {
             LastLanguage = userLanguage;
             return Task.FromResult(Result.Success(new FoodVisionModel(
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                null)));
+                Notes: null)));
         }
 
         public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(

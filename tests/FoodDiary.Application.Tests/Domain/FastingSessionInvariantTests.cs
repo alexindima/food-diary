@@ -183,7 +183,7 @@ public class FastingSessionInvariantTests {
         var session = FastingSession.Create(
             UserId.New(), FastingProtocol.F16_8, 16, DateTime.UtcNow, notes: "Test");
 
-        session.UpdateNotes(null);
+        session.UpdateNotes(notes: null);
 
         Assert.Null(session.Notes);
     }

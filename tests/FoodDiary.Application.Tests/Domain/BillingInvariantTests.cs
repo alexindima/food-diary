@@ -59,13 +59,13 @@ public sealed class BillingInvariantTests {
     [Fact]
     public void BillingWebhookEvent_CreateProcessed_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            BillingWebhookEvent.CreateProcessed("unknown", "evt_1", "type", null, Now, null));
+            BillingWebhookEvent.CreateProcessed("unknown", "evt_1", "type", externalObjectId: null, Now, payloadJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, " ", "type", null, Now, null));
+            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, " ", "type", externalObjectId: null, Now, payloadJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, "evt_1", " ", null, Now, null));
+            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, "evt_1", " ", externalObjectId: null, Now, payloadJson: null));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, "evt_1", "type", null, new DateTime(2026, 4, 28), null));
+            BillingWebhookEvent.CreateProcessed(BillingProviderNames.Stripe, "evt_1", "type", externalObjectId: null, new DateTime(2026, 4, 28), payloadJson: null));
     }
 
     [Fact]
@@ -97,11 +97,11 @@ public sealed class BillingInvariantTests {
     [Fact]
     public void BillingSubscription_CreatePending_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            BillingSubscription.CreatePending(UserId.Empty, BillingProviderNames.Stripe, "customer_1", null, null));
+            BillingSubscription.CreatePending(UserId.Empty, BillingProviderNames.Stripe, "customer_1", externalPriceId: null, plan: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingSubscription.CreatePending(UserId, "unknown", "customer_1", null, null));
+            BillingSubscription.CreatePending(UserId, "unknown", "customer_1", externalPriceId: null, plan: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingSubscription.CreatePending(UserId, BillingProviderNames.Stripe, " ", null, null));
+            BillingSubscription.CreatePending(UserId, BillingProviderNames.Stripe, " ", externalPriceId: null, plan: null));
     }
 
     [Fact]
@@ -135,10 +135,10 @@ public sealed class BillingInvariantTests {
             "active",
             Now,
             Now.AddMonths(1),
-            false,
-            null,
-            null,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_1",
             Now,
             "{\"provider\":\"yookassa\"}");
@@ -166,10 +166,10 @@ public sealed class BillingInvariantTests {
             "active",
             Now,
             Now.AddMonths(1),
-            true,
-            null,
-            null,
-            null,
+            cancelAtPeriodEnd: true,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_1",
             Now);
 
@@ -185,14 +185,14 @@ public sealed class BillingInvariantTests {
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
             "sub_1",
-            null,
+            externalPaymentMethodId: null,
             "price_monthly",
             "monthly",
             status,
             Now,
             Now.AddMonths(1),
-            false,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
             Now,
             Now.AddDays(7),
             "evt_1",
@@ -213,17 +213,17 @@ public sealed class BillingInvariantTests {
 
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
-            null,
-            null,
-            null,
-            null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
             "canceled",
-            null,
+            currentPeriodStartUtc: null,
             Now.AddMonths(1),
-            false,
+            cancelAtPeriodEnd: false,
             Now,
-            null,
-            null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_1",
             Now);
 
@@ -237,32 +237,32 @@ public sealed class BillingInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() => subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
-            null,
-            null,
-            null,
-            null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
             "active",
             new DateTime(2026, 4, 28),
-            null,
-            false,
-            null,
-            null,
-            null,
+            currentPeriodEndUtc: null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_1",
             Now));
         Assert.Throws<ArgumentOutOfRangeException>(() => subscription.ApplyProviderSnapshot(
             BillingProviderNames.Stripe,
-            null,
-            null,
-            null,
-            null,
+            externalSubscriptionId: null,
+            externalPaymentMethodId: null,
+            externalPriceId: null,
+            plan: null,
             "active",
-            null,
-            null,
-            false,
-            null,
-            null,
-            null,
+            currentPeriodStartUtc: null,
+            currentPeriodEndUtc: null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_1",
             new DateTime(2026, 4, 28)));
     }
@@ -271,10 +271,10 @@ public sealed class BillingInvariantTests {
     public void BillingSubscription_MarkPremiumRoleManagedByBilling_IsIdempotent() {
         BillingSubscription subscription = CreatePendingSubscription();
 
-        subscription.MarkPremiumRoleManagedByBilling(false, Now);
+        subscription.MarkPremiumRoleManagedByBilling(value: false, Now);
         Assert.Null(subscription.ModifiedOnUtc);
 
-        subscription.MarkPremiumRoleManagedByBilling(true, Now);
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now);
         Assert.True(subscription.PremiumRoleManagedByBilling);
         Assert.Equal(Now, subscription.ModifiedOnUtc);
     }
@@ -284,7 +284,7 @@ public sealed class BillingInvariantTests {
         BillingSubscription subscription = CreatePendingSubscription();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            subscription.MarkPremiumRoleManagedByBilling(true, new DateTime(2026, 4, 28)));
+            subscription.MarkPremiumRoleManagedByBilling(value: true, new DateTime(2026, 4, 28)));
     }
 
     [Fact]
@@ -413,16 +413,16 @@ public sealed class BillingInvariantTests {
     [Fact]
     public void BillingPayment_Create_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            BillingPayment.Create(UserId.Empty, null, BillingProviderNames.Stripe, "payment_1", null, null, null, null, null, "active", BillingPaymentKinds.Webhook, null, null, null, null, null, null));
+            BillingPayment.Create(UserId.Empty, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", BillingPaymentKinds.Webhook, amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingPayment.Create(UserId, null, "unknown", "payment_1", null, null, null, null, null, "active", BillingPaymentKinds.Webhook, null, null, null, null, null, null));
+            BillingPayment.Create(UserId, billingSubscriptionId: null, "unknown", "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", BillingPaymentKinds.Webhook, amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingPayment.Create(UserId, null, BillingProviderNames.Stripe, " ", null, null, null, null, null, "active", BillingPaymentKinds.Webhook, null, null, null, null, null, null));
+            BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, " ", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", BillingPaymentKinds.Webhook, amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingPayment.Create(UserId, null, BillingProviderNames.Stripe, "payment_1", null, null, null, null, null, " ", BillingPaymentKinds.Webhook, null, null, null, null, null, null));
+            BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, " ", BillingPaymentKinds.Webhook, amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentException>(() =>
-            BillingPayment.Create(UserId, null, BillingProviderNames.Stripe, "payment_1", null, null, null, null, null, "active", " ", null, null, null, null, null, null));
+            BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", " ", amount: null, currency: null, currentPeriodStartUtc: null, currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            BillingPayment.Create(UserId, null, BillingProviderNames.Stripe, "payment_1", null, null, null, null, null, "active", BillingPaymentKinds.Webhook, null, null, new DateTime(2026, 4, 28), null, null, null));
+            BillingPayment.Create(UserId, billingSubscriptionId: null, BillingProviderNames.Stripe, "payment_1", externalCustomerId: null, externalSubscriptionId: null, externalPaymentMethodId: null, externalPriceId: null, plan: null, "active", BillingPaymentKinds.Webhook, amount: null, currency: null, new DateTime(2026, 4, 28), currentPeriodEndUtc: null, webhookEventId: null, providerMetadataJson: null));
     }
 }

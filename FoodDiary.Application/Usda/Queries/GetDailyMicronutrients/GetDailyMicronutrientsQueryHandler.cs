@@ -37,7 +37,7 @@ public class GetDailyMicronutrientsQueryHandler(
 
         if (linkedItems.Count == 0) {
             return Result.Success(new DailyMicronutrientSummaryModel(
-                query.Date, 0, totalProductCount, [], null));
+                query.Date, 0, totalProductCount, [], HealthScores: null));
         }
 
         var fdcIds = linkedItems

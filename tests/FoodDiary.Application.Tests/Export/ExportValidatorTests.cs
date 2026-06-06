@@ -9,7 +9,7 @@ public class ExportValidatorTests {
 
     [Fact]
     public async Task Validate_WithNullUserId_HasError() {
-        var query = new ExportDiaryQuery(null, DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
+        var query = new ExportDiaryQuery(UserId: null, DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
         TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
         result.ShouldHaveValidationErrorFor(q => q.UserId);
     }

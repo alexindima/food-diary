@@ -6,7 +6,7 @@ namespace FoodDiary.Application.Common.Validation;
 public static class ImageAssetIdParser {
     public static Result<ImageAssetId?> ParseOptional(Guid? value, string fieldName) {
         if (!value.HasValue) {
-            return Result.Success<ImageAssetId?>(null);
+            return Result.Success<ImageAssetId?>(value: null);
         }
 
         return value.Value == Guid.Empty

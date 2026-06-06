@@ -42,8 +42,8 @@ namespace FoodDiary.Application.Tests.Dietologist;
 
 [ExcludeFromCodeCoverage]
 public class DietologistFeatureTests {
-    private static readonly DietologistPermissionsInput AllPermissions = new(true, true, true, true, true, true);
-    private static readonly DietologistPermissions AllDomainPermissions = new(true, true, true, true, true, true);
+    private static readonly DietologistPermissionsInput AllPermissions = new(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true);
+    private static readonly DietologistPermissions AllDomainPermissions = new(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true);
 
     private static User CreateUser(UserId? id = null, string email = "user@example.com") {
         var user = User.Create(email, "hashed-password");
@@ -100,8 +100,8 @@ public class DietologistFeatureTests {
                 CarbGoal: null,
                 FiberGoal: null),
             [new DailyCaloriesModel(date, 1200)],
-            new DashboardWeightModel(new WeightPointModel(date, 72), null, 70),
-            new DashboardWaistModel(new WaistPointModel(date, 82), null, 80),
+            new DashboardWeightModel(new WeightPointModel(date, 72), Previous: null, 70),
+            new DashboardWaistModel(new WaistPointModel(date, 82), Previous: null, 80),
             new DashboardMealsModel([], 2),
             Hydration: null);
     }
@@ -198,7 +198,7 @@ public class DietologistFeatureTests {
         InviteDietologistCommandHandler handler = CreateInviteHandler();
 
         Result result = await handler.Handle(
-            new InviteDietologistCommand(null, "diet@example.com", AllPermissions),
+            new InviteDietologistCommand(UserId: null, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -376,7 +376,7 @@ public class DietologistFeatureTests {
         AcceptInvitationCommandHandler handler = CreateAcceptHandler();
 
         Result result = await handler.Handle(
-            new AcceptInvitationCommand(Guid.NewGuid(), "token", null),
+            new AcceptInvitationCommand(Guid.NewGuid(), "token", UserId: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -588,7 +588,7 @@ public class DietologistFeatureTests {
         AcceptInvitationForCurrentUserCommandHandler handler = CreateAcceptCurrentUserHandler();
 
         Result result = await handler.Handle(
-            new AcceptInvitationForCurrentUserCommand(null, Guid.NewGuid()),
+            new AcceptInvitationForCurrentUserCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -737,7 +737,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
-            new GetInvitationForCurrentUserQuery(null, Guid.NewGuid()),
+            new GetInvitationForCurrentUserQuery(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -815,7 +815,7 @@ public class DietologistFeatureTests {
         DeclineInvitationCommandHandler handler = CreateDeclineHandler();
 
         Result result = await handler.Handle(
-            new DeclineInvitationCommand(Guid.NewGuid(), "token", null),
+            new DeclineInvitationCommand(Guid.NewGuid(), "token", UserId: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -833,7 +833,7 @@ public class DietologistFeatureTests {
             passwordHasher: new StubPasswordHasher(verifyResult: false));
 
         Result result = await handler.Handle(
-            new DeclineInvitationCommand(invitation.Id.Value, "wrong", null),
+            new DeclineInvitationCommand(invitation.Id.Value, "wrong", UserId: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -857,7 +857,7 @@ public class DietologistFeatureTests {
             webPushNotificationSender: webPushSender);
 
         Result result = await handler.Handle(
-            new DeclineInvitationCommand(invitation.Id.Value, "token", null),
+            new DeclineInvitationCommand(invitation.Id.Value, "token", UserId: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -910,7 +910,7 @@ public class DietologistFeatureTests {
         DeclineInvitationForCurrentUserCommandHandler handler = CreateDeclineCurrentUserHandler();
 
         Result result = await handler.Handle(
-            new DeclineInvitationForCurrentUserCommand(null, Guid.NewGuid()),
+            new DeclineInvitationForCurrentUserCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1033,7 +1033,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result result = await handler.Handle(
-            new RevokeInvitationCommand(null), CancellationToken.None);
+            new RevokeInvitationCommand(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -1117,7 +1117,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result result = await handler.Handle(
-            new DisconnectDietologistCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new DisconnectDietologistCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -1185,7 +1185,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result result = await handler.Handle(
-            new UpdateDietologistPermissionsCommand(null, AllPermissions),
+            new UpdateDietologistPermissionsCommand(UserId: null, AllPermissions),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1238,7 +1238,7 @@ public class DietologistFeatureTests {
 
         var handler = new UpdateDietologistPermissionsCommandHandler(invRepo, userRepo);
 
-        var newPermissions = new DietologistPermissionsInput(false, false, true, true, true, true);
+        var newPermissions = new DietologistPermissionsInput(ShareMeals: false, ShareStatistics: false, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true);
         Result result = await handler.Handle(
             new UpdateDietologistPermissionsCommand(userId.Value, newPermissions),
             CancellationToken.None);
@@ -1253,7 +1253,7 @@ public class DietologistFeatureTests {
         CreateRecommendationCommandHandler handler = CreateRecommendationHandler();
 
         Result<RecommendationModel> result = await handler.Handle(
-            new CreateRecommendationCommand(null, Guid.NewGuid(), "Eat more veggies"),
+            new CreateRecommendationCommand(UserId: null, Guid.NewGuid(), "Eat more veggies"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1386,7 +1386,7 @@ public class DietologistFeatureTests {
             new InMemoryRecommendationRepository(), new InMemoryUserRepository());
 
         Result result = await handler.Handle(
-            new MarkRecommendationReadCommand(null, Guid.NewGuid()),
+            new MarkRecommendationReadCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1472,7 +1472,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result<DietologistInfoModel?> result = await handler.Handle(
-            new GetMyDietologistQuery(null), CancellationToken.None);
+            new GetMyDietologistQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -1518,7 +1518,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
-            new GetMyClientsQuery(null), CancellationToken.None);
+            new GetMyClientsQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -1723,7 +1723,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), new InMemoryUserRepository());
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(null, Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(UserId: null, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1738,7 +1738,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1807,7 +1807,7 @@ public class DietologistFeatureTests {
         var handler = new GetClientDashboardQueryHandler(invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1827,7 +1827,7 @@ public class DietologistFeatureTests {
             invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1848,7 +1848,7 @@ public class DietologistFeatureTests {
             invRepo, new FailingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
-            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, null, 1, 10, "en", 7),
+            new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1863,7 +1863,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result<UserModel> result = await handler.Handle(
-            new GetClientGoalsQuery(null, Guid.NewGuid()), CancellationToken.None);
+            new GetClientGoalsQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -1899,7 +1899,7 @@ public class DietologistFeatureTests {
     public async Task GetClientGoals_WhenGoalsDenied_ReturnsFailure() {
         var dietologistId = UserId.New();
         var clientId = UserId.New();
-        var noGoalsPermissions = new DietologistPermissions(true, true, true, true, false, true);
+        var noGoalsPermissions = new DietologistPermissions(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: false, ShareHydration: true);
         DietologistInvitation invitation = CreateAcceptedInvitation(clientId, dietologistId, noGoalsPermissions);
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
@@ -1982,7 +1982,7 @@ public class DietologistFeatureTests {
             new InMemoryRecommendationRepository(), new InMemoryUserRepository());
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
-            new GetMyRecommendationsQuery(null), CancellationToken.None);
+            new GetMyRecommendationsQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -2033,7 +2033,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryRecommendationRepository(), new InMemoryUserRepository());
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
-            new GetRecommendationsForClientQuery(null, Guid.NewGuid()), CancellationToken.None);
+            new GetRecommendationsForClientQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -2164,7 +2164,7 @@ public class DietologistFeatureTests {
             new InMemoryInvitationRepository(), new InMemoryUserRepository());
 
         Result<DietologistRelationshipModel?> result = await handler.Handle(
-            new GetMyDietologistRelationshipQuery(null), CancellationToken.None);
+            new GetMyDietologistRelationshipQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -2250,7 +2250,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public void DietologistModels_CanBeConstructed() {
-        var permissions = new DietologistPermissionsModel(true, false, true, false, true, false, true, false);
+        var permissions = new DietologistPermissionsModel(ShareMeals: true, ShareStatistics: false, ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false, ShareProfile: true, ShareFasting: false);
         DateTime acceptedAt = DateTime.UtcNow;
         DateTime expiresAt = acceptedAt.AddDays(7);
 

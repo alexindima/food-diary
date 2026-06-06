@@ -31,7 +31,7 @@ public class OpenFoodFactsFeatureTests {
 
     [Fact]
     public async Task SearchByBarcode_WhenProductNotFound_ReturnsNull() {
-        var service = new StubOpenFoodFactsService(null);
+        var service = new StubOpenFoodFactsService(barcodeResult: null);
         var handler = new SearchByBarcodeQueryHandler(service);
 
         Result<OpenFoodFactsProductModel?> result = await handler.Handle(
@@ -48,7 +48,7 @@ public class OpenFoodFactsFeatureTests {
             CreateProduct("111"),
             CreateProduct("222"),
         };
-        var service = new StubOpenFoodFactsService(null, products);
+        var service = new StubOpenFoodFactsService(barcodeResult: null, products);
         var cache = new StubOpenFoodFactsProductCacheRepository();
         var handler = new SearchOpenFoodFactsQueryHandler(service, cache);
 
@@ -65,7 +65,7 @@ public class OpenFoodFactsFeatureTests {
 
     [Fact]
     public async Task SearchProducts_WhenNoResults_ReturnsEmptyList() {
-        var service = new StubOpenFoodFactsService(null, []);
+        var service = new StubOpenFoodFactsService(barcodeResult: null, []);
         var handler = new SearchOpenFoodFactsQueryHandler(service, new StubOpenFoodFactsProductCacheRepository());
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
@@ -82,7 +82,7 @@ public class OpenFoodFactsFeatureTests {
             CreateProduct("cached-1"),
             CreateProduct("cached-2"),
         };
-        var service = new StubOpenFoodFactsService(null, [CreateProduct("external")]);
+        var service = new StubOpenFoodFactsService(barcodeResult: null, [CreateProduct("external")]);
         var handler = new SearchOpenFoodFactsQueryHandler(
             service,
             new StubOpenFoodFactsProductCacheRepository(cachedProducts));

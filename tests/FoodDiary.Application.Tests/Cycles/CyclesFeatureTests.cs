@@ -91,7 +91,7 @@ public class CyclesFeatureTests {
             new StubUserRepository(User.Create("cycle-empty-user@example.com", "hash")));
 
         Result<CycleModel> result = await handler.Handle(
-            new CreateCycleCommand(Guid.Empty, DateTime.UtcNow, 28, 14, null),
+            new CreateCycleCommand(Guid.Empty, DateTime.UtcNow, 28, 14, Notes: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -107,7 +107,7 @@ public class CyclesFeatureTests {
             new StubUserRepository(user));
 
         Result<CycleModel> result = await handler.Handle(
-            new CreateCycleCommand(user.Id.Value, DateTime.UtcNow, 28, 14, null),
+            new CreateCycleCommand(user.Id.Value, DateTime.UtcNow, 28, 14, Notes: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -237,8 +237,8 @@ public class CyclesFeatureTests {
     [Fact]
     public void CycleMappings_ToModel_SortsDaysByDate() {
         var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
-        cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
-        cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
+        cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), isPeriod: true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
+        cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), isPeriod: false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
 
         CycleModel response = cycle.ToModel();
 

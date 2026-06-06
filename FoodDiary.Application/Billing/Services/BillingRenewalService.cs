@@ -131,7 +131,7 @@ public sealed class BillingRenewalService(
                 skippedAtUtc,
                 "Renewal skipped because subscription user is not accessible.");
             if (subscription.PremiumRoleManagedByBilling) {
-                subscription.MarkPremiumRoleManagedByBilling(false, skippedAtUtc);
+                subscription.MarkPremiumRoleManagedByBilling(value: false, skippedAtUtc);
             }
 
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
@@ -170,10 +170,10 @@ public sealed class BillingRenewalService(
                 renewal.Status,
                 renewal.CurrentPeriodStartUtc,
                 renewal.CurrentPeriodEndUtc,
-                false,
-                null,
-                null,
-                null,
+                cancelAtPeriodEnd: false,
+                canceledAtUtc: null,
+                trialStartUtc: null,
+                trialEndUtc: null,
                 renewal.EventId,
                 renewedAtUtc,
                 renewal.ProviderMetadataJson);

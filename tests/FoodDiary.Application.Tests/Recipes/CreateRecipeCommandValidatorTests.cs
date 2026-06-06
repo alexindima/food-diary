@@ -43,7 +43,7 @@ public class CreateRecipeCommandValidatorTests {
     [Fact]
     public async Task ValidateAsync_WithNullSteps_ReturnsValidationError() {
         var validator = new CreateRecipeCommandValidator();
-        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), null);
+        CreateRecipeCommand command = CreateCommand(Guid.NewGuid(), steps: null);
 
         ValidationResult result = await validator.ValidateAsync(command);
 

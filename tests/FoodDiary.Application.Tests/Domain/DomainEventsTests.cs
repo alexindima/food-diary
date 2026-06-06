@@ -41,7 +41,7 @@ public class DomainEventsTests {
     [Fact]
     public void AggregateRoot_ClearDomainEvents_EmptiesCollection() {
         var meal = Meal.Create(UserId.New(), DateTime.UtcNow, MealType.Lunch);
-        meal.ApplyNutrition(new MealNutritionUpdate(200, 10, 5, 20, 3, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(200, 10, 5, 20, 3, 0, IsAutoCalculated: true));
         Assert.NotEmpty(meal.DomainEvents);
 
         meal.ClearDomainEvents();

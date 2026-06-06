@@ -22,7 +22,7 @@ public sealed class GoalsHttpMappingsTests {
     public void UpdateGoalsRequest_ToCommand_MapsAllFields() {
         var userId = Guid.NewGuid();
         var request = new UpdateGoalsHttpRequest(2000, 150, 70, 250, 30, 2500, 75, 80,
-            true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
+        CalorieCyclingEnabled: true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
 
         UpdateGoalsCommand command = request.ToCommand(userId);
 
@@ -43,7 +43,7 @@ public sealed class GoalsHttpMappingsTests {
     [Fact]
     public void GoalsModel_ToHttpResponse_MapsAllFields() {
         var model = new GoalsModel(2000, 150, 70, 250, 30, 2500, 75, 80,
-            true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
+        CalorieCyclingEnabled: true, 1800, 2000, 2200, 2000, 1800, 2200, 2000);
 
         GoalsHttpResponse response = model.ToHttpResponse();
 
@@ -56,8 +56,8 @@ public sealed class GoalsHttpMappingsTests {
 
     [Fact]
     public void GoalsModel_ToHttpResponse_WithNullValues() {
-        var model = new GoalsModel(null, null, null, null, null, null, null, null,
-            false, null, null, null, null, null, null, null);
+        var model = new GoalsModel(DailyCalorieTarget: null, ProteinTarget: null, FatTarget: null, CarbTarget: null, FiberTarget: null, WaterGoal: null, DesiredWeight: null, DesiredWaist: null,
+        CalorieCyclingEnabled: false, MondayCalories: null, TuesdayCalories: null, WednesdayCalories: null, ThursdayCalories: null, FridayCalories: null, SaturdayCalories: null, SundayCalories: null);
 
         GoalsHttpResponse response = model.ToHttpResponse();
 

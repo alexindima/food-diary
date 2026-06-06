@@ -108,7 +108,7 @@ public sealed class AdminHttpMappingsTests {
 
     [Fact]
     public void AdminAiPromptUpsertHttpRequest_ToCommand_MapsAllFields() {
-        var request = new AdminAiPromptUpsertHttpRequest("Prompt text", true);
+        var request = new AdminAiPromptUpsertHttpRequest("Prompt text", IsActive: true);
 
         UpsertAdminAiPromptCommand command = request.ToCommand("meal-analysis", "ru");
 
@@ -153,7 +153,7 @@ public sealed class AdminHttpMappingsTests {
         var create = new AdminLessonCreateHttpRequest(
             "Title", "Content", "Summary", "en", "nutrition", "beginner", 4, 10);
         var update = new AdminLessonUpdateHttpRequest(
-            "Updated", "Updated content", null, "ru", "fasting", "advanced", 6, 20);
+            "Updated", "Updated content", Summary: null, "ru", "fasting", "advanced", 6, 20);
 
         CreateAdminLessonCommand createCommand = create.ToCreateCommand();
         UpdateAdminLessonCommand updateCommand = update.ToUpdateCommand(lessonId);
@@ -362,15 +362,15 @@ public sealed class AdminHttpMappingsTests {
     public void AdminSingleModels_ToHttpResponse_MapAllFields() {
         DateTime now = DateTime.UtcNow;
         DateTimeOffset offsetNow = DateTimeOffset.UtcNow;
-        var prompt = new AdminAiPromptModel(Guid.NewGuid(), "key", "en", "Prompt", 2, true, now, now.AddMinutes(1));
+        var prompt = new AdminAiPromptModel(Guid.NewGuid(), "key", "en", "Prompt", 2, IsActive: true, now, now.AddMinutes(1));
         var lesson = new AdminLessonModel(Guid.NewGuid(), "Title", "Content", "Summary", "en", "nutrition", "beginner", 4, 10, now, now.AddMinutes(2));
-        var template = new AdminEmailTemplateModel(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", true, now, null);
+        var template = new AdminEmailTemplateModel(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", IsActive: true, now, UpdatedOnUtc: null);
         var impersonationStart = new AdminImpersonationStartModel("token", Guid.NewGuid(), "target@example.com", Guid.NewGuid(), "Support");
         var impersonationSession = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", "ip", "agent", now);
         var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", "ip", "agent", "Chrome", "1", "Windows", "Desktop", now);
         var device = new AdminUserLoginDeviceSummaryModel("Chrome|Windows", 3, now);
         var audit = new AdminUserRoleAuditEventReadModel(Guid.NewGuid(), Guid.NewGuid(), "Admin", "Added", Guid.NewGuid(), "actor@example.com", "manual", now);
-        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", null, now, null);
+        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: null, now, ReviewedAtUtc: null);
         var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "received", offsetNow);
         var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "received", offsetNow);
 
@@ -395,13 +395,13 @@ public sealed class AdminHttpMappingsTests {
         var subscriptionId = Guid.NewGuid();
         var subscription = new AdminBillingSubscriptionReadModel(
             subscriptionId, userId, "user@example.com", "stripe", "customer", "subscription", "payment-method", "price",
-            "premium", "active", now.AddDays(-1), now.AddDays(30), true, now.AddDays(29), "event-1", now, now, null);
+            "premium", "active", now.AddDays(-1), now.AddDays(30), CancelAtPeriodEnd: true, now.AddDays(29), "event-1", now, now, ModifiedOnUtc: null);
         var payment = new AdminBillingPaymentReadModel(
             Guid.NewGuid(), userId, "user@example.com", subscriptionId, "stripe", "payment", "customer", "subscription",
             "payment-method", "price", "premium", "succeeded", "invoice", 12.5m, "USD", now.AddDays(-1), now.AddDays(30),
-            "event-2", "{}", now, null);
+            "event-2", "{}", now, ModifiedOnUtc: null);
         var webhook = new AdminBillingWebhookEventReadModel(
-            Guid.NewGuid(), "stripe", "event-3", "invoice.paid", "invoice-1", "processed", now, "{}", null, now, null);
+            Guid.NewGuid(), "stripe", "event-3", "invoice.paid", "invoice-1", "processed", now, "{}", ErrorMessage: null, now, ModifiedOnUtc: null);
 
         AdminBillingSubscriptionHttpResponse subscriptionResponse = subscription.ToHttpResponse();
         AdminBillingPaymentHttpResponse paymentResponse = payment.ToHttpResponse();
@@ -482,12 +482,12 @@ public sealed class AdminHttpMappingsTests {
     [Fact]
     public void AdminPagedResponses_ToHttpResponse_MapItemsAndMetadata() {
         AdminUserModel user = CreateUser(Guid.NewGuid(), DateTime.UtcNow);
-        var session = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", null, null, DateTime.UtcNow);
-        var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", null, null, null, null, null, null, DateTime.UtcNow);
-        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", null, DateTime.UtcNow, null);
-        var subscription = new AdminBillingSubscriptionReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "stripe", "customer", null, null, null, null, "active", null, null, false, null, null, null, DateTime.UtcNow, null);
-        var payment = new AdminBillingPaymentReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", null, "stripe", "payment", null, null, null, null, null, "succeeded", "invoice", null, null, null, null, null, null, DateTime.UtcNow, null);
-        var webhook = new AdminBillingWebhookEventReadModel(Guid.NewGuid(), "stripe", "event", "invoice.paid", null, "processed", DateTime.UtcNow, null, null, DateTime.UtcNow, null);
+        var session = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", ActorIpAddress: null, ActorUserAgent: null, DateTime.UtcNow);
+        var loginEvent = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", MaskedIpAddress: null, UserAgent: null, BrowserName: null, BrowserVersion: null, OperatingSystem: null, DeviceType: null, DateTime.UtcNow);
+        var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: null, DateTime.UtcNow, ReviewedAtUtc: null);
+        var subscription = new AdminBillingSubscriptionReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "stripe", "customer", ExternalSubscriptionId: null, ExternalPaymentMethodId: null, ExternalPriceId: null, Plan: null, "active", CurrentPeriodStartUtc: null, CurrentPeriodEndUtc: null, CancelAtPeriodEnd: false, NextBillingAttemptUtc: null, LastWebhookEventId: null, LastSyncedAtUtc: null, DateTime.UtcNow, ModifiedOnUtc: null);
+        var payment = new AdminBillingPaymentReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", BillingSubscriptionId: null, "stripe", "payment", ExternalCustomerId: null, ExternalSubscriptionId: null, ExternalPaymentMethodId: null, ExternalPriceId: null, Plan: null, "succeeded", "invoice", Amount: null, Currency: null, CurrentPeriodStartUtc: null, CurrentPeriodEndUtc: null, WebhookEventId: null, ProviderMetadataJson: null, DateTime.UtcNow, ModifiedOnUtc: null);
+        var webhook = new AdminBillingWebhookEventReadModel(Guid.NewGuid(), "stripe", "event", "invoice.paid", ExternalObjectId: null, "processed", DateTime.UtcNow, PayloadJson: null, ErrorMessage: null, DateTime.UtcNow, ModifiedOnUtc: null);
 
         Assert.Single(new PagedResponse<AdminUserModel>([user], 2, 10, 3, 21).ToHttpResponse().Data);
         Assert.Single(new PagedResponse<AdminImpersonationSessionReadModel>([session], 1, 10, 1, 1).ToImpersonationSessionsHttpResponse().Data);

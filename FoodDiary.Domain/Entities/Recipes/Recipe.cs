@@ -198,7 +198,7 @@ public sealed class Recipe : AggregateRoot<RecipeId> {
         }
 
         IsNutritionAutoCalculated = true;
-        ApplyManualNutrition(RecipeNutrition.Create(null, null, null, null, null, null));
+        ApplyManualNutrition(RecipeNutrition.Create(calories: null, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null));
         RaiseDomainEvent(new RecipeAutoNutritionEnabledDomainEvent(Id));
         SetModified();
     }

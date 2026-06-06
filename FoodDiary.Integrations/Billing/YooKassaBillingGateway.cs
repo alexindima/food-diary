@@ -37,15 +37,15 @@ public sealed class YooKassaBillingGateway(
             "payments",
             new CreatePaymentRequest(
                 new AmountRequest(amount, _options.Currency),
-                true,
+                Capture: true,
                 new ConfirmationRequest("redirect", _options.ReturnUrl),
-                true,
+                SavePaymentMethod: true,
                 BuildDescription(request.Plan),
                 new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                     ["plan"] = request.Plan,
                 }),
-            null,
+                idempotenceKey: null,
             cancellationToken).ConfigureAwait(false);
         if (paymentResponse.IsFailure) {
             return Result.Failure<BillingCheckoutSessionModel>(paymentResponse.Error);
@@ -90,7 +90,7 @@ public sealed class YooKassaBillingGateway(
             "payments",
             new CreateRecurringPaymentRequest(
                 new AmountRequest(amount, _options.Currency),
-                true,
+                Capture: true,
                 request.PaymentMethodId,
                 BuildDescription(request.Plan),
                 new Dictionary<string, string>(StringComparer.Ordinal) {
@@ -149,7 +149,7 @@ public sealed class YooKassaBillingGateway(
         if (notification?.Object?.Id is null ||
             string.IsNullOrWhiteSpace(notification.Event) ||
             !notification.Event.StartsWith("payment.", StringComparison.OrdinalIgnoreCase)) {
-            return Result.Success<BillingWebhookEventModel?>(null);
+            return Result.Success<BillingWebhookEventModel?>(value: null);
         }
 
         Result<YooKassaPayment> paymentResult = await FetchPaymentAsync(notification.Object.Id, cancellationToken).ConfigureAwait(false);
@@ -186,11 +186,11 @@ public sealed class YooKassaBillingGateway(
             plan,
             status,
             periodStart,
-string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
-            false,
-            null,
-            null,
-            null,
+            string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
             ParseAmount(payment.Amount?.Value),
             payment.Amount?.Currency,
             JsonSerializer.Serialize(payment, JsonOptions),
@@ -199,7 +199,7 @@ string.Equals(status, "active", StringComparison.Ordinal) ? periodEnd : null,
 
     private async Task<Result<YooKassaPayment>> FetchPaymentAsync(string paymentId, CancellationToken cancellationToken) {
         ConfigureClient();
-        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", null, null, cancellationToken).ConfigureAwait(false);
+        return await SendAsync<YooKassaPayment>(HttpMethod.Get, $"payments/{paymentId}", body: null, idempotenceKey: null, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result<TResponse>> SendAsync<TResponse>(

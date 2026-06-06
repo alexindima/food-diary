@@ -54,7 +54,7 @@ public sealed class TestImageStorageService(IOptions<S3Options> options) : IImag
     public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
         string objectKey,
         CancellationToken cancellationToken) =>
-        Task.FromResult(new ImageObjectValidationResult(true));
+        Task.FromResult(new ImageObjectValidationResult(IsValid: true));
 
     private static string NormalizeFileName(string fileName) {
         string nameOnly = Path.GetFileName(fileName);

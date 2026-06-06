@@ -29,7 +29,7 @@ public class GetProductsQueryHandler(
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }
         ProductType[]? productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse<ProductType>(type, true, out ProductType parsed) ? parsed : (ProductType?)null)
+            .Select(type => Enum.TryParse<ProductType>(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
             .Distinct()
             .ToArray();

@@ -80,10 +80,10 @@ public class GetClientDashboardQueryHandler(
             WeeklyCalorieGoal = permissions.ShareStatistics ? dashboard.WeeklyCalorieGoal : 0,
             Statistics = permissions.ShareStatistics
                 ? dashboard.Statistics
-                : new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null),
+                : new DashboardStatisticsModel(0, 0, 0, 0, 0, ProteinGoal: null, FatGoal: null, CarbGoal: null, FiberGoal: null),
             WeeklyCalories = permissions.ShareStatistics ? dashboard.WeeklyCalories : [],
-            Weight = permissions.ShareWeight ? dashboard.Weight : new DashboardWeightModel(null, null, null),
-            Waist = permissions.ShareWaist ? dashboard.Waist : new DashboardWaistModel(null, null, null),
+            Weight = permissions.ShareWeight ? dashboard.Weight : new DashboardWeightModel(Latest: null, Previous: null, Desired: null),
+            Waist = permissions.ShareWaist ? dashboard.Waist : new DashboardWaistModel(Latest: null, Previous: null, Desired: null),
             Meals = permissions.ShareMeals ? dashboard.Meals : new DashboardMealsModel([], 0),
             Hydration = permissions.ShareHydration ? dashboard.Hydration : null,
             Advice = null,

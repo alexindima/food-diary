@@ -47,7 +47,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             visibility: Visibility.Private);
         recipe.AddStep(1, "Mix ingredients", imageAssetId: imageAsset.Id);
         var shoppingList = ShoppingList.Create(deletedUser.Id, "Cleanup");
-        shoppingList.AddItem("Apple", product.Id, 1, MeasurementUnit.Pcs, "Fruit", false, 0);
+        shoppingList.AddItem("Apple", product.Id, 1, MeasurementUnit.Pcs, "Fruit", isChecked: false, 0);
         var recentItem = RecentItem.Create(deletedUser.Id, RecentItemType.Product, product.Id.Value);
         var aiUsage = AiUsage.Create(deletedUser.Id, "vision", "gpt-4.1-mini", 10, 20, 30);
 
@@ -195,7 +195,7 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
             new DateTime(2026, 3, 29, 0, 0, 0, DateTimeKind.Utc),
             imageAssetId: mealAsset.Id);
         var shoppingList = ShoppingList.Create(deletedUser.Id, "Temporary");
-        shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", false, 0);
+        shoppingList.AddItem("Bread", product.Id, 2, MeasurementUnit.Pcs, "Bakery", isChecked: false, 0);
 
         context.ImageAssets.AddRange(productAsset, recipeAsset, stepAsset, profileAsset, mealAsset);
         context.Products.Add(product);
@@ -263,6 +263,6 @@ public sealed class UserCleanupServiceIntegrationTests(PostgresDatabaseFixture d
         public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
             string objectKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(true));
+            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
     }
 }

@@ -120,7 +120,7 @@ public sealed class UsdaHttpMappingsTests {
         var nutrients = new List<DailyMicronutrientModel> {
             new(1, "Iron", "mg", 12.5, 18, 69.4),
         };
-        var model = new DailyMicronutrientSummaryModel(date, 5, 8, nutrients, null);
+        var model = new DailyMicronutrientSummaryModel(date, 5, 8, nutrients, HealthScores: null);
 
         DailyMicronutrientSummaryHttpResponse response = model.ToHttpResponse();
 

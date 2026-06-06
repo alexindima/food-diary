@@ -80,7 +80,7 @@ public sealed class DietologistEmailSenderTests {
         var transport = new RecordingEmailTransport();
         DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
-            "diet@example.com", Guid.NewGuid(), "token", null, null, "en");
+            "diet@example.com", Guid.NewGuid(), "token", ClientFirstName: null, ClientLastName: null, "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
@@ -92,7 +92,7 @@ public sealed class DietologistEmailSenderTests {
         var transport = new RecordingEmailTransport();
         DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
-            "diet@example.com", Guid.NewGuid(), "token", "John", null, null);
+            "diet@example.com", Guid.NewGuid(), "token", "John", ClientLastName: null, Language: null);
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 

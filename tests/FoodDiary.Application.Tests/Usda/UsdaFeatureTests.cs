@@ -15,7 +15,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithValidData_Succeeds() {
         var userId = UserId.New();
-        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, null, 165, 31, 3.6, 0, 0, 0);
+        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var usdaFood = new UsdaFood { FdcId = 171077, Description = "Chicken, breast" };
         var productRepo = new StubProductRepository(product);
         var usdaRepo = new StubUsdaFoodRepository(usdaFood);
@@ -33,7 +33,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WhenProductNotFound_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(null), new StubUsdaFoodRepository(null));
+            new StubProductRepository(product: null), new StubUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
@@ -46,9 +46,9 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WhenUsdaFoodNotFound_ReturnsFailure() {
         var userId = UserId.New();
-        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, null, 165, 31, 3.6, 0, 0, 0);
+        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(product), new StubUsdaFoodRepository(null));
+            new StubProductRepository(product), new StubUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
@@ -61,7 +61,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WithValidData_Succeeds() {
         var userId = UserId.New();
-        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, null, 165, 31, 3.6, 0, 0, 0);
+        var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var productRepo = new StubProductRepository(product);
 
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(productRepo);
@@ -76,7 +76,7 @@ public class UsdaFeatureTests {
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WhenProductNotFound_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(product: null));
 
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid()),
@@ -88,20 +88,20 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithNullUserId_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(null), new StubUsdaFoodRepository(null));
+            new StubProductRepository(product: null), new StubUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
-            new LinkProductToUsdaFoodCommand(null, Guid.NewGuid(), 1), CancellationToken.None);
+            new LinkProductToUsdaFoodCommand(UserId: null, Guid.NewGuid(), 1), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WithNullUserId_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(product: null));
 
         Result result = await handler.Handle(
-            new UnlinkProductFromUsdaFoodCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new UnlinkProductFromUsdaFoodCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

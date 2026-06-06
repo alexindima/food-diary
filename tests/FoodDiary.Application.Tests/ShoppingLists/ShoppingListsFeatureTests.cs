@@ -25,7 +25,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(null), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -46,7 +46,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(null, Guid.NewGuid()), CancellationToken.None);
+        Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -90,7 +90,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListByIdQueryHandler_WithList_ReturnsModel() {
         var user = User.Create("shopping-by-id-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
-        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
         var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
@@ -103,7 +103,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
-        Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(null), CancellationToken.None);
+        Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -113,7 +113,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListsQueryHandler_WithLists_ReturnsSummaryModels() {
         var user = User.Create("shopping-lists-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
-        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
         var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), new StubUserRepository(user));
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
@@ -189,7 +189,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             new StubUserRepository(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", null),
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", Items: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -205,7 +205,7 @@ public class ShoppingListsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(null, Guid.NewGuid(), "Weekly", null),
+            new UpdateShoppingListCommand(UserId: null, Guid.NewGuid(), "Weekly", Items: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -220,7 +220,7 @@ public class ShoppingListsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), null, null),
+            new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -237,7 +237,7 @@ public class ShoppingListsFeatureTests {
 
         var shoppingListId = Guid.NewGuid();
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), shoppingListId, "Weekly", null),
+            new UpdateShoppingListCommand(Guid.NewGuid(), shoppingListId, "Weekly", Items: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -258,8 +258,8 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(
                 user.Id.Value,
                 list.Id.Value,
-                null,
-                [new ShoppingListItemInput(ProductId.New().Value, null, 1, null, null, false, null)]),
+                Name: null,
+                [new ShoppingListItemInput(ProductId.New().Value, Name: null, 1, Unit: null, Category: null, IsChecked: false, SortOrder: null)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -283,7 +283,7 @@ public class ShoppingListsFeatureTests {
             0,
             category: "Dairy");
         var list = ShoppingList.Create(user.Id, "Old");
-        list.AddItem("Old item", null, 1, null, null, false, 1);
+        list.AddItem("Old item", productId: null, 1, unit: null, category: null, isChecked: false, 1);
         var repository = new SingleShoppingListRepository(list);
         var handler = new UpdateShoppingListCommandHandler(
             repository,
@@ -296,8 +296,8 @@ public class ShoppingListsFeatureTests {
                 list.Id.Value,
                 "  Weekly groceries  ",
                 [
-                    new ShoppingListItemInput(product.Id.Value, null, 2, null, null, true, null),
-                    new ShoppingListItemInput(null, "  Apples  ", 3, "Pcs", "Fruit", false, 7),
+                    new ShoppingListItemInput(product.Id.Value, Name: null, 2, Unit: null, Category: null, IsChecked: true, SortOrder: null),
+                    new ShoppingListItemInput(ProductId: null, "  Apples  ", 3, "Pcs", "Fruit", IsChecked: false, 7),
                 ]),
             CancellationToken.None);
 
@@ -323,7 +323,7 @@ public class ShoppingListsFeatureTests {
     public async Task UpdateShoppingListCommandHandler_WithNameOnly_UpdatesWithoutReplacingItems() {
         var user = User.Create("shopping-update-name-only@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Old");
-        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
+        list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
         var repository = new SingleShoppingListRepository(list);
         var handler = new UpdateShoppingListCommandHandler(
             repository,
@@ -331,7 +331,7 @@ public class ShoppingListsFeatureTests {
             new StubUserRepository(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", null),
+            new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", Items: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -348,7 +348,7 @@ public class ShoppingListsFeatureTests {
             new StubUserRepository(User.Create("shopping-create@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
-            new CreateShoppingListCommand(null, "Weekly", []),
+            new CreateShoppingListCommand(UserId: null, "Weekly", []),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -398,7 +398,7 @@ public class ShoppingListsFeatureTests {
             new CreateShoppingListCommand(
                 user.Id.Value,
                 "Weekly",
-                [new ShoppingListItemInput(ProductId.New().Value, null, 1, null, null, false, null)]),
+                [new ShoppingListItemInput(ProductId.New().Value, Name: null, 1, Unit: null, Category: null, IsChecked: false, SortOrder: null)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -432,8 +432,8 @@ public class ShoppingListsFeatureTests {
                 user.Id.Value,
                 "  Weekly  ",
                 [
-                    new ShoppingListItemInput(product.Id.Value, null, 2, null, null, true, null),
-                    new ShoppingListItemInput(null, "  Apples  ", 3, "Pcs", "Fruit", false, 9),
+                    new ShoppingListItemInput(product.Id.Value, Name: null, 2, Unit: null, Category: null, IsChecked: true, SortOrder: null),
+                    new ShoppingListItemInput(ProductId: null, "  Apples  ", 3, "Pcs", "Fruit", IsChecked: false, 9),
                 ]),
             CancellationToken.None);
 
@@ -455,7 +455,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(null, "Milk", 1, "invalid_unit", null, false, 1),
+            new ShoppingListItemInput(ProductId: null, "Milk", 1, "invalid_unit", Category: null, IsChecked: false, 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -471,7 +471,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankUnit_CreatesCustomItemWithoutUnit() {
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
-            [new ShoppingListItemInput(null, "Milk", 1, " ", null, false, null)],
+            [new ShoppingListItemInput(ProductId: null, "Milk", 1, " ", Category: null, IsChecked: false, SortOrder: null)],
             UserId.New(),
             new NoopProductLookupService(),
             CancellationToken.None);
@@ -485,7 +485,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(null, "Milk", 0, null, null, false, 1),
+            new ShoppingListItemInput(ProductId: null, "Milk", 0, Unit: null, Category: null, IsChecked: false, 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -504,7 +504,7 @@ public class ShoppingListsFeatureTests {
     [InlineData(double.NegativeInfinity)]
     public async Task ShoppingListItemBuilder_WithNonFiniteAmount_Fails(double amount) {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(null, "Milk", amount, null, null, false, 1),
+            new ShoppingListItemInput(ProductId: null, "Milk", amount, Unit: null, Category: null, IsChecked: false, 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -521,7 +521,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(Guid.Empty, null, 1, null, null, false, 1),
+            new ShoppingListItemInput(Guid.Empty, Name: null, 1, Unit: null, Category: null, IsChecked: false, 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -550,7 +550,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankCustomName_FailsWithNameRequired() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(null, "   ", 1, null, null, false, null),
+            new ShoppingListItemInput(ProductId: null, "   ", 1, Unit: null, Category: null, IsChecked: false, SortOrder: null),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -583,7 +583,7 @@ public class ShoppingListsFeatureTests {
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [
-                new ShoppingListItemInput(product.Id.Value, null, 1, null, "Sale", false, 0),
+                new ShoppingListItemInput(product.Id.Value, Name: null, 1, Unit: null, "Sale", IsChecked: false, 0),
             ],
             userId,
             new ProductLookupService(product),
@@ -599,8 +599,8 @@ public class ShoppingListsFeatureTests {
     public void ShoppingListMappings_ToSummaryModel_MapsItemCount() {
         var userId = UserId.New();
         var list = ShoppingList.Create(userId, "Weekly");
-        list.AddItem("Milk", null, 1, MeasurementUnit.Ml, "Dairy", false, 1);
-        list.AddItem("Apples", null, 2, MeasurementUnit.Pcs, "Fruit", true, 2);
+        list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
+        list.AddItem("Apples", productId: null, 2, MeasurementUnit.Pcs, "Fruit", isChecked: true, 2);
 
         ShoppingListSummaryModel model = list.ToSummaryModel();
 

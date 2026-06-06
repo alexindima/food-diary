@@ -203,7 +203,7 @@ public class HydrationFeatureTests {
         var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
 
         Result<HydrationEntryModel> result = await handler.Handle(
-            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, timestamp, null),
+            new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, timestamp, AmountMl: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);

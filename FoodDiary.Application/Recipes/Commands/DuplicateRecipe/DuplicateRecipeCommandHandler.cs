@@ -51,7 +51,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(created.ToModel(0, true));
+        return Result.Success(created.ToModel(0, isOwnedByCurrentUser: true));
     }
 
     private static Recipe CreateDuplicate(UserId userId, Recipe original) {
@@ -63,7 +63,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
             original.Comment,
             original.Category,
             original.ImageUrl,
-            null,
+            imageAssetId: null,
             original.PrepTime,
             original.CookTime,
             original.Visibility);

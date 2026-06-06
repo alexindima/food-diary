@@ -130,14 +130,14 @@ public sealed class PaddleBillingGateway(
             string? eventType = root.GetProperty("event_type").GetString();
             if (string.IsNullOrWhiteSpace(eventType) ||
                 !eventType.StartsWith("subscription.", StringComparison.OrdinalIgnoreCase)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(null));
+                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
             }
 
             JsonElement data = root.GetProperty("data");
             string? subscriptionId = GetString(data, "id");
             string? customerId = GetString(data, "customer_id");
             if (string.IsNullOrWhiteSpace(subscriptionId) || string.IsNullOrWhiteSpace(customerId)) {
-                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(null));
+                return Task.FromResult(Result.Success<BillingWebhookEventModel?>(value: null));
             }
 
             return Task.FromResult(Result.Success<BillingWebhookEventModel?>(CreateWebhookEvent(root, data, eventType, customerId, subscriptionId)));
@@ -168,7 +168,7 @@ public sealed class PaddleBillingGateway(
             eventType,
             customerId,
             subscriptionId,
-            null,
+            ExternalPaymentMethodId: null,
             externalPriceId,
             ResolvePlan(externalPriceId) ?? GetString(customData, "plan"),
             GetString(data, "status") ?? string.Empty,
@@ -178,9 +178,9 @@ public sealed class PaddleBillingGateway(
             ParseDateTime(data, "canceled_at"),
             ParseDateTime(trialDates, "starts_at"),
             ParseDateTime(trialDates, "ends_at") ?? ParseDateTime(data, "next_billed_at"),
-            null,
-            null,
-            null,
+            Amount: null,
+            Currency: null,
+            ProviderMetadataJson: null,
             ParseUserId(customData));
     }
 
@@ -192,7 +192,7 @@ public sealed class PaddleBillingGateway(
             "customers",
             new CreateCustomerRequest(
                 request.Email,
-                null,
+                Name: null,
                 new Dictionary<string, string>(StringComparer.Ordinal) {
                     ["user_id"] = request.UserId.ToString(),
                 }),

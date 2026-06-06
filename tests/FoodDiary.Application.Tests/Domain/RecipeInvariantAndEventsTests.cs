@@ -359,7 +359,7 @@ public class RecipeInvariantAndEventsTests {
         RecipeStep step = recipe.AddStep(1, "Instruction", "Title", "https://img");
         recipe.ClearDomainEvents();
 
-        step.Update("Instruction", "Title", "https://img", null);
+        step.Update("Instruction", "Title", "https://img", imageAssetId: null);
 
         Assert.Null(step.ModifiedOnUtc);
     }
@@ -369,7 +369,7 @@ public class RecipeInvariantAndEventsTests {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
         RecipeStep step = recipe.AddStep(1, "Instruction", "Title", "https://img");
 
-        step.Update("  New instruction  ", "   ", "   ", null);
+        step.Update("  New instruction  ", "   ", "   ", imageAssetId: null);
 
         Assert.Equal("New instruction", step.Instruction);
         Assert.Null(step.Title);
@@ -582,7 +582,7 @@ public class RecipeInvariantAndEventsTests {
     public void ApplyComputedNutrition_WithSameValues_DoesNotSetModifiedOnUtc() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
-        recipe.ApplyComputedNutrition(null, null, null, null, null, null);
+        recipe.ApplyComputedNutrition(calories: null, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null);
 
         Assert.Null(recipe.ModifiedOnUtc);
     }

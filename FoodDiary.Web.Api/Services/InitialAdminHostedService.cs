@@ -38,7 +38,7 @@ public sealed class InitialAdminHostedService(
 
             IReadOnlyList<Role> roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken).ConfigureAwait(false);
             var admin = User.Create(normalizedEmail, passwordHasher.Hash(settings.Password));
-            admin.SetEmailConfirmed(true);
+            admin.SetEmailConfirmed(isConfirmed: true);
             admin.ReplaceRoles(roles);
 
             await dbContext.Users.AddAsync(admin, cancellationToken).ConfigureAwait(false);

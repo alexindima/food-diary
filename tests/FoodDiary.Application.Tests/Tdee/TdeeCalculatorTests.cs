@@ -135,7 +135,7 @@ public class TdeeCalculatorTests {
 
     [Fact]
     public void SuggestCalorieTarget_WithNoWeightGoal_ReturnsTdeeRounded() {
-        double? target = TdeeCalculator.SuggestCalorieTarget(2200, null, null);
+        double? target = TdeeCalculator.SuggestCalorieTarget(2200, currentWeight: null, desiredWeight: null);
 
         Assert.Equal(2200, target);
     }
@@ -170,12 +170,12 @@ public class TdeeCalculatorTests {
 
     [Fact]
     public void GetGoalAdjustmentHint_WithNullTdee_ReturnsNull() {
-        Assert.Null(TdeeCalculator.GetGoalAdjustmentHint(null, 2000, 80, 70));
+        Assert.Null(TdeeCalculator.GetGoalAdjustmentHint(adaptiveTdee: null, 2000, 80, 70));
     }
 
     [Fact]
     public void GetGoalAdjustmentHint_WithNullTarget_ReturnsNull() {
-        Assert.Null(TdeeCalculator.GetGoalAdjustmentHint(2000, null, 80, 70));
+        Assert.Null(TdeeCalculator.GetGoalAdjustmentHint(2000, currentTarget: null, 80, 70));
     }
 
     [Fact]
@@ -277,7 +277,7 @@ public class TdeeCalculatorTests {
             var meal = Meal.Create(TestUserId, date, MealType.Lunch);
             meal.ApplyNutrition(new MealNutritionUpdate(
                 caloriesPerMeal, caloriesPerMeal * 0.15, caloriesPerMeal * 0.035,
-                caloriesPerMeal * 0.05, 5, 0, true));
+                caloriesPerMeal * 0.05, 5, 0, IsAutoCalculated: true));
             meals.Add(meal);
         }
 

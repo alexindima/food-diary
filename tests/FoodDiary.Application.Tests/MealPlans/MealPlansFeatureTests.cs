@@ -21,7 +21,7 @@ namespace FoodDiary.Application.Tests.MealPlans;
 public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WhenPlanNotFound_ReturnsFailure() {
-        var repo = new StubMealPlanRepository(null);
+        var repo = new StubMealPlanRepository(plan: null);
         var handler = new AdoptMealPlanCommandHandler(repo);
 
         Result<MealPlanModel> result = await handler.Handle(
@@ -34,7 +34,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WhenNotCurated_ReturnsFailure() {
         var userId = UserId.New();
-        var plan = MealPlan.CreateForUser(userId, "My Plan", null, DietType.Balanced, 7, null);
+        var plan = MealPlan.CreateForUser(userId, "My Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         var repo = new StubMealPlanRepository(plan);
         var handler = new AdoptMealPlanCommandHandler(repo);
 
@@ -47,10 +47,10 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task AdoptMealPlan_WithNullUserId_ReturnsFailure() {
-        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(null));
+        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(plan: null));
 
         Result<MealPlanModel> result = await handler.Handle(
-            new AdoptMealPlanCommand(null, Guid.NewGuid()), CancellationToken.None);
+            new AdoptMealPlanCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
@@ -63,7 +63,7 @@ public class MealPlansFeatureTests {
             "Chicken breast",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             caloriesPerBase: 165,
             proteinsPerBase: 31,
             fatsPerBase: 3.6,
@@ -77,7 +77,7 @@ public class MealPlansFeatureTests {
         SetProperty(ingredient, nameof(ingredient.Product), product);
         step.AddProductIngredient(ProductId.New(), 50);
 
-        var plan = MealPlan.CreateCurated("High protein", null, DietType.Balanced, 1, null);
+        var plan = MealPlan.CreateCurated("High protein", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         MealPlanDay day = plan.AddDay(1);
         day.AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
         MealPlanMeal lunch = day.AddMeal(MealType.Lunch, recipe.Id, servings: 3);
@@ -104,7 +104,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GenerateShoppingList_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GenerateShoppingListCommandHandler(
-            new StubMealPlanRepository(null),
+            new StubMealPlanRepository(plan: null),
             new RecordingShoppingListRepository());
 
         Result<ShoppingListModel> result = await handler.Handle(
@@ -118,7 +118,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GenerateShoppingList_WhenPlanMissing_ReturnsNotFound() {
         var handler = new GenerateShoppingListCommandHandler(
-            new StubMealPlanRepository(null),
+            new StubMealPlanRepository(plan: null),
             new RecordingShoppingListRepository());
         var planId = Guid.NewGuid();
 
@@ -131,7 +131,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GenerateShoppingList_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
         var ownerId = UserId.New();
-        var plan = MealPlan.CreateForUser(ownerId, "Private plan", null, DietType.Balanced, 1, null);
+        var plan = MealPlan.CreateForUser(ownerId, "Private plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var shoppingLists = new RecordingShoppingListRepository();
         var handler = new GenerateShoppingListCommandHandler(new StubMealPlanRepository(plan), shoppingLists);
 
@@ -145,7 +145,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GetMealPlanById_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
         var ownerId = UserId.New();
-        var plan = MealPlan.CreateForUser(ownerId, "Private plan", null, DietType.Balanced, 1, null);
+        var plan = MealPlan.CreateForUser(ownerId, "Private plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
 
         Result<MealPlanModel> result = await handler.Handle(
@@ -159,7 +159,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WithCuratedPlan_AddsAdoptedPlanAndReturnsSavedModel() {
         var userId = UserId.New();
-        var curated = MealPlan.CreateCurated("Starter plan", null, DietType.Balanced, 1, null);
+        var curated = MealPlan.CreateCurated("Starter plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         curated.AddDay(1).AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
         var repository = new StubMealPlanRepository(curated);
         var handler = new AdoptMealPlanCommandHandler(repository);
@@ -175,7 +175,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlanById_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(null));
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan: null));
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
@@ -185,7 +185,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlanById_WhenPlanMissing_ReturnsNotFound() {
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(null));
+        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan: null));
         var planId = Guid.NewGuid();
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), planId), CancellationToken.None);
@@ -196,7 +196,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlanById_WithCuratedPlan_ReturnsModel() {
-        var plan = MealPlan.CreateCurated("Curated", null, DietType.Balanced, 1, null);
+        var plan = MealPlan.CreateCurated("Curated", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
@@ -208,9 +208,9 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlans_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetMealPlansQueryHandler(new StubMealPlanRepository(null));
+        var handler = new GetMealPlansQueryHandler(new StubMealPlanRepository(plan: null));
 
-        Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, null), CancellationToken.None);
+        Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -219,8 +219,8 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GetMealPlans_WithDietTypeFilter_ReturnsCuratedAndUserPlans() {
         var userId = UserId.New();
-        var curated = MealPlan.CreateCurated("Keto curated", null, DietType.Keto, 1, null);
-        var userPlan = MealPlan.CreateForUser(userId, "User plan", null, DietType.Balanced, 1, null);
+        var curated = MealPlan.CreateCurated("Keto curated", description: null, DietType.Keto, 1, targetCaloriesPerDay: null);
+        var userPlan = MealPlan.CreateForUser(userId, "User plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
         var handler = new GetMealPlansQueryHandler(repository);
 
@@ -272,7 +272,7 @@ public class MealPlansFeatureTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var otherRecipeId = RecipeId.New();
-        var plan = MealPlan.CreateForUser(userId, "User plan", null, DietType.LowCarb, 2, null);
+        var plan = MealPlan.CreateForUser(userId, "User plan", description: null, DietType.LowCarb, 2, targetCaloriesPerDay: null);
         plan.AddDay(1).AddMeal(MealType.Breakfast, recipeId, servings: 1);
         plan.AddDay(2).AddMeal(MealType.Dinner, recipeId, servings: 1);
         plan.Days.Single(day => day.DayNumber == 2).AddMeal(MealType.Lunch, otherRecipeId, servings: 1);

@@ -34,7 +34,7 @@ public class RecipesFeatureTests {
     [Fact]
     public async Task GetRecentRecipesQueryValidator_WithEmptyUserId_Fails() {
         var validator = new GetRecentRecipesQueryValidator();
-        var query = new GetRecentRecipesQuery(Guid.Empty, 10, true);
+        var query = new GetRecentRecipesQuery(Guid.Empty, 10, IncludePublic: true);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -44,7 +44,7 @@ public class RecipesFeatureTests {
     [Fact]
     public async Task GetRecipesOverviewQueryValidator_WithValidUserId_Passes() {
         var validator = new GetRecipesOverviewQueryValidator();
-        var query = new GetRecipesOverviewQuery(Guid.NewGuid(), 1, 10, null, true, 10);
+        var query = new GetRecipesOverviewQuery(Guid.NewGuid(), 1, 10, Search: null, IncludePublic: true, 10);
 
         ValidationResult result = await validator.ValidateAsync(query);
 
@@ -475,7 +475,7 @@ public class RecipesFeatureTests {
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
 
-        Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(null), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(userId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -699,7 +699,7 @@ public class RecipesFeatureTests {
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<RecipeModel> result = await handler.Handle(
-            new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, false),
+            new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, IncludePublic: false),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -712,7 +712,7 @@ public class RecipesFeatureTests {
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<RecipeModel> result = await handler.Handle(
-            new GetRecipeByIdQuery(null, Guid.NewGuid(), false),
+            new GetRecipeByIdQuery(UserId: null, Guid.NewGuid(), IncludePublic: false),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -727,7 +727,7 @@ public class RecipesFeatureTests {
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
 
         Result<RecipeModel> result = await handler.Handle(
-            new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false),
+            new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -750,7 +750,7 @@ public class RecipesFeatureTests {
 
         var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
 
-        Result<RecipeModel> result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, false), CancellationToken.None);
+        Result<RecipeModel> result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(recipe.Id.Value, result.Value.Id);
@@ -895,7 +895,7 @@ public class RecipesFeatureTests {
             new StubFavoriteRecipeRepository([]));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
-            new GetRecipesOverviewQuery(null, 1, 10, null, true, 10, 10),
+            new GetRecipesOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -936,7 +936,7 @@ public class RecipesFeatureTests {
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
         Result<RecipeOverviewModel> result = await handler.Handle(
-            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -962,7 +962,7 @@ public class RecipesFeatureTests {
             new StubFavoriteRecipeRepository([]));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
-            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, null, true, 10, 10),
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -989,7 +989,7 @@ public class RecipesFeatureTests {
         var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
 
         Result<RecipeOverviewModel> result = await handler.Handle(
-            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", true, 10, 10),
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1001,7 +1001,7 @@ public class RecipesFeatureTests {
     public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new SingleRecipeRepositoryForCreate());
 
-        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(null, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1013,7 +1013,7 @@ public class RecipesFeatureTests {
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetRecentRecipesQueryHandler(recentRepository, new SingleRecipeRepositoryForCreate());
 
-        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
@@ -1050,7 +1050,7 @@ public class RecipesFeatureTests {
         ]);
         var handler = new GetRecentRecipesQueryHandler(recentRepository, repository);
 
-        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, true), CancellationToken.None);
+        Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
@@ -1243,7 +1243,7 @@ public class RecipesFeatureTests {
             new OverviewRecipeRepository(),
             new StubUserRepository(User.Create("unused@example.com", "hash")));
 
-        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, null, true), CancellationToken.None);
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -1255,7 +1255,7 @@ public class RecipesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetRecipesQueryHandler(new OverviewRecipeRepository(), new StubUserRepository(user));
 
-        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, null, true), CancellationToken.None);
+        Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
@@ -1324,7 +1324,7 @@ public class RecipesFeatureTests {
             Task.FromResult(
                 assetId.HasValue
                     ? Result.Failure<ImageAsset?>(error)
-                    : Result.Success<ImageAsset?>(null));
+                    : Result.Success<ImageAsset?>(value: null));
     }
 
     [ExcludeFromCodeCoverage]
@@ -1584,8 +1584,8 @@ public class RecipesFeatureTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
             return Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(true)
-                : new DeleteImageAssetResult(false, errorCode));
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode));
         }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
@@ -1631,7 +1631,7 @@ public class RecipesFeatureTests {
     }
 
     private static Product CreateProduct(UserId userId, ProductId productId) {
-        var product = Product.Create(userId, "Ingredient", MeasurementUnit.G, 100, null, 100, 1, 1, 1, 1, 0);
+        var product = Product.Create(userId, "Ingredient", MeasurementUnit.G, 100, defaultPortionAmount: null, 100, 1, 1, 1, 1, 0);
         typeof(Product)
             .GetProperty(nameof(Product.Id))!
             .SetValue(product, productId);
@@ -1763,7 +1763,7 @@ public class RecipesFeatureTests {
             "Ingredient",
             MeasurementUnit.G,
             100,
-            null,
+            defaultPortionAmount: null,
             200,
             10,
             5,

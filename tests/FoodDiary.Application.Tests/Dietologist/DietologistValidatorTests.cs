@@ -12,7 +12,7 @@ public class DietologistValidatorTests {
     public async Task InviteDietologist_WithNullUserId_HasError() {
         var validator = new InviteDietologistCommandValidator();
         var command = new InviteDietologistCommand(
-            null, "diet@example.com", new DietologistPermissionsInput(true, true, true, true, true, true));
+            UserId: null, "diet@example.com", new DietologistPermissionsInput(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true));
         TestValidationResult<InviteDietologistCommand> result = await validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.UserId);
@@ -22,7 +22,7 @@ public class DietologistValidatorTests {
     public async Task InviteDietologist_WithEmptyEmail_HasError() {
         var validator = new InviteDietologistCommandValidator();
         var command = new InviteDietologistCommand(
-            Guid.NewGuid(), "", new DietologistPermissionsInput(true, true, true, true, true, true));
+            Guid.NewGuid(), "", new DietologistPermissionsInput(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true));
         TestValidationResult<InviteDietologistCommand> result = await validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.DietologistEmail);
@@ -32,7 +32,7 @@ public class DietologistValidatorTests {
     public async Task InviteDietologist_WithInvalidEmail_HasError() {
         var validator = new InviteDietologistCommandValidator();
         var command = new InviteDietologistCommand(
-            Guid.NewGuid(), "not-an-email", new DietologistPermissionsInput(true, true, true, true, true, true));
+            Guid.NewGuid(), "not-an-email", new DietologistPermissionsInput(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true));
         TestValidationResult<InviteDietologistCommand> result = await validator.TestValidateAsync(command);
 
         result.ShouldHaveValidationErrorFor(c => c.DietologistEmail);
@@ -51,7 +51,7 @@ public class DietologistValidatorTests {
     public async Task InviteDietologist_WithValidCommand_NoErrors() {
         var validator = new InviteDietologistCommandValidator();
         var command = new InviteDietologistCommand(
-            Guid.NewGuid(), "diet@example.com", new DietologistPermissionsInput(true, true, true, true, true, true));
+            Guid.NewGuid(), "diet@example.com", new DietologistPermissionsInput(ShareMeals: true, ShareStatistics: true, ShareWeight: true, ShareWaist: true, ShareGoals: true, ShareHydration: true));
         TestValidationResult<InviteDietologistCommand> result = await validator.TestValidateAsync(command);
 
         result.ShouldNotHaveAnyValidationErrors();

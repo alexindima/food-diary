@@ -37,7 +37,7 @@ namespace FoodDiary.Application.Tests.Consumptions;
 public class ConsumptionsFeatureTests {
     [Fact]
     public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
-        Result result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(null, null, 100));
+        Result result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(ProductId: null, RecipeId: null, 100));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
@@ -45,7 +45,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero() {
-        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, null);
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, alcohol: null);
 
         Assert.True(result.IsSuccess);
         Assert.Equal(0, result.Value.Alcohol);
@@ -88,7 +88,7 @@ public class ConsumptionsFeatureTests {
             recognizedAtUtc: DateTime.UtcNow,
             notes: null,
             items: [
-                MealAiItemData.Create("Banana", null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0),
+                MealAiItemData.Create("Banana", nameLocal: null, 100, "g", 89, 1.1, 0.3, 23, 2.6, 0),
             ]);
 
         MealNutritionSummary result = MealNutritionCalculator.Calculate(
@@ -150,7 +150,7 @@ public class ConsumptionsFeatureTests {
             ImageUrl: null,
             ImageAssetId: null,
             Items: [
-                new ConsumptionItemHttpRequest(ProductId.New().Value, null, 150),
+                new ConsumptionItemHttpRequest(ProductId.New().Value, RecipeId: null, 150),
             ],
             AiSessions: [
                 new ConsumptionAiSessionHttpRequest(
@@ -195,11 +195,11 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
             MealType.Dinner.ToString(),
             "Updated",
-            null,
+            ImageUrl: null,
             newAssetId.Value,
-            [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
             [],
-            false,
+            IsNutritionAutoCalculated: false,
             600,
             30,
             20,
@@ -234,11 +234,11 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
             "NotARealMealType",
             "Created",
-            null,
-            null,
-            [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            ImageUrl: null,
+            ImageAssetId: null,
+            [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
             [],
-            false,
+            IsNutritionAutoCalculated: false,
             600,
             30,
             20,
@@ -277,19 +277,19 @@ public class ConsumptionsFeatureTests {
                 MealType.Dinner.ToString(),
                 "Created",
                 "https://cdn.test/meal.png",
-                null,
+                ImageAssetId: null,
                 [
-                    new ConsumptionItemInput(productId, null, 150),
-                    new ConsumptionItemInput(null, recipeId, 1),
+                    new ConsumptionItemInput(productId, RecipeId: null, 150),
+                    new ConsumptionItemInput(ProductId: null, recipeId, 1),
                 ],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -376,11 +376,11 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                false,
+                IsNutritionAutoCalculated: false,
                 ManualCalories: null,
                 ManualProteins: 30,
                 ManualFats: 20,
@@ -414,17 +414,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
+                ImageUrl: null,
                 Guid.Empty,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -452,17 +452,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
-                [new ConsumptionItemInput(Guid.Empty, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(Guid.Empty, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -484,7 +484,7 @@ public class ConsumptionsFeatureTests {
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<ConsumptionModel> result = await handler.Handle(
-            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
+            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(ProductId: null, RecipeId: null, 150)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -503,7 +503,7 @@ public class ConsumptionsFeatureTests {
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<ConsumptionModel> result = await handler.Handle(
-            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(null, Guid.Empty, 1)]),
+            CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(ProductId: null, Guid.Empty, 1)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -529,19 +529,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                    new ConsumptionAiItemInput("", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -638,19 +638,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, "Scanner", DateTime.UtcNow, Notes: null, [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -679,19 +679,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), Notes: null, [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -720,19 +720,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, null, null, "recognized", [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, Source: null, RecognizedAtUtc: null, "recognized", [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -762,11 +762,11 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                false,
+                IsNutritionAutoCalculated: false,
                 600,
                 30,
                 20,
@@ -800,17 +800,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Created",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -844,17 +844,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
+                ImageUrl: null,
                 Guid.Empty,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -888,17 +888,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(null, Guid.Empty, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId: null, Guid.Empty, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -952,7 +952,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryValidator_WithNullUserId_HasInvalidTokenError() {
         var validator = new GetConsumptionsOverviewQueryValidator();
 
-        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(null, 1, 10, null, null));
+        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null));
 
         Assert.False(result.IsValid);
         Assert.Contains(result.Errors, error => string.Equals(error.ErrorCode, "Authentication.InvalidToken", StringComparison.Ordinal));
@@ -962,7 +962,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryValidator_WithValidUserId_HasNoErrors() {
         var validator = new GetConsumptionsOverviewQueryValidator();
 
-        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(Guid.NewGuid(), 1, 10, null, null));
+        ValidationResult result = await validator.ValidateAsync(new GetConsumptionsOverviewQuery(Guid.NewGuid(), 1, 10, DateFrom: null, DateTo: null));
 
         Assert.True(result.IsValid);
     }
@@ -985,17 +985,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -1027,17 +1027,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -1073,17 +1073,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                  4),
             CancellationToken.None);
@@ -1112,17 +1112,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 "Snackish",
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -1152,19 +1152,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, "Scanner", DateTime.UtcNow, null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, "Scanner", DateTime.UtcNow, Notes: null, [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -1194,19 +1194,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 [],
-                [new ConsumptionAiSessionInput(null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), null, [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Unspecified), Notes: null, [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -1237,17 +1237,17 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                true,
-                null,
-                null,
-                null,
-                null,
-                null,
-                null,
+                IsNutritionAutoCalculated: true,
+                ManualCalories: null,
+                ManualProteins: null,
+                ManualFats: null,
+                ManualCarbs: null,
+                ManualFiber: null,
+                ManualAlcohol: null,
                 3,
                 4),
             CancellationToken.None);
@@ -1278,11 +1278,11 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
-                null,
-                [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
                 [],
-                false,
+                IsNutritionAutoCalculated: false,
                 600,
                 30,
                 20,
@@ -1328,19 +1328,19 @@ public class ConsumptionsFeatureTests {
                 new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc),
                 MealType.Dinner.ToString(),
                 "Updated",
-                null,
+                ImageUrl: null,
                 newAssetId.Value,
                 [],
-                [new ConsumptionAiSessionInput(null, null, null, "generated", [
-                    new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0),
+                [new ConsumptionAiSessionInput(ImageAssetId: null, Source: null, RecognizedAtUtc: null, "generated", [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0),
                 ])],
-                false,
+                IsNutritionAutoCalculated: false,
                 120,
                 8,
                 3,
                 16,
                 2,
-                null,
+                ManualAlcohol: null,
                 2,
                 5),
             CancellationToken.None);
@@ -1385,7 +1385,7 @@ public class ConsumptionsFeatureTests {
             MealType.Lunch,
             comment: "Owner note");
         meal.AddProduct(ProductId.New(), 150);
-        meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, true));
+        meal.ApplyNutrition(new MealNutritionUpdate(350, 20, 12, 30, 4, 0, IsAutoCalculated: true));
 
         var handler = new GetConsumptionByIdQueryHandler(new SingleMealRepository(meal));
 
@@ -1405,7 +1405,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository());
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
-            new GetConsumptionsQuery(null, 1, 10, null, null),
+            new GetConsumptionsQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1438,9 +1438,9 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_WithMeals_ReturnsMappedFavoriteFlags() {
         var user = User.Create("paged-consumptions@example.com", "hash");
         var lunch = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        lunch.ApplyNutrition(new MealNutritionUpdate(420, 24, 14, 44, 5, 0, true));
+        lunch.ApplyNutrition(new MealNutritionUpdate(420, 24, 14, 44, 5, 0, IsAutoCalculated: true));
         var dinner = Meal.Create(user.Id, new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc), MealType.Dinner);
-        dinner.ApplyNutrition(new MealNutritionUpdate(610, 38, 20, 58, 7, 0, true));
+        dinner.ApplyNutrition(new MealNutritionUpdate(610, 38, 20, 58, 7, 0, IsAutoCalculated: true));
         var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Evening favorite");
         SetFavoriteMealNavigation(favorite, dinner);
         var handler = new GetConsumptionsQueryHandler(
@@ -1449,7 +1449,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository([favorite]));
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
-            new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
+            new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1464,10 +1464,10 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryHandler_ReturnsFavoritePreviewAndFavoriteFlags() {
         var user = User.Create("overview-consumptions@example.com", "hash");
         var breakfast = Meal.Create(user.Id, new DateTime(2026, 3, 26, 8, 0, 0, DateTimeKind.Utc), MealType.Breakfast);
-        breakfast.ApplyNutrition(new MealNutritionUpdate(250, 12, 8, 24, 3, 0, true));
+        breakfast.ApplyNutrition(new MealNutritionUpdate(250, 12, 8, 24, 3, 0, IsAutoCalculated: true));
 
         var dinner = Meal.Create(user.Id, new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc), MealType.Dinner);
-        dinner.ApplyNutrition(new MealNutritionUpdate(640, 40, 24, 52, 6, 0, true));
+        dinner.ApplyNutrition(new MealNutritionUpdate(640, 40, 24, 52, 6, 0, IsAutoCalculated: true));
 
         var favorite = FavoriteMeal.Create(user.Id, dinner.Id, "Fav dinner");
         SetFavoriteMealNavigation(favorite, dinner);
@@ -1479,7 +1479,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository([favorite]));
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
-            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
+            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1598,7 +1598,7 @@ public class ConsumptionsFeatureTests {
         UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
         Result<ConsumptionModel> result = await handler.Handle(
-            UpdateConsumptionCommand(null, meal.Id.Value),
+            UpdateConsumptionCommand(userId: null, meal.Id.Value),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1630,7 +1630,7 @@ public class ConsumptionsFeatureTests {
         UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
         Result<ConsumptionModel> result = await handler.Handle(
-            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, null, 150)]),
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(ProductId: null, RecipeId: null, 150)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1646,7 +1646,7 @@ public class ConsumptionsFeatureTests {
         UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
 
         Result<ConsumptionModel> result = await handler.Handle(
-            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(Guid.Empty, null, 150)]),
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(Guid.Empty, RecipeId: null, 150)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1665,7 +1665,7 @@ public class ConsumptionsFeatureTests {
         var recipeId = RecipeId.New();
 
         Result<ConsumptionModel> result = await handler.Handle(
-            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(null, recipeId.Value, 1)]),
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(ProductId: null, recipeId.Value, 1)]),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -1765,7 +1765,7 @@ public class ConsumptionsFeatureTests {
                 user.Id.Value,
                 meal.Id.Value,
                 items: [],
-                aiSessions: [ValidAiSession(items: [new ConsumptionAiItemInput("", null, 100, "g", 100, 10, 5, 20, 3, 0)])]),
+                aiSessions: [ValidAiSession(items: [new ConsumptionAiItemInput("", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0)])]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1781,7 +1781,7 @@ public class ConsumptionsFeatureTests {
             new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<ConsumptionModel> result = await handler.Handle(
-            new RepeatMealCommand(null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
+            new RepeatMealCommand(UserId: null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1826,7 +1826,7 @@ public class ConsumptionsFeatureTests {
         var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
 
         Result result = await handler.Handle(
-            new DeleteConsumptionCommand(null, Guid.NewGuid()),
+            new DeleteConsumptionCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1838,7 +1838,7 @@ public class ConsumptionsFeatureTests {
         var handler = new GetConsumptionByIdQueryHandler(new CreatingMealRepository());
 
         Result<ConsumptionModel> result = await handler.Handle(
-            new GetConsumptionByIdQuery(null, Guid.NewGuid()),
+            new GetConsumptionByIdQuery(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1853,7 +1853,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository());
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
-            new GetConsumptionsOverviewQuery(null, 1, 10, null, null, 10),
+            new GetConsumptionsOverviewQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1870,7 +1870,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository());
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
-            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, null, null, 10),
+            new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -1902,17 +1902,17 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
             MealType.Dinner.ToString(),
             "Created",
-            null,
+            ImageUrl: null,
             imageAssetId,
-            items ?? [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            items ?? [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
             aiSessions ?? [],
-            true,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
             3,
             4);
 
@@ -1931,9 +1931,9 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
             MealType.Dinner.ToString(),
             "Updated",
-            null,
+            ImageUrl: null,
             imageAssetId,
-            items ?? [new ConsumptionItemInput(ProductId.New().Value, null, 150)],
+            items ?? [new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150)],
             aiSessions ?? [],
             isNutritionAutoCalculated,
             manualCalories,
@@ -1954,7 +1954,7 @@ public class ConsumptionsFeatureTests {
             "Text",
             new DateTime(2026, 3, 26, 18, 0, 0, DateTimeKind.Utc),
             notes,
-            items ?? [new ConsumptionAiItemInput("Soup", null, 250, "g", 120, 8, 3, 16, 2, 0)]);
+            items ?? [new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0)]);
 
     private static UpdateConsumptionCommandHandler CreateUpdateHandler(
         IMealRepository repository,
@@ -1979,7 +1979,7 @@ public class ConsumptionsFeatureTests {
             Task.FromResult(
                 assetId.HasValue
                     ? Result.Failure<ImageAsset?>(Errors.Image.Forbidden())
-                    : Result.Success<ImageAsset?>(null));
+                    : Result.Success<ImageAsset?>(value: null));
     }
 
     [ExcludeFromCodeCoverage]
@@ -2320,8 +2320,8 @@ public class ConsumptionsFeatureTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
             return Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(true)
-                : new DeleteImageAssetResult(false, errorCode));
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode));
         }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
@@ -2343,7 +2343,7 @@ public class ConsumptionsFeatureTests {
             new StubFavoriteMealRepository());
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
-            new GetConsumptionsQuery(user.Id.Value, 1, 10, null, null),
+            new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

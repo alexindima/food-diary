@@ -32,7 +32,7 @@ public sealed class RecipeLikeHttpMappingsTests {
 
     [Fact]
     public void RecipeLikeStatusModel_ToHttpResponse_MapsAllFields() {
-        var model = new RecipeLikeStatusModel(true, 42);
+        var model = new RecipeLikeStatusModel(IsLiked: true, 42);
 
         RecipeLikeStatusHttpResponse response = model.ToHttpResponse();
 
@@ -42,7 +42,7 @@ public sealed class RecipeLikeHttpMappingsTests {
 
     [Fact]
     public void RecipeLikeStatusModel_ToHttpResponse_WhenNotLiked() {
-        var model = new RecipeLikeStatusModel(false, 0);
+        var model = new RecipeLikeStatusModel(IsLiked: false, 0);
 
         RecipeLikeStatusHttpResponse response = model.ToHttpResponse();
 

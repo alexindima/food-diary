@@ -24,7 +24,7 @@ public class UpdateConsumptionCommandValidatorTests {
 
     [Fact]
     public async Task Validate_WhenManualItemAmountIsTooLarge_HasError() {
-        UpdateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), null, 1_000_001)]);
+        UpdateConsumptionCommand command = CreateCommand(items: [new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 1_000_001)]);
         TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
     }
@@ -33,8 +33,8 @@ public class UpdateConsumptionCommandValidatorTests {
     public async Task Validate_WhenAiItemAmountIsZero_HasError() {
         UpdateConsumptionCommand command = CreateCommand(
             items: [],
-            aiSessions: [new ConsumptionAiSessionInput(null, "Text", DateTime.UtcNow, null, [
-                new ConsumptionAiItemInput("Apple", null, 0, "g", 100, 10, 5, 20, 3, 0),
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                new ConsumptionAiItemInput("Apple", NameLocal: null, 0, "g", 100, 10, 5, 20, 3, 0),
             ])]);
         TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         Assert.NotEmpty(result.Errors);
@@ -73,7 +73,7 @@ public class UpdateConsumptionCommandValidatorTests {
             Comment: null,
             ImageUrl: null,
             ImageAssetId: null,
-            Items: items ?? [new ConsumptionItemInput(Guid.NewGuid(), null, 100)],
+            Items: items ?? [new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 100)],
             AiSessions: aiSessions ?? [],
             IsNutritionAutoCalculated: isAutoCalculated,
             ManualCalories: manualCalories,

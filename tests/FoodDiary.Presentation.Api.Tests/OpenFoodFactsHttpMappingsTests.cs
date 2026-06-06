@@ -91,7 +91,7 @@ public sealed class OpenFoodFactsHttpMappingsTests {
         var model = new OpenFoodFactsProductModel(
             "1234567890123",
             "Unknown Product",
-            null, null, null, null, null, null, null, null);
+            Brand: null, Category: null, ImageUrl: null, CaloriesPer100G: null, ProteinsPer100G: null, FatsPer100G: null, CarbsPer100G: null, FiberPer100G: null);
 
         OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 

@@ -60,9 +60,9 @@ public class AdminInvariantTests {
     [Fact]
     public void AdminImpersonationSession_Start_WithEmptyIds_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            AdminImpersonationSession.Start(UserId.Empty, UserId.New(), "Support case", null, null, DateTime.UtcNow));
+            AdminImpersonationSession.Start(UserId.Empty, UserId.New(), "Support case", actorIpAddress: null, actorUserAgent: null, DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
-            AdminImpersonationSession.Start(UserId.New(), UserId.Empty, "Support case", null, null, DateTime.UtcNow));
+            AdminImpersonationSession.Start(UserId.New(), UserId.Empty, "Support case", actorIpAddress: null, actorUserAgent: null, DateTime.UtcNow));
     }
 
     [Theory]
@@ -71,13 +71,13 @@ public class AdminInvariantTests {
     [InlineData("too short")]
     public void AdminImpersonationSession_Start_WithInvalidReason_Throws(string reason) {
         Assert.ThrowsAny<ArgumentException>(() =>
-            AdminImpersonationSession.Start(UserId.New(), UserId.New(), reason, null, null, DateTime.UtcNow));
+            AdminImpersonationSession.Start(UserId.New(), UserId.New(), reason, actorIpAddress: null, actorUserAgent: null, DateTime.UtcNow));
     }
 
     [Fact]
     public void AdminImpersonationSession_Start_WithTooLongReason_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            AdminImpersonationSession.Start(UserId.New(), UserId.New(), new string('r', 501), null, null, DateTime.UtcNow));
+            AdminImpersonationSession.Start(UserId.New(), UserId.New(), new string('r', 501), actorIpAddress: null, actorUserAgent: null, DateTime.UtcNow));
     }
 
     [Fact]
@@ -87,8 +87,8 @@ public class AdminInvariantTests {
                 UserId.New(),
                 UserId.New(),
                 "Support case",
-                null,
-                null,
+                actorIpAddress: null,
+                actorUserAgent: null,
                 new DateTime(2026, 3, 27)));
     }
 }

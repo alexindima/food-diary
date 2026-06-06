@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Tests.Users;
 public class CurrentUserAccessPolicyTests {
     [Fact]
     public void EnsureCanAccess_WithMissingUser_ReturnsInvalidToken() {
-        Error? error = CurrentUserAccessPolicy.EnsureCanAccess(null);
+        Error? error = CurrentUserAccessPolicy.EnsureCanAccess(user: null);
 
         Assert.NotNull(error);
         Assert.Equal("Authentication.InvalidToken", error!.Code);

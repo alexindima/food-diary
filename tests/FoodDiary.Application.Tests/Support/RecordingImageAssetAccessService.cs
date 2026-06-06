@@ -33,7 +33,7 @@ public sealed class RecordingImageAssetAccessService : IImageAssetAccessService 
         }
 
         if (!assetId.HasValue) {
-            return Task.FromResult(Result.Success<ImageAsset?>(null));
+            return Task.FromResult(Result.Success<ImageAsset?>(value: null));
         }
 
         string url = _urls.GetValueOrDefault(assetId.Value, $"https://cdn.example/{assetId.Value.Value:D}.jpg");

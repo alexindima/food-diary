@@ -35,7 +35,7 @@ public sealed class TdeeHttpMappingsTests {
 
     [Fact]
     public void TdeeInsightModel_ToHttpResponse_WithNullValues() {
-        var model = new TdeeInsightModel(null, null, null, null, null, null, TdeeConfidence.None, 0, null);
+        var model = new TdeeInsightModel(EstimatedTdee: null, AdaptiveTdee: null, Bmr: null, SuggestedCalorieTarget: null, CurrentCalorieTarget: null, WeightTrendPerWeek: null, TdeeConfidence.None, 0, GoalAdjustmentHint: null);
 
         TdeeInsightHttpResponse response = model.ToHttpResponse();
 

@@ -30,7 +30,7 @@ public sealed class OpenAiFoodServiceTests {
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
         Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
 
@@ -60,7 +60,7 @@ public sealed class OpenAiFoodServiceTests {
         Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
-            null,
+            description: null,
             VisionPrompt,
             CancellationToken.None);
 
@@ -95,7 +95,7 @@ public sealed class OpenAiFoodServiceTests {
         Result<OpenAiFoodClientResponse<FoodVisionModel>> result = await client.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
             "en",
-            null,
+            description: null,
             VisionPrompt,
             CancellationToken.None);
 
@@ -127,7 +127,7 @@ public sealed class OpenAiFoodServiceTests {
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
         Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
 
@@ -153,7 +153,7 @@ public sealed class OpenAiFoodServiceTests {
         OpenAiFoodClient client = CreateClient(httpClient, new OpenAiOptions { ApiKey = "test-key", TextModel = "test-model" });
 
         Result<OpenAiFoodClientResponse<FoodNutritionModel>> result = await client.CalculateNutritionAsync(
-            [new FoodVisionItemModel("Apple", null, 100m, "g", 0.9m)],
+            [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
             NutritionPrompt,
             CancellationToken.None);
 

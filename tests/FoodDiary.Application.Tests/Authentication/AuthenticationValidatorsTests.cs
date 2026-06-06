@@ -86,7 +86,7 @@ public class AuthenticationValidatorsTests {
     [Fact]
     public async Task TelegramLoginWidgetValidator_WithMissingHash_Fails() {
         var validator = new TelegramLoginWidgetCommandValidator();
-        var command = new TelegramLoginWidgetCommand(1, 1, "", null, null, null, null);
+        var command = new TelegramLoginWidgetCommand(1, 1, "", Username: null, FirstName: null, LastName: null, PhotoUrl: null);
 
         ValidationResult result = await validator.ValidateAsync(command);
 

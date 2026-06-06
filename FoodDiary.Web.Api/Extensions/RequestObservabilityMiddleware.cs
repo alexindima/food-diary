@@ -136,22 +136,22 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
     private readonly record struct RequestSensitivity(string PathLabel, string ScopeLabel, bool IncludeUserIdInTelemetry) {
         public static RequestSensitivity From(PathString path) {
             if (path.StartsWithSegments("/api/v1/auth/admin-sso", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/v1/auth/admin-sso/*", "auth-admin-sso", false);
+                return new RequestSensitivity("/api/v1/auth/admin-sso/*", "auth-admin-sso", IncludeUserIdInTelemetry: false);
             }
 
             if (path.StartsWithSegments("/api/v1/auth/telegram", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/v1/auth/telegram/*", "auth-telegram", false);
+                return new RequestSensitivity("/api/v1/auth/telegram/*", "auth-telegram", IncludeUserIdInTelemetry: false);
             }
 
             if (path.StartsWithSegments("/api/v1/auth", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/api/v1/auth/*", "auth", false);
+                return new RequestSensitivity("/api/v1/auth/*", "auth", IncludeUserIdInTelemetry: false);
             }
 
             if (path.StartsWithSegments("/hubs/email-verification", StringComparison.OrdinalIgnoreCase)) {
-                return new RequestSensitivity("/hubs/email-verification", "signalr-auth", false);
+                return new RequestSensitivity("/hubs/email-verification", "signalr-auth", IncludeUserIdInTelemetry: false);
             }
 
-            return new RequestSensitivity(path.Value ?? "/", "standard", true);
+            return new RequestSensitivity(path.Value ?? "/", "standard", IncludeUserIdInTelemetry: true);
         }
     }
 

@@ -26,7 +26,7 @@ public sealed class MailRelayApplicationValidationTests {
             [],
             "",
             "",
-            null)));
+            TextBody: null)));
 
         Assert.False(result.IsSuccess);
         Assert.Equal(ErrorKind.Validation, result.Error?.Kind);
@@ -99,7 +99,7 @@ public sealed class MailRelayApplicationValidationTests {
             string consumerName,
             string messageKey,
             CancellationToken cancellationToken) =>
-            Task.FromResult(new MailRelayInboxClaimResult(true, Guid.NewGuid()));
+            Task.FromResult(new MailRelayInboxClaimResult(Claimed: true, Guid.NewGuid()));
 
         public Task MarkInboxProcessedAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
 

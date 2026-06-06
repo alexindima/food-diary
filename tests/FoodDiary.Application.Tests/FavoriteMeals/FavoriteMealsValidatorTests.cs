@@ -9,7 +9,7 @@ public class FavoriteMealsValidatorTests {
 
     [Fact]
     public async Task Validate_WithEmptyMealId_HasError() {
-        var command = new AddFavoriteMealCommand(Guid.NewGuid(), Guid.Empty, null);
+        var command = new AddFavoriteMealCommand(Guid.NewGuid(), Guid.Empty, Name: null);
         TestValidationResult<AddFavoriteMealCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.MealId);
     }

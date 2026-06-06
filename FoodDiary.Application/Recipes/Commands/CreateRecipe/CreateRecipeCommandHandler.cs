@@ -156,7 +156,7 @@ public class CreateRecipeCommandHandler(
 
         return created is null
             ? Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."))
-            : Result.Success(created.ToModel(0, true));
+            : Result.Success(created.ToModel(0, isOwnedByCurrentUser: true));
     }
 
     private Task<Result> EnsureIngredientsAccessibleAsync(

@@ -81,11 +81,11 @@ public class UserAuditEventInvariantTests {
     [Fact]
     public void UserLoginEvent_Create_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentException>(() =>
-            UserLoginEvent.Create(UserId.Empty, "Password", null, null, null, null, null, null, DateTime.UtcNow));
+            UserLoginEvent.Create(UserId.Empty, "Password", ipAddress: null, userAgent: null, browserName: null, browserVersion: null, operatingSystem: null, deviceType: null, DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
-            UserLoginEvent.Create(UserId.New(), " ", null, null, null, null, null, null, DateTime.UtcNow));
+            UserLoginEvent.Create(UserId.New(), " ", ipAddress: null, userAgent: null, browserName: null, browserVersion: null, operatingSystem: null, deviceType: null, DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserLoginEvent.Create(UserId.New(), "Password", null, null, null, null, null, null, new DateTime(2026, 5, 1)));
+            UserLoginEvent.Create(UserId.New(), "Password", ipAddress: null, userAgent: null, browserName: null, browserVersion: null, operatingSystem: null, deviceType: null, new DateTime(2026, 5, 1)));
     }
 
     [Fact]
@@ -144,14 +144,14 @@ public class UserAuditEventInvariantTests {
     [Fact]
     public void UserRoleAuditEvent_Create_WithInvalidValues_Throws() {
         Assert.Throws<ArgumentNullException>(() =>
-            UserRoleAuditEvent.Create(UserId.New(), null!, UserRoleAuditAction.Added, null, "Admin", DateTime.UtcNow));
+            UserRoleAuditEvent.Create(UserId.New(), null!, UserRoleAuditAction.Added, actorUserId: null, "Admin", DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
-            UserRoleAuditEvent.Create(UserId.Empty, Role.Create("Premium"), UserRoleAuditAction.Added, null, "Admin", DateTime.UtcNow));
+            UserRoleAuditEvent.Create(UserId.Empty, Role.Create("Premium"), UserRoleAuditAction.Added, actorUserId: null, "Admin", DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
             UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, UserId.Empty, "Admin", DateTime.UtcNow));
         Assert.Throws<ArgumentException>(() =>
-            UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, null, " ", DateTime.UtcNow));
+            UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, actorUserId: null, " ", DateTime.UtcNow));
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, null, "Admin", new DateTime(2026, 5, 1)));
+            UserRoleAuditEvent.Create(UserId.New(), Role.Create("Premium"), UserRoleAuditAction.Added, actorUserId: null, "Admin", new DateTime(2026, 5, 1)));
     }
 }

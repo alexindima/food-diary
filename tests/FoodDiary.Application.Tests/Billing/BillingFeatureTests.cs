@@ -112,7 +112,7 @@ public sealed class BillingFeatureTests {
             new FixedDateTimeProvider(Now));
 
         Result<BillingCheckoutSessionModel> result = await handler.Handle(
-            new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", null),
+            new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", Provider: null),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -256,10 +256,10 @@ public sealed class BillingFeatureTests {
             "active",
             Now,
             Now.AddMonths(1),
-            false,
-            null,
-            null,
-            null,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
             7.99m,
             "USD",
             providerMetadataJson,
@@ -318,13 +318,13 @@ public sealed class BillingFeatureTests {
                 "active",
                 Now,
                 Now.AddMonths(1),
-                false,
-                null,
-                null,
-                null,
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
                 7.99m,
                 "USD",
-                null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -433,13 +433,13 @@ public sealed class BillingFeatureTests {
                     "active",
                     Now,
                     Now.AddMonths(1),
-                    false,
-                    null,
-                    null,
-                    null,
+                    CancelAtPeriodEnd: false,
+                    CanceledAtUtc: null,
+                    TrialStartUtc: null,
+                    TrialEndUtc: null,
                     7.99m,
                     "USD",
-                    null,
+                    ProviderMetadataJson: null,
                     user.Id.Value)),
             new FakeUserRepository(user),
             subscriptionRepository,
@@ -472,14 +472,14 @@ public sealed class BillingFeatureTests {
                     "active",
                     Now,
                     Now.AddMonths(1),
-                    false,
-                    null,
-                    null,
-                    null,
+                    CancelAtPeriodEnd: false,
+                    CanceledAtUtc: null,
+                    TrialStartUtc: null,
+                    TrialEndUtc: null,
                     7.99m,
                     "USD",
-                    null,
-                    null)),
+                    ProviderMetadataJson: null,
+                    UserId: null)),
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new RecordingBillingPaymentRepository(),
@@ -515,13 +515,13 @@ public sealed class BillingFeatureTests {
                 "active",
                 Now,
                 Now.AddMonths(1),
-                false,
-                null,
-                null,
-                null,
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
                 7.99m,
                 "USD",
-                null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -562,13 +562,13 @@ public sealed class BillingFeatureTests {
                     "active",
                     Now,
                     Now.AddMonths(1),
-                    false,
-                    null,
-                    null,
-                    null,
+                    CancelAtPeriodEnd: false,
+                    CanceledAtUtc: null,
+                    TrialStartUtc: null,
+                    TrialEndUtc: null,
                     7.99m,
                     "USD",
-                    null,
+                    ProviderMetadataJson: null,
                     user.Id.Value)),
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(),
@@ -615,7 +615,7 @@ public sealed class BillingFeatureTests {
             Now,
             Now.AddMonths(1),
             "evt_existing_payment_record",
-            null);
+            providerMetadataJson: null);
         var paymentRepository = new RecordingBillingPaymentRepository();
         paymentRepository.Payments.Add(existingPayment);
         var webhookEventRepository = new RecordingBillingWebhookEventRepository();
@@ -658,13 +658,13 @@ public sealed class BillingFeatureTests {
                 "active",
                 Now,
                 Now.AddMonths(1),
-                false,
-                null,
-                null,
-                null,
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
                 7.99m,
                 "USD",
-                null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -708,13 +708,13 @@ public sealed class BillingFeatureTests {
                 string.Equals(missingField, "status", StringComparison.Ordinal) ? string.Empty : "active",
                 Now,
                 Now.AddMonths(1),
-                false,
-                null,
-                null,
-                null,
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
                 7.99m,
                 "USD",
-                null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -742,7 +742,7 @@ public sealed class BillingFeatureTests {
             BillingProviderNames.Paddle,
             "customer_manual",
             "sub_manual",
-            null,
+            externalPaymentMethodId: null,
             "active",
             Now.AddDays(-1),
             Now.AddMonths(1),
@@ -759,19 +759,19 @@ public sealed class BillingFeatureTests {
                 "subscription.canceled",
                 "customer_manual",
                 "sub_manual",
-                null,
+                ExternalPaymentMethodId: null,
                 "price_monthly",
                 "monthly",
                 "canceled",
                 Now.AddDays(-1),
                 Now,
-                false,
+                CancelAtPeriodEnd: false,
                 Now,
-                null,
-                null,
-                null,
-                null,
-                null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
+                Amount: null,
+                Currency: null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -821,13 +821,13 @@ public sealed class BillingFeatureTests {
                 "active",
                 Now,
                 Now.AddMonths(1),
-                false,
-                null,
-                null,
-                null,
+                CancelAtPeriodEnd: false,
+                CanceledAtUtc: null,
+                TrialStartUtc: null,
+                TrialEndUtc: null,
                 7.99m,
                 "USD",
-                null,
+                ProviderMetadataJson: null,
                 user.Id.Value));
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             gateway,
@@ -864,7 +864,7 @@ public sealed class BillingFeatureTests {
             Now.AddMonths(1),
             "evt_deleted_managed_initial",
             Now.AddMonths(-1));
-        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddMonths(-1));
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         ProcessBillingWebhookCommandHandler handler = CreateWebhookHandler(
             new FakeBillingProviderGateway(
@@ -880,13 +880,13 @@ public sealed class BillingFeatureTests {
                     "canceled",
                     Now.AddMonths(-1),
                     Now,
-                    false,
+                    CancelAtPeriodEnd: false,
                     Now,
-                    null,
-                    null,
-                    null,
-                    null,
-                    null,
+                    TrialStartUtc: null,
+                    TrialEndUtc: null,
+                    Amount: null,
+                    Currency: null,
+                    ProviderMetadataJson: null,
                     user.Id.Value)),
             new FakeUserRepository(user),
             subscriptionRepository,
@@ -1018,7 +1018,7 @@ public sealed class BillingFeatureTests {
             Now.AddMonths(-1),
             Now,
             "evt_existing_payment",
-            null));
+            providerMetadataJson: null));
         BillingRenewalService service = CreateRenewalService(
             new InMemoryBillingSubscriptionRepository(subscription),
             paymentRepository,
@@ -1078,13 +1078,13 @@ public sealed class BillingFeatureTests {
             "active",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
-            false,
-            null,
-            null,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_initial",
             Now.AddMonths(-1));
-        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddMonths(-1));
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var service = new BillingRenewalService(
@@ -1115,13 +1115,13 @@ public sealed class BillingFeatureTests {
             BillingProviderNames.YooKassa,
             "customer_missing_details",
             "pay_initial",
-            null,
+            externalPaymentMethodId: null,
             "active",
             Now.AddMonths(-1),
             Now.AddMinutes(-1),
             "evt_initial",
             Now.AddMonths(-1));
-        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddMonths(-1));
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var renewalGateway = new FakeRecurringBillingGateway(
@@ -1164,7 +1164,7 @@ public sealed class BillingFeatureTests {
             Now.AddMinutes(-1),
             "evt_deleted_initial",
             Now.AddMonths(-1));
-        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddMonths(-1));
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddMonths(-1));
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var paymentRepository = new RecordingBillingPaymentRepository();
@@ -1203,7 +1203,7 @@ public sealed class BillingFeatureTests {
             "customer_managed_flag",
             "price_monthly",
             "monthly");
-        subscription.MarkPremiumRoleManagedByBilling(true, Now.AddDays(-1));
+        subscription.MarkPremiumRoleManagedByBilling(value: true, Now.AddDays(-1));
         var userRepository = new FakeUserRepository(user);
         var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
         var service = new BillingAccessService(
@@ -1275,10 +1275,10 @@ public sealed class BillingFeatureTests {
             "active",
             Now,
             Now.AddYears(1),
-            false,
+            cancelAtPeriodEnd: false,
             Now.AddYears(1),
-            null,
-            null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             "evt_789",
             Now,
             "{\"provider\":\"yookassa\"}");
@@ -1314,14 +1314,14 @@ public sealed class BillingFeatureTests {
         subscription.ApplyProviderSnapshot(
             BillingProviderNames.Paddle,
             "sub_trial_expired",
-            null,
+            externalPaymentMethodId: null,
             "price_monthly",
             "monthly",
             "trialing",
             Now.AddDays(-8),
             Now.AddDays(-1),
-            false,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
             Now.AddDays(-8),
             Now.AddDays(-1),
             "evt_trial_expired",
@@ -1757,10 +1757,10 @@ public sealed class BillingFeatureTests {
             status,
             periodStartUtc,
             periodEndUtc,
-            false,
-            null,
-            null,
-            null,
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
             eventId,
             eventCreatedAtUtc,
             metadataJson);
@@ -1797,13 +1797,13 @@ public sealed class BillingFeatureTests {
             "active",
             Now,
             Now.AddMonths(1),
-            false,
-            null,
-            null,
-            null,
+            CancelAtPeriodEnd: false,
+            CanceledAtUtc: null,
+            TrialStartUtc: null,
+            TrialEndUtc: null,
             7.99m,
             "USD",
-            null,
+            ProviderMetadataJson: null,
             user.Id.Value);
 
     private static BillingRenewalService CreateRenewalService(

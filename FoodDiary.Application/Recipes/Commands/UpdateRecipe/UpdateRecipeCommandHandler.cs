@@ -62,7 +62,7 @@ public class UpdateRecipeCommandHandler(
 
         await CleanupAssetsAsync(command, values, cancellationToken).ConfigureAwait(false);
         Recipe updated = updatedResult.Value;
-        return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, true));
+        return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, isOwnedByCurrentUser: true));
     }
 
     private async Task<Result<UpdateRecipeValues>> PrepareUpdateValuesAsync(
@@ -177,7 +177,7 @@ public class UpdateRecipeCommandHandler(
 
     private static Result<Visibility?> ParseVisibility(UpdateRecipeCommand command) {
         if (string.IsNullOrWhiteSpace(command.Visibility)) {
-            return Result.Success<Visibility?>(null);
+            return Result.Success<Visibility?>(value: null);
         }
 
         return EnumValueParser.ParseOptional<Visibility>(

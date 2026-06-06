@@ -28,25 +28,25 @@ public static class FastingMappings {
             session.Protocol.ToString(),
             ResolvePlanType(session.Protocol).ToString(),
             ResolveOccurrenceKind(session.Protocol).ToString(),
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
+            CyclicFastDays: null,
+            CyclicEatDays: null,
+            CyclicEatDayFastHours: null,
+            CyclicEatDayEatingWindowHours: null,
+            CyclicPhaseDayNumber: null,
+            CyclicPhaseDayTotal: null,
             session.IsCompleted,
             session.Status.ToString(),
             session.Notes,
-            null,
-            null,
-            null,
-            null,
+            CheckInAtUtc: null,
+            HungerLevel: null,
+            EnergyLevel: null,
+            MoodLevel: null,
             [],
-            null,
+            CheckInNotes: null,
             []);
 
     public static FastingSessionModel ToModel(this FastingOccurrence occurrence) {
-        return occurrence.ToModel(occurrence.Plan, null);
+        return occurrence.ToModel(occurrence.Plan, checkIns: null);
     }
 
     public static FastingSessionModel ToModel(

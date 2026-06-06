@@ -13,7 +13,7 @@ public class WaistEntriesValidatorTests {
     [Fact]
     public async Task CreateWaist_WithNullUserId_HasError() {
         TestValidationResult<CreateWaistEntryCommand> result = await new CreateWaistEntryCommandValidator().TestValidateAsync(
-            new CreateWaistEntryCommand(null, DateTime.UtcNow, 80));
+            new CreateWaistEntryCommand(UserId: null, DateTime.UtcNow, 80));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -48,7 +48,7 @@ public class WaistEntriesValidatorTests {
     [Fact]
     public async Task GetLatestWaist_WithNullUserId_HasError() {
         TestValidationResult<GetLatestWaistEntryQuery> result = await new GetLatestWaistEntryQueryValidator().TestValidateAsync(
-            new GetLatestWaistEntryQuery(null));
+            new GetLatestWaistEntryQuery(UserId: null));
         result.ShouldHaveValidationErrorFor(c => c.UserId);
     }
 
@@ -69,14 +69,14 @@ public class WaistEntriesValidatorTests {
     [Fact]
     public async Task GetWaistEntries_WithZeroLimit_HasError() {
         TestValidationResult<GetWaistEntriesQuery> result = await new GetWaistEntriesQueryValidator().TestValidateAsync(
-            new GetWaistEntriesQuery(Guid.NewGuid(), null, null, 0, false));
+            new GetWaistEntriesQuery(Guid.NewGuid(), DateFrom: null, DateTo: null, 0, Descending: false));
         result.ShouldHaveValidationErrorFor(c => c.Limit);
     }
 
     [Fact]
     public async Task GetWaistEntries_WithInvertedDates_HasError() {
         TestValidationResult<GetWaistEntriesQuery> result = await new GetWaistEntriesQueryValidator().TestValidateAsync(
-            new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), null, false));
+            new GetWaistEntriesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-7), Limit: null, Descending: false));
         Assert.NotEmpty(result.Errors);
     }
 

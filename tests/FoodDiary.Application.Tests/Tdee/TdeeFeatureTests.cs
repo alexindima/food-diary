@@ -21,7 +21,7 @@ public class TdeeFeatureTests {
         GetTdeeInsightQueryHandler handler = CreateHandler();
 
         Result<TdeeInsightModel> result = await handler.Handle(
-            new GetTdeeInsightQuery(null), CancellationToken.None);
+            new GetTdeeInsightQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }

@@ -36,7 +36,7 @@ public class GetCurrentCycleQueryHandler(
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (cycle is null) {
-            return Result.Success<CycleModel?>(null);
+            return Result.Success<CycleModel?>(value: null);
         }
 
         CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);

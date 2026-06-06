@@ -143,7 +143,7 @@ public sealed class UpdateUserCommandHandlerTests {
             new StubImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
-        Result<UserModel> result = await handler.Handle(CreateCommand(null), CancellationToken.None);
+        Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
@@ -346,8 +346,8 @@ public sealed class UpdateUserCommandHandlerTests {
         public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
             RequestedAssetIds.Add(assetId);
             return Task.FromResult(errorCode is null
-                ? new DeleteImageAssetResult(true)
-                : new DeleteImageAssetResult(false, errorCode));
+                ? new DeleteImageAssetResult(Deleted: true)
+                : new DeleteImageAssetResult(Deleted: false, errorCode));
         }
 
         public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>

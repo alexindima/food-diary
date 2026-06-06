@@ -70,7 +70,7 @@ public class ValueObjectsInvariantTests {
     [InlineData(double.NegativeInfinity)]
     public void RecipeNutrition_Create_WithNonFiniteValue_Throws(double value) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            RecipeNutrition.Create(value, null, null, null, null, null));
+            RecipeNutrition.Create(value, proteins: null, fats: null, carbs: null, fiber: null, alcohol: null));
     }
 
     [Theory]
@@ -87,7 +87,7 @@ public class ValueObjectsInvariantTests {
     [InlineData(double.NegativeInfinity)]
     public void UserNutritionGoals_Create_WithNonFiniteValue_Throws(double value) {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            UserNutritionGoals.Create(value, null, null, null, null, null));
+            UserNutritionGoals.Create(value, proteinTarget: null, fatTarget: null, carbTarget: null, fiberTarget: null, waterGoal: null));
     }
 
     [Fact]

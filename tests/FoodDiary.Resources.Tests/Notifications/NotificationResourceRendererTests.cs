@@ -28,7 +28,7 @@ public sealed class NotificationResourceRendererTests {
     public void Render_WithNullLocale_UsesEnglishResources() {
         var renderer = new NotificationResourceRenderer();
 
-        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, null, string.Empty);
+        NotificationText text = renderer.Render(NotificationTypes.NewRecommendation, locale: null, string.Empty);
 
         Assert.Equal("New recommendation from your dietologist", text.Title);
         Assert.Null(text.Body);

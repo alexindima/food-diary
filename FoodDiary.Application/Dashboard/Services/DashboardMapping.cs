@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Dashboard.Services;
 public static class DashboardMapping {
     public static DashboardStatisticsModel ToStatisticsModel(AggregatedStatisticsModel? response, User? user) {
         if (response is null) {
-            return new DashboardStatisticsModel(0, 0, 0, 0, 0, null, null, null, null);
+            return new DashboardStatisticsModel(0, 0, 0, 0, 0, ProteinGoal: null, FatGoal: null, CarbGoal: null, FiberGoal: null);
         }
 
         return new DashboardStatisticsModel(

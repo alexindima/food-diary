@@ -29,7 +29,7 @@ public sealed class ContentReportHttpMappingsTests {
         var targetId = Guid.NewGuid();
         DateTime createdAt = DateTime.UtcNow;
         var model = new ContentReportModel(
-            id, reporterId, "Comment", targetId, "Offensive", "Pending", null, createdAt, null);
+            id, reporterId, "Comment", targetId, "Offensive", "Pending", AdminNote: null, createdAt, ReviewedAtUtc: null);
 
         ContentReportHttpResponse response = model.ToHttpResponse();
 

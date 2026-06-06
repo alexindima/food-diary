@@ -290,7 +290,7 @@ public class CreateConsumptionCommandHandler(
             return true;
         }
 
-        return Enum.TryParse(source, true, out result);
+        return Enum.TryParse(source, ignoreCase: true, out result);
     }
 
     private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {

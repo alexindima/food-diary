@@ -46,7 +46,7 @@ public class ContentReportsFeatureTests {
         var handler = new CreateContentReportCommandHandler(new InMemoryContentReportRepository());
 
         Result<ContentReportModel> result = await handler.Handle(
-            new CreateContentReportCommand(null, "Recipe", Guid.NewGuid(), "Spam"),
+            new CreateContentReportCommand(UserId: null, "Recipe", Guid.NewGuid(), "Spam"),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);

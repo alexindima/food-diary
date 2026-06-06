@@ -51,11 +51,11 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             original.Description,
             original.Comment,
             original.ImageUrl,
-            null,
+            imageAssetId: null,
             original.Visibility);
 
         await productRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(duplicate.ToModel(0, true));
+        return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
     }
 }

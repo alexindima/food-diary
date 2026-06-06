@@ -37,9 +37,9 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
                 "Lunch",
                 "Created meal",
-                null,
-                null,
-                [new ConsumptionItemHttpRequest(productId, null, 180)]));
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemHttpRequest(productId, RecipeId: null, 180)]));
 
         ConsumptionPayload? payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions);
 
@@ -91,9 +91,9 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 new DateTime(2026, 3, 26, 19, 0, 0, DateTimeKind.Utc),
                 "Dinner",
                 "Updated meal",
-                null,
-                null,
-                [new ConsumptionItemHttpRequest(productId, null, 220)],
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemHttpRequest(productId, RecipeId: null, 220)],
                 IsNutritionAutoCalculated: true,
                 PreMealSatietyLevel: 2,
                 PostMealSatietyLevel: 4));
@@ -163,15 +163,15 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
         HttpResponseMessage response = await client.PostAsJsonAsync(
             "/api/v1/products",
             new CreateProductHttpRequest(
-                null,
+                Barcode: null,
                 name,
-                null,
+                Brand: null,
                 "Unknown",
-                null,
-                null,
-                null,
-                null,
-                null,
+                Category: null,
+                Description: null,
+                Comment: null,
+                ImageUrl: null,
+                ImageAssetId: null,
                 "G",
                 100,
                 100,
@@ -196,9 +196,9 @@ public sealed class AuthAndConsumptionsFlowTests(ApiWebApplicationFactory factor
                 new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
                 mealType,
                 comment,
-                null,
-                null,
-                [new ConsumptionItemHttpRequest(productId, null, 180)])).ConfigureAwait(false);
+                ImageUrl: null,
+                ImageAssetId: null,
+                [new ConsumptionItemHttpRequest(productId, RecipeId: null, 180)])).ConfigureAwait(false);
         response.EnsureSuccessStatusCode();
 
         ConsumptionPayload? payload = await response.Content.ReadFromJsonAsync<ConsumptionPayload>(JsonOptions).ConfigureAwait(false);

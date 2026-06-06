@@ -13,7 +13,7 @@ public sealed class ImageAssetAccessService(
         UserId userId,
         CancellationToken cancellationToken = default) {
         if (!assetId.HasValue) {
-            return Result.Success<ImageAsset?>(null);
+            return Result.Success<ImageAsset?>(value: null);
         }
 
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId.Value, cancellationToken).ConfigureAwait(false);

@@ -20,7 +20,7 @@ public sealed class MailRelayMessageProcessor(
                     string.Join(", ", suppressedRecipients),
                     queuedEmail.CorrelationId);
                 MailRelayTelemetry.RecordDeliveryEvent("suppressed");
-                return new MailRelayProcessResult(false, true);
+                return new MailRelayProcessResult(Succeeded: false, IsTerminalFailure: true);
             }
 
             await smtpSubmissionService.SendAsync(queuedEmail, cancellationToken).ConfigureAwait(false);
@@ -32,7 +32,7 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.AttemptCount,
                 queuedEmail.CorrelationId);
             MailRelayTelemetry.RecordDeliveryEvent("success");
-            return new MailRelayProcessResult(true, false);
+            return new MailRelayProcessResult(Succeeded: true, IsTerminalFailure: false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
             throw;
         } catch (Exception ex) {
@@ -47,7 +47,7 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.MaxAttempts,
                 queuedEmail.CorrelationId);
             MailRelayTelemetry.RecordDeliveryEvent("failure", ex.GetType().Name);
-            return new MailRelayProcessResult(false, failureDecision.IsTerminalFailure);
+            return new MailRelayProcessResult(Succeeded: false, failureDecision.IsTerminalFailure);
         }
     }
 }

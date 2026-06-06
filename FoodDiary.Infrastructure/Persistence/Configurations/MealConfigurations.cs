@@ -28,7 +28,7 @@ internal sealed class MealConfiguration : IEntityTypeConfiguration<Meal> {
         entity.HasOne(e => e.User)
             .WithMany(u => u.Meals)
             .HasForeignKey(e => e.UserId);
-        entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(true);
+        entity.Property(e => e.IsNutritionAutoCalculated).HasDefaultValue(value: true);
 
         entity.HasIndex(e => new { e.UserId, e.Date, e.CreatedOnUtc });
 

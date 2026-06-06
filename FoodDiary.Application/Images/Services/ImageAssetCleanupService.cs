@@ -11,28 +11,28 @@ public sealed class ImageAssetCleanupService(
     ILogger<ImageAssetCleanupService> logger) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
-            return new DeleteImageAssetResult(false, "invalid");
+            return new DeleteImageAssetResult(Deleted: false, "invalid");
         }
 
         ImageAsset? asset = await imageAssetRepository.GetByIdAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (asset is null) {
-            return new DeleteImageAssetResult(false, "not_found");
+            return new DeleteImageAssetResult(Deleted: false, "not_found");
         }
 
         bool inUse = await imageAssetRepository.IsAssetInUseAsync(assetId, cancellationToken).ConfigureAwait(false);
         if (inUse) {
-            return new DeleteImageAssetResult(false, "in_use");
+            return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
         try {
             await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {
             logger.LogError(ex, "Failed to delete image object {ObjectKey}", asset.ObjectKey);
-            return new DeleteImageAssetResult(false, "storage_error");
+            return new DeleteImageAssetResult(Deleted: false, "storage_error");
         }
 
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
-        return new DeleteImageAssetResult(true);
+        return new DeleteImageAssetResult(Deleted: true);
     }
 
     public async Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {

@@ -28,7 +28,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             .Where(n => n.Id == notification.Id)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(n => n.CreatedOnUtc, createdBeforeRetentionCutoff)
-                .SetProperty(n => n.IsRead, true)
+                .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, readAfterRetentionCutoff));
 
         var repository = new NotificationRepository(context);
@@ -60,7 +60,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             .Where(n => n.Id == notification.Id)
             .ExecuteUpdateAsync(setters => setters
                 .SetProperty(n => n.CreatedOnUtc, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc))
-                .SetProperty(n => n.IsRead, true)
+                .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc)));
 
         var repository = new NotificationRepository(context);
