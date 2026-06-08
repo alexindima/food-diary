@@ -19,12 +19,13 @@
                 <div class="consumption-detail__heading">
                     <h2 class="consumption-detail__title">{{ 'CONSUMPTION_DETAIL.TITLE' | translate }}</h2>
                     @if (formattedDate) {
-                    <p class="consumption-detail__subtitle">
-                        {{ formattedDate }} @if (mealTypeLabel) {
-                        <span aria-hidden="true"> &middot; </span>
-                        <span>{{ mealTypeLabel }}</span>
-                        }
-                    </p>
+                        <p class="consumption-detail__subtitle">
+                            {{ formattedDate }}
+                            @if (mealTypeLabel) {
+                                <span aria-hidden="true"> &middot; </span>
+                                <span>{{ mealTypeLabel }}</span>
+                            }
+                        </p>
                     }
                 </div>
             </div>
@@ -41,19 +42,27 @@
     </header>
 
     <div class="consumption-detail fd-stack fd-gap-lg">
-        @switch (activeTab) { @case ('summary') {
-        <fd-meal-detail-summary
-            [consumption]="consumption"
-            [macroSummaryBlocks]="macroSummaryBlocks()"
-            [preMealSatietyMeta]="preMealSatietyMeta"
-            [postMealSatietyMeta]="postMealSatietyMeta"
-            [itemPreview]="itemPreview"
-            [isItemPreviewExpanded]="isItemPreviewExpanded()"
-            (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
-        />
-        } @case ('nutrients') {
-        <fd-nutrition-editor class="consumption-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
-        } }
+        @switch (activeTab) {
+            @case ('summary') {
+                <fd-meal-detail-summary
+                    [consumption]="consumption"
+                    [macroSummaryBlocks]="macroSummaryBlocks()"
+                    [preMealSatietyMeta]="preMealSatietyMeta"
+                    [postMealSatietyMeta]="postMealSatietyMeta"
+                    [itemPreview]="itemPreview"
+                    [isItemPreviewExpanded]="isItemPreviewExpanded()"
+                    (itemPreviewExpandedToggle)="toggleItemPreviewExpanded()"
+                />
+            }
+            @case ('nutrients') {
+                <fd-nutrition-editor
+                    class="consumption-detail__nutrients"
+                    [form]="nutritionForm"
+                    [macroState]="macroBarState"
+                    [readonly]="true"
+                />
+            }
+        }
     </div>
 
     <div fdUiDialogFooter class="consumption-detail__footer fd-stack fd-gap-sm">

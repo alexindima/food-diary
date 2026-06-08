@@ -1,13 +1,13 @@
 @if (shouldRender()) {
-<div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
-    @defer (on viewport) {
-    <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-        <fd-daily-advice-card class="dashboard__card dashboard__card--advice" [advice]="advice()" [isLoading]="isLoading()" />
-    </fd-dashboard-card-shell>
-    } @placeholder {
-    <fd-ui-loader />
-    } @loading (minimum 300ms) {
-    <fd-ui-loader />
-    }
-</div>
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
+        @defer (on viewport) {
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+                <fd-daily-advice-card class="dashboard__card dashboard__card--advice" [advice]="advice()" [isLoading]="isLoading()" />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
 }

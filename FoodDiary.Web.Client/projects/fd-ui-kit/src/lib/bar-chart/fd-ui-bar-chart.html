@@ -1,34 +1,35 @@
 <div class="fd-ui-bar-chart" role="img" [attr.aria-label]="ariaLabel()">
     @if (itemViews().length) {
-    <svg class="fd-ui-bar-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
-        @for (gridLine of gridLines(); track $index) {
-        <line class="fd-ui-bar-chart__grid-line" x1="0" x2="100" [attr.y1]="gridLine.y" [attr.y2]="gridLine.y" />
-        }
+        <svg class="fd-ui-bar-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
+            @for (gridLine of gridLines(); track $index) {
+                <line class="fd-ui-bar-chart__grid-line" x1="0" x2="100" [attr.y1]="gridLine.y" [attr.y2]="gridLine.y" />
+            }
 
-        <line class="fd-ui-bar-chart__axis" x1="0" x2="100" [attr.y1]="chartBottom" [attr.y2]="chartBottom" />
+            <line class="fd-ui-bar-chart__axis" x1="0" x2="100" [attr.y1]="chartBottom" [attr.y2]="chartBottom" />
 
-        @for (item of itemViews(); track $index) {
-        <rect
-            class="fd-ui-bar-chart__bar"
-            rx="2"
-            [attr.x]="item.x"
-            [attr.y]="item.y"
-            [attr.width]="item.width"
-            [attr.height]="item.height"
-            [style.fill]="item.color"
-        >
-            <title>{{ item.tooltip }}</title>
-        </rect>
-        }
-    </svg>
+            @for (item of itemViews(); track $index) {
+                <rect
+                    class="fd-ui-bar-chart__bar"
+                    rx="2"
+                    [attr.x]="item.x"
+                    [attr.y]="item.y"
+                    [attr.width]="item.width"
+                    [attr.height]="item.height"
+                    [style.fill]="item.color"
+                >
+                    <title>{{ item.tooltip }}</title>
+                </rect>
+            }
+        </svg>
 
-    @if (showLabels()) {
-    <div class="fd-ui-bar-chart__labels" aria-hidden="true">
-        @for (item of itemViews(); track $index) {
-        <span class="fd-ui-bar-chart__label" [attr.title]="item.tooltip">{{ item.label }}</span>
+        @if (showLabels()) {
+            <div class="fd-ui-bar-chart__labels" aria-hidden="true">
+                @for (item of itemViews(); track $index) {
+                    <span class="fd-ui-bar-chart__label" [attr.title]="item.tooltip">{{ item.label }}</span>
+                }
+            </div>
         }
-    </div>
-    } } @else {
-    <div class="fd-ui-bar-chart__empty">{{ emptyLabel() }}</div>
+    } @else {
+        <div class="fd-ui-bar-chart__empty">{{ emptyLabel() }}</div>
     }
 </div>

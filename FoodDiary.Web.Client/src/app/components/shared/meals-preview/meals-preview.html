@@ -2,28 +2,30 @@
     <div class="meals-preview__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-card-header">
         <h2 class="meals-preview__title fd-ui-page-title">{{ titleText() || (titleKey() | translate) }}</h2>
         @if (showViewAll()) {
-        <fd-ui-button variant="primary" fill="text" size="sm" icon="open_in_new" (click)="viewAll.emit()">
-            {{ viewAllKey() | translate }}
-        </fd-ui-button>
+            <fd-ui-button variant="primary" fill="text" size="sm" icon="open_in_new" (click)="viewAll.emit()">
+                {{ viewAllKey() | translate }}
+            </fd-ui-button>
         }
     </div>
 
     <div class="meals-preview__list fd-stack fd-gap-card-content">
         @if (!entries().length && showEmptyState()) {
-        <div class="meals-preview__empty fd-ui-body-sm">{{ emptyKey() | translate }}</div>
-        } @else { @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
-        <fd-meals-preview-entry
-            [entry]="entry"
-            [showAddButtons]="showAddButtons()"
-            [showAiButtons]="showAiButtons()"
-            [expandedAiSlot]="expandedAiSlot()"
-            [isAiMealSaving]="isAiMealSaving()"
-            [aiMealClearToken]="aiMealClearToken()"
-            (open)="open.emit($event)"
-            (add)="add.emit($event)"
-            (aiToggle)="toggleAi($event)"
-            (aiMealCreateRequested)="createMealFromAiResult($event)"
-        />
-        } }
+            <div class="meals-preview__empty fd-ui-body-sm">{{ emptyKey() | translate }}</div>
+        } @else {
+            @for (entry of entries(); track entry.meal?.id ?? entry.slot ?? $index) {
+                <fd-meals-preview-entry
+                    [entry]="entry"
+                    [showAddButtons]="showAddButtons()"
+                    [showAiButtons]="showAiButtons()"
+                    [expandedAiSlot]="expandedAiSlot()"
+                    [isAiMealSaving]="isAiMealSaving()"
+                    [aiMealClearToken]="aiMealClearToken()"
+                    (open)="open.emit($event)"
+                    (add)="add.emit($event)"
+                    (aiToggle)="toggleAi($event)"
+                    (aiMealCreateRequested)="createMealFromAiResult($event)"
+                />
+            }
+        }
     </div>
 </section>

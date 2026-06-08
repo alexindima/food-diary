@@ -47,17 +47,29 @@
                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
             </fd-ui-button>
             @if (isEditMode()) {
-            <fd-ui-button type="submit" class="consumption-manage__action-button" appearance="brand-action" icon="save" [fullWidth]="true">
-                {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
-            </fd-ui-button>
+                <fd-ui-button
+                    type="submit"
+                    class="consumption-manage__action-button"
+                    appearance="brand-action"
+                    icon="save"
+                    [fullWidth]="true"
+                >
+                    {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
+                </fd-ui-button>
             } @else {
-            <fd-ui-button type="submit" class="consumption-manage__action-button" appearance="brand-action" icon="add" [fullWidth]="true">
-                {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
-            </fd-ui-button>
+                <fd-ui-button
+                    type="submit"
+                    class="consumption-manage__action-button"
+                    appearance="brand-action"
+                    icon="add"
+                    [fullWidth]="true"
+                >
+                    {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
+                </fd-ui-button>
             }
         </div>
         @if (globalError()) {
-        <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
+            <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
         }
     </div>
 </div>

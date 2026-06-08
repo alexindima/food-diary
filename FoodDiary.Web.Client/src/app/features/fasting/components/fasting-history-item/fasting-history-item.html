@@ -23,38 +23,39 @@
         </div>
     </div>
     @if (session.notes) {
-    <p class="fasting__history-notes fd-ui-caption">{{ session.notes }}</p>
-    } @if (item.hasCheckIns) {
-    <div class="fasting__history-toggle-row fd-row fd-wrap fd-justify-between fd-gap-sm">
-        <span class="fasting__history-toggle-count fd-ui-caption">
-            {{ 'FASTING.HISTORY_CHECK_INS_COUNT' | translate: { count: item.checkInCount } }}
-        </span>
-        <div class="fasting__history-toggle-buttons fd-row fd-wrap fd-justify-end fd-gap-card-profile">
-            @if (item.canViewChart) {
-            <fd-ui-button
-                type="button"
-                class="fasting__history-toggle fasting__history-toggle--muted"
-                variant="secondary"
-                fill="text"
-                (click)="chartOpen.emit(session)"
-            >
-                {{ 'FASTING.SHOW_CHECK_IN_CHART' | translate }}
-            </fd-ui-button>
-            }
-            <fd-ui-button
-                type="button"
-                class="fasting__history-toggle"
-                variant="secondary"
-                fill="text"
-                [attr.aria-expanded]="item.isExpanded"
-                [attr.aria-controls]="item.checkInRegionId"
-                (click)="historyToggle.emit(session.id)"
-            >
-                {{ item.toggleKey | translate: { count: item.checkInCount } }}
-            </fd-ui-button>
+        <p class="fasting__history-notes fd-ui-caption">{{ session.notes }}</p>
+    }
+    @if (item.hasCheckIns) {
+        <div class="fasting__history-toggle-row fd-row fd-wrap fd-justify-between fd-gap-sm">
+            <span class="fasting__history-toggle-count fd-ui-caption">
+                {{ 'FASTING.HISTORY_CHECK_INS_COUNT' | translate: { count: item.checkInCount } }}
+            </span>
+            <div class="fasting__history-toggle-buttons fd-row fd-wrap fd-justify-end fd-gap-card-profile">
+                @if (item.canViewChart) {
+                    <fd-ui-button
+                        type="button"
+                        class="fasting__history-toggle fasting__history-toggle--muted"
+                        variant="secondary"
+                        fill="text"
+                        (click)="chartOpen.emit(session)"
+                    >
+                        {{ 'FASTING.SHOW_CHECK_IN_CHART' | translate }}
+                    </fd-ui-button>
+                }
+                <fd-ui-button
+                    type="button"
+                    class="fasting__history-toggle"
+                    variant="secondary"
+                    fill="text"
+                    [attr.aria-expanded]="item.isExpanded"
+                    [attr.aria-controls]="item.checkInRegionId"
+                    (click)="historyToggle.emit(session.id)"
+                >
+                    {{ item.toggleKey | translate: { count: item.checkInCount } }}
+                </fd-ui-button>
+            </div>
         </div>
-    </div>
 
-    <fd-fasting-history-check-in-list [historyItem]="item" (checkInsLoadMore)="checkInsLoadMore.emit($event)" />
+        <fd-fasting-history-check-in-list [historyItem]="item" (checkInsLoadMore)="checkInsLoadMore.emit($event)" />
     }
 </fd-ui-accent-surface>

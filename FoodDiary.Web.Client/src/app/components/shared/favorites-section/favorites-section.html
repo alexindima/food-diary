@@ -8,20 +8,20 @@
     </button>
 
     @if (isOpen()) {
-    <div class="fd-favorites-section__body fd-stack fd-gap-sm">
-        <ng-content />
+        <div class="fd-favorites-section__body fd-stack fd-gap-sm">
+            <ng-content />
 
-        @if (showLoadMore() && loadMoreLabel()) {
-        <fd-ui-button
-            class="fd-favorites-section__load-more"
-            variant="secondary"
-            fill="outline"
-            [disabled]="isLoadingMore()"
-            (click)="onLoadMore()"
-        >
-            {{ loadMoreLabel() }}
-        </fd-ui-button>
-        }
-    </div>
+            @if (showLoadMore() && loadMoreLabel()) {
+                <fd-ui-button
+                    class="fd-favorites-section__load-more"
+                    variant="secondary"
+                    fill="outline"
+                    [disabled]="isLoadingMore()"
+                    (click)="onLoadMore()"
+                >
+                    {{ loadMoreLabel() }}
+                </fd-ui-button>
+            }
+        </div>
     }
 </div>

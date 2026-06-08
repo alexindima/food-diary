@@ -12,47 +12,55 @@
             (imageChanged)="onImageChanged($event)"
         />
 
-        @if (!isLoading()) { @if (errorKey(); as currentErrorKey) {
-        <div class="photo-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
-            {{ currentErrorKey | translate }}
-        </div>
-        } @if (results().length) {
-        <div class="photo-ai-dialog__results fd-stack fd-gap-sm">
-            <fd-meal-photo-result-actions
-                [hasSelectionAsset]="hasSelectionAsset()"
-                [isEditing]="isEditing()"
-                (reanalyze)="onReanalyze()"
-                (editAction)="applyEditAction()"
-            />
-
-            @if (isEditing()) {
-            <fd-meal-photo-edit-list
-                [items]="editItems()"
-                [unitOptions]="unitOptions"
-                (itemDropped)="onEditItemDrop($event)"
-                (itemUpdated)="updateEditItemFromView($event)"
-                (itemRemoved)="removeEditItem($event)"
-                (itemAdded)="addEditItem()"
-            />
-            } @else {
-            <fd-meal-photo-result-table [resultViews]="resultViews()" />
+        @if (!isLoading()) {
+            @if (errorKey(); as currentErrorKey) {
+                <div class="photo-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
+                    {{ currentErrorKey | translate }}
+                </div>
             }
+            @if (results().length) {
+                <div class="photo-ai-dialog__results fd-stack fd-gap-sm">
+                    <fd-meal-photo-result-actions
+                        [hasSelectionAsset]="hasSelectionAsset()"
+                        [isEditing]="isEditing()"
+                        (reanalyze)="onReanalyze()"
+                        (editAction)="applyEditAction()"
+                    />
 
-            <fd-meal-photo-nutrition-summary
-                [isNutritionLoading]="isNutritionLoading()"
-                [items]="macroSummaryItems()"
-                [errorKey]="nutritionErrorKey()"
-            />
-        </div>
-        } }
+                    @if (isEditing()) {
+                        <fd-meal-photo-edit-list
+                            [items]="editItems()"
+                            [unitOptions]="unitOptions"
+                            (itemDropped)="onEditItemDrop($event)"
+                            (itemUpdated)="updateEditItemFromView($event)"
+                            (itemRemoved)="removeEditItem($event)"
+                            (itemAdded)="addEditItem()"
+                        />
+                    } @else {
+                        <fd-meal-photo-result-table [resultViews]="resultViews()" />
+                    }
+
+                    <fd-meal-photo-nutrition-summary
+                        [isNutritionLoading]="isNutritionLoading()"
+                        [items]="macroSummaryItems()"
+                        [errorKey]="nutritionErrorKey()"
+                    />
+                </div>
+            }
+        }
     </div>
 
     <div fdUiDialogFooter class="photo-ai-dialog__actions fd-ui-actions fd-ui-actions--end">
         <fd-ui-button fill="outline" variant="secondary" (click)="close()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
         @if (!isEditing()) {
-        <fd-ui-button variant="primary" fill="solid" [disabled]="!nutrition() || isLoading() || isNutritionLoading()" (click)="addToMeal()">
-            {{ submitLabelKey() | translate }}
-        </fd-ui-button>
+            <fd-ui-button
+                variant="primary"
+                fill="solid"
+                [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
+                (click)="addToMeal()"
+            >
+                {{ submitLabelKey() | translate }}
+            </fd-ui-button>
         }
     </div>
 </fd-ui-dialog>

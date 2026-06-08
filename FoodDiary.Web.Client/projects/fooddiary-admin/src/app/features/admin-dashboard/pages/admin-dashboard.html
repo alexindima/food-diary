@@ -1,132 +1,134 @@
 <div class="admin-dashboard fd-grid fd-gap-md">
     @if (isLoading()) {
-    <p>Loading dashboard...</p>
+        <p>Loading dashboard...</p>
     } @else {
-    <div class="admin-dashboard__grid fd-grid fd-gap-md">
-        <fd-ui-card>
-            <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                <div class="admin-dashboard__label fd-ui-body-xs">Total users</div>
-                <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.totalUsers ?? 0 }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                <div class="admin-dashboard__label fd-ui-body-xs">Active users</div>
-                <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.activeUsers ?? 0 }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                <div class="admin-dashboard__label fd-ui-body-xs">Premium users</div>
-                <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.premiumUsers ?? 0 }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                <div class="admin-dashboard__label fd-ui-body-xs">Pending reports</div>
-                <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.pendingReportsCount ?? 0 }}</div>
-            </div>
-        </fd-ui-card>
-
-        <fd-ui-card>
-            <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                <div class="admin-dashboard__label fd-ui-body-xs">AI total tokens</div>
-                <div class="admin-dashboard__value fd-ui-metric-md">{{ aiUsage()?.totalTokens ?? 0 }}</div>
-            </div>
-        </fd-ui-card>
-    </div>
-
-    <fd-ui-card>
-        <div class="admin-dashboard__section fd-grid fd-gap-md">
-            <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
-                <div>
-                    <div class="admin-dashboard__section-title fd-ui-title-sm">Login clients</div>
-                    <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
-                        Authentication events grouped by device, operating system, and browser
-                    </div>
+        <div class="admin-dashboard__grid fd-grid fd-gap-md">
+            <fd-ui-card>
+                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                    <div class="admin-dashboard__label fd-ui-body-xs">Total users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.totalUsers ?? 0 }}</div>
                 </div>
-            </div>
+            </fd-ui-card>
 
-            <div class="admin-dashboard__login-charts fd-grid fd-gap-md">
-                <fd-ui-pie-chart title="Devices" [segments]="loginDeviceSegments()" />
-                <fd-ui-pie-chart title="OS" [segments]="loginOperatingSystemSegments()" />
-                <fd-ui-pie-chart title="Browsers" [segments]="loginBrowserSegments()" />
-            </div>
+            <fd-ui-card>
+                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                    <div class="admin-dashboard__label fd-ui-body-xs">Active users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.activeUsers ?? 0 }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                    <div class="admin-dashboard__label fd-ui-body-xs">Premium users</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.premiumUsers ?? 0 }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                    <div class="admin-dashboard__label fd-ui-body-xs">Pending reports</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ summary()?.pendingReportsCount ?? 0 }}</div>
+                </div>
+            </fd-ui-card>
+
+            <fd-ui-card>
+                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                    <div class="admin-dashboard__label fd-ui-body-xs">AI total tokens</div>
+                    <div class="admin-dashboard__value fd-ui-metric-md">{{ aiUsage()?.totalTokens ?? 0 }}</div>
+                </div>
+            </fd-ui-card>
         </div>
-    </fd-ui-card>
 
-    <fd-ui-card>
-        <div class="admin-dashboard__section fd-grid fd-gap-md">
-            <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
-                <div>
-                    <div class="admin-dashboard__section-title fd-ui-title-sm">Fasting telemetry</div>
-                    <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
-                        Internal product metrics for fasting adoption and check-ins
+        <fd-ui-card>
+            <div class="admin-dashboard__section fd-grid fd-gap-md">
+                <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
+                    <div>
+                        <div class="admin-dashboard__section-title fd-ui-title-sm">Login clients</div>
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
+                            Authentication events grouped by device, operating system, and browser
+                        </div>
                     </div>
+                </div>
+
+                <div class="admin-dashboard__login-charts fd-grid fd-gap-md">
+                    <fd-ui-pie-chart title="Devices" [segments]="loginDeviceSegments()" />
+                    <fd-ui-pie-chart title="OS" [segments]="loginOperatingSystemSegments()" />
+                    <fd-ui-pie-chart title="Browsers" [segments]="loginBrowserSegments()" />
                 </div>
             </div>
+        </fd-ui-card>
 
-            @if (fastingTelemetryView(); as telemetry) {
-            <div class="admin-dashboard__telemetry-grid fd-grid fd-gap-md">
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Started sessions</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.startedSessions }}</div>
-                </div>
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Completed sessions</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completedSessions }}</div>
-                </div>
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Saved check-ins</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.savedCheckIns }}</div>
-                </div>
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Completion rate</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completionRatePercent }}%</div>
-                </div>
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Check-in rate</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.checkInRatePercent }}%</div>
-                </div>
-                <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__label fd-ui-body-xs">Avg completed duration</div>
-                    <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.averageCompletedDurationHours }}h</div>
-                </div>
-            </div>
-
-            <div class="admin-dashboard__meta-list fd-grid fd-gap-xxs">
-                <div>Window: last {{ telemetry.windowHours }} hours</div>
-                <div>Last check-in: {{ telemetry.lastCheckInRelativeTime }}</div>
-            </div>
-
-            <div class="admin-dashboard__preset-list fd-grid fd-gap-sm">
-                <div class="admin-dashboard__section-subtitle fd-ui-body-xs">Top reminder presets</div>
-
-                @for (preset of telemetry.topPresets; track preset.presetId) {
-                <div class="admin-dashboard__preset-item fd-grid fd-gap-xxs">
-                    <div class="admin-dashboard__preset-header fd-row fd-justify-between fd-gap-md">
-                        <strong>{{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h</strong>
-                        <span>{{ preset.selectionCount }} selections</span>
-                    </div>
-                    <div class="admin-dashboard__preset-meta">Key: {{ preset.presetId }}</div>
-                    <div class="admin-dashboard__preset-meta">
-                        Started {{ preset.startedSessions }}, check-ins {{ preset.savedCheckIns }}, completed {{ preset.completedSessions }}
-                    </div>
-                    <div class="admin-dashboard__preset-meta">
-                        Check-in rate {{ preset.checkInRatePercentText }}%, completion rate {{ preset.completionRatePercentText }}%
+        <fd-ui-card>
+            <div class="admin-dashboard__section fd-grid fd-gap-md">
+                <div class="admin-dashboard__section-header fd-row fd-align-start fd-justify-between fd-gap-md">
+                    <div>
+                        <div class="admin-dashboard__section-title fd-ui-title-sm">Fasting telemetry</div>
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">
+                            Internal product metrics for fasting adoption and check-ins
+                        </div>
                     </div>
                 </div>
-                } @empty {
-                <p>No reminder preset data yet.</p>
+
+                @if (fastingTelemetryView(); as telemetry) {
+                    <div class="admin-dashboard__telemetry-grid fd-grid fd-gap-md">
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Started sessions</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.startedSessions }}</div>
+                        </div>
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Completed sessions</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completedSessions }}</div>
+                        </div>
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Saved check-ins</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.savedCheckIns }}</div>
+                        </div>
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Completion rate</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.completionRatePercent }}%</div>
+                        </div>
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Check-in rate</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.checkInRatePercent }}%</div>
+                        </div>
+                        <div class="admin-dashboard__stat fd-grid fd-gap-xxs">
+                            <div class="admin-dashboard__label fd-ui-body-xs">Avg completed duration</div>
+                            <div class="admin-dashboard__value fd-ui-metric-md">{{ telemetry.averageCompletedDurationHours }}h</div>
+                        </div>
+                    </div>
+
+                    <div class="admin-dashboard__meta-list fd-grid fd-gap-xxs">
+                        <div>Window: last {{ telemetry.windowHours }} hours</div>
+                        <div>Last check-in: {{ telemetry.lastCheckInRelativeTime }}</div>
+                    </div>
+
+                    <div class="admin-dashboard__preset-list fd-grid fd-gap-sm">
+                        <div class="admin-dashboard__section-subtitle fd-ui-body-xs">Top reminder presets</div>
+
+                        @for (preset of telemetry.topPresets; track preset.presetId) {
+                            <div class="admin-dashboard__preset-item fd-grid fd-gap-xxs">
+                                <div class="admin-dashboard__preset-header fd-row fd-justify-between fd-gap-md">
+                                    <strong>{{ preset.firstReminderHours ?? '-' }}h / {{ preset.followUpReminderHours ?? '-' }}h</strong>
+                                    <span>{{ preset.selectionCount }} selections</span>
+                                </div>
+                                <div class="admin-dashboard__preset-meta">Key: {{ preset.presetId }}</div>
+                                <div class="admin-dashboard__preset-meta">
+                                    Started {{ preset.startedSessions }}, check-ins {{ preset.savedCheckIns }}, completed
+                                    {{ preset.completedSessions }}
+                                </div>
+                                <div class="admin-dashboard__preset-meta">
+                                    Check-in rate {{ preset.checkInRatePercentText }}%, completion rate
+                                    {{ preset.completionRatePercentText }}%
+                                </div>
+                            </div>
+                        } @empty {
+                            <p>No reminder preset data yet.</p>
+                        }
+                    </div>
+                } @else {
+                    <p>Fasting telemetry is unavailable.</p>
                 }
             </div>
-            } @else {
-            <p>Fasting telemetry is unavailable.</p>
-            }
-        </div>
-    </fd-ui-card>
+        </fd-ui-card>
     }
 </div>

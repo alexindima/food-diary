@@ -18,46 +18,46 @@
 
         <div class="features__category-strip fd-row fd-gap-sm" role="tablist" [aria-label]="'FEATURES.CATEGORY_ARIA' | translate">
             @for (category of categories; track category.key) {
-            <button
-                type="button"
-                role="tab"
-                class="features__category-chip fd-inline-center fd-gap-xs"
-                [class.features__category-chip--active]="activeCategoryKey() === category.key"
-                [attr.aria-selected]="activeCategoryKey() === category.key"
-                [attr.aria-controls]="category.panelId"
-                [attr.id]="category.tabId"
-                (click)="selectCategory(category.key)"
-            >
-                <fd-ui-icon size="md" [name]="category.icon" />
-                <span>{{ category.labelKey | translate }}</span>
-            </button>
+                <button
+                    type="button"
+                    role="tab"
+                    class="features__category-chip fd-inline-center fd-gap-xs"
+                    [class.features__category-chip--active]="activeCategoryKey() === category.key"
+                    [attr.aria-selected]="activeCategoryKey() === category.key"
+                    [attr.aria-controls]="category.panelId"
+                    [attr.id]="category.tabId"
+                    (click)="selectCategory(category.key)"
+                >
+                    <fd-ui-icon size="md" [name]="category.icon" />
+                    <span>{{ category.labelKey | translate }}</span>
+                </button>
             }
         </div>
 
         @if (activeCategory(); as category) {
-        <section
-            class="features__panel fd-grid fd-gap-lg fd-align-start"
-            role="tabpanel"
-            [attr.id]="category.panelId"
-            [attr.aria-labelledby]="category.tabId"
-        >
-            <div class="features__panel-copy">
-                <span class="features__panel-eyebrow">{{ category.eyebrowKey | translate }}</span>
-                <h3 class="features__panel-title">{{ category.titleKey | translate }}</h3>
-                <p class="features__panel-text">{{ category.descriptionKey | translate }}</p>
-            </div>
+            <section
+                class="features__panel fd-grid fd-gap-lg fd-align-start"
+                role="tabpanel"
+                [attr.id]="category.panelId"
+                [attr.aria-labelledby]="category.tabId"
+            >
+                <div class="features__panel-copy">
+                    <span class="features__panel-eyebrow">{{ category.eyebrowKey | translate }}</span>
+                    <h3 class="features__panel-title">{{ category.titleKey | translate }}</h3>
+                    <p class="features__panel-text">{{ category.descriptionKey | translate }}</p>
+                </div>
 
-            <div class="features__cards fd-grid fd-gap-md" aria-live="polite">
-                @for (item of category.itemKeys; track item.key) {
-                <article class="features__card fd-stack fd-gap-sm">
-                    <div class="features__card-accent"></div>
-                    <p class="features__card-kicker">{{ item.kickerKey | translate }}</p>
-                    <h4 class="features__card-title">{{ item.titleKey | translate }}</h4>
-                    <p class="features__card-description">{{ item.descriptionKey | translate }}</p>
-                </article>
-                }
-            </div>
-        </section>
+                <div class="features__cards fd-grid fd-gap-md" aria-live="polite">
+                    @for (item of category.itemKeys; track item.key) {
+                        <article class="features__card fd-stack fd-gap-sm">
+                            <div class="features__card-accent"></div>
+                            <p class="features__card-kicker">{{ item.kickerKey | translate }}</p>
+                            <h4 class="features__card-title">{{ item.titleKey | translate }}</h4>
+                            <p class="features__card-description">{{ item.descriptionKey | translate }}</p>
+                        </article>
+                    }
+                </div>
+            </section>
         }
     </div>
 </section>

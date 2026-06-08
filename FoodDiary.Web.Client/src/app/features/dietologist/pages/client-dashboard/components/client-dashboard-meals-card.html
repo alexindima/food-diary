@@ -1,32 +1,32 @@
 @if (meals().length > 0) {
-<fd-ui-card>
-    <div class="client-dashboard__section">
-        <div class="client-dashboard__section-head fd-row fd-justify-between fd-gap-md">
-            <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
-            <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT' | translate: { count: total() } }} </span>
+    <fd-ui-card>
+        <div class="client-dashboard__section">
+            <div class="client-dashboard__section-head fd-row fd-justify-between fd-gap-md">
+                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
+                <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT' | translate: { count: total() } }} </span>
+            </div>
+            <div class="client-dashboard__list fd-stack fd-gap-sm">
+                @for (meal of meals(); track meal.id) {
+                    <article class="client-dashboard__row">
+                        <div class="fd-row fd-justify-between fd-gap-sm">
+                            <div class="fd-stack fd-gap-xxs">
+                                <strong class="client-dashboard__row-title">{{ meal.title }}</strong>
+                                <span class="fd-ui-caption">{{ meal.date | date: 'short' }}</span>
+                            </div>
+                            <strong class="client-dashboard__row-value">{{ meal.calories }}</strong>
+                        </div>
+                        <p class="client-dashboard__row-text fd-ui-body-sm">{{ meal.itemSummary }}</p>
+                        <span class="fd-ui-caption">{{ meal.macros }}</span>
+                    </article>
+                }
+            </div>
         </div>
-        <div class="client-dashboard__list fd-stack fd-gap-sm">
-            @for (meal of meals(); track meal.id) {
-            <article class="client-dashboard__row">
-                <div class="fd-row fd-justify-between fd-gap-sm">
-                    <div class="fd-stack fd-gap-xxs">
-                        <strong class="client-dashboard__row-title">{{ meal.title }}</strong>
-                        <span class="fd-ui-caption">{{ meal.date | date: 'short' }}</span>
-                    </div>
-                    <strong class="client-dashboard__row-value">{{ meal.calories }}</strong>
-                </div>
-                <p class="client-dashboard__row-text fd-ui-body-sm">{{ meal.itemSummary }}</p>
-                <span class="fd-ui-caption">{{ meal.macros }}</span>
-            </article>
-            }
-        </div>
-    </div>
-</fd-ui-card>
+    </fd-ui-card>
 } @else if (showEmptyState()) {
-<fd-ui-card>
-    <div class="client-dashboard__section">
-        <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
-        <p class="client-dashboard__placeholder fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.EMPTY' | translate }}</p>
-    </div>
-</fd-ui-card>
+    <fd-ui-card>
+        <div class="client-dashboard__section">
+            <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
+            <p class="client-dashboard__placeholder fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.EMPTY' | translate }}</p>
+        </div>
+    </fd-ui-card>
 }

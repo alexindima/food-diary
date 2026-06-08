@@ -8,12 +8,12 @@
         [style.background]="fillColor() || null"
     >
         @if (label()) {
-        <label class="fd-ui-autocomplete__label" [attr.for]="id()">
-            <span class="fd-ui-autocomplete__label-text">{{ label() }}</span>
-            @if (required()) {
-            <span class="fd-ui-autocomplete__required">*</span>
-            }
-        </label>
+            <label class="fd-ui-autocomplete__label" [attr.for]="id()">
+                <span class="fd-ui-autocomplete__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-autocomplete__required">*</span>
+                }
+            </label>
         }
 
         <input
@@ -39,19 +39,19 @@
         />
 
         @if (hasSelectedValue() || queryText()) {
-        <button
-            class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
-            type="button"
-            aria-label="Clear"
-            [disabled]="disabled()"
-            (click)="clearValue($event)"
-        >
-            <fd-ui-icon name="close" />
-        </button>
+            <button
+                class="fd-ui-autocomplete__suffix fd-ui-autocomplete__suffix--button"
+                type="button"
+                aria-label="Clear"
+                [disabled]="disabled()"
+                (click)="clearValue($event)"
+            >
+                <fd-ui-icon name="close" />
+            </button>
         } @else {
-        <span class="fd-ui-autocomplete__suffix" aria-hidden="true">
-            <fd-ui-icon name="search" />
-        </span>
+            <span class="fd-ui-autocomplete__suffix" aria-hidden="true">
+                <fd-ui-icon name="search" />
+            </span>
         }
 
         <ng-template
@@ -84,6 +84,6 @@
     </div>
 
     @if (error()) {
-    <div class="fd-ui-autocomplete__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+        <div class="fd-ui-autocomplete__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

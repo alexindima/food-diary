@@ -26,19 +26,27 @@
     </header>
 
     <div class="product-detail fd-stack fd-gap-lg">
-        @switch (activeTab()) { @case ('summary') {
-        <fd-product-detail-summary
-            [product]="product"
-            [calories]="calories"
-            [baseUnitKey]="baseUnitKey"
-            [productTypeKey]="productTypeKey"
-            [qualityScore]="qualityScore"
-            [qualityGrade]="qualityGrade"
-            [macroSummaryBlocks]="macroSummaryBlocks"
-        />
-        } @case ('nutrients') {
-        <fd-nutrition-editor class="product-detail__nutrients" [form]="nutritionForm" [macroState]="macroBarState" [readonly]="true" />
-        } }
+        @switch (activeTab()) {
+            @case ('summary') {
+                <fd-product-detail-summary
+                    [product]="product"
+                    [calories]="calories"
+                    [baseUnitKey]="baseUnitKey"
+                    [productTypeKey]="productTypeKey"
+                    [qualityScore]="qualityScore"
+                    [qualityGrade]="qualityGrade"
+                    [macroSummaryBlocks]="macroSummaryBlocks"
+                />
+            }
+            @case ('nutrients') {
+                <fd-nutrition-editor
+                    class="product-detail__nutrients"
+                    [form]="nutritionForm"
+                    [macroState]="macroBarState"
+                    [readonly]="true"
+                />
+            }
+        }
     </div>
 
     <fd-product-detail-actions

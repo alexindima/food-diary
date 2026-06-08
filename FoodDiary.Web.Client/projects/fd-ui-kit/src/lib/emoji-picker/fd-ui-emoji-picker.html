@@ -1,33 +1,34 @@
 <div role="radiogroup" [class]="containerClass()" [attr.aria-label]="ariaLabel() || null">
     @for (option of options(); track option.value) {
-    <button
-        #optionButton
-        type="button"
-        class="fd-ui-emoji-picker__option"
-        role="radio"
-        [class.is-selected]="isSelected(option.value)"
-        [class.has-label]="showLabels() && !!option.label"
-        [class.has-description]="showDescriptions() && !!option.description"
-        [disabled]="option.disabled ?? false"
-        [attr.aria-checked]="isSelected(option.value)"
-        [attr.aria-label]="getOptionAriaLabel(option)"
-        [attr.tabindex]="getTabIndex(option.value)"
-        [fdUiHint]="option.hint ?? null"
-        [fdUiHintDisabled]="!option.hint"
-        (click)="select(option)"
-        (keydown)="navigateEmojiGrid($index, $event)"
-    >
-        <span class="fd-ui-emoji-picker__emoji" aria-hidden="true">{{ option.emoji }}</span>
+        <button
+            #optionButton
+            type="button"
+            class="fd-ui-emoji-picker__option"
+            role="radio"
+            [class.is-selected]="isSelected(option.value)"
+            [class.has-label]="showLabels() && !!option.label"
+            [class.has-description]="showDescriptions() && !!option.description"
+            [disabled]="option.disabled ?? false"
+            [attr.aria-checked]="isSelected(option.value)"
+            [attr.aria-label]="getOptionAriaLabel(option)"
+            [attr.tabindex]="getTabIndex(option.value)"
+            [fdUiHint]="option.hint ?? null"
+            [fdUiHintDisabled]="!option.hint"
+            (click)="select(option)"
+            (keydown)="navigateEmojiGrid($index, $event)"
+        >
+            <span class="fd-ui-emoji-picker__emoji" aria-hidden="true">{{ option.emoji }}</span>
 
-        @if ((showLabels() && option.label) || (showDescriptions() && option.description)) {
-        <span class="fd-ui-emoji-picker__text">
-            @if (showLabels() && option.label) {
-            <span class="fd-ui-emoji-picker__label">{{ option.label }}</span>
-            } @if (showDescriptions() && option.description) {
-            <span class="fd-ui-emoji-picker__description">{{ option.description }}</span>
+            @if ((showLabels() && option.label) || (showDescriptions() && option.description)) {
+                <span class="fd-ui-emoji-picker__text">
+                    @if (showLabels() && option.label) {
+                        <span class="fd-ui-emoji-picker__label">{{ option.label }}</span>
+                    }
+                    @if (showDescriptions() && option.description) {
+                        <span class="fd-ui-emoji-picker__description">{{ option.description }}</span>
+                    }
+                </span>
             }
-        </span>
-        }
-    </button>
+        </button>
     }
 </div>

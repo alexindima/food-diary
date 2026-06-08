@@ -8,42 +8,42 @@
     </div>
 
     @if (isLoading()) {
-    <p>Loading sessions...</p>
+        <p>Loading sessions...</p>
     } @else {
-    <div class="summary fd-ui-action-text">Total sessions: {{ totalItems() }}</div>
+        <div class="summary fd-ui-action-text">Total sessions: {{ totalItems() }}</div>
 
-    <table class="users-table">
-        <thead>
-            <tr>
-                <th>Started</th>
-                <th>Admin</th>
-                <th>Target user</th>
-                <th>Reason</th>
-                <th>IP</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (session of sessions(); track session.id) {
-            <tr>
-                <td>{{ session.startedAtUtc | date: 'medium' }}</td>
-                <td>{{ session.actorEmail }}</td>
-                <td>{{ session.targetEmail }}</td>
-                <td class="users-table__reason" [title]="session.reason">{{ session.reason }}</td>
-                <td>{{ session.actorIpAddress || '-' }}</td>
-            </tr>
-            } @empty {
-            <tr>
-                <td colspan="5">No impersonation sessions found.</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Started</th>
+                    <th>Admin</th>
+                    <th>Target user</th>
+                    <th>Reason</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (session of sessions(); track session.id) {
+                    <tr>
+                        <td>{{ session.startedAtUtc | date: 'medium' }}</td>
+                        <td>{{ session.actorEmail }}</td>
+                        <td>{{ session.targetEmail }}</td>
+                        <td class="users-table__reason" [title]="session.reason">{{ session.reason }}</td>
+                        <td>{{ session.actorIpAddress || '-' }}</td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="5">No impersonation sessions found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <fd-ui-pagination
-        [length]="totalItems()"
-        [pageSize]="pageSize()"
-        [pageIndex]="page() - 1"
-        (pageIndexChange)="pageChange.emit($event + 1)"
-    />
+        <fd-ui-pagination
+            [length]="totalItems()"
+            [pageSize]="pageSize()"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="pageChange.emit($event + 1)"
+        />
     }
 </section>

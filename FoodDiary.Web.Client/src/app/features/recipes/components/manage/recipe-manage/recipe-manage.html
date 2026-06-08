@@ -9,9 +9,9 @@
 
     <form class="recipe-manage__form fd-stack fd-gap-lg" [attr.aria-busy]="isSubmitting()" (submit)="onSubmit(); $event.preventDefault()">
         @if (globalError()) {
-        <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
-            {{ globalError() }}
-        </div>
+            <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
+                {{ globalError() }}
+            </div>
         }
 
         <div class="recipe-manage__grid fd-grid fd-gap-lg">

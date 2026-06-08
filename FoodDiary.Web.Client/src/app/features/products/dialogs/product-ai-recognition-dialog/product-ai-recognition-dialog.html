@@ -13,16 +13,17 @@
             />
 
             @if (statusKey(); as status) {
-            <div
-                class="product-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
-                [class.product-ai-dialog__status--loading]="isLoading()"
-            >
-                {{ status | translate }}
-            </div>
-            } @if (isLoading() || isNutritionLoading()) {
-            <div class="product-ai-dialog__scan-overlay">
-                <div class="product-ai-dialog__scan-line" [class.product-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
-            </div>
+                <div
+                    class="product-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
+                    [class.product-ai-dialog__status--loading]="isLoading()"
+                >
+                    {{ status | translate }}
+                </div>
+            }
+            @if (isLoading() || isNutritionLoading()) {
+                <div class="product-ai-dialog__scan-overlay">
+                    <div class="product-ai-dialog__scan-line" [class.product-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
+                </div>
             }
         </div>
 
@@ -41,11 +42,17 @@
         />
 
         @if (errorKey(); as error) {
-        <div class="product-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">{{ error | translate }}</div>
-        } @if (nutritionErrorKey(); as error) {
-        <div class="product-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">{{ error | translate }}</div>
-        } @if (nutrition(); as nutrition) {
-        <fd-product-ai-recognition-result [form]="resultForm" [nutrition]="nutrition" [itemNames]="itemNames()" />
+            <div class="product-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
+                {{ error | translate }}
+            </div>
+        }
+        @if (nutritionErrorKey(); as error) {
+            <div class="product-ai-dialog__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm">
+                {{ error | translate }}
+            </div>
+        }
+        @if (nutrition(); as nutrition) {
+            <fd-product-ai-recognition-result [form]="resultForm" [nutrition]="nutrition" [itemNames]="itemNames()" />
         }
     </div>
 

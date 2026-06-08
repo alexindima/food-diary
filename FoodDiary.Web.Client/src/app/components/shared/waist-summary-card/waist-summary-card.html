@@ -9,8 +9,11 @@
 >
     <div class="waist-summary-card__content fd-stack fd-gap-xxs">
         <strong class="waist-summary-card__value fd-ui-metric-lg">
-            @if (latest()) { {{ latest() | number: '1.0-1' }} {{ 'WAIST_CARD.CM' | translate }} } @else { {{ 'WAIST_CARD.NO_DATA' |
-            translate }} }
+            @if (latest()) {
+                {{ latest() | number: '1.0-1' }} {{ 'WAIST_CARD.CM' | translate }}
+            } @else {
+                {{ 'WAIST_CARD.NO_DATA' | translate }}
+            }
         </strong>
         <span
             class="waist-summary-card__trend fd-ui-body-sm fd-ui-text-muted"

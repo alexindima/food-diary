@@ -1,10 +1,10 @@
 ﻿<div #container class="recipe-select fd-stack fd-gap-md">
     @if (!embedded()) {
-    <div class="recipe-select__header fd-row fd-justify-between">
-        <div>
-            <h2 class="recipe-select__title fd-ui-section-title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+        <div class="recipe-select__header fd-row fd-justify-between">
+            <div>
+                <h2 class="recipe-select__title fd-ui-section-title">{{ 'RECIPE_SELECT_DIALOG.TITLE' | translate }}</h2>
+            </div>
         </div>
-    </div>
     }
 
     <div class="recipe-select__controls fd-grid fd-gap-sm fd-align-center">
@@ -40,18 +40,19 @@
     />
 
     @if (recipeData.totalPages > 1) {
-    <fd-ui-pagination
-        class="recipe-select__pagination"
-        [length]="recipeData.totalItems"
-        [pageSize]="pageSize"
-        [pageIndex]="currentPageIndex"
-        (pageIndexChange)="onPageChange($event)"
-    />
-    } @if (!embedded()) {
-    <div class="recipe-select__footer fd-row fd-justify-end">
-        <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateRecipeClick()">
-            {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
-        </fd-ui-button>
-    </div>
+        <fd-ui-pagination
+            class="recipe-select__pagination"
+            [length]="recipeData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+        />
+    }
+    @if (!embedded()) {
+        <div class="recipe-select__footer fd-row fd-justify-end">
+            <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onCreateRecipeClick()">
+                {{ 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
     }
 </div>

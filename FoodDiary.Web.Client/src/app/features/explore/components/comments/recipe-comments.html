@@ -5,7 +5,7 @@
         <fd-ui-textarea [formField]="commentForm.text" [placeholder]="'COMMENTS.WRITE_PLACEHOLDER' | translate" [rows]="3" />
         <div class="comment-form-actions">
             @if (editingCommentId()) {
-            <fd-ui-button variant="outline" size="sm" (click)="onCancelEdit()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
+                <fd-ui-button variant="outline" size="sm" (click)="onCancelEdit()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
             }
             <fd-ui-button
                 variant="primary"

@@ -1,15 +1,16 @@
 <div [class]="hostClass" [style.--fd-nutrient-tint]="tintColor() || null" [style.--fd-nutrient-text-color]="textColor() || null">
     @if (label()) {
-    <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase()">
-        @if (icon(); as iconName) {
-        <fd-ui-icon class="fd-ui-nutrient-input__icon" [name]="iconName" />
-        }
-        <span class="fd-ui-nutrient-input__label-text">
-            {{ label() }} @if (required()) {
-            <span class="fd-ui-nutrient-input__required">*</span>
+        <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase()">
+            @if (icon(); as iconName) {
+                <fd-ui-icon class="fd-ui-nutrient-input__icon" [name]="iconName" />
             }
-        </span>
-    </div>
+            <span class="fd-ui-nutrient-input__label-text">
+                {{ label() }}
+                @if (required()) {
+                    <span class="fd-ui-nutrient-input__required">*</span>
+                }
+            </span>
+        </div>
     }
 
     <div class="fd-ui-nutrient-input__value-row">
@@ -32,11 +33,11 @@
             (blur)="onBlur()"
         />
         @if (unitLabel()) {
-        <span class="fd-ui-nutrient-input__unit">{{ unitLabel() }}</span>
+            <span class="fd-ui-nutrient-input__unit">{{ unitLabel() }}</span>
         }
     </div>
 
     @if (error()) {
-    <div class="fd-ui-nutrient-input__error">{{ error() }}</div>
+        <div class="fd-ui-nutrient-input__error">{{ error() }}</div>
     }
 </div>

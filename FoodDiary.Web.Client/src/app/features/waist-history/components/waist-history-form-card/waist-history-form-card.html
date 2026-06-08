@@ -20,12 +20,16 @@
 
         <div class="waist-history-page__form-actions">
             <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
-                @if (isEditing()) { {{ 'WAIST_HISTORY.UPDATE' | translate }} } @else { {{ 'WAIST_HISTORY.ADD' | translate }} }
+                @if (isEditing()) {
+                    {{ 'WAIST_HISTORY.UPDATE' | translate }}
+                } @else {
+                    {{ 'WAIST_HISTORY.ADD' | translate }}
+                }
             </fd-ui-button>
             @if (isEditing()) {
-            <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
-                {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
-            </fd-ui-button>
+                <fd-ui-button type="button" variant="secondary" fill="text" (click)="editCancel.emit()">
+                    {{ 'WAIST_HISTORY.CANCEL_EDIT' | translate }}
+                </fd-ui-button>
             }
         </div>
     </form>

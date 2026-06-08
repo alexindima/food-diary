@@ -1,10 +1,11 @@
 <div class="fd-ui-radio-group" [class.fd-ui-radio-group--horizontal]="orientation() === 'horizontal'">
     @if (label()) {
-    <p class="fd-ui-radio-group__label">
-        {{ label() }} @if (required()) {
-        <span aria-hidden="true">*</span>
-        }
-    </p>
+        <p class="fd-ui-radio-group__label">
+            {{ label() }}
+            @if (required()) {
+                <span aria-hidden="true">*</span>
+            }
+        </p>
     }
 
     <div
@@ -25,8 +26,9 @@
     </div>
 
     @if (hint() && !error()) {
-    <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
-    } @if (error()) {
-    <p class="fd-ui-radio-group__error" role="alert" [id]="`${id()}-error`">{{ error() }}</p>
+        <p class="fd-ui-radio-group__hint">{{ hint() }}</p>
+    }
+    @if (error()) {
+        <p class="fd-ui-radio-group__error" role="alert" [id]="`${id()}-error`">{{ error() }}</p>
     }
 </div>

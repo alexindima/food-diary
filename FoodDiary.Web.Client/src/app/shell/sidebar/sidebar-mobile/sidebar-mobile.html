@@ -1,16 +1,16 @@
 <nav class="sidebar-mobile" aria-label="Mobile navigation">
     @if (isProgressVisible()) {
-    <section class="sidebar-mobile__progress" aria-live="polite">
-        <div class="sidebar-mobile__progress-head">
-            <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
-            <span class="sidebar-mobile__progress-value fd-ui-caption">
-                {{ dailyConsumedKcalRounded() }}/{{ dailyGoalKcalRounded() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
-            </span>
-        </div>
-        <div class="sidebar-mobile__progress-track fd-ui-progress-track" aria-hidden="true">
-            <span class="sidebar-mobile__progress-fill fd-ui-progress-fill" [style.width.%]="dailyProgressPercent()"></span>
-        </div>
-    </section>
+        <section class="sidebar-mobile__progress" aria-live="polite">
+            <div class="sidebar-mobile__progress-head">
+                <span class="sidebar-mobile__progress-title">{{ 'SIDEBAR.DAILY_NORM' | translate }}</span>
+                <span class="sidebar-mobile__progress-value fd-ui-caption">
+                    {{ dailyConsumedKcalRounded() }}/{{ dailyGoalKcalRounded() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
+                </span>
+            </div>
+            <div class="sidebar-mobile__progress-track fd-ui-progress-track" aria-hidden="true">
+                <span class="sidebar-mobile__progress-fill fd-ui-progress-fill" [style.width.%]="dailyProgressPercent()"></span>
+            </div>
+        </section>
     }
 
     <div class="sidebar-mobile__nav fd-grid">
@@ -77,69 +77,69 @@
     </div>
 
     @if (isSheetOpen()) {
-    <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMenus.emit()"></div>
+        <div class="sidebar-mobile__backdrop" aria-hidden="true" (click)="closeMenus.emit()"></div>
 
-    <div
-        #mobileSheetPanel
-        class="sidebar-mobile__sheet"
-        role="dialog"
-        aria-modal="true"
-        tabindex="-1"
-        [attr.aria-label]="activeSheetLabelKey() | translate"
-    >
-        @if (mobileSheet() === 'user') {
-        <div class="sidebar-mobile__user-row">
-            <a
-                routerLink="/profile"
-                routerLinkActive="is-active"
-                class="sidebar-mobile__sheet-link sidebar-mobile__profile-link fd-row fd-gap-xs"
-                [class.is-pending]="pendingRoute() === '/profile'"
-                (click)="directRouteClick.emit({ route: '/profile' }); closeMenus.emit()"
-            >
-                <fd-ui-icon name="settings" />
-                <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>
-            </a>
-            <button
-                class="sidebar-mobile__sheet-link sidebar-mobile__notifications-button"
-                type="button"
-                [ariaLabel]="'NOTIFICATIONS.TITLE' | translate"
-                [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
-                (click)="mobileAction.emit('openNotifications')"
-            >
-                <fd-ui-icon name="notifications" />
-                <span class="sidebar-mobile__notifications-badge fd-ui-caption" [hidden]="unreadNotificationCount() <= 0">
-                    {{ unreadNotificationCount() }}
-                </span>
-            </button>
+        <div
+            #mobileSheetPanel
+            class="sidebar-mobile__sheet"
+            role="dialog"
+            aria-modal="true"
+            tabindex="-1"
+            [attr.aria-label]="activeSheetLabelKey() | translate"
+        >
+            @if (mobileSheet() === 'user') {
+                <div class="sidebar-mobile__user-row">
+                    <a
+                        routerLink="/profile"
+                        routerLinkActive="is-active"
+                        class="sidebar-mobile__sheet-link sidebar-mobile__profile-link fd-row fd-gap-xs"
+                        [class.is-pending]="pendingRoute() === '/profile'"
+                        (click)="directRouteClick.emit({ route: '/profile' }); closeMenus.emit()"
+                    >
+                        <fd-ui-icon name="settings" />
+                        <span class="fd-ui-action-text">{{ 'HEADER.PROFILE' | translate }}</span>
+                    </a>
+                    <button
+                        class="sidebar-mobile__sheet-link sidebar-mobile__notifications-button"
+                        type="button"
+                        [ariaLabel]="'NOTIFICATIONS.TITLE' | translate"
+                        [fdUiHint]="'NOTIFICATIONS.TITLE' | translate"
+                        (click)="mobileAction.emit('openNotifications')"
+                    >
+                        <fd-ui-icon name="notifications" />
+                        <span class="sidebar-mobile__notifications-badge fd-ui-caption" [hidden]="unreadNotificationCount() <= 0">
+                            {{ unreadNotificationCount() }}
+                        </span>
+                    </button>
+                </div>
+
+                @if (isAdmin()) {
+                    <button
+                        class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--admin sidebar-mobile__sheet-action fd-row fd-gap-xs"
+                        type="button"
+                        (click)="mobileAction.emit('openAdminPanel')"
+                    >
+                        <fd-ui-icon name="admin_panel_settings" />
+                        <span class="fd-ui-action-text">{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
+                    </button>
+                }
+
+                <button
+                    class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--danger sidebar-mobile__sheet-logout fd-row fd-gap-xs"
+                    type="button"
+                    (click)="mobileAction.emit('logout')"
+                >
+                    <fd-ui-icon name="logout" />
+                    <span class="fd-ui-action-text">{{ 'HEADER.LOGOUT' | translate }}</span>
+                </button>
+            } @else {
+                <fd-sidebar-route-links
+                    linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
+                    [items]="activeRouteItems()"
+                    [pendingRoute]="pendingRoute()"
+                    (itemSelected)="routeSelected.emit($event); closeMenus.emit()"
+                />
+            }
         </div>
-
-        @if (isAdmin()) {
-        <button
-            class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--admin sidebar-mobile__sheet-action fd-row fd-gap-xs"
-            type="button"
-            (click)="mobileAction.emit('openAdminPanel')"
-        >
-            <fd-ui-icon name="admin_panel_settings" />
-            <span class="fd-ui-action-text">{{ 'SIDEBAR.ADMIN_PANEL' | translate }}</span>
-        </button>
-        }
-
-        <button
-            class="sidebar-mobile__sheet-link sidebar-mobile__sheet-link--danger sidebar-mobile__sheet-logout fd-row fd-gap-xs"
-            type="button"
-            (click)="mobileAction.emit('logout')"
-        >
-            <fd-ui-icon name="logout" />
-            <span class="fd-ui-action-text">{{ 'HEADER.LOGOUT' | translate }}</span>
-        </button>
-        } @else {
-        <fd-sidebar-route-links
-            linkClass="sidebar-mobile__sheet-link fd-row fd-gap-xs"
-            [items]="activeRouteItems()"
-            [pendingRoute]="pendingRoute()"
-            (itemSelected)="routeSelected.emit($event); closeMenus.emit()"
-        />
-        }
-    </div>
     }
 </nav>

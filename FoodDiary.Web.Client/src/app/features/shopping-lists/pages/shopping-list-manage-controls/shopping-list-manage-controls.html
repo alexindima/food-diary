@@ -14,81 +14,81 @@
         </div>
         <div class="shopping-list__list-cards" role="listbox" [attr.aria-label]="'SHOPPING_LIST.LISTS_LABEL' | translate">
             @for (list of lists(); track list.id) {
-            <div
-                class="shopping-list__list-card"
-                role="option"
-                [attr.aria-selected]="list.id === selectedListId()"
-                [class.shopping-list__list-card--active]="list.id === selectedListId()"
-                [class.shopping-list__list-card--editing]="editingListId() === list.id"
-            >
-                @if (editingListId() === list.id) {
-                <div class="shopping-list__list-card-rename">
-                    <span class="shopping-list__list-card-icon">
-                        <fd-ui-icon name="shopping_cart" size="sm" />
-                    </span>
-                    <input
-                        class="shopping-list__list-card-rename-input fd-ui-body-small"
-                        type="text"
-                        [value]="renameDraft()"
-                        [attr.aria-label]="'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate"
-                        (input)="updateRenameDraft($event)"
-                        (blur)="saveRename(list.id)"
-                        (keydown.enter)="saveRename(list.id)"
-                        (keydown.escape)="cancelRename()"
-                    />
-                    <fd-ui-button
-                        class="shopping-list__list-card-save"
-                        variant="ghost"
-                        fill="text"
-                        icon="save"
-                        [ariaLabel]="'SHOPPING_LIST.SAVE_NAME_BUTTON' | translate"
-                        [disabled]="renameDraft().trim().length === 0"
-                        (click)="saveRename(list.id)"
-                    />
+                <div
+                    class="shopping-list__list-card"
+                    role="option"
+                    [attr.aria-selected]="list.id === selectedListId()"
+                    [class.shopping-list__list-card--active]="list.id === selectedListId()"
+                    [class.shopping-list__list-card--editing]="editingListId() === list.id"
+                >
+                    @if (editingListId() === list.id) {
+                        <div class="shopping-list__list-card-rename">
+                            <span class="shopping-list__list-card-icon">
+                                <fd-ui-icon name="shopping_cart" size="sm" />
+                            </span>
+                            <input
+                                class="shopping-list__list-card-rename-input fd-ui-body-small"
+                                type="text"
+                                [value]="renameDraft()"
+                                [attr.aria-label]="'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate"
+                                (input)="updateRenameDraft($event)"
+                                (blur)="saveRename(list.id)"
+                                (keydown.enter)="saveRename(list.id)"
+                                (keydown.escape)="cancelRename()"
+                            />
+                            <fd-ui-button
+                                class="shopping-list__list-card-save"
+                                variant="ghost"
+                                fill="text"
+                                icon="save"
+                                [ariaLabel]="'SHOPPING_LIST.SAVE_NAME_BUTTON' | translate"
+                                [disabled]="renameDraft().trim().length === 0"
+                                (click)="saveRename(list.id)"
+                            />
+                        </div>
+                    } @else {
+                        <button class="shopping-list__list-card-select" type="button" (click)="selectList(list.id)">
+                            <span class="shopping-list__list-card-icon">
+                                <fd-ui-icon name="shopping_cart" size="sm" />
+                            </span>
+                            <span class="shopping-list__list-card-main">
+                                <span class="shopping-list__list-card-name fd-ui-body-small"> {{ list.name }} </span>
+                            </span>
+                            <span class="shopping-list__list-card-count fd-ui-stat-label">{{ list.itemsCount }}</span>
+                        </button>
+                        <fd-ui-button
+                            class="shopping-list__list-card-menu-trigger"
+                            variant="ghost"
+                            fill="text"
+                            icon="more_vert"
+                            [ariaLabel]="'COMMON.MORE_ACTIONS' | translate"
+                            [fdUiMenuTrigger]="listMenu"
+                        />
+                    }
+                    <fd-ui-menu #listMenu="fdUiMenu">
+                        <fd-ui-menu-item [disabled]="list.id === selectedListId()" (itemClick)="selectList(list.id)">
+                            <fd-ui-icon name="check_circle" />
+                            <span>{{ 'SHOPPING_LIST.MAKE_ACTIVE_BUTTON' | translate }}</span>
+                        </fd-ui-menu-item>
+                        <fd-ui-menu-item (itemClick)="renameList(list.id)">
+                            <fd-ui-icon name="edit" />
+                            <span>{{ 'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate }}</span>
+                        </fd-ui-menu-item>
+                        <fd-ui-menu-item [disabled]="!canClearListCard(list)" (itemClick)="clearListById.emit(list.id)">
+                            <fd-ui-icon name="delete_sweep" />
+                            <span>{{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}</span>
+                        </fd-ui-menu-item>
+                        <fd-ui-menu-divider />
+                        <fd-ui-menu-item
+                            class="fd-ui-menu-item--danger"
+                            [disabled]="!canDeleteList()"
+                            (itemClick)="deleteListById.emit(list.id)"
+                        >
+                            <fd-ui-icon name="delete" />
+                            <span>{{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}</span>
+                        </fd-ui-menu-item>
+                    </fd-ui-menu>
                 </div>
-                } @else {
-                <button class="shopping-list__list-card-select" type="button" (click)="selectList(list.id)">
-                    <span class="shopping-list__list-card-icon">
-                        <fd-ui-icon name="shopping_cart" size="sm" />
-                    </span>
-                    <span class="shopping-list__list-card-main">
-                        <span class="shopping-list__list-card-name fd-ui-body-small"> {{ list.name }} </span>
-                    </span>
-                    <span class="shopping-list__list-card-count fd-ui-stat-label">{{ list.itemsCount }}</span>
-                </button>
-                <fd-ui-button
-                    class="shopping-list__list-card-menu-trigger"
-                    variant="ghost"
-                    fill="text"
-                    icon="more_vert"
-                    [ariaLabel]="'COMMON.MORE_ACTIONS' | translate"
-                    [fdUiMenuTrigger]="listMenu"
-                />
-                }
-                <fd-ui-menu #listMenu="fdUiMenu">
-                    <fd-ui-menu-item [disabled]="list.id === selectedListId()" (itemClick)="selectList(list.id)">
-                        <fd-ui-icon name="check_circle" />
-                        <span>{{ 'SHOPPING_LIST.MAKE_ACTIVE_BUTTON' | translate }}</span>
-                    </fd-ui-menu-item>
-                    <fd-ui-menu-item (itemClick)="renameList(list.id)">
-                        <fd-ui-icon name="edit" />
-                        <span>{{ 'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate }}</span>
-                    </fd-ui-menu-item>
-                    <fd-ui-menu-item [disabled]="!canClearListCard(list)" (itemClick)="clearListById.emit(list.id)">
-                        <fd-ui-icon name="delete_sweep" />
-                        <span>{{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}</span>
-                    </fd-ui-menu-item>
-                    <fd-ui-menu-divider />
-                    <fd-ui-menu-item
-                        class="fd-ui-menu-item--danger"
-                        [disabled]="!canDeleteList()"
-                        (itemClick)="deleteListById.emit(list.id)"
-                    >
-                        <fd-ui-icon name="delete" />
-                        <span>{{ 'SHOPPING_LIST.DELETE_LIST_BUTTON' | translate }}</span>
-                    </fd-ui-menu-item>
-                </fd-ui-menu>
-            </div>
             }
         </div>
     </div>

@@ -6,16 +6,16 @@
     </div>
 
     @if (isLoading()) {
-    <p>Loading users...</p>
+        <p>Loading users...</p>
     } @else {
-    <fd-admin-users-table
-        [users]="users()"
-        [totalItems]="totalItems()"
-        [page]="page()"
-        [pageSize]="limit"
-        [totalPages]="totalPages()"
-        (details)="openDetails($event)"
-        (pageChange)="goToPage($event)"
-    />
+        <fd-admin-users-table
+            [users]="users()"
+            [totalItems]="totalItems()"
+            [page]="page()"
+            [pageSize]="limit"
+            [totalPages]="totalPages()"
+            (details)="openDetails($event)"
+            (pageChange)="goToPage($event)"
+        />
     }
 </div>

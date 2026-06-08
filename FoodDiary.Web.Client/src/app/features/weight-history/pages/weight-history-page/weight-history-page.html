@@ -22,9 +22,9 @@
         <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
-        <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
+            <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
         } @placeholder {
-        <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+            <div class="weight-history-page__placeholder" aria-hidden="true"></div>
         }
 
         <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
@@ -44,16 +44,16 @@
         </div>
 
         @defer (on viewport) {
-        <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
-            <fd-weight-history-entries-card
-                [isLoading]="isLoading()"
-                [entries]="entriesDescending()"
-                (editEntry)="startEdit($event)"
-                (removeEntry)="deleteEntry($event)"
-            />
-        </div>
+            <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
+                <fd-weight-history-entries-card
+                    [isLoading]="isLoading()"
+                    [entries]="entriesDescending()"
+                    (editEntry)="startEdit($event)"
+                    (removeEntry)="deleteEntry($event)"
+                />
+            </div>
         } @placeholder {
-        <div class="weight-history-page__placeholder" aria-hidden="true"></div>
+            <div class="weight-history-page__placeholder" aria-hidden="true"></div>
         }
     </fd-page-body>
 </div>

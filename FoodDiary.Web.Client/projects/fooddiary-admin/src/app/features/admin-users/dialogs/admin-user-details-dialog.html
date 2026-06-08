@@ -1,29 +1,30 @@
 <fd-ui-dialog title="User details" size="xl" bodyScrollInset="edge">
     <div class="admin-user-details">
         @if (hasError()) {
-        <p class="admin-user-details__error">Could not load user details.</p>
+            <p class="admin-user-details__error">Could not load user details.</p>
         } @else {
-        <header class="admin-user-details__header">
-            @if (user().profileImage) {
-            <img class="admin-user-details__avatar" alt="" [src]="user().profileImage" />
-            } @else {
-            <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
-            }
+            <header class="admin-user-details__header">
+                @if (user().profileImage) {
+                    <img class="admin-user-details__avatar" alt="" [src]="user().profileImage" />
+                } @else {
+                    <div class="admin-user-details__avatar admin-user-details__avatar--initials">{{ initials() }}</div>
+                }
 
-            <div class="admin-user-details__identity">
-                <h2>{{ user().email }}</h2>
-                <div class="admin-user-details__meta">
-                    <span>{{ user().firstName || '-' }} {{ user().lastName || '' }}</span>
-                    <span>{{ user().roles.join(', ') || 'No roles' }}</span>
+                <div class="admin-user-details__identity">
+                    <h2>{{ user().email }}</h2>
+                    <div class="admin-user-details__meta">
+                        <span>{{ user().firstName || '-' }} {{ user().lastName || '' }}</span>
+                        <span>{{ user().roles.join(', ') || 'No roles' }}</span>
+                    </div>
                 </div>
-            </div>
-        </header>
+            </header>
 
-        @if (isLoading()) {
-        <p>Loading details...</p>
-        } @else {
-        <fd-admin-user-details-body [roleAuditEvents]="roleAuditEvents()" [loginEvents]="loginEvents()" [sections]="sections()" />
-        } }
+            @if (isLoading()) {
+                <p>Loading details...</p>
+            } @else {
+                <fd-admin-user-details-body [roleAuditEvents]="roleAuditEvents()" [loginEvents]="loginEvents()" [sections]="sections()" />
+            }
+        }
     </div>
 
     <div class="admin-user-details__footer" fdUiDialogFooter>

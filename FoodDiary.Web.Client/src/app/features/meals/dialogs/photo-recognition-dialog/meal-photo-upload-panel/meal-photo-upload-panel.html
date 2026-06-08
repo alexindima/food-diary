@@ -12,15 +12,16 @@
     />
 
     @if (statusKey(); as currentStatusKey) {
-    <div
-        class="photo-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
-        [class.photo-ai-dialog__status--loading]="isLoading()"
-    >
-        {{ currentStatusKey | translate }}
-    </div>
-    } @if (isLoading() || isNutritionLoading()) {
-    <div class="photo-ai-dialog__scan-overlay">
-        <div class="photo-ai-dialog__scan-line" [class.photo-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
-    </div>
+        <div
+            class="photo-ai-dialog__status fd-ui-pill fd-ui-pill--compact fd-ui-overline"
+            [class.photo-ai-dialog__status--loading]="isLoading()"
+        >
+            {{ currentStatusKey | translate }}
+        </div>
+    }
+    @if (isLoading() || isNutritionLoading()) {
+        <div class="photo-ai-dialog__scan-overlay">
+            <div class="photo-ai-dialog__scan-line" [class.photo-ai-dialog__scan-line--nutrition]="isNutritionLoading()"></div>
+        </div>
     }
 </div>

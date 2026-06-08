@@ -13,11 +13,13 @@
             <span class="fd-ui-checkbox__checkmark"></span>
         </span>
         <span class="fd-ui-checkbox__label-text">
-            @if (label()) { {{ label() }} }
+            @if (label()) {
+                {{ label() }}
+            }
             <ng-content />
         </span>
     </label>
     @if (hint()) {
-    <div class="fd-ui-checkbox__hint fd-ui-helper-text">{{ hint() }}</div>
+        <div class="fd-ui-checkbox__hint fd-ui-helper-text">{{ hint() }}</div>
     }
 </div>

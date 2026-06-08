@@ -5,11 +5,11 @@
 
     <fd-page-body>
         @if (facade.isDetailLoading()) {
-        <fd-ui-loader />
+            <fd-ui-loader />
         } @else if (selectedPlanView(); as plan) {
-        <fd-meal-plan-detail-header [plan]="plan.header" (adoptPlan)="adopt()" (generateShoppingList)="generateShoppingList()" />
+            <fd-meal-plan-detail-header [plan]="plan.header" (adoptPlan)="adopt()" (generateShoppingList)="generateShoppingList()" />
 
-        <fd-meal-plan-detail-days [days]="plan.days" />
+            <fd-meal-plan-detail-days [days]="plan.days" />
         }
     </fd-page-body>
 </div>

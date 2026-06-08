@@ -15,8 +15,8 @@
         {{ editActionView().labelKey | translate }}
     </fd-ui-button>
     @if (isEditing()) {
-    <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="editCancel.emit()">
-        {{ 'COMMON.CANCEL' | translate }}
-    </fd-ui-button>
+        <fd-ui-button variant="secondary" fill="outline" size="sm" (click)="editCancel.emit()">
+            {{ 'COMMON.CANCEL' | translate }}
+        </fd-ui-button>
     }
 </div>

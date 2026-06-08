@@ -5,16 +5,16 @@
     </div>
 
     @if (showAction()) {
-    <fd-ui-button
-        class="entity-card__action-button"
-        appearance="card-action"
-        variant="primary"
-        fill="solid"
-        [icon]="actionIcon()"
-        [ariaLabel]="actionAriaLabel() ?? ''"
-        (click)="emitCardAction($event)"
-    >
-        {{ actionAriaLabel() }}
-    </fd-ui-button>
+        <fd-ui-button
+            class="entity-card__action-button"
+            appearance="card-action"
+            variant="primary"
+            fill="solid"
+            [icon]="actionIcon()"
+            [ariaLabel]="actionAriaLabel() ?? ''"
+            (click)="emitCardAction($event)"
+        >
+            {{ actionAriaLabel() }}
+        </fd-ui-button>
     }
 </div>

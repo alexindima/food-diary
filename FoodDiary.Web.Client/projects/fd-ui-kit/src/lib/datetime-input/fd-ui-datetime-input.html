@@ -1,12 +1,12 @@
 <div [class]="hostClass()">
     <div class="fd-ui-datetime-input__control-wrap" (focusin)="onFocusIn()" (focusout)="onFocusOut()">
         @if (label()) {
-        <label class="fd-ui-datetime-input__label" [attr.for]="id()">
-            <span class="fd-ui-datetime-input__label-text">{{ label() }}</span>
-            @if (required()) {
-            <span class="fd-ui-datetime-input__required">*</span>
-            }
-        </label>
+            <label class="fd-ui-datetime-input__label" [attr.for]="id()">
+                <span class="fd-ui-datetime-input__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-datetime-input__required">*</span>
+                }
+            </label>
         }
         <div class="fd-ui-datetime-input__fields">
             <div class="fd-ui-datetime-input__segment fd-ui-datetime-input__segment--date">
@@ -41,6 +41,6 @@
     </div>
 
     @if (error()) {
-    <div class="fd-ui-datetime-input__error">{{ error() }}</div>
+        <div class="fd-ui-datetime-input__error">{{ error() }}</div>
     }
 </div>

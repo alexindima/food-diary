@@ -1,12 +1,12 @@
 <div [class]="hostClass()">
     <div class="fd-ui-time-input__control-wrap" (focusout)="onFocusOut()">
         @if (label()) {
-        <label class="fd-ui-time-input__label" [attr.for]="id()">
-            <span class="fd-ui-time-input__label-text">{{ label() }}</span>
-            @if (required()) {
-            <span class="fd-ui-time-input__required">*</span>
-            }
-        </label>
+            <label class="fd-ui-time-input__label" [attr.for]="id()">
+                <span class="fd-ui-time-input__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-time-input__required">*</span>
+                }
+            </label>
         }
         <div class="fd-ui-time-input__segment">
             <input
@@ -32,6 +32,6 @@
     </div>
 
     @if (error()) {
-    <div class="fd-ui-time-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+        <div class="fd-ui-time-input__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

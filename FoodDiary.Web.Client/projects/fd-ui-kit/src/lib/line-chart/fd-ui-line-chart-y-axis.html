@@ -1,13 +1,13 @@
 @if (show()) {
-<div class="fd-ui-line-chart__y-axis" aria-hidden="true">
-    <div class="fd-ui-line-chart__y-axis-sizer">
+    <div class="fd-ui-line-chart__y-axis" aria-hidden="true">
+        <div class="fd-ui-line-chart__y-axis-sizer">
+            @for (gridLine of gridLines(); track $index) {
+                <span>{{ gridLine.label }}</span>
+            }
+        </div>
+
         @for (gridLine of gridLines(); track $index) {
-        <span>{{ gridLine.label }}</span>
+            <span class="fd-ui-line-chart__y-axis-label" [style.top]="gridLine.yPercent">{{ gridLine.label }}</span>
         }
     </div>
-
-    @for (gridLine of gridLines(); track $index) {
-    <span class="fd-ui-line-chart__y-axis-label" [style.top]="gridLine.yPercent">{{ gridLine.label }}</span>
-    }
-</div>
 }

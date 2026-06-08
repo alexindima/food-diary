@@ -1,18 +1,18 @@
 @if (shouldRender()) {
-<div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockClick.emit($event)">
-    @defer (on viewport) {
-    <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-        <fd-tdee-insight-card
-            class="dashboard__card dashboard__card--tdee"
-            [insight]="insight()"
-            [isLoading]="isLoading()"
-            (applyGoal)="applyGoal.emit($event)"
-        />
-    </fd-dashboard-card-shell>
-    } @placeholder {
-    <fd-ui-loader />
-    } @loading (minimum 300ms) {
-    <fd-ui-loader />
-    }
-</div>
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockClick.emit($event)">
+        @defer (on viewport) {
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+                <fd-tdee-insight-card
+                    class="dashboard__card dashboard__card--tdee"
+                    [insight]="insight()"
+                    [isLoading]="isLoading()"
+                    (applyGoal)="applyGoal.emit($event)"
+                />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
 }

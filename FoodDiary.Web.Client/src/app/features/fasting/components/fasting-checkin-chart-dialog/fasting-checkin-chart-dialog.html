@@ -2,23 +2,23 @@
     <div class="fasting-checkin-chart-dialog__body">
         <div class="fasting-checkin-chart-dialog__charts">
             @for (series of chartSeries(); track series.key) {
-            <section class="fasting-checkin-chart-dialog__chart fd-stack fd-gap-xs">
-                <h3 class="fd-ui-card-title">
-                    <span class="fasting-checkin-chart-dialog__swatch" [style.background]="series.color"></span>
-                    {{ series.label }}
-                </h3>
-                <fd-ui-line-chart
-                    [title]="series.label"
-                    [points]="series.points"
-                    [lineColor]="series.color"
-                    [minValue]="minLevel"
-                    [maxValue]="maxLevel"
-                    [showArea]="false"
-                    [showAxisLabels]="true"
-                    [showGrid]="true"
-                    [axisDecimalPlaces]="0"
-                />
-            </section>
+                <section class="fasting-checkin-chart-dialog__chart fd-stack fd-gap-xs">
+                    <h3 class="fd-ui-card-title">
+                        <span class="fasting-checkin-chart-dialog__swatch" [style.background]="series.color"></span>
+                        {{ series.label }}
+                    </h3>
+                    <fd-ui-line-chart
+                        [title]="series.label"
+                        [points]="series.points"
+                        [lineColor]="series.color"
+                        [minValue]="minLevel"
+                        [maxValue]="maxLevel"
+                        [showArea]="false"
+                        [showAxisLabels]="true"
+                        [showGrid]="true"
+                        [axisDecimalPlaces]="0"
+                    />
+                </section>
             }
         </div>
     </div>

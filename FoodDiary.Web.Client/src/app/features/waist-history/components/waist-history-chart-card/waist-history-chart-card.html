@@ -1,18 +1,20 @@
 <fd-ui-card class="waist-history-page__card waist-history-page__card--chart" [title]="'WAIST_HISTORY.CHART_TITLE' | translate">
     @if (isLoading()) {
-    <div class="waist-history-page__loader fd-ui-body-sm">{{ 'WAIST_HISTORY.LOADING' | translate }}</div>
-    } @else { @if (hasPoints()) {
-    <fd-ui-line-chart
-        class="waist-history-page__chart"
-        lineColor="var(--fd-color-sky-500)"
-        [title]="'WAIST_HISTORY.CHART_TITLE' | translate"
-        [points]="chartPoints()"
-        [showArea]="false"
-        [showAxisLabels]="true"
-        [showGrid]="true"
-        [valueSuffix]="'GENERAL.UNITS.CM' | translate"
-    />
+        <div class="waist-history-page__loader fd-ui-body-sm">{{ 'WAIST_HISTORY.LOADING' | translate }}</div>
     } @else {
-    <p class="waist-history-page__empty-chart fd-ui-body-sm">{{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>
-    } }
+        @if (hasPoints()) {
+            <fd-ui-line-chart
+                class="waist-history-page__chart"
+                lineColor="var(--fd-color-sky-500)"
+                [title]="'WAIST_HISTORY.CHART_TITLE' | translate"
+                [points]="chartPoints()"
+                [showArea]="false"
+                [showAxisLabels]="true"
+                [showGrid]="true"
+                [valueSuffix]="'GENERAL.UNITS.CM' | translate"
+            />
+        } @else {
+            <p class="waist-history-page__empty-chart fd-ui-body-sm">{{ 'WAIST_HISTORY.NO_DATA_FOR_CHART' | translate }}</p>
+        }
+    }
 </fd-ui-card>

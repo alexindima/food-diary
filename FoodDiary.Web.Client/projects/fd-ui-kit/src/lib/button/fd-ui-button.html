@@ -7,13 +7,13 @@
 >
     <span class="fd-ui-button__content">
         @if (icon(); as iconName) {
-        <fd-ui-icon class="fd-ui-button__icon" [name]="iconName" />
+            <fd-ui-icon class="fd-ui-button__icon" [name]="iconName" />
         }
         <span class="fd-ui-button__label">
             <ng-content />
         </span>
     </span>
     @if (loading()) {
-    <span class="fd-ui-button__spinner" aria-hidden="true"></span>
+        <span class="fd-ui-button__spinner" aria-hidden="true"></span>
     }
 </button>

@@ -16,19 +16,19 @@
 
             <div class="dashboard-appearance-dialog__grid fd-grid fd-gap-sm">
                 @for (theme of themes; track theme.name) {
-                <button
-                    type="button"
-                    class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--theme fd-stack fd-align-start fd-gap-xs"
-                    [class.is-selected]="selectedTheme() === theme.name"
-                    [attr.aria-pressed]="selectedTheme() === theme.name"
-                    (click)="selectTheme(theme.name)"
-                >
-                    <span [class]="`dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--${theme.name}`"></span>
-                    <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
-                    <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
-                        {{ theme.descriptionKey | translate }}
-                    </span>
-                </button>
+                    <button
+                        type="button"
+                        class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--theme fd-stack fd-align-start fd-gap-xs"
+                        [class.is-selected]="selectedTheme() === theme.name"
+                        [attr.aria-pressed]="selectedTheme() === theme.name"
+                        (click)="selectTheme(theme.name)"
+                    >
+                        <span [class]="`dashboard-appearance-dialog__swatch dashboard-appearance-dialog__swatch--${theme.name}`"></span>
+                        <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ theme.labelKey | translate }}</span>
+                        <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
+                            {{ theme.descriptionKey | translate }}
+                        </span>
+                    </button>
                 }
             </div>
         </section>
@@ -45,31 +45,31 @@
 
             <div class="dashboard-appearance-dialog__grid dashboard-appearance-dialog__grid--styles fd-grid fd-gap-sm">
                 @for (uiStyle of uiStyles; track uiStyle.name) {
-                <button
-                    type="button"
-                    class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--style fd-stack fd-align-start fd-gap-xs"
-                    [class.is-selected]="selectedUiStyle() === uiStyle.name"
-                    [attr.aria-pressed]="selectedUiStyle() === uiStyle.name"
-                    (click)="selectUiStyle(uiStyle.name)"
-                >
-                    <span
-                        [class]="`dashboard-appearance-dialog__style-preview dashboard-appearance-dialog__style-preview--${uiStyle.name}`"
+                    <button
+                        type="button"
+                        class="dashboard-appearance-dialog__option dashboard-appearance-dialog__option--style fd-stack fd-align-start fd-gap-xs"
+                        [class.is-selected]="selectedUiStyle() === uiStyle.name"
+                        [attr.aria-pressed]="selectedUiStyle() === uiStyle.name"
+                        (click)="selectUiStyle(uiStyle.name)"
                     >
-                        <span></span>
-                        <span></span>
-                        <span></span>
-                    </span>
-                    <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ uiStyle.labelKey | translate }}</span>
-                    <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
-                        {{ uiStyle.descriptionKey | translate }}
-                    </span>
-                </button>
+                        <span
+                            [class]="`dashboard-appearance-dialog__style-preview dashboard-appearance-dialog__style-preview--${uiStyle.name}`"
+                        >
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </span>
+                        <span class="dashboard-appearance-dialog__option-title fd-ui-body">{{ uiStyle.labelKey | translate }}</span>
+                        <span class="dashboard-appearance-dialog__option-copy fd-ui-body-sm fd-ui-text-muted">
+                            {{ uiStyle.descriptionKey | translate }}
+                        </span>
+                    </button>
                 }
             </div>
         </section>
 
         @if (submitError()) {
-        <p class="dashboard-appearance-dialog__error" role="alert">{{ submitError() }}</p>
+            <p class="dashboard-appearance-dialog__error" role="alert">{{ submitError() }}</p>
         }
     </div>
 </fd-ui-dialog>

@@ -5,25 +5,28 @@
     </div>
 
     @if (confidenceLabel(); as currentConfidenceLabel) {
-    <div [class]="`tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--${confidenceClass()}`">
-        <fd-ui-icon name="verified" />
-        <span>{{ currentConfidenceLabel | translate }}</span>
-    </div>
-    } @if (insight(); as currentInsight) {
-    <fd-tdee-insight-card-details [insight]="currentInsight" [weightTrendFormatted]="weightTrendFormatted()" />
-    } @if (hintKey(); as currentHintKey) {
-    <div class="tdee-card__hint fd-row fd-align-start fd-gap-xs fd-ui-meta-text">
-        <fd-ui-icon name="tips_and_updates" />
-        <span>{{ currentHintKey | translate }}</span>
-    </div>
-    } @if (showSuggestion() && insight(); as currentInsight) {
-    <div class="tdee-card__suggestion fd-row fd-justify-between fd-gap-sm">
-        <span class="tdee-card__suggestion-text fd-ui-meta-text">
-            {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: currentInsight.suggestedCalorieTarget | number: '1.0-0' } }}
-        </span>
-        <fd-ui-button variant="primary" fill="outline" size="sm" (click)="applyGoal.emit($event)">
-            {{ 'TDEE_CARD.APPLY' | translate }}
-        </fd-ui-button>
-    </div>
+        <div [class]="`tdee-card__confidence fd-ui-pill fd-ui-pill--compact fd-ui-overline tdee-card__confidence--${confidenceClass()}`">
+            <fd-ui-icon name="verified" />
+            <span>{{ currentConfidenceLabel | translate }}</span>
+        </div>
+    }
+    @if (insight(); as currentInsight) {
+        <fd-tdee-insight-card-details [insight]="currentInsight" [weightTrendFormatted]="weightTrendFormatted()" />
+    }
+    @if (hintKey(); as currentHintKey) {
+        <div class="tdee-card__hint fd-row fd-align-start fd-gap-xs fd-ui-meta-text">
+            <fd-ui-icon name="tips_and_updates" />
+            <span>{{ currentHintKey | translate }}</span>
+        </div>
+    }
+    @if (showSuggestion() && insight(); as currentInsight) {
+        <div class="tdee-card__suggestion fd-row fd-justify-between fd-gap-sm">
+            <span class="tdee-card__suggestion-text fd-ui-meta-text">
+                {{ 'TDEE_CARD.SUGGESTED_GOAL' | translate: { value: currentInsight.suggestedCalorieTarget | number: '1.0-0' } }}
+            </span>
+            <fd-ui-button variant="primary" fill="outline" size="sm" (click)="applyGoal.emit($event)">
+                {{ 'TDEE_CARD.APPLY' | translate }}
+            </fd-ui-button>
+        </div>
     }
 </div>

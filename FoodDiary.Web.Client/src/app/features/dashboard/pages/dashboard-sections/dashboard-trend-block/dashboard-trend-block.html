@@ -1,24 +1,24 @@
 @if (shouldRender()) {
-<div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
-    @defer (on viewport) {
-    <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
-        <fd-weight-trend-card
-            [class]="cardClass()"
-            [title]="title()"
-            [unitKey]="unitKey()"
-            [iconName]="iconName()"
-            [accentColor]="accentColor()"
-            [currentWeight]="current()"
-            [change]="change()"
-            [points]="points()"
-            [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
-            [isLoading]="isLoading()"
-        />
-    </fd-dashboard-card-shell>
-    } @placeholder {
-    <fd-ui-loader />
-    } @loading (minimum 300ms) {
-    <fd-ui-loader />
-    }
-</div>
+    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
+        @defer (on viewport) {
+            <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
+                <fd-weight-trend-card
+                    [class]="cardClass()"
+                    [title]="title()"
+                    [unitKey]="unitKey()"
+                    [iconName]="iconName()"
+                    [accentColor]="accentColor()"
+                    [currentWeight]="current()"
+                    [change]="change()"
+                    [points]="points()"
+                    [timeframeLabel]="'WEIGHT_TREND_CARD.LAST_7_DAYS' | translate"
+                    [isLoading]="isLoading()"
+                />
+            </fd-dashboard-card-shell>
+        } @placeholder {
+            <fd-ui-loader />
+        } @loading (minimum 300ms) {
+            <fd-ui-loader />
+        }
+    </div>
 }

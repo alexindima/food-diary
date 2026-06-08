@@ -9,23 +9,23 @@
             (cdkDropListDropped)="onStepDrop($event)"
         >
             @for (step of steps(); track $index) {
-            <div class="recipe-step" cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="$count <= 1" [cdkDragBoundary]="dragBoundary">
-                <fd-recipe-step-card
-                    [step]="step.state"
-                    [stepIndex]="$index"
-                    [isExpanded]="isStepExpanded($index)"
-                    [dragDisabled]="$count <= 1"
-                    (toggleExpanded)="onToggleStepExpanded($index)"
-                    (removeStep)="onRemoveStep($index)"
-                    (addIngredient)="onAddIngredient($index)"
-                    (removeIngredient)="onRemoveIngredient($index, $event)"
-                    (selectProduct)="onSelectProduct($index, $event)"
-                    (stepTitleChange)="onStepTitleChange($index, $event)"
-                    (stepImageChange)="onStepImageChange($index, $event)"
-                    (stepDescriptionChange)="onStepDescriptionChange($index, $event)"
-                    (ingredientAmountChange)="onIngredientAmountChange($index, $event)"
-                />
-            </div>
+                <div class="recipe-step" cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="$count <= 1" [cdkDragBoundary]="dragBoundary">
+                    <fd-recipe-step-card
+                        [step]="step.state"
+                        [stepIndex]="$index"
+                        [isExpanded]="isStepExpanded($index)"
+                        [dragDisabled]="$count <= 1"
+                        (toggleExpanded)="onToggleStepExpanded($index)"
+                        (removeStep)="onRemoveStep($index)"
+                        (addIngredient)="onAddIngredient($index)"
+                        (removeIngredient)="onRemoveIngredient($index, $event)"
+                        (selectProduct)="onSelectProduct($index, $event)"
+                        (stepTitleChange)="onStepTitleChange($index, $event)"
+                        (stepImageChange)="onStepImageChange($index, $event)"
+                        (stepDescriptionChange)="onStepDescriptionChange($index, $event)"
+                        (ingredientAmountChange)="onIngredientAmountChange($index, $event)"
+                    />
+                </div>
             }
         </div>
         <fd-ui-button
@@ -40,7 +40,7 @@
             {{ 'RECIPE_MANAGE.ADD_STEP' | translate }}
         </fd-ui-button>
         @if (stepsError()) {
-        <div class="recipe-steps-list__array-error fd-ui-body-sm">{{ stepsError() }}</div>
+            <div class="recipe-steps-list__array-error fd-ui-body-sm">{{ stepsError() }}</div>
         }
     </section>
 </div>

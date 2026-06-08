@@ -14,15 +14,15 @@
     (sectionToggled)="onSidebarSectionToggle($event.section.id)"
 >
     @if (currentUser(); as user) {
-    <fd-sidebar-user-menu
-        fdUiSidebarFooter
-        [user]="user"
-        [userPlanLabelKey]="userPlanLabelKey()"
-        [isOpen]="isUserMenuOpen()"
-        [pendingRoute]="pendingRoute()"
-        (toggleMenu)="userMenuToggle.emit($event)"
-        (directRouteClick)="directRouteClick.emit($event)"
-        (logout)="logout.emit()"
-    />
+        <fd-sidebar-user-menu
+            fdUiSidebarFooter
+            [user]="user"
+            [userPlanLabelKey]="userPlanLabelKey()"
+            [isOpen]="isUserMenuOpen()"
+            [pendingRoute]="pendingRoute()"
+            (toggleMenu)="userMenuToggle.emit($event)"
+            (directRouteClick)="directRouteClick.emit($event)"
+            (logout)="logout.emit()"
+        />
     }
 </fd-ui-sidebar>

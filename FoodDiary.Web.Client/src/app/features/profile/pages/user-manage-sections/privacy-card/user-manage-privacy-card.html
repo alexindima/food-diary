@@ -12,32 +12,32 @@
                 <div class="user-manage__privacy-label">{{ 'USER_MANAGE.AI_CONSENT_LABEL' | translate }}</div>
                 <div class="user-manage__privacy-status">
                     @if (hasAiConsent()) {
-                    <span
-                        class="user-manage__privacy-badge user-manage__privacy-badge--active fd-ui-pill fd-ui-pill--success fd-ui-caption"
-                    >
-                        {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
-                    </span>
+                        <span
+                            class="user-manage__privacy-badge user-manage__privacy-badge--active fd-ui-pill fd-ui-pill--success fd-ui-caption"
+                        >
+                            {{ 'USER_MANAGE.AI_CONSENT_ACTIVE' | translate }}
+                        </span>
                     } @else {
-                    <span
-                        class="user-manage__privacy-badge user-manage__privacy-badge--inactive fd-ui-pill fd-ui-pill--muted fd-ui-caption"
-                    >
-                        {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
-                    </span>
+                        <span
+                            class="user-manage__privacy-badge user-manage__privacy-badge--inactive fd-ui-pill fd-ui-pill--muted fd-ui-caption"
+                        >
+                            {{ 'USER_MANAGE.AI_CONSENT_INACTIVE' | translate }}
+                        </span>
                     }
                 </div>
             </div>
             @if (hasAiConsent()) {
-            <fd-ui-button
-                type="button"
-                fill="outline"
-                variant="secondary"
-                size="sm"
-                [disabled]="isAccountActionBusy() || isRevokingAiConsent()"
-                [loading]="isRevokingAiConsent()"
-                (click)="aiConsentRevoke.emit()"
-            >
-                {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
-            </fd-ui-button>
+                <fd-ui-button
+                    type="button"
+                    fill="outline"
+                    variant="secondary"
+                    size="sm"
+                    [disabled]="isAccountActionBusy() || isRevokingAiConsent()"
+                    [loading]="isRevokingAiConsent()"
+                    (click)="aiConsentRevoke.emit()"
+                >
+                    {{ 'USER_MANAGE.AI_CONSENT_REVOKE' | translate }}
+                </fd-ui-button>
             }
         </div>
         <div class="user-manage__privacy-item fd-row fd-gap-sm fd-justify-between">

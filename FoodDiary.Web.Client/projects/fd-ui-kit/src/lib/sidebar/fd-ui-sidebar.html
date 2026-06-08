@@ -2,44 +2,44 @@
     <div class="fd-ui-sidebar__brand fd-row fd-gap-xs">
         <div class="fd-ui-sidebar__logo fd-place-center">
             @if (logoMaskStyle(); as maskStyle) {
-            <span class="fd-ui-sidebar__logo-mark" aria-hidden="true" [style.--fd-ui-sidebar-logo-mask-url]="maskStyle"></span>
+                <span class="fd-ui-sidebar__logo-mark" aria-hidden="true" [style.--fd-ui-sidebar-logo-mask-url]="maskStyle"></span>
             } @else {
-            <span class="fd-ui-sidebar__logo-text fd-ui-metric-lg">{{ logoText() ?? brandTitle().slice(0, 2) }}</span>
+                <span class="fd-ui-sidebar__logo-text fd-ui-metric-lg">{{ logoText() ?? brandTitle().slice(0, 2) }}</span>
             }
         </div>
         <div class="fd-ui-sidebar__brand-text fd-grid fd-gap-xxs">
             <span class="fd-ui-sidebar__brand-title fd-ui-action-text">{{ brandTitle() }}</span>
             @if (brandSubtitle(); as subtitle) {
-            <span class="fd-ui-sidebar__brand-subtitle fd-ui-caption">{{ subtitle }}</span>
+                <span class="fd-ui-sidebar__brand-subtitle fd-ui-caption">{{ subtitle }}</span>
             }
         </div>
         @if (notificationAriaLabel(); as ariaLabel) {
-        <fd-ui-button
-            class="fd-ui-sidebar__brand-notifications"
-            variant="secondary"
-            fill="text"
-            icon="notifications"
-            [ariaLabel]="ariaLabel"
-            [fdUiHint]="notificationHint() ?? ariaLabel"
-            (click)="notificationClick.emit()"
-        >
-            @if (notificationBadge() > 0) {
-            <span class="fd-ui-sidebar__brand-notifications-dot" aria-hidden="true"></span>
-            }
-        </fd-ui-button>
+            <fd-ui-button
+                class="fd-ui-sidebar__brand-notifications"
+                variant="secondary"
+                fill="text"
+                icon="notifications"
+                [ariaLabel]="ariaLabel"
+                [fdUiHint]="notificationHint() ?? ariaLabel"
+                (click)="notificationClick.emit()"
+            >
+                @if (notificationBadge() > 0) {
+                    <span class="fd-ui-sidebar__brand-notifications-dot" aria-hidden="true"></span>
+                }
+            </fd-ui-button>
         }
     </div>
 
     @for (section of allSections(); track section.id) {
-    <fd-ui-sidebar-section
-        class="fd-ui-sidebar__section-slot"
-        [class.fd-ui-sidebar__section-slot--bottom]="bottomSectionIds().has(section.id)"
-        [section]="section"
-        [pendingRoute]="pendingRoute()"
-        (routeSelected)="routeSelected.emit({ item: $event })"
-        (actionSelected)="actionSelected.emit({ item: $event })"
-        (sectionToggled)="sectionToggled.emit($event)"
-    />
+        <fd-ui-sidebar-section
+            class="fd-ui-sidebar__section-slot"
+            [class.fd-ui-sidebar__section-slot--bottom]="bottomSectionIds().has(section.id)"
+            [section]="section"
+            [pendingRoute]="pendingRoute()"
+            (routeSelected)="routeSelected.emit({ item: $event })"
+            (actionSelected)="actionSelected.emit({ item: $event })"
+            (sectionToggled)="sectionToggled.emit($event)"
+        />
     }
 
     <div class="fd-ui-sidebar__spacer"></div>

@@ -12,23 +12,23 @@
     </thead>
     <tbody>
         @for (user of users(); track user.id) {
-        <tr
-            class="users-table__row"
-            tabindex="0"
-            (click)="details.emit(user)"
-            (keydown.enter)="details.emit(user)"
-            (keydown.space)="$event.preventDefault(); details.emit(user)"
-        >
-            <td>{{ user.email }}</td>
-            <td>{{ user.username || '-' }}</td>
-            <td>{{ user.roles.join(', ') || '-' }}</td>
-            <td>{{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'medium') : '-' }}</td>
-            <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
-        </tr>
+            <tr
+                class="users-table__row"
+                tabindex="0"
+                (click)="details.emit(user)"
+                (keydown.enter)="details.emit(user)"
+                (keydown.space)="$event.preventDefault(); details.emit(user)"
+            >
+                <td>{{ user.email }}</td>
+                <td>{{ user.username || '-' }}</td>
+                <td>{{ user.roles.join(', ') || '-' }}</td>
+                <td>{{ user.lastLoginAtUtc ? (user.lastLoginAtUtc | date: 'medium') : '-' }}</td>
+                <td>{{ user.isEmailConfirmed ? 'Yes' : 'No' }}</td>
+            </tr>
         } @empty {
-        <tr>
-            <td colspan="5">No users found.</td>
-        </tr>
+            <tr>
+                <td colspan="5">No users found.</td>
+            </tr>
         }
     </tbody>
 </table>

@@ -7,10 +7,10 @@
         </div>
         <div class="seo-landing__audience-grid">
             @for (item of audience().items; track item.key) {
-            <article class="seo-landing__audience-card">
-                <h3 class="seo-landing__feature-title">{{ item.titleKey | translate }}</h3>
-                <p class="seo-landing__feature-text">{{ item.textKey | translate }}</p>
-            </article>
+                <article class="seo-landing__audience-card">
+                    <h3 class="seo-landing__feature-title">{{ item.titleKey | translate }}</h3>
+                    <p class="seo-landing__feature-text">{{ item.textKey | translate }}</p>
+                </article>
             }
         </div>
     </div>
@@ -25,10 +25,10 @@
         </div>
         <div class="seo-landing__feature-grid">
             @for (feature of features().items; track feature.key) {
-            <article class="seo-landing__feature-card">
-                <h3 class="seo-landing__feature-title">{{ feature.titleKey | translate }}</h3>
-                <p class="seo-landing__feature-text">{{ feature.textKey | translate }}</p>
-            </article>
+                <article class="seo-landing__feature-card">
+                    <h3 class="seo-landing__feature-title">{{ feature.titleKey | translate }}</h3>
+                    <p class="seo-landing__feature-text">{{ feature.textKey | translate }}</p>
+                </article>
             }
         </div>
     </div>
@@ -43,11 +43,11 @@
         </div>
         <div class="seo-landing__steps">
             @for (step of steps().items; track step.key) {
-            <article class="seo-landing__step-card">
-                <div class="seo-landing__step-index">{{ $index + 1 }}</div>
-                <h3 class="seo-landing__step-title">{{ step.titleKey | translate }}</h3>
-                <p class="seo-landing__step-text">{{ step.textKey | translate }}</p>
-            </article>
+                <article class="seo-landing__step-card">
+                    <div class="seo-landing__step-index">{{ $index + 1 }}</div>
+                    <h3 class="seo-landing__step-title">{{ step.titleKey | translate }}</h3>
+                    <p class="seo-landing__step-text">{{ step.textKey | translate }}</p>
+                </article>
             }
         </div>
     </div>
@@ -62,10 +62,10 @@
         </div>
         <div class="seo-landing__faq">
             @for (item of faq().items; track item.key) {
-            <details class="seo-landing__faq-item">
-                <summary class="seo-landing__faq-question">{{ item.questionKey | translate }}</summary>
-                <p class="seo-landing__faq-answer">{{ item.answerKey | translate }}</p>
-            </details>
+                <details class="seo-landing__faq-item">
+                    <summary class="seo-landing__faq-question">{{ item.questionKey | translate }}</summary>
+                    <p class="seo-landing__faq-answer">{{ item.answerKey | translate }}</p>
+                </details>
             }
         </div>
     </div>

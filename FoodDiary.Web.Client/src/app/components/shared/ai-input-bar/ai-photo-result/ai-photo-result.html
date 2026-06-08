@@ -21,57 +21,60 @@
     />
 
     @if (errorKey(); as currentErrorKey) {
-    <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
-        {{ currentErrorKey | translate }}
-    </div>
-    } @if (!isAnalyzing() && results().length) {
-    <fd-ai-photo-result-actions
-        [isAnalyzing]="isAnalyzing()"
-        [isEditing]="isEditing()"
-        [editActionView]="editActionView()"
-        (reanalyze)="reanalyzeRequested.emit()"
-        (editAction)="applyEditAction()"
-        (editCancel)="cancelEditing()"
-    />
-
-    @if (isEditing()) {
-    <fd-ai-photo-edit-list
-        [items]="editItems()"
-        [unitOptions]="editUnitOptions()"
-        (itemDropped)="reorderEditItems($event)"
-        (itemUpdated)="updateEditItemFromView($event)"
-        (itemRemoved)="removeEditItem($event)"
-        (itemAdded)="addEditItem()"
-    />
-    } @else {
-    <fd-ai-photo-result-rows [rows]="resultRows()" />
-    } @if (!isNutritionLoading() && nutrition()) {
-    <fd-ai-photo-nutrition-summary [items]="nutritionSummary()" />
-    } @if (!isNutritionLoading() && nutritionErrorKey(); as currentNutritionErrorKey) {
-    <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
-        {{ currentNutritionErrorKey | translate }}
-    </div>
+        <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
+            {{ currentErrorKey | translate }}
+        </div>
     }
+    @if (!isAnalyzing() && results().length) {
+        <fd-ai-photo-result-actions
+            [isAnalyzing]="isAnalyzing()"
+            [isEditing]="isEditing()"
+            [editActionView]="editActionView()"
+            (reanalyze)="reanalyzeRequested.emit()"
+            (editAction)="applyEditAction()"
+            (editCancel)="cancelEditing()"
+        />
 
-    <fd-ai-photo-details-panel
-        [isVisible]="!isEditing()"
-        [showDetails]="showDetails()"
-        [isExpanded]="isDetailsExpanded()"
-        [toggleView]="detailsToggleView()"
-        [submitLabelKey]="submitLabelKey()"
-        [submitDisabled]="submitDisabled()"
-        [date]="detailsDate()"
-        [time]="detailsTime()"
-        [comment]="detailsComment()"
-        [preMealSatietyLevel]="preMealSatietyLevel()"
-        [postMealSatietyLevel]="postMealSatietyLevel()"
-        (detailsToggle)="toggleDetails()"
-        (mealSubmit)="emitAddToMeal()"
-        (dateChange)="updateDetailsDate($event)"
-        (timeChange)="updateDetailsTime($event)"
-        (commentChange)="updateDetailsComment($event)"
-        (preMealSatietyLevelChange)="preMealSatietyLevel.set($event)"
-        (postMealSatietyLevelChange)="postMealSatietyLevel.set($event)"
-    />
+        @if (isEditing()) {
+            <fd-ai-photo-edit-list
+                [items]="editItems()"
+                [unitOptions]="editUnitOptions()"
+                (itemDropped)="reorderEditItems($event)"
+                (itemUpdated)="updateEditItemFromView($event)"
+                (itemRemoved)="removeEditItem($event)"
+                (itemAdded)="addEditItem()"
+            />
+        } @else {
+            <fd-ai-photo-result-rows [rows]="resultRows()" />
+        }
+        @if (!isNutritionLoading() && nutrition()) {
+            <fd-ai-photo-nutrition-summary [items]="nutritionSummary()" />
+        }
+        @if (!isNutritionLoading() && nutritionErrorKey(); as currentNutritionErrorKey) {
+            <div class="ai-photo-result__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-error-text" role="alert">
+                {{ currentNutritionErrorKey | translate }}
+            </div>
+        }
+
+        <fd-ai-photo-details-panel
+            [isVisible]="!isEditing()"
+            [showDetails]="showDetails()"
+            [isExpanded]="isDetailsExpanded()"
+            [toggleView]="detailsToggleView()"
+            [submitLabelKey]="submitLabelKey()"
+            [submitDisabled]="submitDisabled()"
+            [date]="detailsDate()"
+            [time]="detailsTime()"
+            [comment]="detailsComment()"
+            [preMealSatietyLevel]="preMealSatietyLevel()"
+            [postMealSatietyLevel]="postMealSatietyLevel()"
+            (detailsToggle)="toggleDetails()"
+            (mealSubmit)="emitAddToMeal()"
+            (dateChange)="updateDetailsDate($event)"
+            (timeChange)="updateDetailsTime($event)"
+            (commentChange)="updateDetailsComment($event)"
+            (preMealSatietyLevelChange)="preMealSatietyLevel.set($event)"
+            (postMealSatietyLevelChange)="postMealSatietyLevel.set($event)"
+        />
     }
 </div>

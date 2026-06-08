@@ -1,13 +1,13 @@
 <div class="dashboard-summary-card">
     <fd-dashboard-widget-frame [title]="'DASHBOARD_SUMMARY.TITLE' | translate">
         @if (showNotice()) {
-        <fd-notice-banner
-            type="info"
-            [title]="noticeTitleKey() | translate"
-            [message]="noticeMessageKey() | translate"
-            [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
-            (action)="onGoalAction()"
-        />
+            <fd-notice-banner
+                type="info"
+                [title]="noticeTitleKey() | translate"
+                [message]="noticeMessageKey() | translate"
+                [actionLabel]="'DASHBOARD_SUMMARY.GOALS_ACTION' | translate"
+                (action)="onGoalAction()"
+            />
         }
         <div class="dashboard-summary-card__layout fd-grid fd-gap-card-content">
             <div
@@ -102,31 +102,31 @@
                         {{ 'CONSUMPTION_RING.WEEKLY_LABEL' | translate }}: {{ weeklyPercent() }}%
                     </div>
                     <div class="dashboard-summary-card__burned-line fd-ui-overline" [hidden]="caloriesBurned() <= 0">
-                        {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }} {{ 'CONSUMPTION_RING.UNIT' |
-                        translate }}
+                        {{ 'CONSUMPTION_RING.BURNED' | translate }}: {{ caloriesBurned() | number: '1.0-0' }}
+                        {{ 'CONSUMPTION_RING.UNIT' | translate }}
                     </div>
                 </div>
             </div>
 
             <div class="dashboard-summary-card__bars fd-grid fd-gap-card-relaxed">
                 @for (bar of nutrientBarViewModels(); track bar.id) {
-                <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
-                    <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
-                        <span class="dashboard-summary-card__bar-label fd-ui-body-sm"> {{ bar.labelText }} </span>
-                        <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
-                            {{ bar.current | number: '1.0-0' }}
-                            <span [hidden]="bar.target <= 0"> / {{ bar.target | number: '1.0-0' }} </span>
-                            {{ bar.unitText }}
-                        </span>
+                    <div class="dashboard-summary-card__bar fd-stack fd-gap-card-header">
+                        <div class="dashboard-summary-card__bar-header fd-row fd-justify-between fd-gap-card-header">
+                            <span class="dashboard-summary-card__bar-label fd-ui-body-sm"> {{ bar.labelText }} </span>
+                            <span class="dashboard-summary-card__bar-value fd-ui-meta-text fd-nowrap" [style.color]="bar.valueColor">
+                                {{ bar.current | number: '1.0-0' }}
+                                <span [hidden]="bar.target <= 0"> / {{ bar.target | number: '1.0-0' }} </span>
+                                {{ bar.unitText }}
+                            </span>
+                        </div>
+                        <div class="dashboard-summary-card__bar-track fd-ui-progress-track">
+                            <div
+                                class="dashboard-summary-card__bar-fill fd-ui-progress-fill"
+                                [style.background]="bar.fillBackground"
+                                [style.width.%]="bar.fillWidth"
+                            ></div>
+                        </div>
                     </div>
-                    <div class="dashboard-summary-card__bar-track fd-ui-progress-track">
-                        <div
-                            class="dashboard-summary-card__bar-fill fd-ui-progress-fill"
-                            [style.background]="bar.fillBackground"
-                            [style.width.%]="bar.fillWidth"
-                        ></div>
-                    </div>
-                </div>
                 }
             </div>
         </div>

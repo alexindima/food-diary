@@ -7,51 +7,64 @@
 
     <fd-page-body>
         @if (isLoading()) {
-        <section class="recommendations-page__state fd-place-center fd-ui-body-sm" role="status" aria-live="polite">
-            {{ 'RECOMMENDATIONS.LOADING' | translate }}
-        </section>
+            <section class="recommendations-page__state fd-place-center fd-ui-body-sm" role="status" aria-live="polite">
+                {{ 'RECOMMENDATIONS.LOADING' | translate }}
+            </section>
         } @else if (errorKey(); as error) {
-        <section class="recommendations-page__state recommendations-page__state--error fd-place-center fd-ui-body-sm" role="alert">
-            {{ error | translate }}
-        </section>
+            <section class="recommendations-page__state recommendations-page__state--error fd-place-center fd-ui-body-sm" role="alert">
+                {{ error | translate }}
+            </section>
         } @else if (recommendationItems().length === 0) {
-        <section class="recommendations-page__empty fd-place-center fd-stack fd-gap-sm" role="status">
-            <fd-ui-icon name="medical_information" />
-            <h2 class="fd-ui-card-title">{{ 'RECOMMENDATIONS.EMPTY_TITLE' | translate }}</h2>
-            <p class="fd-ui-body-sm">{{ 'RECOMMENDATIONS.EMPTY_TEXT' | translate }}</p>
-        </section>
+            <section class="recommendations-page__empty fd-place-center fd-stack fd-gap-sm" role="status">
+                <fd-ui-icon name="medical_information" />
+                <h2 class="fd-ui-card-title">{{ 'RECOMMENDATIONS.EMPTY_TITLE' | translate }}</h2>
+                <p class="fd-ui-body-sm">{{ 'RECOMMENDATIONS.EMPTY_TEXT' | translate }}</p>
+            </section>
         } @else {
-        <section class="recommendations-page__list fd-grid fd-gap-md" aria-live="polite">
-            @for (recommendation of recommendationItems(); track recommendation.id) {
-            <button
-                type="button"
-                class="recommendations-page__item"
-                [class.recommendations-page__item--selected]="recommendation.isSelected"
-                [class.is-read]="recommendation.isRead"
-                (click)="markRecommendationAsRead(recommendation)"
-            >
-                <fd-ui-card class="recommendations-page__card">
-                    <div class="recommendations-page__card-head fd-row fd-justify-between fd-gap-md">
-                        <div class="recommendations-page__card-title fd-stack fd-gap-xxs">
-                            <span class="fd-ui-caption">
-                                @if (recommendation.dietologistName; as dietologistName) { {{ 'RECOMMENDATIONS.FROM_NAMED' | translate: {
-                                name: dietologistName } }} } @else { {{ 'RECOMMENDATIONS.FROM_GENERIC' | translate }} }
-                            </span>
-                            <span class="recommendations-page__date fd-ui-caption">
-                                {{ recommendation.createdAtUtc | date: 'medium' }}
-                            </span>
-                        </div>
-                        <span class="recommendations-page__status fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                            @if (recommendation.isMarkingRead) { {{ 'RECOMMENDATIONS.STATUS_MARKING' | translate }} } @else if
-                            (recommendation.isRead) { {{ 'RECOMMENDATIONS.STATUS_READ' | translate }} } @else { {{
-                            'RECOMMENDATIONS.STATUS_UNREAD' | translate }} }
-                        </span>
-                    </div>
-                    <p class="recommendations-page__text fd-ui-body">{{ recommendation.text }}</p>
-                </fd-ui-card>
-            </button>
-            }
-        </section>
+            <section class="recommendations-page__list fd-grid fd-gap-md" aria-live="polite">
+                @for (recommendation of recommendationItems(); track recommendation.id) {
+                    <button
+                        type="button"
+                        class="recommendations-page__item"
+                        [class.recommendations-page__item--selected]="recommendation.isSelected"
+                        [class.is-read]="recommendation.isRead"
+                        (click)="markRecommendationAsRead(recommendation)"
+                    >
+                        <fd-ui-card class="recommendations-page__card">
+                            <div class="recommendations-page__card-head fd-row fd-justify-between fd-gap-md">
+                                <div class="recommendations-page__card-title fd-stack fd-gap-xxs">
+                                    <span class="fd-ui-caption">
+                                        @if (recommendation.dietologistName; as dietologistName) {
+                                            {{
+                                                'RECOMMENDATIONS.FROM_NAMED'
+                                                    | translate
+                                                        : {
+                                                              name: dietologistName,
+                                                          }
+                                            }}
+                                        } @else {
+                                            {{ 'RECOMMENDATIONS.FROM_GENERIC' | translate }}
+                                        }
+                                    </span>
+                                    <span class="recommendations-page__date fd-ui-caption">
+                                        {{ recommendation.createdAtUtc | date: 'medium' }}
+                                    </span>
+                                </div>
+                                <span class="recommendations-page__status fd-ui-pill fd-ui-pill--compact fd-ui-caption">
+                                    @if (recommendation.isMarkingRead) {
+                                        {{ 'RECOMMENDATIONS.STATUS_MARKING' | translate }}
+                                    } @else if (recommendation.isRead) {
+                                        {{ 'RECOMMENDATIONS.STATUS_READ' | translate }}
+                                    } @else {
+                                        {{ 'RECOMMENDATIONS.STATUS_UNREAD' | translate }}
+                                    }
+                                </span>
+                            </div>
+                            <p class="recommendations-page__text fd-ui-body">{{ recommendation.text }}</p>
+                        </fd-ui-card>
+                    </button>
+                }
+            </section>
         }
     </fd-page-body>
 </main>

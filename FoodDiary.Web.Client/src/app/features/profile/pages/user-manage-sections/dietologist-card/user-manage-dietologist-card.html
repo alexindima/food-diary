@@ -9,26 +9,26 @@
 
     <div class="user-manage__dietologist fd-stack fd-gap-md">
         @if (isLoadingDietologist()) {
-        <div class="user-manage__dietologist-empty fd-ui-surface fd-ui-surface--dashed">
-            {{ 'USER_MANAGE.DIETOLOGIST_LOADING' | translate }}
-        </div>
+            <div class="user-manage__dietologist-empty fd-ui-surface fd-ui-surface--dashed">
+                {{ 'USER_MANAGE.DIETOLOGIST_LOADING' | translate }}
+            </div>
         } @else {
-        <fd-user-manage-dietologist-summary
-            [dietologistForm]="dietologistForm()"
-            [dietologistRelationship]="dietologistRelationship()"
-            [dietologistInviteEmailError]="dietologistInviteEmailError()"
-            [isSavingDietologist]="isSavingDietologist()"
-            (dietologistInvite)="dietologistInvite.emit()"
-            (dietologistRevoke)="dietologistRevoke.emit()"
-        />
+            <fd-user-manage-dietologist-summary
+                [dietologistForm]="dietologistForm()"
+                [dietologistRelationship]="dietologistRelationship()"
+                [dietologistInviteEmailError]="dietologistInviteEmailError()"
+                [isSavingDietologist]="isSavingDietologist()"
+                (dietologistInvite)="dietologistInvite.emit()"
+                (dietologistRevoke)="dietologistRevoke.emit()"
+            />
 
-        <fd-user-manage-dietologist-permissions
-            [permissions]="dietologistPermissions()"
-            [isSavingDietologist]="isSavingDietologist()"
-            (permissionChange)="changeDietologistPermission($event)"
-        />
+            <fd-user-manage-dietologist-permissions
+                [permissions]="dietologistPermissions()"
+                [isSavingDietologist]="isSavingDietologist()"
+                (permissionChange)="changeDietologistPermission($event)"
+            />
 
-        <fd-ui-form-error class="user-manage__error user-manage__error--dietologist" [error]="dietologistError()" />
+            <fd-ui-form-error class="user-manage__error user-manage__error--dietologist" [error]="dietologistError()" />
         }
     </div>
 </fd-ui-card>

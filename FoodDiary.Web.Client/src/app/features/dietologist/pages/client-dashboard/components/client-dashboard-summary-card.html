@@ -1,16 +1,16 @@
 @if (summary(); as measurement) {
-<fd-ui-card>
-    <div class="client-dashboard__section client-dashboard__summary-section">
-        <h2 class="fd-ui-card-title">{{ titleKey() | translate }}</h2>
-        <strong class="client-dashboard__summary-value">{{ measurement.value }}</strong>
-        <div class="client-dashboard__summary-meta fd-row fd-wrap fd-gap-xs">
-            <span class="fd-ui-caption">{{ measurement.date | date: 'mediumDate' }}</span>
-            @if (measurement.delta; as delta) {
-            <span class="fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BODY.DELTA' | translate: { delta } }}
-            </span>
-            }
+    <fd-ui-card>
+        <div class="client-dashboard__section client-dashboard__summary-section">
+            <h2 class="fd-ui-card-title">{{ titleKey() | translate }}</h2>
+            <strong class="client-dashboard__summary-value">{{ measurement.value }}</strong>
+            <div class="client-dashboard__summary-meta fd-row fd-wrap fd-gap-xs">
+                <span class="fd-ui-caption">{{ measurement.date | date: 'mediumDate' }}</span>
+                @if (measurement.delta; as delta) {
+                    <span class="fd-ui-pill fd-ui-pill--compact fd-ui-caption">
+                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BODY.DELTA' | translate: { delta } }}
+                    </span>
+                }
+            </div>
         </div>
-    </div>
-</fd-ui-card>
+    </fd-ui-card>
 }

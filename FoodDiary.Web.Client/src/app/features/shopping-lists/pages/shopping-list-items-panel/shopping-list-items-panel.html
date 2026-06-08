@@ -35,43 +35,43 @@
 
     <section class="shopping-list__items-surface">
         @if (itemViewModels().length > 0) {
-        <div class="shopping-list__items-head">
-            <div class="shopping-list__items-title fd-ui-card-title">{{ 'SHOPPING_LIST.TITLE' | translate }}</div>
-            <div class="shopping-list__items-count fd-ui-pill fd-ui-pill--compact">{{ itemViewModels().length }}</div>
-        </div>
-        <div class="shopping-list__items">
-            @for (item of itemViewModels(); track item.id) {
-            <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
-                <fd-ui-checkbox
-                    class="shopping-list__checkbox"
-                    label=""
-                    [checked]="item.isChecked"
-                    (checkedChange)="itemCheckedChange.emit({ itemId: item.id, checked: $event })"
-                />
-                <div class="shopping-list__item-body">
-                    <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
-                    @if (item.meta) {
-                    <div class="shopping-list__item-meta fd-ui-caption">{{ item.meta }}</div>
-                    }
-                </div>
-                <fd-ui-button
-                    class="shopping-list__item-remove"
-                    variant="secondary"
-                    fill="solid"
-                    icon="delete"
-                    [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
-                    (click)="itemRemove.emit(item.id)"
-                />
+            <div class="shopping-list__items-head">
+                <div class="shopping-list__items-title fd-ui-card-title">{{ 'SHOPPING_LIST.TITLE' | translate }}</div>
+                <div class="shopping-list__items-count fd-ui-pill fd-ui-pill--compact">{{ itemViewModels().length }}</div>
             </div>
-            }
-        </div>
+            <div class="shopping-list__items">
+                @for (item of itemViewModels(); track item.id) {
+                    <div class="shopping-list__item" [class.shopping-list__item--checked]="item.isChecked">
+                        <fd-ui-checkbox
+                            class="shopping-list__checkbox"
+                            label=""
+                            [checked]="item.isChecked"
+                            (checkedChange)="itemCheckedChange.emit({ itemId: item.id, checked: $event })"
+                        />
+                        <div class="shopping-list__item-body">
+                            <div class="shopping-list__item-name fd-ui-action-text">{{ item.name }}</div>
+                            @if (item.meta) {
+                                <div class="shopping-list__item-meta fd-ui-caption">{{ item.meta }}</div>
+                            }
+                        </div>
+                        <fd-ui-button
+                            class="shopping-list__item-remove"
+                            variant="secondary"
+                            fill="solid"
+                            icon="delete"
+                            [fdUiHint]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
+                            [ariaLabel]="'SHOPPING_LIST.REMOVE_ITEM' | translate"
+                            (click)="itemRemove.emit(item.id)"
+                        />
+                    </div>
+                }
+            </div>
         } @else {
-        <div class="shopping-list__empty-state">
-            <fd-ui-icon name="shopping_cart" size="xl" />
-            <div class="shopping-list__empty-title fd-ui-card-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
-            <div class="shopping-list__empty-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
-        </div>
+            <div class="shopping-list__empty-state">
+                <fd-ui-icon name="shopping_cart" size="xl" />
+                <div class="shopping-list__empty-title fd-ui-card-title">{{ 'SHOPPING_LIST.EMPTY_TITLE' | translate }}</div>
+                <div class="shopping-list__empty-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.EMPTY_COPY' | translate }}</div>
+            </div>
         }
     </section>
 </div>

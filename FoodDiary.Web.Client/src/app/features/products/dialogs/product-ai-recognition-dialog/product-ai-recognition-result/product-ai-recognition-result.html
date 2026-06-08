@@ -1,19 +1,21 @@
 <div class="product-ai-dialog__summary fd-stack fd-gap-md">
     @if (itemNames().length) {
-    <div class="product-ai-dialog__items fd-stack fd-gap-sm">
-        <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
-        <div class="product-ai-dialog__items-list fd-row fd-wrap fd-gap-xs">
-            @for (item of itemNames(); track item) {
-            <span class="product-ai-dialog__item-chip fd-ui-pill fd-ui-pill--compact fd-ui-caption">{{ item }}</span>
-            }
+        <div class="product-ai-dialog__items fd-stack fd-gap-sm">
+            <div class="product-ai-dialog__items-label fd-ui-caption">{{ 'PRODUCT_AI_DIALOG.ITEMS_LABEL' | translate }}</div>
+            <div class="product-ai-dialog__items-list fd-row fd-wrap fd-gap-xs">
+                @for (item of itemNames(); track item) {
+                    <span class="product-ai-dialog__item-chip fd-ui-pill fd-ui-pill--compact fd-ui-caption">{{ item }}</span>
+                }
+            </div>
         </div>
-    </div>
-    } @if (hasMultipleItems()) {
-    <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">
-        {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
-    </div>
-    } @if (nutrition().notes) {
-    <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ nutrition().notes }}</div>
+    }
+    @if (hasMultipleItems()) {
+        <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">
+            {{ 'PRODUCT_AI_DIALOG.MULTIPLE_ITEMS_NOTE' | translate }}
+        </div>
+    }
+    @if (nutrition().notes) {
+        <div class="product-ai-dialog__note fd-ui-notice-surface fd-ui-notice-surface--muted fd-ui-body-sm">{{ nutrition().notes }}</div>
     }
 
     <div class="product-ai-dialog__form-grid fd-grid fd-gap-md">

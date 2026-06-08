@@ -1,10 +1,14 @@
 @if (hasMacrosError()) {
-<div class="nutrition-editor-messages__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">{{ macrosError() }}</div>
-} @if (hasManualHint()) {
-<p class="nutrition-editor-messages__hint fd-ui-body-sm">{{ manualHintKey() | translate }}</p>
-} @if (warning(); as warningData) {
-<div class="nutrition-editor-messages__warning fd-ui-body-sm">
-    {{ 'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING' | translate: { expected: warningData.expectedCalories, actual:
-    warningData.actualCalories } }}
-</div>
+    <div class="nutrition-editor-messages__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">{{ macrosError() }}</div>
+}
+@if (hasManualHint()) {
+    <p class="nutrition-editor-messages__hint fd-ui-body-sm">{{ manualHintKey() | translate }}</p>
+}
+@if (warning(); as warningData) {
+    <div class="nutrition-editor-messages__warning fd-ui-body-sm">
+        {{
+            'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING'
+                | translate: { expected: warningData.expectedCalories, actual: warningData.actualCalories }
+        }}
+    </div>
 }

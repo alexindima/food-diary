@@ -12,27 +12,29 @@
         />
 
         @if (isCustomCyclicPresetSelected()) {
-        <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
-            <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
-                <fd-ui-input
-                    type="number"
-                    size="sm"
-                    [label]="'FASTING.CYCLIC_FAST_DAYS_SHORT' | translate"
-                    [value]="cyclicFastDays()"
-                    (valueChange)="cyclicFastDaysChange.emit(normalizeNumericControlValue($event))"
-                />
+            <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.CYCLIC_FAST_DAYS_SHORT' | translate"
+                        [value]="cyclicFastDays()"
+                        (valueChange)="cyclicFastDaysChange.emit(normalizeNumericControlValue($event))"
+                    />
+                </div>
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.CYCLIC_EAT_DAYS_SHORT' | translate"
+                        [value]="cyclicEatDays()"
+                        (valueChange)="cyclicEatDaysChange.emit(normalizeNumericControlValue($event))"
+                    />
+                </div>
+                <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
+                    {{ cyclicFastDays() }}:{{ cyclicEatDays() }}
+                </div>
             </div>
-            <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
-                <fd-ui-input
-                    type="number"
-                    size="sm"
-                    [label]="'FASTING.CYCLIC_EAT_DAYS_SHORT' | translate"
-                    [value]="cyclicEatDays()"
-                    (valueChange)="cyclicEatDaysChange.emit(normalizeNumericControlValue($event))"
-                />
-            </div>
-            <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">{{ cyclicFastDays() }}:{{ cyclicEatDays() }}</div>
-        </div>
         }
     </div>
 </div>
@@ -51,20 +53,20 @@
         />
 
         @if (cyclicEatDayProtocol() === 'CustomIntermittent') {
-        <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
-            <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
-                <fd-ui-input
-                    type="number"
-                    size="sm"
-                    [label]="'FASTING.FAST_HOURS_SHORT' | translate"
-                    [value]="cyclicEatDayFastHours()"
-                    (valueChange)="cyclicEatDayFastHoursChange.emit(normalizeNumericControlValue($event))"
-                />
+            <div class="fasting-controls__custom-intermittent fd-row fd-align-center fd-gap-xs">
+                <div class="fasting-controls__custom-input fasting-controls__custom-input--inline">
+                    <fd-ui-input
+                        type="number"
+                        size="sm"
+                        [label]="'FASTING.FAST_HOURS_SHORT' | translate"
+                        [value]="cyclicEatDayFastHours()"
+                        (valueChange)="cyclicEatDayFastHoursChange.emit(normalizeNumericControlValue($event))"
+                    />
+                </div>
+                <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
+                    {{ cyclicEatDayFastHours() }}:{{ cyclicEatDayEatingWindowHours() }}
+                </div>
             </div>
-            <div class="fasting-controls__custom-intermittent-summary fd-ui-stat-value">
-                {{ cyclicEatDayFastHours() }}:{{ cyclicEatDayEatingWindowHours() }}
-            </div>
-        </div>
         }
     </div>
 </div>

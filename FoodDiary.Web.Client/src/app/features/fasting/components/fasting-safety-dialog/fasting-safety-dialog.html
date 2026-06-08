@@ -7,16 +7,17 @@
 
     <div fdUiDialogFooter class="fasting-safety-dialog__footer fd-stack fd-gap-sm">
         @if (data.confirmLabel) {
-        <fd-ui-button variant="primary" [fullWidth]="true" (click)="onConfirm()"> {{ data.confirmLabel }} </fd-ui-button>
-        } @if (data.cancelLabel) {
-        <fd-ui-button
-            variant="secondary"
-            [fill]="data.confirmLabel ? 'outline' : 'solid'"
-            [fullWidth]="true"
-            (click)="data.confirmLabel ? onCancel() : onClose()"
-        >
-            {{ data.cancelLabel }}
-        </fd-ui-button>
+            <fd-ui-button variant="primary" [fullWidth]="true" (click)="onConfirm()"> {{ data.confirmLabel }} </fd-ui-button>
+        }
+        @if (data.cancelLabel) {
+            <fd-ui-button
+                variant="secondary"
+                [fill]="data.confirmLabel ? 'outline' : 'solid'"
+                [fullWidth]="true"
+                (click)="data.confirmLabel ? onCancel() : onClose()"
+            >
+                {{ data.cancelLabel }}
+            </fd-ui-button>
         }
     </div>
 </fd-ui-dialog-shell>

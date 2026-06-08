@@ -42,45 +42,45 @@
         <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate">
                 @if (!cycle()) {
-                <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
+                    <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
-                <form class="cycle-tracking__form fd-stack fd-gap-card-header" (ngSubmit)="saveDay()">
-                    <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
-                        <fd-ui-date-input
-                            class="cycle-tracking__form-control"
-                            [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
-                            [formField]="dayForm.date"
-                        />
-                        <fd-ui-checkbox class="cycle-tracking__form-control cycle-tracking__checkbox" [formField]="dayForm.isPeriod">
-                            {{ 'CYCLE_TRACKING.IS_PERIOD' | translate }}
-                        </fd-ui-checkbox>
-                    </div>
+                    <form class="cycle-tracking__form fd-stack fd-gap-card-header" (ngSubmit)="saveDay()">
+                        <div class="cycle-tracking__form-row cycle-tracking__form-row--wide fd-grid fd-gap-card-header fd-align-center">
+                            <fd-ui-date-input
+                                class="cycle-tracking__form-control"
+                                [label]="'CYCLE_TRACKING.DAY_DATE' | translate"
+                                [formField]="dayForm.date"
+                            />
+                            <fd-ui-checkbox class="cycle-tracking__form-control cycle-tracking__checkbox" [formField]="dayForm.isPeriod">
+                                {{ 'CYCLE_TRACKING.IS_PERIOD' | translate }}
+                            </fd-ui-checkbox>
+                        </div>
 
-                    <div class="cycle-tracking__symptom-grid fd-grid fd-gap-card-header">
-                        @for (field of symptomFields; track field.key) {
+                        <div class="cycle-tracking__symptom-grid fd-grid fd-gap-card-header">
+                            @for (field of symptomFields; track field.key) {
+                                <fd-ui-input
+                                    class="cycle-tracking__form-control"
+                                    type="number"
+                                    [step]="1"
+                                    [label]="field.labelKey | translate"
+                                    [formField]="symptomField(field.key)"
+                                />
+                            }
+                        </div>
+
                         <fd-ui-input
                             class="cycle-tracking__form-control"
-                            type="number"
-                            [step]="1"
-                            [label]="field.labelKey | translate"
-                            [formField]="symptomField(field.key)"
+                            [label]="'CYCLE_TRACKING.NOTES' | translate"
+                            [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
+                            [formField]="dayForm.notes"
                         />
-                        }
-                    </div>
 
-                    <fd-ui-input
-                        class="cycle-tracking__form-control"
-                        [label]="'CYCLE_TRACKING.NOTES' | translate"
-                        [placeholder]="'CYCLE_TRACKING.NOTES_PLACEHOLDER' | translate"
-                        [formField]="dayForm.notes"
-                    />
-
-                    <div class="cycle-tracking__actions fd-ui-actions">
-                        <fd-ui-button type="submit" [disabled]="isSavingDay()" [loading]="isSavingDay()">
-                            {{ 'CYCLE_TRACKING.SAVE_DAY' | translate }}
-                        </fd-ui-button>
-                    </div>
-                </form>
+                        <div class="cycle-tracking__actions fd-ui-actions">
+                            <fd-ui-button type="submit" [disabled]="isSavingDay()" [loading]="isSavingDay()">
+                                {{ 'CYCLE_TRACKING.SAVE_DAY' | translate }}
+                            </fd-ui-button>
+                        </div>
+                    </form>
                 }
             </fd-ui-card>
 

@@ -1,12 +1,12 @@
 <div [class]="hostClass()">
     <div class="fd-ui-textarea__control-wrap" role="presentation" [style.background]="fillColor() || null" (click)="focusControl(control)">
         @if (label()) {
-        <label class="fd-ui-textarea__label" [attr.for]="id()">
-            <span class="fd-ui-textarea__label-text">{{ label() }}</span>
-            @if (required()) {
-            <span class="fd-ui-textarea__required">*</span>
-            }
-        </label>
+            <label class="fd-ui-textarea__label" [attr.for]="id()">
+                <span class="fd-ui-textarea__label-text">{{ label() }}</span>
+                @if (required()) {
+                    <span class="fd-ui-textarea__required">*</span>
+                }
+            </label>
         }
         <textarea
             #control
@@ -28,6 +28,6 @@
     </div>
 
     @if (hasError()) {
-    <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
+        <div class="fd-ui-textarea__error" role="alert" [id]="`${id()}-error`">{{ error() }}</div>
     }
 </div>

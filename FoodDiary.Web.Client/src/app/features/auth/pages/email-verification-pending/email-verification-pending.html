@@ -1,12 +1,15 @@
 <div class="email-verify-pending fd-center">
     <fd-ui-card class="email-verify-pending__card" [title]="'AUTH.VERIFY_PENDING.TITLE' | translate">
         <p class="email-verify-pending__description fd-ui-body-sm">
-            @if (email()) { {{ 'AUTH.VERIFY_PENDING.DESCRIPTION' | translate: { email: email() } }} } @else { {{
-            'AUTH.VERIFY_PENDING.DESCRIPTION_FALLBACK' | translate }} }
+            @if (email()) {
+                {{ 'AUTH.VERIFY_PENDING.DESCRIPTION' | translate: { email: email() } }}
+            } @else {
+                {{ 'AUTH.VERIFY_PENDING.DESCRIPTION_FALLBACK' | translate }}
+            }
         </p>
 
         @if (statusMessage()) {
-        <div class="email-verify-pending__status fd-ui-body-sm">{{ statusMessage() }}</div>
+            <div class="email-verify-pending__status fd-ui-body-sm">{{ statusMessage() }}</div>
         }
 
         <div class="email-verify-pending__actions fd-row fd-gap-sm">
@@ -31,9 +34,9 @@
             </fd-ui-button>
         </div>
         @if (resendCooldownSeconds() > 0) {
-        <div class="email-verify-pending__cooldown fd-ui-caption">
-            {{ 'AUTH.VERIFY_PENDING.RESEND_COOLDOWN' | translate: { seconds: resendCooldownSeconds() } }}
-        </div>
+            <div class="email-verify-pending__cooldown fd-ui-caption">
+                {{ 'AUTH.VERIFY_PENDING.RESEND_COOLDOWN' | translate: { seconds: resendCooldownSeconds() } }}
+            </div>
         }
     </fd-ui-card>
 </div>

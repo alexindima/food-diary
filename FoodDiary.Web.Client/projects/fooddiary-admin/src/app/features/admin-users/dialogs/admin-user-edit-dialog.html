@@ -13,10 +13,10 @@
         <div class="roles fd-grid fd-gap-xs">
             <div class="roles__title">Roles</div>
             @for (role of roles; track role) {
-            <div>
-                <input type="checkbox" [id]="`admin-user-edit-role-${role}`" [checked]="hasRole(role)" (change)="toggleRole(role)" />
-                <label [attr.for]="`admin-user-edit-role-${role}`">{{ role }}</label>
-            </div>
+                <div>
+                    <input type="checkbox" [id]="`admin-user-edit-role-${role}`" [checked]="hasRole(role)" (change)="toggleRole(role)" />
+                    <label [attr.for]="`admin-user-edit-role-${role}`">{{ role }}</label>
+                </div>
             }
         </div>
 
@@ -24,7 +24,7 @@
             <label for="admin-user-edit-language">Language</label>
             <select id="admin-user-edit-language" [formField]="form.language">
                 @for (language of languages; track language.value) {
-                <option [value]="language.value">{{ language.label }}</option>
+                    <option [value]="language.value">{{ language.label }}</option>
                 }
             </select>
         </div>

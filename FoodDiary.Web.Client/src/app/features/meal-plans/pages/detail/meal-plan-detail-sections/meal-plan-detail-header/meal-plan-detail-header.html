@@ -4,7 +4,7 @@
     <p class="meal-plan-detail__desc fd-ui-body" [hidden]="!plan().description">{{ plan().description }}</p>
     <div class="meal-plan-detail__actions fd-row fd-wrap fd-gap-sm">
         @if (plan().isCurated) {
-        <fd-ui-button icon="content_copy" (click)="adoptPlan.emit()"> {{ 'MEAL_PLANS.ADOPT' | translate }} </fd-ui-button>
+            <fd-ui-button icon="content_copy" (click)="adoptPlan.emit()"> {{ 'MEAL_PLANS.ADOPT' | translate }} </fd-ui-button>
         }
         <fd-ui-button variant="secondary" icon="shopping_cart" (click)="generateShoppingList.emit()">
             {{ 'MEAL_PLANS.GENERATE_SHOPPING_LIST' | translate }}

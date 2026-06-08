@@ -9,12 +9,12 @@
         {{ 'TDEE_DIALOG.ACTIONS.MEAL' | translate }}
     </fd-ui-button>
     @if (showSuggestion()) {
-    <fd-ui-button type="button" variant="primary" icon="done" (click)="suggestionApply.emit()">
-        {{ 'TDEE_CARD.APPLY' | translate }}
-    </fd-ui-button>
+        <fd-ui-button type="button" variant="primary" icon="done" (click)="suggestionApply.emit()">
+            {{ 'TDEE_CARD.APPLY' | translate }}
+        </fd-ui-button>
     } @else {
-    <fd-ui-button type="button" variant="primary" icon="flag" (click)="dialogClose.emit({ type: 'goals' })">
-        {{ 'TDEE_DIALOG.ACTIONS.GOALS' | translate }}
-    </fd-ui-button>
+        <fd-ui-button type="button" variant="primary" icon="flag" (click)="dialogClose.emit({ type: 'goals' })">
+            {{ 'TDEE_DIALOG.ACTIONS.GOALS' | translate }}
+        </fd-ui-button>
     }
 </div>

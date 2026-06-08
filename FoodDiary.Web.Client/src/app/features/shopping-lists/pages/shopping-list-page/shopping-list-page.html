@@ -6,98 +6,44 @@
     >
         <ng-container fdPageHeaderActions>
             @if (isMobileView()) {
-            <div class="shopping-list__mobile-toolbar">
-                <fd-ui-button
-                    class="shopping-list__icon-button shopping-list__manage-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="tune"
-                    [fdUiHint]="'SHOPPING_LIST.LISTS_LABEL' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.LISTS_LABEL' | translate"
-                    (click)="toggleMobileManage()"
-                />
-                <fd-ui-button
-                    class="shopping-list__icon-button shopping-list__icon-button--primary"
-                    appearance="toolbar"
-                    variant="primary"
-                    fill="solid"
-                    icon="add"
-                    [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
-                    [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
-                    [disabled]="isLoading()"
-                    (click)="createNewList()"
-                />
-            </div>
+                <div class="shopping-list__mobile-toolbar">
+                    <fd-ui-button
+                        class="shopping-list__icon-button shopping-list__manage-button"
+                        appearance="toolbar"
+                        variant="secondary"
+                        fill="outline"
+                        icon="tune"
+                        [fdUiHint]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                        [ariaLabel]="'SHOPPING_LIST.LISTS_LABEL' | translate"
+                        (click)="toggleMobileManage()"
+                    />
+                    <fd-ui-button
+                        class="shopping-list__icon-button shopping-list__icon-button--primary"
+                        appearance="toolbar"
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
+                        [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
+                        [disabled]="isLoading()"
+                        (click)="createNewList()"
+                    />
+                </div>
             }
         </ng-container>
 
         @if (isMobileView()) {
-        <div fdPageHeaderExtra class="shopping-list__mobile-manage" [class.shopping-list__mobile-manage--open]="isMobileManageVisible()">
-            <fd-shopping-list-manage-controls
-                [listSelectField]="listSelectForm.id"
-                [lists]="lists()"
-                [isLoading]="isLoading()"
-                [canDeleteList]="canDeleteList()"
-                [isMobile]="true"
-                [renameRequestedListId]="renameRequestedListId()"
-                (createList)="createNewList()"
-                (clearListById)="clearListById($event)"
-                (deleteListById)="deleteListById($event)"
-                (renameListById)="renameListById($event.listId, $event.name)"
-                (renameRequestHandled)="clearRenameRequest($event)"
-            />
-        </div>
-        }
-    </fd-page-header>
-
-    <fd-page-body>
-        @if (isLoading()) {
-        <fd-ui-loader class="shopping-list__loader" />
-        } @else { @if (!hasLists()) {
-        <section class="shopping-list__no-lists">
-            <div class="shopping-list__no-lists-icon fd-center">
-                <fd-ui-icon name="shopping_cart" size="xl" />
-            </div>
-            <h2 class="shopping-list__no-lists-title fd-ui-card-title">{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
-            <p class="shopping-list__no-lists-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
-            <fd-ui-button variant="primary" fill="solid" icon="add" [disabled]="isLoading()" (click)="createNewList()">
-                {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
-            </fd-ui-button>
-        </section>
-        } @else {
-        <section class="shopping-list__summary">
-            <div class="shopping-list__summary-icon fd-center">
-                <fd-ui-icon name="shopping_cart" size="lg" />
-            </div>
-            <div class="shopping-list__summary-main">
-                <h2 class="shopping-list__summary-title fd-ui-card-title">{{ list()?.name }}</h2>
-                <div class="shopping-list__summary-meta fd-ui-caption">{{ checkedItemsCount() }} / {{ totalItemsCount() }}</div>
-            </div>
-            <div class="shopping-list__summary-stats">
-                <div class="shopping-list__summary-stat">
-                    <span class="shopping-list__summary-value fd-ui-stat-value">{{ remainingItemsCount() }}</span>
-                    <span class="shopping-list__summary-label fd-ui-stat-label">{{ 'SHOPPING_LIST.REMAINING_ITEMS' | translate }}</span>
-                </div>
-            </div>
-        </section>
-
-        <div class="shopping-list__workspace">
-            <fd-shopping-list-items-panel
-                class="shopping-list__items-panel"
-                [itemForm]="itemForm"
-                [items]="items()"
-                (itemAdd)="addItem()"
-                (itemRemove)="removeItem($event)"
-                (itemCheckedChange)="toggleItemChecked($event.itemId, $event.checked)"
-            />
-            @if (!isMobileView()) {
-            <aside class="shopping-list__sidebar">
+            <div
+                fdPageHeaderExtra
+                class="shopping-list__mobile-manage"
+                [class.shopping-list__mobile-manage--open]="isMobileManageVisible()"
+            >
                 <fd-shopping-list-manage-controls
                     [listSelectField]="listSelectForm.id"
                     [lists]="lists()"
                     [isLoading]="isLoading()"
                     [canDeleteList]="canDeleteList()"
+                    [isMobile]="true"
                     [renameRequestedListId]="renameRequestedListId()"
                     (createList)="createNewList()"
                     (clearListById)="clearListById($event)"
@@ -105,9 +51,71 @@
                     (renameListById)="renameListById($event.listId, $event.name)"
                     (renameRequestHandled)="clearRenameRequest($event)"
                 />
-            </aside>
+            </div>
+        }
+    </fd-page-header>
+
+    <fd-page-body>
+        @if (isLoading()) {
+            <fd-ui-loader class="shopping-list__loader" />
+        } @else {
+            @if (!hasLists()) {
+                <section class="shopping-list__no-lists">
+                    <div class="shopping-list__no-lists-icon fd-center">
+                        <fd-ui-icon name="shopping_cart" size="xl" />
+                    </div>
+                    <h2 class="shopping-list__no-lists-title fd-ui-card-title">{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
+                    <p class="shopping-list__no-lists-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
+                    <fd-ui-button variant="primary" fill="solid" icon="add" [disabled]="isLoading()" (click)="createNewList()">
+                        {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
+                    </fd-ui-button>
+                </section>
+            } @else {
+                <section class="shopping-list__summary">
+                    <div class="shopping-list__summary-icon fd-center">
+                        <fd-ui-icon name="shopping_cart" size="lg" />
+                    </div>
+                    <div class="shopping-list__summary-main">
+                        <h2 class="shopping-list__summary-title fd-ui-card-title">{{ list()?.name }}</h2>
+                        <div class="shopping-list__summary-meta fd-ui-caption">{{ checkedItemsCount() }} / {{ totalItemsCount() }}</div>
+                    </div>
+                    <div class="shopping-list__summary-stats">
+                        <div class="shopping-list__summary-stat">
+                            <span class="shopping-list__summary-value fd-ui-stat-value">{{ remainingItemsCount() }}</span>
+                            <span class="shopping-list__summary-label fd-ui-stat-label">{{
+                                'SHOPPING_LIST.REMAINING_ITEMS' | translate
+                            }}</span>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="shopping-list__workspace">
+                    <fd-shopping-list-items-panel
+                        class="shopping-list__items-panel"
+                        [itemForm]="itemForm"
+                        [items]="items()"
+                        (itemAdd)="addItem()"
+                        (itemRemove)="removeItem($event)"
+                        (itemCheckedChange)="toggleItemChecked($event.itemId, $event.checked)"
+                    />
+                    @if (!isMobileView()) {
+                        <aside class="shopping-list__sidebar">
+                            <fd-shopping-list-manage-controls
+                                [listSelectField]="listSelectForm.id"
+                                [lists]="lists()"
+                                [isLoading]="isLoading()"
+                                [canDeleteList]="canDeleteList()"
+                                [renameRequestedListId]="renameRequestedListId()"
+                                (createList)="createNewList()"
+                                (clearListById)="clearListById($event)"
+                                (deleteListById)="deleteListById($event)"
+                                (renameListById)="renameListById($event.listId, $event.name)"
+                                (renameRequestHandled)="clearRenameRequest($event)"
+                            />
+                        </aside>
+                    }
+                </div>
             }
-        </div>
-        } }
+        }
     </fd-page-body>
 </div>

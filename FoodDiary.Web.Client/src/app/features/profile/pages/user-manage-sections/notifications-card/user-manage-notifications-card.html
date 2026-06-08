@@ -5,7 +5,7 @@
             <div class="user-manage__card-title">{{ 'USER_MANAGE.NOTIFICATIONS_SECTION' | translate }}</div>
             <div class="user-manage__card-subtitle">{{ 'USER_MANAGE.NOTIFICATIONS_DESC' | translate }}</div>
             @if (notificationsStatusKey(); as statusKey) {
-            <div class="user-manage__section-status">{{ statusKey | translate }}</div>
+                <div class="user-manage__section-status">{{ statusKey | translate }}</div>
             }
         </div>
     </div>
@@ -36,112 +36,120 @@
         </div>
 
         @if (pushNotificationsEnabled()) {
-        <div class="user-manage__notifications-category-list fd-stack fd-gap-sm">
-            <div
-                class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-            >
-                <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                    <div class="user-manage__notifications-label">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}</div>
-                    <div class="user-manage__notifications-hint">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}</div>
+            <div class="user-manage__notifications-category-list fd-stack fd-gap-sm">
+                <div
+                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
+                >
+                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
+                        <div class="user-manage__notifications-label">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_LABEL' | translate }}</div>
+                        <div class="user-manage__notifications-hint">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_HINT' | translate }}</div>
+                    </div>
+                    <fd-ui-switch
+                        [checked]="fastingPushNotificationsEnabled()"
+                        [disabled]="isUpdatingNotifications()"
+                        [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
+                        [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
+                        (checkedChange)="fastingPushNotificationsToggle.emit()"
+                    />
                 </div>
-                <fd-ui-switch
-                    [checked]="fastingPushNotificationsEnabled()"
-                    [disabled]="isUpdatingNotifications()"
-                    [fdUiHint]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
-                    [ariaLabel]="'USER_MANAGE.FASTING_NOTIFICATIONS' | translate"
-                    (checkedChange)="fastingPushNotificationsToggle.emit()"
-                />
-            </div>
 
-            @if (fastingPushNotificationsEnabled()) {
-            <div
-                class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-            >
-                <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                    <div class="user-manage__notifications-label">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE' | translate }}</div>
-                    <div class="user-manage__notifications-hint">{{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_HINT' | translate }}</div>
-                </div>
-                <div class="user-manage__notifications-reminders fd-grid fd-gap-sm">
-                    <div class="user-manage__notifications-reminder-presets fd-stack fd-gap-xs">
-                        <div class="user-manage__notifications-reminder-presets-label">
-                            {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_PRESETS' | translate }}
+                @if (fastingPushNotificationsEnabled()) {
+                    <div
+                        class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
+                    >
+                        <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
+                            <div class="user-manage__notifications-label">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_TITLE' | translate }}
+                            </div>
+                            <div class="user-manage__notifications-hint">
+                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_HINT' | translate }}
+                            </div>
                         </div>
-                        <div class="user-manage__notifications-reminder-presets-list fd-row fd-wrap fd-gap-xs">
-                            @for (preset of fastingReminderPresets(); track preset.id) {
+                        <div class="user-manage__notifications-reminders fd-grid fd-gap-sm">
+                            <div class="user-manage__notifications-reminder-presets fd-stack fd-gap-xs">
+                                <div class="user-manage__notifications-reminder-presets-label">
+                                    {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_PRESETS' | translate }}
+                                </div>
+                                <div class="user-manage__notifications-reminder-presets-list fd-row fd-wrap fd-gap-xs">
+                                    @for (preset of fastingReminderPresets(); track preset.id) {
+                                        <fd-ui-button
+                                            class="user-manage__preset-button"
+                                            type="button"
+                                            fill="outline"
+                                            variant="secondary"
+                                            size="sm"
+                                            [class.user-manage__preset-button--active]="activeFastingReminderPresetId() === preset.id"
+                                            (click)="fastingReminderPresetApply.emit(preset)"
+                                        >
+                                            {{ preset.labelKey | translate }}
+                                        </fd-ui-button>
+                                    }
+                                </div>
+                            </div>
+                            <fd-ui-input
+                                type="number"
+                                size="sm"
+                                [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST' | translate"
+                                [value]="fastingCheckInReminderHours()"
+                                (valueChange)="
+                                    fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'first' })
+                                "
+                            />
+                            <fd-ui-input
+                                type="number"
+                                size="sm"
+                                [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND' | translate"
+                                [value]="fastingCheckInFollowUpReminderHours()"
+                                (valueChange)="
+                                    fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'followUp' })
+                                "
+                            />
                             <fd-ui-button
-                                class="user-manage__preset-button"
+                                class="user-manage__notifications-reminder-save"
                                 type="button"
                                 fill="outline"
                                 variant="secondary"
-                                size="sm"
-                                [class.user-manage__preset-button--active]="activeFastingReminderPresetId() === preset.id"
-                                (click)="fastingReminderPresetApply.emit(preset)"
+                                [disabled]="isUpdatingNotifications()"
+                                [loading]="isUpdatingNotifications()"
+                                (click)="fastingReminderHoursSave.emit()"
                             >
-                                {{ preset.labelKey | translate }}
+                                {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE' | translate }}
                             </fd-ui-button>
-                            }
                         </div>
                     </div>
-                    <fd-ui-input
-                        type="number"
-                        size="sm"
-                        [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_FIRST' | translate"
-                        [value]="fastingCheckInReminderHours()"
-                        (valueChange)="fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'first' })"
-                    />
-                    <fd-ui-input
-                        type="number"
-                        size="sm"
-                        [label]="'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SECOND' | translate"
-                        [value]="fastingCheckInFollowUpReminderHours()"
-                        (valueChange)="fastingReminderHoursChange.emit({ value: normalizeReminderHoursValue($event), field: 'followUp' })"
-                    />
-                    <fd-ui-button
-                        class="user-manage__notifications-reminder-save"
-                        type="button"
-                        fill="outline"
-                        variant="secondary"
+                }
+
+                <div
+                    class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
+                >
+                    <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
+                        <div class="user-manage__notifications-label">{{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}</div>
+                        <div class="user-manage__notifications-hint">{{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}</div>
+                    </div>
+                    <fd-ui-switch
+                        [checked]="socialPushNotificationsEnabled()"
                         [disabled]="isUpdatingNotifications()"
-                        [loading]="isUpdatingNotifications()"
-                        (click)="fastingReminderHoursSave.emit()"
-                    >
-                        {{ 'USER_MANAGE.NOTIFICATIONS_FASTING_REMINDER_SAVE' | translate }}
-                    </fd-ui-button>
+                        [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
+                        [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
+                        (checkedChange)="socialPushNotificationsToggle.emit()"
+                    />
                 </div>
             </div>
-            }
 
-            <div
-                class="user-manage__notifications-item user-manage__notifications-item--nested fd-row fd-gap-card-profile fd-justify-between fd-ui-surface fd-ui-surface--raised"
-            >
-                <div class="user-manage__notifications-copy fd-stack fd-gap-xxs">
-                    <div class="user-manage__notifications-label">{{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_LABEL' | translate }}</div>
-                    <div class="user-manage__notifications-hint">{{ 'USER_MANAGE.NOTIFICATIONS_SOCIAL_HINT' | translate }}</div>
-                </div>
-                <fd-ui-switch
-                    [checked]="socialPushNotificationsEnabled()"
-                    [disabled]="isUpdatingNotifications()"
-                    [fdUiHint]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
-                    [ariaLabel]="'USER_MANAGE.SOCIAL_NOTIFICATIONS' | translate"
-                    (checkedChange)="socialPushNotificationsToggle.emit()"
-                />
+            <div class="user-manage__notifications-actions fd-row">
+                <fd-ui-button
+                    class="user-manage__notifications-action-button"
+                    type="button"
+                    fill="outline"
+                    variant="secondary"
+                    icon="notifications_active"
+                    [loading]="isSchedulingTestNotification()"
+                    [disabled]="isSchedulingTestNotification() || !pushNotificationsSupported() || !fastingPushNotificationsEnabled()"
+                    (click)="testNotificationSchedule.emit()"
+                >
+                    {{ 'USER_MANAGE.NOTIFICATIONS_TEST_BUTTON' | translate }}
+                </fd-ui-button>
             </div>
-        </div>
-
-        <div class="user-manage__notifications-actions fd-row">
-            <fd-ui-button
-                class="user-manage__notifications-action-button"
-                type="button"
-                fill="outline"
-                variant="secondary"
-                icon="notifications_active"
-                [loading]="isSchedulingTestNotification()"
-                [disabled]="isSchedulingTestNotification() || !pushNotificationsSupported() || !fastingPushNotificationsEnabled()"
-                (click)="testNotificationSchedule.emit()"
-            >
-                {{ 'USER_MANAGE.NOTIFICATIONS_TEST_BUTTON' | translate }}
-            </fd-ui-button>
-        </div>
         }
 
         <fd-user-manage-connected-devices

@@ -1,50 +1,51 @@
 <div class="fd-ui-line-chart" role="img" [attr.aria-label]="ariaLabel()">
     @if (pointViews().length) {
-    <div class="fd-ui-line-chart__plot" [class.fd-ui-line-chart__plot--with-axis-labels]="showAxisLabels()">
-        <fd-ui-line-chart-y-axis [show]="showAxisLabels()" [gridLines]="gridLines()" />
+        <div class="fd-ui-line-chart__plot" [class.fd-ui-line-chart__plot--with-axis-labels]="showAxisLabels()">
+            <fd-ui-line-chart-y-axis [show]="showAxisLabels()" [gridLines]="gridLines()" />
 
-        <div class="fd-ui-line-chart__surface">
-            <svg class="fd-ui-line-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
-                @for (gridLine of gridSegments(); track $index) {
-                <line
-                    class="fd-ui-line-chart__grid-line"
-                    [attr.x1]="gridLine.x1"
-                    [attr.x2]="gridLine.x2"
-                    [attr.y1]="gridLine.y1"
-                    [attr.y2]="gridLine.y2"
-                />
+            <div class="fd-ui-line-chart__surface">
+                <svg class="fd-ui-line-chart__svg" aria-hidden="true" focusable="false" preserveAspectRatio="none" [attr.viewBox]="viewBox">
+                    @for (gridLine of gridSegments(); track $index) {
+                        <line
+                            class="fd-ui-line-chart__grid-line"
+                            [attr.x1]="gridLine.x1"
+                            [attr.x2]="gridLine.x2"
+                            [attr.y1]="gridLine.y1"
+                            [attr.y2]="gridLine.y2"
+                        />
+                    }
+
+                    <line
+                        class="fd-ui-line-chart__axis"
+                        [attr.x1]="chartLeft()"
+                        [attr.x2]="chartRight()"
+                        [attr.y1]="chartBottom()"
+                        [attr.y2]="chartBottom()"
+                    />
+
+                    @for (area of areaSegments(); track $index) {
+                        <path class="fd-ui-line-chart__area" [attr.d]="area.path" [style.fill]="area.fill" />
+                    }
+                    @for (line of lineSegments(); track $index) {
+                        <path class="fd-ui-line-chart__line" [attr.d]="line.path" [style.stroke]="line.color" />
+                    }
+                </svg>
+
+                @for (point of visiblePoints(); track $index) {
+                    <span
+                        class="fd-ui-line-chart__point"
+                        [style.background]="point.color"
+                        [style.left]="point.xPercent"
+                        [style.top]="point.yPercent"
+                        [attr.title]="point.tooltip"
+                    ></span>
                 }
+            </div>
 
-                <line
-                    class="fd-ui-line-chart__axis"
-                    [attr.x1]="chartLeft()"
-                    [attr.x2]="chartRight()"
-                    [attr.y1]="chartBottom()"
-                    [attr.y2]="chartBottom()"
-                />
-
-                @for (area of areaSegments(); track $index) {
-                <path class="fd-ui-line-chart__area" [attr.d]="area.path" [style.fill]="area.fill" />
-                } @for (line of lineSegments(); track $index) {
-                <path class="fd-ui-line-chart__line" [attr.d]="line.path" [style.stroke]="line.color" />
-                }
-            </svg>
-
-            @for (point of visiblePoints(); track $index) {
-            <span
-                class="fd-ui-line-chart__point"
-                [style.background]="point.color"
-                [style.left]="point.xPercent"
-                [style.top]="point.yPercent"
-                [attr.title]="point.tooltip"
-            ></span>
-            }
+            <fd-ui-line-chart-x-axis [show]="showAxisLabels()" [labels]="xAxisLabels()" />
+            <fd-ui-line-chart-legend [show]="shouldShowSeriesLegend()" [series]="seriesViews()" />
         </div>
-
-        <fd-ui-line-chart-x-axis [show]="showAxisLabels()" [labels]="xAxisLabels()" />
-        <fd-ui-line-chart-legend [show]="shouldShowSeriesLegend()" [series]="seriesViews()" />
-    </div>
     } @else {
-    <div class="fd-ui-line-chart__empty">{{ emptyLabel() }}</div>
+        <div class="fd-ui-line-chart__empty">{{ emptyLabel() }}</div>
     }
 </div>

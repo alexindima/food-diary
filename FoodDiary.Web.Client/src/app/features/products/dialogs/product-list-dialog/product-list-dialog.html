@@ -1,11 +1,11 @@
 <div class="product-select fd-stack fd-gap-md">
     @if (!embedded()) {
-    <div class="product-select__header fd-row fd-justify-between">
-        <div>
-            <h2 class="product-select__title fd-page-title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
-            <p class="product-select__subtitle fd-ui-body-sm">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
+        <div class="product-select__header fd-row fd-justify-between">
+            <div>
+                <h2 class="product-select__title fd-page-title">{{ 'PRODUCT_LIST.TITLE' | translate }}</h2>
+                <p class="product-select__subtitle fd-ui-body-sm">{{ 'PRODUCT_LIST.SUBTITLE' | translate }}</p>
+            </div>
         </div>
-    </div>
     }
 
     <div class="product-select__controls fd-grid fd-gap-sm fd-align-center">
@@ -39,18 +39,19 @@
     />
 
     @if (productData.totalPages > 1) {
-    <fd-ui-pagination
-        class="product-select__pagination"
-        [length]="productData.totalItems"
-        [pageSize]="pageSize"
-        [pageIndex]="currentPageIndex"
-        (pageIndexChange)="onPageChange($event)"
-    />
-    } @if (!embedded()) {
-    <div class="product-select__footer fd-row fd-justify-end">
-        <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
-            {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
-        </fd-ui-button>
-    </div>
+        <fd-ui-pagination
+            class="product-select__pagination"
+            [length]="productData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="currentPageIndex"
+            (pageIndexChange)="onPageChange($event)"
+        />
+    }
+    @if (!embedded()) {
+        <div class="product-select__footer fd-row fd-justify-end">
+            <fd-ui-button variant="primary" fill="solid" icon="add" (click)="onAddProductClick()">
+                {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
+            </fd-ui-button>
+        </div>
     }
 </div>

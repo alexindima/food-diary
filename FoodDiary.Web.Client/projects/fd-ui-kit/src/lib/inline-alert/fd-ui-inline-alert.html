@@ -4,21 +4,23 @@
 
 <div class="fd-ui-inline-alert__content">
     @if (title()) {
-    <div class="fd-ui-inline-alert__title fd-ui-card-title">{{ title() }}</div>
-    } @if (message()) {
-    <p class="fd-ui-inline-alert__message fd-ui-body-sm">{{ message() }}</p>
-    } @if (hasActions()) {
-    <fd-ui-inline-alert-actions
-        [primaryActionLabel]="primaryActionLabel()"
-        [secondaryActionLabel]="secondaryActionLabel()"
-        (primaryAction)="primaryAction.emit()"
-        (secondaryAction)="secondaryAction.emit()"
-    />
+        <div class="fd-ui-inline-alert__title fd-ui-card-title">{{ title() }}</div>
+    }
+    @if (message()) {
+        <p class="fd-ui-inline-alert__message fd-ui-body-sm">{{ message() }}</p>
+    }
+    @if (hasActions()) {
+        <fd-ui-inline-alert-actions
+            [primaryActionLabel]="primaryActionLabel()"
+            [secondaryActionLabel]="secondaryActionLabel()"
+            (primaryAction)="primaryAction.emit()"
+            (secondaryAction)="secondaryAction.emit()"
+        />
     }
 </div>
 
 @if (dismissible()) {
-<button type="button" class="fd-ui-inline-alert__dismiss" (click)="dismiss.emit()">
-    <fd-ui-icon name="close" />
-</button>
+    <button type="button" class="fd-ui-inline-alert__dismiss" (click)="dismiss.emit()">
+        <fd-ui-icon name="close" />
+    </button>
 }

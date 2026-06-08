@@ -2,99 +2,103 @@
     <ng-content select="[nutrition-before]" />
 
     @if (form(); as signalForm) {
-    <fd-ui-nutrient-input
-        class="nutrition-editor__input nutrition-editor__input--calories"
-        type="number"
-        size="lg"
-        icon="local_fire_department"
-        placeholder="0"
-        [formField]="signalForm.calories"
-        [label]="'NUTRITION_EDITOR.CALORIES' | translate"
-        [unitLabel]="'GENERAL.UNITS.KCAL' | translate"
-        [controlReadonly]="readonly()"
-        [tintColor]="nutrientFillColors.calories"
-        [textColor]="nutrientTextColors.calories"
-    />
-    @if (hasCaloriesError()) {
-    <div class="nutrition-editor__errors fd-ui-error-text">{{ caloriesError() }}</div>
-    }
-
-    <div class="nutrition-editor__grid fd-grid fd-gap-card-header">
         <fd-ui-nutrient-input
-            class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--proteins"
+            class="nutrition-editor__input nutrition-editor__input--calories"
             type="number"
-            size="md"
-            icon="fitness_center"
+            size="lg"
+            icon="local_fire_department"
             placeholder="0"
-            [formField]="signalForm.proteins"
-            [label]="'NUTRITION_EDITOR.PROTEINS' | translate"
-            [unitLabel]="'GENERAL.UNITS.G' | translate"
+            [formField]="signalForm.calories"
+            [label]="'NUTRITION_EDITOR.CALORIES' | translate"
+            [unitLabel]="'GENERAL.UNITS.KCAL' | translate"
             [controlReadonly]="readonly()"
-            [tintColor]="nutrientFillColors.proteins"
-            [textColor]="nutrientTextColors.proteins"
+            [tintColor]="nutrientFillColors.calories"
+            [textColor]="nutrientTextColors.calories"
         />
-        <fd-ui-nutrient-input
-            class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--fats"
-            type="number"
-            size="md"
-            icon="opacity"
-            placeholder="0"
-            [formField]="signalForm.fats"
-            [label]="'NUTRITION_EDITOR.FATS' | translate"
-            [unitLabel]="'GENERAL.UNITS.G' | translate"
-            [controlReadonly]="readonly()"
-            [tintColor]="nutrientFillColors.fats"
-            [textColor]="nutrientTextColors.fats"
-        />
-        <fd-ui-nutrient-input
-            class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--carbs"
-            type="number"
-            size="md"
-            icon="grain"
-            placeholder="0"
-            [formField]="signalForm.carbs"
-            [label]="'NUTRITION_EDITOR.CARBS' | translate"
-            [unitLabel]="'GENERAL.UNITS.G' | translate"
-            [controlReadonly]="readonly()"
-            [tintColor]="nutrientFillColors.carbs"
-            [textColor]="nutrientTextColors.carbs"
-        />
-    </div>
-
-    <div class="nutrition-editor__macro-bar fd-row" aria-hidden="true">
-        @for (segment of macroBarState().segments; track segment.key) {
-        <span class="nutrition-editor__macro-bar-segment" [style.width.%]="segment.percent" [style.backgroundColor]="segment.color"></span>
+        @if (hasCaloriesError()) {
+            <div class="nutrition-editor__errors fd-ui-error-text">{{ caloriesError() }}</div>
         }
-    </div>
 
-    <div class="nutrition-editor__grid nutrition-editor__grid--secondary fd-grid fd-gap-card-header">
-        <fd-ui-nutrient-input
-            class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--fiber"
-            type="number"
-            size="md"
-            icon="spa"
-            placeholder="0"
-            [formField]="signalForm.fiber"
-            [label]="'NUTRITION_EDITOR.FIBER' | translate"
-            [unitLabel]="'GENERAL.UNITS.G' | translate"
-            [controlReadonly]="readonly()"
-            [tintColor]="nutrientFillColors.fiber"
-            [textColor]="nutrientTextColors.fiber"
-        />
-        <fd-ui-nutrient-input
-            class="nutrition-editor__input nutrition-editor__input--alcohol"
-            type="number"
-            size="md"
-            icon="wine_bar"
-            variant="tinted"
-            placeholder="0"
-            [formField]="signalForm.alcohol"
-            [label]="'NUTRITION_EDITOR.ALCOHOL' | translate"
-            [unitLabel]="'GENERAL.UNITS.G' | translate"
-            [controlReadonly]="readonly()"
-            [tintColor]="nutrientFillColors.alcohol"
-        />
-    </div>
+        <div class="nutrition-editor__grid fd-grid fd-gap-card-header">
+            <fd-ui-nutrient-input
+                class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--proteins"
+                type="number"
+                size="md"
+                icon="fitness_center"
+                placeholder="0"
+                [formField]="signalForm.proteins"
+                [label]="'NUTRITION_EDITOR.PROTEINS' | translate"
+                [unitLabel]="'GENERAL.UNITS.G' | translate"
+                [controlReadonly]="readonly()"
+                [tintColor]="nutrientFillColors.proteins"
+                [textColor]="nutrientTextColors.proteins"
+            />
+            <fd-ui-nutrient-input
+                class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--fats"
+                type="number"
+                size="md"
+                icon="opacity"
+                placeholder="0"
+                [formField]="signalForm.fats"
+                [label]="'NUTRITION_EDITOR.FATS' | translate"
+                [unitLabel]="'GENERAL.UNITS.G' | translate"
+                [controlReadonly]="readonly()"
+                [tintColor]="nutrientFillColors.fats"
+                [textColor]="nutrientTextColors.fats"
+            />
+            <fd-ui-nutrient-input
+                class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--carbs"
+                type="number"
+                size="md"
+                icon="grain"
+                placeholder="0"
+                [formField]="signalForm.carbs"
+                [label]="'NUTRITION_EDITOR.CARBS' | translate"
+                [unitLabel]="'GENERAL.UNITS.G' | translate"
+                [controlReadonly]="readonly()"
+                [tintColor]="nutrientFillColors.carbs"
+                [textColor]="nutrientTextColors.carbs"
+            />
+        </div>
+
+        <div class="nutrition-editor__macro-bar fd-row" aria-hidden="true">
+            @for (segment of macroBarState().segments; track segment.key) {
+                <span
+                    class="nutrition-editor__macro-bar-segment"
+                    [style.width.%]="segment.percent"
+                    [style.backgroundColor]="segment.color"
+                ></span>
+            }
+        </div>
+
+        <div class="nutrition-editor__grid nutrition-editor__grid--secondary fd-grid fd-gap-card-header">
+            <fd-ui-nutrient-input
+                class="nutrition-editor__input nutrition-editor__input--macro nutrition-editor__input--fiber"
+                type="number"
+                size="md"
+                icon="spa"
+                placeholder="0"
+                [formField]="signalForm.fiber"
+                [label]="'NUTRITION_EDITOR.FIBER' | translate"
+                [unitLabel]="'GENERAL.UNITS.G' | translate"
+                [controlReadonly]="readonly()"
+                [tintColor]="nutrientFillColors.fiber"
+                [textColor]="nutrientTextColors.fiber"
+            />
+            <fd-ui-nutrient-input
+                class="nutrition-editor__input nutrition-editor__input--alcohol"
+                type="number"
+                size="md"
+                icon="wine_bar"
+                variant="tinted"
+                placeholder="0"
+                [formField]="signalForm.alcohol"
+                [label]="'NUTRITION_EDITOR.ALCOHOL' | translate"
+                [unitLabel]="'GENERAL.UNITS.G' | translate"
+                [controlReadonly]="readonly()"
+                [tintColor]="nutrientFillColors.alcohol"
+            />
+        </div>
     }
 
     <fd-nutrition-editor-messages

@@ -22,9 +22,9 @@
         <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
-        <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
+            <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
         } @placeholder {
-        <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+            <div class="waist-history-page__placeholder" aria-hidden="true"></div>
         }
 
         <div class="waist-history-page__content waist-history-page__content--form">
@@ -44,16 +44,16 @@
         </div>
 
         @defer (on viewport) {
-        <div class="waist-history-page__content waist-history-page__content--full">
-            <fd-waist-history-entries-card
-                [isLoading]="isLoading()"
-                [entries]="entriesDescending()"
-                (editEntry)="startEdit($event)"
-                (removeEntry)="deleteEntry($event)"
-            />
-        </div>
+            <div class="waist-history-page__content waist-history-page__content--full">
+                <fd-waist-history-entries-card
+                    [isLoading]="isLoading()"
+                    [entries]="entriesDescending()"
+                    (editEntry)="startEdit($event)"
+                    (removeEntry)="deleteEntry($event)"
+                />
+            </div>
         } @placeholder {
-        <div class="waist-history-page__placeholder" aria-hidden="true"></div>
+            <div class="waist-history-page__placeholder" aria-hidden="true"></div>
         }
     </fd-page-body>
 </div>

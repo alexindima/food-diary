@@ -6,15 +6,17 @@
             accentColor="var(--fd-color-primary-300)"
             [tinted]="true"
         >
-            <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption"
-                >{{ 'RECIPE_DETAIL.SUMMARY.CALORIES' | translate }}</span
-            >
+            <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+                'RECIPE_DETAIL.SUMMARY.CALORIES' | translate
+            }}</span>
             <strong class="recipe-detail__hero-value fd-ui-summary-surface__value">
                 {{ calories() }} {{ 'GENERAL.UNITS.KCAL' | translate }}
             </strong>
             <span class="recipe-detail__hero-meta fd-ui-body-sm">
-                {{ recipe().servings }} {{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }} @if (totalTime() !== null) { &middot; {{
-                totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }} }
+                {{ recipe().servings }} {{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}
+                @if (totalTime() !== null) {
+                    &middot; {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+                }
             </span>
         </fd-ui-accent-surface>
 
@@ -34,13 +36,13 @@
 
     <div class="recipe-detail__macro-bars fd-stack fd-gap-sm">
         @for (macro of macroSummaryBlocks(); track macro.labelKey) {
-        <div class="recipe-detail__macro-row">
-            <span class="recipe-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
-            <div class="recipe-detail__macro-track" aria-hidden="true">
-                <span class="recipe-detail__macro-fill" [style.background]="macro.color" [style.width.%]="macro.percent"></span>
+            <div class="recipe-detail__macro-row">
+                <span class="recipe-detail__macro-label fd-ui-caption">{{ macro.labelKey | translate }}</span>
+                <div class="recipe-detail__macro-track" aria-hidden="true">
+                    <span class="recipe-detail__macro-fill" [style.background]="macro.color" [style.width.%]="macro.percent"></span>
+                </div>
+                <strong class="recipe-detail__macro-value fd-ui-body-sm"> {{ macro.value }} {{ macro.unitKey | translate }} </strong>
             </div>
-            <strong class="recipe-detail__macro-value fd-ui-body-sm"> {{ macro.value }} {{ macro.unitKey | translate }} </strong>
-        </div>
         }
     </div>
 </section>
@@ -52,9 +54,9 @@
         accentColor="var(--fd-color-primary-300)"
         [tinted]="true"
     >
-        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption"
-            >{{ 'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate }}</span
-        >
+        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+            'RECIPE_DETAIL.SUMMARY.SERVINGS' | translate
+        }}</span>
         <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{ recipe().servings }}</strong>
     </fd-ui-accent-surface>
 
@@ -64,11 +66,15 @@
         accentColor="var(--fd-color-primary-300)"
         [tinted]="true"
     >
-        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption"
-            >{{ 'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate }}</span
-        >
+        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+            'RECIPE_DETAIL.SUMMARY.TOTAL_TIME' | translate
+        }}</span>
         <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">
-            @if (totalTime() !== null) { {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }} } @else { - }
+            @if (totalTime() !== null) {
+                {{ totalTime() }} {{ 'RECIPE_DETAIL.MIN' | translate }}
+            } @else {
+                -
+            }
         </strong>
     </fd-ui-accent-surface>
 
@@ -78,25 +84,25 @@
         accentColor="var(--fd-color-primary-300)"
         [tinted]="true"
     >
-        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption"
-            >{{ 'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate }}</span
-        >
+        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+            'RECIPE_DETAIL.SUMMARY.INGREDIENTS' | translate
+        }}</span>
         <strong class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-action-text">{{ ingredientCount() }}</strong>
     </fd-ui-accent-surface>
 </div>
 
 @if (recipe().comment) {
-<fd-ui-accent-surface
-    class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--comment fd-ui-summary-surface"
-    accentSide="top"
-    accentColor="var(--fd-color-primary-300)"
-    [tinted]="true"
->
-    <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption"
-        >{{ 'RECIPE_DETAIL.SUMMARY.COMMENT' | translate }}</span
+    <fd-ui-accent-surface
+        class="recipe-detail__surface recipe-detail__surface--summary recipe-detail__surface--comment fd-ui-summary-surface"
+        accentSide="top"
+        accentColor="var(--fd-color-primary-300)"
+        [tinted]="true"
     >
-    <span class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm">{{ recipe().comment }}</span>
-</fd-ui-accent-surface>
+        <span class="recipe-detail__surface-label fd-ui-summary-surface__label fd-ui-caption">{{
+            'RECIPE_DETAIL.SUMMARY.COMMENT' | translate
+        }}</span>
+        <span class="recipe-detail__surface-value fd-ui-summary-surface__value fd-ui-body-sm">{{ recipe().comment }}</span>
+    </fd-ui-accent-surface>
 }
 
 <fd-recipe-detail-ingredient-preview [ingredients]="ingredientPreview()" />

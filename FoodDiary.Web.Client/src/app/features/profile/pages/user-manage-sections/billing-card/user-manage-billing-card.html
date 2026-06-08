@@ -8,20 +8,20 @@
     </div>
 
     @if (isLoadingBilling()) {
-    <div class="user-manage__billing-state fd-ui-body-sm">{{ 'USER_MANAGE.BILLING_LOADING' | translate }}</div>
+        <div class="user-manage__billing-state fd-ui-body-sm">{{ 'USER_MANAGE.BILLING_LOADING' | translate }}</div>
     } @else if (billingError(); as billingErrorKey) {
-    <div class="user-manage__billing-state user-manage__billing-state--error fd-ui-body-sm">{{ billingErrorKey | translate }}</div>
-    <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
-        <fd-ui-button type="button" variant="secondary" fill="outline" (click)="billingReload.emit()">
-            {{ 'USER_MANAGE.BILLING_RETRY' | translate }}
-        </fd-ui-button>
-    </div>
+        <div class="user-manage__billing-state user-manage__billing-state--error fd-ui-body-sm">{{ billingErrorKey | translate }}</div>
+        <div class="user-manage__billing-actions fd-row fd-wrap fd-gap-xs">
+            <fd-ui-button type="button" variant="secondary" fill="outline" (click)="billingReload.emit()">
+                {{ 'USER_MANAGE.BILLING_RETRY' | translate }}
+            </fd-ui-button>
+        </div>
     } @else if (billingView(); as billing) {
-    <fd-user-manage-billing-summary
-        [billing]="billing"
-        [isOpeningBillingPortal]="isOpeningBillingPortal()"
-        (billingPortalOpen)="billingPortalOpen.emit()"
-        (premiumPageOpen)="premiumPageOpen.emit()"
-    />
+        <fd-user-manage-billing-summary
+            [billing]="billing"
+            [isOpeningBillingPortal]="isOpeningBillingPortal()"
+            (billingPortalOpen)="billingPortalOpen.emit()"
+            (premiumPageOpen)="premiumPageOpen.emit()"
+        />
     }
 </fd-ui-card>

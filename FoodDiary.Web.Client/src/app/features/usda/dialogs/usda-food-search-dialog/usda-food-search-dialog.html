@@ -7,16 +7,18 @@
 
     <div class="results-container">
         @if (isLoading()) {
-        <div class="loading">{{ 'COMMON.LOADING' | translate }}...</div>
-        } @if (!isLoading() && results().length === 0 && searchQuery().length > 0) {
-        <div class="no-results">{{ 'USDA_SEARCH.NO_RESULTS' | translate }}</div>
-        } @for (food of results(); track food.fdcId) {
-        <button type="button" class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
-            <span class="food-name fd-ui-action-text">{{ food.description }}</span>
-            @if (food.foodCategory) {
-            <span class="food-category fd-ui-caption">{{ food.foodCategory }}</span>
-            }
-        </button>
+            <div class="loading">{{ 'COMMON.LOADING' | translate }}...</div>
+        }
+        @if (!isLoading() && results().length === 0 && searchQuery().length > 0) {
+            <div class="no-results">{{ 'USDA_SEARCH.NO_RESULTS' | translate }}</div>
+        }
+        @for (food of results(); track food.fdcId) {
+            <button type="button" class="result-item" [class.selected]="selectedFood()?.fdcId === food.fdcId" (click)="selectFood(food)">
+                <span class="food-name fd-ui-action-text">{{ food.description }}</span>
+                @if (food.foodCategory) {
+                    <span class="food-category fd-ui-caption">{{ food.foodCategory }}</span>
+                }
+            </button>
         }
     </div>
 

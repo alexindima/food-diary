@@ -2,99 +2,99 @@
     <fd-page-header class="goals__header" [title]="'GOALS_PAGE.TITLE' | translate" [subtitle]="'GOALS_PAGE.SUBTITLE' | translate">
         <ng-container fdPageHeaderActions>
             @if (saveStatusKey(); as statusKey) {
-            <span
-                class="goals__status fd-ui-pill fd-ui-action-text"
-                [class.goals__status--saving]="isSavingGoals()"
-                [class.goals__status--loading]="isLoadingGoals()"
-            >
-                {{ statusKey | translate }}
-            </span>
+                <span
+                    class="goals__status fd-ui-pill fd-ui-action-text"
+                    [class.goals__status--saving]="isSavingGoals()"
+                    [class.goals__status--loading]="isLoadingGoals()"
+                >
+                    {{ statusKey | translate }}
+                </span>
             }
         </ng-container>
     </fd-page-header>
 
     <fd-page-body>
         @if (hasLoadError()) {
-        <fd-error-state (retry)="reload()" />
+            <fd-error-state (retry)="reload()" />
         } @else if (isLoadingGoals()) {
-        <div class="goals__grid">
-            <div class="goals__column goals__column--main">
-                <div class="goals__main-grid">
-                    <div class="goals__calorie-stack">
-                        <fd-skeleton-card />
-                        <fd-skeleton-card />
-                        <fd-skeleton-card />
-                    </div>
-                    <div class="goals__macro-stack">
-                        <fd-skeleton-card />
-                        <fd-skeleton-card />
-                        <div class="goals__body-targets-row">
+            <div class="goals__grid">
+                <div class="goals__column goals__column--main">
+                    <div class="goals__main-grid">
+                        <div class="goals__calorie-stack">
                             <fd-skeleton-card />
                             <fd-skeleton-card />
+                            <fd-skeleton-card />
+                        </div>
+                        <div class="goals__macro-stack">
+                            <fd-skeleton-card />
+                            <fd-skeleton-card />
+                            <div class="goals__body-targets-row">
+                                <fd-skeleton-card />
+                                <fd-skeleton-card />
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         } @else {
-        <div class="goals__grid">
-            <div class="goals__column goals__column--main">
-                <div class="goals__main-grid">
-                    <div class="goals__calorie-stack">
-                        <fd-goals-calorie-card
-                            [minCalories]="minCalories"
-                            [maxCalories]="maxCalories"
-                            [calorieTarget]="calorieTarget()"
-                            [ringProgressOffset]="ringProgressOffset()"
-                            [accentColor]="accentColor()"
-                            [ringKnobAngle]="ringKnobAngle()"
-                            (ringPointerDown)="startRingDrag($event)"
-                            (ringPointerMove)="onRingHover($event)"
-                            (ringPointerLeave)="onRingLeave($event)"
-                            (caloriesInput)="onCaloriesInput($event)"
-                            (caloriesBlur)="onCaloriesBlur($event)"
-                            (sliderInput)="onSliderInput($event)"
-                        />
+            <div class="goals__grid">
+                <div class="goals__column goals__column--main">
+                    <div class="goals__main-grid">
+                        <div class="goals__calorie-stack">
+                            <fd-goals-calorie-card
+                                [minCalories]="minCalories"
+                                [maxCalories]="maxCalories"
+                                [calorieTarget]="calorieTarget()"
+                                [ringProgressOffset]="ringProgressOffset()"
+                                [accentColor]="accentColor()"
+                                [ringKnobAngle]="ringKnobAngle()"
+                                (ringPointerDown)="startRingDrag($event)"
+                                (ringPointerMove)="onRingHover($event)"
+                                (ringPointerLeave)="onRingLeave($event)"
+                                (caloriesInput)="onCaloriesInput($event)"
+                                (caloriesBlur)="onCaloriesBlur($event)"
+                                (sliderInput)="onSliderInput($event)"
+                            />
 
-                        <fd-goals-cycling-card
-                            [enabled]="calorieCyclingEnabled()"
-                            [dayControls]="cyclingDayControls()"
-                            [dayCalories]="dayCalories()"
-                            [maxCalories]="maxCalories"
-                            (enabledToggle)="toggleCalorieCycling()"
-                            (dayCaloriesInput)="onDayCaloriesInputChange($event)"
-                        />
+                            <fd-goals-cycling-card
+                                [enabled]="calorieCyclingEnabled()"
+                                [dayControls]="cyclingDayControls()"
+                                [dayCalories]="dayCalories()"
+                                [maxCalories]="maxCalories"
+                                (enabledToggle)="toggleCalorieCycling()"
+                                (dayCaloriesInput)="onDayCaloriesInputChange($event)"
+                            />
 
-                        @if (waterViewState(); as water) {
-                        <fd-goals-water-card
-                            [water]="water"
-                            (waterInput)="onWaterInputChange($event)"
-                            (waterSlider)="onWaterSliderChange($event)"
-                        />
-                        }
-                    </div>
+                            @if (waterViewState(); as water) {
+                                <fd-goals-water-card
+                                    [water]="water"
+                                    (waterInput)="onWaterInputChange($event)"
+                                    (waterSlider)="onWaterSliderChange($event)"
+                                />
+                            }
+                        </div>
 
-                    <div class="goals__macro-stack">
-                        <fd-goals-macros-card
-                            [macroPresetOptions]="macroPresetOptions"
-                            [selectedPreset]="selectedPreset()"
-                            [macros]="coreMacroViewStates()"
-                            (presetChange)="onMacroPresetModelChange($event)"
-                            (macroInput)="onMacroValueInput($event)"
-                            (macroSlider)="onMacroSliderInput($event)"
-                        />
+                        <div class="goals__macro-stack">
+                            <fd-goals-macros-card
+                                [macroPresetOptions]="macroPresetOptions"
+                                [selectedPreset]="selectedPreset()"
+                                [macros]="coreMacroViewStates()"
+                                (presetChange)="onMacroPresetModelChange($event)"
+                                (macroInput)="onMacroValueInput($event)"
+                                (macroSlider)="onMacroSliderInput($event)"
+                            />
 
-                        <fd-goals-fiber-card
-                            [fiber]="fiberMacroViewState()"
-                            (macroInput)="onMacroValueInput($event)"
-                            (macroSlider)="onMacroSliderInput($event)"
-                        />
+                            <fd-goals-fiber-card
+                                [fiber]="fiberMacroViewState()"
+                                (macroInput)="onMacroValueInput($event)"
+                                (macroSlider)="onMacroSliderInput($event)"
+                            />
 
-                        <fd-goals-body-targets [targets]="currentBodyTargets()" (targetInput)="onBodyTargetInput($event)" />
+                            <fd-goals-body-targets [targets]="currentBodyTargets()" (targetInput)="onBodyTargetInput($event)" />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         }
     </fd-page-body>
 </div>

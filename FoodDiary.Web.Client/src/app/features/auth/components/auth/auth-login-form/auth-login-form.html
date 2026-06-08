@@ -51,18 +51,18 @@
         </fd-ui-button>
         <fd-ui-form-error [error]="globalError()" />
         @if (showRestoreAction()) {
-        <fd-ui-button
-            type="button"
-            size="lg"
-            variant="secondary"
-            fill="outline"
-            [disabled]="form()().invalid() || isRestoring() || isSubmitting()"
-            [loading]="isRestoring()"
-            [fullWidth]="true"
-            (click)="restoreSubmit.emit()"
-        >
-            {{ 'AUTH.LOGIN.RESTORE' | translate }}
-        </fd-ui-button>
+            <fd-ui-button
+                type="button"
+                size="lg"
+                variant="secondary"
+                fill="outline"
+                [disabled]="form()().invalid() || isRestoring() || isSubmitting()"
+                [loading]="isRestoring()"
+                [fullWidth]="true"
+                (click)="restoreSubmit.emit()"
+            >
+                {{ 'AUTH.LOGIN.RESTORE' | translate }}
+            </fd-ui-button>
         }
     </div>
 

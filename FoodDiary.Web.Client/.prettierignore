@@ -1,0 +1,9 @@
+.claude
+.lighthouseci
+dist
+dist-admin
+dist-storybook
+coverage
+reports
+.angular
+.tmp

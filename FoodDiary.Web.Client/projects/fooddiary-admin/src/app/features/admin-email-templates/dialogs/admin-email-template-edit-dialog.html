@@ -72,16 +72,16 @@
                         {{ isSendingTest() ? 'Sending...' : 'Send test' }}
                     </fd-ui-button>
                     @if (testSendStatus() === 'sent') {
-                    <p class="test-send__status test-send__status--sent">Test email sent.</p>
+                        <p class="test-send__status test-send__status--sent">Test email sent.</p>
                     } @else if (testSendStatus() === 'failed') {
-                    <p class="test-send__status test-send__status--failed">Failed to send test email.</p>
+                        <p class="test-send__status test-send__status--failed">Failed to send test email.</p>
                     }
                 </div>
 
                 @if (previewMode() === 'html') {
-                <div class="preview preview--html" [innerHTML]="previewHtml()"></div>
+                    <div class="preview preview--html" [innerHTML]="previewHtml()"></div>
                 } @else {
-                <pre class="preview preview--text">{{ previewText() }}</pre>
+                    <pre class="preview preview--text">{{ previewText() }}</pre>
                 }
             </aside>
         </div>

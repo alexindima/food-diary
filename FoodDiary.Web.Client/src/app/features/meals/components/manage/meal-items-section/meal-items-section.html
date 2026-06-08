@@ -24,11 +24,11 @@
             (openItemSelect)="openItemSelect.emit($event)"
         >
             @if (aiSessions().length) {
-            <fd-meal-ai-sessions
-                [aiSessions]="aiSessions()"
-                (editSession)="editSession.emit($event)"
-                (deleteSession)="deleteSession.emit($event)"
-            />
+                <fd-meal-ai-sessions
+                    [aiSessions]="aiSessions()"
+                    (editSession)="editSession.emit($event)"
+                    (deleteSession)="deleteSession.emit($event)"
+                />
             }
         </fd-meal-items-list>
     </div>

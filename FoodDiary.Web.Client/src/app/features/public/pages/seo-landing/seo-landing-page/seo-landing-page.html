@@ -15,7 +15,7 @@
                 </div>
                 <div class="seo-landing__chips">
                     @for (chipKey of hero.chipKeys; track chipKey) {
-                    <span class="seo-landing__chip">{{ chipKey | translate }}</span>
+                        <span class="seo-landing__chip">{{ chipKey | translate }}</span>
                     }
                 </div>
             </div>
@@ -25,7 +25,7 @@
                 <p class="seo-landing__panel-text">{{ hero.panel.textKey | translate }}</p>
                 <ul class="seo-landing__panel-list">
                     @for (itemKey of hero.panel.itemKeys; track itemKey) {
-                    <li>{{ itemKey | translate }}</li>
+                        <li>{{ itemKey | translate }}</li>
                     }
                 </ul>
             </aside>

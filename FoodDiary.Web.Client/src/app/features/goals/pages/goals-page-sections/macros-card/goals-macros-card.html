@@ -10,11 +10,11 @@
             />
         </div>
         @for (macro of macros(); track macro.key) {
-        <fd-goals-macro-slider
-            [macro]="macro"
-            (valueInput)="emitMacroInput(macro.key, $event)"
-            (sliderInput)="emitMacroSlider(macro.key, $event)"
-        />
+            <fd-goals-macro-slider
+                [macro]="macro"
+                (valueInput)="emitMacroInput(macro.key, $event)"
+                (sliderInput)="emitMacroSlider(macro.key, $event)"
+            />
         }
     </div>
 </fd-ui-card>

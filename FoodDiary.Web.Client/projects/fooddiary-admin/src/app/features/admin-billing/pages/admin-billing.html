@@ -32,28 +32,31 @@
     />
 
     @if (isLoading()) {
-    <p>Loading billing records...</p>
+        <p>Loading billing records...</p>
     } @else {
-    <p class="admin-billing__error" role="alert" [hidden]="errorMessage() === null">{{ errorMessage() }}</p>
+        <p class="admin-billing__error" role="alert" [hidden]="errorMessage() === null">{{ errorMessage() }}</p>
 
-    <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
+        <div class="admin-billing__summary fd-ui-action-text">Total records: {{ totalItems() }}</div>
 
-    @if (activeTab() === 'subscriptions') {
-    <fd-admin-billing-subscriptions-table [items]="subscriptionItems()" />
-    } @if (activeTab() === 'payments') {
-    <fd-admin-billing-payments-table [items]="paymentItems()" (metadataOpen)="showMetadata($event)" />
-    } @if (activeTab() === 'webhook-events') {
-    <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
+        @if (activeTab() === 'subscriptions') {
+            <fd-admin-billing-subscriptions-table [items]="subscriptionItems()" />
+        }
+        @if (activeTab() === 'payments') {
+            <fd-admin-billing-payments-table [items]="paymentItems()" (metadataOpen)="showMetadata($event)" />
+        }
+        @if (activeTab() === 'webhook-events') {
+            <fd-admin-billing-webhooks-table [items]="webhookEventItems()" (metadataOpen)="showMetadata($event)" />
+        }
+
+        <fd-ui-pagination
+            class="admin-billing__pagination"
+            [length]="totalItems()"
+            [pageSize]="limit"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="goToPage($event + 1)"
+        />
     }
-
-    <fd-ui-pagination
-        class="admin-billing__pagination"
-        [length]="totalItems()"
-        [pageSize]="limit"
-        [pageIndex]="page() - 1"
-        (pageIndexChange)="goToPage($event + 1)"
-    />
-    } @if (selectedMetadata(); as metadata) {
-    <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="selectedMetadata.set(null)" />
+    @if (selectedMetadata(); as metadata) {
+        <fd-admin-billing-metadata-panel [metadata]="metadata" (closePanel)="selectedMetadata.set(null)" />
     }
 </div>

@@ -43,18 +43,18 @@
                                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
                             </fd-ui-button>
                             @if (canShowDeleteButton()) {
-                            <fd-ui-button
-                                type="button"
-                                class="product-manage__delete-button product-manage__delete-button--icon"
-                                variant="danger"
-                                fill="outline"
-                                icon="delete"
-                                [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
-                                [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
-                                [loading]="isDeleting()"
-                                [disabled]="isSubmitting()"
-                                (click)="onDeleteProductAsync()"
-                            />
+                                <fd-ui-button
+                                    type="button"
+                                    class="product-manage__delete-button product-manage__delete-button--icon"
+                                    variant="danger"
+                                    fill="outline"
+                                    icon="delete"
+                                    [fdUiHint]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
+                                    [ariaLabel]="'PRODUCT_MANAGE.DELETE_BUTTON' | translate"
+                                    [loading]="isDeleting()"
+                                    [disabled]="isSubmitting()"
+                                    (click)="onDeleteProductAsync()"
+                                />
                             }
                             <fd-ui-button
                                 type="submit"
@@ -69,7 +69,7 @@
                             </fd-ui-button>
                         </div>
                         @if (globalError()) {
-                        <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
+                            <fd-ui-form-error class="product-manage__footer-error" [error]="globalError()" />
                         }
                     </div>
                 </div>

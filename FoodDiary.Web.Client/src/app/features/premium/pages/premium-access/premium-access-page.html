@@ -19,7 +19,7 @@
     />
 
     @if (showPlans()) {
-    <fd-premium-plans-card [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
+        <fd-premium-plans-card [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
     }
 
     <fd-premium-benefits-card />

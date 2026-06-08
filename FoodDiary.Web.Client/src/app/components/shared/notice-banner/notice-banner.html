@@ -6,7 +6,17 @@
 >
     <div class="fd-notice__main fd-row fd-align-start fd-gap-inline-alert">
         <div class="fd-notice__icon fd-place-center" aria-hidden="true">
-            @switch (type()) { @case ('warning') { ! } @case ('error') { x } @default { i } }
+            @switch (type()) {
+                @case ('warning') {
+                    !
+                }
+                @case ('error') {
+                    x
+                }
+                @default {
+                    i
+                }
+            }
         </div>
         <div class="fd-notice__text fd-stack fd-gap-inline-alert-content">
             <div class="fd-notice__title fd-ui-card-title">{{ title() }}</div>
@@ -14,8 +24,8 @@
         </div>
     </div>
     @if (showAction()) {
-    <fd-ui-button class="fd-notice__action fd-nowrap" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
-        {{ actionLabel() }}
-    </fd-ui-button>
+        <fd-ui-button class="fd-notice__action fd-nowrap" type="button" variant="secondary" fill="text" size="sm" (click)="onAction()">
+            {{ actionLabel() }}
+        </fd-ui-button>
     }
 </div>

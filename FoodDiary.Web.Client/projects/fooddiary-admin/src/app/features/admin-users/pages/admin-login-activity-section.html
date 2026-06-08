@@ -8,46 +8,46 @@
     </div>
 
     @if (isLoading()) {
-    <p>Loading login activity...</p>
+        <p>Loading login activity...</p>
     } @else {
-    <div class="summary fd-ui-action-text">Total login events: {{ totalItems() }}</div>
+        <div class="summary fd-ui-action-text">Total login events: {{ totalItems() }}</div>
 
-    <table class="users-table">
-        <thead>
-            <tr>
-                <th>Logged in</th>
-                <th>User</th>
-                <th>Provider</th>
-                <th>Device</th>
-                <th>Browser</th>
-                <th>OS</th>
-                <th>IP</th>
-            </tr>
-        </thead>
-        <tbody>
-            @for (event of events(); track event.id) {
-            <tr>
-                <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
-                <td>{{ event.userEmail }}</td>
-                <td>{{ event.authProvider }}</td>
-                <td>{{ event.deviceType || '-' }}</td>
-                <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
-                <td>{{ event.operatingSystem || '-' }}</td>
-                <td>{{ event.maskedIpAddress || '-' }}</td>
-            </tr>
-            } @empty {
-            <tr>
-                <td colspan="7">No login activity found.</td>
-            </tr>
-            }
-        </tbody>
-    </table>
+        <table class="users-table">
+            <thead>
+                <tr>
+                    <th>Logged in</th>
+                    <th>User</th>
+                    <th>Provider</th>
+                    <th>Device</th>
+                    <th>Browser</th>
+                    <th>OS</th>
+                    <th>IP</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (event of events(); track event.id) {
+                    <tr>
+                        <td>{{ event.loggedInAtUtc | date: 'medium' }}</td>
+                        <td>{{ event.userEmail }}</td>
+                        <td>{{ event.authProvider }}</td>
+                        <td>{{ event.deviceType || '-' }}</td>
+                        <td>{{ event.browserName || '-' }} {{ event.browserVersion || '' }}</td>
+                        <td>{{ event.operatingSystem || '-' }}</td>
+                        <td>{{ event.maskedIpAddress || '-' }}</td>
+                    </tr>
+                } @empty {
+                    <tr>
+                        <td colspan="7">No login activity found.</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
 
-    <fd-ui-pagination
-        [length]="totalItems()"
-        [pageSize]="pageSize()"
-        [pageIndex]="page() - 1"
-        (pageIndexChange)="pageChange.emit($event + 1)"
-    />
+        <fd-ui-pagination
+            [length]="totalItems()"
+            [pageSize]="pageSize()"
+            [pageIndex]="page() - 1"
+            (pageIndexChange)="pageChange.emit($event + 1)"
+        />
     }
 </section>

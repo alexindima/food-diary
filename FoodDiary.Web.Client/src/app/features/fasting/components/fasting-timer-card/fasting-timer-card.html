@@ -12,31 +12,33 @@
         [class.fasting-timer-card__layout--setup]="isSetupLayout()"
     >
         @if (isDashboardLayout()) {
-        <fd-dashboard-widget-frame [title]="'FASTING.TITLE' | translate">
-            <div class="fasting-timer-card__content fasting-timer-card__content--summary fd-grid fd-gap-card-relaxed fd-align-center">
-                <ng-container [ngTemplateOutlet]="summaryRing" />
-                <ng-container [ngTemplateOutlet]="summaryContent" />
-            </div>
-        </fd-dashboard-widget-frame>
+            <fd-dashboard-widget-frame [title]="'FASTING.TITLE' | translate">
+                <div class="fasting-timer-card__content fasting-timer-card__content--summary fd-grid fd-gap-card-relaxed fd-align-center">
+                    <ng-container [ngTemplateOutlet]="summaryRing" />
+                    <ng-container [ngTemplateOutlet]="summaryContent" />
+                </div>
+            </fd-dashboard-widget-frame>
         } @else {
-        <div
-            class="fasting-timer-card__content fd-stack fd-align-center fd-gap-card-relaxed"
-            [class.fasting-timer-card__content--setup]="isSetupLayout()"
-            [class.fasting-timer-card__content--page-summary]="isPageSummaryLayout()"
-        >
-            <ng-container [ngTemplateOutlet]="mainRing" />
-        </div>
+            <div
+                class="fasting-timer-card__content fd-stack fd-align-center fd-gap-card-relaxed"
+                [class.fasting-timer-card__content--setup]="isSetupLayout()"
+                [class.fasting-timer-card__content--page-summary]="isPageSummaryLayout()"
+            >
+                <ng-container [ngTemplateOutlet]="mainRing" />
+            </div>
 
-        @if (isPageSummaryLayout()) {
-        <ng-container [ngTemplateOutlet]="summaryContent" />
-        } } @if (chrome.showPageControls) {
-        <div
-            class="fasting-timer-card__controls-slot"
-            [class.fasting-timer-card__controls-slot--page-summary]="isPageSummaryLayout()"
-            [class.fasting-timer-card__controls-slot--setup]="isSetupLayout()"
-        >
-            <fd-fasting-controls />
-        </div>
+            @if (isPageSummaryLayout()) {
+                <ng-container [ngTemplateOutlet]="summaryContent" />
+            }
+        }
+        @if (chrome.showPageControls) {
+            <div
+                class="fasting-timer-card__controls-slot"
+                [class.fasting-timer-card__controls-slot--page-summary]="isPageSummaryLayout()"
+                [class.fasting-timer-card__controls-slot--setup]="isSetupLayout()"
+            >
+                <fd-fasting-controls />
+            </div>
         }
     </div>
 </fd-ui-card>
@@ -52,11 +54,11 @@
     <div class="fasting-timer-card__ring" [style.box-shadow]="ringGlow()">
         <ng-container [ngTemplateOutlet]="ringProgress" />
         @if (isPageSummaryLayout()) {
-        <ng-container [ngTemplateOutlet]="summaryRingContent" />
+            <ng-container [ngTemplateOutlet]="summaryRingContent" />
         } @else {
-        <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
-            <fd-fasting-timer-card-items [items]="mainRingItems()" />
-        </div>
+            <div class="fasting-timer-card__ring-content fd-stack fd-center fd-gap-micro">
+                <fd-fasting-timer-card-items [items]="mainRingItems()" />
+            </div>
         }
     </div>
 </ng-template>
