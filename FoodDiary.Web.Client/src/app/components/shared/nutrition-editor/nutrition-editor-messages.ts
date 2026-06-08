@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 
-import type { NutritionMismatchWarning } from './nutrition-editor.types';
+type NutritionMismatchWarning = {
+    expectedCalories: number;
+    actualCalories: number;
+};
 
 @Component({
     selector: 'fd-nutrition-editor-messages',

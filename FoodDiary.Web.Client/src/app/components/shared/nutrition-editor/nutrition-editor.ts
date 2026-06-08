@@ -1,24 +1,39 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input';
 
-import type {
-    NutritionEditorSignalForm,
-    NutritionMacroSegment,
-    NutritionMacroState,
-    NutritionMismatchWarning,
-} from './nutrition-editor.types';
 import { NutritionEditorMessagesComponent } from './nutrition-editor-messages';
 
-export type {
-    NutritionEditorSignalForm,
-    NutritionFormModel,
-    NutritionMacroSegment,
-    NutritionMacroState,
-    NutritionMismatchWarning,
-} from './nutrition-editor.types';
+export type NutritionMacroSegment = {
+    key: 'proteins' | 'fats' | 'carbs';
+    percent: number;
+};
+
+export type NutritionMacroState = {
+    isEmpty: boolean;
+    segments: NutritionMacroSegment[];
+};
+
+export type NutritionMismatchWarning = {
+    expectedCalories: number;
+    actualCalories: number;
+};
+
+export type NutritionFormModel = {
+    calories: number | null;
+    proteins: number | null;
+    fats: number | null;
+    carbs: number | null;
+    fiber: number | null;
+    alcohol: number | null;
+};
+
+export type NutritionEditorSignalForm = Pick<
+    FieldTree<NutritionFormModel>,
+    'calories' | 'proteins' | 'fats' | 'carbs' | 'fiber' | 'alcohol'
+>;
 
 @Component({
     selector: 'fd-nutrition-editor',
