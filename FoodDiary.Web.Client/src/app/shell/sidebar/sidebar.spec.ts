@@ -364,14 +364,8 @@ function createAdminWindowMock(): {
 
 function mockAdminWindow(adminWindow: ReturnType<typeof createAdminWindowMock>): void {
     environment.adminAppUrl = 'http://localhost:4300';
-    Object.defineProperty(URL, 'createObjectURL', {
-        configurable: true,
-        value: vi.fn(() => ADMIN_LOADING_URL),
-    });
-    Object.defineProperty(URL, 'revokeObjectURL', {
-        configurable: true,
-        value: vi.fn(),
-    });
+    vi.spyOn(URL, 'createObjectURL').mockReturnValue(ADMIN_LOADING_URL);
+    vi.spyOn(URL, 'revokeObjectURL').mockImplementation(() => {});
     vi.spyOn(window, 'open').mockReturnValue(adminWindow as unknown as Window);
 }
 
