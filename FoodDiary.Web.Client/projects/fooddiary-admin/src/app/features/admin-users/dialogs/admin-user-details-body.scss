@@ -1,0 +1,57 @@
+:host {
+    // Stay transparent so sections participate directly in the dialog body grid gap.
+    display: contents;
+}
+
+.admin-user-details__section {
+    display: grid;
+    gap: var(--fd-space-sm);
+}
+
+.admin-user-details__section h3 {
+    margin: 0;
+}
+
+.admin-user-details__login,
+.admin-user-details__audit,
+.admin-user-details__login > div {
+    display: grid;
+    gap: var(--fd-space-xxs);
+}
+
+.admin-user-details__login span,
+.admin-user-details__audit span,
+.admin-user-details__grid dt {
+    color: var(--fd-color-text-muted);
+}
+
+.admin-user-details__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--fd-space-sm);
+    margin: 0;
+}
+
+.admin-user-details__grid div,
+.admin-user-details__login,
+.admin-user-details__audit {
+    min-width: 0;
+    padding: var(--fd-space-sm);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-sm);
+}
+
+.admin-user-details__grid dt {
+    font-size: var(--fd-text-caption-size);
+}
+
+.admin-user-details__grid dd {
+    margin: var(--fd-space-xxs) 0 0;
+    overflow-wrap: anywhere;
+}
+
+.admin-user-details__login-list,
+.admin-user-details__audit-list {
+    display: grid;
+    gap: var(--fd-space-xs);
+}

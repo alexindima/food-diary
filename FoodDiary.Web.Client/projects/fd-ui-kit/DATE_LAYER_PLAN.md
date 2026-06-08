@@ -1,6 +1,7 @@
 # Date Layer Plan
 
 ## Goal
+
 - Remove direct Angular Material datepicker/input coupling from the UI kit.
 - Replace the current date stack with design-system primitives that match the product's visuals and data contracts.
 - Keep ISO-friendly values and explicit keyboard/accessibility behavior.
@@ -24,16 +25,16 @@ Current issues before the migration:
 Current usage in the app:
 
 - `fd-ui-date-input`
-  - cycle tracking
-  - profile
-  - weight history
-  - waist history
-  - meal manage
+    - cycle tracking
+    - profile
+    - weight history
+    - waist history
+    - meal manage
 - `fd-ui-date-range-input`
-  - period filter
-  - meal list filters
+    - period filter
+    - meal list filters
 - `fd-ui-date-picker-button`
-  - dashboard header date selector
+    - dashboard header date selector
 
 ## Recommendation
 
@@ -44,12 +45,12 @@ Reasoning:
 - Date selection is product-critical and visible in several flows.
 - The current Material-backed implementation is already wrapped by our design system, so replacing internals will not create broad app churn.
 - A custom datepicker will give us tighter control over:
-  - visuals
-  - compact layouts
-  - toolbar/dashboard usage
-  - ISO value handling
-  - mobile behavior
-  - future range selection UX
+    - visuals
+    - compact layouts
+    - toolbar/dashboard usage
+    - ISO value handling
+    - mobile behavior
+    - future range selection UX
 
 But it should be built as a small date system, not as one large component.
 
@@ -58,47 +59,53 @@ But it should be built as a small date system, not as one large component.
 ### Core primitives
 
 1. `fd-ui-calendar`
+
 - Inline month view.
 - Responsible for:
-  - month navigation
-  - day grid rendering
-  - disabled dates
-  - min/max dates
-  - selected day
-  - keyboard navigation
+    - month navigation
+    - day grid rendering
+    - disabled dates
+    - min/max dates
+    - selected day
+    - keyboard navigation
 - No field chrome and no overlay logic.
 
 2. `fd-ui-date-picker`
+
 - Overlay/popover wrapper around `fd-ui-calendar`.
 - Responsible for:
-  - anchored overlay
-  - open/close state
-  - focus restore
-  - outside click / escape handling
-  - optional presets later
+    - anchored overlay
+    - open/close state
+    - focus restore
+    - outside click / escape handling
+    - optional presets later
 
 3. `fd-ui-date-field`
+
 - Standard field for single date values.
 - Uses `fd-ui-input`-style shell and opens `fd-ui-date-picker`.
 - Value contract:
-  - external value: `string | null`
-  - format: `YYYY-MM-DD`
+    - external value: `string | null`
+    - format: `YYYY-MM-DD`
 
 4. `fd-ui-date-time-field`
+
 - Reuses `fd-ui-date-field` plus time input segment.
 - Value contract:
-  - external value: `string | null`
-  - format: `YYYY-MM-DDTHH:mm`
+    - external value: `string | null`
+    - format: `YYYY-MM-DDTHH:mm`
 
 5. `fd-ui-date-range-field`
+
 - Uses two single-date values but behaves as one control.
 - Value contract:
-  - external value: `{ start: Date | null; end: Date | null }`
-  - or a new explicit range interface if we want to normalize later
+    - external value: `{ start: Date | null; end: Date | null }`
+    - or a new explicit range interface if we want to normalize later
 
 ### Optional convenience wrappers
 
 6. `fd-ui-date-picker-button`
+
 - Keep this public API for dashboard/toolbars.
 - Reimplement it on top of `fd-ui-date-picker` instead of Material.
 - This should be a thin convenience wrapper, not a separate date system.
@@ -164,17 +171,17 @@ Suggested v1 responsibilities:
 
 - Calendar grid should use roving tabindex.
 - Support:
-  - `ArrowLeft`
-  - `ArrowRight`
-  - `ArrowUp`
-  - `ArrowDown`
-  - `Home`
-  - `End`
-  - `PageUp`
-  - `PageDown`
-  - `Enter`
-  - `Space`
-  - `Escape`
+    - `ArrowLeft`
+    - `ArrowRight`
+    - `ArrowUp`
+    - `ArrowDown`
+    - `Home`
+    - `End`
+    - `PageUp`
+    - `PageDown`
+    - `Enter`
+    - `Space`
+    - `Escape`
 - Overlay must restore focus to trigger on close.
 - Field must expose correct `aria-invalid`, `aria-describedby`, and label association.
 - Date button variant must always have an accessible name.
@@ -182,24 +189,29 @@ Suggested v1 responsibilities:
 ## Implementation Order
 
 ### Phase 1
+
 - Build `fd-ui-calendar`.
 - Build `fd-ui-date-picker` with CDK overlay.
 - Reimplement `fd-ui-date-picker-button` on top of them.
 
 Reason:
+
 - This replaces the dashboard use case quickly.
 - It creates the reusable popup foundation before touching form fields.
 
 ### Phase 2
+
 - Build `fd-ui-date-field`.
 - Migrate existing `fd-ui-date-input` usages to it.
 - Keep `fd-ui-date-input` temporarily as a compatibility shell or deprecate it.
 
 ### Phase 3
+
 - Build `fd-ui-date-time-field`.
 - Replace `fd-ui-datetime-input`.
 
 ### Phase 4
+
 - Rework `fd-ui-date-range-input` into `fd-ui-date-range-field`.
 - Decide whether to keep the current range value contract or normalize it.
 

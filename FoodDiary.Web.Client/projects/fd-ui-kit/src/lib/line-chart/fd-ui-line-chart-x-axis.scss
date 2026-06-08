@@ -1,0 +1,84 @@
+:host {
+    // Stay transparent so the x-axis element is placed directly in the chart plot grid.
+    display: contents;
+}
+
+.fd-ui-line-chart__x-axis {
+    position: relative;
+    min-height: var(--fd-text-caption-line-height);
+    grid-area: x-axis;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+}
+
+.fd-ui-line-chart__x-axis span {
+    position: absolute;
+    top: 0;
+    display: block;
+    min-width: 0;
+    max-width: 72px;
+    overflow: hidden;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--start {
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
+    transform: translateX(-50%);
+}
+
+.fd-ui-line-chart__x-axis--angled {
+    min-height: var(--fd-line-chart-angled-axis-height);
+}
+
+.fd-ui-line-chart__x-axis--angled span {
+    top: -6px;
+    max-width: 96px;
+    text-align: center;
+    transform: translateX(-0.35em) rotate(45deg);
+    transform-origin: 0.35em top;
+}
+
+.fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--start {
+    transform: translateX(-0.35em) rotate(45deg);
+}
+
+.fd-ui-line-chart__x-axis--angled .fd-ui-line-chart__x-axis-label--end {
+    transform: translateX(-0.35em) rotate(45deg);
+}
+
+@container (max-width: 560px) {
+    /* stylelint-disable-next-line rule-empty-line-before */
+    .fd-ui-line-chart__x-axis {
+        min-height: var(--fd-line-chart-angled-axis-height);
+    }
+
+    .fd-ui-line-chart__x-axis span {
+        top: -6px;
+        max-width: 88px;
+        text-align: center;
+        transform: translateX(-0.35em) rotate(45deg);
+        transform-origin: 0.35em top;
+    }
+
+    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--start {
+        transform: translateX(-0.35em) rotate(45deg);
+    }
+
+    .fd-ui-line-chart__x-axis .fd-ui-line-chart__x-axis-label--end {
+        transform: translateX(-0.35em) rotate(45deg);
+    }
+}
+
+@container (max-width: 380px) {
+    /* stylelint-disable-next-line rule-empty-line-before */
+    .fd-ui-line-chart__x-axis span:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end) {
+        display: none;
+    }
+}

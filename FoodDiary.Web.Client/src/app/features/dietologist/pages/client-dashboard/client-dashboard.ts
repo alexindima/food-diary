@@ -38,6 +38,13 @@ import {
     type ClientRecommendationView,
     getClientDashboardTitle,
 } from './client-dashboard-lib/client-dashboard.mapper';
+import { ClientDashboardFastingCardComponent } from './components/client-dashboard-fasting-card';
+import { ClientDashboardHeaderComponent } from './components/client-dashboard-header';
+import { ClientDashboardHydrationCardComponent } from './components/client-dashboard-hydration-card';
+import { ClientDashboardMealsCardComponent } from './components/client-dashboard-meals-card';
+import { ClientDashboardMetricListComponent } from './components/client-dashboard-metric-list';
+import { ClientDashboardNoticesComponent } from './components/client-dashboard-notices';
+import { ClientDashboardSummaryCardComponent } from './components/client-dashboard-summary-card';
 
 const RECOMMENDATION_MAX_LENGTH = 2000;
 const CLIENT_DASHBOARD_TREND_DAYS = 14;
@@ -65,7 +72,22 @@ type RecommendationFormModel = {
 @Component({
     selector: 'fd-client-dashboard',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [DatePipe, FormField, TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiTextareaComponent],
+    imports: [
+        DatePipe,
+        FormField,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiCardComponent,
+        FdUiDateInputComponent,
+        FdUiTextareaComponent,
+        ClientDashboardHeaderComponent,
+        ClientDashboardNoticesComponent,
+        ClientDashboardMetricListComponent,
+        ClientDashboardMealsCardComponent,
+        ClientDashboardSummaryCardComponent,
+        ClientDashboardHydrationCardComponent,
+        ClientDashboardFastingCardComponent,
+    ],
     templateUrl: './client-dashboard.html',
     styleUrls: ['./client-dashboard.scss'],
 })

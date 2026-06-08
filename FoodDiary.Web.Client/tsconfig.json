@@ -7,10 +7,7 @@
         "strict": true,
         "noImplicitOverride": true,
         "paths": {
-            "fd-ui-kit": [
-                "./projects/fd-ui-kit/src/public-api",
-                "./dist/fd-ui-kit"
-            ],
+            "fd-ui-kit": ["./projects/fd-ui-kit/src/public-api", "./dist/fd-ui-kit"],
             "fd-ui-kit/*": ["./projects/fd-ui-kit/src/lib/*"]
         },
         "noPropertyAccessFromIndexSignature": true,
@@ -52,17 +49,17 @@
         "strictTemplates": true
     },
     "references": [
-      {
-        "path": "./projects/fd-ui-kit/tsconfig.lib.json"
-      },
-      {
-        "path": "./projects/fd-ui-kit/tsconfig.spec.json"
-      },
-      {
-        "path": "./projects/fooddiary-admin/tsconfig.app.json"
-      },
-      {
-        "path": "./projects/fooddiary-admin/tsconfig.spec.json"
-      }
+        {
+            "path": "./projects/fd-ui-kit/tsconfig.lib.json"
+        },
+        {
+            "path": "./projects/fd-ui-kit/tsconfig.spec.json"
+        },
+        {
+            "path": "./projects/fooddiary-admin/tsconfig.app.json"
+        },
+        {
+            "path": "./projects/fooddiary-admin/tsconfig.spec.json"
+        }
     ]
 }

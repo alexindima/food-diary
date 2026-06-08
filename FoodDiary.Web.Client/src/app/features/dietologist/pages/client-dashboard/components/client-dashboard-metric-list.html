@@ -1,0 +1,15 @@
+@if (tiles().length > 0) {
+<fd-ui-card>
+    <div class="client-dashboard__section">
+        <h2 class="fd-ui-card-title">{{ titleKey() | translate }}</h2>
+        <div class="client-dashboard__metrics" [class.client-dashboard__metrics--wide]="wide()">
+            @for (tile of tiles(); track tile.labelKey) {
+            <div class="client-dashboard__metric">
+                <span class="client-dashboard__metric-label fd-ui-caption">{{ tile.labelKey | translate }}</span>
+                <strong class="client-dashboard__metric-value">{{ tile.value }}</strong>
+            </div>
+            }
+        </div>
+    </div>
+</fd-ui-card>
+}

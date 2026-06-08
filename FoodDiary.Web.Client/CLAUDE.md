@@ -4,11 +4,11 @@ Angular 21 SPA for nutrition tracking with a shared UI library and admin app.
 
 ## Workspace
 
-| Project | Type | Root | Port |
-|---------|------|------|------|
-| food-diary-web-client | application | src/ | 4200 |
-| fd-ui-kit | library | projects/fd-ui-kit/ | — |
-| fooddiary-admin | application | projects/fooddiary-admin/ | 4300 |
+| Project               | Type        | Root                      | Port |
+| --------------------- | ----------- | ------------------------- | ---- |
+| food-diary-web-client | application | src/                      | 4200 |
+| fd-ui-kit             | library     | projects/fd-ui-kit/       | —    |
+| fooddiary-admin       | application | projects/fooddiary-admin/ | 4300 |
 
 ## Key Configuration
 
@@ -22,6 +22,7 @@ Angular 21 SPA for nutrition tracking with a shared UI library and admin app.
 ## Component Conventions
 
 ### Mandatory
+
 - **Standalone components** — no NgModules, all components are standalone
 - **OnPush change detection** — default for all components
 - **Signals** — `signal()` for state, `computed()` for derived, `input()` / `output()` for component APIs, `viewChild()` for template refs
@@ -32,20 +33,24 @@ Angular 21 SPA for nutrition tracking with a shared UI library and admin app.
 - **Viewport boundary** — app feature code should use `ViewportService` for the shared mobile breakpoint instead of injecting `BreakpointObserver` directly
 
 ### State Management
+
 No NgRx. State via Angular Signals in services and components. `AuthService` holds auth state as signals. Feature services extend `ApiService` base class.
 
 ### HTTP Layer
+
 - `ApiService` base class (`services/api.service.ts`) — typed `get/post/put/patch/delete` wrappers
 - `RetryInterceptor` — retries GET 3x with exponential backoff, skips 4xx
 - `AuthInterceptor` — attaches Bearer token, 401 triggers refresh then retry
 
 ### Routing
+
 - Authenticated routes lazy-loaded via `loadChildren()` with `PreloadAllModules`
 - `authGuard` checks `isAuthenticated()` + `isEmailConfirmed()`
 - SEO via `data.seo` on each route (titleKey, descriptionKey, noIndex)
 - Feature routes use container/child pattern
 
 ### Cleanup Pattern
+
 `takeUntilDestroyed(this.destroyRef)` for RxJS subscription cleanup.
 
 ## Feature Organization

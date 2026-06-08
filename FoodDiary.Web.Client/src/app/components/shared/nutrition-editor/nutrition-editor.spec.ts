@@ -71,9 +71,12 @@ describe('NutritionEditorComponent', () => {
 
         fixture.detectChanges();
 
-        const errors = el.querySelectorAll('.nutrition-editor__errors');
-        expect(errors.length).toBe(2);
-        expect(errors[0].textContent).toContain('Calories are required.');
-        expect(errors[1].textContent).toContain('Macros do not match.');
+        const caloriesErrors = el.querySelectorAll('.nutrition-editor__errors');
+        expect(caloriesErrors.length).toBe(1);
+        expect(caloriesErrors[0].textContent).toContain('Calories are required.');
+
+        const macrosErrors = el.querySelectorAll('.nutrition-editor-messages__errors');
+        expect(macrosErrors.length).toBe(1);
+        expect(macrosErrors[0].textContent).toContain('Macros do not match.');
     });
 });

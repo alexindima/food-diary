@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -10,24 +9,15 @@ import { forkJoin } from 'rxjs';
 
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import type { AdminUser, AdminUserLoginEvent, AdminUserRoleAuditEvent } from '../models/admin-user.models';
+import { AdminUserDetailsBodyComponent, type DetailSection } from './admin-user-details-body';
 
 const ACTIVITY_PREVIEW_LIMIT = 3;
-
-type DetailField = {
-    label: string;
-    value: string;
-};
-
-type DetailSection = {
-    title: string;
-    fields: DetailField[];
-};
 
 export type AdminUserDetailsDialogResult = 'edit' | 'impersonate' | null;
 
 @Component({
     selector: 'fd-admin-user-details-dialog',
-    imports: [DatePipe, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective],
+    imports: [FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, AdminUserDetailsBodyComponent],
     templateUrl: './admin-user-details-dialog.html',
     styleUrl: './admin-user-details-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -191,18 +181,6 @@ export class AdminUserDetailsDialogComponent {
                     this.isLoading.set(false);
                 },
             });
-    }
-
-    protected describeRoleActor(event: AdminUserRoleAuditEvent): string {
-        if (event.actorEmail !== null && event.actorEmail !== undefined && event.actorEmail.trim().length > 0) {
-            return event.actorEmail;
-        }
-
-        if (event.actorUserId !== null && event.actorUserId !== undefined && event.actorUserId.trim().length > 0) {
-            return event.actorUserId;
-        }
-
-        return event.source;
     }
 
     private buildInitials(user: AdminUser): string {

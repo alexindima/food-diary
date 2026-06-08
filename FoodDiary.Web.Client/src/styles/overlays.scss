@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .fd-ui-dialog-panel {
-
     &:focus,
     &:focus-visible {
         outline: none;
@@ -38,7 +37,6 @@
 }
 
 @keyframes fdDialogDetailBackdrop {
-
     0% {
         opacity: 0;
     }
@@ -72,7 +70,6 @@
 }
 
 @media #{variables.$media-tablet} {
-
     .fd-ui-dialog-panel--edge-mobile .fd-ui-dialog__footer {
         gap: var(--fd-space-sm);
     }

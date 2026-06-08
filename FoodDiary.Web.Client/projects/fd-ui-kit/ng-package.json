@@ -1,8 +1,8 @@
 {
-  "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../dist/fd-ui-kit",
-  "lib": {
-    "entryFile": "src/public-api.ts",
-    "styleIncludePaths": ["../../src/styles", "src/lib"]
-  }
+    "$schema": "../../node_modules/ng-packagr/ng-package.schema.json",
+    "dest": "../../dist/fd-ui-kit",
+    "lib": {
+        "entryFile": "src/public-api.ts",
+        "styleIncludePaths": ["../../src/styles", "src/lib"]
+    }
 }

@@ -1,0 +1,15 @@
+@if (hydration(); as hydrationView) {
+<fd-ui-card>
+    <div class="client-dashboard__section client-dashboard__summary-section">
+        <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.HYDRATION_TITLE' | translate }}</h2>
+        <strong class="client-dashboard__summary-value">{{ hydrationView.total }}</strong>
+        @if (hydrationView.goal; as goal) {
+        <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.HYDRATION.GOAL' | translate: { goal } }} </span>
+        } @if (hydrationView.progress !== null) {
+        <div class="client-dashboard__progress" aria-hidden="true">
+            <span [style.width.%]="hydrationView.progress"></span>
+        </div>
+        }
+    </div>
+</fd-ui-card>
+}

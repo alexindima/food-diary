@@ -1,0 +1,38 @@
+:host {
+    // Stay transparent so the card participates directly in the sections stack gap.
+    display: contents;
+}
+
+.client-dashboard__section {
+    padding: var(--fd-space-md);
+
+    h2 {
+        margin: 0 0 var(--fd-space-xs);
+    }
+}
+
+.client-dashboard__summary-section {
+    display: grid;
+    gap: var(--fd-space-xs);
+}
+
+.client-dashboard__summary-value {
+    color: var(--fd-color-text);
+    font-size: var(--fd-text-display-xs-size);
+    line-height: var(--fd-text-display-xs-line-height);
+}
+
+.client-dashboard__progress {
+    width: 100%;
+    height: 8px;
+    overflow: hidden;
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-surface-muted);
+
+    span {
+        display: block;
+        height: 100%;
+        border-radius: inherit;
+        background: var(--fd-color-primary-500);
+    }
+}

@@ -1,5 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 
+import { FdUiLineChartLegendComponent } from './fd-ui-line-chart-legend';
+import { FdUiLineChartXAxisComponent } from './fd-ui-line-chart-x-axis';
+import { FdUiLineChartYAxisComponent } from './fd-ui-line-chart-y-axis';
+
 export type FdUiLineChartPoint = {
     label: string;
     value: number | null;
@@ -60,6 +64,23 @@ type FdUiLineChartPointGroupOptions = {
     shouldPrefixTooltip: boolean;
 };
 
+type FdUiLineChartGridSegment = {
+    x1: number;
+    y1: number;
+    x2: number;
+    y2: number;
+};
+
+type FdUiLineChartAreaSegment = {
+    path: string;
+    fill: string;
+};
+
+type FdUiLineChartLineSegment = {
+    path: string;
+    color: string;
+};
+
 const LINE_CHART_VIEWBOX_WIDTH = 100;
 const LINE_CHART_VIEWBOX_HEIGHT = 64;
 const LINE_CHART_PADDING = 6;
@@ -98,7 +119,7 @@ const DEFAULT_FILL_COLOR = 'color-mix(in srgb, var(--fd-color-primary-500) 14%, 
 
 @Component({
     selector: 'fd-ui-line-chart',
-    imports: [],
+    imports: [FdUiLineChartYAxisComponent, FdUiLineChartXAxisComponent, FdUiLineChartLegendComponent],
     templateUrl: './fd-ui-line-chart.html',
     styleUrl: './fd-ui-line-chart.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -318,6 +339,32 @@ export class FdUiLineChartComponent {
     protected readonly pointViews = computed<readonly FdUiLineChartPointViewModel[]>(() =>
         this.seriesViews().flatMap(series => series.points),
     );
+
+    protected readonly gridSegments = computed<readonly FdUiLineChartGridSegment[]>(() => {
+        if (!this.showGrid()) {
+            return [];
+        }
+
+        const left = this.chartLeft();
+        const right = this.chartRight();
+        const top = this.chartTop();
+        const bottom = this.chartBottom();
+        const horizontal = this.gridLines().map(line => ({ x1: left, y1: line.y, x2: right, y2: line.y }));
+        const vertical = this.verticalGridLines().map(line => ({ x1: line.x, y1: top, x2: line.x, y2: bottom }));
+
+        return [...horizontal, ...vertical];
+    });
+    protected readonly areaSegments = computed<readonly FdUiLineChartAreaSegment[]>(() => {
+        if (!this.showArea()) {
+            return [];
+        }
+
+        return this.seriesViews().flatMap(series => series.areaPaths.map(path => ({ path, fill: series.fillColor })));
+    });
+    protected readonly lineSegments = computed<readonly FdUiLineChartLineSegment[]>(() =>
+        this.seriesViews().flatMap(series => series.paths.map(path => ({ path, color: series.color }))),
+    );
+    protected readonly visiblePoints = computed<readonly FdUiLineChartPointViewModel[]>(() => (this.showPoints() ? this.pointViews() : []));
 
     protected readonly linePath = computed(() => {
         return this.seriesViews()[0]?.path ?? '';

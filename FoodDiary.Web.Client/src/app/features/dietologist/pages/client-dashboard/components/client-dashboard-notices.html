@@ -1,0 +1,5 @@
+@if (detailsLoading()) {
+<p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.DETAILS_LOADING' | translate }}</p>
+} @if (sectionLoadError(); as sectionErrorKey) {
+<p class="client-dashboard__warning fd-ui-body-sm">{{ sectionErrorKey | translate }}</p>
+}

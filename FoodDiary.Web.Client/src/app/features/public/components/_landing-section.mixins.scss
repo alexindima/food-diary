@@ -46,13 +46,7 @@
     }
 }
 
-@mixin marketing-body(
-    $size: 1.02rem,
-    $line-height: 1.65,
-    $color: var(--fd-color-slate-600),
-    $max-width: null,
-    $margin: 0
-) {
+@mixin marketing-body($size: 1.02rem, $line-height: 1.65, $color: var(--fd-color-slate-600), $max-width: null, $margin: 0) {
     margin: $margin;
     color: $color;
     font-size: $size;
@@ -63,10 +57,7 @@
     }
 }
 
-@mixin section-eyebrow(
-    $background: var(--fd-bg-brand-tint-medium),
-    $color: var(--fd-color-primary-600)
-) {
+@mixin section-eyebrow($background: var(--fd-bg-brand-tint-medium), $color: var(--fd-color-primary-600)) {
     display: inline-flex;
     align-self: flex-start;
     width: fit-content;

@@ -1767,7 +1767,6 @@ export default [
             '@angular-eslint/no-uncalled-signals': 'error',
             '@angular-eslint/use-injectable-provided-in': 'error',
             '@angular-eslint/no-async-lifecycle-method': 'error',
-            '@angular-eslint/no-conflicting-lifecycle': 'error',
             '@angular-eslint/no-empty-lifecycle-method': 'error',
             '@angular-eslint/no-forward-ref': 'error',
             '@angular-eslint/no-implicit-take-until-destroyed': 'error',

@@ -1,0 +1,31 @@
+@if (fasting(); as fastingView) {
+<fd-ui-card>
+    <div class="client-dashboard__section client-dashboard__summary-section">
+        <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.FASTING_TITLE' | translate }}</h2>
+        <strong class="client-dashboard__summary-value">{{ fastingView.status }}</strong>
+        <div class="client-dashboard__details">
+            <div class="client-dashboard__detail">
+                <span class="client-dashboard__detail-label fd-ui-caption">
+                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.PROTOCOL' | translate }}
+                </span>
+                <strong class="client-dashboard__detail-value">{{ fastingView.protocol }}</strong>
+            </div>
+            <div class="client-dashboard__detail">
+                <span class="client-dashboard__detail-label fd-ui-caption">
+                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.STARTED' | translate }}
+                </span>
+                <strong class="client-dashboard__detail-value">{{ fastingView.startedAtUtc | date: 'short' }}</strong>
+            </div>
+            <div class="client-dashboard__detail">
+                <span class="client-dashboard__detail-label fd-ui-caption">
+                    {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.PLANNED' | translate }}
+                </span>
+                <strong class="client-dashboard__detail-value">{{ fastingView.plannedDuration }}</strong>
+            </div>
+        </div>
+        @if (fastingView.checkInSummary; as checkInSummary) {
+        <p class="client-dashboard__row-text fd-ui-body-sm">{{ checkInSummary }}</p>
+        }
+    </div>
+</fd-ui-card>
+}

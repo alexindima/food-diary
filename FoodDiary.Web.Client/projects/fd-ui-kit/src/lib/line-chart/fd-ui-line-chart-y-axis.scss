@@ -1,0 +1,35 @@
+:host {
+    // Stay transparent so the y-axis element is placed directly in the chart plot grid.
+    display: contents;
+}
+
+.fd-ui-line-chart__y-axis {
+    position: relative;
+    min-width: 0;
+    height: var(--fd-line-chart-height);
+    text-align: right;
+    grid-area: y-axis;
+    color: var(--fd-color-text-muted);
+    font-size: var(--fd-text-caption-size);
+    line-height: var(--fd-text-caption-line-height);
+}
+
+.fd-ui-line-chart__y-axis-label,
+.fd-ui-line-chart__y-axis-sizer span {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.fd-ui-line-chart__y-axis-label {
+    position: absolute;
+    right: 0;
+    max-width: 112px;
+    transform: translateY(-50%);
+}
+
+.fd-ui-line-chart__y-axis-sizer {
+    display: grid;
+    visibility: hidden;
+}

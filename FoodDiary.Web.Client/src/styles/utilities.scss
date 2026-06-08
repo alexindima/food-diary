@@ -211,7 +211,6 @@
 }
 
 .fd-visually-hidden-focusable {
-
     &:not(:focus):not(:focus-visible) {
         position: absolute;
         width: 1px;

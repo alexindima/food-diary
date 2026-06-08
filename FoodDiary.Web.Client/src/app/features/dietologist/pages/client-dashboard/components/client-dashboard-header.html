@@ -1,0 +1,9 @@
+@if (show()) {
+<h1 class="client-dashboard__title fd-page-title">{{ title() }}</h1>
+<span class="client-dashboard__email fd-ui-caption">{{ email() }}</span>
+<div class="client-dashboard__profile-meta fd-row fd-wrap fd-gap-xs">
+    @for (chip of chips(); track chip) {
+    <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline"> {{ chip }} </span>
+    }
+</div>
+}

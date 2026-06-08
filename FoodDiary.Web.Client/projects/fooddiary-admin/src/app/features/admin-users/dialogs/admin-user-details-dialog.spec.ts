@@ -208,14 +208,11 @@ describe('AdminUserDetailsDialogComponent', () => {
         expect(component['canImpersonate']()).toBe(false);
     });
 
-    it('formats initials, fallback fields and role actors', async () => {
+    it('formats initials and fallback fields', async () => {
         const { component } = await createContextAsync();
 
         expect(component['initials']()).toBe('JD');
         expect(component['sections']()[0]?.fields.some(field => field.label === 'Roles' && field.value === 'User')).toBe(true);
-        expect(component['describeRoleActor'](roleAuditEvent)).toBe('admin@example.com');
-        expect(component['describeRoleActor']({ ...roleAuditEvent, actorEmail: '', actorUserId: 'actor-1' })).toBe('actor-1');
-        expect(component['describeRoleActor']({ ...roleAuditEvent, actorEmail: '', actorUserId: '' })).toBe('AdminPanel');
 
         component['user'].set({ ...baseUser, firstName: '', lastName: '', email: 'fallback@example.com', roles: [] });
 

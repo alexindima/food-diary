@@ -95,14 +95,12 @@
             [tintColor]="nutrientFillColors.alcohol"
         />
     </div>
-    } @if (hasMacrosError()) {
-    <div class="nutrition-editor__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">{{ macrosError() }}</div>
-    } @if (hasManualHint()) {
-    <p class="nutrition-editor__hint fd-ui-body-sm">{{ manualHintKey() | translate }}</p>
-    } @if (warning(); as warningData) {
-    <div class="nutrition-editor__warning fd-ui-body-sm">
-        {{ 'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING' | translate : { expected: warningData.expectedCalories, actual:
-        warningData.actualCalories, } }}
-    </div>
     }
+
+    <fd-nutrition-editor-messages
+        [macrosError]="macrosError()"
+        [showManualHint]="showManualHint()"
+        [manualHintKey]="manualHintKey()"
+        [warning]="warning()"
+    />
 </div>

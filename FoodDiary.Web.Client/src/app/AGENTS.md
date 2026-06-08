@@ -1,10 +1,12 @@
 # Angular App Guidelines
 
 ## Scope
+
 Rules for `FoodDiary.Web.Client/src/app/`.
 Also apply `FoodDiary.Web.Client/AGENTS.md`.
 
 ## Structure
+
 - Feature code belongs in `features/<feature>/`.
 - Shared API clients and API-facing helpers belong in `shared/api/`.
 - Shared models belong in `shared/models/`.
@@ -14,6 +16,7 @@ Also apply `FoodDiary.Web.Client/AGENTS.md`.
 - Route guards belong to route configuration usage, not arbitrary feature implementation imports.
 
 ## Angular Rules
+
 - Use standalone components without explicitly setting `standalone: true`.
 - Use `ChangeDetectionStrategy.OnPush`.
 - Prefer signals, `computed()`, `input()`, `output()`, and `inject()`.
@@ -23,6 +26,7 @@ Also apply `FoodDiary.Web.Client/AGENTS.md`.
 - Prefer class/style bindings over `ngClass`/`ngStyle`.
 
 ## Import Boundaries
+
 - Do not import feature roots directly. Import concrete feature layers.
 - Do not import `*.routes.ts` from feature implementation code.
 - Do not deep-import UI kit internals from `projects/fd-ui-kit/src/lib/**`.
@@ -32,6 +36,7 @@ Also apply `FoodDiary.Web.Client/AGENTS.md`.
 - Do not use direct browser globals in runtime code; preserve SSR compatibility.
 
 ## Verification
+
 - Lint: `cd FoodDiary.Web.Client && npm run lint`
 - Dependency graph: `cd FoodDiary.Web.Client && npm run lint:deps:strict`
 - App tests: `cd FoodDiary.Web.Client && npm run test:ci:app`

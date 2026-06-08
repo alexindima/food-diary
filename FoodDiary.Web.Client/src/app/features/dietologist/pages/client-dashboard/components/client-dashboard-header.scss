@@ -1,0 +1,18 @@
+:host {
+    // Stay transparent so heading, email and chips keep the parent header stack gap.
+    display: contents;
+}
+
+.client-dashboard__title {
+    margin: var(--fd-space-xs) 0 0;
+}
+
+.client-dashboard__email {
+    color: var(--fd-color-text-muted);
+}
+
+.client-dashboard__chip {
+    --fd-pill-bg: var(--fd-bg-status-info);
+    --fd-pill-border: transparent;
+    --fd-pill-color: var(--fd-color-primary-700);
+}

@@ -9,12 +9,12 @@
             (cdkDropListDropped)="onStepDrop($event)"
         >
             @for (step of steps(); track $index) {
-            <div class="recipe-step" cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="steps().length <= 1" [cdkDragBoundary]="dragBoundary">
+            <div class="recipe-step" cdkDrag cdkDragLockAxis="y" [cdkDragDisabled]="$count <= 1" [cdkDragBoundary]="dragBoundary">
                 <fd-recipe-step-card
                     [step]="step.state"
                     [stepIndex]="$index"
                     [isExpanded]="isStepExpanded($index)"
-                    [dragDisabled]="steps().length <= 1"
+                    [dragDisabled]="$count <= 1"
                     (toggleExpanded)="onToggleStepExpanded($index)"
                     (removeStep)="onRemoveStep($index)"
                     (addIngredient)="onAddIngredient($index)"

@@ -3,15 +3,12 @@
         <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">
             {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BACK' | translate }}
         </fd-ui-button>
-        @if (client(); as currentClient) {
-        <h1 class="client-dashboard__title fd-page-title">{{ clientTitle() }}</h1>
-        <span class="client-dashboard__email fd-ui-caption">{{ currentClient.email }}</span>
-        <div class="client-dashboard__profile-meta fd-row fd-wrap fd-gap-xs">
-            @for (chip of profileChips(); track chip) {
-            <span class="client-dashboard__chip fd-ui-pill fd-ui-pill--primary fd-ui-overline"> {{ chip }} </span>
-            }
-        </div>
-        }
+        <fd-client-dashboard-header
+            [show]="client() !== null"
+            [title]="clientTitle()"
+            [email]="client()?.email ?? ''"
+            [chips]="profileChips()"
+        />
     </div>
 
     @if (loading()) {
@@ -69,177 +66,29 @@
             </div>
         </form>
     </fd-ui-card>
-    } @if (detailsLoading()) {
-    <p class="fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.DETAILS_LOADING' | translate }}</p>
-    } @if (sectionLoadError(); as sectionErrorKey) {
-    <p class="client-dashboard__warning fd-ui-body-sm">{{ sectionErrorKey | translate }}</p>
     }
 
+    <fd-client-dashboard-notices [detailsLoading]="detailsLoading()" [sectionLoadError]="sectionLoadError()" />
+
     <div class="client-dashboard__sections fd-stack fd-gap-md">
-        @if (nutritionTiles().length > 0) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.STATISTICS_TITLE' | translate }}</h2>
-                <div class="client-dashboard__metrics">
-                    @for (tile of nutritionTiles(); track tile.labelKey) {
-                    <div class="client-dashboard__metric">
-                        <span class="client-dashboard__metric-label fd-ui-caption">{{ tile.labelKey | translate }}</span>
-                        <strong class="client-dashboard__metric-value">{{ tile.value }}</strong>
-                    </div>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (bodyTiles().length > 0) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROGRESS_TITLE' | translate }}</h2>
-                <div class="client-dashboard__metrics">
-                    @for (tile of bodyTiles(); track tile.labelKey) {
-                    <div class="client-dashboard__metric">
-                        <span class="client-dashboard__metric-label fd-ui-caption">{{ tile.labelKey | translate }}</span>
-                        <strong class="client-dashboard__metric-value">{{ tile.value }}</strong>
-                    </div>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (profileDetails().length > 0) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROFILE_TITLE' | translate }}</h2>
-                <div class="client-dashboard__details">
-                    @for (detail of profileDetails(); track detail.labelKey) {
-                    <div class="client-dashboard__detail">
-                        <span class="client-dashboard__detail-label fd-ui-caption">{{ detail.labelKey | translate }}</span>
-                        <strong class="client-dashboard__detail-value">{{ detail.value }}</strong>
-                    </div>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (mealItems().length > 0) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <div class="client-dashboard__section-head fd-row fd-justify-between fd-gap-md">
-                    <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
-                    <span class="fd-ui-caption">
-                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.COUNT' | translate: { count: dashboard()?.meals?.total ?? 0 } }}
-                    </span>
-                </div>
-                <div class="client-dashboard__list fd-stack fd-gap-sm">
-                    @for (meal of mealItems(); track meal.id) {
-                    <article class="client-dashboard__row">
-                        <div class="fd-row fd-justify-between fd-gap-sm">
-                            <div class="fd-stack fd-gap-xxs">
-                                <strong class="client-dashboard__row-title">{{ meal.title }}</strong>
-                                <span class="fd-ui-caption">{{ meal.date | date: 'short' }}</span>
-                            </div>
-                            <strong class="client-dashboard__row-value">{{ meal.calories }}</strong>
-                        </div>
-                        <p class="client-dashboard__row-text fd-ui-body-sm">{{ meal.itemSummary }}</p>
-                        <span class="fd-ui-caption">{{ meal.macros }}</span>
-                    </article>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @else if (client()?.permissions?.shareMeals) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.MEALS_TITLE' | translate }}</h2>
-                <p class="client-dashboard__placeholder fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.MEALS.EMPTY' | translate }}</p>
-            </div>
-        </fd-ui-card>
-        } @if (weightSummary(); as weight) {
-        <fd-ui-card>
-            <div class="client-dashboard__section client-dashboard__summary-section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WEIGHT_TITLE' | translate }}</h2>
-                <strong class="client-dashboard__summary-value">{{ weight.value }}</strong>
-                <div class="client-dashboard__summary-meta fd-row fd-wrap fd-gap-xs">
-                    <span class="fd-ui-caption">{{ weight.date | date: 'mediumDate' }}</span>
-                    @if (weight.delta; as delta) {
-                    <span class="fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BODY.DELTA' | translate: { delta } }}
-                    </span>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (waistSummary(); as waist) {
-        <fd-ui-card>
-            <div class="client-dashboard__section client-dashboard__summary-section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WAIST_TITLE' | translate }}</h2>
-                <strong class="client-dashboard__summary-value">{{ waist.value }}</strong>
-                <div class="client-dashboard__summary-meta fd-row fd-wrap fd-gap-xs">
-                    <span class="fd-ui-caption">{{ waist.date | date: 'mediumDate' }}</span>
-                    @if (waist.delta; as delta) {
-                    <span class="fd-ui-pill fd-ui-pill--compact fd-ui-caption">
-                        {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BODY.DELTA' | translate: { delta } }}
-                    </span>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (hydrationSummary(); as hydration) {
-        <fd-ui-card>
-            <div class="client-dashboard__section client-dashboard__summary-section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.HYDRATION_TITLE' | translate }}</h2>
-                <strong class="client-dashboard__summary-value">{{ hydration.total }}</strong>
-                @if (hydration.goal; as goal) {
-                <span class="fd-ui-caption"> {{ 'DIETOLOGIST.CLIENT_DASHBOARD.HYDRATION.GOAL' | translate: { goal } }} </span>
-                } @if (hydration.progress !== null) {
-                <div class="client-dashboard__progress" aria-hidden="true">
-                    <span [style.width.%]="hydration.progress"></span>
-                </div>
-                }
-            </div>
-        </fd-ui-card>
-        } @if (fastingSummary(); as fasting) {
-        <fd-ui-card>
-            <div class="client-dashboard__section client-dashboard__summary-section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.FASTING_TITLE' | translate }}</h2>
-                <strong class="client-dashboard__summary-value">{{ fasting.status }}</strong>
-                <div class="client-dashboard__details">
-                    <div class="client-dashboard__detail">
-                        <span class="client-dashboard__detail-label fd-ui-caption">
-                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.PROTOCOL' | translate }}
-                        </span>
-                        <strong class="client-dashboard__detail-value">{{ fasting.protocol }}</strong>
-                    </div>
-                    <div class="client-dashboard__detail">
-                        <span class="client-dashboard__detail-label fd-ui-caption">
-                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.STARTED' | translate }}
-                        </span>
-                        <strong class="client-dashboard__detail-value">{{ fasting.startedAtUtc | date: 'short' }}</strong>
-                    </div>
-                    <div class="client-dashboard__detail">
-                        <span class="client-dashboard__detail-label fd-ui-caption">
-                            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.FASTING.PLANNED' | translate }}
-                        </span>
-                        <strong class="client-dashboard__detail-value">{{ fasting.plannedDuration }}</strong>
-                    </div>
-                </div>
-                @if (fasting.checkInSummary; as checkInSummary) {
-                <p class="client-dashboard__row-text fd-ui-body-sm">{{ checkInSummary }}</p>
-                }
-            </div>
-        </fd-ui-card>
-        } @if (goalTiles().length > 0) {
-        <fd-ui-card>
-            <div class="client-dashboard__section">
-                <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.GOALS_TITLE' | translate }}</h2>
-                <div class="client-dashboard__metrics">
-                    @for (tile of goalTiles(); track tile.labelKey) {
-                    <div class="client-dashboard__metric">
-                        <span class="client-dashboard__metric-label fd-ui-caption">{{ tile.labelKey | translate }}</span>
-                        <strong class="client-dashboard__metric-value">{{ tile.value }}</strong>
-                    </div>
-                    }
-                </div>
-            </div>
-        </fd-ui-card>
-        } @if (!hasAnyPermission()) {
+        <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.STATISTICS_TITLE" [tiles]="nutritionTiles()" />
+        <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROGRESS_TITLE" [tiles]="bodyTiles()" />
+        <fd-client-dashboard-metric-list
+            titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROFILE_TITLE"
+            [tiles]="profileDetails()"
+            [wide]="true"
+        />
+        <fd-client-dashboard-meals-card
+            [meals]="mealItems()"
+            [total]="dashboard()?.meals?.total ?? 0"
+            [showEmptyState]="client()?.permissions?.shareMeals ?? false"
+        />
+        <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WEIGHT_TITLE" [summary]="weightSummary()" />
+        <fd-client-dashboard-summary-card titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.WAIST_TITLE" [summary]="waistSummary()" />
+        <fd-client-dashboard-hydration-card [hydration]="hydrationSummary()" />
+        <fd-client-dashboard-fasting-card [fasting]="fastingSummary()" />
+        <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.GOALS_TITLE" [tiles]="goalTiles()" />
+        @if (!hasAnyPermission()) {
         <p class="client-dashboard__no-data fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NO_DATA' | translate }}</p>
         }
 

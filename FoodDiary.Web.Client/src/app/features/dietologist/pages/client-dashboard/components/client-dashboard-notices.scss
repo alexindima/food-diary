@@ -1,0 +1,8 @@
+:host {
+    // Stay transparent so notices flow directly in the dashboard column.
+    display: contents;
+}
+
+.client-dashboard__warning {
+    color: var(--fd-color-text-muted);
+}

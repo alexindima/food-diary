@@ -1,41 +1,28 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { type FieldTree, FormField } from '@angular/forms/signals';
+import { FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiNutrientInputComponent } from 'fd-ui-kit/nutrient-input/fd-ui-nutrient-input';
 
-export type NutritionMacroSegment = {
-    key: 'proteins' | 'fats' | 'carbs';
-    percent: number;
-};
+import type {
+    NutritionEditorSignalForm,
+    NutritionMacroSegment,
+    NutritionMacroState,
+    NutritionMismatchWarning,
+} from './nutrition-editor.types';
+import { NutritionEditorMessagesComponent } from './nutrition-editor-messages';
 
-export type NutritionMacroState = {
-    isEmpty: boolean;
-    segments: NutritionMacroSegment[];
-};
-
-export type NutritionMismatchWarning = {
-    expectedCalories: number;
-    actualCalories: number;
-};
-
-export type NutritionFormModel = {
-    calories: number | null;
-    proteins: number | null;
-    fats: number | null;
-    carbs: number | null;
-    fiber: number | null;
-    alcohol: number | null;
-};
-
-export type NutritionEditorSignalForm = Pick<
-    FieldTree<NutritionFormModel>,
-    'calories' | 'proteins' | 'fats' | 'carbs' | 'fiber' | 'alcohol'
->;
+export type {
+    NutritionEditorSignalForm,
+    NutritionFormModel,
+    NutritionMacroSegment,
+    NutritionMacroState,
+    NutritionMismatchWarning,
+} from './nutrition-editor.types';
 
 @Component({
     selector: 'fd-nutrition-editor',
-    imports: [CommonModule, FormField, TranslatePipe, FdUiNutrientInputComponent],
+    imports: [CommonModule, FormField, TranslatePipe, FdUiNutrientInputComponent, NutritionEditorMessagesComponent],
     templateUrl: './nutrition-editor.html',
     styleUrls: ['./nutrition-editor.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -50,8 +37,6 @@ export class NutritionEditorComponent {
     public readonly manualHintKey = input('');
     public readonly warning = input<NutritionMismatchWarning | null>(null);
     protected readonly hasCaloriesError = computed(() => this.hasText(this.caloriesError()));
-    protected readonly hasMacrosError = computed(() => this.hasText(this.macrosError()));
-    protected readonly hasManualHint = computed(() => this.showManualHint() && this.manualHintKey().trim().length > 0);
 
     protected readonly nutrientFillColors = {
         calories: 'var(--fd-color-nutrition-calories-fill)',

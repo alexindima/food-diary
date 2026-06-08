@@ -1,0 +1,53 @@
+:host {
+    // Stay transparent so the card participates directly in the sections stack gap.
+    display: contents;
+}
+
+.client-dashboard__section {
+    padding: var(--fd-space-md);
+
+    h2 {
+        margin: 0 0 var(--fd-space-xs);
+    }
+}
+
+.client-dashboard__summary-section {
+    display: grid;
+    gap: var(--fd-space-xs);
+}
+
+.client-dashboard__summary-value {
+    color: var(--fd-color-text);
+    font-size: var(--fd-text-display-xs-size);
+    line-height: var(--fd-text-display-xs-line-height);
+}
+
+.client-dashboard__details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--fd-space-sm);
+}
+
+.client-dashboard__detail {
+    display: grid;
+    gap: var(--fd-space-xxs);
+    padding: var(--fd-space-sm);
+    border: var(--fd-border-default);
+    border-radius: var(--fd-radius-sm);
+    background: var(--fd-bg-surface-soft);
+}
+
+.client-dashboard__detail-label {
+    color: var(--fd-color-text-muted);
+}
+
+.client-dashboard__detail-value {
+    color: var(--fd-color-text);
+    font-size: var(--fd-text-title-sm-size);
+    line-height: var(--fd-text-title-sm-line-height);
+}
+
+.client-dashboard__row-text {
+    margin: 0;
+    color: var(--fd-color-text-muted);
+}

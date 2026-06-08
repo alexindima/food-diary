@@ -1,0 +1,10 @@
+@if (show()) {
+<div class="fd-ui-line-chart__legend" aria-hidden="true">
+    @for (item of series(); track item.label) {
+    <span>
+        <i [style.background]="item.color"></i>
+        {{ item.label }}
+    </span>
+    }
+</div>
+}

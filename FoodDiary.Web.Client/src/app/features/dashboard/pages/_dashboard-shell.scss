@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 @mixin apply-dashboard-shell($color-text-secondary) {
-
     &__header {
         margin-bottom: var(--fd-page-header-gap);
         position: relative;
@@ -33,7 +32,6 @@
     }
 
     &--editing {
-
         .dashboard__date-button,
         .dashboard__push-action {
             pointer-events: none;
@@ -64,7 +62,6 @@
     }
 
     &__grid--editing {
-
         .dashboard__block {
             cursor: pointer;
         }

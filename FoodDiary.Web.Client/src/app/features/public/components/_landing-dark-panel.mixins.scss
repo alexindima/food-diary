@@ -7,8 +7,6 @@
         background: $background;
     }
     border: var(--fd-border-width) solid var(--fd-landing-dark-border);
-    box-shadow:
-        var(--fd-landing-shadow-strong),
-        var(--fd-landing-shadow-highlight);
+    box-shadow: var(--fd-landing-shadow-strong), var(--fd-landing-shadow-highlight);
     color: var(--fd-color-slate-50);
 }
