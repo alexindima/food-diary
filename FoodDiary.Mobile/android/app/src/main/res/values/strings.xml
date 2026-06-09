@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Food Diary</string>
+    <string name="title_activity_main">Food Diary</string>
+    <string name="package_name">club.fooddiary.app</string>
+    <string name="custom_url_scheme">club.fooddiary.app</string>
+</resources>
