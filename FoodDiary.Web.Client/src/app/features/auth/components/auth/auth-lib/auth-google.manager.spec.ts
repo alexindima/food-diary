@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { GoogleIdentityService } from '../../../lib/google-identity.service';
@@ -9,6 +10,9 @@ let googleIdentityServiceSpy: {
     prompt: ReturnType<typeof vi.fn>;
     renderButton: ReturnType<typeof vi.fn>;
 };
+let translateServiceSpy: {
+    instant: ReturnType<typeof vi.fn>;
+};
 
 beforeEach(() => {
     googleIdentityServiceSpy = {
@@ -16,9 +20,16 @@ beforeEach(() => {
         prompt: vi.fn(),
         renderButton: vi.fn(),
     };
+    translateServiceSpy = {
+        instant: vi.fn((key: string) => key),
+    };
 
     TestBed.configureTestingModule({
-        providers: [AuthGoogleManager, { provide: GoogleIdentityService, useValue: googleIdentityServiceSpy }],
+        providers: [
+            AuthGoogleManager,
+            { provide: GoogleIdentityService, useValue: googleIdentityServiceSpy },
+            { provide: TranslateService, useValue: translateServiceSpy },
+        ],
     });
 });
 
