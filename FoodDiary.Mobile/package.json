@@ -15,7 +15,8 @@
     },
     "dependencies": {
         "@capacitor/android": "8.4.0",
-        "@capacitor/core": "8.4.0"
+        "@capacitor/core": "8.4.0",
+        "@capgo/capacitor-social-login": "^8.3.22"
     },
     "devDependencies": {
         "@capacitor/cli": "8.4.0",

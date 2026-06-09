@@ -90,6 +90,30 @@
         min-height: var(--fd-size-control-touch);
     }
 
+    &__native-google-button {
+        width: min(100%, 360px);
+        min-height: var(--fd-size-control-touch);
+        border: var(--fd-border-width-default) solid var(--fd-color-border-strong);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-color-white);
+        color: var(--fd-color-text);
+        font-family: inherit;
+        font-size: var(--fd-text-body-size);
+        font-weight: var(--fd-font-weight-semibold);
+        line-height: var(--fd-text-body-line-height);
+        cursor: pointer;
+        box-shadow: var(--fd-shadow-sm);
+
+        &:hover {
+            border-color: var(--fd-color-primary-300);
+        }
+
+        &:focus-visible {
+            outline: var(--fd-focus-ring-width) solid var(--fd-focus-ring-color);
+            outline-offset: var(--fd-focus-ring-offset);
+        }
+    }
+
     &__google-hint {
         text-align: center;
         color: var(--fd-color-text-muted);

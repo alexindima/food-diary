@@ -8,6 +8,16 @@ const config: CapacitorConfig = {
         androidScheme: 'https',
         appStartPath: '/mobile/login',
     },
+    plugins: {
+        SocialLogin: {
+            providers: {
+                google: true,
+                apple: false,
+                facebook: false,
+                twitter: false,
+            },
+        },
+    },
 };
 
 export default config;
