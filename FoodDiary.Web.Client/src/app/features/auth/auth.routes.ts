@@ -2,6 +2,16 @@ import type { Routes } from '@angular/router';
 
 export const authRoutes: Routes = [
     {
+        path: 'mobile',
+        redirectTo: 'mobile/login',
+        pathMatch: 'full',
+    },
+    {
+        path: 'mobile/login',
+        loadComponent: async () => import('./pages/mobile-login/mobile-login').then(m => m.MobileLoginComponent),
+        data: { seo: { titleKey: 'SEO.AUTH_LOGIN', descriptionKey: 'SEO.AUTH_DESCRIPTION', noIndex: true } },
+    },
+    {
         path: 'verify-pending',
         loadComponent: async () =>
             import('./pages/email-verification-pending/email-verification-pending').then(m => m.EmailVerificationPendingComponent),

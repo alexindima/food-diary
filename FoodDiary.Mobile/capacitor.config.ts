@@ -6,6 +6,7 @@ const config: CapacitorConfig = {
     webDir: '../FoodDiary.Web.Client/dist/browser',
     server: {
         androidScheme: 'https',
+        appStartPath: '/mobile/login',
     },
 };
 

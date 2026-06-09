@@ -29,9 +29,11 @@ import { LoggingApiService } from './services/logging-api.service';
 import { UserService } from './shared/api/user.service';
 import { FoodDiaryTranslationLoader } from './shared/i18n/food-diary-translation.loader';
 import { LocalizationService } from './shared/i18n/localization.service';
+import { isMobileShellWindow } from './shared/platform/mobile-shell-runtime';
 import { ThemeService } from './shared/theme/theme.service';
 
 const isBrowserEnvironment = typeof window !== 'undefined';
+const isMobileShellEnvironment = isBrowserEnvironment && isMobileShellWindow(window);
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -107,7 +109,7 @@ export const appConfig: ApplicationConfig = {
         ...(isBrowserEnvironment
             ? [
                   provideServiceWorker('ngsw-worker.js', {
-                      enabled: !isDevMode(),
+                      enabled: !isDevMode() && !isMobileShellEnvironment,
                       registrationStrategy: 'registerWhenStable:30000',
                   }),
               ]

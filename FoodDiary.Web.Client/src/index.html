@@ -10,6 +10,16 @@
         <meta name="keywords" content="nutrition, food diary, health, food" />
         <base href="/" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <script>
+            (() => {
+                const isAndroidWebView = navigator.userAgent.includes('Android') && navigator.userAgent.includes('; wv');
+                const isCapacitorLocalHost = location.protocol === 'https:' && location.hostname === 'localhost';
+
+                if (isAndroidWebView && isCapacitorLocalHost && location.pathname === '/') {
+                    location.replace('/mobile/login');
+                }
+            })();
+        </script>
         <link rel="icon" type="image/svg+xml" href="/assets/images/header/logo.svg" />
         <link rel="alternate icon" type="image/x-icon" href="/assets/images/favicon.ico" />
         <link rel="manifest" href="/assets/manifest.webmanifest" />

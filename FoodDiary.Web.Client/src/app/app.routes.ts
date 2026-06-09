@@ -7,6 +7,7 @@ import { authGuard } from './guards/auth.guard';
 import { dietologistGuard } from './guards/dietologist.guard';
 import { loggedInGuard } from './guards/logged-in.guard';
 import { unsavedChangesGuard } from './guards/unsaved-changes.guard';
+import { mobileShellStartGuard } from './shared/platform/mobile-shell-start.guard';
 
 const publicSeoLanding = ({
     path,
@@ -43,7 +44,7 @@ export const routes: Routes = [
     {
         path: '',
         loadComponent: async () => import('./features/public/pages/landing/main').then(m => m.MainComponent),
-        canActivate: [loggedInGuard],
+        canActivate: [mobileShellStartGuard, loggedInGuard],
         canDeactivate: [unsavedChangesGuard],
         data: { seo: { titleKey: 'SEO.LANDING_TITLE', descriptionKey: 'SEO.LANDING_DESCRIPTION' } },
     },
