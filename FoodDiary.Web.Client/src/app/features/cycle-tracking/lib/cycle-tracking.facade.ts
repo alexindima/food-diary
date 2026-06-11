@@ -276,7 +276,7 @@ export class CycleTrackingFacade {
 
                 const bleedingDates = new Set(day.bleedingEntries.map(entry => entry.date));
                 const symptomDates = new Set(day.symptoms.map(symptom => symptom.date));
-                this.cycle.set({
+                const updatedCycle = {
                     ...current,
                     bleedingEntries: [...current.bleedingEntries.filter(entry => !bleedingDates.has(entry.date)), ...day.bleedingEntries],
                     symptoms: [...current.symptoms.filter(symptom => !symptomDates.has(symptom.date)), ...day.symptoms],
@@ -287,7 +287,9 @@ export class CycleTrackingFacade {
                                   ...current.fertilitySignals.filter(fertilitySignal => fertilitySignal.date !== day.fertilitySignal?.date),
                                   day.fertilitySignal,
                               ],
-                });
+                };
+                this.cycle.set(updatedCycle);
+                this.loadNutritionSummary(updatedCycle);
             });
     }
 

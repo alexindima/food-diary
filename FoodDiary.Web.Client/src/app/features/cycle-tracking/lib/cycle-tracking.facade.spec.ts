@@ -153,6 +153,7 @@ describe('CycleTrackingFacade days', () => {
         });
         expect(facade.bleedingEntries()).toHaveLength(1);
         expect(facade.bleedingEntries()[0].id).toBe('bleeding-1');
+        expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
     });
 
     it('does not save a day when current cycle is missing', () => {
