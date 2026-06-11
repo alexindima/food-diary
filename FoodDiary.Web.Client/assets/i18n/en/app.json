@@ -2025,6 +2025,7 @@
         "OVULATION_IN": "Ovulation in {{days}} days",
         "NEXT_PERIOD_IN": "Next period in {{days}} days",
         "NEXT_PERIOD_TODAY": "Period expected today",
+        "CONFIDENCE": "{{value}} confidence",
         "NO_DATA_TITLE": "Cycle not set",
         "NO_DATA_BODY": "Add your cycle start date to see predictions here.",
         "NO_DATA_ACTION": "Set cycle"

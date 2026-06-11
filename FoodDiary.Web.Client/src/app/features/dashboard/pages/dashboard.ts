@@ -184,6 +184,7 @@ export class DashboardComponent {
         const cycle = this.cycle();
 
         return {
+            cycle,
             startDate: cycle?.trackingStartDate ?? null,
             predictions: cycle?.predictions ?? null,
         };

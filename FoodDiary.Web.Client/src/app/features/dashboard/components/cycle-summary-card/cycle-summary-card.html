@@ -11,6 +11,15 @@
                     }
                 </div>
             }
+            @if (hasMeta()) {
+                <div class="cycle-summary-card__meta fd-row fd-gap-xs">
+                    @for (pill of metaPills(); track pill.id) {
+                        <span class="cycle-summary-card__pill fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text">
+                            {{ pill.labelKey | translate: pill.params }}
+                        </span>
+                    }
+                </div>
+            }
         } @else {
             <fd-notice-banner
                 type="info"
