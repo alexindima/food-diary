@@ -10,15 +10,19 @@ import {
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     type CycleLogDay,
+    type CycleNutritionSummary,
     type CycleResponse,
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../models/cycle.data';
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
+const LOGGED_CYCLE_DAYS = 4;
+
 let facade: CycleTrackingFacade;
 let cyclesService: {
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
     getCurrent: ReturnType<typeof vi.fn<CyclesService['getCurrent']>>;
+    getNutritionSummary: ReturnType<typeof vi.fn<CyclesService['getNutritionSummary']>>;
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
     upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
 };
@@ -27,6 +31,7 @@ let exportService: { exportCycle: ReturnType<typeof vi.fn<ExportService['exportC
 beforeEach(() => {
     cyclesService = {
         getCurrent: vi.fn<CyclesService['getCurrent']>().mockReturnValue(of(createCycleResponse())),
+        getNutritionSummary: vi.fn<CyclesService['getNutritionSummary']>().mockReturnValue(of(createNutritionSummary())),
         create: vi.fn<CyclesService['create']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -76,6 +81,8 @@ describe('CycleTrackingFacade current cycle', () => {
 
         expect(cyclesService.getCurrent).toHaveBeenCalledTimes(1);
         expect(facade.cycle()?.id).toBe('cycle-1');
+        expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(1);
+        expect(facade.nutritionSummary()?.loggedCycleDays).toBe(LOGGED_CYCLE_DAYS);
     });
 
     it('creates a new cycle from form values', () => {
@@ -305,6 +312,21 @@ function createCycleLogDay(): CycleLogDay {
             },
         ],
         fertilitySignal: null,
+    };
+}
+
+function createNutritionSummary(): CycleNutritionSummary {
+    return {
+        dateFrom: '2026-04-01T00:00:00.000Z',
+        dateTo: '2026-04-30T23:59:59.999Z',
+        loggedCycleDays: LOGGED_CYCLE_DAYS,
+        daysWithMeals: 3,
+        bleedingDays: 2,
+        averageCaloriesOnBleedingDays: 2100,
+        averageCaloriesOnNonBleedingCycleDays: 1800,
+        averageFiberOnBleedingDays: 18,
+        averageFiberOnNonBleedingCycleDays: 28,
+        averagePainImpactOnDaysWithMeals: 6,
     };
 }
 

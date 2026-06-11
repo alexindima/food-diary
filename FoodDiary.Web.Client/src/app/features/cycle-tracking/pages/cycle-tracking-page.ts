@@ -45,11 +45,13 @@ import {
 } from '../models/cycle.data';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
+import { CycleNutritionSummaryCardComponent } from './cycle-nutrition-summary-card/cycle-nutrition-summary-card';
 import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from './cycle-tracking-page-lib/cycle-tracking-page.config';
 import {
     buildCycleCurrentView,
     buildCycleDayItems,
     buildCycleFactorItems,
+    buildCycleNutritionSummaryView,
     buildCyclePredictionView,
 } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
 
@@ -70,6 +72,7 @@ import {
         FdUiCheckboxComponent,
         CycleCurrentCardComponent,
         CycleDaysCardComponent,
+        CycleNutritionSummaryCardComponent,
     ],
     templateUrl: './cycle-tracking-page.html',
     styleUrl: './cycle-tracking-page.scss',
@@ -87,7 +90,9 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
+    protected readonly isLoadingNutritionSummary = this.facade.isLoadingNutritionSummary;
     protected readonly cycle = this.facade.cycle;
+    protected readonly nutritionSummary = this.facade.nutritionSummary;
     protected readonly startCycleForm = this.facade.startCycleForm;
     protected readonly dayForm = this.facade.dayForm;
     protected readonly factorForm = this.facade.factorForm;
@@ -100,6 +105,7 @@ export class CycleTrackingPageComponent {
     protected readonly fertilitySignals = this.facade.fertilitySignals;
     protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
+    protected readonly nutritionSummaryView = computed(() => buildCycleNutritionSummaryView(this.nutritionSummary(), this.appLocale()));
     protected readonly dayItems = computed(() =>
         buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), this.appLocale()),
     );

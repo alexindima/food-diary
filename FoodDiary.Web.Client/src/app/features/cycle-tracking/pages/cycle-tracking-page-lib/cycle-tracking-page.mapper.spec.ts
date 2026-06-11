@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BleedingEntry, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
+import type { BleedingEntry, CycleNutritionSummary, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
 import {
     BLEEDING_TYPE_BLEEDING,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -10,7 +10,13 @@ import {
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
-import { buildCycleCurrentView, buildCycleDayItems, buildCycleFactorItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
+import {
+    buildCycleCurrentView,
+    buildCycleDayItems,
+    buildCycleFactorItems,
+    buildCycleNutritionSummaryView,
+    buildCyclePredictionView,
+} from './cycle-tracking-page.mapper';
 
 const CYCLE: CycleResponse = {
     id: 'cycle-1',
@@ -53,6 +59,19 @@ const CARE_PROMPT_YEAR = 2026;
 const APRIL_MONTH_INDEX = 3;
 const LAST_PROLONGED_BLEEDING_INDEX = PROLONGED_BLEEDING_DAYS - 1;
 const SEVERE_PAIN_VALUE = 8;
+const NUTRITION_LOGGED_CYCLE_DAYS = 4;
+const NUTRITION_SUMMARY: CycleNutritionSummary = {
+    dateFrom: '2026-04-01T00:00:00.000Z',
+    dateTo: '2026-04-30T23:59:59.999Z',
+    loggedCycleDays: NUTRITION_LOGGED_CYCLE_DAYS,
+    daysWithMeals: 3,
+    bleedingDays: 2,
+    averageCaloriesOnBleedingDays: 2100.25,
+    averageCaloriesOnNonBleedingCycleDays: 1800,
+    averageFiberOnBleedingDays: 18.5,
+    averageFiberOnNonBleedingCycleDays: 28,
+    averagePainImpactOnDaysWithMeals: 6.25,
+};
 
 const BLEEDING_ENTRY: BleedingEntry = {
     id: 'bleeding-1',
@@ -190,6 +209,23 @@ describe('cycle tracking prediction mapper', () => {
 
         expect(view?.hasPredictionRanges).toBe(false);
         expect(view?.limitedReasonKey).toBe('CYCLE_TRACKING.PREDICTIONS_LIMITED');
+    });
+});
+
+describe('cycle tracking nutrition summary mapper', () => {
+    it('formats nutrition summary values', () => {
+        const view = buildCycleNutritionSummaryView(NUTRITION_SUMMARY, 'en-US');
+
+        expect(view?.summary.loggedCycleDays).toBe(NUTRITION_LOGGED_CYCLE_DAYS);
+        expect(view?.bleedingCaloriesLabel).toBe('2,100.3');
+        expect(view?.nonBleedingCaloriesLabel).toBe('1,800');
+        expect(view?.bleedingFiberLabel).toBe('18.5');
+        expect(view?.nonBleedingFiberLabel).toBe('28');
+        expect(view?.painImpactLabel).toBe('6.3');
+    });
+
+    it('returns null without nutrition summary', () => {
+        expect(buildCycleNutritionSummaryView(null, 'en-US')).toBeNull();
     });
 });
 

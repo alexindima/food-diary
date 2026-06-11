@@ -130,6 +130,19 @@ export type CyclePredictions = {
     rationale: string;
 };
 
+export type CycleNutritionSummary = {
+    dateFrom: string;
+    dateTo: string;
+    loggedCycleDays: number;
+    daysWithMeals: number;
+    bleedingDays: number;
+    averageCaloriesOnBleedingDays: number;
+    averageCaloriesOnNonBleedingCycleDays: number;
+    averageFiberOnBleedingDays: number;
+    averageFiberOnNonBleedingCycleDays: number;
+    averagePainImpactOnDaysWithMeals: number;
+};
+
 export type CycleResponse = {
     id: string;
     userId: string;

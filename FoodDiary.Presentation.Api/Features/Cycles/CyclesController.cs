@@ -17,6 +17,15 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
         HandleOk(userId.ToCurrentQuery(), static value => value is null ? null : value.ToHttpResponse());
 
+    [HttpGet("current/nutrition-summary")]
+    [ProducesResponseType<CycleNutritionSummaryHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    public Task<IActionResult> GetNutritionSummary(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] DateTime dateFrom,
+        [FromQuery] DateTime dateTo) =>
+        HandleOk(userId.ToNutritionSummaryQuery(dateFrom, dateTo), static value => value is null ? null : value.ToHttpResponse());
+
     [HttpPost]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

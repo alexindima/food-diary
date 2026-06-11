@@ -46,6 +46,19 @@ public static class CycleHttpResponseMappings {
             model.Symptoms.ToHttpResponseList(ToHttpResponse),
             model.FertilitySignal?.ToHttpResponse());
 
+    public static CycleNutritionSummaryHttpResponse ToHttpResponse(this CycleNutritionSummaryModel model) =>
+        new(
+            model.DateFrom,
+            model.DateTo,
+            model.LoggedCycleDays,
+            model.DaysWithMeals,
+            model.BleedingDays,
+            model.AverageCaloriesOnBleedingDays,
+            model.AverageCaloriesOnNonBleedingCycleDays,
+            model.AverageFiberOnBleedingDays,
+            model.AverageFiberOnNonBleedingCycleDays,
+            model.AveragePainImpactOnDaysWithMeals);
+
     public static BleedingEntryHttpResponse ToHttpResponse(this BleedingEntryModel model) =>
         new(
             model.Id,

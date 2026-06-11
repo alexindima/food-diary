@@ -4,7 +4,14 @@ import { catchError, map, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { CreateCyclePayload, CycleLogDay, CycleResponse, UpsertCycleDayPayload, UpsertCycleFactorPayload } from '../models/cycle.data';
+import type {
+    CreateCyclePayload,
+    CycleLogDay,
+    CycleNutritionSummary,
+    CycleResponse,
+    UpsertCycleDayPayload,
+    UpsertCycleFactorPayload,
+} from '../models/cycle.data';
 
 @Service()
 export class CyclesService extends ApiService {
@@ -13,6 +20,12 @@ export class CyclesService extends ApiService {
     public getCurrent(): Observable<CycleResponse | null> {
         return this.get<CycleResponse | null>('current').pipe(
             catchError((error: unknown) => fallbackApiError('Cycle fetch error', error, null)),
+        );
+    }
+
+    public getNutritionSummary(dateFrom: string, dateTo: string): Observable<CycleNutritionSummary | null> {
+        return this.get<CycleNutritionSummary | null>('current/nutrition-summary', { dateFrom, dateTo }).pipe(
+            catchError((error: unknown) => fallbackApiError('Cycle nutrition summary fetch error', error, null)),
         );
     }
 

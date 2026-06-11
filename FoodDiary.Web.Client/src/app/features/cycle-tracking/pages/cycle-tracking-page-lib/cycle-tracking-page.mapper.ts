@@ -18,6 +18,7 @@ import {
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     type CycleFactor,
     type CycleFactorType,
+    type CycleNutritionSummary,
     type CyclePredictions,
     type CycleResponse,
     type CycleSymptomEntry,
@@ -33,6 +34,7 @@ import type {
     CycleDaySignalItemViewModel,
     CycleDayViewModel,
     CycleFactorListItemViewModel,
+    CycleNutritionSummaryViewModel,
     CyclePredictionViewModel,
     CycleSummaryItemViewModel,
     CycleViewModel,
@@ -85,6 +87,25 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         confidenceLabel: prediction.confidence,
         hasPredictionRanges,
         limitedReasonKey: hasPredictionRanges ? null : 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
+    };
+}
+
+export function buildCycleNutritionSummaryView(
+    summary: CycleNutritionSummary | null,
+    locale: string,
+): CycleNutritionSummaryViewModel | null {
+    if (summary === null) {
+        return null;
+    }
+
+    const numberFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+    return {
+        summary,
+        bleedingCaloriesLabel: numberFormatter.format(summary.averageCaloriesOnBleedingDays),
+        nonBleedingCaloriesLabel: numberFormatter.format(summary.averageCaloriesOnNonBleedingCycleDays),
+        bleedingFiberLabel: numberFormatter.format(summary.averageFiberOnBleedingDays),
+        nonBleedingFiberLabel: numberFormatter.format(summary.averageFiberOnNonBleedingCycleDays),
+        painImpactLabel: numberFormatter.format(summary.averagePainImpactOnDaysWithMeals),
     };
 }
 

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Features.Cycles.Mappings;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
@@ -49,6 +50,19 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(request.Type, command.Type);
         Assert.Equal(request.StartDate, command.StartDate);
         Assert.True(command.ClearNotes);
+    }
+
+    [Fact]
+    public void NutritionSummaryQuery_ToQuery_MapsRange() {
+        var userId = Guid.NewGuid();
+        DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        DateTime dateTo = dateFrom.AddDays(7);
+
+        GetCycleNutritionSummaryQuery query = userId.ToNutritionSummaryQuery(dateFrom, dateTo);
+
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(dateFrom, query.DateFrom);
+        Assert.Equal(dateTo, query.DateTo);
     }
 
     [Fact]
@@ -137,5 +151,30 @@ public sealed class CycleHttpMappingsTests {
 
         Assert.Null(response.Predictions);
         Assert.Empty(response.BleedingEntries);
+    }
+
+    [Fact]
+    public void CycleNutritionSummary_ToHttpResponse_MapsAllFields() {
+        DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var model = new CycleNutritionSummaryModel(
+            dateFrom,
+            dateFrom.AddDays(7),
+            LoggedCycleDays: 4,
+            DaysWithMeals: 3,
+            BleedingDays: 2,
+            AverageCaloriesOnBleedingDays: 2100,
+            AverageCaloriesOnNonBleedingCycleDays: 1800,
+            AverageFiberOnBleedingDays: 18,
+            AverageFiberOnNonBleedingCycleDays: 28,
+            AveragePainImpactOnDaysWithMeals: 6.5);
+
+        CycleNutritionSummaryHttpResponse response = model.ToHttpResponse();
+
+        Assert.Equal(4, response.LoggedCycleDays);
+        Assert.Equal(3, response.DaysWithMeals);
+        Assert.Equal(2, response.BleedingDays);
+        Assert.Equal(2100, response.AverageCaloriesOnBleedingDays);
+        Assert.Equal(28, response.AverageFiberOnNonBleedingCycleDays);
+        Assert.Equal(6.5, response.AveragePainImpactOnDaysWithMeals);
     }
 }

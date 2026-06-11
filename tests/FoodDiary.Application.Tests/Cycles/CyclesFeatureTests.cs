@@ -1,16 +1,20 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.Cycles.Services;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Cycles;
@@ -188,6 +192,52 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithCycleLogsAndMeals_ReturnsBleedingComparison() {
+        var user = User.Create("cycle-nutrition@example.com", "hash");
+        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, startDate);
+        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(1), CycleSymptomCategory.Craving, 6, ["sweet"], note: null);
+        Meal bleedingMeal = CreateMeal(user.Id, startDate, calories: 2100, fiber: 18);
+        Meal nonBleedingMeal = CreateMeal(user.Id, startDate.AddDays(1), calories: 1800, fiber: 28);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new InMemoryCycleRepository(profile),
+            new StubMealRepository([bleedingMeal, nonBleedingMeal]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
+        Assert.Equal(2, summary.LoggedCycleDays);
+        Assert.Equal(2, summary.DaysWithMeals);
+        Assert.Equal(1, summary.BleedingDays);
+        Assert.Equal(2100, summary.AverageCaloriesOnBleedingDays);
+        Assert.Equal(1800, summary.AverageCaloriesOnNonBleedingCycleDays);
+        Assert.Equal(18, summary.AverageFiberOnBleedingDays);
+        Assert.Equal(28, summary.AverageFiberOnNonBleedingCycleDays);
+        Assert.Equal(8, summary.AveragePainImpactOnDaysWithMeals);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithMissingCycle_ReturnsNull() {
+        var user = User.Create("cycle-nutrition-missing@example.com", "hash");
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Value);
+    }
+
+    [Fact]
     public void CycleMappings_ToModel_SortsLogsByDate() {
         var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
         profile.UpsertBleedingEntry(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
@@ -259,6 +309,12 @@ public class CyclesFeatureTests {
             DiscreetNotifications: true,
             Notes: null);
 
+    private static Meal CreateMeal(UserId userId, DateTime date, double calories, double fiber) {
+        var meal = Meal.Create(userId, date, MealType.Lunch, comment: null);
+        meal.ApplyNutrition(new MealNutritionUpdate(calories, 30, 20, 60, fiber, 0, IsAutoCalculated: true));
+        return meal;
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class NoopCycleRepository : ICycleRepository {
         public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
@@ -291,6 +347,25 @@ public class CyclesFeatureTests {
 
         public Task<IReadOnlyList<CycleProfile>> GetByUserAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyList<CycleProfile>>(profile.UserId == userId ? [profile] : []);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubMealRepository(IReadOnlyList<Meal> meals) : IMealRepository {
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Meal>>([.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)]);
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

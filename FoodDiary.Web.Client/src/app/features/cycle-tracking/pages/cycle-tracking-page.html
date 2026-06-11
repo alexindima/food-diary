@@ -223,6 +223,8 @@
             </fd-ui-card>
 
             <fd-cycle-days-card [isLoading]="isLoading()" [items]="dayItems()" />
+
+            <fd-cycle-nutrition-summary-card [isLoading]="isLoadingNutritionSummary()" [summary]="nutritionSummaryView()" />
         </div>
     </fd-page-body>
 </div>

@@ -18,6 +18,7 @@ import {
     type CycleFactor,
     type CycleFactorType,
     type CycleFlowLevel,
+    type CycleNutritionSummary,
     type CyclePredictions,
     type CycleResponse,
     type CycleSymptomEntry,
@@ -97,7 +98,9 @@ export class CycleTrackingFacade {
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
     public readonly isExportingCycle = signal(false);
+    public readonly isLoadingNutritionSummary = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
+    public readonly nutritionSummary = signal<CycleNutritionSummary | null>(null);
 
     public readonly startCycleModel = signal<StartCycleFormModel>({
         trackingStartDate: formatDateInputValue(new Date()),
@@ -197,6 +200,30 @@ export class CycleTrackingFacade {
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
+                this.loadNutritionSummary(cycle);
+            });
+    }
+
+    private loadNutritionSummary(cycle: CycleResponse | null): void {
+        if (cycle === null) {
+            this.nutritionSummary.set(null);
+            return;
+        }
+
+        this.isLoadingNutritionSummary.set(true);
+        this.cyclesService
+            .getNutritionSummary(
+                this.normalizeStartOfDay(new Date(cycle.trackingStartDate)).toISOString(),
+                this.normalizeEndOfDay(new Date()).toISOString(),
+            )
+            .pipe(
+                finalize(() => {
+                    this.isLoadingNutritionSummary.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(summary => {
+                this.nutritionSummary.set(summary);
             });
     }
 
@@ -298,6 +325,7 @@ export class CycleTrackingFacade {
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
+                this.loadNutritionSummary(cycle);
             });
     }
 
@@ -367,6 +395,7 @@ export class CycleTrackingFacade {
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
+                this.loadNutritionSummary(cycle);
             });
     }
 

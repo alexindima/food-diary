@@ -952,6 +952,21 @@
       ]
     },
     {
+      "Path": "/api/v{version}/cycles/current/nutrition-summary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/cycles/{cycleprofileid}/days",
       "Operations": [
         {

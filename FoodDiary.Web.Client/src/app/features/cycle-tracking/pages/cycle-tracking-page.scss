@@ -188,6 +188,21 @@
         margin: 0;
     }
 
+    &__nutrition-summary {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
+    &__nutrition-metric {
+        display: grid;
+        gap: var(--fd-space-2xs);
+        min-width: 0;
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface-raised);
+    }
+
     &__day-notes {
         margin: 0;
         color: var(--fd-color-slate-600);

@@ -11,6 +11,7 @@ import {
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     type CycleLogDay,
+    type CycleNutritionSummary,
     type CycleResponse,
     type UpsertCycleDayPayload,
     type UpsertCycleFactorPayload,
@@ -55,6 +56,18 @@ const MOCK_DAY: CycleLogDay = {
     symptoms: [],
     fertilitySignal: null,
 };
+const MOCK_NUTRITION_SUMMARY: CycleNutritionSummary = {
+    dateFrom: '2026-03-01T00:00:00.000Z',
+    dateTo: '2026-03-31T23:59:59.999Z',
+    loggedCycleDays: 4,
+    daysWithMeals: 3,
+    bleedingDays: 2,
+    averageCaloriesOnBleedingDays: 2100,
+    averageCaloriesOnNonBleedingCycleDays: 1800,
+    averageFiberOnBleedingDays: 18,
+    averageFiberOnNonBleedingCycleDays: 28,
+    averagePainImpactOnDaysWithMeals: 6,
+};
 
 let service: CyclesService;
 let httpMock: HttpTestingController;
@@ -90,6 +103,17 @@ describe('CyclesService current cycle', () => {
 
         const req = httpMock.expectOne(`${BASE_URL}/current`);
         req.flush('Not found', { status: 404, statusText: 'Not Found' });
+    });
+
+    it('should get nutrition summary', () => {
+        service.getNutritionSummary('2026-03-01T00:00:00.000Z', '2026-03-31T23:59:59.999Z').subscribe(summary => {
+            expect(summary).toEqual(MOCK_NUTRITION_SUMMARY);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/current/nutrition-summary` && r.method === 'GET');
+        expect(req.request.params.get('dateFrom')).toBe('2026-03-01T00:00:00.000Z');
+        expect(req.request.params.get('dateTo')).toBe('2026-03-31T23:59:59.999Z');
+        req.flush(MOCK_NUTRITION_SUMMARY);
     });
 });
 

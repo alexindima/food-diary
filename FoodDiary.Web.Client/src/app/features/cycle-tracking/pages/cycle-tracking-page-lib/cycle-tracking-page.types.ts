@@ -1,4 +1,11 @@
-import type { BleedingEntry, CyclePredictions, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
+import type {
+    BleedingEntry,
+    CycleNutritionSummary,
+    CyclePredictions,
+    CycleResponse,
+    CycleSymptomEntry,
+    FertilitySignal,
+} from '../../models/cycle.data';
 
 export type CycleViewModel = {
     cycle: CycleResponse;
@@ -36,6 +43,15 @@ export type CyclePredictionViewModel = {
     confidenceLabel: string;
     hasPredictionRanges: boolean;
     limitedReasonKey: string | null;
+};
+
+export type CycleNutritionSummaryViewModel = {
+    summary: CycleNutritionSummary;
+    bleedingCaloriesLabel: string;
+    nonBleedingCaloriesLabel: string;
+    bleedingFiberLabel: string;
+    nonBleedingFiberLabel: string;
+    painImpactLabel: string;
 };
 
 export type CycleDayViewModel = {
