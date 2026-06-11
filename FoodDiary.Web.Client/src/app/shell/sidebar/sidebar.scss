@@ -363,6 +363,10 @@
 
     @media #{variables.$media-tablet} {
         display: grid;
+        position: relative;
+        right: auto;
+        bottom: auto;
+        left: auto;
     }
 
     &__progress {

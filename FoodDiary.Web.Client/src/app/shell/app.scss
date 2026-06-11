@@ -151,15 +151,24 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     }
 
     .fd-root__sidebar {
-        position: relative;
-        height: 0;
+        position: fixed;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: auto;
         overflow: visible;
+        z-index: var(--fd-z-index-floating-panel);
     }
 
     body.cdk-global-scrollblock .fd-root__sidebar,
     html.cdk-global-scrollblock .fd-root__sidebar {
-        position: relative;
-        height: 0;
+        position: fixed;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        height: auto;
         overflow: visible;
         width: 100%;
     }

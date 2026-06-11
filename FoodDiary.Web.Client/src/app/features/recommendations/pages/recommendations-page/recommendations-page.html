@@ -1,9 +1,5 @@
 <main class="recommendations-page fd-stack fd-gap-xl" fdPageContainer>
-    <header class="recommendations-page__header fd-stack fd-gap-xs">
-        <p class="recommendations-page__eyebrow fd-ui-overline">{{ 'RECOMMENDATIONS.EYEBROW' | translate }}</p>
-        <h1 class="recommendations-page__title">{{ 'RECOMMENDATIONS.TITLE' | translate }}</h1>
-        <p class="recommendations-page__subtitle fd-ui-body">{{ 'RECOMMENDATIONS.SUBTITLE' | translate }}</p>
-    </header>
+    <fd-page-header [title]="'RECOMMENDATIONS.TITLE' | translate" [subtitle]="'RECOMMENDATIONS.SUBTITLE' | translate" />
 
     <fd-page-body>
         @if (isLoading()) {

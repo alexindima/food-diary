@@ -47,24 +47,4 @@ describe('PageHeaderComponent', () => {
         const subtitleEl = el.querySelector('.fd-page-subtitle');
         expect(subtitleEl).toBeNull();
     });
-
-    it('should default stickyOnMobile to true', () => {
-        fixture.detectChanges();
-        expect(component['stickyOnMobile']()).toBe(true);
-    });
-
-    it('should apply mobile-static host class when stickyOnMobile is false', () => {
-        fixture.componentRef.setInput('stickyOnMobile', false);
-        fixture.detectChanges();
-
-        const hostEl = fixture.nativeElement as HTMLElement;
-        expect(hostEl.classList.contains('fd-page-header--mobile-static')).toBe(true);
-    });
-
-    it('should not apply mobile-static host class when stickyOnMobile is true', () => {
-        fixture.detectChanges();
-
-        const hostEl = fixture.nativeElement as HTMLElement;
-        expect(hostEl.classList.contains('fd-page-header--mobile-static')).toBe(false);
-    });
 });

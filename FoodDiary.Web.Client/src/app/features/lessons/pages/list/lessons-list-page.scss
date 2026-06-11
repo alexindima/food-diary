@@ -6,20 +6,8 @@
 
 .lessons-list {
     // stylelint-disable-next-line rule-empty-line-before
-    &__header {
-        margin-bottom: var(--fd-space-lg);
-    }
-
-    &__title {
-        margin: 0;
-    }
-
-    &__subtitle {
-        margin: var(--fd-space-xxs) 0 0;
-    }
-
     &__progress {
-        margin-top: var(--fd-space-sm);
+        margin-top: 0;
     }
 
     &__progress-bar {
@@ -47,7 +35,7 @@
     }
 
     &__filters {
-        margin-bottom: var(--fd-space-lg);
+        margin: 0;
     }
 
     &__grid {

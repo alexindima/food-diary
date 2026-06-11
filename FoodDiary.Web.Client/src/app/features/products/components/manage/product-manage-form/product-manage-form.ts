@@ -12,6 +12,7 @@ import { catchError, firstValueFrom, of } from 'rxjs';
 import { BarcodeScannerComponent } from '../../../../../components/shared/barcode-scanner/barcode-scanner';
 import type { ConfirmDeleteDialogData } from '../../../../../components/shared/confirm-delete-dialog/confirm-delete-dialog';
 import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header';
+import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { NavigationService } from '../../../../../services/navigation.service';
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
@@ -64,6 +65,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
         FdUiFormErrorComponent,
         FdPageContainerDirective,
         ManageHeaderComponent,
+        PageBodyComponent,
         ProductBasicInfoComponent,
         ProductNutritionEditorComponent,
     ],

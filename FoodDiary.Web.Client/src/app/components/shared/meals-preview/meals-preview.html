@@ -1,6 +1,6 @@
 ﻿<section class="meals-preview fd-stack fd-gap-card-content">
     <div class="meals-preview__header fd-row fd-align-start fd-justify-between fd-wrap fd-gap-card-header">
-        <h2 class="meals-preview__title fd-ui-page-title">{{ titleText() || (titleKey() | translate) }}</h2>
+        <h2 class="meals-preview__title fd-ui-title-md">{{ titleText() || (titleKey() | translate) }}</h2>
         @if (showViewAll()) {
             <fd-ui-button variant="primary" fill="text" size="sm" icon="open_in_new" (click)="viewAll.emit()">
                 {{ viewAllKey() | translate }}

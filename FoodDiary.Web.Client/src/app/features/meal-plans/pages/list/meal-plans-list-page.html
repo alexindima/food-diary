@@ -1,12 +1,8 @@
 <div class="meal-plans-list" fdPageContainer>
-    <header class="meal-plans-list__header">
-        <h1 class="meal-plans-list__title fd-ui-display-sm">{{ 'MEAL_PLANS.TITLE' | translate }}</h1>
-        <p class="meal-plans-list__subtitle fd-page-subtitle">{{ 'MEAL_PLANS.SUBTITLE' | translate }}</p>
-    </header>
-
-    <fd-meal-plan-list-filters [selectedType]="facade.dietTypeFilter()" (filterChange)="filterByDiet($event)" />
+    <fd-page-header [title]="'MEAL_PLANS.TITLE' | translate" [subtitle]="'MEAL_PLANS.SUBTITLE' | translate" />
 
     <fd-page-body>
+        <fd-meal-plan-list-filters [selectedType]="facade.dietTypeFilter()" (filterChange)="filterByDiet($event)" />
         <fd-meal-plan-list-content [isLoading]="facade.isLoading()" [plans]="planCards()" (planOpen)="openPlan($event)" />
     </fd-page-body>
 </div>

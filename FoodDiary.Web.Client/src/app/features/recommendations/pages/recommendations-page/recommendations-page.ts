@@ -7,6 +7,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import type { DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
@@ -19,7 +20,15 @@ type RecommendationViewModel = DietologistRecommendation & {
 
 @Component({
     selector: 'fd-recommendations-page',
-    imports: [DatePipe, TranslatePipe, FdUiCardComponent, FdUiIconComponent, PageBodyComponent, FdPageContainerDirective],
+    imports: [
+        DatePipe,
+        TranslatePipe,
+        FdUiCardComponent,
+        FdUiIconComponent,
+        PageBodyComponent,
+        PageHeaderComponent,
+        FdPageContainerDirective,
+    ],
     templateUrl: './recommendations-page.html',
     styleUrl: './recommendations-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -38,31 +38,31 @@
         </ng-container>
     </fd-page-header>
 
-    @defer (on idle) {
-        <fd-ai-input-action-bar
-            mode="create"
-            [isProcessing]="isAiMealSaving()"
-            [clearToken]="aiMealClearToken()"
-            (mealCreateRequested)="onAiMealCreateRequested($event)"
-            (manualAction)="goToMealAddAsync()"
-        />
-    } @placeholder {
-        <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
-    }
-
-    <fd-meal-list-favorites
-        [favoriteViews]="favoriteViews()"
-        [count]="favoriteTotalCount()"
-        [isOpen]="isFavoritesOpen()"
-        [showLoadMore]="hasMoreFavorites()"
-        [isLoadingMore]="isFavoritesLoadingMore()"
-        (toggleRequested)="toggleFavorites()"
-        (loadMore)="loadFavorites()"
-        (favoriteRepeated)="repeatFavorite($event)"
-        (favoriteRemoved)="removeFavorite($event)"
-    />
-
     <fd-page-body>
+        @defer (on idle) {
+            <fd-ai-input-action-bar
+                mode="create"
+                [isProcessing]="isAiMealSaving()"
+                [clearToken]="aiMealClearToken()"
+                (mealCreateRequested)="onAiMealCreateRequested($event)"
+                (manualAction)="goToMealAddAsync()"
+            />
+        } @placeholder {
+            <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
+        }
+
+        <fd-meal-list-favorites
+            [favoriteViews]="favoriteViews()"
+            [count]="favoriteTotalCount()"
+            [isOpen]="isFavoritesOpen()"
+            [showLoadMore]="hasMoreFavorites()"
+            [isLoadingMore]="isFavoritesLoadingMore()"
+            (toggleRequested)="toggleFavorites()"
+            (loadMore)="loadFavorites()"
+            (favoriteRepeated)="repeatFavorite($event)"
+            (favoriteRemoved)="removeFavorite($event)"
+        />
+
         <fd-meal-list-content
             [errorKey]="errorKey()"
             [isLoading]="consumptionData.isLoading()"

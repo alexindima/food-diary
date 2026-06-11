@@ -7,6 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../../../../../environments/environment';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { AuthService } from '../../../../services/auth.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
@@ -34,6 +35,7 @@ import { buildPremiumOverviewCardViewModel, buildPremiumPlanCards } from './prem
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FdPageContainerDirective,
+        PageBodyComponent,
         PageHeaderComponent,
         TranslatePipe,
         PremiumAccessBannersComponent,

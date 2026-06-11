@@ -7,54 +7,56 @@
         (back)="onCancelAsync()"
     />
 
-    <form class="consumption-manage__form fd-stack fd-gap-lg" (submit)="onSubmit(); $event.preventDefault()">
-        @let generalErrors = generalFieldErrors();
-        <div class="consumption-manage__grid fd-grid fd-gap-xl">
-            <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
-                <fd-meal-general-info
-                    [consumptionForm]="consumptionSignalForm"
-                    [mealTypeSelectOptions]="mealTypeSelectOptions"
-                    [generalErrors]="generalErrors"
-                />
+    <fd-page-body>
+        <form class="consumption-manage__form fd-stack fd-gap-lg" (submit)="onSubmit(); $event.preventDefault()">
+            @let generalErrors = generalFieldErrors();
+            <div class="consumption-manage__grid fd-grid fd-gap-xl">
+                <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
+                    <fd-meal-general-info
+                        [consumptionForm]="consumptionSignalForm"
+                        [mealTypeSelectOptions]="mealTypeSelectOptions"
+                        [generalErrors]="generalErrors"
+                    />
 
-                <fd-meal-satiety-card
-                    [preMealSatietyLevel]="preMealSatietyLevel()"
-                    [postMealSatietyLevel]="postMealSatietyLevel()"
-                    (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
-                    (postMealSatietyLevelChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
-                />
+                    <fd-meal-satiety-card
+                        [preMealSatietyLevel]="preMealSatietyLevel()"
+                        [postMealSatietyLevel]="postMealSatietyLevel()"
+                        (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
+                        (postMealSatietyLevelChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
+                    />
 
-                <fd-meal-items-section
-                    [items]="itemListItems()"
-                    [itemsError]="itemsError()"
-                    [aiSessions]="aiSessions()"
-                    [selectedMealType]="selectedMealType()"
-                    [isProcessing]="false"
-                    [renderVersion]="0"
-                    (mealRecognized)="onAiMealRecognized($event)"
-                    (addItem)="addConsumptionItem()"
-                    (editItem)="openManualItemDialog($event)"
-                    (removeItem)="removeItem($event)"
-                    (openItemSelect)="onItemSourceClick($event)"
-                    (editSession)="onEditAiSession($event)"
-                    (deleteSession)="onDeleteAiSession($event)"
-                />
+                    <fd-meal-items-section
+                        [items]="itemListItems()"
+                        [itemsError]="itemsError()"
+                        [aiSessions]="aiSessions()"
+                        [selectedMealType]="selectedMealType()"
+                        [isProcessing]="false"
+                        [renderVersion]="0"
+                        (mealRecognized)="onAiMealRecognized($event)"
+                        (addItem)="addConsumptionItem()"
+                        (editItem)="openManualItemDialog($event)"
+                        (removeItem)="removeItem($event)"
+                        (openItemSelect)="onItemSourceClick($event)"
+                        (editSession)="onEditAiSession($event)"
+                        (deleteSession)="onDeleteAiSession($event)"
+                    />
+                </div>
+
+                <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">
+                    <fd-meal-nutrition-sidebar
+                        [consumptionForm]="consumptionSignalForm"
+                        [macroBarState]="macroBarState()"
+                        [nutritionMode]="nutritionMode()"
+                        [nutritionWarning]="nutritionWarning()"
+                        [caloriesError]="caloriesError()"
+                        [macrosError]="macrosError()"
+                        [isEditMode]="consumption() !== null"
+                        [globalError]="globalError()"
+                        (nutritionModeChange)="onNutritionModeChange($event)"
+                        (cancelRequested)="onCancelAsync()"
+                    />
+                </div>
             </div>
-
-            <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">
-                <fd-meal-nutrition-sidebar
-                    [consumptionForm]="consumptionSignalForm"
-                    [macroBarState]="macroBarState()"
-                    [nutritionMode]="nutritionMode()"
-                    [nutritionWarning]="nutritionWarning()"
-                    [caloriesError]="caloriesError()"
-                    [macrosError]="macrosError()"
-                    [isEditMode]="consumption() !== null"
-                    [globalError]="globalError()"
-                    (nutritionModeChange)="onNutritionModeChange($event)"
-                    (cancelRequested)="onCancelAsync()"
-                />
-            </div>
-        </div>
-    </form>
+        </form>
+    </fd-page-body>
 </div>

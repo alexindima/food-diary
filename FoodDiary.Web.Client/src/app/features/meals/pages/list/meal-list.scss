@@ -124,7 +124,7 @@
         }
 
         &__day-header {
-            padding: 0 var(--fd-space-md);
+            padding: 0;
         }
 
         &__day-label {
@@ -145,8 +145,8 @@
         &__no-results,
         &__loader,
         &__pagination {
-            padding-left: var(--fd-space-md);
-            padding-right: var(--fd-space-md);
+            padding-left: 0;
+            padding-right: 0;
         }
     }
 

@@ -293,9 +293,9 @@ $color-text-secondary: var(--fd-color-text-muted);
 
         // stylelint-disable-next-line rule-empty-line-before
         &__header {
-            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-xs);
-            margin: 0 calc(var(--fd-layout-page-horizontal-padding) * -1);
-            width: calc(100% + var(--fd-layout-page-horizontal-padding) * 2);
+            padding: var(--fd-space-xs) var(--fd-layout-page-horizontal-padding);
+            margin: 0;
+            width: 100%;
             box-sizing: border-box;
             border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
             background: var(--fd-page-header-mobile-background);
@@ -336,10 +336,6 @@ $color-text-secondary: var(--fd-color-text-muted);
             --fd-button-width: var(--fd-size-control-touch);
             --fd-button-min-width: var(--fd-size-control-touch);
             --fd-button-padding-x: 0;
-        }
-
-        &__body {
-            padding: 0;
         }
 
         &__quick-add {

@@ -1,6 +1,14 @@
+@use 'variables' as variables;
+
 .fd-page-body {
     width: 100%;
     gap: var(--fd-layout-page-section-spacing);
     box-sizing: border-box;
     padding-bottom: var(--fd-space-page-body-bottom-padding);
+}
+
+@media #{variables.$media-tablet} {
+    .fd-page-body {
+        padding-inline: var(--fd-layout-page-horizontal-padding);
+    }
 }

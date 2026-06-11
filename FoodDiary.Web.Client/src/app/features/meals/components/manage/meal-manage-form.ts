@@ -11,6 +11,7 @@ import { firstValueFrom } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header';
+import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { NavigationService } from '../../../../services/navigation.service';
 import { createCollectionTouchedState } from '../../../../shared/lib/collection-touched-state.utils';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
@@ -64,6 +65,7 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
     imports: [
         TranslatePipe,
         ManageHeaderComponent,
+        PageBodyComponent,
         FdPageContainerDirective,
         MealGeneralInfoComponent,
         MealSatietyCardComponent,

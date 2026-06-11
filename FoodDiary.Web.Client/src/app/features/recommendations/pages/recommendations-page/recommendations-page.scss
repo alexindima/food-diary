@@ -12,29 +12,9 @@
     margin: 0 auto;
     width: 100%;
     max-width: 980px;
-    padding-block: var(--fd-space-xl);
 
-    &__header {
-        min-width: 0;
-    }
-
-    &__eyebrow,
-    &__subtitle,
     &__date {
         color: var(--fd-color-text-muted);
-    }
-
-    &__title {
-        margin: 0;
-        color: var(--fd-color-text);
-        font-size: var(--fd-text-display-sm-size);
-        line-height: var(--fd-text-display-sm-line-height);
-        letter-spacing: 0;
-    }
-
-    &__subtitle {
-        max-width: 64ch;
-        margin: 0;
     }
 
     &__state,
@@ -122,8 +102,6 @@
 
 @media (max-width: 640px) {
     .recommendations-page {
-        padding-block: var(--fd-space-lg);
-
         &__card-head {
             flex-direction: column;
         }

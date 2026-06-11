@@ -6,20 +6,8 @@
 
 .meal-plans-list {
     // stylelint-disable-next-line rule-empty-line-before
-    &__header {
-        margin-bottom: var(--fd-space-lg);
-    }
-
-    &__title {
-        margin: 0;
-    }
-
-    &__subtitle {
-        margin: var(--fd-space-xxs) 0 0;
-    }
-
     &__filters {
-        margin-bottom: var(--fd-space-lg);
+        margin: 0;
     }
 
     &__grid {

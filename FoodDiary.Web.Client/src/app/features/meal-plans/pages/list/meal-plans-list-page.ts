@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanCards } from '../../lib/meal-plan-view.mapper';
@@ -12,7 +13,14 @@ import { MealPlanListFiltersComponent } from './meal-plan-list-sections/meal-pla
 
 @Component({
     selector: 'fd-meal-plans-list-page',
-    imports: [TranslatePipe, PageBodyComponent, FdPageContainerDirective, MealPlanListFiltersComponent, MealPlanListContentComponent],
+    imports: [
+        TranslatePipe,
+        PageBodyComponent,
+        PageHeaderComponent,
+        FdPageContainerDirective,
+        MealPlanListFiltersComponent,
+        MealPlanListContentComponent,
+    ],
     providers: [MealPlanFacade],
     templateUrl: './meal-plans-list-page.html',
     styleUrl: './meal-plans-list-page.scss',

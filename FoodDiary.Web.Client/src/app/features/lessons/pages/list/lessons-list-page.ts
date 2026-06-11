@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { buildLessonListItems, buildLessonProgress } from '../../lib/lesson-view.mapper';
@@ -15,6 +16,7 @@ import { LessonsListProgressComponent } from './lessons-list-sections/lessons-li
     imports: [
         TranslatePipe,
         PageBodyComponent,
+        PageHeaderComponent,
         FdPageContainerDirective,
         LessonsListFiltersComponent,
         LessonsListGridComponent,

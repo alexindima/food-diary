@@ -41,6 +41,11 @@ body.fd-scroll-lock {
     overflow: hidden;
 }
 
+.fd-page-container {
+    --fd-page-container-padding: var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding)
+        min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
+}
+
 .fd-layout-page {
     width: 100%;
     min-height: 0;
@@ -74,6 +79,11 @@ body.fd-scroll-lock {
     body {
         overflow-y: auto;
         overflow-x: hidden;
+    }
+
+    .fd-page-container {
+        --fd-page-container-padding: var(--fd-layout-page-top-padding) 0
+            min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
     }
 }
 
