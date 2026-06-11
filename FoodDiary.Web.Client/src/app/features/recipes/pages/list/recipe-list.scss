@@ -40,7 +40,6 @@
 
     &__mobile-search {
         display: none;
-        background: var(--fd-bg-surface-inset);
 
         &--open {
             display: block;
@@ -216,7 +215,6 @@
 
         &__search-form--mobile {
             min-width: 100%;
-            padding: var(--fd-space-xs) var(--fd-space-sm) var(--fd-space-sm);
             width: 100%;
         }
 

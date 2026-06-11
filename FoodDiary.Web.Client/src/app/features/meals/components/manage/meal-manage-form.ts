@@ -10,8 +10,8 @@ import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { firstValueFrom } from 'rxjs';
 
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
-import { ManageHeaderComponent } from '../../../../components/shared/manage-header/manage-header';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../../services/navigation.service';
 import { createCollectionTouchedState } from '../../../../shared/lib/collection-touched-state.utils';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
@@ -64,8 +64,8 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
-        ManageHeaderComponent,
         PageBodyComponent,
+        PageHeaderComponent,
         FdPageContainerDirective,
         MealGeneralInfoComponent,
         MealSatietyCardComponent,

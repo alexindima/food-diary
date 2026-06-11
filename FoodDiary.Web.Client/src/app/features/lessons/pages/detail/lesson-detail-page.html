@@ -1,5 +1,10 @@
 <div class="lesson-detail" fdPageContainer>
-    <fd-ui-button variant="secondary" fill="outline" icon="arrow_back" (click)="goBack()"> {{ 'LESSONS.BACK' | translate }} </fd-ui-button>
+    <fd-page-header
+        [title]="'LESSONS.TITLE' | translate"
+        [backVisible]="true"
+        [backAriaLabel]="'LESSONS.BACK' | translate"
+        (back)="goBack()"
+    />
 
     <fd-page-body>
         <fd-lesson-detail-content [isLoading]="facade.isDetailLoading()" [lesson]="lesson()" (markRead)="markRead()" />

@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { LessonFacade } from '../../lib/lesson.facade';
 import { buildLessonDetailView } from '../../lib/lesson-view.mapper';
@@ -11,7 +11,7 @@ import { LessonDetailContentComponent } from './lesson-detail-sections/lesson-de
 
 @Component({
     selector: 'fd-lesson-detail-page',
-    imports: [TranslatePipe, FdUiButtonComponent, PageBodyComponent, FdPageContainerDirective, LessonDetailContentComponent],
+    imports: [TranslatePipe, PageBodyComponent, PageHeaderComponent, FdPageContainerDirective, LessonDetailContentComponent],
     providers: [LessonFacade],
     templateUrl: './lesson-detail-page.html',
     styleUrl: './lesson-detail-page.scss',

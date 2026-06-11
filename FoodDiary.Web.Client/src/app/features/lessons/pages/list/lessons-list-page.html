@@ -1,9 +1,8 @@
 <div class="lessons-list" fdPageContainer>
-    <fd-page-header [title]="'LESSONS.TITLE' | translate" [subtitle]="'LESSONS.SUBTITLE' | translate">
-        <fd-lessons-list-progress fdPageHeaderExtra [progress]="progress()" />
-    </fd-page-header>
+    <fd-page-header [title]="'LESSONS.TITLE' | translate" [subtitle]="'LESSONS.SUBTITLE' | translate" />
 
     <fd-page-body>
+        <fd-lessons-list-progress [progress]="progress()" />
         <fd-lessons-list-filters [selectedCategory]="facade.categoryFilter()" (filterChange)="filterByCategory($event)" />
         <fd-lessons-list-grid [isLoading]="facade.isLoading()" [lessons]="lessons()" (lessonOpen)="openLesson($event)" />
     </fd-page-body>

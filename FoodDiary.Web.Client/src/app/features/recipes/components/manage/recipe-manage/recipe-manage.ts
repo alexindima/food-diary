@@ -5,8 +5,8 @@ import { form, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import { ManageHeaderComponent } from '../../../../../components/shared/manage-header/manage-header';
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
@@ -38,8 +38,8 @@ import {
     imports: [
         TranslatePipe,
         FdUiButtonComponent,
-        ManageHeaderComponent,
         PageBodyComponent,
+        PageHeaderComponent,
         FdPageContainerDirective,
         RecipeBasicInfoComponent,
         RecipeNutritionEditorComponent,

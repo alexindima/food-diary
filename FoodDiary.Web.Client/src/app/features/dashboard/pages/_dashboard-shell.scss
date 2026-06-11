@@ -1,27 +1,6 @@
 @use 'variables' as variables;
 
 @mixin apply-dashboard-shell($color-text-secondary) {
-    &__header {
-        margin-bottom: var(--fd-page-header-gap);
-        position: relative;
-        width: 100%;
-    }
-
-    &__title-block {
-        min-width: 220px;
-    }
-
-    &__subtitle {
-        margin: 0;
-        color: var(--fd-color-text-muted);
-    }
-
-    &__header-actions {
-        align-self: flex-start;
-        width: auto;
-        margin-left: auto;
-    }
-
     &__date-button {
         margin-left: 0;
     }
@@ -36,11 +15,6 @@
         .dashboard__push-action {
             pointer-events: none;
         }
-    }
-
-    &__title {
-        margin: 0;
-        color: var(--fd-color-text);
     }
 
     &__date-field {

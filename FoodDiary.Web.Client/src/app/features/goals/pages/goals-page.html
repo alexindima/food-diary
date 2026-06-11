@@ -1,16 +1,14 @@
 <div class="goals" fdPageContainer>
     <fd-page-header class="goals__header" [title]="'GOALS_PAGE.TITLE' | translate" [subtitle]="'GOALS_PAGE.SUBTITLE' | translate">
-        <ng-container fdPageHeaderActions>
-            @if (saveStatusKey(); as statusKey) {
-                <span
-                    class="goals__status fd-ui-pill fd-ui-action-text"
-                    [class.goals__status--saving]="isSavingGoals()"
-                    [class.goals__status--loading]="isLoadingGoals()"
-                >
-                    {{ statusKey | translate }}
-                </span>
-            }
-        </ng-container>
+        @if (saveStatusKey(); as statusKey) {
+            <span
+                class="goals__status fd-ui-pill fd-ui-action-text"
+                [class.goals__status--saving]="isSavingGoals()"
+                [class.goals__status--loading]="isLoadingGoals()"
+            >
+                {{ statusKey | translate }}
+            </span>
+        }
     </fd-page-header>
 
     <fd-page-body>

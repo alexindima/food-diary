@@ -1,8 +1,9 @@
 <div class="recipe-manage fd-stack" fdPageContainer>
-    <fd-manage-header
+    <fd-page-header
         class="recipe-manage__header"
         [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'RECIPE_MANAGE.SUBTITLE' | translate"
+        [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
     />

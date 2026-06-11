@@ -136,10 +136,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
     }
 
-    &__title-text--compact {
-        display: none;
-    }
-
     &__block {
         position: relative;
         z-index: 2;
@@ -238,15 +234,6 @@ $color-text-secondary: var(--fd-color-text-muted);
     }
 
     @media #{variables.$media-desktop} {
-        // stylelint-disable-next-line rule-empty-line-before
-        &__title-text--full {
-            display: none;
-        }
-
-        &__title-text--compact {
-            display: inline;
-        }
-
         &__push-action {
             min-width: var(--fd-size-control-touch);
             padding-inline: 0;
@@ -290,44 +277,6 @@ $color-text-secondary: var(--fd-color-text-muted);
 
     @media #{variables.$media-mobile} {
         --fd-layout-page-vertical-padding: 0;
-
-        // stylelint-disable-next-line rule-empty-line-before
-        &__header {
-            padding: var(--fd-space-xs) var(--fd-layout-page-horizontal-padding);
-            margin: 0;
-            width: 100%;
-            box-sizing: border-box;
-            border-bottom: var(--fd-border-width) solid var(--fd-page-header-mobile-border-color);
-            background: var(--fd-page-header-mobile-background);
-            display: grid;
-            grid-template-columns: minmax(0, 1fr) auto;
-            grid-template-areas:
-                'title actions'
-                'subtitle subtitle';
-            align-items: center;
-            column-gap: var(--fd-space-xs);
-            row-gap: var(--fd-space-xxs);
-        }
-
-        &__title-block {
-            display: contents;
-        }
-
-        &__title {
-            grid-area: title;
-        }
-
-        &__subtitle {
-            grid-area: subtitle;
-        }
-
-        &__header-actions {
-            grid-area: actions;
-            margin-left: 0;
-            width: auto;
-            flex-wrap: nowrap;
-            min-width: 0;
-        }
 
         &__appearance-action {
             min-width: var(--fd-size-control-touch);

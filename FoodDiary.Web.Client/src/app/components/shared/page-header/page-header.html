@@ -1,4 +1,17 @@
 <header class="fd-page-header">
+    @if (backVisible()) {
+        <fd-ui-button
+            type="button"
+            class="fd-page-header__back"
+            appearance="plain-icon"
+            variant="secondary"
+            fill="outline"
+            icon="arrow_back"
+            [fdUiHint]="backAriaLabel()"
+            [ariaLabel]="backAriaLabel()"
+            (click)="onBackClick()"
+        />
+    }
     <div class="fd-page-header__title-block">
         <h1 class="fd-page-title">{{ title() }}</h1>
         @if (subtitle()) {
@@ -7,10 +20,7 @@
     </div>
     <div class="fd-page-header__actions">
         <fd-header-actions-overflow>
-            <ng-content select="[fdPageHeaderActions]" />
+            <ng-content />
         </fd-header-actions-overflow>
-    </div>
-    <div class="fd-page-header__extra">
-        <ng-content select="[fdPageHeaderExtra]" />
     </div>
 </header>

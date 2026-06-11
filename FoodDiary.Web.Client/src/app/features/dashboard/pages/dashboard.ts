@@ -12,12 +12,17 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 
 import type { AiInputBarResult } from '../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
@@ -47,7 +52,6 @@ import { DashboardAdviceBlockComponent } from './dashboard-sections/dashboard-ad
 import { DashboardCycleBlockComponent } from './dashboard-sections/dashboard-cycle-block/dashboard-cycle-block';
 import { DashboardEditHintComponent } from './dashboard-sections/dashboard-edit-hint/dashboard-edit-hint';
 import { DashboardFastingBlockComponent } from './dashboard-sections/dashboard-fasting-block/dashboard-fasting-block';
-import { DashboardHeaderComponent } from './dashboard-sections/dashboard-header/dashboard-header';
 import { DashboardHydrationBlockComponent } from './dashboard-sections/dashboard-hydration-block/dashboard-hydration-block';
 import { DashboardMealsBlockComponent } from './dashboard-sections/dashboard-meals-block/dashboard-meals-block';
 import { DashboardQuickAddComponent } from './dashboard-sections/dashboard-quick-add/dashboard-quick-add';
@@ -62,9 +66,12 @@ import { DashboardTrendBlockComponent } from './dashboard-sections/dashboard-tre
     },
     imports: [
         PageBodyComponent,
+        PageHeaderComponent,
         FdPageContainerDirective,
         TranslatePipe,
-        DashboardHeaderComponent,
+        FdUiHintDirective,
+        FdUiButtonComponent,
+        FdUiDatePickerButtonComponent,
         DashboardQuickAddComponent,
         DashboardEditHintComponent,
         DashboardFastingBlockComponent,
@@ -88,6 +95,7 @@ export class DashboardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly unsavedChangesService = inject(UnsavedChangesService);
     private readonly themeService = inject(ThemeService);
+    private readonly viewportService = inject(ViewportService);
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
@@ -149,6 +157,12 @@ export class DashboardComponent {
         const selectedDateLabel = this.formatSelectedDate();
 
         return buildDashboardHeaderState(isToday, selectedDateLabel);
+    });
+    protected readonly dashboardTitle = computed(() => {
+        const headerState = this.dashboardHeaderState();
+        const titleKey = this.viewportService.isMobile() ? headerState.compactTitleKey : headerState.fullTitleKey;
+
+        return this.translateService.instant(titleKey, headerState.titleParams ?? undefined);
     });
     protected readonly mealsPreviewState = computed<DashboardMealsPreviewState>(() => {
         this.languageVersion();

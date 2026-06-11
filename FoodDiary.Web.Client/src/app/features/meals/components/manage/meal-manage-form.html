@@ -1,8 +1,9 @@
 <div class="consumption-manage fd-stack" fdPageContainer>
-    <fd-manage-header
+    <fd-page-header
         class="consumption-manage__header"
         [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'CONSUMPTION_MANAGE.SUBTITLE' | translate"
+        [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
     />

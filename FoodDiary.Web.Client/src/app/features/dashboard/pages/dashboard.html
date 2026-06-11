@@ -1,19 +1,63 @@
 <div #dashboardRoot class="dashboard fd-stack fd-gap-xl" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
-    @if (layout.isEditingLayout()) {
-        <div class="dashboard__edit-overlay"></div>
-    }
+    <fd-page-header [title]="dashboardTitle()" [subtitle]="'DASHBOARD.SUBTITLE' | translate" [compactActions]="true">
+        <div
+            class="dashboard__date-group fd-inline-center"
+            data-fd-overflow-icon="calendar_today"
+            [attr.data-fd-overflow-label]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+        >
+            <fd-ui-date-picker-button
+                class="dashboard__date-button"
+                [value]="selectedDate()"
+                [disabled]="layout.isEditingLayout()"
+                [ariaLabel]="dashboardHeaderState().selectedDateLabel"
+                [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+                (valueChange)="changeDashboardDate($event)"
+            />
+        </div>
 
-    <fd-dashboard-header
-        [headerState]="dashboardHeaderState()"
-        [selectedDate]="selectedDate()"
-        [isEditingLayout]="layout.isEditingLayout()"
-        (dateChange)="changeDashboardDate($event)"
-        (appearanceOpen)="openAppearanceDialogAsync()"
-        (notificationSettingsOpen)="openNotificationSettingsAsync()"
-        (settingsOpen)="layout.openSettings()"
-    />
+        <fd-ui-button
+            class="dashboard__appearance-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="palette"
+            [disabled]="layout.isEditingLayout()"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+            (click)="openAppearanceDialogAsync()"
+        />
+
+        <fd-ui-button
+            class="dashboard__push-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="notifications"
+            [disabled]="layout.isEditingLayout()"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+            (click)="openNotificationSettingsAsync()"
+        />
+
+        <fd-ui-button
+            class="dashboard__settings-action"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="tune"
+            [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_SETTINGS' | translate"
+            [class.dashboard__settings-action--active]="layout.isEditingLayout()"
+            [attr.aria-pressed]="layout.isEditingLayout()"
+            (click)="layout.openSettings()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
+        @if (layout.isEditingLayout()) {
+            <div class="dashboard__edit-overlay"></div>
+        }
+
         <div class="dashboard__body">
             @if (isLoading()) {
                 <div class="dashboard__loader fd-ui-body-sm">{{ 'DASHBOARD.LOADING' | translate }}</div>

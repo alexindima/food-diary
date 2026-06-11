@@ -1,10 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
+import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanDetailView } from '../../lib/meal-plan-view.mapper';
@@ -15,9 +15,9 @@ import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-
     selector: 'fd-meal-plan-detail-page',
     imports: [
         TranslatePipe,
-        FdUiButtonComponent,
         FdUiLoaderComponent,
         PageBodyComponent,
+        PageHeaderComponent,
         FdPageContainerDirective,
         MealPlanDetailHeaderComponent,
         MealPlanDetailDaysComponent,

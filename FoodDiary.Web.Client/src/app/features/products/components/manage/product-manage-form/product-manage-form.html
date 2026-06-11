@@ -1,8 +1,9 @@
 <div class="product-manage fd-stack" fdPageContainer>
-    <fd-manage-header
+    <fd-page-header
         class="product-manage__header"
         [title]="manageHeaderState().titleKey | translate"
         [subtitle]="'PRODUCT_MANAGE.SUBTITLE' | translate"
+        [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
     />

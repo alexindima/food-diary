@@ -661,11 +661,100 @@ const actionOrientedTemplateEventHandlersRule = {
     create: createActionOrientedTemplateEventHandlersRule,
 };
 
+const allowedPageContainerChildElements = new Set(['fd-page-header', 'fd-page-body']);
+
+const blockChildrenSelectors = {
+    IfBlock: node => node.branches.flatMap(branch => branch.children ?? []),
+    DeferredBlock: node => [
+        ...(node.children ?? []),
+        ...(node.placeholder?.children ?? []),
+        ...(node.loading?.children ?? []),
+        ...(node.error?.children ?? []),
+    ],
+    ForLoopBlock: node => [...(node.children ?? []), ...(node.empty?.children ?? [])],
+    SwitchBlock: node => (node.cases ?? []).flatMap(item => item.children ?? []),
+    Template: node => node.children ?? [],
+};
+
+const getBlockChildren = node => blockChildrenSelectors[node.type]?.(node) ?? null;
+
+const collectPageContainerChildren = nodes =>
+    (nodes ?? []).flatMap(node => {
+        if (node.type === 'Text' && node.value.trim().length === 0) {
+            return [];
+        }
+
+        const blockChildren = getBlockChildren(node);
+
+        if (blockChildren !== null) {
+            return collectPageContainerChildren(blockChildren);
+        }
+
+        return [node];
+    });
+
+const isPageContainerElement = node => node.type === 'Element' && hasTemplateAttribute(node, 'fdPageContainer');
+
+const createFdPageContainerStructureRule = context => ({
+    Element(node) {
+        if (!isPageContainerElement(node)) {
+            return;
+        }
+
+        const directChildren = collectPageContainerChildren(node.children);
+        const directElements = directChildren.filter(child => child.type === 'Element');
+        const hasPageHeader = directElements.some(child => child.name === 'fd-page-header');
+        const hasPageBody = directElements.some(child => child.name === 'fd-page-body');
+
+        if (!hasPageHeader) {
+            context.report({
+                node,
+                messageId: 'missingPageHeader',
+            });
+        }
+
+        if (!hasPageBody) {
+            context.report({
+                node,
+                messageId: 'missingPageBody',
+            });
+        }
+
+        for (const child of directChildren) {
+            if (child.type === 'Element' && allowedPageContainerChildElements.has(child.name)) {
+                continue;
+            }
+
+            context.report({
+                node: child,
+                messageId: 'unexpectedChild',
+            });
+        }
+    },
+});
+
+const fdPageContainerStructureRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Require fdPageContainer templates to use the shared fd-page-header and fd-page-body structure.',
+        },
+        messages: {
+            missingPageBody: '`fdPageContainer` must include a direct `<fd-page-body>` child.',
+            missingPageHeader: '`fdPageContainer` must include a direct `<fd-page-header>` child.',
+            unexpectedChild: 'Only `<fd-page-header>` and `<fd-page-body>` may be direct children of `fdPageContainer`.',
+        },
+        schema: [],
+    },
+    create: createFdPageContainerStructureRule,
+};
+
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
         'no-component-file-suffix': noComponentFileSuffixRule,
         'action-oriented-event-handlers': actionOrientedTemplateEventHandlersRule,
+        'fd-page-container-structure': fdPageContainerStructureRule,
         'no-label-wrapped-control': {
             meta: {
                 type: 'problem',
@@ -2365,6 +2454,7 @@ export default [
                 },
             ],
             'local/fd-ui-button-accessible-name': 'error',
+            'local/fd-page-container-structure': 'error',
             'local/action-oriented-event-handlers': 'error',
             'local/no-component-file-suffix': 'error',
             'local/no-mojibake': 'error',

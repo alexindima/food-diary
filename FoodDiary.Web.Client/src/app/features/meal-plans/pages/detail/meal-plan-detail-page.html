@@ -1,7 +1,10 @@
 <div class="meal-plan-detail" fdPageContainer>
-    <fd-ui-button variant="secondary" fill="outline" icon="arrow_back" (click)="goBack()">
-        {{ 'MEAL_PLANS.BACK' | translate }}
-    </fd-ui-button>
+    <fd-page-header
+        [title]="'MEAL_PLANS.TITLE' | translate"
+        [backVisible]="true"
+        [backAriaLabel]="'MEAL_PLANS.BACK' | translate"
+        (back)="goBack()"
+    />
 
     <fd-page-body>
         @if (facade.isDetailLoading()) {
