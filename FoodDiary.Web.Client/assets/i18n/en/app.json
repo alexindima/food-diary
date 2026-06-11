@@ -1543,6 +1543,8 @@
         "PRED_NEXT": "Next period",
         "PRED_OVULATION": "Ovulation",
         "PRED_PMS": "PMS window",
+        "PREDICTIONS_LIMITED": "Predictions limited",
+        "PREDICTIONS_LIMITED_BODY": "Active mode or factors make calendar estimates less reliable. Confidence: {{confidence}}.",
         "LOG_DAY_TITLE": "Log day & symptoms",
         "DAY_DATE": "Date",
         "IS_PERIOD": "Period day",

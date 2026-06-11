@@ -109,7 +109,9 @@ describe('cycle tracking page mapper', () => {
     it('returns null when there is no current cycle', () => {
         expect(buildCycleCurrentView(null, 'en-US')).toBeNull();
     });
+});
 
+describe('cycle tracking prediction mapper', () => {
     it('builds prediction labels using UTC dates', () => {
         const view = buildCyclePredictionView(
             {
@@ -140,6 +142,8 @@ describe('cycle tracking page mapper', () => {
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: '',
             confidenceLabel: 'Moderate',
+            hasPredictionRanges: true,
+            limitedReasonKey: null,
         });
     });
 
@@ -161,6 +165,25 @@ describe('cycle tracking page mapper', () => {
         expect(view?.nextPeriodRangeLabel).toBe('not-a-date');
         expect(view?.ovulationRangeLabel).toBe('');
         expect(view?.pmsRangeLabel).toBe('');
+    });
+
+    it('marks prediction as limited when backend returns no date ranges', () => {
+        const view = buildCyclePredictionView(
+            {
+                nextPeriodStartFrom: null,
+                nextPeriodStartTo: null,
+                ovulationFrom: null,
+                ovulationTo: null,
+                pmsWindowStart: null,
+                pmsWindowEnd: null,
+                confidence: 'Low',
+                rationale: 'Predictions are limited by the active tracking mode.',
+            },
+            'en-US',
+        );
+
+        expect(view?.hasPredictionRanges).toBe(false);
+        expect(view?.limitedReasonKey).toBe('CYCLE_TRACKING.PREDICTIONS_LIMITED');
     });
 });
 

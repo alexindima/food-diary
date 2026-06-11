@@ -105,6 +105,15 @@
         --fd-summary-surface-background: var(--fd-bg-surface-raised);
     }
 
+    &__prediction-limited {
+        margin-top: var(--fd-space-card-header-gap);
+        padding: var(--fd-space-surface-padding);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-muted-tint-subtle);
+        color: var(--fd-color-slate-700);
+    }
+
     &__current-factors {
         flex-wrap: wrap;
         margin-top: var(--fd-space-card-header-gap);

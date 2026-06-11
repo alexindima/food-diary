@@ -31,47 +31,7 @@
         }
 
         @if (prediction(); as cyclePrediction) {
-            <div class="cycle-tracking__predictions fd-grid fd-gap-card-header">
-                <fd-ui-accent-surface
-                    class="cycle-tracking__prediction fd-ui-summary-surface"
-                    accentSide="top"
-                    accentColor="var(--fd-color-orange-500)"
-                    [tinted]="true"
-                >
-                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                        'CYCLE_TRACKING.PRED_NEXT' | translate
-                    }}</span>
-                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.nextPeriodRangeLabel }}
-                    </strong>
-                </fd-ui-accent-surface>
-                <fd-ui-accent-surface
-                    class="cycle-tracking__prediction fd-ui-summary-surface"
-                    accentSide="top"
-                    accentColor="var(--fd-color-green-500)"
-                    [tinted]="true"
-                >
-                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                        'CYCLE_TRACKING.PRED_OVULATION' | translate
-                    }}</span>
-                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.ovulationRangeLabel }}
-                    </strong>
-                </fd-ui-accent-surface>
-                <fd-ui-accent-surface
-                    class="cycle-tracking__prediction fd-ui-summary-surface"
-                    accentSide="top"
-                    accentColor="var(--fd-color-primary-500)"
-                    [tinted]="true"
-                >
-                    <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
-                        'CYCLE_TRACKING.PRED_PMS' | translate
-                    }}</span>
-                    <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.pmsRangeLabel }}
-                    </strong>
-                </fd-ui-accent-surface>
-            </div>
+            <fd-cycle-prediction-block [prediction]="cyclePrediction" />
         }
     } @else {
         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_COPY' | translate }}</p>

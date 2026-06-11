@@ -66,12 +66,19 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
         return null;
     }
 
+    const nextPeriodRangeLabel = formatRange(prediction.nextPeriodStartFrom, prediction.nextPeriodStartTo, locale);
+    const ovulationRangeLabel = formatRange(prediction.ovulationFrom, prediction.ovulationTo, locale);
+    const pmsRangeLabel = formatRange(prediction.pmsWindowStart, prediction.pmsWindowEnd, locale);
+    const hasPredictionRanges = [nextPeriodRangeLabel, ovulationRangeLabel, pmsRangeLabel].some(label => label.length > 0);
+
     return {
         prediction,
-        nextPeriodRangeLabel: formatRange(prediction.nextPeriodStartFrom, prediction.nextPeriodStartTo, locale),
-        ovulationRangeLabel: formatRange(prediction.ovulationFrom, prediction.ovulationTo, locale),
-        pmsRangeLabel: formatRange(prediction.pmsWindowStart, prediction.pmsWindowEnd, locale),
+        nextPeriodRangeLabel,
+        ovulationRangeLabel,
+        pmsRangeLabel,
         confidenceLabel: prediction.confidence,
+        hasPredictionRanges,
+        limitedReasonKey: hasPredictionRanges ? null : 'CYCLE_TRACKING.PREDICTIONS_LIMITED',
     };
 }
 

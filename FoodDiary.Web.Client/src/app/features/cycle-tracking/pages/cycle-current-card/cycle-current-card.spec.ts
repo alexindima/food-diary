@@ -93,6 +93,8 @@ describe('CycleCurrentCardComponent', () => {
             ovulationRangeLabel: 'Apr 15 - Apr 16',
             pmsRangeLabel: 'Apr 23 - Apr 28',
             confidenceLabel: 'Moderate',
+            hasPredictionRanges: true,
+            limitedReasonKey: null,
         });
         fixture.detectChanges();
 
