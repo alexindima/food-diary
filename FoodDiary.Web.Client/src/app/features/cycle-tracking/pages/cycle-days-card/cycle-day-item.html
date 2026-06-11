@@ -1,0 +1,26 @@
+<fd-ui-accent-surface class="cycle-tracking__day" accentSide="left" [accentColor]="item().accentColor" [tinted]="true">
+    <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
+        <div class="cycle-tracking__day-date fd-ui-stat-value">{{ item().dateLabel }}</div>
+        <div
+            class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
+            [class.cycle-tracking__day-badge--period]="item().bleedingEntries.length > 0"
+        >
+            {{ item().badgeLabelKey | translate }}
+        </div>
+    </div>
+    <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">
+        @for (symptom of item().symptoms.slice(0, 4); track symptom.id) {
+            <span>{{ 'CYCLE_TRACKING.SYMPTOM_VALUE' | translate: { value: symptom.intensity } }}</span>
+        }
+    </div>
+    @if (item().fertilitySignalItems.length > 0) {
+        <div class="cycle-tracking__signals-row fd-ui-body-sm fd-grid fd-gap-card-header">
+            @for (signal of item().fertilitySignalItems; track signal.textKey) {
+                <span>{{ signal.textKey | translate: signal.params }}</span>
+            }
+        </div>
+    }
+    @if (item().notes) {
+        <p class="cycle-tracking__day-notes fd-ui-caption">{{ item().notes }}</p>
+    }
+</fd-ui-accent-surface>

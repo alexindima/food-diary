@@ -39,6 +39,26 @@ const ITEMS: CycleDayViewModel[] = [
                 note: null,
             },
         ],
+        fertilitySignal: {
+            id: 'signal-1',
+            cycleProfileId: 'cycle-1',
+            date: '2026-04-02T00:00:00.000Z',
+            basalBodyTemperatureCelsius: 36.62,
+            ovulationTestResult: 1,
+            cervicalFluid: 'egg white',
+            hadSex: true,
+            notes: null,
+        },
+        fertilitySignalItems: [
+            {
+                textKey: 'CYCLE_TRACKING.BBT_SUMMARY',
+                params: { value: '36.62' },
+            },
+            {
+                textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
+            },
+        ],
+        notes: 'felt tired',
         dateLabel: 'Apr 2, 2026',
         accentColor: 'var(--fd-color-red-600)',
         badgeLabelKey: 'CYCLE_TRACKING.BADGE_PERIOD',
@@ -79,6 +99,7 @@ describe('CycleDaysCardComponent', () => {
 
         expect(getText()).toContain('Apr 2, 2026');
         expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_VALUE');
+        expect(getText()).toContain('CYCLE_TRACKING.BBT_SUMMARY');
         expect(getText()).toContain('felt tired');
     });
 });

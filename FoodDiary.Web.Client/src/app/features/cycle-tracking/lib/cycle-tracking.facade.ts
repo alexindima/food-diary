@@ -20,6 +20,7 @@ import {
     type CycleResponse,
     type CycleSymptomEntry,
     type CycleTrackingMode,
+    type FertilitySignal,
     type FertilitySignalPayload,
     OVULATION_TEST_RESULT_UNKNOWN,
     type OvulationTestResult,
@@ -146,6 +147,7 @@ export class CycleTrackingFacade {
     public readonly bleedingEntries = computed<BleedingEntry[]>(() => [...(this.cycle()?.bleedingEntries ?? [])]);
     public readonly symptoms = computed<CycleSymptomEntry[]>(() => [...(this.cycle()?.symptoms ?? [])]);
     public readonly factors = computed<CycleFactor[]>(() => [...(this.cycle()?.factors ?? [])]);
+    public readonly fertilitySignals = computed<FertilitySignal[]>(() => [...(this.cycle()?.fertilitySignals ?? [])]);
 
     public initialize(): void {
         this.loadCycle();

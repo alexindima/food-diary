@@ -94,9 +94,12 @@ export class CycleTrackingPageComponent {
     protected readonly bleedingEntries = this.facade.bleedingEntries;
     protected readonly symptoms = this.facade.symptoms;
     protected readonly factors = this.facade.factors;
+    protected readonly fertilitySignals = this.facade.fertilitySignals;
     protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
-    protected readonly dayItems = computed(() => buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.appLocale()));
+    protected readonly dayItems = computed(() =>
+        buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), this.appLocale()),
+    );
     protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
         this.languageVersion();
         return [

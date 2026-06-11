@@ -5,9 +5,12 @@ import {
     type CyclePredictions,
     type CycleResponse,
     type CycleSymptomEntry,
+    type FertilitySignal,
+    OVULATION_TEST_RESULT_NEGATIVE,
+    OVULATION_TEST_RESULT_POSITIVE,
 } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
-import type { CycleDayViewModel, CyclePredictionViewModel, CycleViewModel } from './cycle-tracking-page.types';
+import type { CycleDaySignalItemViewModel, CycleDayViewModel, CyclePredictionViewModel, CycleViewModel } from './cycle-tracking-page.types';
 
 const FULL_DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
 const SHORT_DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
@@ -38,22 +41,77 @@ export function buildCyclePredictionView(prediction: CyclePredictions | null, lo
     };
 }
 
-export function buildCycleDayItems(bleedingEntries: BleedingEntry[], symptoms: CycleSymptomEntry[], locale: string): CycleDayViewModel[] {
-    const dates = new Set([...bleedingEntries.map(entry => entry.date), ...symptoms.map(symptom => symptom.date)]);
+export function buildCycleDayItems(
+    bleedingEntries: BleedingEntry[],
+    symptoms: CycleSymptomEntry[],
+    fertilitySignals: FertilitySignal[],
+    locale: string,
+): CycleDayViewModel[] {
+    const dates = new Set([
+        ...bleedingEntries.map(entry => entry.date),
+        ...symptoms.map(symptom => symptom.date),
+        ...fertilitySignals.map(signal => signal.date),
+    ]);
     return [...dates]
         .sort((a, b) => b.localeCompare(a))
         .map(date => {
             const dayBleeding = bleedingEntries.filter(entry => entry.date === date);
+            const fertilitySignal = fertilitySignals.find(signal => signal.date === date) ?? null;
             const hasBleeding = dayBleeding.some(entry => entry.type === BLEEDING_TYPE_BLEEDING);
             return {
                 date,
                 dateLabel: formatCycleDate(date, locale, FULL_DATE_OPTIONS),
                 bleedingEntries: dayBleeding,
                 symptoms: symptoms.filter(symptom => symptom.date === date),
+                fertilitySignal,
+                fertilitySignalItems: buildFertilitySignalItems(fertilitySignal),
+                notes:
+                    dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
                 badgeLabelKey: hasBleeding ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_TRACKED',
             };
         });
+}
+
+function buildFertilitySignalItems(signal: FertilitySignal | null): CycleDaySignalItemViewModel[] {
+    if (signal === null) {
+        return [];
+    }
+
+    const items: CycleDaySignalItemViewModel[] = [];
+    if (signal.basalBodyTemperatureCelsius !== null && signal.basalBodyTemperatureCelsius !== undefined) {
+        items.push({
+            textKey: 'CYCLE_TRACKING.BBT_SUMMARY',
+            params: { value: signal.basalBodyTemperatureCelsius.toFixed(2) },
+        });
+    }
+
+    if (signal.ovulationTestResult === OVULATION_TEST_RESULT_POSITIVE) {
+        items.push({
+            textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
+        });
+    }
+
+    if (signal.ovulationTestResult === OVULATION_TEST_RESULT_NEGATIVE) {
+        items.push({
+            textKey: 'CYCLE_TRACKING.OVULATION_TEST_NEGATIVE_SUMMARY',
+        });
+    }
+
+    if (signal.cervicalFluid !== null && signal.cervicalFluid !== undefined && signal.cervicalFluid.trim().length > 0) {
+        items.push({
+            textKey: 'CYCLE_TRACKING.CERVICAL_FLUID_SUMMARY',
+            params: { value: signal.cervicalFluid },
+        });
+    }
+
+    if (signal.hadSex === true) {
+        items.push({
+            textKey: 'CYCLE_TRACKING.HAD_SEX',
+        });
+    }
+
+    return items;
 }
 
 function formatRange(from: string | null | undefined, to: string | null | undefined, locale: string): string {

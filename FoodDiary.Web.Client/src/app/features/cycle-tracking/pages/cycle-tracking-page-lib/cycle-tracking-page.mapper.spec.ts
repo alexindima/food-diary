@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 
-import type { BleedingEntry, CycleResponse, CycleSymptomEntry } from '../../models/cycle.data';
-import { BLEEDING_TYPE_BLEEDING, CYCLE_FLOW_MEDIUM } from '../../models/cycle.data';
+import type { BleedingEntry, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
+import { BLEEDING_TYPE_BLEEDING, CYCLE_FLOW_MEDIUM, OVULATION_TEST_RESULT_POSITIVE } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
 
@@ -43,6 +43,17 @@ const SYMPTOM_ENTRY: CycleSymptomEntry = {
     intensity: 4,
     tags: [],
     note: null,
+};
+
+const FERTILITY_SIGNAL: FertilitySignal = {
+    id: 'signal-1',
+    cycleProfileId: 'cycle-1',
+    date: '2026-04-03T00:00:00.000Z',
+    basalBodyTemperatureCelsius: 36.62,
+    ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+    cervicalFluid: 'egg white',
+    hadSex: true,
+    notes: 'signal note',
 };
 
 describe('cycle tracking page mapper', () => {
@@ -111,9 +122,11 @@ describe('cycle tracking page mapper', () => {
         expect(view?.ovulationRangeLabel).toBe('');
         expect(view?.pmsRangeLabel).toBe('');
     });
+});
 
+describe('cycle tracking day item mapper', () => {
     it('builds day item styling and badges', () => {
-        const items = buildCycleDayItems([BLEEDING_ENTRY], [SYMPTOM_ENTRY], 'en-US');
+        const items = buildCycleDayItems([BLEEDING_ENTRY], [SYMPTOM_ENTRY], [FERTILITY_SIGNAL], 'en-US');
 
         const bleedingItem = items.find(item => item.dateLabel === 'Apr 2, 2026');
         const symptomItem = items.find(item => item.dateLabel === 'Apr 3, 2026');
@@ -126,6 +139,14 @@ describe('cycle tracking page mapper', () => {
         expect(symptomItem).toMatchObject({
             accentColor: DEFAULT_DAY_ACCENT_COLOR,
             badgeLabelKey: 'CYCLE_TRACKING.BADGE_TRACKED',
+            notes: 'signal note',
+        });
+        expect(symptomItem?.fertilitySignalItems).toContainEqual({
+            textKey: 'CYCLE_TRACKING.BBT_SUMMARY',
+            params: { value: '36.62' },
+        });
+        expect(symptomItem?.fertilitySignalItems).toContainEqual({
+            textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
         });
     });
 });
