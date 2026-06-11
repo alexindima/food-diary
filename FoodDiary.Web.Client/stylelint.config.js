@@ -44,6 +44,7 @@ export default {
         'declaration-property-value-disallowed-list': restrictedValueRules,
         'declaration-property-value-keyword-no-deprecated': true,
         'font-family-no-duplicate-names': true,
+        'font-family-no-missing-generic-family-keyword': true,
         'font-weight-notation': 'numeric',
         'function-url-quotes': 'always',
         'length-zero-no-unit': true,

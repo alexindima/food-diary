@@ -92,7 +92,7 @@
 }
 
 .fd-ui-code-sm {
-    font-family: var(--fd-font-family-monospace);
+    font-family: var(--fd-font-family-monospace), monospace;
     font-size: var(--fd-text-code-sm-size);
     line-height: var(--fd-text-code-sm-line-height);
     font-weight: var(--fd-text-code-sm-weight);

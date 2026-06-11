@@ -19,8 +19,13 @@ describe('FdLayoutPageDirective', () => {
         const element = getSection(fixture);
 
         expect(element.classList.contains('fd-layout-page')).toBe(true);
+        expect(element.style.alignItems).toBe('stretch');
         expect(element.style.background).toBe('var(--fd-bg-page)');
+        expect(element.style.display).toBe('flex');
+        expect(element.style.justifyContent).toBe('center');
+        expect(element.style.minHeight).toBe('0px');
         expect(element.style.padding).toBe('var(--fd-layout-page-vertical-padding) var(--fd-layout-page-horizontal-padding)');
+        expect(element.style.width).toBe('100%');
     });
 
     it('should apply input overrides', () => {

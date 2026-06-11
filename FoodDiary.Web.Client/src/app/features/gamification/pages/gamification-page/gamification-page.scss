@@ -1,10 +1,12 @@
-.gamification {
-    &__header {
-        margin-bottom: var(--fd-page-header-gap);
-    }
+@use 'variables' as variables;
 
+.gamification {
     &__stats-grid {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+
+        > * {
+            min-width: 0;
+        }
     }
 
     &__stat {
@@ -66,10 +68,15 @@
     }
 
     &__grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+
+        > * {
+            min-width: 0;
+        }
     }
 
     &__card {
+        min-width: 0;
         height: 100%;
     }
 
@@ -119,7 +126,11 @@
     }
 
     &__badges {
-        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(min(100%, 100px), 1fr));
+
+        > * {
+            min-width: 0;
+        }
     }
 
     &__badge {
@@ -174,5 +185,13 @@
         margin: 0;
         padding: var(--fd-space-section-state-compact-padding);
         color: var(--fd-color-text-muted);
+    }
+
+    @media #{variables.$media-tablet} {
+        &__stats-grid,
+        &__grid,
+        &__badges {
+            grid-template-columns: minmax(0, 1fr);
+        }
     }
 }

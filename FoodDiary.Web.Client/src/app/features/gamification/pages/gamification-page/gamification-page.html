@@ -1,9 +1,5 @@
-<div class="gamification fd-stack fd-gap-page-header" fdPageContainer>
-    <fd-page-header
-        class="gamification__header"
-        [title]="'GAMIFICATION.TITLE' | translate"
-        [subtitle]="'GAMIFICATION.SUBTITLE' | translate"
-    />
+<div class="gamification" fdPageContainer>
+    <fd-page-header [title]="'GAMIFICATION.TITLE' | translate" [subtitle]="'GAMIFICATION.SUBTITLE' | translate" />
 
     <fd-page-body>
         @if (isLoading()) {

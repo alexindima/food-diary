@@ -21,7 +21,15 @@
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--fd-space-page-header-actions-gap) var(--fd-space-page-header-gap);
+    min-height: var(--fd-page-header-height);
     width: 100%;
+}
+
+.fd-page-header__title-block {
+    display: flex;
+    flex-direction: column;
+    gap: var(--fd-space-xxs);
+    min-width: 220px;
 }
 
 .fd-page-header__back {
@@ -29,6 +37,11 @@
 }
 
 .fd-page-header__actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--fd-page-actions-gap);
+    min-width: 240px;
     width: 100%;
 }
 

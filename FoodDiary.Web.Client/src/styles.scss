@@ -27,7 +27,7 @@ body {
 
 body {
     margin: 0;
-    font-family: var(--fd-font-family-base);
+    font-family: var(--fd-font-family-base), sans-serif;
     font-size: var(--fd-font-size-base);
     line-height: var(--fd-line-height-base);
     color: var(--fd-color-text);
@@ -42,34 +42,11 @@ body.fd-scroll-lock {
 }
 
 .fd-page-container {
-    --fd-page-container-padding: var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding)
+    --fd-page-container-padding: 0 var(--fd-layout-page-horizontal-padding)
         min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
 }
 
-.fd-layout-page {
-    width: 100%;
-    min-height: 0;
-    background: var(--fd-bg-page);
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-}
-
-.fd-layout-page__content {
-    width: 100%;
-    max-width: var(--fd-layout-page-content-max-width);
-    margin: 0 auto;
-    display: flex;
-    flex-direction: column;
-    padding: var(--fd-layout-page-top-padding) var(--fd-layout-page-horizontal-padding) var(--fd-layout-page-vertical-padding);
-    background: var(--fd-bg-page);
-}
-
 @media #{variables.$media-tablet} {
-    :root {
-        --fd-layout-page-top-padding: 0;
-    }
-
     html,
     body {
         height: auto;
@@ -82,33 +59,6 @@ body.fd-scroll-lock {
     }
 
     .fd-page-container {
-        --fd-page-container-padding: var(--fd-layout-page-top-padding) 0
-            min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
+        --fd-page-container-padding: 0 0 min(var(--fd-layout-page-vertical-padding), var(--fd-space-page-body-bottom-padding));
     }
-}
-
-/* legacy layout classes removed; page layout handled via fdPageLayout directive */
-
-.fd-page-header {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: var(--fd-page-header-gap);
-    min-height: var(--fd-page-header-height);
-}
-
-.fd-page-header__title-block {
-    display: flex;
-    flex-direction: column;
-    gap: var(--fd-space-xxs);
-    min-width: 220px;
-}
-
-.fd-page-header__actions {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: var(--fd-page-actions-gap);
-    min-width: 240px;
 }

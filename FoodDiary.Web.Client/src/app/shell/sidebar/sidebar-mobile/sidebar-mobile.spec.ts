@@ -10,6 +10,7 @@ import { SidebarMobileComponent } from './sidebar-mobile';
 const DAILY_CONSUMED = 850;
 const DAILY_GOAL = 2000;
 const DAILY_PROGRESS = 42.5;
+const UNREAD_NOTIFICATION_COUNT = 3;
 
 describe('SidebarMobileComponent', () => {
     beforeEach(() => {
@@ -53,11 +54,30 @@ describe('SidebarMobileComponent', () => {
 
         expect(host.querySelector('.sidebar-mobile__sheet-link--admin')).not.toBeNull();
     });
+
+    it('does not render notification badge when there are no unread notifications', () => {
+        const fixture = createComponent('user', false, 0);
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.sidebar-mobile__notifications-badge')).toBeNull();
+    });
+
+    it('renders notification badge when there are unread notifications', () => {
+        const fixture = createComponent('user', false, UNREAD_NOTIFICATION_COUNT);
+        const host = fixture.nativeElement as HTMLElement;
+
+        const badge = host.querySelector('.sidebar-mobile__notifications-badge');
+        if (badge === null) {
+            throw new Error('Expected notification badge to render.');
+        }
+        expect(badge.textContent.trim()).toBe(String(UNREAD_NOTIFICATION_COUNT));
+    });
 });
 
 function createComponent(
     mobileSheet: 'food' | 'body' | 'reports' | 'user' | null,
     isAdmin = false,
+    unreadNotificationCount = 0,
 ): ComponentFixture<SidebarMobileComponent> {
     TestBed.configureTestingModule({
         imports: [SidebarMobileComponent, TranslateModule.forRoot()],
@@ -70,7 +90,7 @@ function createComponent(
     fixture.componentRef.setInput('dailyGoalKcalRounded', DAILY_GOAL);
     fixture.componentRef.setInput('dailyProgressPercent', DAILY_PROGRESS);
     fixture.componentRef.setInput('pendingRoute', null);
-    fixture.componentRef.setInput('unreadNotificationCount', 0);
+    fixture.componentRef.setInput('unreadNotificationCount', unreadNotificationCount);
     fixture.componentRef.setInput('mobileSheet', mobileSheet);
     fixture.componentRef.setInput('isAdmin', isAdmin);
     fixture.detectChanges();

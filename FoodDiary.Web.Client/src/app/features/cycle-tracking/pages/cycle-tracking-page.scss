@@ -1,25 +1,32 @@
-.cycle-tracking {
-    &__header {
-        margin-bottom: var(--fd-page-header-gap);
-    }
+@use 'variables' as variables;
 
+.cycle-tracking {
     &__grid {
-        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+
+        > * {
+            min-width: 0;
+        }
     }
 
     &__grid--log {
-        grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
     }
 
     &__card {
+        min-width: 0;
         height: 100%;
     }
 
+    &__form {
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
     &__form-row {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
 
         &--wide {
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
             align-items: center;
         }
     }
@@ -38,7 +45,11 @@
 
     &__summary,
     &__predictions {
-        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+
+        > * {
+            min-width: 0;
+        }
     }
 
     &__summary-item,
@@ -49,10 +60,11 @@
     }
 
     &__symptom-grid {
-        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
     }
 
     &__day {
+        min-width: 0;
         padding: var(--fd-space-surface-padding);
         border-radius: var(--fd-radius-lg);
         border: var(--fd-border-muted);
@@ -80,7 +92,7 @@
     }
 
     &__symptoms-row {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
         color: var(--fd-color-slate-700);
         margin-bottom: var(--fd-space-card-header-gap);
     }
@@ -95,5 +107,22 @@
         margin: 0;
         padding: var(--fd-space-section-state-compact-padding);
         color: var(--fd-color-slate-500);
+    }
+
+    @media #{variables.$media-tablet} {
+        &__grid,
+        &__grid--log,
+        &__form-row,
+        &__form-row--wide,
+        &__summary,
+        &__predictions,
+        &__symptom-grid,
+        &__symptoms-row {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        &__checkbox {
+            margin-top: 0;
+        }
     }
 }

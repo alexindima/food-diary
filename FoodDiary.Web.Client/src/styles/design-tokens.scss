@@ -428,7 +428,6 @@ $fd-theme-design-tokens: (
         ),
         layout-page: (
             background: #f5f7fb,
-            top-padding: clamp(6px, 1.5vw, 10px),
             horizontal-padding: clamp(12px, 3vw, 32px),
             vertical-padding: clamp(32px, 6vw, 64px),
             content-max-width: 1200px,
@@ -502,7 +501,6 @@ $fd-theme-design-tokens: (
         ),
         layout-page: (
             background: #f3faf6,
-            top-padding: clamp(6px, 1.5vw, 10px),
             horizontal-padding: clamp(12px, 3vw, 32px),
             vertical-padding: clamp(32px, 6vw, 64px),
             content-max-width: 1200px,
@@ -576,7 +574,6 @@ $fd-theme-design-tokens: (
         ),
         layout-page: (
             background: #14171c,
-            top-padding: clamp(6px, 1.5vw, 10px),
             horizontal-padding: clamp(12px, 3vw, 32px),
             vertical-padding: clamp(32px, 6vw, 64px),
             content-max-width: 1200px,
@@ -1800,7 +1797,6 @@ $fd-theme-design-tokens: (
         --fd-color-notice-danger-action: color-mix(in srgb, var(--fd-color-danger) 76%, var(--fd-color-text));
 
         --fd-layout-page-background: #{fd-theme-token($theme, layout-page, background)};
-        --fd-layout-page-top-padding: #{fd-theme-token($theme, layout-page, top-padding)};
         --fd-layout-page-horizontal-padding: #{fd-theme-token($theme, layout-page, horizontal-padding)};
         --fd-layout-page-vertical-padding: #{fd-theme-token($theme, layout-page, vertical-padding)};
         --fd-layout-page-content-max-width: #{fd-theme-token($theme, layout-page, content-max-width)};
