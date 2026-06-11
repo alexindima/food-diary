@@ -45,6 +45,7 @@ import {
 } from '../models/cycle.data';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
+import { CycleFactorListComponent } from './cycle-factor-list/cycle-factor-list';
 import { CycleNutritionSummaryCardComponent } from './cycle-nutrition-summary-card/cycle-nutrition-summary-card';
 import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from './cycle-tracking-page-lib/cycle-tracking-page.config';
 import {
@@ -72,6 +73,7 @@ import {
         FdUiCheckboxComponent,
         CycleCurrentCardComponent,
         CycleDaysCardComponent,
+        CycleFactorListComponent,
         CycleNutritionSummaryCardComponent,
     ],
     templateUrl: './cycle-tracking-page.html',
@@ -91,6 +93,8 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly clearingDayDate = this.facade.clearingDayDate;
+    protected readonly editingDayDate = this.facade.editingDayDate;
+    protected readonly editingFactorId = this.facade.editingFactorId;
     protected readonly isLoadingNutritionSummary = this.facade.isLoadingNutritionSummary;
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
@@ -177,8 +181,28 @@ export class CycleTrackingPageComponent {
         this.facade.saveFactor();
     }
 
+    protected editDay(date: string): void {
+        this.facade.editDay(date);
+    }
+
+    protected cancelDayEdit(): void {
+        this.facade.cancelDayEdit();
+    }
+
     protected clearDay(date: string): void {
         this.facade.clearDay(date);
+    }
+
+    protected editFactor(factorId: string): void {
+        this.facade.editFactor(factorId);
+    }
+
+    protected cancelFactorEdit(): void {
+        this.facade.cancelFactorEdit();
+    }
+
+    protected endFactorToday(factorId: string): void {
+        this.facade.endFactorToday(factorId);
     }
 
     protected exportCycle(): void {

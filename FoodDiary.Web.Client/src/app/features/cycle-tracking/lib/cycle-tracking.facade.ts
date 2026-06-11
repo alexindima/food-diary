@@ -100,6 +100,8 @@ export class CycleTrackingFacade {
     public readonly isSavingFactor = signal(false);
     public readonly isExportingCycle = signal(false);
     public readonly clearingDayDate = signal<string | null>(null);
+    public readonly editingDayDate = signal<string | null>(null);
+    public readonly editingFactorId = signal<string | null>(null);
     public readonly isLoadingNutritionSummary = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
     public readonly nutritionSummary = signal<CycleNutritionSummary | null>(null);
@@ -276,23 +278,48 @@ export class CycleTrackingFacade {
                     return;
                 }
 
-                const bleedingDates = new Set(day.bleedingEntries.map(entry => entry.date));
-                const symptomDates = new Set(day.symptoms.map(symptom => symptom.date));
+                const dayDateKey = this.toDateKey(day.date);
                 const updatedCycle = {
                     ...current,
-                    bleedingEntries: [...current.bleedingEntries.filter(entry => !bleedingDates.has(entry.date)), ...day.bleedingEntries],
-                    symptoms: [...current.symptoms.filter(symptom => !symptomDates.has(symptom.date)), ...day.symptoms],
+                    bleedingEntries: [
+                        ...current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dayDateKey),
+                        ...day.bleedingEntries,
+                    ],
+                    symptoms: [...current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
                     fertilitySignals:
                         day.fertilitySignal === null || day.fertilitySignal === undefined
                             ? current.fertilitySignals
                             : [
-                                  ...current.fertilitySignals.filter(fertilitySignal => fertilitySignal.date !== day.fertilitySignal?.date),
+                                  ...current.fertilitySignals.filter(
+                                      fertilitySignal => this.toDateKey(fertilitySignal.date) !== dayDateKey,
+                                  ),
                                   day.fertilitySignal,
                               ],
                 };
+                this.editingDayDate.set(null);
                 this.cycle.set(updatedCycle);
                 this.loadNutritionSummary(updatedCycle);
             });
+    }
+
+    public editDay(date: string): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null) {
+            return;
+        }
+
+        const dateKey = this.toDateKey(date);
+        const dayBleeding = currentCycle.bleedingEntries.filter(entry => this.toDateKey(entry.date) === dateKey);
+        const daySymptoms = currentCycle.symptoms.filter(symptom => this.toDateKey(symptom.date) === dateKey);
+        const fertilitySignal = currentCycle.fertilitySignals.find(item => this.toDateKey(item.date) === dateKey);
+        const bleeding = dayBleeding.find(entry => entry.type === BLEEDING_TYPE_BLEEDING) ?? dayBleeding[0];
+
+        this.dayModel.set(this.buildDayEditModel(date, daySymptoms, bleeding, fertilitySignal));
+        this.editingDayDate.set(date);
+    }
+
+    public cancelDayEdit(): void {
+        this.editingDayDate.set(null);
     }
 
     public saveFactor(): void {
@@ -326,6 +353,54 @@ export class CycleTrackingFacade {
                 finalize(() => {
                     this.isSavingFactor.set(false);
                 }),
+            )
+            .subscribe(cycle => {
+                this.editingFactorId.set(null);
+                this.cycle.set(cycle);
+                this.loadNutritionSummary(cycle);
+            });
+    }
+
+    public editFactor(factorId: string): void {
+        const factor = this.factors().find(item => item.id === factorId);
+        if (factor === undefined) {
+            return;
+        }
+
+        this.factorModel.set({
+            type: factor.type,
+            startDate: formatDateInputValue(new Date(factor.startDate)),
+            endDate: factor.endDate === null || factor.endDate === undefined ? null : formatDateInputValue(new Date(factor.endDate)),
+            notes: factor.notes ?? null,
+        });
+        this.editingFactorId.set(factorId);
+    }
+
+    public cancelFactorEdit(): void {
+        this.editingFactorId.set(null);
+    }
+
+    public endFactorToday(factorId: string): void {
+        const currentCycle = this.cycle();
+        const factor = this.factors().find(item => item.id === factorId);
+        if (currentCycle === null || factor === undefined || this.isSavingFactor()) {
+            return;
+        }
+
+        this.isSavingFactor.set(true);
+        this.cyclesService
+            .upsertFactor(currentCycle.id, {
+                type: factor.type,
+                startDate: factor.startDate,
+                endDate: this.normalizeEndOfDay(new Date()).toISOString(),
+                notes: factor.notes ?? undefined,
+                clearNotes: false,
+            })
+            .pipe(
+                finalize(() => {
+                    this.isSavingFactor.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
             )
             .subscribe(cycle => {
                 this.cycle.set(cycle);
@@ -460,6 +535,70 @@ export class CycleTrackingFacade {
     private toOptionalText(value: string | null | undefined): string | undefined {
         const trimmed = value?.trim();
         return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
+    }
+
+    private buildDayEditModel(
+        date: string,
+        symptoms: CycleSymptomEntry[],
+        bleeding: BleedingEntry | undefined,
+        fertilitySignal: FertilitySignal | undefined,
+    ): CycleDayFormModel {
+        return {
+            date: formatDateInputValue(new Date(date)),
+            ...this.buildBleedingEditFields(symptoms, bleeding),
+            ...this.buildSymptomEditFields(symptoms),
+            ...this.buildFertilityEditFields(fertilitySignal),
+            notes: this.findDayNotes(bleeding, fertilitySignal),
+        };
+    }
+
+    private buildBleedingEditFields(
+        symptoms: CycleSymptomEntry[],
+        bleeding: BleedingEntry | undefined,
+    ): Pick<CycleDayFormModel, 'isBleeding' | 'bleedingType' | 'flow' | 'pain'> {
+        return {
+            isBleeding: bleeding !== undefined,
+            bleedingType: bleeding?.type ?? BLEEDING_TYPE_BLEEDING,
+            flow: bleeding?.flow ?? CYCLE_FLOW_MEDIUM,
+            pain: bleeding?.painImpact ?? this.findSymptomIntensity(symptoms, 'pain'),
+        };
+    }
+
+    private buildSymptomEditFields(
+        symptoms: CycleSymptomEntry[],
+    ): Pick<CycleDayFormModel, 'mood' | 'energy' | 'sleepQuality' | 'bloating' | 'headache' | 'libido'> {
+        return {
+            mood: this.findSymptomIntensity(symptoms, 'mood'),
+            energy: this.findSymptomIntensity(symptoms, 'energy'),
+            sleepQuality: this.findSymptomIntensity(symptoms, 'sleepQuality'),
+            bloating: this.findSymptomIntensity(symptoms, 'bloating'),
+            headache: this.findSymptomIntensity(symptoms, 'headache'),
+            libido: this.findSymptomIntensity(symptoms, 'libido'),
+        };
+    }
+
+    private buildFertilityEditFields(
+        fertilitySignal: FertilitySignal | undefined,
+    ): Pick<CycleDayFormModel, 'basalBodyTemperatureCelsius' | 'ovulationTestResult' | 'cervicalFluid' | 'hadSex'> {
+        return {
+            basalBodyTemperatureCelsius: fertilitySignal?.basalBodyTemperatureCelsius ?? null,
+            ovulationTestResult: fertilitySignal?.ovulationTestResult ?? null,
+            cervicalFluid: fertilitySignal?.cervicalFluid ?? null,
+            hadSex: fertilitySignal?.hadSex ?? false,
+        };
+    }
+
+    private findDayNotes(bleeding: BleedingEntry | undefined, fertilitySignal: FertilitySignal | undefined): string | null {
+        return bleeding?.notes ?? fertilitySignal?.notes ?? null;
+    }
+
+    private findSymptomIntensity(symptoms: CycleSymptomEntry[], key: (typeof CYCLE_SYMPTOM_FIELDS)[number]['key']): number {
+        const symptomField = CYCLE_SYMPTOM_FIELDS.find(item => item.key === key);
+        if (symptomField === undefined) {
+            return MIN_SYMPTOM_VALUE;
+        }
+
+        return symptoms.find(symptom => symptom.category === symptomField.category)?.intensity ?? MIN_SYMPTOM_VALUE;
     }
 
     private normalizeStartOfDay(value: Date): Date {

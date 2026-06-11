@@ -155,7 +155,16 @@
 
                         <div class="cycle-tracking__actions fd-ui-actions">
                             <fd-ui-button type="submit" [disabled]="isSavingDay()" [loading]="isSavingDay()">
-                                {{ 'CYCLE_TRACKING.SAVE_DAY' | translate }}
+                                {{ (editingDayDate() ? 'CYCLE_TRACKING.UPDATE_DAY' : 'CYCLE_TRACKING.SAVE_DAY') | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button
+                                type="button"
+                                variant="secondary"
+                                fill="text"
+                                [hidden]="!editingDayDate()"
+                                (click)="cancelDayEdit()"
+                            >
+                                {{ 'CYCLE_TRACKING.CANCEL_EDIT' | translate }}
                             </fd-ui-button>
                         </div>
                     </form>
@@ -196,29 +205,26 @@
 
                         <div class="cycle-tracking__actions fd-ui-actions">
                             <fd-ui-button type="submit" [disabled]="isSavingFactor()" [loading]="isSavingFactor()">
-                                {{ 'CYCLE_TRACKING.SAVE_FACTOR' | translate }}
+                                {{ (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate }}
+                            </fd-ui-button>
+                            <fd-ui-button
+                                type="button"
+                                variant="secondary"
+                                fill="text"
+                                [hidden]="!editingFactorId()"
+                                (click)="cancelFactorEdit()"
+                            >
+                                {{ 'CYCLE_TRACKING.CANCEL_EDIT' | translate }}
                             </fd-ui-button>
                         </div>
                     </form>
 
-                    <div class="cycle-tracking__factor-list fd-stack fd-gap-xs">
-                        @for (factor of factorItems(); track factor.id) {
-                            <div class="cycle-tracking__factor-item">
-                                <div class="cycle-tracking__factor-copy fd-stack fd-gap-2xs">
-                                    <span class="fd-ui-title-sm">{{ factor.labelKey | translate }}</span>
-                                    <span class="fd-ui-body-sm">{{ factor.dateRangeLabel }}</span>
-                                </div>
-                                <span
-                                    class="cycle-tracking__factor-status fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
-                                    [class.cycle-tracking__factor-status--ended]="!factor.isActive"
-                                >
-                                    {{ factor.statusLabelKey | translate }}
-                                </span>
-                            </div>
-                        } @empty {
-                            <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_FACTORS' | translate }}</p>
-                        }
-                    </div>
+                    <fd-cycle-factor-list
+                        [items]="factorItems()"
+                        [isSaving]="isSavingFactor()"
+                        (editFactor)="editFactor($event)"
+                        (endFactor)="endFactorToday($event)"
+                    />
                 }
             </fd-ui-card>
 
@@ -226,6 +232,7 @@
                 [isLoading]="isLoading()"
                 [items]="dayItems()"
                 [clearingDate]="clearingDayDate()"
+                (editDay)="editDay($event)"
                 (clearDay)="clearDay($event)"
             />
 

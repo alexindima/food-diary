@@ -16,5 +16,6 @@ export class CycleDaysCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly items = input.required<CycleDayViewModel[]>();
     public readonly clearingDate = input<string | null>(null);
+    public readonly editDay = output<string>();
     public readonly clearDay = output<string>();
 }

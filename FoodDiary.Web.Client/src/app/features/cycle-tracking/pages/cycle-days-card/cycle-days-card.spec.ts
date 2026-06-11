@@ -121,6 +121,18 @@ describe('CycleDaysCardComponent', () => {
 
         expect(clearDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
     });
+
+    it('emits edit day when day edit action is clicked', () => {
+        const editDay = vi.fn();
+        fixture.componentInstance.editDay.subscribe(editDay);
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.componentRef.setInput('items', ITEMS);
+        fixture.detectChanges();
+
+        getEditButton().click();
+
+        expect(editDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
+    });
 });
 
 function getText(): string {
@@ -131,6 +143,15 @@ function getDeleteButton(): HTMLButtonElement {
     const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.CLEAR_DAY"]');
     if (button === null) {
         throw new Error('Expected clear day button to be rendered.');
+    }
+
+    return button;
+}
+
+function getEditButton(): HTMLButtonElement {
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.EDIT_DAY"]');
+    if (button === null) {
+        throw new Error('Expected edit day button to be rendered.');
     }
 
     return button;

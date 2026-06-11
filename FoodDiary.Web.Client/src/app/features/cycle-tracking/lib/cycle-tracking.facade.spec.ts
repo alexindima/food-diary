@@ -125,7 +125,7 @@ describe('CycleTrackingFacade current cycle', () => {
     });
 });
 
-describe('CycleTrackingFacade days', () => {
+describe('CycleTrackingFacade day saving', () => {
     it('upserts a day and merges it into the current profile', () => {
         facade.initialize();
         setValidDayForm();
@@ -163,7 +163,9 @@ describe('CycleTrackingFacade days', () => {
 
         expect(cyclesService.upsertDay).not.toHaveBeenCalled();
     });
+});
 
+describe('CycleTrackingFacade day editing', () => {
     it('clears a day and removes its logs from current profile', () => {
         cyclesService.getCurrent.mockReturnValue(
             of({
@@ -203,6 +205,56 @@ describe('CycleTrackingFacade days', () => {
         expect(facade.symptoms()).toEqual([]);
         expect(facade.fertilitySignals()).toEqual([]);
         expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
+    });
+});
+
+describe('CycleTrackingFacade day form editing', () => {
+    it('loads an existing day into the day form for editing', () => {
+        cyclesService.getCurrent.mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                bleedingEntries: [createBleedingEntry('bleeding-1', '2026-04-02T00:00:00.000Z')],
+                symptoms: [
+                    {
+                        id: 'symptom-1',
+                        cycleProfileId: 'cycle-1',
+                        date: '2026-04-02T00:00:00.000Z',
+                        category: 1,
+                        intensity: 4,
+                        tags: [],
+                        note: null,
+                    },
+                ],
+                fertilitySignals: [
+                    {
+                        id: 'signal-1',
+                        cycleProfileId: 'cycle-1',
+                        date: '2026-04-02T00:00:00.000Z',
+                        basalBodyTemperatureCelsius: 36.62,
+                        ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+                        cervicalFluid: 'egg white',
+                        hadSex: true,
+                        notes: null,
+                    },
+                ],
+            }),
+        );
+        facade.initialize();
+
+        facade.editDay('2026-04-02T00:00:00.000Z');
+
+        expect(facade.editingDayDate()).toBe('2026-04-02T00:00:00.000Z');
+        expect(facade.dayModel()).toMatchObject({
+            date: '2026-04-02',
+            isBleeding: true,
+            pain: 5,
+            mood: 4,
+            basalBodyTemperatureCelsius: 36.62,
+            ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+            cervicalFluid: 'egg white',
+            hadSex: true,
+            notes: 'note',
+        });
     });
 });
 
@@ -265,6 +317,36 @@ describe('CycleTrackingFacade factors', () => {
 
         expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
+
+    it('loads a factor into the factor form for editing', () => {
+        facade.initialize();
+
+        facade.editFactor('factor-1');
+
+        expect(facade.editingFactorId()).toBe('factor-1');
+        expect(facade.factorModel()).toEqual({
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-04-01',
+            endDate: null,
+            notes: 'pill',
+        });
+    });
+
+    it('ends an active factor today', () => {
+        facade.initialize();
+
+        facade.endFactorToday('factor-1');
+
+        const payload = cyclesService.upsertFactor.mock.calls[0][1];
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', payload);
+        expect(payload).toMatchObject({
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-04-01T00:00:00.000Z',
+            notes: 'pill',
+            clearNotes: false,
+        });
+        expect(typeof payload.endDate).toBe('string');
+    });
 });
 
 describe('CycleTrackingFacade export', () => {
@@ -324,7 +406,16 @@ function createCycleResponse(): CycleResponse {
         discreetNotifications: true,
         bleedingEntries: [],
         symptoms: [],
-        factors: [],
+        factors: [
+            {
+                id: 'factor-1',
+                cycleProfileId: 'cycle-1',
+                type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+                startDate: '2026-04-01T00:00:00.000Z',
+                endDate: null,
+                notes: 'pill',
+            },
+        ],
         fertilitySignals: [],
         predictions: {
             nextPeriodStartFrom: '2026-04-29T00:00:00Z',

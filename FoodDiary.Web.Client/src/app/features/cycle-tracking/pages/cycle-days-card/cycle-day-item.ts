@@ -16,5 +16,6 @@ import type { CycleDayViewModel } from '../cycle-tracking-page-lib/cycle-trackin
 export class CycleDayItemComponent {
     public readonly item = input.required<CycleDayViewModel>();
     public readonly isClearing = input(false);
+    public readonly editDay = output<string>();
     public readonly clearDay = output<string>();
 }

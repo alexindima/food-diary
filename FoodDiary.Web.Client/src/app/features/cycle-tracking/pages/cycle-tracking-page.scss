@@ -82,6 +82,11 @@
         min-width: 0;
     }
 
+    &__factor-actions {
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
+    }
+
     &__factor-status {
         flex: 0 0 auto;
         --fd-pill-bg: var(--fd-bg-category-teal);
@@ -117,6 +122,11 @@
         border-radius: var(--fd-radius-md);
         background: var(--fd-bg-muted-tint-subtle);
         color: var(--fd-color-slate-700);
+    }
+
+    &__privacy-note {
+        margin: var(--fd-space-card-header-gap) 0;
+        color: var(--fd-color-slate-600);
     }
 
     &__current-factors {

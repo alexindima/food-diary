@@ -6,7 +6,12 @@
     } @else {
         <div class="cycle-tracking__days fd-stack fd-gap-card-header">
             @for (item of items(); track item.date) {
-                <fd-cycle-day-item [item]="item" [isClearing]="clearingDate() === item.date" (clearDay)="clearDay.emit($event)" />
+                <fd-cycle-day-item
+                    [item]="item"
+                    [isClearing]="clearingDate() === item.date"
+                    (editDay)="editDay.emit($event)"
+                    (clearDay)="clearDay.emit($event)"
+                />
             }
         </div>
     }

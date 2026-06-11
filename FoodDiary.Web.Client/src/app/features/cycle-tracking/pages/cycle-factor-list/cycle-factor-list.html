@@ -1,0 +1,12 @@
+<div class="cycle-tracking__factor-list fd-stack fd-gap-xs">
+    @for (factor of items(); track factor.id) {
+        <fd-cycle-factor-item
+            [factor]="factor"
+            [isSaving]="isSaving()"
+            (editFactor)="editFactor.emit($event)"
+            (endFactor)="endFactor.emit($event)"
+        />
+    } @empty {
+        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_FACTORS' | translate }}</p>
+    }
+</div>

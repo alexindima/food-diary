@@ -30,6 +30,10 @@
             </div>
         }
 
+        <p class="cycle-tracking__privacy-note fd-ui-body-sm" [hidden]="!currentCycle.cycle.discreetNotifications">
+            {{ 'CYCLE_TRACKING.DISCREET_STATUS' | translate }}
+        </p>
+
         @if (prediction(); as cyclePrediction) {
             <fd-cycle-prediction-block [prediction]="cyclePrediction" />
         }

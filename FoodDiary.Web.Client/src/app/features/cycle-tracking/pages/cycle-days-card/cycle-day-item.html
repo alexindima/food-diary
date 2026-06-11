@@ -12,6 +12,15 @@
                 type="button"
                 size="sm"
                 fill="text"
+                variant="secondary"
+                icon="edit"
+                [ariaLabel]="'CYCLE_TRACKING.EDIT_DAY' | translate"
+                (click)="editDay.emit(item().date)"
+            />
+            <fd-ui-button
+                type="button"
+                size="sm"
+                fill="text"
                 variant="danger"
                 icon="delete"
                 [loading]="isClearing()"
