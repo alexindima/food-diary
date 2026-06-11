@@ -704,36 +704,6 @@ public class AdditionalValueObjectsInvariantTests {
         Assert.True(perms.ShareFasting);
     }
 
-    // --- DailySymptoms ---
-
-    [Fact]
-    public void DailySymptoms_CreateAndUpdate_StoreValuesAndValidateRange() {
-        var symptoms = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-
-        DailySymptoms updated = symptoms.Update(pain: 8, libido: 9);
-
-        Assert.Equal(8, updated.Pain);
-        Assert.Equal(2, updated.Mood);
-        Assert.Equal(9, updated.Libido);
-        Assert.Throws<ArgumentOutOfRangeException>(() => symptoms.Update(mood: 10));
-        Assert.Throws<ArgumentOutOfRangeException>(() => DailySymptoms.Create(-1, 2, 3, 4, 5, 6, 7));
-    }
-
-    [Fact]
-    public void DailySymptoms_Equality_ComparesValues() {
-        var first = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var same = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var different = DailySymptoms.Create(7, 6, 5, 4, 3, 2, 1);
-
-        Assert.True(first.Equals(first));
-        Assert.True(first.Equals(same));
-        Assert.False(first.Equals(different));
-        Assert.False(first.Equals(other: null));
-        Assert.True(first.Equals((object)same));
-        Assert.False(first.Equals(new object()));
-        Assert.Equal(first.GetHashCode(), same.GetHashCode());
-    }
-
     // --- Simple code value objects ---
 
     [Theory]

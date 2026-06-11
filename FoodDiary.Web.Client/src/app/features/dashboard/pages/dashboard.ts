@@ -184,7 +184,8 @@ export class DashboardComponent {
         const cycle = this.cycle();
 
         return {
-            startDate: cycle?.startDate ?? null,
+            cycle,
+            startDate: cycle?.trackingStartDate ?? null,
             predictions: cycle?.predictions ?? null,
         };
     });

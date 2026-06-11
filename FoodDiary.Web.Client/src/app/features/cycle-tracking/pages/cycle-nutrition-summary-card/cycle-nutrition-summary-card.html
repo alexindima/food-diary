@@ -1,0 +1,46 @@
+<fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.NUTRITION_SUMMARY_TITLE' | translate">
+    @if (isLoading()) {
+        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</p>
+    } @else if (summary(); as item) {
+        @if (!item.hasEnoughData) {
+            <p class="cycle-tracking__nutrition-note fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_LIMITED' | translate }}</p>
+        }
+
+        <div class="cycle-tracking__nutrition-summary fd-grid fd-gap-card-header">
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_LOGGED_DAYS' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.summary.loggedCycleDays }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_DAYS_WITH_MEALS' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.summary.daysWithMeals }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_BLEEDING_DAYS' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.summary.bleedingDays }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_BLEEDING_CALORIES' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.bleedingCaloriesLabel }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_NON_BLEEDING_CALORIES' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.nonBleedingCaloriesLabel }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_BLEEDING_FIBER' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.bleedingFiberLabel }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_NON_BLEEDING_FIBER' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.nonBleedingFiberLabel }}</strong>
+            </div>
+            <div class="cycle-tracking__nutrition-metric">
+                <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_PAIN_WITH_MEALS' | translate }}</span>
+                <strong class="fd-ui-title-sm">{{ item.painImpactLabel }}</strong>
+            </div>
+        </div>
+    } @else {
+        <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_EMPTY' | translate }}</p>
+    }
+</fd-ui-card>

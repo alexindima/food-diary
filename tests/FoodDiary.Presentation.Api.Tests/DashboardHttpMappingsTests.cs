@@ -11,6 +11,7 @@ using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -64,7 +65,7 @@ public sealed class DashboardHttpMappingsTests {
         var date = new DateTime(2026, 4, 6, 0, 0, 0, DateTimeKind.Utc);
         DateTime dateTo = date.AddDays(1).AddTicks(-1);
         var cycleId = Guid.NewGuid();
-        var cycleDayId = Guid.NewGuid();
+        var bleedingId = Guid.NewGuid();
         var model = new DashboardSnapshotModel(
             date,
             dateTo,
@@ -110,20 +111,31 @@ public sealed class DashboardHttpMappingsTests {
             new CycleModel(
                 cycleId,
                 Guid.NewGuid(),
+                CycleTrackingMode.PeriodTracking,
+                CycleConfidence.Medium,
                 date.AddDays(-10),
-                AverageLength: 28,
+                AverageCycleLength: 28,
+                AveragePeriodLength: 5,
                 LutealLength: 14,
+                IsRegular: true,
+                IsOnboardingComplete: true,
+                ShowFertilityEstimates: false,
+                DiscreetNotifications: true,
                 Notes: "regular",
                 [
-                    new CycleDayModel(
-                        cycleDayId,
+                    new BleedingEntryModel(
+                        bleedingId,
                         cycleId,
                         date,
-                        IsPeriod: true,
-                        new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7),
+                        BleedingType.Bleeding,
+                        CycleFlowLevel.Medium,
+                        PainImpact: 2,
                         Notes: "day notes"),
                 ],
-                new CyclePredictionsModel(date.AddDays(18), date.AddDays(4), date.AddDays(15))));
+                Symptoms: [],
+                Factors: [],
+                FertilitySignals: [],
+                new CyclePredictionsModel(date.AddDays(17), date.AddDays(19), OvulationFrom: null, OvulationTo: null, date.AddDays(13), date.AddDays(19), "Medium", "test")));
 
         DashboardSnapshotHttpResponse response = model.ToHttpResponse();
 
@@ -143,7 +155,7 @@ public sealed class DashboardHttpMappingsTests {
         Assert.Equal(420, response.CaloriesBurned);
         Assert.Equal(2400, response.TdeeInsight!.EstimatedTdee);
         Assert.Equal(cycleId, response.CurrentCycle!.Id);
-        Assert.Equal(cycleDayId, response.CurrentCycle.Days.First().Id);
-        Assert.Equal(date.AddDays(18), response.CurrentCycle.Predictions!.NextPeriodStart);
+        Assert.Equal(bleedingId, response.CurrentCycle.BleedingEntries.First().Id);
+        Assert.Equal(date.AddDays(17), response.CurrentCycle.Predictions!.NextPeriodStartFrom);
     }
 }

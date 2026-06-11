@@ -1,0 +1,5 @@
+<div class="cycle-tracking__care-prompts fd-stack fd-gap-2xs">
+    @for (prompt of items(); track prompt.id) {
+        <span class="cycle-tracking__care-prompt fd-ui-caption">{{ prompt.textKey | translate }}</span>
+    }
+</div>

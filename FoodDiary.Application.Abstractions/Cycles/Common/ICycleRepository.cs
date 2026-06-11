@@ -4,24 +4,24 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Abstractions.Cycles.Common;
 
 public interface ICycleRepository {
-    Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default);
+    Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default);
 
-    Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default);
+    Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default);
 
-    Task<Cycle?> GetByIdAsync(
-        CycleId id,
+    Task<CycleProfile?> GetByIdAsync(
+        CycleProfileId id,
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default);
 
-    Task<Cycle?> GetLatestAsync(
+    Task<CycleProfile?> GetCurrentAsync(
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<Cycle>> GetByUserAsync(
+    Task<IReadOnlyList<CycleProfile>> GetByUserAsync(
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         CancellationToken cancellationToken = default);
 }

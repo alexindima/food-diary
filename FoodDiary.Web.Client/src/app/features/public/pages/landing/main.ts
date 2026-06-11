@@ -74,7 +74,12 @@ export class MainComponent {
         }
 
         this.authDialogOpen = true;
-        const dialogRef = await this.authDialogService.openAsync({ mode, returnUrl, adminReturnUrl });
+        const dialogRef = await this.authDialogService.openAsync({ mode, returnUrl, adminReturnUrl, destroyRef: this.destroyRef });
+        if (dialogRef === null || this.destroyRef.destroyed) {
+            this.authDialogOpen = false;
+            return;
+        }
+
         dialogRef
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))

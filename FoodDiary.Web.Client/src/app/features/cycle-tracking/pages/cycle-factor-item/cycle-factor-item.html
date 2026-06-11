@@ -1,0 +1,35 @@
+<div class="cycle-tracking__factor-item">
+    <div class="cycle-tracking__factor-copy fd-stack fd-gap-2xs">
+        <span class="fd-ui-title-sm">{{ factor().labelKey | translate }}</span>
+        <span class="fd-ui-body-sm">{{ factor().dateRangeLabel }}</span>
+    </div>
+    <div class="cycle-tracking__factor-actions fd-row fd-gap-xs fd-align-center">
+        <span
+            class="cycle-tracking__factor-status fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
+            [class.cycle-tracking__factor-status--ended]="!factor().isActive"
+        >
+            {{ factor().statusLabelKey | translate }}
+        </span>
+        <fd-ui-button
+            type="button"
+            size="sm"
+            fill="text"
+            variant="secondary"
+            icon="edit"
+            [ariaLabel]="'CYCLE_TRACKING.EDIT_FACTOR' | translate"
+            (click)="editFactor.emit(factor().id)"
+        />
+        @if (factor().isActive) {
+            <fd-ui-button
+                type="button"
+                size="sm"
+                fill="text"
+                variant="secondary"
+                icon="event_busy"
+                [disabled]="isSaving()"
+                [ariaLabel]="'CYCLE_TRACKING.END_FACTOR' | translate"
+                (click)="endFactor.emit(factor().id)"
+            />
+        }
+    </div>
+</div>

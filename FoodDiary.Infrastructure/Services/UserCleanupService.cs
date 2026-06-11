@@ -149,8 +149,11 @@ public sealed class UserCleanupService(
         await dbContext.HydrationEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.WeightEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
         await dbContext.WaistEntries.Where(entry => entry.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.CycleDays.Where(day => day.Cycle.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-        await dbContext.Cycles.Where(cycle => cycle.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.CycleBleedingEntries.Where(entry => entry.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.CycleSymptomEntries.Where(entry => entry.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.CycleFactors.Where(factor => factor.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.FertilitySignals.Where(signal => signal.CycleProfile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        await dbContext.CycleProfiles.Where(profile => profile.UserId == userId).ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
     }
 
     private async Task DeleteImageAssetsAsync(UserId userId, CancellationToken cancellationToken) {

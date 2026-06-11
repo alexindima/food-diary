@@ -174,22 +174,41 @@
   },
   "cycle-current": {
     "keys": [
-      "averageLength",
-      "days",
+      "averageCycleLength",
+      "averagePeriodLength",
+      "bleedingEntries",
+      "confidence",
+      "discreetNotifications",
+      "factors",
+      "fertilitySignals",
       "id",
+      "isOnboardingComplete",
+      "isRegular",
       "lutealLength",
+      "mode",
       "notes",
       "predictions",
-      "startDate",
+      "showFertilityEstimates",
+      "symptoms",
+      "trackingStartDate",
       "userId"
     ],
-    "averageLength": 28,
+    "averageCycleLength": 28,
+    "averagePeriodLength": 5,
     "lutealLength": 14,
-    "daysCount": 0,
+    "bleedingEntriesCount": 0,
+    "symptomsCount": 0,
+    "factorsCount": 0,
+    "fertilitySignalsCount": 0,
     "predictionKeys": [
-      "nextPeriodStart",
-      "ovulationDate",
-      "pmsStart"
+      "confidence",
+      "nextPeriodStartFrom",
+      "nextPeriodStartTo",
+      "ovulationFrom",
+      "ovulationTo",
+      "pmsWindowEnd",
+      "pmsWindowStart",
+      "rationale"
     ]
   },
   "dashboard-snapshot": {
@@ -322,17 +341,17 @@
     "dashboardLayoutKeys": []
   },
   "image-upload-url": {
-      "keys": [
-        "assetId",
-        "expiresAtUtc",
-        "fileUrl",
-        "uploadUrl"
-      ],
-      "uploadUrlHost": "s3.test.local",
-      "uploadUrlHasSignature": false,
-      "fileUrlHost": "cdn.test.local",
-      "assetIdIsGuid": true
-    },
+    "keys": [
+      "assetId",
+      "expiresAtUtc",
+      "fileUrl",
+      "uploadUrl"
+    ],
+    "uploadUrlHost": "s3.test.local",
+    "uploadUrlHasSignature": false,
+    "fileUrlHost": "cdn.test.local",
+    "assetIdIsGuid": true
+  },
   "user-overview": {
     "keys": [
       "dietologistRelationship",

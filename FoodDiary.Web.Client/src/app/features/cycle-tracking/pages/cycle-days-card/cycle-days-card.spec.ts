@@ -1,28 +1,70 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { CycleDayViewModel } from '../cycle-tracking-page-lib/cycle-tracking-page.types';
 import { CycleDaysCardComponent } from './cycle-days-card';
 
 const ITEMS: CycleDayViewModel[] = [
     {
-        day: {
-            id: 'day-1',
-            cycleId: 'cycle-1',
-            date: '2026-04-02T00:00:00.000Z',
-            isPeriod: true,
-            symptoms: {
-                pain: 5,
-                mood: 3,
-                edema: 1,
-                headache: 2,
-                energy: 4,
-                sleepQuality: 6,
-                libido: 2,
+        date: '2026-04-02T00:00:00.000Z',
+        bleedingEntries: [
+            {
+                id: 'bleeding-1',
+                cycleProfileId: 'cycle-1',
+                date: '2026-04-02T00:00:00.000Z',
+                type: 0,
+                flow: 2,
+                painImpact: 5,
+                notes: 'felt tired',
             },
-            notes: 'felt tired',
+        ],
+        symptoms: [
+            {
+                id: 'symptom-1',
+                cycleProfileId: 'cycle-1',
+                date: '2026-04-02T00:00:00.000Z',
+                category: 0,
+                intensity: 5,
+                tags: [],
+                note: null,
+            },
+            {
+                id: 'symptom-2',
+                cycleProfileId: 'cycle-1',
+                date: '2026-04-02T00:00:00.000Z',
+                category: 3,
+                intensity: 6,
+                tags: [],
+                note: null,
+            },
+        ],
+        fertilitySignal: {
+            id: 'signal-1',
+            cycleProfileId: 'cycle-1',
+            date: '2026-04-02T00:00:00.000Z',
+            basalBodyTemperatureCelsius: 36.62,
+            ovulationTestResult: 1,
+            cervicalFluid: 'egg white',
+            hadSex: true,
+            notes: null,
         },
+        fertilitySignalItems: [
+            {
+                textKey: 'CYCLE_TRACKING.BBT_SUMMARY',
+                params: { value: '36.62' },
+            },
+            {
+                textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
+            },
+        ],
+        carePromptItems: [
+            {
+                id: 'heavy-flow',
+                textKey: 'CYCLE_TRACKING.CARE_HEAVY_FLOW',
+            },
+        ],
+        notes: 'felt tired',
         dateLabel: 'Apr 2, 2026',
         accentColor: 'var(--fd-color-red-600)',
         badgeLabelKey: 'CYCLE_TRACKING.BADGE_PERIOD',
@@ -62,12 +104,55 @@ describe('CycleDaysCardComponent', () => {
         fixture.detectChanges();
 
         expect(getText()).toContain('Apr 2, 2026');
-        expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_PAIN: 5/9');
-        expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_SLEEP: 6/9');
+        expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_VALUE');
+        expect(getText()).toContain('CYCLE_TRACKING.BBT_SUMMARY');
+        expect(getText()).toContain('CYCLE_TRACKING.CARE_HEAVY_FLOW');
         expect(getText()).toContain('felt tired');
+    });
+
+    it('emits clear day when day delete action is clicked', () => {
+        const clearDay = vi.fn();
+        fixture.componentInstance.clearDay.subscribe(clearDay);
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.componentRef.setInput('items', ITEMS);
+        fixture.detectChanges();
+
+        getDeleteButton().click();
+
+        expect(clearDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
+    });
+
+    it('emits edit day when day edit action is clicked', () => {
+        const editDay = vi.fn();
+        fixture.componentInstance.editDay.subscribe(editDay);
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.componentRef.setInput('items', ITEMS);
+        fixture.detectChanges();
+
+        getEditButton().click();
+
+        expect(editDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
     });
 });
 
 function getText(): string {
     return (fixture.nativeElement as HTMLElement).textContent;
+}
+
+function getDeleteButton(): HTMLButtonElement {
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.CLEAR_DAY"]');
+    if (button === null) {
+        throw new Error('Expected clear day button to be rendered.');
+    }
+
+    return button;
+}
+
+function getEditButton(): HTMLButtonElement {
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.EDIT_DAY"]');
+    if (button === null) {
+        throw new Error('Expected edit day button to be rendered.');
+    }
+
+    return button;
 }

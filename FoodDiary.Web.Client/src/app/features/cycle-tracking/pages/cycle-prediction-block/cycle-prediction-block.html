@@ -1,0 +1,50 @@
+@if (prediction().hasPredictionRanges) {
+    <div class="cycle-tracking__predictions fd-grid fd-gap-card-header">
+        <fd-ui-accent-surface
+            class="cycle-tracking__prediction fd-ui-summary-surface"
+            accentSide="top"
+            accentColor="var(--fd-color-orange-500)"
+            [tinted]="true"
+        >
+            <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                'CYCLE_TRACKING.PRED_NEXT' | translate
+            }}</span>
+            <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                {{ prediction().nextPeriodRangeLabel }}
+            </strong>
+        </fd-ui-accent-surface>
+        <fd-ui-accent-surface
+            class="cycle-tracking__prediction fd-ui-summary-surface"
+            accentSide="top"
+            accentColor="var(--fd-color-green-500)"
+            [tinted]="true"
+        >
+            <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                'CYCLE_TRACKING.PRED_OVULATION' | translate
+            }}</span>
+            <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                {{ prediction().ovulationRangeLabel }}
+            </strong>
+        </fd-ui-accent-surface>
+        <fd-ui-accent-surface
+            class="cycle-tracking__prediction fd-ui-summary-surface"
+            accentSide="top"
+            accentColor="var(--fd-color-primary-500)"
+            [tinted]="true"
+        >
+            <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
+                'CYCLE_TRACKING.PRED_PMS' | translate
+            }}</span>
+            <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                {{ prediction().pmsRangeLabel }}
+            </strong>
+        </fd-ui-accent-surface>
+    </div>
+} @else if (prediction().limitedReasonKey) {
+    <div class="cycle-tracking__prediction-limited fd-stack fd-gap-2xs">
+        <strong class="fd-ui-title-sm">{{ prediction().limitedReasonKey | translate }}</strong>
+        <span class="fd-ui-body-sm">
+            {{ 'CYCLE_TRACKING.PREDICTIONS_LIMITED_BODY' | translate: { confidence: prediction().confidenceLabel } }}
+        </span>
+    </div>
+}

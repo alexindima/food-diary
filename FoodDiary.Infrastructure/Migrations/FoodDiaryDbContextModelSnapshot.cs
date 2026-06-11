@@ -1829,22 +1829,59 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.ToTable("RecipeLikes");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Cycle", b => {
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.BleedingEntry", b => {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
-
-                    b.Property<int>("AverageLength")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(28);
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("LutealLength")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer")
-                        .HasDefaultValue(14);
+                    b.Property<Guid>("CycleProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Flow")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<int?>("PainImpact")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CycleProfileId", "Date", "Type")
+                        .IsUnique();
+
+                    b.ToTable("CycleBleedingEntries", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleFactor", b => {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CycleProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("EndDate")
+                        .HasColumnType("date");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -1856,32 +1893,59 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("date");
 
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId", "StartDate")
-                        .HasDatabaseName("IX_Cycles_User_StartDate");
+                    b.HasIndex("CycleProfileId", "Type", "StartDate")
+                        .IsUnique();
 
-                    b.ToTable("Cycles");
+                    b.ToTable("CycleFactors", (string)null);
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleDay", b => {
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b => {
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
+
+                    b.Property<int>("AverageCycleLength")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(28);
+
+                    b.Property<int>("AveragePeriodLength")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(5);
+
+                    b.Property<string>("Confidence")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
 
                     b.Property<DateTime>("CreatedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<Guid>("CycleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("date");
-
-                    b.Property<bool>("IsPeriod")
+                    b.Property<bool>("DiscreetNotifications")
                         .HasColumnType("boolean");
+
+                    b.Property<bool>("IsOnboardingComplete")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("IsRegular")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LutealLength")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(14);
+
+                    b.Property<string>("Mode")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
 
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
@@ -1890,12 +1954,61 @@ namespace FoodDiary.Infrastructure.Migrations {
                         .HasMaxLength(1024)
                         .HasColumnType("character varying(1024)");
 
+                    b.Property<bool>("ShowFertilityEstimates")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime>("TrackingStartDate")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("CycleId", "Date")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("CycleDays");
+                    b.ToTable("CycleProfiles", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleSymptomEntry", b => {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CycleProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("Intensity")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<string>("TagsJson")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CycleProfileId", "Date", "Category")
+                        .IsUnique();
+
+                    b.ToTable("CycleSymptomEntries", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b => {
@@ -2274,6 +2387,48 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.HasIndex("ReminderPresetId", "Name", "OccurredAtUtc");
 
                     b.ToTable("FastingTelemetryEvents");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FertilitySignal", b => {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<double?>("BasalBodyTemperatureCelsius")
+                        .HasColumnType("double precision");
+
+                    b.Property<string>("CervicalFluid")
+                        .HasMaxLength(128)
+                        .HasColumnType("character varying(128)");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CycleProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("date");
+
+                    b.Property<bool?>("HadSex")
+                        .HasColumnType("boolean");
+
+                    b.Property<DateTime?>("ModifiedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<string>("OvulationTestResult")
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CycleProfileId", "Date")
+                        .IsUnique();
+
+                    b.ToTable("FertilitySignals", (string)null);
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.HydrationEntry", b => {
@@ -3454,7 +3609,27 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Cycle", b => {
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.BleedingEntry", b => {
+                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                        .WithMany("BleedingEntries")
+                        .HasForeignKey("CycleProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CycleProfile");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleFactor", b => {
+                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                        .WithMany("Factors")
+                        .HasForeignKey("CycleProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CycleProfile");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b => {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
                         .WithMany("Cycles")
                         .HasForeignKey("UserId")
@@ -3462,58 +3637,14 @@ namespace FoodDiary.Infrastructure.Migrations {
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleDay", b => {
-                    b.HasOne("FoodDiary.Domain.Entities.Tracking.Cycle", "Cycle")
-                        .WithMany("Days")
-                        .HasForeignKey("CycleId")
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleSymptomEntry", b => {
+                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                        .WithMany("SymptomEntries")
+                        .HasForeignKey("CycleProfileId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("FoodDiary.Domain.ValueObjects.DailySymptoms", "Symptoms", b1 =>
-                        {
-                            b1.Property<Guid>("CycleDayId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<int>("Edema")
-                                .HasColumnType("integer")
-                                .HasColumnName("Edema");
-
-                            b1.Property<int>("Energy")
-                                .HasColumnType("integer")
-                                .HasColumnName("Energy");
-
-                            b1.Property<int>("Headache")
-                                .HasColumnType("integer")
-                                .HasColumnName("Headache");
-
-                            b1.Property<int>("Libido")
-                                .HasColumnType("integer")
-                                .HasColumnName("Libido");
-
-                            b1.Property<int>("Mood")
-                                .HasColumnType("integer")
-                                .HasColumnName("Mood");
-
-                            b1.Property<int>("Pain")
-                                .HasColumnType("integer")
-                                .HasColumnName("Pain");
-
-                            b1.Property<int>("SleepQuality")
-                                .HasColumnType("integer")
-                                .HasColumnName("SleepQuality");
-
-                            b1.HasKey("CycleDayId");
-
-                            b1.ToTable("CycleDays");
-
-                            b1.WithOwner()
-                                .HasForeignKey("CycleDayId");
-                        });
-
-                    b.Navigation("Cycle");
-
-                    b.Navigation("Symptoms")
-                        .IsRequired();
+                    b.Navigation("CycleProfile");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.ExerciseEntry", b => {
@@ -3578,6 +3709,16 @@ namespace FoodDiary.Infrastructure.Migrations {
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.FertilitySignal", b => {
+                    b.HasOne("FoodDiary.Domain.Entities.Tracking.CycleProfile", "CycleProfile")
+                        .WithMany("FertilitySignals")
+                        .HasForeignKey("CycleProfileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CycleProfile");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.HydrationEntry", b => {
@@ -3762,8 +3903,14 @@ namespace FoodDiary.Infrastructure.Migrations {
                     b.Navigation("Items");
                 });
 
-            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.Cycle", b => {
-                    b.Navigation("Days");
+            modelBuilder.Entity("FoodDiary.Domain.Entities.Tracking.CycleProfile", b => {
+                    b.Navigation("BleedingEntries");
+
+                    b.Navigation("Factors");
+
+                    b.Navigation("FertilitySignals");
+
+                    b.Navigation("SymptomEntries");
                 });
 
             modelBuilder.Entity("FoodDiary.Domain.Entities.Usda.UsdaFood", b => {

@@ -18,4 +18,14 @@
     &__day {
         color: var(--fd-color-text);
     }
+
+    &__meta {
+        flex-wrap: wrap;
+    }
+
+    &__pill {
+        --fd-pill-bg: var(--fd-bg-category-teal);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-teal-700);
+    }
 }

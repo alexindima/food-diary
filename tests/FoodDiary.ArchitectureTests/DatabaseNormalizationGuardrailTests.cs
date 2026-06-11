@@ -10,6 +10,8 @@ public sealed class DatabaseNormalizationGuardrailTests {
         "BillingPayment.ProviderMetadataJson",
         "BillingSubscription.ProviderMetadataJson",
         "BillingWebhookEvent.PayloadJson",
+        // User-entered symptom tags are small per-entry annotations, not shared facts or reporting dimensions.
+        "CycleSymptomEntry.TagsJson",
         "Notification.PayloadJson",
         "User.DashboardLayoutJson",
     };

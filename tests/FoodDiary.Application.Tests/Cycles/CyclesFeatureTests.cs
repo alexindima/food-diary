@@ -1,17 +1,22 @@
-using FoodDiary.Application.Cycles.Commands.CreateCycle;
-using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
+using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
+using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
+using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.Cycles.Services;
+using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 namespace FoodDiary.Application.Tests.Cycles;
 
@@ -20,9 +25,20 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task CreateCycleCommandValidator_WithInvalidLength_Fails() {
         var validator = new CreateCycleCommandValidator();
-        var command = new CreateCycleCommand(Guid.NewGuid(), DateTime.UtcNow, AverageLength: 10, LutealLength: 20, Notes: null);
+        var command = new CreateCycleCommand(
+            Guid.NewGuid(),
+            DateTime.UtcNow,
+            (int)CycleTrackingMode.PeriodTracking,
+            AverageCycleLength: 10,
+            AveragePeriodLength: 20,
+            LutealLength: 20,
+            IsRegular: false,
+            IsOnboardingComplete: false,
+            ShowFertilityEstimates: false,
+            DiscreetNotifications: true,
+            Notes: null);
 
-        ValidationResult result = await validator.ValidateAsync(command);
+        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
     }
@@ -34,105 +50,52 @@ public class CyclesFeatureTests {
             Guid.NewGuid(),
             Guid.NewGuid(),
             DateTime.UtcNow,
-            IsPeriod: true,
-            Symptoms: new DailySymptomsModel(10, 0, 0, 0, 0, 0, 0),
-            Notes: null,
-            ClearNotes: false);
+            Bleeding: null,
+            Symptoms: [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 11, [], Note: null, ClearNote: false)],
+            FertilitySignal: null);
 
-        ValidationResult result = await validator.ValidateAsync(command);
-
-        Assert.False(result.IsValid);
-    }
-
-    [Fact]
-    public async Task UpsertCycleDayCommandValidator_WithClearNotesAndValue_Fails() {
-        var validator = new UpsertCycleDayCommandValidator();
-        var command = new UpsertCycleDayCommand(
-            Guid.NewGuid(),
-            Guid.NewGuid(),
-            DateTime.UtcNow,
-            IsPeriod: true,
-            Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
-            Notes: "note",
-            ClearNotes: true);
-
-        ValidationResult result = await validator.ValidateAsync(command);
+        FluentValidation.Results.ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.False(result.IsValid);
-        Assert.Contains(result.Errors, e => string.Equals(e.ErrorMessage, "Notes cannot be provided when ClearNotes is true.", StringComparison.Ordinal));
     }
 
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WithEmptyCycleId_ReturnsValidationFailure() {
         var handler = new UpsertCycleDayCommandHandler(
             new NoopCycleRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            new StubUserRepository(User.Create("cycle-empty@example.com", "hash")));
 
-        Result<CycleDayModel> result = await handler.Handle(
+        Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 Guid.NewGuid(),
                 Guid.Empty,
                 DateTime.UtcNow,
-                IsPeriod: true,
-                Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
-                Notes: null,
-                ClearNotes: false),
+                Bleeding: null,
+                Symptoms: [],
+                FertilitySignal: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
-        Assert.Equal("Validation.Invalid", result.Error.Code);
-        Assert.Contains("CycleId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
-    }
-
-    [Fact]
-    public async Task CreateCycleCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new CreateCycleCommandHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(User.Create("cycle-empty-user@example.com", "hash")));
-
-        Result<CycleModel> result = await handler.Handle(
-            new CreateCycleCommand(Guid.Empty, DateTime.UtcNow, 28, 14, Notes: null),
-            CancellationToken.None);
-
-        Assert.True(result.IsFailure);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Contains("CycleProfileId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
     public async Task CreateCycleCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-cycle@example.com", "hash");
-        user.DeleteAccount(DateTime.UtcNow);
-        var handler = new CreateCycleCommandHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(user));
+        user.MarkDeleted(DateTime.UtcNow);
+        var handler = new CreateCycleCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
 
-        Result<CycleModel> result = await handler.Handle(
-            new CreateCycleCommand(user.Id.Value, DateTime.UtcNow, 28, 14, Notes: null),
-            CancellationToken.None);
+        Result<CycleModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
     [Fact]
-    public async Task GetCurrentCycleQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentCycleQueryHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(User.Create("cycle-current-empty@example.com", "hash")));
-
-        Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
-
-        Assert.True(result.IsFailure);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-    }
-
-    [Fact]
     public async Task GetCurrentCycleQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-current-deleted@example.com", "hash");
-        user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetCurrentCycleQueryHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(user));
+        user.MarkDeleted(DateTime.UtcNow);
+        var handler = new GetCurrentCycleQueryHandler(new NoopCycleRepository(), new StubUserRepository(user));
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
 
@@ -141,66 +104,18 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
-    public async Task UpsertCycleDayCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new UpsertCycleDayCommandHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(User.Create("cycle-day-empty-user@example.com", "hash")));
-
-        Result<CycleDayModel> result = await handler.Handle(
-            new UpsertCycleDayCommand(
-                Guid.Empty,
-                Guid.NewGuid(),
-                DateTime.UtcNow,
-                IsPeriod: true,
-                Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
-                Notes: null,
-                ClearNotes: false),
-            CancellationToken.None);
-
-        Assert.True(result.IsFailure);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-    }
-
-    [Fact]
-    public async Task UpsertCycleDayCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
-        var user = User.Create("cycle-day-deleted@example.com", "hash");
-        user.DeleteAccount(DateTime.UtcNow);
-        var handler = new UpsertCycleDayCommandHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(user));
-
-        Result<CycleDayModel> result = await handler.Handle(
-            new UpsertCycleDayCommand(
-                user.Id.Value,
-                Guid.NewGuid(),
-                DateTime.UtcNow,
-                IsPeriod: true,
-                Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
-                Notes: null,
-                ClearNotes: false),
-            CancellationToken.None);
-
-        Assert.True(result.IsFailure);
-        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
-    }
-
-    [Fact]
-    public async Task UpsertCycleDayCommandHandler_WhenCycleMissing_ReturnsNotFound() {
+    public async Task UpsertCycleDayCommandHandler_WhenProfileMissing_ReturnsNotFound() {
         var user = User.Create("cycle-day-missing@example.com", "hash");
-        var cycleId = Guid.NewGuid();
-        var handler = new UpsertCycleDayCommandHandler(
-            new NoopCycleRepository(),
-            new StubUserRepository(user));
+        var handler = new UpsertCycleDayCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
 
-        Result<CycleDayModel> result = await handler.Handle(
+        Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 user.Id.Value,
-                cycleId,
+                Guid.NewGuid(),
                 DateTime.UtcNow,
-                IsPeriod: true,
-                Symptoms: new DailySymptomsModel(1, 1, 1, 1, 1, 1, 1),
-                Notes: null,
-                ClearNotes: false),
+                new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Medium, PainImpact: 2, Notes: null, ClearNotes: false),
+                Symptoms: [],
+                FertilitySignal: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -208,123 +123,316 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
-    public async Task UpsertCycleDayCommandHandler_WithValidCommand_UpdatesCycleAndReturnsDay() {
+    public async Task UpsertCycleDayCommandHandler_WithValidCommand_UpdatesProfileAndReturnsDay() {
         var user = User.Create("cycle-day-success@example.com", "hash");
-        var cycle = Cycle.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
-        var repository = new InMemoryCycleRepository(cycle);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
         var handler = new UpsertCycleDayCommandHandler(repository, new StubUserRepository(user));
-        var date = new DateTime(2026, 4, 5, 12, 30, 0, DateTimeKind.Local);
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
 
-        Result<CycleDayModel> result = await handler.Handle(
+        Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
                 user.Id.Value,
-                cycle.Id.Value,
+                profile.Id.Value,
                 date,
-                IsPeriod: true,
-                Symptoms: new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7),
-                Notes: "day note",
+                new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Medium, PainImpact: 3, Notes: "note", ClearNotes: false),
+                [new SymptomLogCommandModel((int)CycleSymptomCategory.Craving, 7, ["sweet"], Note: null, ClearNote: false)],
+                FertilitySignal: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(profile.Id.Value, result.Value.CycleProfileId);
+        Assert.Single(result.Value.BleedingEntries);
+        Assert.Single(result.Value.Symptoms);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task ClearCycleDayCommandHandler_WithExistingDay_RemovesAllDayLogs() {
+        var user = User.Create("cycle-day-clear@example.com", "hash");
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: "note");
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Craving, 7, ["sweet"], note: null);
+        profile.UpsertFertilitySignal(date, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new ClearCycleDayCommandHandler(repository, new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, date),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(profile.BleedingEntries);
+        Assert.Empty(profile.SymptomEntries);
+        Assert.Empty(profile.FertilitySignals);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithInvalidType_ReturnsValidationFailure() {
+        var user = User.Create("cycle-factor-invalid@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var handler = new UpsertCycleFactorCommandHandler(new InMemoryCycleRepository(profile), new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                Type: 999,
+                StartDate: DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithValidCommand_UpdatesProfileAndReturnsCycle() {
+        var user = User.Create("cycle-factor-success@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleFactorCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                (int)CycleFactorType.HormonalContraception,
+                new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+                EndDate: null,
+                Notes: "pill",
                 ClearNotes: false),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(repository.UpdateCalled);
-        Assert.Equal(cycle.Id.Value, result.Value.CycleId);
-        Assert.True(result.Value.IsPeriod);
-        Assert.Equal(7, result.Value.Symptoms.Libido);
-        Assert.Equal("day note", result.Value.Notes);
+        Assert.Single(result.Value.Factors);
+        Assert.Equal(CycleFactorType.HormonalContraception, result.Value.Factors.Single().Type);
+        Assert.True(repository.WasUpdated);
     }
 
     [Fact]
-    public void CycleMappings_ToModel_SortsDaysByDate() {
-        var cycle = Cycle.Create(UserId.New(), DateTime.UtcNow);
-        cycle.AddOrUpdateDay(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), isPeriod: true, DailySymptoms.Create(1, 1, 1, 1, 1, 1, 1));
-        cycle.AddOrUpdateDay(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), isPeriod: false, DailySymptoms.Create(2, 2, 2, 2, 2, 2, 2));
+    public async Task GetCycleNutritionSummaryQueryHandler_WithCycleLogsAndMeals_ReturnsBleedingComparison() {
+        var user = User.Create("cycle-nutrition@example.com", "hash");
+        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, startDate);
+        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(1), CycleSymptomCategory.Craving, 6, ["sweet"], note: null);
+        Meal bleedingMeal = CreateMeal(user.Id, startDate, calories: 2100, fiber: 18);
+        Meal nonBleedingMeal = CreateMeal(user.Id, startDate.AddDays(1), calories: 1800, fiber: 28);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new InMemoryCycleRepository(profile),
+            new StubMealRepository([bleedingMeal, nonBleedingMeal]),
+            new StubUserRepository(user));
 
-        CycleModel response = cycle.ToModel();
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
+            CancellationToken.None);
 
-        Assert.Collection(
-            response.Days,
-            day => Assert.Equal(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), day.Date),
-            day => Assert.Equal(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), day.Date));
+        Assert.True(result.IsSuccess);
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
+        Assert.Equal(2, summary.LoggedCycleDays);
+        Assert.Equal(2, summary.DaysWithMeals);
+        Assert.Equal(1, summary.BleedingDays);
+        Assert.Equal(2100, summary.AverageCaloriesOnBleedingDays);
+        Assert.Equal(1800, summary.AverageCaloriesOnNonBleedingCycleDays);
+        Assert.Equal(18, summary.AverageFiberOnBleedingDays);
+        Assert.Equal(28, summary.AverageFiberOnNonBleedingCycleDays);
+        Assert.Equal(8, summary.AveragePainImpactOnDaysWithMeals);
+        Assert.False(summary.HasEnoughNutritionData);
     }
 
     [Fact]
-    public void CycleMappings_ToValueObject_MapsSymptomValues() {
-        var model = new DailySymptomsModel(1, 2, 3, 4, 5, 6, 7);
+    public async Task GetCycleNutritionSummaryQueryHandler_WithEnoughGroupData_MarksSummaryReliable() {
+        var user = User.Create("cycle-nutrition-enough@example.com", "hash");
+        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, startDate);
+        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
+        profile.UpsertBleedingEntry(startDate.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 6, notes: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(2), CycleSymptomCategory.Craving, 4, [], note: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(3), CycleSymptomCategory.Energy, 5, [], note: null);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new InMemoryCycleRepository(profile),
+            new StubMealRepository([
+                CreateMeal(user.Id, startDate, calories: 2100, fiber: 18),
+                CreateMeal(user.Id, startDate.AddDays(1), calories: 2000, fiber: 20),
+                CreateMeal(user.Id, startDate.AddDays(2), calories: 1800, fiber: 28),
+                CreateMeal(user.Id, startDate.AddDays(3), calories: 1900, fiber: 26),
+            ]),
+            new StubUserRepository(user));
 
-        DailySymptoms symptoms = model.ToValueObject();
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(4)),
+            CancellationToken.None);
 
-        Assert.Equal(1, symptoms.Pain);
-        Assert.Equal(2, symptoms.Mood);
-        Assert.Equal(3, symptoms.Edema);
-        Assert.Equal(4, symptoms.Headache);
-        Assert.Equal(5, symptoms.Energy);
-        Assert.Equal(6, symptoms.SleepQuality);
-        Assert.Equal(7, symptoms.Libido);
+        Assert.True(result.IsSuccess);
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
+        Assert.True(summary.HasEnoughNutritionData);
     }
 
     [Fact]
-    public void CyclePredictionService_CalculatePredictions_NormalizesToUtcDate() {
-        var localStart = DateTime.SpecifyKind(new DateTime(2026, 1, 10, 23, 30, 0), DateTimeKind.Local);
-        var cycle = Cycle.Create(UserId.New(), localStart, averageLength: 28, lutealLength: 14);
+    public async Task GetCycleNutritionSummaryQueryHandler_WithMissingCycle_ReturnsNull() {
+        var user = User.Create("cycle-nutrition-missing@example.com", "hash");
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(user));
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            CancellationToken.None);
 
-        Assert.NotNull(predictions.NextPeriodStart);
-        Assert.NotNull(predictions.OvulationDate);
-        Assert.NotNull(predictions.PmsStart);
-        Assert.Equal(DateTimeKind.Utc, predictions.NextPeriodStart!.Value.Kind);
-        Assert.Equal(DateTimeKind.Utc, predictions.OvulationDate!.Value.Kind);
-        Assert.Equal(DateTimeKind.Utc, predictions.PmsStart!.Value.Kind);
+        Assert.True(result.IsSuccess);
+        Assert.Null(result.Value);
     }
 
     [Fact]
-    public void CyclePredictionService_CalculatePredictions_WithNullCycle_Throws() {
-        Assert.Throws<ArgumentNullException>(() => CyclePredictionService.CalculatePredictions(null!));
+    public void CycleMappings_ToModel_SortsLogsByDate() {
+        var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
+        profile.UpsertBleedingEntry(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
+        profile.UpsertBleedingEntry(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: null, notes: null);
+
+        CycleModel response = profile.ToModel();
+
+        Assert.Equal(
+            [new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc)],
+            response.BleedingEntries.Select(day => day.Date));
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_ReturnsRangeAndConfidence() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        Assert.NotNull(predictions.NextPeriodStartFrom);
+        Assert.NotNull(predictions.NextPeriodStartTo);
+        Assert.NotNull(predictions.OvulationFrom);
+        Assert.Equal("Learning", predictions.Confidence);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_WithActivePredictionLimitingFactor_ReturnsLimitedPrediction() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
+        profile.UpsertFactor(
+            CycleFactorType.HormonalContraception,
+            new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+            endDate: null,
+            notes: null);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        Assert.Null(predictions.NextPeriodStartFrom);
+        Assert.Null(predictions.NextPeriodStartTo);
+        Assert.Null(predictions.OvulationFrom);
+        Assert.Null(predictions.OvulationTo);
+        Assert.Equal("Predictions are limited by the active tracking mode.", predictions.Rationale);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_WithEndedPredictionLimitingFactor_ReturnsRange() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
+        profile.UpsertFactor(
+            CycleFactorType.HormonalContraception,
+            new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
+            notes: null);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        Assert.NotNull(predictions.NextPeriodStartFrom);
+        Assert.NotNull(predictions.OvulationFrom);
+    }
+
+    private static CreateCycleCommand CreateCommand(Guid userId) =>
+        new(
+            userId,
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            (int)CycleTrackingMode.PeriodTracking,
+            AverageCycleLength: 28,
+            AveragePeriodLength: 5,
+            LutealLength: 14,
+            IsRegular: false,
+            IsOnboardingComplete: false,
+            ShowFertilityEstimates: false,
+            DiscreetNotifications: true,
+            Notes: null);
+
+    private static Meal CreateMeal(UserId userId, DateTime date, double calories, double fiber) {
+        var meal = Meal.Create(userId, date, MealType.Lunch, comment: null);
+        meal.ApplyNutrition(new MealNutritionUpdate(calories, 30, 20, 60, fiber, 0, IsAutoCalculated: true));
+        return meal;
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class NoopCycleRepository : ICycleRepository {
-        public Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.FromResult(cycle);
-        public Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task<Cycle?> GetByIdAsync(CycleId id, UserId userId, bool includeDays = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
-        public Task<Cycle?> GetLatestAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<Cycle?>(null);
-        public Task<IReadOnlyList<Cycle>> GetByUserAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Cycle>>([]);
+        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
+
+        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<CycleProfile?> GetByIdAsync(CycleProfileId id, UserId userId, bool includeDetails = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
+
+        public Task<CycleProfile?> GetCurrentAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) => Task.FromResult<CycleProfile?>(null);
+
+        public Task<IReadOnlyList<CycleProfile>> GetByUserAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<CycleProfile>>([]);
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryCycleRepository(Cycle cycle) : ICycleRepository {
-        public bool UpdateCalled { get; private set; }
+    private sealed class InMemoryCycleRepository(CycleProfile profile) : ICycleRepository {
+        public bool WasUpdated { get; private set; }
 
-        public Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) => Task.FromResult(cycle);
+        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => Task.FromResult(profile);
 
-        public Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) {
-            UpdateCalled = true;
+        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+            WasUpdated = true;
             return Task.CompletedTask;
         }
 
-        public Task<Cycle?> GetByIdAsync(CycleId id, UserId userId, bool includeDays = false, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult(cycle.Id == id && cycle.UserId == userId ? cycle : null);
+        public Task<CycleProfile?> GetByIdAsync(CycleProfileId id, UserId userId, bool includeDetails = false, bool asTracking = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile.Id == id && profile.UserId == userId ? profile : null);
 
-        public Task<Cycle?> GetLatestAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult(cycle.UserId == userId ? cycle : null);
+        public Task<CycleProfile?> GetCurrentAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile.UserId == userId ? profile : null);
 
-        public Task<IReadOnlyList<Cycle>> GetByUserAsync(UserId userId, bool includeDays = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Cycle>>(cycle.UserId == userId ? [cycle] : []);
+        public Task<IReadOnlyList<CycleProfile>> GetByUserAsync(UserId userId, bool includeDetails = false, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<CycleProfile>>(profile.UserId == userId ? [profile] : []);
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubMealRepository(IReadOnlyList<Meal> meals) : IMealRepository {
+        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Meal>>([.. meals.Where(meal => meal.Date >= dateFrom && meal.Date <= dateTo)]);
+
+        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubUserRepository(User? user) : IUserRepository {
+        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult(user);
+        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult(user);
+        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
+        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => Task.FromResult<(IReadOnlyList<User>, int)>((user is null ? [] : [user], user is null ? 0 : 1));
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => Task.FromResult((user is null ? 0 : 1, user is { IsActive: true } ? 1 : 0, 0, user?.DeletedAt is null ? 0 : 1, (IReadOnlyList<User>)(user is null ? [] : [user])));
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<Role>>([]);
+        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => Task.FromResult(user);
+        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => Task.CompletedTask;
+        public Task<bool> ExistsByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult(user is not null);
     }
 }

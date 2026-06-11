@@ -4,35 +4,70 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { CycleDay, CycleResponse } from '../models/cycle.data';
+import {
+    BLEEDING_TYPE_BLEEDING,
+    type CreateCyclePayload,
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FLOW_MEDIUM,
+    CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    type CycleLogDay,
+    type CycleNutritionSummary,
+    type CycleResponse,
+    type UpsertCycleDayPayload,
+    type UpsertCycleFactorPayload,
+} from '../models/cycle.data';
 import { CyclesService } from './cycles.service';
 
 const BASE_URL = environment.apiUrls.cycles;
 const MOCK_CYCLE: CycleResponse = {
     id: 'c-1',
     userId: 'user-1',
-    startDate: '2026-03-01',
-    averageLength: 28,
+    mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    confidence: 1,
+    trackingStartDate: '2026-03-01',
+    averageCycleLength: 28,
+    averagePeriodLength: 5,
     lutealLength: 14,
+    isRegular: true,
+    isOnboardingComplete: true,
+    showFertilityEstimates: true,
+    discreetNotifications: true,
     notes: null,
-    days: [],
+    bleedingEntries: [],
+    symptoms: [],
+    factors: [],
+    fertilitySignals: [],
     predictions: null,
 };
-const MOCK_DAY: CycleDay = {
-    id: 'd-1',
-    cycleId: 'c-1',
+const MOCK_DAY: CycleLogDay = {
+    cycleProfileId: 'c-1',
     date: '2026-03-05',
-    isPeriod: true,
-    symptoms: {
-        pain: 2,
-        mood: 3,
-        edema: 0,
-        headache: 1,
-        energy: 3,
-        sleepQuality: 4,
-        libido: 2,
-    },
-    notes: null,
+    bleedingEntries: [
+        {
+            id: 'b-1',
+            cycleProfileId: 'c-1',
+            date: '2026-03-05',
+            type: BLEEDING_TYPE_BLEEDING,
+            flow: CYCLE_FLOW_MEDIUM,
+            painImpact: 2,
+            notes: null,
+        },
+    ],
+    symptoms: [],
+    fertilitySignal: null,
+};
+const MOCK_NUTRITION_SUMMARY: CycleNutritionSummary = {
+    dateFrom: '2026-03-01T00:00:00.000Z',
+    dateTo: '2026-03-31T23:59:59.999Z',
+    loggedCycleDays: 4,
+    daysWithMeals: 3,
+    bleedingDays: 2,
+    averageCaloriesOnBleedingDays: 2100,
+    averageCaloriesOnNonBleedingCycleDays: 1800,
+    averageFiberOnBleedingDays: 18,
+    averageFiberOnNonBleedingCycleDays: 28,
+    averagePainImpactOnDaysWithMeals: 6,
+    hasEnoughNutritionData: true,
 };
 
 let service: CyclesService;
@@ -70,11 +105,33 @@ describe('CyclesService current cycle', () => {
         const req = httpMock.expectOne(`${BASE_URL}/current`);
         req.flush('Not found', { status: 404, statusText: 'Not Found' });
     });
+
+    it('should get nutrition summary', () => {
+        service.getNutritionSummary('2026-03-01T00:00:00.000Z', '2026-03-31T23:59:59.999Z').subscribe(summary => {
+            expect(summary).toEqual(MOCK_NUTRITION_SUMMARY);
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/current/nutrition-summary` && r.method === 'GET');
+        expect(req.request.params.get('dateFrom')).toBe('2026-03-01T00:00:00.000Z');
+        expect(req.request.params.get('dateTo')).toBe('2026-03-31T23:59:59.999Z');
+        req.flush(MOCK_NUTRITION_SUMMARY);
+    });
 });
 
 describe('CyclesService mutations', () => {
     it('should create cycle', () => {
-        const payload = { startDate: '2026-03-01', averageLength: 28, lutealLength: 14, notes: null };
+        const payload: CreateCyclePayload = {
+            trackingStartDate: '2026-03-01',
+            mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+            averageCycleLength: 28,
+            averagePeriodLength: 5,
+            lutealLength: 14,
+            isRegular: true,
+            isOnboardingComplete: true,
+            showFertilityEstimates: true,
+            discreetNotifications: true,
+            notes: null,
+        };
 
         service.create(payload).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
@@ -87,19 +144,17 @@ describe('CyclesService mutations', () => {
     });
 
     it('should upsert cycle day', () => {
-        const payload = {
+        const payload: UpsertCycleDayPayload = {
             date: '2026-03-05',
-            isPeriod: true,
-            symptoms: {
-                pain: 2,
-                mood: 3,
-                edema: 0,
-                headache: 1,
-                energy: 3,
-                sleepQuality: 4,
-                libido: 2,
+            bleeding: {
+                type: BLEEDING_TYPE_BLEEDING,
+                flow: CYCLE_FLOW_MEDIUM,
+                painImpact: 2,
+                notes: null,
+                clearNotes: false,
             },
-            notes: null,
+            symptoms: [],
+            fertilitySignal: null,
         };
 
         service.upsertDay('c-1', payload).subscribe(day => {
@@ -110,5 +165,34 @@ describe('CyclesService mutations', () => {
         expect(req.request.method).toBe('PUT');
         expect(req.request.body).toEqual(payload);
         req.flush(MOCK_DAY);
+    });
+
+    it('should clear cycle day', () => {
+        service.clearDay('c-1', '2026-03-05T00:00:00.000Z').subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/c-1/days` && r.method === 'DELETE');
+        expect(req.request.params.get('date')).toBe('2026-03-05T00:00:00.000Z');
+        req.flush(null);
+    });
+
+    it('should upsert cycle factor', () => {
+        const payload: UpsertCycleFactorPayload = {
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-03-01',
+            endDate: null,
+            notes: 'pill',
+            clearNotes: false,
+        };
+
+        service.upsertFactor('c-1', payload).subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/factors`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual(payload);
+        req.flush(MOCK_CYCLE);
     });
 });

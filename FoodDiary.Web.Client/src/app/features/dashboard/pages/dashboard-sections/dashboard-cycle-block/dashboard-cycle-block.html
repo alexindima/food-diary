@@ -4,6 +4,7 @@
             <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
                 <fd-cycle-summary-card
                     class="dashboard__card dashboard__card--cycle"
+                    [cycle]="cardState().cycle"
                     [startDate]="cardState().startDate"
                     [predictions]="cardState().predictions"
                     [referenceDate]="referenceDate()"

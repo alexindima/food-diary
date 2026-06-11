@@ -4,25 +4,6 @@ namespace FoodDiary.Application.Tests.Domain.ValueObjects;
 
 [ExcludeFromCodeCoverage]
 public class ValueObjectsInvariantTests {
-    [Fact]
-    public void DailySymptoms_Create_WithOutOfRangeValue_Throws() {
-        Assert.Throws<ArgumentOutOfRangeException>(() =>
-            DailySymptoms.Create(-1, 0, 0, 0, 0, 0, 0));
-    }
-
-    [Fact]
-    public void DailySymptoms_Create_AndUpdate_PreserveValueEquality() {
-        var source = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        var same = DailySymptoms.Create(1, 2, 3, 4, 5, 6, 7);
-        DailySymptoms updated = source.Update(mood: 8);
-
-        Assert.Equal(source, same);
-        Assert.Equal(source.GetHashCode(), same.GetHashCode());
-        Assert.NotEqual(source, updated);
-        Assert.Equal(8, updated.Mood);
-        Assert.Equal(1, updated.Pain);
-    }
-
     [Theory]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]

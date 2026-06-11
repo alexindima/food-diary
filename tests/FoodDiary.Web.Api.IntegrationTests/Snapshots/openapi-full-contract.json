@@ -952,7 +952,49 @@
       ]
     },
     {
-      "Path": "/api/v{version}/cycles/{cycleid}/days",
+      "Path": "/api/v{version}/cycles/current/nutrition-summary",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/cycles/{cycleprofileid}/days",
+      "Operations": [
+        {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        },
+        {
+          "Method": "put",
+          "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/cycles/{cycleprofileid}/factors",
       "Operations": [
         {
           "Method": "put",
@@ -1301,6 +1343,20 @@
         {
           "Method": "put",
           "HasRequestBody": true,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
+      "Path": "/api/v{version}/export/cycle",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
           "ResponseCodes": [
             "200",
             "401",

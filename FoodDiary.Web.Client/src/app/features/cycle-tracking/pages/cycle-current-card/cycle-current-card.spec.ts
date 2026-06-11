@@ -8,10 +8,20 @@ import { CycleCurrentCardComponent } from './cycle-current-card';
 const CYCLE: CycleResponse = {
     id: 'cycle-1',
     userId: 'user-1',
-    startDate: '2026-04-01T00:00:00.000Z',
-    averageLength: 28,
+    mode: 0,
+    confidence: 1,
+    trackingStartDate: '2026-04-01T00:00:00.000Z',
+    averageCycleLength: 28,
+    averagePeriodLength: 5,
     lutealLength: 14,
-    days: [],
+    isRegular: true,
+    isOnboardingComplete: true,
+    showFertilityEstimates: true,
+    discreetNotifications: true,
+    bleedingEntries: [],
+    symptoms: [],
+    factors: [],
+    fertilitySignals: [],
     predictions: null,
 };
 
@@ -46,25 +56,56 @@ describe('CycleCurrentCardComponent', () => {
         fixture.componentRef.setInput('isLoading', false);
         fixture.componentRef.setInput('current', {
             cycle: CYCLE,
-            startDateLabel: 'Apr 1, 2026',
+            trackingStartDateLabel: 'Apr 1, 2026',
+            summaryItems: [
+                {
+                    labelKey: 'CYCLE_TRACKING.STARTED',
+                    valueKey: 'CYCLE_TRACKING.STARTED_SUMMARY',
+                    params: { value: 'Apr 1, 2026' },
+                    accentColor: 'var(--fd-color-purple-500)',
+                },
+                {
+                    labelKey: 'CYCLE_TRACKING.MODE',
+                    valueKey: 'CYCLE_TRACKING.MODE_PERIOD_TRACKING',
+                    accentColor: 'var(--fd-color-sky-500)',
+                },
+            ],
+            activeFactorItems: [
+                {
+                    id: 'factor-1',
+                    labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+                    startDateLabel: 'Apr 2',
+                },
+            ],
         });
         fixture.componentRef.setInput('prediction', {
             prediction: {
-                nextPeriodStart: '2026-04-29',
-                ovulationDate: '2026-04-15',
-                pmsStart: '2026-04-23',
+                nextPeriodStartFrom: '2026-04-29',
+                nextPeriodStartTo: '2026-05-01',
+                ovulationFrom: '2026-04-15',
+                ovulationTo: '2026-04-16',
+                pmsWindowStart: '2026-04-23',
+                pmsWindowEnd: '2026-04-28',
+                confidence: 'Moderate',
+                rationale: 'Based on recent bleeding entries.',
             },
-            nextPeriodStartLabel: 'Apr 29',
-            ovulationDateLabel: 'Apr 15',
-            pmsStartLabel: 'Apr 23',
+            nextPeriodRangeLabel: 'Apr 29 - May 1',
+            ovulationRangeLabel: 'Apr 15 - Apr 16',
+            pmsRangeLabel: 'Apr 23 - Apr 28',
+            confidenceLabel: 'Moderate',
+            hasPredictionRanges: true,
+            limitedReasonKey: null,
         });
         fixture.detectChanges();
 
         expect(fixture.componentInstance['titleKey']()).toBe('CYCLE_TRACKING.CURRENT_CYCLE');
-        expect(getText()).toContain('Apr 1, 2026');
-        expect(getText()).toContain('Apr 29');
-        expect(getText()).toContain('Apr 15');
-        expect(getText()).toContain('Apr 23');
+        expect(getText()).toContain('CYCLE_TRACKING.STARTED_SUMMARY');
+        expect(getText()).toContain('CYCLE_TRACKING.MODE_PERIOD_TRACKING');
+        expect(getText()).toContain('CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION');
+        expect(getText()).toContain('CYCLE_TRACKING.FACTOR_SINCE');
+        expect(getText()).toContain('Apr 29 - May 1');
+        expect(getText()).toContain('Apr 15 - Apr 16');
+        expect(getText()).toContain('Apr 23 - Apr 28');
     });
 });
 

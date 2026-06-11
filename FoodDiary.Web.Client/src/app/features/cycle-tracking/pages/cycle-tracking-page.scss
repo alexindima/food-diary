@@ -13,6 +13,11 @@
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
     }
 
+    &__page-actions {
+        justify-content: flex-end;
+        margin-bottom: var(--fd-space-card-gap);
+    }
+
     &__card {
         min-width: 0;
         height: 100%;
@@ -43,6 +48,57 @@
         justify-content: flex-start;
     }
 
+    &__section {
+        padding-top: var(--fd-space-card-header-gap);
+        border-top: var(--fd-border-muted);
+    }
+
+    &__section-title {
+        margin: 0;
+        color: var(--fd-color-slate-900);
+    }
+
+    &__factor-list {
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
+    &__factor-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+        min-width: 0;
+        padding: var(--fd-space-surface-padding);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface-raised);
+
+        > * {
+            min-width: 0;
+        }
+    }
+
+    &__factor-copy {
+        min-width: 0;
+    }
+
+    &__factor-actions {
+        flex: 0 0 auto;
+        flex-wrap: nowrap;
+    }
+
+    &__factor-status {
+        flex: 0 0 auto;
+        --fd-pill-bg: var(--fd-bg-category-teal);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-teal-700);
+
+        &--ended {
+            --fd-pill-bg: var(--fd-bg-muted-tint);
+            --fd-pill-color: var(--fd-color-slate-600);
+        }
+    }
+
     &__summary,
     &__predictions {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
@@ -57,6 +113,32 @@
         --fd-summary-surface-padding: var(--fd-space-surface-padding);
         --fd-summary-surface-radius: var(--fd-radius-card);
         --fd-summary-surface-background: var(--fd-bg-surface-raised);
+    }
+
+    &__prediction-limited {
+        margin-top: var(--fd-space-card-header-gap);
+        padding: var(--fd-space-surface-padding);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-muted-tint-subtle);
+        color: var(--fd-color-slate-700);
+    }
+
+    &__privacy-note {
+        margin: var(--fd-space-card-header-gap) 0;
+        color: var(--fd-color-slate-600);
+    }
+
+    &__current-factors {
+        flex-wrap: wrap;
+        margin-top: var(--fd-space-card-header-gap);
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__current-factor {
+        --fd-pill-bg: var(--fd-bg-category-teal);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-green-700);
     }
 
     &__symptom-grid {
@@ -80,6 +162,10 @@
         color: var(--fd-color-slate-900);
     }
 
+    &__day-actions {
+        flex-wrap: nowrap;
+    }
+
     &__day-badge {
         --fd-pill-bg: var(--fd-bg-category-sky);
         --fd-pill-border: transparent;
@@ -95,6 +181,45 @@
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
         color: var(--fd-color-slate-700);
         margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__signals-row {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        color: var(--fd-color-slate-700);
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__care-prompts {
+        margin-bottom: var(--fd-space-card-header-gap);
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-status-warning);
+        color: var(--fd-color-slate-700);
+    }
+
+    &__care-prompt {
+        margin: 0;
+    }
+
+    &__nutrition-summary {
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
+        margin-top: var(--fd-space-card-header-gap);
+    }
+
+    &__nutrition-note {
+        margin: var(--fd-space-card-header-gap) 0 0;
+        color: var(--fd-color-slate-600);
+    }
+
+    &__nutrition-metric {
+        display: grid;
+        gap: var(--fd-space-2xs);
+        min-width: 0;
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface-raised);
     }
 
     &__day-notes {
@@ -117,7 +242,8 @@
         &__summary,
         &__predictions,
         &__symptom-grid,
-        &__symptoms-row {
+        &__symptoms-row,
+        &__signals-row {
             grid-template-columns: minmax(0, 1fr);
         }
 
