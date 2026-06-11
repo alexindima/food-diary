@@ -9,6 +9,7 @@ import {
     CYCLE_FACTOR_TYPE_PERIMENOPAUSE,
     CYCLE_FACTOR_TYPE_POSTPARTUM,
     CYCLE_FACTOR_TYPE_PREGNANCY,
+    CYCLE_FLOW_HEAVY,
     CYCLE_TRACKING_MODE_NO_PERIOD,
     CYCLE_TRACKING_MODE_PERIMENOPAUSE,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -28,6 +29,7 @@ import {
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import type {
     CycleActiveFactorViewModel,
+    CycleDayCarePromptViewModel,
     CycleDaySignalItemViewModel,
     CycleDayViewModel,
     CycleFactorListItemViewModel,
@@ -39,6 +41,10 @@ import type {
 const FULL_DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short', year: 'numeric' };
 const SHORT_DATE_OPTIONS: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
 const UTC_TIME_ZONE: Intl.DateTimeFormatOptions['timeZone'] = 'UTC';
+const ISO_DATE_KEY_LENGTH = 10;
+const MS_PER_DAY = 86_400_000;
+const PROLONGED_BLEEDING_DAYS = 8;
+const SEVERE_PAIN_THRESHOLD = 8;
 const SUMMARY_ACCENTS = [
     'var(--fd-color-purple-500)',
     'var(--fd-color-sky-500)',
@@ -93,10 +99,12 @@ export function buildCycleDayItems(
         ...symptoms.map(symptom => symptom.date),
         ...fertilitySignals.map(signal => signal.date),
     ]);
+    const bleedingStreakByDate = buildBleedingStreakByDate(bleedingEntries);
     return [...dates]
         .sort((a, b) => b.localeCompare(a))
         .map(date => {
             const dayBleeding = bleedingEntries.filter(entry => entry.date === date);
+            const dateKey = toDateKey(date);
             const fertilitySignal = fertilitySignals.find(signal => signal.date === date) ?? null;
             const hasBleeding = dayBleeding.some(entry => entry.type === BLEEDING_TYPE_BLEEDING);
             return {
@@ -106,12 +114,61 @@ export function buildCycleDayItems(
                 symptoms: symptoms.filter(symptom => symptom.date === date),
                 fertilitySignal,
                 fertilitySignalItems: buildFertilitySignalItems(fertilitySignal),
+                carePromptItems: buildCarePromptItems(dayBleeding, bleedingStreakByDate.get(dateKey) ?? 0),
                 notes:
                     dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
                 badgeLabelKey: hasBleeding ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_TRACKED',
             };
         });
+}
+
+function buildCarePromptItems(bleedingEntries: BleedingEntry[], bleedingStreakDays: number): CycleDayCarePromptViewModel[] {
+    const prompts: CycleDayCarePromptViewModel[] = [];
+    if (
+        bleedingEntries.some(
+            entry => entry.painImpact !== null && entry.painImpact !== undefined && entry.painImpact >= SEVERE_PAIN_THRESHOLD,
+        )
+    ) {
+        prompts.push({ id: 'severe-pain', textKey: 'CYCLE_TRACKING.CARE_SEVERE_PAIN' });
+    }
+
+    if (bleedingEntries.some(entry => entry.flow === CYCLE_FLOW_HEAVY)) {
+        prompts.push({ id: 'heavy-flow', textKey: 'CYCLE_TRACKING.CARE_HEAVY_FLOW' });
+    }
+
+    if (bleedingStreakDays >= PROLONGED_BLEEDING_DAYS) {
+        prompts.push({ id: 'prolonged-bleeding', textKey: 'CYCLE_TRACKING.CARE_PROLONGED_BLEEDING' });
+    }
+
+    return prompts;
+}
+
+function buildBleedingStreakByDate(bleedingEntries: BleedingEntry[]): Map<string, number> {
+    const bleedingDateKeys = [
+        ...new Set(bleedingEntries.filter(entry => entry.type === BLEEDING_TYPE_BLEEDING).map(entry => toDateKey(entry.date))),
+    ]
+        .filter(dateKey => dateKey.length > 0)
+        .sort();
+    const streakByDate = new Map<string, number>();
+    let previousTime: number | null = null;
+    let streak = 0;
+
+    for (const dateKey of bleedingDateKeys) {
+        const time = Date.parse(`${dateKey}T00:00:00.000Z`);
+        if (Number.isNaN(time)) {
+            streakByDate.set(dateKey, 1);
+            previousTime = null;
+            streak = 0;
+            continue;
+        }
+
+        streak = previousTime !== null && time - previousTime === MS_PER_DAY ? streak + 1 : 1;
+        streakByDate.set(dateKey, streak);
+        previousTime = time;
+    }
+
+    return streakByDate;
 }
 
 export function buildCycleFactorItems(factors: CycleFactor[], locale: string): CycleFactorListItemViewModel[] {
@@ -270,6 +327,15 @@ function getFactorLabelKey(type: CycleFactorType): string {
             return 'CYCLE_TRACKING.FACTOR_NO_PERIOD';
         }
     }
+}
+
+function toDateKey(value: string): string {
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+        return value;
+    }
+
+    return date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
 }
 
 function formatRange(from: string | null | undefined, to: string | null | undefined, locale: string): string {

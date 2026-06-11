@@ -4,6 +4,7 @@ import type { BleedingEntry, CycleResponse, CycleSymptomEntry, FertilitySignal }
 import {
     BLEEDING_TYPE_BLEEDING,
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FLOW_HEAVY,
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     OVULATION_TEST_RESULT_POSITIVE,
@@ -47,6 +48,11 @@ const CYCLE: CycleResponse = {
     fertilitySignals: [],
     predictions: null,
 };
+const PROLONGED_BLEEDING_DAYS = 8;
+const CARE_PROMPT_YEAR = 2026;
+const APRIL_MONTH_INDEX = 3;
+const LAST_PROLONGED_BLEEDING_INDEX = PROLONGED_BLEEDING_DAYS - 1;
+const SEVERE_PAIN_VALUE = 8;
 
 const BLEEDING_ENTRY: BleedingEntry = {
     id: 'bleeding-1',
@@ -234,5 +240,29 @@ describe('cycle tracking day item mapper', () => {
         expect(symptomItem?.fertilitySignalItems).toContainEqual({
             textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
         });
+    });
+
+    it('builds care prompts for severe pain, heavy flow, and prolonged bleeding', () => {
+        const bleedingEntries = Array.from({ length: PROLONGED_BLEEDING_DAYS }, (_, index): BleedingEntry => {
+            const date = new Date(Date.UTC(CARE_PROMPT_YEAR, APRIL_MONTH_INDEX, index + 1)).toISOString();
+            return {
+                id: `bleeding-${index + 1}`,
+                cycleProfileId: 'cycle-1',
+                date,
+                type: BLEEDING_TYPE_BLEEDING,
+                flow: index === LAST_PROLONGED_BLEEDING_INDEX ? CYCLE_FLOW_HEAVY : CYCLE_FLOW_MEDIUM,
+                painImpact: index === LAST_PROLONGED_BLEEDING_INDEX ? SEVERE_PAIN_VALUE : null,
+                notes: null,
+            };
+        });
+
+        const items = buildCycleDayItems(bleedingEntries, [], [], 'en-US');
+        const latestItem = items.find(item => item.dateLabel === 'Apr 8, 2026');
+
+        expect(latestItem?.carePromptItems).toEqual([
+            { id: 'severe-pain', textKey: 'CYCLE_TRACKING.CARE_SEVERE_PAIN' },
+            { id: 'heavy-flow', textKey: 'CYCLE_TRACKING.CARE_HEAVY_FLOW' },
+            { id: 'prolonged-bleeding', textKey: 'CYCLE_TRACKING.CARE_PROLONGED_BLEEDING' },
+        ]);
     });
 });

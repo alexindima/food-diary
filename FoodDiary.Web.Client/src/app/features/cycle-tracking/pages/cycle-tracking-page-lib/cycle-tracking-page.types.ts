@@ -45,6 +45,7 @@ export type CycleDayViewModel = {
     symptoms: CycleSymptomEntry[];
     fertilitySignal: FertilitySignal | null;
     fertilitySignalItems: CycleDaySignalItemViewModel[];
+    carePromptItems: CycleDayCarePromptViewModel[];
     notes: string | null;
     accentColor: string;
     badgeLabelKey: string;
@@ -53,4 +54,9 @@ export type CycleDayViewModel = {
 export type CycleDaySignalItemViewModel = {
     textKey: string;
     params?: Record<string, string | number>;
+};
+
+export type CycleDayCarePromptViewModel = {
+    id: string;
+    textKey: string;
 };

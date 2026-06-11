@@ -58,6 +58,12 @@ const ITEMS: CycleDayViewModel[] = [
                 textKey: 'CYCLE_TRACKING.OVULATION_TEST_POSITIVE_SUMMARY',
             },
         ],
+        carePromptItems: [
+            {
+                id: 'heavy-flow',
+                textKey: 'CYCLE_TRACKING.CARE_HEAVY_FLOW',
+            },
+        ],
         notes: 'felt tired',
         dateLabel: 'Apr 2, 2026',
         accentColor: 'var(--fd-color-red-600)',
@@ -100,6 +106,7 @@ describe('CycleDaysCardComponent', () => {
         expect(getText()).toContain('Apr 2, 2026');
         expect(getText()).toContain('CYCLE_TRACKING.SYMPTOM_VALUE');
         expect(getText()).toContain('CYCLE_TRACKING.BBT_SUMMARY');
+        expect(getText()).toContain('CYCLE_TRACKING.CARE_HEAVY_FLOW');
         expect(getText()).toContain('felt tired');
     });
 });

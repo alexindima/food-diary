@@ -20,6 +20,9 @@
             }
         </div>
     }
+    @if (item().carePromptItems.length > 0) {
+        <fd-cycle-day-care-prompts [items]="item().carePromptItems" />
+    }
     @if (item().notes) {
         <p class="cycle-tracking__day-notes fd-ui-caption">{{ item().notes }}</p>
     }
