@@ -328,6 +328,7 @@ function createNutritionSummary(): CycleNutritionSummary {
         averageFiberOnBleedingDays: 18,
         averageFiberOnNonBleedingCycleDays: 28,
         averagePainImpactOnDaysWithMeals: 6,
+        hasEnoughNutritionData: true,
     };
 }
 

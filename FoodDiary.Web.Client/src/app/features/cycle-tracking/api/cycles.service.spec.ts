@@ -67,6 +67,7 @@ const MOCK_NUTRITION_SUMMARY: CycleNutritionSummary = {
     averageFiberOnBleedingDays: 18,
     averageFiberOnNonBleedingCycleDays: 28,
     averagePainImpactOnDaysWithMeals: 6,
+    hasEnoughNutritionData: true,
 };
 
 let service: CyclesService;

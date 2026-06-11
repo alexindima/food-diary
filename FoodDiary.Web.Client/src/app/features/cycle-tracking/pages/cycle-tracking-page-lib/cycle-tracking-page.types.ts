@@ -47,6 +47,7 @@ export type CyclePredictionViewModel = {
 
 export type CycleNutritionSummaryViewModel = {
     summary: CycleNutritionSummary;
+    hasEnoughData: boolean;
     bleedingCaloriesLabel: string;
     nonBleedingCaloriesLabel: string;
     bleedingFiberLabel: string;

@@ -166,7 +166,8 @@ public sealed class CycleHttpMappingsTests {
             AverageCaloriesOnNonBleedingCycleDays: 1800,
             AverageFiberOnBleedingDays: 18,
             AverageFiberOnNonBleedingCycleDays: 28,
-            AveragePainImpactOnDaysWithMeals: 6.5);
+            AveragePainImpactOnDaysWithMeals: 6.5,
+            HasEnoughNutritionData: true);
 
         CycleNutritionSummaryHttpResponse response = model.ToHttpResponse();
 
@@ -176,5 +177,6 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(2100, response.AverageCaloriesOnBleedingDays);
         Assert.Equal(28, response.AverageFiberOnNonBleedingCycleDays);
         Assert.Equal(6.5, response.AveragePainImpactOnDaysWithMeals);
+        Assert.True(response.HasEnoughNutritionData);
     }
 }

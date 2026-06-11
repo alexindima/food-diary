@@ -219,6 +219,35 @@ public class CyclesFeatureTests {
         Assert.Equal(18, summary.AverageFiberOnBleedingDays);
         Assert.Equal(28, summary.AverageFiberOnNonBleedingCycleDays);
         Assert.Equal(8, summary.AveragePainImpactOnDaysWithMeals);
+        Assert.False(summary.HasEnoughNutritionData);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithEnoughGroupData_MarksSummaryReliable() {
+        var user = User.Create("cycle-nutrition-enough@example.com", "hash");
+        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, startDate);
+        profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
+        profile.UpsertBleedingEntry(startDate.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 6, notes: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(2), CycleSymptomCategory.Craving, 4, [], note: null);
+        profile.UpsertSymptomEntry(startDate.AddDays(3), CycleSymptomCategory.Energy, 5, [], note: null);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new InMemoryCycleRepository(profile),
+            new StubMealRepository([
+                CreateMeal(user.Id, startDate, calories: 2100, fiber: 18),
+                CreateMeal(user.Id, startDate.AddDays(1), calories: 2000, fiber: 20),
+                CreateMeal(user.Id, startDate.AddDays(2), calories: 1800, fiber: 28),
+                CreateMeal(user.Id, startDate.AddDays(3), calories: 1900, fiber: 26),
+            ]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(4)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
+        Assert.True(summary.HasEnoughNutritionData);
     }
 
     [Fact]

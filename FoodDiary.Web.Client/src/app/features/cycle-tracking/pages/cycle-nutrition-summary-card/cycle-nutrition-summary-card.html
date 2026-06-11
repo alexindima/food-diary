@@ -2,6 +2,10 @@
     @if (isLoading()) {
         <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.LOADING' | translate }}</p>
     } @else if (summary(); as item) {
+        @if (!item.hasEnoughData) {
+            <p class="cycle-tracking__nutrition-note fd-ui-body-sm">{{ 'CYCLE_TRACKING.NUTRITION_SUMMARY_LIMITED' | translate }}</p>
+        }
+
         <div class="cycle-tracking__nutrition-summary fd-grid fd-gap-card-header">
             <div class="cycle-tracking__nutrition-metric">
                 <span class="fd-ui-meta-text">{{ 'CYCLE_TRACKING.NUTRITION_LOGGED_DAYS' | translate }}</span>

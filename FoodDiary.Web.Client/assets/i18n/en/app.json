@@ -1513,6 +1513,7 @@
         "EXPORT_CYCLE": "Export cycle CSV",
         "NUTRITION_SUMMARY_TITLE": "Cycle nutrition overlap",
         "NUTRITION_SUMMARY_EMPTY": "Log cycle days and meals in the same period to see nutrition overlap.",
+        "NUTRITION_SUMMARY_LIMITED": "More paired cycle and meal days are needed before comparing bleeding and non-bleeding nutrition.",
         "NUTRITION_LOGGED_DAYS": "Cycle days",
         "NUTRITION_DAYS_WITH_MEALS": "With meals",
         "NUTRITION_BLEEDING_DAYS": "Bleeding days",

@@ -10,4 +10,5 @@ public sealed record CycleNutritionSummaryHttpResponse(
     double AverageCaloriesOnNonBleedingCycleDays,
     double AverageFiberOnBleedingDays,
     double AverageFiberOnNonBleedingCycleDays,
-    double AveragePainImpactOnDaysWithMeals);
+    double AveragePainImpactOnDaysWithMeals,
+    bool HasEnoughNutritionData);

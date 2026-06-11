@@ -20,6 +20,7 @@ public class GetCycleNutritionSummaryQueryHandler(
     IUserRepository userRepository)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {
     private const int MaxSummaryRangeDays = 366;
+    private const int MinComparisonDaysPerGroup = 2;
 
     public async Task<Result<CycleNutritionSummaryModel?>> Handle(
         GetCycleNutritionSummaryQuery query,
@@ -86,7 +87,8 @@ public class GetCycleNutritionSummaryQueryHandler(
             Average(nonBleedingDays, day => day.Calories),
             Average(bleedingDays, day => day.Fiber),
             Average(nonBleedingDays, day => day.Fiber),
-            Average(days.Where(day => day.HasMeals && day.PainImpact.HasValue), day => day.PainImpact ?? 0));
+            Average(days.Where(day => day.HasMeals && day.PainImpact.HasValue), day => day.PainImpact ?? 0),
+            bleedingDays.Count >= MinComparisonDaysPerGroup && nonBleedingDays.Count >= MinComparisonDaysPerGroup);
     }
 
     private static List<CycleNutritionDay> BuildCycleDays(

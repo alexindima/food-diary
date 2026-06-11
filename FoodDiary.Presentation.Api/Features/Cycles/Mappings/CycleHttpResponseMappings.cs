@@ -57,7 +57,8 @@ public static class CycleHttpResponseMappings {
             model.AverageCaloriesOnNonBleedingCycleDays,
             model.AverageFiberOnBleedingDays,
             model.AverageFiberOnNonBleedingCycleDays,
-            model.AveragePainImpactOnDaysWithMeals);
+            model.AveragePainImpactOnDaysWithMeals,
+            model.HasEnoughNutritionData);
 
     public static BleedingEntryHttpResponse ToHttpResponse(this BleedingEntryModel model) =>
         new(

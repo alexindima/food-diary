@@ -141,6 +141,7 @@ export type CycleNutritionSummary = {
     averageFiberOnBleedingDays: number;
     averageFiberOnNonBleedingCycleDays: number;
     averagePainImpactOnDaysWithMeals: number;
+    hasEnoughNutritionData: boolean;
 };
 
 export type CycleResponse = {

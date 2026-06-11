@@ -71,6 +71,7 @@ const NUTRITION_SUMMARY: CycleNutritionSummary = {
     averageFiberOnBleedingDays: 18.5,
     averageFiberOnNonBleedingCycleDays: 28,
     averagePainImpactOnDaysWithMeals: 6.25,
+    hasEnoughNutritionData: true,
 };
 
 const BLEEDING_ENTRY: BleedingEntry = {
@@ -217,6 +218,7 @@ describe('cycle tracking nutrition summary mapper', () => {
         const view = buildCycleNutritionSummaryView(NUTRITION_SUMMARY, 'en-US');
 
         expect(view?.summary.loggedCycleDays).toBe(NUTRITION_LOGGED_CYCLE_DAYS);
+        expect(view?.hasEnoughData).toBe(true);
         expect(view?.bleedingCaloriesLabel).toBe('2,100.3');
         expect(view?.nonBleedingCaloriesLabel).toBe('1,800');
         expect(view?.bleedingFiberLabel).toBe('18.5');
@@ -226,6 +228,15 @@ describe('cycle tracking nutrition summary mapper', () => {
 
     it('returns null without nutrition summary', () => {
         expect(buildCycleNutritionSummaryView(null, 'en-US')).toBeNull();
+    });
+
+    it('hides comparison values when nutrition summary has limited data', () => {
+        const view = buildCycleNutritionSummaryView({ ...NUTRITION_SUMMARY, hasEnoughNutritionData: false }, 'en-US');
+
+        expect(view?.hasEnoughData).toBe(false);
+        expect(view?.bleedingCaloriesLabel).toBe('\u2014');
+        expect(view?.nonBleedingCaloriesLabel).toBe('\u2014');
+        expect(view?.painImpactLabel).toBe('\u2014');
     });
 });
 

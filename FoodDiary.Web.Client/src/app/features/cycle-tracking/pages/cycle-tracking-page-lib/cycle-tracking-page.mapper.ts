@@ -99,13 +99,17 @@ export function buildCycleNutritionSummaryView(
     }
 
     const numberFormatter = new Intl.NumberFormat(locale, { maximumFractionDigits: 1 });
+    const limitedLabel = '\u2014';
+    const formatComparison = (value: number): string => (summary.hasEnoughNutritionData ? numberFormatter.format(value) : limitedLabel);
+
     return {
         summary,
-        bleedingCaloriesLabel: numberFormatter.format(summary.averageCaloriesOnBleedingDays),
-        nonBleedingCaloriesLabel: numberFormatter.format(summary.averageCaloriesOnNonBleedingCycleDays),
-        bleedingFiberLabel: numberFormatter.format(summary.averageFiberOnBleedingDays),
-        nonBleedingFiberLabel: numberFormatter.format(summary.averageFiberOnNonBleedingCycleDays),
-        painImpactLabel: numberFormatter.format(summary.averagePainImpactOnDaysWithMeals),
+        hasEnoughData: summary.hasEnoughNutritionData,
+        bleedingCaloriesLabel: formatComparison(summary.averageCaloriesOnBleedingDays),
+        nonBleedingCaloriesLabel: formatComparison(summary.averageCaloriesOnNonBleedingCycleDays),
+        bleedingFiberLabel: formatComparison(summary.averageFiberOnBleedingDays),
+        nonBleedingFiberLabel: formatComparison(summary.averageFiberOnNonBleedingCycleDays),
+        painImpactLabel: formatComparison(summary.averagePainImpactOnDaysWithMeals),
     };
 }
 

@@ -1115,6 +1115,7 @@
         "EXPORT_CYCLE": "Экспорт CSV цикла",
         "NUTRITION_SUMMARY_TITLE": "Связь цикла и питания",
         "NUTRITION_SUMMARY_EMPTY": "Отмечайте дни цикла и приемы пищи в одном периоде, чтобы увидеть связь с питанием.",
+        "NUTRITION_SUMMARY_LIMITED": "Для сравнения питания в дни кровотечения и в другие дни нужно больше парных записей цикла и еды.",
         "NUTRITION_LOGGED_DAYS": "Дни цикла",
         "NUTRITION_DAYS_WITH_MEALS": "С едой",
         "NUTRITION_BLEEDING_DAYS": "Дни кровотечения",

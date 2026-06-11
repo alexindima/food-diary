@@ -193,6 +193,11 @@
         margin-top: var(--fd-space-card-header-gap);
     }
 
+    &__nutrition-note {
+        margin: var(--fd-space-card-header-gap) 0 0;
+        color: var(--fd-color-slate-600);
+    }
+
     &__nutrition-metric {
         display: grid;
         gap: var(--fd-space-2xs);
