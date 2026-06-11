@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
@@ -15,4 +15,6 @@ import { CycleDayItemComponent } from './cycle-day-item';
 export class CycleDaysCardComponent {
     public readonly isLoading = input.required<boolean>();
     public readonly items = input.required<CycleDayViewModel[]>();
+    public readonly clearingDate = input<string | null>(null);
+    public readonly clearDay = output<string>();
 }

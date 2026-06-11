@@ -1617,6 +1617,7 @@
         "STARTED": "Started",
         "DAYS_TITLE": "Logged days",
         "NO_DAYS": "No days logged yet.",
+        "CLEAR_DAY": "Clear day",
         "BADGE_PERIOD": "Period",
         "BADGE_FOLLICULAR": "Logged",
         "BADGE_TRACKED": "Logged"

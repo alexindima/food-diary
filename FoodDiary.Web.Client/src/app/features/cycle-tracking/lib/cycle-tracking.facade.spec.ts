@@ -20,6 +20,7 @@ const LOGGED_CYCLE_DAYS = 4;
 
 let facade: CycleTrackingFacade;
 let cyclesService: {
+    clearDay: ReturnType<typeof vi.fn<CyclesService['clearDay']>>;
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
     getCurrent: ReturnType<typeof vi.fn<CyclesService['getCurrent']>>;
     getNutritionSummary: ReturnType<typeof vi.fn<CyclesService['getNutritionSummary']>>;
@@ -32,6 +33,7 @@ beforeEach(() => {
     cyclesService = {
         getCurrent: vi.fn<CyclesService['getCurrent']>().mockReturnValue(of(createCycleResponse())),
         getNutritionSummary: vi.fn<CyclesService['getNutritionSummary']>().mockReturnValue(of(createNutritionSummary())),
+        clearDay: vi.fn<CyclesService['clearDay']>().mockReturnValue(of(void 0)),
         create: vi.fn<CyclesService['create']>().mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -160,6 +162,47 @@ describe('CycleTrackingFacade days', () => {
         facade.saveDay();
 
         expect(cyclesService.upsertDay).not.toHaveBeenCalled();
+    });
+
+    it('clears a day and removes its logs from current profile', () => {
+        cyclesService.getCurrent.mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                bleedingEntries: [createBleedingEntry('bleeding-1', '2026-04-02T00:00:00.000Z')],
+                symptoms: [
+                    {
+                        id: 'symptom-1',
+                        cycleProfileId: 'cycle-1',
+                        date: '2026-04-02T00:00:00.000Z',
+                        category: 0,
+                        intensity: 5,
+                        tags: [],
+                        note: null,
+                    },
+                ],
+                fertilitySignals: [
+                    {
+                        id: 'signal-1',
+                        cycleProfileId: 'cycle-1',
+                        date: '2026-04-02T00:00:00.000Z',
+                        basalBodyTemperatureCelsius: 36.62,
+                        ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+                        cervicalFluid: 'egg white',
+                        hadSex: true,
+                        notes: null,
+                    },
+                ],
+            }),
+        );
+        facade.initialize();
+
+        facade.clearDay('2026-04-02T00:00:00.000Z');
+
+        expect(cyclesService.clearDay).toHaveBeenCalledWith('cycle-1', '2026-04-02T00:00:00.000Z');
+        expect(facade.bleedingEntries()).toEqual([]);
+        expect(facade.symptoms()).toEqual([]);
+        expect(facade.fertilitySignals()).toEqual([]);
+        expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
     });
 });
 

@@ -222,7 +222,12 @@
                 }
             </fd-ui-card>
 
-            <fd-cycle-days-card [isLoading]="isLoading()" [items]="dayItems()" />
+            <fd-cycle-days-card
+                [isLoading]="isLoading()"
+                [items]="dayItems()"
+                [clearingDate]="clearingDayDate()"
+                (clearDay)="clearDay($event)"
+            />
 
             <fd-cycle-nutrition-summary-card [isLoading]="isLoadingNutritionSummary()" [summary]="nutritionSummaryView()" />
         </div>

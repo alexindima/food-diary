@@ -1,4 +1,5 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
@@ -35,6 +36,9 @@ public static class CycleHttpMappings {
             request.Bleeding?.ToCommandModel(),
             request.Symptoms.Select(static symptom => symptom.ToCommandModel()).ToList(),
             request.FertilitySignal?.ToCommandModel());
+
+    public static ClearCycleDayCommand ToClearDayCommand(this Guid cycleProfileId, Guid userId, DateTime date) =>
+        new(userId, cycleProfileId, date);
 
     public static UpsertCycleFactorCommand ToCommand(this UpsertCycleFactorHttpRequest request, Guid userId, Guid cycleProfileId) =>
         new(

@@ -970,6 +970,17 @@
       "Path": "/api/v{version}/cycles/{cycleprofileid}/days",
       "Operations": [
         {
+          "Method": "delete",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "400",
+            "401",
+            "404",
+            "500"
+          ]
+        },
+        {
           "Method": "put",
           "HasRequestBody": true,
           "ResponseCodes": [

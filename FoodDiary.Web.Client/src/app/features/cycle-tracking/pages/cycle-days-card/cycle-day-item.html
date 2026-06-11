@@ -1,11 +1,24 @@
 <fd-ui-accent-surface class="cycle-tracking__day" accentSide="left" [accentColor]="item().accentColor" [tinted]="true">
     <div class="cycle-tracking__day-header fd-row fd-justify-between fd-gap-card-header">
         <div class="cycle-tracking__day-date fd-ui-stat-value">{{ item().dateLabel }}</div>
-        <div
-            class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
-            [class.cycle-tracking__day-badge--period]="item().bleedingEntries.length > 0"
-        >
-            {{ item().badgeLabelKey | translate }}
+        <div class="cycle-tracking__day-actions fd-row fd-gap-xs fd-align-center">
+            <div
+                class="cycle-tracking__day-badge fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text"
+                [class.cycle-tracking__day-badge--period]="item().bleedingEntries.length > 0"
+            >
+                {{ item().badgeLabelKey | translate }}
+            </div>
+            <fd-ui-button
+                type="button"
+                size="sm"
+                fill="text"
+                variant="danger"
+                icon="delete"
+                [loading]="isClearing()"
+                [disabled]="isClearing()"
+                [ariaLabel]="'CYCLE_TRACKING.CLEAR_DAY' | translate"
+                (click)="clearDay.emit(item().date)"
+            />
         </div>
     </div>
     <div class="cycle-tracking__symptoms-row fd-ui-body-sm fd-grid fd-gap-card-header">

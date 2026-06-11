@@ -152,6 +152,10 @@
         color: var(--fd-color-slate-900);
     }
 
+    &__day-actions {
+        flex-wrap: nowrap;
+    }
+
     &__day-badge {
         --fd-pill-bg: var(--fd-bg-category-sky);
         --fd-pill-border: transparent;

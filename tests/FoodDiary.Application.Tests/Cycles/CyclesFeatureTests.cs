@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Mappings;
@@ -143,6 +144,28 @@ public class CyclesFeatureTests {
         Assert.Equal(profile.Id.Value, result.Value.CycleProfileId);
         Assert.Single(result.Value.BleedingEntries);
         Assert.Single(result.Value.Symptoms);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task ClearCycleDayCommandHandler_WithExistingDay_RemovesAllDayLogs() {
+        var user = User.Create("cycle-day-clear@example.com", "hash");
+        DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        profile.UpsertBleedingEntry(date, BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 3, notes: "note");
+        profile.UpsertSymptomEntry(date, CycleSymptomCategory.Craving, 7, ["sweet"], note: null);
+        profile.UpsertFertilitySignal(date, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new ClearCycleDayCommandHandler(repository, new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, date),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(profile.BleedingEntries);
+        Assert.Empty(profile.SymptomEntries);
+        Assert.Empty(profile.FertilitySignals);
         Assert.True(repository.WasUpdated);
     }
 

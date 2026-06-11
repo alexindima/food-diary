@@ -1,6 +1,6 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { TranslateModule } from '@ngx-translate/core';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { CycleDayViewModel } from '../cycle-tracking-page-lib/cycle-tracking-page.types';
 import { CycleDaysCardComponent } from './cycle-days-card';
@@ -109,8 +109,29 @@ describe('CycleDaysCardComponent', () => {
         expect(getText()).toContain('CYCLE_TRACKING.CARE_HEAVY_FLOW');
         expect(getText()).toContain('felt tired');
     });
+
+    it('emits clear day when day delete action is clicked', () => {
+        const clearDay = vi.fn();
+        fixture.componentInstance.clearDay.subscribe(clearDay);
+        fixture.componentRef.setInput('isLoading', false);
+        fixture.componentRef.setInput('items', ITEMS);
+        fixture.detectChanges();
+
+        getDeleteButton().click();
+
+        expect(clearDay).toHaveBeenCalledWith('2026-04-02T00:00:00.000Z');
+    });
 });
 
 function getText(): string {
     return (fixture.nativeElement as HTMLElement).textContent;
+}
+
+function getDeleteButton(): HTMLButtonElement {
+    const button = (fixture.nativeElement as HTMLElement).querySelector<HTMLButtonElement>('button[aria-label="CYCLE_TRACKING.CLEAR_DAY"]');
+    if (button === null) {
+        throw new Error('Expected clear day button to be rendered.');
+    }
+
+    return button;
 }

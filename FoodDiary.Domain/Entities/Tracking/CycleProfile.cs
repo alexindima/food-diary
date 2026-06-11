@@ -180,6 +180,22 @@ public sealed class CycleProfile : AggregateRoot<CycleProfileId> {
         return signal;
     }
 
+    public bool ClearDay(DateTime date) {
+        DateTime normalizedDate = NormalizeDate(date);
+        int removedCount =
+            _bleedingEntries.RemoveAll(entry => entry.Date == normalizedDate) +
+            _symptomEntries.RemoveAll(entry => entry.Date == normalizedDate) +
+            _fertilitySignals.RemoveAll(signal => signal.Date == normalizedDate);
+
+        if (removedCount == 0) {
+            return false;
+        }
+
+        Confidence = CalculateConfidence();
+        SetModified();
+        return true;
+    }
+
     public DateTime? GetLastBleedingStart() =>
         _bleedingEntries
             .Where(entry => entry.Type == BleedingType.Bleeding)

@@ -167,6 +167,16 @@ describe('CyclesService mutations', () => {
         req.flush(MOCK_DAY);
     });
 
+    it('should clear cycle day', () => {
+        service.clearDay('c-1', '2026-03-05T00:00:00.000Z').subscribe(result => {
+            expect(result).toBeNull();
+        });
+
+        const req = httpMock.expectOne(r => r.url === `${BASE_URL}/c-1/days` && r.method === 'DELETE');
+        expect(req.request.params.get('date')).toBe('2026-03-05T00:00:00.000Z');
+        req.flush(null);
+    });
+
     it('should upsert cycle factor', () => {
         const payload: UpsertCycleFactorPayload = {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,

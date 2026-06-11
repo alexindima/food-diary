@@ -40,6 +40,12 @@ export class CyclesService extends ApiService {
         );
     }
 
+    public clearDay(cycleProfileId: string, date: string): Observable<void> {
+        return this.delete<void>(`${cycleProfileId}/days`, undefined, { date }).pipe(
+            catchError((error: unknown) => rethrowApiError('Cycle day clear error', error)),
+        );
+    }
+
     public upsertFactor(cycleProfileId: string, payload: UpsertCycleFactorPayload): Observable<CycleResponse> {
         return this.put<CycleResponse>(`${cycleProfileId}/factors`, payload).pipe(
             map(cycle => cycle),

@@ -90,6 +90,7 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
     protected readonly isExportingCycle = this.facade.isExportingCycle;
+    protected readonly clearingDayDate = this.facade.clearingDayDate;
     protected readonly isLoadingNutritionSummary = this.facade.isLoadingNutritionSummary;
     protected readonly cycle = this.facade.cycle;
     protected readonly nutritionSummary = this.facade.nutritionSummary;
@@ -174,6 +175,10 @@ export class CycleTrackingPageComponent {
 
     protected saveFactor(): void {
         this.facade.saveFactor();
+    }
+
+    protected clearDay(date: string): void {
+        this.facade.clearDay(date);
     }
 
     protected exportCycle(): void {

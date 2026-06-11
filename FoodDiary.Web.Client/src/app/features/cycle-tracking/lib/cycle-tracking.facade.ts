@@ -86,6 +86,7 @@ const DAY_END_HOURS = 23;
 const DAY_END_MINUTES = 59;
 const DAY_END_SECONDS = 59;
 const DAY_END_MILLISECONDS = 999;
+const ISO_DATE_KEY_LENGTH = 10;
 
 @Service()
 export class CycleTrackingFacade {
@@ -98,6 +99,7 @@ export class CycleTrackingFacade {
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
     public readonly isExportingCycle = signal(false);
+    public readonly clearingDayDate = signal<string | null>(null);
     public readonly isLoadingNutritionSummary = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
     public readonly nutritionSummary = signal<CycleNutritionSummary | null>(null);
@@ -331,6 +333,43 @@ export class CycleTrackingFacade {
             });
     }
 
+    public clearDay(date: string): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || currentCycle.id.length === 0 || this.clearingDayDate() !== null) {
+            return;
+        }
+
+        const dateKey = this.toDateKey(date);
+        if (dateKey.length === 0) {
+            return;
+        }
+
+        this.clearingDayDate.set(date);
+        this.cyclesService
+            .clearDay(currentCycle.id, new Date(date).toISOString())
+            .pipe(
+                finalize(() => {
+                    this.clearingDayDate.set(null);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => {
+                const current = this.cycle();
+                if (current === null) {
+                    return;
+                }
+
+                const updatedCycle = {
+                    ...current,
+                    bleedingEntries: current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dateKey),
+                    symptoms: current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dateKey),
+                    fertilitySignals: current.fertilitySignals.filter(fertilitySignal => this.toDateKey(fertilitySignal.date) !== dateKey),
+                };
+                this.cycle.set(updatedCycle);
+                this.loadNutritionSummary(updatedCycle);
+            });
+    }
+
     public exportCycle(): void {
         const currentCycle = this.cycle();
         if (currentCycle === null || this.isExportingCycle()) {
@@ -433,5 +472,10 @@ export class CycleTrackingFacade {
         const result = new Date(value);
         result.setHours(DAY_END_HOURS, DAY_END_MINUTES, DAY_END_SECONDS, DAY_END_MILLISECONDS);
         return result;
+    }
+
+    private toDateKey(value: string): string {
+        const date = new Date(value);
+        return Number.isNaN(date.getTime()) ? '' : date.toISOString().slice(0, ISO_DATE_KEY_LENGTH);
     }
 }
