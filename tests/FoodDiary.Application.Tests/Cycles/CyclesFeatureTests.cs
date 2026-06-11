@@ -212,6 +212,39 @@ public class CyclesFeatureTests {
         Assert.Equal("Learning", predictions.Confidence);
     }
 
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_WithActivePredictionLimitingFactor_ReturnsLimitedPrediction() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
+        profile.UpsertFactor(
+            CycleFactorType.HormonalContraception,
+            new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+            endDate: null,
+            notes: null);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        Assert.Null(predictions.NextPeriodStartFrom);
+        Assert.Null(predictions.NextPeriodStartTo);
+        Assert.Null(predictions.OvulationFrom);
+        Assert.Null(predictions.OvulationTo);
+        Assert.Equal("Predictions are limited by the active tracking mode.", predictions.Rationale);
+    }
+
+    [Fact]
+    public void CyclePredictionService_CalculatePredictions_WithEndedPredictionLimitingFactor_ReturnsRange() {
+        var profile = CycleProfile.Create(UserId.New(), new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), showFertilityEstimates: true);
+        profile.UpsertFactor(
+            CycleFactorType.HormonalContraception,
+            new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
+            notes: null);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        Assert.NotNull(predictions.NextPeriodStartFrom);
+        Assert.NotNull(predictions.OvulationFrom);
+    }
+
     private static CreateCycleCommand CreateCommand(Guid userId) =>
         new(
             userId,

@@ -10,7 +10,7 @@ public static class CyclePredictionService {
     public static CyclePredictionsModel CalculatePredictions(CycleProfile profile) {
         ArgumentNullException.ThrowIfNull(profile);
 
-        if (profile.Mode is CycleTrackingMode.Pregnancy or CycleTrackingMode.PostpartumLactation or CycleTrackingMode.NoPeriod) {
+        if (HasLimitedPredictionMode(profile) || HasActivePredictionLimitingFactor(profile)) {
             return new CyclePredictionsModel(
                 NextPeriodStartFrom: null,
                 NextPeriodStartTo: null,
@@ -55,4 +55,16 @@ public static class CyclePredictionService {
         DateTime.SpecifyKind(
             (date.Kind == DateTimeKind.Utc ? date : date.ToUniversalTime()).Date,
             DateTimeKind.Utc);
+
+    private static bool HasLimitedPredictionMode(CycleProfile profile) =>
+        profile.Mode is CycleTrackingMode.Pregnancy or CycleTrackingMode.PostpartumLactation or CycleTrackingMode.NoPeriod;
+
+    private static bool HasActivePredictionLimitingFactor(CycleProfile profile) =>
+        profile.Factors.Any(factor =>
+            factor.EndDate is null &&
+            factor.Type is CycleFactorType.Pregnancy
+                or CycleFactorType.Lactation
+                or CycleFactorType.HormonalContraception
+                or CycleFactorType.Postpartum
+                or CycleFactorType.NoPeriod);
 }
