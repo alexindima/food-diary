@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Mappings;
 using FoodDiary.Application.Cycles.Models;
@@ -138,6 +139,51 @@ public class CyclesFeatureTests {
         Assert.Equal(profile.Id.Value, result.Value.CycleProfileId);
         Assert.Single(result.Value.BleedingEntries);
         Assert.Single(result.Value.Symptoms);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithInvalidType_ReturnsValidationFailure() {
+        var user = User.Create("cycle-factor-invalid@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var handler = new UpsertCycleFactorCommandHandler(new InMemoryCycleRepository(profile), new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                Type: 999,
+                StartDate: DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithValidCommand_UpdatesProfileAndReturnsCycle() {
+        var user = User.Create("cycle-factor-success@example.com", "hash");
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleFactorCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                (int)CycleFactorType.HormonalContraception,
+                new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc),
+                EndDate: null,
+                Notes: "pill",
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Single(result.Value.Factors);
+        Assert.Equal(CycleFactorType.HormonalContraception, result.Value.Factors.Single().Type);
         Assert.True(repository.WasUpdated);
     }
 

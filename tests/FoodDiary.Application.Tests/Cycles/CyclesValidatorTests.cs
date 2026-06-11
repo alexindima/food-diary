@@ -1,5 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
+using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Domain.Enums;
 
@@ -53,6 +54,31 @@ public class CyclesValidatorTests {
         result.ShouldNotHaveAnyValidationErrors();
     }
 
+    [Fact]
+    public async Task UpsertCycleFactor_WithEndBeforeStart_HasError() {
+        DateTime startDate = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
+
+        TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(
+            CreateFactorCommand(StartDate: startDate, EndDate: startDate.AddDays(-1)));
+
+        result.ShouldHaveValidationErrorFor(c => c.EndDate);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactor_WithClearNotesAndValue_HasError() {
+        TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(
+            CreateFactorCommand(Notes: "notes", ClearNotes: true));
+
+        result.ShouldHaveValidationErrorFor(string.Empty);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactor_WithValidData_Passes() {
+        TestValidationResult<UpsertCycleFactorCommand> result = await new UpsertCycleFactorCommandValidator().TestValidateAsync(CreateFactorCommand());
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
     private static CreateCycleCommand CreateCommand(
         bool UseNullUserId = false,
         int? AverageCycleLength = 28) =>
@@ -79,4 +105,18 @@ public class CyclesValidatorTests {
             Bleeding ?? new BleedingLogCommandModel((int)BleedingType.Bleeding, (int)CycleFlowLevel.Light, PainImpact: null, Notes: null, ClearNotes: false),
             [new SymptomLogCommandModel((int)CycleSymptomCategory.Pain, 3, [], Note: null, ClearNote: false)],
             FertilitySignal: null);
+
+    private static UpsertCycleFactorCommand CreateFactorCommand(
+        DateTime? StartDate = null,
+        DateTime? EndDate = null,
+        string? Notes = null,
+        bool ClearNotes = false) =>
+        new(
+            Guid.NewGuid(),
+            Guid.NewGuid(),
+            (int)CycleFactorType.HormonalContraception,
+            StartDate ?? DateTime.UtcNow,
+            EndDate,
+            Notes,
+            ClearNotes);
 }

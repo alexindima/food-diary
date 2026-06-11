@@ -1,3 +1,4 @@
+using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Domain.Enums;
@@ -28,6 +29,26 @@ public sealed class CycleHttpMappingsTests {
         Assert.Equal(bleeding.Type, command.Bleeding!.Type);
         Assert.Equal(bleeding.ClearNotes, command.Bleeding.ClearNotes);
         Assert.Single(command.Symptoms);
+    }
+
+    [Fact]
+    public void UpsertCycleFactorRequest_ToCommand_MapsClearNotes() {
+        var userId = Guid.NewGuid();
+        var cycleProfileId = Guid.NewGuid();
+        var request = new UpsertCycleFactorHttpRequest(
+            Type: (int)CycleFactorType.HormonalContraception,
+            StartDate: new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            EndDate: null,
+            Notes: null,
+            ClearNotes: true);
+
+        UpsertCycleFactorCommand command = request.ToCommand(userId, cycleProfileId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal(cycleProfileId, command.CycleProfileId);
+        Assert.Equal(request.Type, command.Type);
+        Assert.Equal(request.StartDate, command.StartDate);
+        Assert.True(command.ClearNotes);
     }
 
     [Fact]

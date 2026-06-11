@@ -7,13 +7,24 @@ import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
     type BleedingEntry,
+    type BleedingType,
     type CreateCyclePayload,
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FLOW_LIGHT,
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    type CycleFactor,
+    type CycleFactorType,
+    type CycleFlowLevel,
     type CyclePredictions,
     type CycleResponse,
     type CycleSymptomEntry,
+    type CycleTrackingMode,
+    type FertilitySignalPayload,
+    OVULATION_TEST_RESULT_UNKNOWN,
+    type OvulationTestResult,
     type SymptomLogPayload,
+    type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
 import { CYCLE_SYMPTOM_FIELDS } from '../pages/cycle-tracking-page-lib/cycle-tracking-page.config';
 import {
@@ -32,16 +43,20 @@ import {
 
 type StartCycleFormModel = {
     trackingStartDate: string | null;
+    mode: CycleTrackingMode | null;
     averageCycleLength: number | null;
     averagePeriodLength: number | null;
     lutealLength: number | null;
     isRegular: boolean;
     showFertilityEstimates: boolean;
+    discreetNotifications: boolean;
 };
 
 export type CycleDayFormModel = {
     date: string | null;
     isBleeding: boolean;
+    bleedingType: BleedingType | null;
+    flow: CycleFlowLevel | null;
     pain: number;
     mood: number;
     energy: number;
@@ -49,6 +64,17 @@ export type CycleDayFormModel = {
     bloating: number;
     headache: number;
     libido: number;
+    basalBodyTemperatureCelsius: number | null;
+    ovulationTestResult: OvulationTestResult | null;
+    cervicalFluid: string | null;
+    hadSex: boolean;
+    notes: string | null;
+};
+
+type CycleFactorFormModel = {
+    type: CycleFactorType | null;
+    startDate: string | null;
+    endDate: string | null;
     notes: string | null;
 };
 
@@ -59,18 +85,22 @@ export class CycleTrackingFacade {
     public readonly isLoading = signal(false);
     public readonly isSavingCycle = signal(false);
     public readonly isSavingDay = signal(false);
+    public readonly isSavingFactor = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
 
     public readonly startCycleModel = signal<StartCycleFormModel>({
         trackingStartDate: formatDateInputValue(new Date()),
+        mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
         averageCycleLength: DEFAULT_AVERAGE_CYCLE_LENGTH,
         averagePeriodLength: DEFAULT_AVERAGE_PERIOD_LENGTH,
         lutealLength: DEFAULT_LUTEAL_LENGTH,
         isRegular: false,
         showFertilityEstimates: false,
+        discreetNotifications: true,
     });
     public readonly startCycleForm = form(this.startCycleModel, path => {
         required(path.trackingStartDate);
+        required(path.mode);
         min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
         max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
         min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
@@ -82,6 +112,8 @@ export class CycleTrackingFacade {
     public readonly dayModel = signal<CycleDayFormModel>({
         date: formatDateInputValue(new Date()),
         isBleeding: false,
+        bleedingType: BLEEDING_TYPE_BLEEDING,
+        flow: CYCLE_FLOW_MEDIUM,
         pain: 0,
         mood: 0,
         energy: 0,
@@ -89,15 +121,31 @@ export class CycleTrackingFacade {
         bloating: 0,
         headache: 0,
         libido: 0,
+        basalBodyTemperatureCelsius: null,
+        ovulationTestResult: null,
+        cervicalFluid: null,
+        hadSex: false,
         notes: null,
     });
     public readonly dayForm = form(this.dayModel, path => {
         required(path.date);
     });
 
+    public readonly factorModel = signal<CycleFactorFormModel>({
+        type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+        startDate: formatDateInputValue(new Date()),
+        endDate: null,
+        notes: null,
+    });
+    public readonly factorForm = form(this.factorModel, path => {
+        required(path.type);
+        required(path.startDate);
+    });
+
     public readonly predictions = computed<CyclePredictions | null>(() => this.cycle()?.predictions ?? null);
     public readonly bleedingEntries = computed<BleedingEntry[]>(() => [...(this.cycle()?.bleedingEntries ?? [])]);
     public readonly symptoms = computed<CycleSymptomEntry[]>(() => [...(this.cycle()?.symptoms ?? [])]);
+    public readonly factors = computed<CycleFactor[]>(() => [...(this.cycle()?.factors ?? [])]);
 
     public initialize(): void {
         this.loadCycle();
@@ -117,14 +165,14 @@ export class CycleTrackingFacade {
         const startDate = new Date(formValue.trackingStartDate);
         const payload: CreateCyclePayload = {
             trackingStartDate: startDate.toISOString(),
-            mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+            mode: formValue.mode ?? CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: formValue.averageCycleLength ?? undefined,
             averagePeriodLength: formValue.averagePeriodLength ?? undefined,
             lutealLength: formValue.lutealLength ?? undefined,
             isRegular: formValue.isRegular,
             isOnboardingComplete: true,
             showFertilityEstimates: formValue.showFertilityEstimates,
-            discreetNotifications: true,
+            discreetNotifications: formValue.discreetNotifications,
         };
 
         this.isSavingCycle.set(true);
@@ -166,14 +214,15 @@ export class CycleTrackingFacade {
                 date: entryDate.toISOString(),
                 bleeding: formValue.isBleeding
                     ? {
-                          type: BLEEDING_TYPE_BLEEDING,
-                          flow: CYCLE_FLOW_MEDIUM,
+                          type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
+                          flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
                           painImpact: this.clampSymptom(formValue.pain),
                           notes: formValue.notes ?? undefined,
                           clearNotes: false,
                       }
                     : null,
                 symptoms,
+                fertilitySignal: this.buildFertilitySignalPayload(formValue),
             })
             .pipe(
                 finalize(() => {
@@ -203,6 +252,43 @@ export class CycleTrackingFacade {
             });
     }
 
+    public saveFactor(): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || currentCycle.id.length === 0) {
+            return;
+        }
+
+        if (this.factorForm().invalid()) {
+            this.factorForm().markAsTouched();
+            return;
+        }
+
+        const formValue = this.factorModel();
+        if (formValue.type === null || formValue.startDate === null || formValue.startDate.length === 0) {
+            return;
+        }
+
+        const payload: UpsertCycleFactorPayload = {
+            type: formValue.type,
+            startDate: new Date(formValue.startDate).toISOString(),
+            endDate: formValue.endDate === null || formValue.endDate.length === 0 ? null : new Date(formValue.endDate).toISOString(),
+            notes: this.toOptionalText(formValue.notes),
+            clearNotes: false,
+        };
+
+        this.isSavingFactor.set(true);
+        this.cyclesService
+            .upsertFactor(currentCycle.id, payload)
+            .pipe(
+                finalize(() => {
+                    this.isSavingFactor.set(false);
+                }),
+            )
+            .subscribe(cycle => {
+                this.cycle.set(cycle);
+            });
+    }
+
     private buildSymptomPayload(formValue: CycleDayFormModel): SymptomLogPayload[] {
         return CYCLE_SYMPTOM_FIELDS.map(field => ({
             category: field.category,
@@ -211,6 +297,29 @@ export class CycleTrackingFacade {
             note: null,
             clearNote: false,
         }));
+    }
+
+    private buildFertilitySignalPayload(formValue: CycleDayFormModel): FertilitySignalPayload | null {
+        const basalBodyTemperatureCelsius = this.toNullableNumber(formValue.basalBodyTemperatureCelsius);
+        const cervicalFluid = this.toOptionalText(formValue.cervicalFluid);
+        const hasSignal =
+            basalBodyTemperatureCelsius !== null ||
+            formValue.ovulationTestResult !== null ||
+            cervicalFluid !== undefined ||
+            formValue.hadSex;
+
+        if (!hasSignal) {
+            return null;
+        }
+
+        return {
+            basalBodyTemperatureCelsius,
+            ovulationTestResult: formValue.ovulationTestResult ?? OVULATION_TEST_RESULT_UNKNOWN,
+            cervicalFluid,
+            hadSex: formValue.hadSex,
+            notes: undefined,
+            clearNotes: false,
+        };
     }
 
     private loadCycle(): void {
@@ -233,5 +342,19 @@ export class CycleTrackingFacade {
         }
 
         return Math.min(MAX_SYMPTOM_VALUE, Math.max(MIN_SYMPTOM_VALUE, value));
+    }
+
+    private toNullableNumber(value: number | string | null | undefined): number | null {
+        if (value === null || value === undefined || value === '') {
+            return null;
+        }
+
+        const numberValue = Number(value);
+        return Number.isNaN(numberValue) ? null : numberValue;
+    }
+
+    private toOptionalText(value: string | null | undefined): string | undefined {
+        const trimmed = value?.trim();
+        return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
     }
 }

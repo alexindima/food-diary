@@ -29,4 +29,11 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> UpsertDay(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
         HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
+
+    [HttpPut("{cycleProfileId:guid}/factors")]
+    [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> UpsertFactor(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleFactorHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
 }

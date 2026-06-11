@@ -7,11 +7,13 @@ import { environment } from '../../../../environments/environment';
 import {
     BLEEDING_TYPE_BLEEDING,
     type CreateCyclePayload,
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     type CycleLogDay,
     type CycleResponse,
     type UpsertCycleDayPayload,
+    type UpsertCycleFactorPayload,
 } from '../models/cycle.data';
 import { CyclesService } from './cycles.service';
 
@@ -138,5 +140,24 @@ describe('CyclesService mutations', () => {
         expect(req.request.method).toBe('PUT');
         expect(req.request.body).toEqual(payload);
         req.flush(MOCK_DAY);
+    });
+
+    it('should upsert cycle factor', () => {
+        const payload: UpsertCycleFactorPayload = {
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-03-01',
+            endDate: null,
+            notes: 'pill',
+            clearNotes: false,
+        };
+
+        service.upsertFactor('c-1', payload).subscribe(cycle => {
+            expect(cycle).toEqual(MOCK_CYCLE);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/c-1/factors`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual(payload);
+        req.flush(MOCK_CYCLE);
     });
 });

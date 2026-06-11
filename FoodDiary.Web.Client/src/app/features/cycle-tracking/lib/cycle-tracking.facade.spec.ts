@@ -5,10 +5,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_FLOW_MEDIUM,
     CYCLE_TRACKING_MODE_PERIOD_TRACKING,
     type CycleLogDay,
     type CycleResponse,
+    OVULATION_TEST_RESULT_POSITIVE,
 } from '../models/cycle.data';
 import { CycleTrackingFacade } from './cycle-tracking.facade';
 
@@ -17,6 +19,7 @@ let cyclesService: {
     create: ReturnType<typeof vi.fn<CyclesService['create']>>;
     getCurrent: ReturnType<typeof vi.fn<CyclesService['getCurrent']>>;
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
+    upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
 };
 
 beforeEach(() => {
@@ -34,6 +37,21 @@ beforeEach(() => {
             }),
         ),
         upsertDay: vi.fn<CyclesService['upsertDay']>().mockReturnValue(of(createCycleLogDay())),
+        upsertFactor: vi.fn<CyclesService['upsertFactor']>().mockReturnValue(
+            of({
+                ...createCycleResponse(),
+                factors: [
+                    {
+                        id: 'factor-1',
+                        cycleProfileId: 'cycle-1',
+                        type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+                        startDate: '2026-04-01T00:00:00.000Z',
+                        endDate: null,
+                        notes: 'pill',
+                    },
+                ],
+            }),
+        ),
     };
 
     TestBed.configureTestingModule({
@@ -54,11 +72,13 @@ describe('CycleTrackingFacade current cycle', () => {
     it('creates a new cycle from form values', () => {
         facade.startCycleModel.set({
             trackingStartDate: '2026-04-03',
+            mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
             averageCycleLength: 30,
             averagePeriodLength: 6,
             lutealLength: 15,
             isRegular: true,
             showFertilityEstimates: true,
+            discreetNotifications: false,
         });
 
         facade.startCycle();
@@ -72,7 +92,7 @@ describe('CycleTrackingFacade current cycle', () => {
             isRegular: true,
             isOnboardingComplete: true,
             showFertilityEstimates: true,
-            discreetNotifications: true,
+            discreetNotifications: false,
         });
         expect(facade.cycle()?.id).toBe('cycle-2');
     });
@@ -107,6 +127,14 @@ describe('CycleTrackingFacade days', () => {
         expect(payload.symptoms).toContainEqual({ category: 0, intensity: 5, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).toContainEqual({ category: 1, intensity: 3, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).toContainEqual({ category: 3, intensity: 6, tags: [], note: null, clearNote: false });
+        expect(payload.fertilitySignal).toEqual({
+            basalBodyTemperatureCelsius: 36.62,
+            ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+            cervicalFluid: 'egg white',
+            hadSex: true,
+            notes: undefined,
+            clearNotes: false,
+        });
         expect(facade.bleedingEntries()).toHaveLength(1);
         expect(facade.bleedingEntries()[0].id).toBe('bleeding-1');
     });
@@ -124,6 +152,8 @@ describe('CycleTrackingFacade symptom values', () => {
         facade.dayModel.set({
             date: '2026-04-02',
             isBleeding: true,
+            bleedingType: BLEEDING_TYPE_BLEEDING,
+            flow: CYCLE_FLOW_MEDIUM,
             pain: -1,
             mood: 99,
             energy: Number.NaN,
@@ -131,6 +161,10 @@ describe('CycleTrackingFacade symptom values', () => {
             bloating: 2,
             headache: 4,
             libido: 2,
+            basalBodyTemperatureCelsius: null,
+            ovulationTestResult: null,
+            cervicalFluid: null,
+            hadSex: false,
             notes: null,
         });
 
@@ -140,6 +174,36 @@ describe('CycleTrackingFacade symptom values', () => {
         expect(payload.bleeding?.painImpact).toBe(0);
         expect(payload.symptoms).toContainEqual({ category: 1, intensity: 10, tags: [], note: null, clearNote: false });
         expect(payload.symptoms).toContainEqual({ category: 2, intensity: 0, tags: [], note: null, clearNote: false });
+    });
+});
+
+describe('CycleTrackingFacade factors', () => {
+    it('upserts a factor and replaces current cycle state', () => {
+        facade.initialize();
+        facade.factorModel.set({
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-04-01',
+            endDate: null,
+            notes: 'pill',
+        });
+
+        facade.saveFactor();
+
+        expect(cyclesService.upsertFactor).toHaveBeenCalledWith('cycle-1', {
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-04-01T00:00:00.000Z',
+            endDate: null,
+            notes: 'pill',
+            clearNotes: false,
+        });
+        expect(facade.factors()).toHaveLength(1);
+        expect(facade.factors()[0].id).toBe('factor-1');
+    });
+
+    it('does not save a factor when current cycle is missing', () => {
+        facade.saveFactor();
+
+        expect(cyclesService.upsertFactor).not.toHaveBeenCalled();
     });
 });
 
@@ -232,6 +296,8 @@ function setValidDayForm(): void {
     facade.dayModel.set({
         date: '2026-04-02',
         isBleeding: true,
+        bleedingType: BLEEDING_TYPE_BLEEDING,
+        flow: CYCLE_FLOW_MEDIUM,
         pain: 5,
         mood: 3,
         energy: 4,
@@ -239,6 +305,10 @@ function setValidDayForm(): void {
         bloating: 1,
         headache: 2,
         libido: 2,
+        basalBodyTemperatureCelsius: 36.62,
+        ovulationTestResult: OVULATION_TEST_RESULT_POSITIVE,
+        cervicalFluid: 'egg white',
+        hadSex: true,
         notes: 'note',
     });
 }

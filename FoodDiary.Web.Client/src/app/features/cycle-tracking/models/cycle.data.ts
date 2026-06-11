@@ -30,6 +30,13 @@ export const CYCLE_SYMPTOM_CATEGORY_OTHER = 99;
 export const OVULATION_TEST_RESULT_NEGATIVE = 0;
 export const OVULATION_TEST_RESULT_POSITIVE = 1;
 export const OVULATION_TEST_RESULT_UNKNOWN = 2;
+export const CYCLE_FACTOR_TYPE_PREGNANCY = 0;
+export const CYCLE_FACTOR_TYPE_LACTATION = 1;
+export const CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION = 2;
+export const CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION = 3;
+export const CYCLE_FACTOR_TYPE_POSTPARTUM = 4;
+export const CYCLE_FACTOR_TYPE_PERIMENOPAUSE = 5;
+export const CYCLE_FACTOR_TYPE_NO_PERIOD = 6;
 
 export type CycleTrackingMode =
     | typeof CYCLE_TRACKING_MODE_PERIOD_TRACKING
@@ -63,6 +70,14 @@ export type OvulationTestResult =
     | typeof OVULATION_TEST_RESULT_NEGATIVE
     | typeof OVULATION_TEST_RESULT_POSITIVE
     | typeof OVULATION_TEST_RESULT_UNKNOWN;
+export type CycleFactorType =
+    | typeof CYCLE_FACTOR_TYPE_PREGNANCY
+    | typeof CYCLE_FACTOR_TYPE_LACTATION
+    | typeof CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION
+    | typeof CYCLE_FACTOR_TYPE_NON_HORMONAL_CONTRACEPTION
+    | typeof CYCLE_FACTOR_TYPE_POSTPARTUM
+    | typeof CYCLE_FACTOR_TYPE_PERIMENOPAUSE
+    | typeof CYCLE_FACTOR_TYPE_NO_PERIOD;
 
 export type BleedingEntry = {
     id: string;
@@ -87,7 +102,7 @@ export type CycleSymptomEntry = {
 export type CycleFactor = {
     id: string;
     cycleProfileId: string;
-    type: number;
+    type: CycleFactorType;
     startDate: string;
     endDate?: string | null;
     notes?: string | null;
@@ -187,4 +202,12 @@ export type UpsertCycleDayPayload = {
     bleeding?: BleedingLogPayload | null;
     symptoms: SymptomLogPayload[];
     fertilitySignal?: FertilitySignalPayload | null;
+};
+
+export type UpsertCycleFactorPayload = {
+    type: CycleFactorType;
+    startDate: string;
+    endDate?: string | null;
+    notes?: string | null;
+    clearNotes: boolean;
 };
