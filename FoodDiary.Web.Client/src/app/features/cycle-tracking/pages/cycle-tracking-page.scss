@@ -88,6 +88,18 @@
         --fd-summary-surface-background: var(--fd-bg-surface-raised);
     }
 
+    &__current-factors {
+        flex-wrap: wrap;
+        margin-top: var(--fd-space-card-header-gap);
+        margin-bottom: var(--fd-space-card-header-gap);
+    }
+
+    &__current-factor {
+        --fd-pill-bg: var(--fd-bg-category-teal);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-green-700);
+    }
+
     &__symptom-grid {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 140px), 1fr));
     }

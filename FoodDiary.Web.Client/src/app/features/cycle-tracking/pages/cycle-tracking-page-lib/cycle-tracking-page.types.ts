@@ -3,6 +3,20 @@ import type { BleedingEntry, CyclePredictions, CycleResponse, CycleSymptomEntry,
 export type CycleViewModel = {
     cycle: CycleResponse;
     trackingStartDateLabel: string;
+    summaryItems: CycleSummaryItemViewModel[];
+    activeFactorItems: CycleActiveFactorViewModel[];
+};
+
+export type CycleSummaryItemViewModel = {
+    labelKey: string;
+    valueKey: string;
+    params?: Record<string, string | number>;
+    accentColor: string;
+};
+
+export type CycleActiveFactorViewModel = {
+    labelKey: string;
+    startDateLabel: string;
 };
 
 export type CyclePredictionViewModel = {

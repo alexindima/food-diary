@@ -1,14 +1,20 @@
 import { describe, expect, it } from 'vitest';
 
 import type { BleedingEntry, CycleResponse, CycleSymptomEntry, FertilitySignal } from '../../models/cycle.data';
-import { BLEEDING_TYPE_BLEEDING, CYCLE_FLOW_MEDIUM, OVULATION_TEST_RESULT_POSITIVE } from '../../models/cycle.data';
+import {
+    BLEEDING_TYPE_BLEEDING,
+    CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+    CYCLE_FLOW_MEDIUM,
+    CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
+    OVULATION_TEST_RESULT_POSITIVE,
+} from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
 
 const CYCLE: CycleResponse = {
     id: 'cycle-1',
     userId: 'user-1',
-    mode: 0,
+    mode: CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
     confidence: 1,
     trackingStartDate: '2026-04-01T00:00:00.000Z',
     averageCycleLength: 28,
@@ -20,7 +26,16 @@ const CYCLE: CycleResponse = {
     discreetNotifications: true,
     bleedingEntries: [],
     symptoms: [],
-    factors: [],
+    factors: [
+        {
+            id: 'factor-1',
+            cycleProfileId: 'cycle-1',
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-04-02T00:00:00.000Z',
+            endDate: null,
+            notes: null,
+        },
+    ],
     fertilitySignals: [],
     predictions: null,
 };
@@ -60,10 +75,26 @@ describe('cycle tracking page mapper', () => {
     it('builds current cycle view with formatted start date', () => {
         const view = buildCycleCurrentView(CYCLE, 'en-US');
 
-        expect(view).toEqual({
-            cycle: CYCLE,
-            trackingStartDateLabel: 'Apr 1, 2026',
-        });
+        expect(view?.cycle).toBe(CYCLE);
+        expect(view?.trackingStartDateLabel).toBe('Apr 1, 2026');
+        expect(view?.summaryItems).toContainEqual(
+            expect.objectContaining({
+                labelKey: 'CYCLE_TRACKING.MODE',
+                valueKey: 'CYCLE_TRACKING.MODE_TRYING_TO_CONCEIVE',
+            }),
+        );
+        expect(view?.summaryItems).toContainEqual(
+            expect.objectContaining({
+                labelKey: 'CYCLE_TRACKING.REGULARITY',
+                valueKey: 'CYCLE_TRACKING.REGULARITY_REGULAR',
+            }),
+        );
+        expect(view?.activeFactorItems).toEqual([
+            {
+                labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+                startDateLabel: 'Apr 2',
+            },
+        ]);
     });
 
     it('returns null when there is no current cycle', () => {

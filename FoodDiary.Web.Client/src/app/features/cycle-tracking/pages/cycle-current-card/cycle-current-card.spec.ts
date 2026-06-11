@@ -57,6 +57,25 @@ describe('CycleCurrentCardComponent', () => {
         fixture.componentRef.setInput('current', {
             cycle: CYCLE,
             trackingStartDateLabel: 'Apr 1, 2026',
+            summaryItems: [
+                {
+                    labelKey: 'CYCLE_TRACKING.STARTED',
+                    valueKey: 'CYCLE_TRACKING.STARTED_SUMMARY',
+                    params: { value: 'Apr 1, 2026' },
+                    accentColor: 'var(--fd-color-purple-500)',
+                },
+                {
+                    labelKey: 'CYCLE_TRACKING.MODE',
+                    valueKey: 'CYCLE_TRACKING.MODE_PERIOD_TRACKING',
+                    accentColor: 'var(--fd-color-sky-500)',
+                },
+            ],
+            activeFactorItems: [
+                {
+                    labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+                    startDateLabel: 'Apr 2',
+                },
+            ],
         });
         fixture.componentRef.setInput('prediction', {
             prediction: {
@@ -77,7 +96,9 @@ describe('CycleCurrentCardComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.componentInstance['titleKey']()).toBe('CYCLE_TRACKING.CURRENT_CYCLE');
-        expect(getText()).toContain('Apr 1, 2026');
+        expect(getText()).toContain('CYCLE_TRACKING.STARTED_SUMMARY');
+        expect(getText()).toContain('CYCLE_TRACKING.MODE_PERIOD_TRACKING');
+        expect(getText()).toContain('CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION');
         expect(getText()).toContain('Apr 29 - May 1');
         expect(getText()).toContain('Apr 15 - Apr 16');
         expect(getText()).toContain('Apr 23 - Apr 28');
