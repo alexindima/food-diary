@@ -1,4 +1,4 @@
-import { signal } from '@angular/core';
+import { type Signal, signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteConfigLoadStart, Router } from '@angular/router';
 import { Subject } from 'rxjs';
@@ -47,9 +47,25 @@ describe('AppComponent shell behavior', () => {
             path: router.url,
         });
     });
+
+    it('uses compact mobile navigation spacing only for dashboard routes', async () => {
+        const { component, routerEvents } = await createComponentAsync();
+        const compactNavigation = (component as unknown as { usesCompactMobileNavigation: Signal<boolean> }).usesCompactMobileNavigation;
+
+        expect(compactNavigation()).toBe(true);
+
+        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/products', '/products'));
+
+        expect(compactNavigation()).toBe(false);
+
+        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard?date=2026-06-11', '/dashboard?date=2026-06-11'));
+
+        expect(compactNavigation()).toBe(true);
+    });
 });
 
 async function createComponentAsync(): Promise<{
+    component: AppComponent;
     localizationService: { loadTranslationsForRouteAsync: ReturnType<typeof vi.fn> };
     routeLoadingService: { beginLoad: ReturnType<typeof vi.fn>; endLoad: ReturnType<typeof vi.fn> };
     router: { events: Subject<unknown>; url: string };
@@ -98,9 +114,18 @@ async function createComponentAsync(): Promise<{
     });
 
     await TestBed.compileComponents();
-    TestBed.createComponent(AppComponent).detectChanges();
+    const fixture = TestBed.createComponent(AppComponent);
+    fixture.detectChanges();
 
-    return { localizationService, routeLoadingService, router, routerEvents, seoService, themeService };
+    return {
+        component: fixture.componentInstance,
+        localizationService,
+        routeLoadingService,
+        router,
+        routerEvents,
+        seoService,
+        themeService,
+    };
 }
 
 function createActivatedRouteStub(): ActivatedRoute {

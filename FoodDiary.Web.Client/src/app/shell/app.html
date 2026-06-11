@@ -1,6 +1,11 @@
 <a class="fd-skip-nav fd-visually-hidden-focusable" href="#main-content">Skip to main content</a>
 <fd-ui-top-loader [visible]="isTopLoaderVisible()" />
-<div class="fd-root" [class.fd-root--no-sidebar]="!isAuthenticated()" [class.fd-root--impersonating]="isImpersonating()">
+<div
+    class="fd-root"
+    [class.fd-root--no-sidebar]="!isAuthenticated()"
+    [class.fd-root--impersonating]="isImpersonating()"
+    [class.fd-root--compact-mobile-nav]="usesCompactMobileNavigation()"
+>
     @if (isAuthenticated()) {
         @defer (when isAuthenticated()) {
             <fd-sidebar class="fd-root__sidebar" />

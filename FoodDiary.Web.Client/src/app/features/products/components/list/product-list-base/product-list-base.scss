@@ -115,10 +115,10 @@
 
     &__favorites-grid {
         grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-        padding: 0 var(--fd-space-sm) var(--fd-space-sm);
     }
 
     &__favorite-card {
+        min-width: 0;
         padding: var(--fd-space-xs) var(--fd-space-sm);
         border-radius: var(--fd-radius-card);
         background: var(--fd-bg-surface-raised);
@@ -271,6 +271,10 @@
 
         &__header-actions {
             display: none;
+        }
+
+        &__favorites-grid {
+            grid-template-columns: minmax(0, 1fr);
         }
 
         &__search-form--mobile {

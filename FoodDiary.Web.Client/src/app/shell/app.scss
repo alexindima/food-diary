@@ -27,6 +27,7 @@
     min-height: 100dvh;
     background: var(--fd-bg-page);
     --fd-layout-sidebar-width: var(--fd-layout-shell-sidebar-width);
+    --fd-layout-shell-current-mobile-viewport-bottom-padding: var(--fd-layout-shell-mobile-sheet-bottom);
     overflow: hidden;
 
     &__sidebar {
@@ -135,6 +136,10 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     }
 }
 
+.fd-root--compact-mobile-nav {
+    --fd-layout-shell-current-mobile-viewport-bottom-padding: var(--fd-layout-shell-mobile-viewport-bottom-padding);
+}
+
 .fd-root:not(.fd-root--no-sidebar) .fd-root__main {
     grid-row: 1 / span 1;
     grid-column: 2 / span 1;
@@ -184,7 +189,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     .fd-root__viewport {
         overflow: visible;
         min-height: auto;
-        padding-bottom: calc(var(--fd-layout-shell-mobile-viewport-bottom-padding) + env(safe-area-inset-bottom));
+        padding-bottom: calc(var(--fd-layout-shell-current-mobile-viewport-bottom-padding) + env(safe-area-inset-bottom));
     }
 
     .fd-root--no-sidebar .fd-root__viewport {

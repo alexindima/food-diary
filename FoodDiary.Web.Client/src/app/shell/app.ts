@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, Injector, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, RouteConfigLoadEnd, RouteConfigLoadStart, Router, RouterOutlet } from '@angular/router';
 import { FdUiToastHostComponent, FdUiTopLoaderComponent } from 'fd-ui-kit';
@@ -39,12 +39,26 @@ export class AppComponent {
     protected isImpersonating = this.authService.isImpersonating;
     protected impersonationReason = this.authService.impersonationReason;
     protected readonly isTopLoaderVisible = computed(() => this.globalLoadingService.isVisible() || this.routeLoadingService.isVisible());
+    protected readonly currentPath = signal(this.getCurrentPath());
+    protected readonly usesCompactMobileNavigation = computed(() => {
+        const path = this.currentPath();
+        return path === '/' || path === '/dashboard';
+    });
 
     public constructor() {
         if (typeof window !== 'undefined') {
             this.injector.get(NotificationRealtimeService);
             this.injector.get(PushNotificationService);
         }
+
+        this.router.events
+            .pipe(
+                filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(event => {
+                this.currentPath.set(this.getCurrentPath(event.urlAfterRedirects));
+            });
 
         this.router.events
             .pipe(
@@ -91,6 +105,12 @@ export class AppComponent {
     private async prepareRouteAsync(url: string): Promise<void> {
         this.themeService.applyThemeForRoute(url);
         await this.localizationService.loadTranslationsForRouteAsync(url);
+    }
+
+    private getCurrentPath(url = this.router.url): string {
+        const path = url.split(/[?#]/, 1)[0];
+        const normalized = path.length > 0 ? path : '/';
+        return normalized.endsWith('/') && normalized.length > 1 ? normalized.slice(0, -1) : normalized;
     }
 
     protected stopImpersonation(): void {
