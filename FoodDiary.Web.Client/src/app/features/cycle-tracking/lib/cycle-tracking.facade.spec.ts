@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { ExportService } from '../../../shared/api/export.service';
 import { CyclesService } from '../api/cycles.service';
 import {
     BLEEDING_TYPE_BLEEDING,
@@ -21,6 +22,7 @@ let cyclesService: {
     upsertDay: ReturnType<typeof vi.fn<CyclesService['upsertDay']>>;
     upsertFactor: ReturnType<typeof vi.fn<CyclesService['upsertFactor']>>;
 };
+let exportService: { exportCycle: ReturnType<typeof vi.fn<ExportService['exportCycle']>> };
 
 beforeEach(() => {
     cyclesService = {
@@ -53,9 +55,16 @@ beforeEach(() => {
             }),
         ),
     };
+    exportService = {
+        exportCycle: vi.fn<ExportService['exportCycle']>().mockReturnValue(of(void 0)),
+    };
 
     TestBed.configureTestingModule({
-        providers: [CycleTrackingFacade, { provide: CyclesService, useValue: cyclesService }],
+        providers: [
+            CycleTrackingFacade,
+            { provide: CyclesService, useValue: cyclesService },
+            { provide: ExportService, useValue: exportService },
+        ],
     });
 
     facade = TestBed.inject(CycleTrackingFacade);
@@ -207,6 +216,25 @@ describe('CycleTrackingFacade factors', () => {
     });
 });
 
+describe('CycleTrackingFacade export', () => {
+    it('exports the current cycle from tracking start to today', () => {
+        facade.initialize();
+
+        facade.exportCycle();
+
+        const request = exportService.exportCycle.mock.calls[0][0];
+        expect(request.dateFrom).toBe(toLocalStartOfDayIso('2026-04-01T00:00:00Z'));
+        expect(typeof request.timeZoneOffsetMinutes).toBe('number');
+        expect(facade.isExportingCycle()).toBe(false);
+    });
+
+    it('skips export when current cycle is missing', () => {
+        facade.exportCycle();
+
+        expect(exportService.exportCycle).not.toHaveBeenCalled();
+    });
+});
+
 describe('CycleTrackingFacade day ordering', () => {
     it('replaces existing entries by returned date', () => {
         cyclesService.getCurrent.mockReturnValue(
@@ -311,4 +339,10 @@ function setValidDayForm(): void {
         hadSex: true,
         notes: 'note',
     });
+}
+
+function toLocalStartOfDayIso(value: string): string {
+    const date = new Date(value);
+    date.setHours(0, 0, 0, 0);
+    return date.toISOString();
 }

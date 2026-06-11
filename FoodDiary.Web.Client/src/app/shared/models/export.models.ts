@@ -7,3 +7,9 @@ export type ExportDiaryRequest = {
     locale?: string;
     timeZoneOffsetMinutes?: number;
 };
+
+export type ExportCycleRequest = {
+    dateFrom: string;
+    dateTo: string;
+    timeZoneOffsetMinutes?: number;
+};

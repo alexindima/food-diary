@@ -86,6 +86,7 @@ export class CycleTrackingPageComponent {
     protected readonly isSavingCycle = this.facade.isSavingCycle;
     protected readonly isSavingDay = this.facade.isSavingDay;
     protected readonly isSavingFactor = this.facade.isSavingFactor;
+    protected readonly isExportingCycle = this.facade.isExportingCycle;
     protected readonly cycle = this.facade.cycle;
     protected readonly startCycleForm = this.facade.startCycleForm;
     protected readonly dayForm = this.facade.dayForm;
@@ -167,6 +168,10 @@ export class CycleTrackingPageComponent {
 
     protected saveFactor(): void {
         this.facade.saveFactor();
+    }
+
+    protected exportCycle(): void {
+        this.facade.exportCycle();
     }
 
     protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {

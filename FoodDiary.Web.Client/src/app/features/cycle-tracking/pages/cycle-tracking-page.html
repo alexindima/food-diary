@@ -2,6 +2,12 @@
     <fd-page-header [title]="'CYCLE_TRACKING.TITLE' | translate" [subtitle]="'CYCLE_TRACKING.SUBTITLE' | translate" />
 
     <fd-page-body>
+        <div class="cycle-tracking__page-actions fd-ui-actions">
+            <fd-ui-button type="button" [disabled]="!cycle() || isExportingCycle()" [loading]="isExportingCycle()" (click)="exportCycle()">
+                {{ 'CYCLE_TRACKING.EXPORT_CYCLE' | translate }}
+            </fd-ui-button>
+        </div>
+
         <div class="cycle-tracking__grid fd-grid fd-gap-card-content">
             <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
                 <form class="cycle-tracking__form fd-stack fd-gap-card-header" (ngSubmit)="startCycle()">

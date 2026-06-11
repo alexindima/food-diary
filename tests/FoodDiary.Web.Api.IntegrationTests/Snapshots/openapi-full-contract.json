@@ -1326,6 +1326,20 @@
       ]
     },
     {
+      "Path": "/api/v{version}/export/cycle",
+      "Operations": [
+        {
+          "Method": "get",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "200",
+            "401",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/export/diary",
       "Operations": [
         {

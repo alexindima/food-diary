@@ -1510,6 +1510,7 @@
         "TITLE": "Cycle tracking",
         "SUBTITLE": "Log menstrual days and daily symptoms in one place",
         "CREATE_CYCLE_TITLE": "Start a new cycle",
+        "EXPORT_CYCLE": "Export cycle CSV",
         "START_DATE": "Start date",
         "TRACKING_START_DATE": "Tracking start date",
         "AVG_LENGTH": "Avg cycle length (days)",

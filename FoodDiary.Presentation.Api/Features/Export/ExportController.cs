@@ -20,4 +20,13 @@ public class ExportController(ISender mediator) : AuthorizedController(mediator)
         [FromQuery] int? timeZoneOffsetMinutes = null,
         [FromQuery] string? reportOrigin = null) =>
         HandleFile(ExportHttpMappings.ToQuery(userId, dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin));
+
+    [HttpGet("cycle")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public Task<IActionResult> ExportCycle(
+        [FromCurrentUser] Guid userId,
+        [FromQuery] DateTime dateFrom,
+        [FromQuery] DateTime dateTo,
+        [FromQuery] int? timeZoneOffsetMinutes = null) =>
+        HandleFile(ExportHttpMappings.ToCycleQuery(userId, dateFrom, dateTo, timeZoneOffsetMinutes));
 }

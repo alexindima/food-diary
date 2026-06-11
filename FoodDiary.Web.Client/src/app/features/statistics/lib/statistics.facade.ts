@@ -4,12 +4,12 @@ import { form } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { finalize, forkJoin } from 'rxjs';
 
+import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
-import { ExportService } from '../../meals/api/export.service';
-import type { ExportFormat } from '../../meals/models/export.models';
+import type { ExportFormat } from '../../../shared/models/export.models';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import type { WaistEntrySummaryPoint } from '../../waist-history/models/waist-entry.data';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';

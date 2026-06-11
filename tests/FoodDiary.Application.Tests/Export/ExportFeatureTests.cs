@@ -1,10 +1,13 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Export.Models;
+using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -227,6 +230,45 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportCycle_WithCurrentProfile_ReturnsCycleCsv() {
+        var userId = UserId.New();
+        var profile = CycleProfile.Create(userId, TestDate);
+        profile.UpsertBleedingEntry(TestDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: "heavy, painful");
+        profile.UpsertSymptomEntry(TestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
+        profile.UpsertFertilitySignal(TestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
+        profile.UpsertFactor(CycleFactorType.HormonalContraception, TestDate.AddDays(-1), endDate: null, notes: "pill");
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal("text/csv", result.Value.ContentType);
+        Assert.EndsWith(".csv", result.Value.FileName, StringComparison.Ordinal);
+        string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
+        Assert.Contains("RecordType,Date,EndDate,Category", content, StringComparison.Ordinal);
+        Assert.Contains("Bleeding,2026-04-01,,Bleeding,,Heavy,8", content, StringComparison.Ordinal);
+        Assert.Contains("\"heavy, painful\"", content, StringComparison.Ordinal);
+        Assert.Contains("Symptom,2026-04-01,,Mood,irritable,,6", content, StringComparison.Ordinal);
+        Assert.Contains("FertilitySignal,2026-04-01,,,,,,36.62,Positive,egg white,True,signal note", content, StringComparison.Ordinal);
+        Assert.Contains("Factor,2026-03-31,,HormonalContraception", content, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithNoCurrentProfile_ReturnsNotFound() {
+        var userId = UserId.New();
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Cycle.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public void CsvGenerator_WithAutoCalculated_UsesTotals() {
         Meal meal = CreateMeal();
 
@@ -386,6 +428,33 @@ public class ExportFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubCycleRepository(CycleProfile? profile) : ICycleRepository {
+        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<CycleProfile?> GetByIdAsync(
+            CycleProfileId id,
+            UserId userId,
+            bool includeDetails = false,
+            bool asTracking = false,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public Task<CycleProfile?> GetCurrentAsync(
+            UserId userId,
+            bool includeDetails = false,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(profile is null || profile.UserId != userId ? null : profile);
+
+        public Task<IReadOnlyList<CycleProfile>> GetByUserAsync(
+            UserId userId,
+            bool includeDetails = false,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

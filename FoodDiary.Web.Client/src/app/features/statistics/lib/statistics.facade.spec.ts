@@ -3,9 +3,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
-import { ExportService } from '../../meals/api/export.service';
 import { WaistEntriesService } from '../../waist-history/api/waist-entries.service';
 import { WeightEntriesService } from '../../weight-history/api/weight-entries.service';
 import { StatisticsService } from '../api/statistics.service';

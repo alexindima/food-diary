@@ -6,7 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
 import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary';
-import type { ExportFormat } from '../../meals/models/export.models';
+import type { ExportFormat } from '../../../shared/models/export.models';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import type { BodyChartTab, DateRange, NutritionChartTab, StatisticsRange } from '../lib/statistics-data-mapper';
 import { StatisticsComponent } from './statistics';

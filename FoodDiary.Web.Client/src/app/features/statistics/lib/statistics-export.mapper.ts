@@ -1,4 +1,4 @@
-import type { ExportDiaryRequest, ExportFormat } from '../../meals/models/export.models';
+import type { ExportDiaryRequest, ExportFormat } from '../../../shared/models/export.models';
 import type { DateRange } from './statistics-data-mapper';
 import { normalizeEndOfDay, normalizeStartOfDay } from './statistics-data-mapper';
 

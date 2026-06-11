@@ -2,9 +2,9 @@ import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { inject, PLATFORM_ID, Service } from '@angular/core';
 import { map, type Observable } from 'rxjs';
 
-import { environment } from '../../../../environments/environment';
-import { ApiService } from '../../../services/api.service';
-import type { ExportDiaryRequest } from '../models/export.models';
+import { environment } from '../../../environments/environment';
+import { ApiService } from '../../services/api.service';
+import type { ExportCycleRequest, ExportDiaryRequest } from '../models/export.models';
 
 @Service()
 export class ExportService extends ApiService {
@@ -18,7 +18,20 @@ export class ExportService extends ApiService {
         const { dateFrom, dateTo, format = 'csv', locale, timeZoneOffsetMinutes } = request;
         const ext = format === 'pdf' ? 'pdf' : 'csv';
         const reportOrigin = this.isBrowser ? this.document.location.origin : undefined;
-        return this.getBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }).pipe(
+        return this.downloadBlob('diary', { dateFrom, dateTo, format, locale, timeZoneOffsetMinutes, reportOrigin }, `food-diary.${ext}`);
+    }
+
+    public exportCycle(request: ExportCycleRequest): Observable<void> {
+        const { dateFrom, dateTo, timeZoneOffsetMinutes } = request;
+        return this.downloadBlob('cycle', { dateFrom, dateTo, timeZoneOffsetMinutes }, 'cycle-tracking.csv');
+    }
+
+    private downloadBlob(
+        endpoint: string,
+        params: Record<string, string | number | boolean | null | undefined>,
+        fallbackFileName: string,
+    ): Observable<void> {
+        return this.getBlob(endpoint, params).pipe(
             map(response => {
                 const blob = response.body;
                 if (blob === null) {
@@ -26,7 +39,7 @@ export class ExportService extends ApiService {
                 }
 
                 const contentDisposition = response.headers.get('Content-Disposition');
-                const fileName = this.extractFileName(contentDisposition) ?? `food-diary.${ext}`;
+                const fileName = this.extractFileName(contentDisposition) ?? fallbackFileName;
 
                 if (!this.isBrowser) {
                     return;

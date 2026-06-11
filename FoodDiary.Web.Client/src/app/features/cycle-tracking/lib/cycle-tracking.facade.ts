@@ -1,7 +1,9 @@
-import { computed, inject, Service, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required } from '@angular/forms/signals';
 import { finalize } from 'rxjs';
 
+import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
 import { CyclesService } from '../api/cycles.service';
 import {
@@ -79,14 +81,22 @@ type CycleFactorFormModel = {
     notes: string | null;
 };
 
+const DAY_END_HOURS = 23;
+const DAY_END_MINUTES = 59;
+const DAY_END_SECONDS = 59;
+const DAY_END_MILLISECONDS = 999;
+
 @Service()
 export class CycleTrackingFacade {
     private readonly cyclesService = inject(CyclesService);
+    private readonly exportService = inject(ExportService);
+    private readonly destroyRef = inject(DestroyRef);
 
     public readonly isLoading = signal(false);
     public readonly isSavingCycle = signal(false);
     public readonly isSavingDay = signal(false);
     public readonly isSavingFactor = signal(false);
+    public readonly isExportingCycle = signal(false);
     public readonly cycle = signal<CycleResponse | null>(null);
 
     public readonly startCycleModel = signal<StartCycleFormModel>({
@@ -291,6 +301,28 @@ export class CycleTrackingFacade {
             });
     }
 
+    public exportCycle(): void {
+        const currentCycle = this.cycle();
+        if (currentCycle === null || this.isExportingCycle()) {
+            return;
+        }
+
+        this.isExportingCycle.set(true);
+        this.exportService
+            .exportCycle({
+                dateFrom: this.normalizeStartOfDay(new Date(currentCycle.trackingStartDate)).toISOString(),
+                dateTo: this.normalizeEndOfDay(new Date()).toISOString(),
+                timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
+            })
+            .pipe(
+                finalize(() => {
+                    this.isExportingCycle.set(false);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
+    }
+
     private buildSymptomPayload(formValue: CycleDayFormModel): SymptomLogPayload[] {
         return CYCLE_SYMPTOM_FIELDS.map(field => ({
             category: field.category,
@@ -358,5 +390,17 @@ export class CycleTrackingFacade {
     private toOptionalText(value: string | null | undefined): string | undefined {
         const trimmed = value?.trim();
         return trimmed === undefined || trimmed.length === 0 ? undefined : trimmed;
+    }
+
+    private normalizeStartOfDay(value: Date): Date {
+        const result = new Date(value);
+        result.setHours(0, 0, 0, 0);
+        return result;
+    }
+
+    private normalizeEndOfDay(value: Date): Date {
+        const result = new Date(value);
+        result.setHours(DAY_END_HOURS, DAY_END_MINUTES, DAY_END_SECONDS, DAY_END_MILLISECONDS);
+        return result;
     }
 }
