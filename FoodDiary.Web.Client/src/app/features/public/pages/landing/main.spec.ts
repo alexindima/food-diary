@@ -84,11 +84,13 @@ describe('MainComponent', () => {
         await vi.waitFor(() => {
             expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
         });
-        expect(authDialogServiceMock.openAsync).toHaveBeenCalledWith({
-            mode: 'login',
-            returnUrl: '/dashboard',
-            adminReturnUrl: '/users',
-        });
+        expect(authDialogServiceMock.openAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                mode: 'login',
+                returnUrl: '/dashboard',
+                adminReturnUrl: '/users',
+            }),
+        );
     });
 
     it('opens register dialog from auth query param', async () => {
@@ -99,11 +101,13 @@ describe('MainComponent', () => {
         await vi.waitFor(() => {
             expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
         });
-        expect(authDialogServiceMock.openAsync).toHaveBeenCalledWith({
-            mode: 'register',
-            returnUrl: null,
-            adminReturnUrl: null,
-        });
+        expect(authDialogServiceMock.openAsync).toHaveBeenCalledWith(
+            expect.objectContaining({
+                mode: 'register',
+                returnUrl: null,
+                adminReturnUrl: null,
+            }),
+        );
     });
 
     it('does not reopen auth dialog for duplicate auth query param emissions', async () => {
@@ -166,5 +170,25 @@ describe('MainComponent', () => {
 
         expect(routerMock.navigate).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToHomeAsync).toHaveBeenCalled();
+    });
+});
+
+describe('MainComponent auth dialog cancellation', () => {
+    it('allows a later auth dialog when lazy dialog loading is cancelled', async () => {
+        authDialogServiceMock.openAsync.mockResolvedValueOnce(null).mockResolvedValueOnce({ afterClosed: () => of(void 0) });
+        await createComponentAsync('', {}, { auth: 'login' });
+        queryParamMapSubject.next(convertToParamMap({ auth: 'login' }));
+
+        fixture.detectChanges();
+        await vi.waitFor(() => {
+            expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(1);
+        });
+
+        queryParamMapSubject.next(convertToParamMap({ auth: 'register' }));
+
+        await vi.waitFor(() => {
+            expect(authDialogServiceMock.openAsync).toHaveBeenCalledTimes(2);
+        });
+        expect(authDialogServiceMock.openAsync).toHaveBeenLastCalledWith(expect.objectContaining({ mode: 'register' }));
     });
 });
