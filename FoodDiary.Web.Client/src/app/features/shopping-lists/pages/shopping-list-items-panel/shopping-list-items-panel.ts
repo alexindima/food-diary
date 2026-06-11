@@ -33,6 +33,7 @@ export class ShoppingListItemsPanelComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly activeLang = signal(this.translateService.getCurrentLang());
+    protected readonly areDetailsVisible = signal(false);
 
     public readonly itemForm = input.required<FieldTree<ShoppingListItemFormModel>>();
     public readonly items = input.required<readonly ShoppingListItem[]>();
@@ -54,5 +55,9 @@ export class ShoppingListItemsPanelComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(event => {
             this.activeLang.set(event.lang);
         });
+    }
+
+    protected toggleDetails(): void {
+        this.areDetailsVisible.update(value => !value);
     }
 }

@@ -104,7 +104,10 @@ public sealed class DomainEventInvariantTests {
             1.5,
             MeasurementUnit.Ml,
             "Dairy",
+            aisle: null,
+            note: null,
             isChecked: true,
+            checkedOnUtc: null,
             sortOrder: 2,
             occurredOnUtc);
 

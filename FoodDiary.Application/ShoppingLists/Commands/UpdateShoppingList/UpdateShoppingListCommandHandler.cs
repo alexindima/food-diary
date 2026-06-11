@@ -99,10 +99,41 @@ public class UpdateShoppingListCommandHandler(
             return Result.Failure(itemsResult.Error);
         }
 
-        list.ClearItems();
+        var retainedItemIds = new HashSet<ShoppingListItemId>();
         foreach (ShoppingListItemData item in itemsResult.Value) {
-            list.AddItem(item.Name, item.ProductId, item.Amount, item.Unit, item.Category, item.IsChecked, item.SortOrder);
+            ShoppingListItem? existing = item.Id.HasValue ? list.FindItem(item.Id.Value) : null;
+            if (existing is null) {
+                ShoppingListItem added = list.AddItem(
+                    item.Name,
+                    item.ProductId,
+                    item.Amount,
+                    item.Unit,
+                    item.Category,
+                    item.IsChecked,
+                    item.SortOrder,
+                    item.Aisle,
+                    item.Note,
+                    item.CheckedOnUtc,
+                    item.Id);
+                retainedItemIds.Add(added.Id);
+                continue;
+            }
+
+            existing.UpdateDetails(
+                item.Name,
+                item.ProductId,
+                item.Amount,
+                item.Unit,
+                item.Category,
+                item.Aisle,
+                item.Note,
+                item.IsChecked,
+                item.CheckedOnUtc,
+                item.SortOrder);
+            retainedItemIds.Add(existing.Id);
         }
+
+        list.RemoveItemsExcept(retainedItemIds);
 
         return Result.Success();
     }

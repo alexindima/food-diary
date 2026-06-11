@@ -1,36 +1,60 @@
 <div class="shopping-list__panel">
     <form class="shopping-list__add-form" (ngSubmit)="itemAdd.emit()">
-        <div class="shopping-list__add-head">
-            <div class="shopping-list__add-icon fd-center">
-                <fd-ui-icon name="add_shopping_cart" size="md" />
-            </div>
-            <div class="shopping-list__add-title fd-ui-card-title">{{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}</div>
+        <div class="shopping-list__quick-add-row">
+            <fd-ui-input
+                class="shopping-list__quick-add-input"
+                [formField]="itemForm().name"
+                [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
+                [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
+            />
+            <fd-ui-button
+                type="button"
+                class="shopping-list__details-button"
+                variant="secondary"
+                fill="outline"
+                icon="tune"
+                [fdUiHint]="'SHOPPING_LIST.ADD_ITEM_DETAILS' | translate"
+                [ariaLabel]="'SHOPPING_LIST.ADD_ITEM_DETAILS' | translate"
+                (click)="toggleDetails()"
+            />
+            <fd-ui-button
+                type="button"
+                class="shopping-list__quick-add-button"
+                variant="primary"
+                fill="solid"
+                icon="add"
+                [disabled]="isItemFormInvalid()"
+                (click)="itemAdd.emit()"
+            >
+                {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
+            </fd-ui-button>
         </div>
-        <fd-ui-input
-            [formField]="itemForm().name"
-            [label]="'SHOPPING_LIST.ADD_ITEM_NAME' | translate"
-            [placeholder]="'SHOPPING_LIST.ADD_ITEM_NAME_PLACEHOLDER' | translate"
-        />
-        <fd-ui-input
-            type="number"
-            [formField]="itemForm().amount"
-            [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
-            [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
-        />
-        <fd-ui-select
-            [formField]="itemForm().unit"
-            [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
-            [placeholder]="'SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER' | translate"
-            [options]="unitOptions()"
-        />
-        <fd-ui-input
-            [formField]="itemForm().category"
-            [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
-            [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
-        />
-        <fd-ui-button type="submit" variant="secondary" fill="outline" icon="add" [disabled]="isItemFormInvalid()">
-            {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}
-        </fd-ui-button>
+        @if (areDetailsVisible()) {
+            <div class="shopping-list__add-details">
+                <fd-ui-input
+                    type="number"
+                    [formField]="itemForm().amount"
+                    [label]="'SHOPPING_LIST.ADD_ITEM_AMOUNT' | translate"
+                    [placeholder]="'SHOPPING_LIST.ADD_ITEM_AMOUNT_PLACEHOLDER' | translate"
+                />
+                <fd-ui-select
+                    [formField]="itemForm().unit"
+                    [label]="'SHOPPING_LIST.ADD_ITEM_UNIT' | translate"
+                    [placeholder]="'SHOPPING_LIST.ADD_ITEM_UNIT_PLACEHOLDER' | translate"
+                    [options]="unitOptions()"
+                />
+                <fd-ui-input
+                    [formField]="itemForm().category"
+                    [label]="'SHOPPING_LIST.ADD_ITEM_CATEGORY' | translate"
+                    [placeholder]="'SHOPPING_LIST.ADD_ITEM_CATEGORY_PLACEHOLDER' | translate"
+                />
+                <fd-ui-input
+                    [formField]="itemForm().note"
+                    [label]="'SHOPPING_LIST.ADD_ITEM_NOTE' | translate"
+                    [placeholder]="'SHOPPING_LIST.ADD_ITEM_NOTE_PLACEHOLDER' | translate"
+                />
+            </div>
+        }
     </form>
 
     <section class="shopping-list__items-surface">

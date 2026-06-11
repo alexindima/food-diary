@@ -25,7 +25,8 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
         }
 
         if (includeItems) {
-            query = query.Include(l => l.Items);
+            query = query.Include(l => l.Items)
+                .ThenInclude(i => i.Sources);
         }
 
         return await query.FirstOrDefaultAsync(
@@ -45,7 +46,8 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
         }
 
         if (includeItems) {
-            query = query.Include(l => l.Items);
+            query = query.Include(l => l.Items)
+                .ThenInclude(i => i.Sources);
         }
 
         return await query
@@ -61,7 +63,8 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
         IQueryable<ShoppingList> query = context.ShoppingLists.AsNoTracking();
 
         if (includeItems) {
-            query = query.Include(l => l.Items);
+            query = query.Include(l => l.Items)
+                .ThenInclude(i => i.Sources);
         }
 
         return await query

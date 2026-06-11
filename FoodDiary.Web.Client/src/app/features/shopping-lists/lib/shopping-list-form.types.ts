@@ -6,6 +6,7 @@ export type ShoppingListItemFormModel = {
     amount: number | null;
     unit: MeasurementUnit | null;
     category: string | null;
+    note: string | null;
 };
 
 export type ShoppingListItemViewModel = {

@@ -39,7 +39,7 @@ public class GenerateShoppingListCommandHandler(
     private static ShoppingList CreateShoppingList(UserId userId, MealPlan plan) {
         var shoppingList = ShoppingList.Create(userId, plan.Name);
         foreach (AggregatedIngredient item in AggregateIngredients(plan).Values.OrderBy(i => i.SortOrder)) {
-            shoppingList.AddItem(
+            ShoppingListItem shoppingListItem = shoppingList.AddItem(
                 item.Name,
                 item.ProductId,
                 Math.Round(item.TotalAmount, 1, MidpointRounding.ToEven),
@@ -47,6 +47,18 @@ public class GenerateShoppingListCommandHandler(
                 item.Category,
                 isChecked: false,
                 item.SortOrder);
+
+            foreach (IngredientSource source in item.Sources) {
+                shoppingListItem.AddMealPlanSource(
+                    plan.Id,
+                    source.MealPlanMealId,
+                    source.RecipeId,
+                    source.Label,
+                    source.DayNumber,
+                    source.MealType,
+                    Math.Round(source.Amount, 1, MidpointRounding.ToEven),
+                    source.Unit);
+            }
         }
 
         return shoppingList;
@@ -76,8 +88,19 @@ public class GenerateShoppingListCommandHandler(
                         ProductId productId = ingredient.ProductId.Value;
                         double scaledAmount = ingredient.Amount * servingsMultiplier;
 
+                        var source = new IngredientSource {
+                            MealPlanMealId = meal.Id,
+                            RecipeId = recipe.Id,
+                            Label = recipe.Name,
+                            DayNumber = day.DayNumber,
+                            MealType = meal.MealType.ToString(),
+                            Amount = scaledAmount,
+                            Unit = ingredient.Product.BaseUnit,
+                        };
+
                         if (aggregated.TryGetValue(productId, out AggregatedIngredient? existing)) {
                             existing.TotalAmount += scaledAmount;
+                            existing.Sources.Add(source);
                         } else {
                             aggregated[productId] = new AggregatedIngredient {
                                 ProductId = productId,
@@ -86,6 +109,7 @@ public class GenerateShoppingListCommandHandler(
                                 Category = ingredient.Product.Category,
                                 TotalAmount = scaledAmount,
                                 SortOrder = sortOrder++,
+                                Sources = [source],
                             };
                         }
                     }
@@ -103,5 +127,16 @@ public class GenerateShoppingListCommandHandler(
         public string? Category { get; init; }
         public double TotalAmount { get; set; }
         public int SortOrder { get; init; }
+        public required List<IngredientSource> Sources { get; init; }
+    }
+
+    private sealed class IngredientSource {
+        public required MealPlanMealId MealPlanMealId { get; init; }
+        public required RecipeId RecipeId { get; init; }
+        public required string Label { get; init; }
+        public required int DayNumber { get; init; }
+        public required string MealType { get; init; }
+        public required double Amount { get; init; }
+        public Domain.Enums.MeasurementUnit? Unit { get; init; }
     }
 }

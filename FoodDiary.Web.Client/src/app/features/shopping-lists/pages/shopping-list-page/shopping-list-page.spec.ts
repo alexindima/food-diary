@@ -22,7 +22,11 @@ const SHOPPING_LIST_ITEM: ShoppingListItem = {
     amount: 12,
     unit: 'pcs',
     category: 'Dairy',
+    aisle: 'Dairy',
+    note: null,
     isChecked: false,
+    checkedOnUtc: null,
+    sources: [],
     sortOrder: 1,
 };
 
@@ -143,6 +147,7 @@ describe('ShoppingListPageComponent form and item actions', () => {
             amount: 2,
             unit: MeasurementUnit.ML,
             category: ' Dairy ',
+            note: ' Carton ',
         });
 
         component['addItem']();
@@ -152,14 +157,40 @@ describe('ShoppingListPageComponent form and item actions', () => {
             amount: 2,
             unit: MeasurementUnit.ML,
             category: 'Dairy',
+            note: 'Carton',
         });
         expect(component['itemFormModel']().name).toBe('');
         expect(component['itemFormModel']().amount).toBeNull();
     });
 
+    it('adds an item from quick add input submit', async () => {
+        const { facade, fixture } = await setupShoppingListPageAsync();
+        const host = fixture.nativeElement as HTMLElement;
+        const nameInput = host.querySelector<HTMLInputElement>('.shopping-list__quick-add-input input');
+        const submitButton = host.querySelector<HTMLButtonElement>('.shopping-list__quick-add-button button');
+
+        if (nameInput === null || submitButton === null) {
+            throw new Error('Expected quick add controls to exist.');
+        }
+
+        nameInput.value = 'Wine';
+        nameInput.dispatchEvent(new Event('input', { bubbles: true }));
+        fixture.detectChanges();
+
+        submitButton.click();
+
+        expect(facade.addItem).toHaveBeenCalledWith({
+            name: 'Wine',
+            amount: null,
+            unit: null,
+            category: null,
+            note: null,
+        });
+    });
+
     it('does not add invalid or blank items', async () => {
         const { component, facade } = await setupShoppingListPageAsync();
-        component['itemFormModel'].set({ name: '   ', amount: null, unit: null, category: null });
+        component['itemFormModel'].set({ name: '   ', amount: null, unit: null, category: null, note: null });
 
         component['addItem']();
 

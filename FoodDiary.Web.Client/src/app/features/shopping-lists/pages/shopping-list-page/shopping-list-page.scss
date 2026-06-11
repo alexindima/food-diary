@@ -367,9 +367,9 @@
 
     &__panel {
         display: grid;
-        grid-template-columns: minmax(260px, 340px) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr);
         align-items: start;
-        gap: var(--fd-space-md);
+        gap: var(--fd-space-sm);
     }
 
     &__add-form {
@@ -386,6 +386,38 @@
         fd-ui-select {
             width: 100%;
         }
+    }
+
+    &__quick-add-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto auto;
+        align-items: end;
+        gap: var(--fd-space-xs);
+    }
+
+    &__quick-add-input {
+        min-width: 0;
+    }
+
+    &__details-button {
+        --fd-button-width: var(--fd-size-control-lg);
+        --fd-button-min-width: var(--fd-size-control-lg);
+        --fd-button-height: var(--fd-size-control-lg);
+        --fd-button-height-explicit: var(--fd-size-control-lg);
+        --fd-button-padding-x: 0;
+        --fd-button-border-radius: var(--fd-radius-md);
+        --fd-button-icon-size: var(--fd-size-icon-md);
+    }
+
+    &__quick-add-button {
+        align-self: end;
+        min-width: 112px;
+    }
+
+    &__add-details {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: var(--fd-space-sm);
     }
 
     &__add-head {
@@ -610,6 +642,19 @@
         &__panel {
             grid-template-columns: 1fr;
             gap: var(--fd-space-sm);
+        }
+
+        &__quick-add-row {
+            grid-template-columns: minmax(0, 1fr) auto;
+        }
+
+        &__quick-add-button {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        &__add-details {
+            grid-template-columns: 1fr;
         }
 
         &__add-form,

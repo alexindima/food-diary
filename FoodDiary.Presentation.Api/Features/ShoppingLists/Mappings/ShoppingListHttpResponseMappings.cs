@@ -32,8 +32,22 @@ public static class ShoppingListHttpResponseMappings {
             model.Amount,
             model.Unit,
             model.Category,
+            model.Aisle,
+            model.Note,
             model.IsChecked,
-            model.SortOrder
+            model.CheckedOnUtc,
+            model.SortOrder,
+            model.Sources.Select(source => new ShoppingListItemSourceHttpResponse(
+                source.Id,
+                source.SourceType,
+                source.MealPlanId,
+                source.MealPlanMealId,
+                source.RecipeId,
+                source.Label,
+                source.DayNumber,
+                source.MealType,
+                source.Amount,
+                source.Unit)).ToList()
         );
     }
 }

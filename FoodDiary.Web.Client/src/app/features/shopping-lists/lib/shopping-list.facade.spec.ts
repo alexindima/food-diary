@@ -245,5 +245,6 @@ function addMilk(facade: ShoppingListFacade): void {
         amount: 1,
         unit: MeasurementUnit.ML,
         category: 'Dairy',
+        note: null,
     });
 }

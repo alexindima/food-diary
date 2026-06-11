@@ -19,7 +19,11 @@ const ITEM: ShoppingListItem = {
     amount: 2,
     unit: MeasurementUnit.ML,
     category: 'Dairy',
+    aisle: 'Dairy',
+    note: null,
     isChecked: false,
+    checkedOnUtc: null,
+    sources: [],
     sortOrder: 5,
 };
 const VALID_DECIMAL_AMOUNT = 1.5;
@@ -65,12 +69,16 @@ describe('shopping-list-item.mapper', () => {
 
     it('should map item to update dto with rebuilt sort order', () => {
         expect(mapShoppingListItemToDto(ITEM, 0)).toEqual({
+            id: 'item-1',
             productId: 'product-1',
             name: 'Milk',
             amount: 2,
             unit: MeasurementUnit.ML,
             category: 'Dairy',
+            aisle: 'Dairy',
+            note: null,
             isChecked: false,
+            checkedOnUtc: null,
             sortOrder: 1,
         });
     });
