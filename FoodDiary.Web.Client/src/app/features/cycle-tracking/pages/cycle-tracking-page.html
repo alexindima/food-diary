@@ -196,10 +196,18 @@
                     </form>
 
                     <div class="cycle-tracking__factor-list fd-stack fd-gap-xs">
-                        @for (factor of factors(); track factor.id) {
+                        @for (factor of factorItems(); track factor.id) {
                             <div class="cycle-tracking__factor-item">
-                                <span class="fd-ui-title-sm">{{ factorLabel(factor) }}</span>
-                                <span class="fd-ui-body-sm">{{ factor.startDate | date: 'mediumDate' }}</span>
+                                <div class="cycle-tracking__factor-copy fd-stack fd-gap-2xs">
+                                    <span class="fd-ui-title-sm">{{ factor.labelKey | translate }}</span>
+                                    <span class="fd-ui-body-sm">{{ factor.dateRangeLabel }}</span>
+                                </div>
+                                <span
+                                    class="cycle-tracking__factor-status fd-ui-pill fd-ui-pill--compact fd-ui-meta-text"
+                                    [class.cycle-tracking__factor-status--ended]="!factor.isActive"
+                                >
+                                    {{ factor.statusLabelKey | translate }}
+                                </span>
                             </div>
                         } @empty {
                             <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_FACTORS' | translate }}</p>

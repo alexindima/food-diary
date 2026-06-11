@@ -59,6 +59,7 @@
 
     &__factor-item {
         display: flex;
+        align-items: center;
         justify-content: space-between;
         gap: var(--fd-space-sm);
         min-width: 0;
@@ -69,6 +70,22 @@
 
         > * {
             min-width: 0;
+        }
+    }
+
+    &__factor-copy {
+        min-width: 0;
+    }
+
+    &__factor-status {
+        flex: 0 0 auto;
+        --fd-pill-bg: var(--fd-bg-category-teal);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-teal-700);
+
+        &--ended {
+            --fd-pill-bg: var(--fd-bg-muted-tint);
+            --fd-pill-color: var(--fd-color-slate-600);
         }
     }
 

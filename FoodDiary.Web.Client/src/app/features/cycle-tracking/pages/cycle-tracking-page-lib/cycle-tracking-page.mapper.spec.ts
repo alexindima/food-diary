@@ -9,7 +9,7 @@ import {
     OVULATION_TEST_RESULT_POSITIVE,
 } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
-import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
+import { buildCycleCurrentView, buildCycleDayItems, buildCycleFactorItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
 
 const CYCLE: CycleResponse = {
     id: 'cycle-1',
@@ -33,6 +33,14 @@ const CYCLE: CycleResponse = {
             type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
             startDate: '2026-04-02T00:00:00.000Z',
             endDate: null,
+            notes: null,
+        },
+        {
+            id: 'factor-2',
+            cycleProfileId: 'cycle-1',
+            type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
+            startDate: '2026-03-02T00:00:00.000Z',
+            endDate: '2026-03-10T00:00:00.000Z',
             notes: null,
         },
     ],
@@ -91,6 +99,7 @@ describe('cycle tracking page mapper', () => {
         );
         expect(view?.activeFactorItems).toEqual([
             {
+                id: 'factor-1',
                 labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
                 startDateLabel: 'Apr 2',
             },
@@ -152,6 +161,29 @@ describe('cycle tracking page mapper', () => {
         expect(view?.nextPeriodRangeLabel).toBe('not-a-date');
         expect(view?.ovulationRangeLabel).toBe('');
         expect(view?.pmsRangeLabel).toBe('');
+    });
+});
+
+describe('cycle tracking factor mapper', () => {
+    it('builds factor list items with date ranges and status labels', () => {
+        const view = buildCycleFactorItems(CYCLE.factors, 'en-US');
+
+        expect(view).toEqual([
+            {
+                id: 'factor-1',
+                labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+                dateRangeLabel: 'Apr 2',
+                statusLabelKey: 'CYCLE_TRACKING.FACTOR_ACTIVE',
+                isActive: true,
+            },
+            {
+                id: 'factor-2',
+                labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
+                dateRangeLabel: 'Mar 2 - Mar 10',
+                statusLabelKey: 'CYCLE_TRACKING.FACTOR_ENDED',
+                isActive: false,
+            },
+        ]);
     });
 });
 

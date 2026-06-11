@@ -22,9 +22,9 @@
 
         @if (currentCycle.activeFactorItems.length > 0) {
             <div class="cycle-tracking__current-factors fd-row fd-gap-xs">
-                @for (factor of currentCycle.activeFactorItems; track factor.labelKey) {
+                @for (factor of currentCycle.activeFactorItems; track factor.id) {
                     <span class="cycle-tracking__current-factor fd-ui-pill fd-ui-pill--compact fd-ui-pill--primary fd-ui-meta-text">
-                        {{ factor.labelKey | translate }} · {{ factor.startDateLabel }}
+                        {{ factor.labelKey | translate }} {{ 'CYCLE_TRACKING.FACTOR_SINCE' | translate: { date: factor.startDateLabel } }}
                     </span>
                 }
             </div>

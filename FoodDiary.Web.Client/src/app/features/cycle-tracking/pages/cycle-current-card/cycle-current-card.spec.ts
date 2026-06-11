@@ -72,6 +72,7 @@ describe('CycleCurrentCardComponent', () => {
             ],
             activeFactorItems: [
                 {
+                    id: 'factor-1',
                     labelKey: 'CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION',
                     startDateLabel: 'Apr 2',
                 },
@@ -99,6 +100,7 @@ describe('CycleCurrentCardComponent', () => {
         expect(getText()).toContain('CYCLE_TRACKING.STARTED_SUMMARY');
         expect(getText()).toContain('CYCLE_TRACKING.MODE_PERIOD_TRACKING');
         expect(getText()).toContain('CYCLE_TRACKING.FACTOR_HORMONAL_CONTRACEPTION');
+        expect(getText()).toContain('CYCLE_TRACKING.FACTOR_SINCE');
         expect(getText()).toContain('Apr 29 - May 1');
         expect(getText()).toContain('Apr 15 - Apr 16');
         expect(getText()).toContain('Apr 23 - Apr 28');

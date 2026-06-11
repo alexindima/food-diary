@@ -15,8 +15,17 @@ export type CycleSummaryItemViewModel = {
 };
 
 export type CycleActiveFactorViewModel = {
+    id: string;
     labelKey: string;
     startDateLabel: string;
+};
+
+export type CycleFactorListItemViewModel = {
+    id: string;
+    labelKey: string;
+    dateRangeLabel: string;
+    statusLabelKey: string;
+    isActive: boolean;
 };
 
 export type CyclePredictionViewModel = {

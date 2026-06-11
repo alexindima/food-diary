@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField } from '@angular/forms/signals';
@@ -36,7 +35,6 @@ import {
     CYCLE_TRACKING_MODE_POSTPARTUM_LACTATION,
     CYCLE_TRACKING_MODE_PREGNANCY,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
-    type CycleFactor,
     type CycleFactorType,
     type CycleFlowLevel,
     type CycleTrackingMode,
@@ -48,13 +46,17 @@ import {
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
 import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from './cycle-tracking-page-lib/cycle-tracking-page.config';
-import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
+import {
+    buildCycleCurrentView,
+    buildCycleDayItems,
+    buildCycleFactorItems,
+    buildCyclePredictionView,
+} from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
     imports: [
         TranslatePipe,
-        DatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -100,6 +102,7 @@ export class CycleTrackingPageComponent {
     protected readonly dayItems = computed(() =>
         buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.fertilitySignals(), this.appLocale()),
     );
+    protected readonly factorItems = computed(() => buildCycleFactorItems(this.factors(), this.appLocale()));
     protected readonly modeOptions = computed<Array<FdUiSelectOption<CycleTrackingMode>>>(() => {
         this.languageVersion();
         return [
@@ -164,10 +167,6 @@ export class CycleTrackingPageComponent {
 
     protected saveFactor(): void {
         this.facade.saveFactor();
-    }
-
-    protected factorLabel(factor: CycleFactor): string {
-        return this.factorTypeOptions().find(option => option.value === factor.type)?.label ?? String(factor.type);
     }
 
     protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {

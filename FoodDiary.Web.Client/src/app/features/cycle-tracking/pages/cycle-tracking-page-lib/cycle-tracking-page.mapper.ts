@@ -30,6 +30,7 @@ import type {
     CycleActiveFactorViewModel,
     CycleDaySignalItemViewModel,
     CycleDayViewModel,
+    CycleFactorListItemViewModel,
     CyclePredictionViewModel,
     CycleSummaryItemViewModel,
     CycleViewModel,
@@ -102,6 +103,21 @@ export function buildCycleDayItems(
                     dayBleeding.find(entry => entry.notes !== null && entry.notes !== undefined)?.notes ?? fertilitySignal?.notes ?? null,
                 accentColor: hasBleeding ? PERIOD_DAY_ACCENT_COLOR : DEFAULT_DAY_ACCENT_COLOR,
                 badgeLabelKey: hasBleeding ? 'CYCLE_TRACKING.BADGE_PERIOD' : 'CYCLE_TRACKING.BADGE_TRACKED',
+            };
+        });
+}
+
+export function buildCycleFactorItems(factors: CycleFactor[], locale: string): CycleFactorListItemViewModel[] {
+    return [...factors]
+        .sort((a, b) => b.startDate.localeCompare(a.startDate))
+        .map(factor => {
+            const isActive = factor.endDate === null || factor.endDate === undefined;
+            return {
+                id: factor.id,
+                labelKey: getFactorLabelKey(factor.type),
+                dateRangeLabel: formatFactorDateRange(factor, locale),
+                statusLabelKey: isActive ? 'CYCLE_TRACKING.FACTOR_ACTIVE' : 'CYCLE_TRACKING.FACTOR_ENDED',
+                isActive,
             };
         });
 }
@@ -190,9 +206,14 @@ function buildActiveFactorItems(factors: CycleFactor[], locale: string): CycleAc
         .filter(factor => factor.endDate === null || factor.endDate === undefined)
         .sort((a, b) => b.startDate.localeCompare(a.startDate))
         .map(factor => ({
+            id: factor.id,
             labelKey: getFactorLabelKey(factor.type),
             startDateLabel: formatCycleDate(factor.startDate, locale, SHORT_DATE_OPTIONS, UTC_TIME_ZONE),
         }));
+}
+
+function formatFactorDateRange(factor: CycleFactor, locale: string): string {
+    return formatRange(factor.startDate, factor.endDate, locale);
 }
 
 function getModeLabelKey(mode: CycleTrackingMode): string {
