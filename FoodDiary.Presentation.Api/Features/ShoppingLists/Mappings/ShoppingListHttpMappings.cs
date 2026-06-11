@@ -37,11 +37,15 @@ public static class ShoppingListHttpMappings {
 
     private static ShoppingListItemInput ToInput(ShoppingListItemHttpRequest request) =>
         new(
+            request.Id,
             request.ProductId,
             request.Name,
             request.Amount,
             request.Unit,
             request.Category,
+            request.Aisle,
+            request.Note,
             request.IsChecked,
+            request.CheckedOnUtc,
             request.SortOrder);
 }

@@ -15,7 +15,11 @@ const CHECKED_ITEM: ShoppingListItem = {
     amount: 2,
     unit: 'l',
     category: 'Dairy',
+    aisle: 'Dairy',
+    note: null,
     isChecked: true,
+    checkedOnUtc: null,
+    sources: [],
     sortOrder: 1,
 };
 
@@ -25,6 +29,7 @@ function createItemForm(): FieldTree<ShoppingListItemFormModel> {
         amount: null,
         unit: null,
         category: null,
+        note: null,
     });
 
     return TestBed.runInInjectionContext(() =>

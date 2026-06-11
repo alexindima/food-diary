@@ -162,13 +162,17 @@ public sealed class PresentationPayloadContractIntegrationTests(
                 "Weekend Shopping",
                 [
                     new ShoppingListItemHttpRequest(
+                        Id: null,
                         ProductId: null,
-                        "Milk",
-                        2,
-                        "Ml",
-                        "Dairy",
+                        Name: "Milk",
+                        Amount: 2,
+                        Unit: "Ml",
+                        Category: "Dairy",
+                        Aisle: null,
+                        Note: null,
                         IsChecked: false,
-                        1),
+                        CheckedOnUtc: null,
+                        SortOrder: 1),
                 ]));
         Assert.Equal(HttpStatusCode.Created, createResponse.StatusCode);
         Assert.NotNull(createResponse.Headers.Location);

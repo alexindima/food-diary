@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Products.Common;
+﻿using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
@@ -259,7 +259,7 @@ public class ShoppingListsFeatureTests {
                 user.Id.Value,
                 list.Id.Value,
                 Name: null,
-                [new ShoppingListItemInput(ProductId.New().Value, Name: null, 1, Unit: null, Category: null, IsChecked: false, SortOrder: null)]),
+                [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -296,8 +296,8 @@ public class ShoppingListsFeatureTests {
                 list.Id.Value,
                 "  Weekly groceries  ",
                 [
-                    new ShoppingListItemInput(product.Id.Value, Name: null, 2, Unit: null, Category: null, IsChecked: true, SortOrder: null),
-                    new ShoppingListItemInput(ProductId: null, "  Apples  ", 3, "Pcs", "Fruit", IsChecked: false, 7),
+                    new ShoppingListItemInput(Id: null, ProductId: product.Id.Value, Name: null, Amount: 2, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: null, SortOrder: null),
+                    new ShoppingListItemInput(Id: null, ProductId: null, Name: "  Apples  ", Amount: 3, Unit: "Pcs", Category: "Fruit", Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 7),
                 ]),
             CancellationToken.None);
 
@@ -398,7 +398,7 @@ public class ShoppingListsFeatureTests {
             new CreateShoppingListCommand(
                 user.Id.Value,
                 "Weekly",
-                [new ShoppingListItemInput(ProductId.New().Value, Name: null, 1, Unit: null, Category: null, IsChecked: false, SortOrder: null)]),
+                [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)]),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -432,8 +432,8 @@ public class ShoppingListsFeatureTests {
                 user.Id.Value,
                 "  Weekly  ",
                 [
-                    new ShoppingListItemInput(product.Id.Value, Name: null, 2, Unit: null, Category: null, IsChecked: true, SortOrder: null),
-                    new ShoppingListItemInput(ProductId: null, "  Apples  ", 3, "Pcs", "Fruit", IsChecked: false, 9),
+                    new ShoppingListItemInput(Id: null, ProductId: product.Id.Value, Name: null, Amount: 2, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: true, CheckedOnUtc: null, SortOrder: null),
+                    new ShoppingListItemInput(Id: null, ProductId: null, Name: "  Apples  ", Amount: 3, Unit: "Pcs", Category: "Fruit", Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 9),
                 ]),
             CancellationToken.None);
 
@@ -455,7 +455,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithInvalidUnit_FailsWithUnitField() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(ProductId: null, "Milk", 1, "invalid_unit", Category: null, IsChecked: false, 1),
+            new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 1, Unit: "invalid_unit", Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -471,7 +471,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankUnit_CreatesCustomItemWithoutUnit() {
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
-            [new ShoppingListItemInput(ProductId: null, "Milk", 1, " ", Category: null, IsChecked: false, SortOrder: null)],
+            [new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 1, Unit: " ", Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)],
             UserId.New(),
             new NoopProductLookupService(),
             CancellationToken.None);
@@ -485,7 +485,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithNonPositiveAmount_Fails() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(ProductId: null, "Milk", 0, Unit: null, Category: null, IsChecked: false, 1),
+            new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: 0, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -504,7 +504,7 @@ public class ShoppingListsFeatureTests {
     [InlineData(double.NegativeInfinity)]
     public async Task ShoppingListItemBuilder_WithNonFiniteAmount_Fails(double amount) {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(ProductId: null, "Milk", amount, Unit: null, Category: null, IsChecked: false, 1),
+            new ShoppingListItemInput(Id: null, ProductId: null, Name: "Milk", Amount: amount, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -521,7 +521,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithEmptyProductId_FailsWithValidationError() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(Guid.Empty, Name: null, 1, Unit: null, Category: null, IsChecked: false, 1),
+            new ShoppingListItemInput(Id: null, ProductId: Guid.Empty, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -550,7 +550,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task ShoppingListItemBuilder_WithBlankCustomName_FailsWithNameRequired() {
         ShoppingListItemInput[] items = [
-            new ShoppingListItemInput(ProductId: null, "   ", 1, Unit: null, Category: null, IsChecked: false, SortOrder: null),
+            new ShoppingListItemInput(Id: null, ProductId: null, Name: "   ", Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null),
         ];
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
@@ -583,7 +583,7 @@ public class ShoppingListsFeatureTests {
 
         Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
             [
-                new ShoppingListItemInput(product.Id.Value, Name: null, 1, Unit: null, "Sale", IsChecked: false, 0),
+                new ShoppingListItemInput(Id: null, ProductId: product.Id.Value, Name: null, Amount: 1, Unit: null, Category: "Sale", Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 0),
             ],
             userId,
             new ProductLookupService(product),

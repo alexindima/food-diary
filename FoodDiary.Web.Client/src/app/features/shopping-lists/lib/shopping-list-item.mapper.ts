@@ -31,9 +31,8 @@ export function formatShoppingListItemMeta(item: ShoppingListItem, translate: Sh
         parts.push(unitLabel !== null ? `${item.amount} ${unitLabel}` : `${item.amount}`);
     }
 
-    if (item.category !== null && item.category !== undefined && item.category.length > 0) {
-        parts.push(item.category);
-    }
+    appendTextPart(parts, item.category);
+    appendTextPart(parts, item.sources?.[0]?.label);
 
     return parts.join(' - ');
 }
@@ -56,12 +55,16 @@ export function normalizeShoppingListAmount(value: number | null): number | null
 
 export function mapShoppingListItemToDto(item: ShoppingListItem, index: number): ShoppingListItemDto {
     return {
+        id: isTemporaryId(item.id) ? null : item.id,
         productId: item.productId ?? null,
         name: item.name,
         amount: item.amount ?? null,
         unit: item.unit ?? null,
         category: item.category ?? null,
+        aisle: item.aisle ?? item.category ?? null,
+        note: item.note ?? null,
         isChecked: item.isChecked,
+        checkedOnUtc: item.checkedOnUtc ?? null,
         sortOrder: index + 1,
     };
 }
@@ -74,4 +77,14 @@ function getUnitLabel(unit: MeasurementUnit | string | null | undefined, transla
     const key = `GENERAL.UNITS.${unit}`;
     const translated = translate(key);
     return translated === key ? unit : translated;
+}
+
+function appendTextPart(parts: string[], value: string | null | undefined): void {
+    if (value !== null && value !== undefined && value.length > 0) {
+        parts.push(value);
+    }
+}
+
+function isTemporaryId(id: string): boolean {
+    return id.startsWith('temp-');
 }

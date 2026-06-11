@@ -8,5 +8,9 @@ public sealed record ShoppingListItemModel(
     double? Amount,
     string? Unit,
     string? Category,
+    string? Aisle,
+    string? Note,
     bool IsChecked,
-    int SortOrder);
+    DateTime? CheckedOnUtc,
+    int SortOrder,
+    IReadOnlyList<ShoppingListItemSourceModel> Sources);

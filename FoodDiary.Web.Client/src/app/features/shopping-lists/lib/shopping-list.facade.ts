@@ -15,6 +15,7 @@ export type ShoppingListDraftItem = {
     amount: number | null;
     unit: MeasurementUnit | null;
     category: string | null;
+    note: string | null;
 };
 
 @Service()
@@ -144,8 +145,12 @@ export class ShoppingListFacade {
                 amount: normalizeShoppingListAmount(draft.amount),
                 unit: draft.unit ?? null,
                 category: draft.category?.trim() ?? null,
+                aisle: draft.category?.trim() ?? null,
+                note: draft.note?.trim() ?? null,
                 productId: null,
                 isChecked: false,
+                checkedOnUtc: null,
+                sources: [],
                 sortOrder: this.items().length + 1,
             },
         ];
@@ -167,7 +172,15 @@ export class ShoppingListFacade {
     }
 
     public toggleItemChecked(itemId: string, checked: boolean): void {
-        const nextItems = this.items().map(entry => (entry.id === itemId ? { ...entry, isChecked: checked } : entry));
+        const nextItems = this.items().map(entry =>
+            entry.id === itemId
+                ? {
+                      ...entry,
+                      isChecked: checked,
+                      checkedOnUtc: checked ? new Date().toISOString() : null,
+                  }
+                : entry,
+        );
         this.items.set(nextItems);
         this.scheduleSave();
     }

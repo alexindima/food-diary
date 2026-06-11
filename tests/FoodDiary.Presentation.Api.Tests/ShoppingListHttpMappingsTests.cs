@@ -58,7 +58,18 @@ public sealed class ShoppingListHttpMappingsTests {
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
         var request = new CreateShoppingListHttpRequest("Groceries", new List<ShoppingListItemHttpRequest> {
-            new(productId, "Milk", 2.0, "L", "Dairy", false, 1),
+            new(
+                Id: null,
+                ProductId: productId,
+                Name: "Milk",
+                Amount: 2.0,
+                Unit: "L",
+                Category: "Dairy",
+                Aisle: null,
+                Note: null,
+                IsChecked: false,
+                CheckedOnUtc: null,
+                SortOrder: 1),
         });
 
         CreateShoppingListCommand command = request.ToCommand(userId);
@@ -86,7 +97,18 @@ public sealed class ShoppingListHttpMappingsTests {
         var userId = Guid.NewGuid();
         var listId = Guid.NewGuid();
         var request = new UpdateShoppingListHttpRequest("Updated Name", new List<ShoppingListItemHttpRequest> {
-            new(null, "Eggs", 12, "pcs", "Protein", true, 2),
+            new(
+                Id: null,
+                ProductId: null,
+                Name: "Eggs",
+                Amount: 12,
+                Unit: "pcs",
+                Category: "Protein",
+                Aisle: null,
+                Note: null,
+                IsChecked: true,
+                CheckedOnUtc: null,
+                SortOrder: 2),
         });
 
         UpdateShoppingListCommand command = request.ToCommand(userId, listId);
@@ -119,7 +141,20 @@ public sealed class ShoppingListHttpMappingsTests {
         var productId = Guid.NewGuid();
         DateTime createdAt = DateTime.UtcNow;
         var items = new List<ShoppingListItemModel> {
-            new(itemId, listId, productId, "Bread", 1, "loaf", "Bakery", false, 0),
+            new(
+                itemId,
+                listId,
+                productId,
+                "Bread",
+                1,
+                "loaf",
+                "Bakery",
+                Aisle: null,
+                Note: null,
+                IsChecked: false,
+                CheckedOnUtc: null,
+                SortOrder: 0,
+                Sources: []),
         };
         var model = new ShoppingListModel(listId, "Shopping", createdAt, items);
 

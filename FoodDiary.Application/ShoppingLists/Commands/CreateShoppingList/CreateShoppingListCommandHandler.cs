@@ -54,7 +54,11 @@ public class CreateShoppingListCommandHandler(
                 item.Unit,
                 item.Category,
                 item.IsChecked,
-                item.SortOrder);
+                item.SortOrder,
+                item.Aisle,
+                item.Note,
+                item.CheckedOnUtc,
+                item.Id);
         }
 
         await shoppingListRepository.AddAsync(list, cancellationToken).ConfigureAwait(false);

@@ -161,14 +161,18 @@
     "name": "Weekend Shopping",
     "itemsCount": 1,
     "itemKeys": [
+      "aisle",
       "amount",
       "category",
+      "checkedOnUtc",
       "id",
       "isChecked",
       "name",
+      "note",
       "productId",
       "shoppingListId",
       "sortOrder",
+      "sources",
       "unit"
     ]
   },

@@ -70,6 +70,7 @@ export class ShoppingListPageComponent {
         amount: null,
         unit: null,
         category: null,
+        note: null,
     });
     protected readonly listSelectForm = form(this.listSelectModel);
     protected readonly itemForm = form(this.itemFormModel, path => {
@@ -124,6 +125,7 @@ export class ShoppingListPageComponent {
             amount: value.amount,
             unit: value.unit ?? null,
             category: value.category?.trim() ?? null,
+            note: value.note?.trim() ?? null,
         });
 
         this.itemFormModel.set({
@@ -131,6 +133,7 @@ export class ShoppingListPageComponent {
             amount: null,
             unit: null,
             category: null,
+            note: null,
         });
     }
 

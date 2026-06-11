@@ -55,6 +55,18 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
         RaiseDomainEvent(new ShoppingListItemsClearedDomainEvent(Id, clearedItemsCount));
     }
 
+    public ShoppingListItem? FindItem(ShoppingListItemId id) =>
+        _items.FirstOrDefault(item => item.Id == id);
+
+    public void RemoveItemsExcept(IReadOnlySet<ShoppingListItemId> itemIdsToKeep) {
+        int removedCount = _items.RemoveAll(item => !itemIdsToKeep.Contains(item.Id));
+        if (removedCount == 0) {
+            return;
+        }
+
+        SetModified();
+    }
+
     public ShoppingListItem AddItem(
         string name,
         ProductId? productId,
@@ -62,7 +74,11 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
         MeasurementUnit? unit,
         string? category,
         bool isChecked,
-        int sortOrder) {
+        int sortOrder,
+        string? aisle = null,
+        string? note = null,
+        DateTime? checkedOnUtc = null,
+        ShoppingListItemId? id = null) {
         var item = ShoppingListItem.Create(
             Id,
             name,
@@ -71,7 +87,11 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
             unit,
             category,
             isChecked,
-            sortOrder);
+            sortOrder,
+            aisle,
+            note,
+            checkedOnUtc,
+            id);
         _items.Add(item);
         SetModified();
         RaiseDomainEvent(new ShoppingListItemAddedDomainEvent(
@@ -82,7 +102,10 @@ public sealed class ShoppingList : AggregateRoot<ShoppingListId> {
             item.Amount,
             item.Unit,
             item.Category,
+            item.Aisle,
+            item.Note,
             item.IsChecked,
+            item.CheckedOnUtc,
             item.SortOrder));
         return item;
     }

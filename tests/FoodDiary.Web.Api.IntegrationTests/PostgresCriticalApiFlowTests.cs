@@ -302,13 +302,17 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
                 "Postgres relational list",
                 [
                     new ShoppingListItemHttpRequest(
-                        product.Id,
-                        "Relational Product",
-                        2,
-                        "pcs",
-                        "Test",
+                        Id: null,
+                        ProductId: product.Id,
+                        Name: "Relational Product",
+                        Amount: 2,
+                        Unit: "pcs",
+                        Category: "Test",
+                        Aisle: null,
+                        Note: null,
                         IsChecked: false,
-                        0),
+                        CheckedOnUtc: null,
+                        SortOrder: 0),
                 ]));
 
         await AssertStatusCodeAsync(HttpStatusCode.Created, createShoppingListResponse);

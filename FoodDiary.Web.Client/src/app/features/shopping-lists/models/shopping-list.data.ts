@@ -15,8 +15,25 @@ export type ShoppingListItem = {
     amount?: number | null;
     unit?: MeasurementUnit | string | null;
     category?: string | null;
+    aisle?: string | null;
+    note?: string | null;
     isChecked: boolean;
+    checkedOnUtc?: string | null;
     sortOrder: number;
+    sources?: ShoppingListItemSource[];
+};
+
+export type ShoppingListItemSource = {
+    id: string;
+    sourceType: string;
+    mealPlanId?: string | null;
+    mealPlanMealId?: string | null;
+    recipeId?: string | null;
+    label: string;
+    dayNumber?: number | null;
+    mealType?: string | null;
+    amount: number;
+    unit?: MeasurementUnit | string | null;
 };
 
 export type ShoppingListSummary = {
@@ -37,11 +54,15 @@ export type ShoppingListUpdateDto = {
 };
 
 export type ShoppingListItemDto = {
+    id?: string | null;
     productId?: string | null;
     name?: string | null;
     amount?: number | null;
     unit?: MeasurementUnit | string | null;
     category?: string | null;
+    aisle?: string | null;
+    note?: string | null;
     isChecked?: boolean;
+    checkedOnUtc?: string | null;
     sortOrder?: number | null;
 };

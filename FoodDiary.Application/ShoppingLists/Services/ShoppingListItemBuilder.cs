@@ -22,6 +22,11 @@ public static class ShoppingListItemBuilder {
             .Select(item => item.ProductId!.Value)
             .ToList();
 
+        if (items.Any(item => item.Id == Guid.Empty)) {
+            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
+                Errors.Validation.Invalid(nameof(ShoppingListItemInput.Id), "Id must not be empty."));
+        }
+
         if (productIds.Any(id => id == Guid.Empty)) {
             return Result.Failure<IReadOnlyList<ShoppingListItemData>>(
                 Errors.Validation.Invalid(nameof(ShoppingListItemInput.ProductId), "ProductId must not be empty."));
@@ -90,12 +95,16 @@ public static class ShoppingListItemBuilder {
         var productId = new ProductId(item.ProductId!.Value);
         Product product = products[productId];
         return new ShoppingListItemData(
+            ToItemId(item.Id),
             product.Name,
             productId,
             item.Amount,
             product.BaseUnit,
             item.Category ?? product.Category,
+            item.Aisle ?? item.Category ?? product.Category,
+            item.Note,
             item.IsChecked,
+            item.CheckedOnUtc,
             ResolveSortOrder(item.SortOrder, index));
     }
 
@@ -110,12 +119,16 @@ public static class ShoppingListItemBuilder {
         }
 
         return Result.Success(new ShoppingListItemData(
+            ToItemId(item.Id),
             item.Name.Trim(),
             ProductId: null,
             item.Amount,
             unitResult.Value,
             item.Category,
+            item.Aisle ?? item.Category,
+            item.Note,
             item.IsChecked,
+            item.CheckedOnUtc,
             ResolveSortOrder(item.SortOrder, index)));
     }
 
@@ -132,4 +145,7 @@ public static class ShoppingListItemBuilder {
 
     private static int ResolveSortOrder(int? sortOrder, int index) =>
         sortOrder is > 0 ? sortOrder.Value : index + 1;
+
+    private static ShoppingListItemId? ToItemId(Guid? id) =>
+        id.HasValue ? new ShoppingListItemId(id.Value) : null;
 }

@@ -29,6 +29,12 @@ internal sealed class ShoppingListItemConfiguration : IEntityTypeConfiguration<S
         builder.Property(e => e.Category)
             .HasMaxLength(128);
 
+        builder.Property(e => e.Aisle)
+            .HasMaxLength(128);
+
+        builder.Property(e => e.Note)
+            .HasMaxLength(512);
+
         builder.Property(e => e.IsChecked)
             .HasDefaultValue(value: false);
 
@@ -40,5 +46,13 @@ internal sealed class ShoppingListItemConfiguration : IEntityTypeConfiguration<S
             .HasForeignKey(e => e.ProductId)
             .IsRequired(false)
             .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasMany(e => e.Sources)
+            .WithOne(s => s.ShoppingListItem)
+            .HasForeignKey(s => s.ShoppingListItemId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.Navigation(e => e.Sources)
+            .UsePropertyAccessMode(PropertyAccessMode.Field);
     }
 }

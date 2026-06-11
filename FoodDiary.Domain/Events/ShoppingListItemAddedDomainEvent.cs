@@ -13,7 +13,10 @@ public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
         double? amount,
         MeasurementUnit? unit,
         string? category,
+        string? aisle,
+        string? note,
         bool isChecked,
+        DateTime? checkedOnUtc,
         int sortOrder,
         DateTime? occurredOnUtcOverride = null) {
         ShoppingListId = shoppingListId;
@@ -23,7 +26,10 @@ public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
         Amount = amount;
         Unit = unit;
         Category = category;
+        Aisle = aisle;
+        Note = note;
         IsChecked = isChecked;
+        CheckedOnUtc = checkedOnUtc;
         SortOrder = sortOrder;
         OccurredOnUtc = occurredOnUtcOverride ?? DomainTime.UtcNow;
     }
@@ -35,7 +41,10 @@ public sealed record ShoppingListItemAddedDomainEvent : IDomainEvent {
     public double? Amount { get; }
     public MeasurementUnit? Unit { get; }
     public string? Category { get; }
+    public string? Aisle { get; }
+    public string? Note { get; }
     public bool IsChecked { get; }
+    public DateTime? CheckedOnUtc { get; }
     public int SortOrder { get; }
     public DateTime OccurredOnUtc { get; }
 }
