@@ -30,16 +30,16 @@ public class GetCurrentCycleQueryHandler(
             return Result.Failure<CycleModel?>(accessError);
         }
 
-        Cycle? cycle = await cycleRepository.GetLatestAsync(
+        CycleProfile? profile = await cycleRepository.GetCurrentAsync(
             userId,
-            includeDays: true,
+            includeDetails: true,
             cancellationToken: cancellationToken).ConfigureAwait(false);
 
-        if (cycle is null) {
+        if (profile is null) {
             return Result.Success<CycleModel?>(value: null);
         }
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);
-        return Result.Success<CycleModel?>(cycle.ToModel(predictions));
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        return Result.Success<CycleModel?>(profile.ToModel(predictions));
     }
 }

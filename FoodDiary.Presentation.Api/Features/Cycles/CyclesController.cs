@@ -23,11 +23,10 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     public Task<IActionResult> Create([FromCurrentUser] Guid userId, [FromBody] CreateCycleHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
-    [HttpPut("{cycleId:guid}/days")]
-    [ProducesResponseType<CyclePredictionsHttpResponse>(StatusCodes.Status200OK)]
+    [HttpPut("{cycleProfileId:guid}/days")]
+    [ProducesResponseType<CycleLogDayHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
-    public Task<IActionResult> UpsertDay(Guid cycleId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
-        HandleOk(request.ToCommand(userId, cycleId), static value => value.ToHttpResponse());
+    public Task<IActionResult> UpsertDay(Guid cycleProfileId, [FromCurrentUser] Guid userId, [FromBody] UpsertCycleDayHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, cycleProfileId), static value => value.ToHttpResponse());
 }
-

@@ -1,5 +1,4 @@
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
 using FoodDiary.Presentation.Api.Responses;
 
@@ -10,36 +9,80 @@ public static class CycleHttpResponseMappings {
         return new CycleHttpResponse(
             model.Id,
             model.UserId,
-            model.StartDate,
-            model.AverageLength,
+            (int)model.Mode,
+            (int)model.Confidence,
+            model.TrackingStartDate,
+            model.AverageCycleLength,
+            model.AveragePeriodLength,
             model.LutealLength,
+            model.IsRegular,
+            model.IsOnboardingComplete,
+            model.ShowFertilityEstimates,
+            model.DiscreetNotifications,
             model.Notes,
-            model.Days.ToHttpResponseList(ToHttpResponse),
+            model.BleedingEntries.ToHttpResponseList(ToHttpResponse),
+            model.Symptoms.ToHttpResponseList(ToHttpResponse),
+            model.Factors.ToHttpResponseList(ToHttpResponse),
+            model.FertilitySignals.ToHttpResponseList(ToHttpResponse),
             model.Predictions is null
                 ? null
                 : new CyclePredictionsHttpResponse(
-                    model.Predictions.NextPeriodStart,
-                    model.Predictions.OvulationDate,
-                    model.Predictions.PmsStart)
+                    model.Predictions.NextPeriodStartFrom,
+                    model.Predictions.NextPeriodStartTo,
+                    model.Predictions.OvulationFrom,
+                    model.Predictions.OvulationTo,
+                    model.Predictions.PmsWindowStart,
+                    model.Predictions.PmsWindowEnd,
+                    model.Predictions.Confidence,
+                    model.Predictions.Rationale)
         );
     }
 
-    public static CycleDayHttpResponse ToHttpResponse(this CycleDayModel model) {
-        return new CycleDayHttpResponse(
-            model.Id,
-            model.CycleId,
+    public static CycleLogDayHttpResponse ToHttpResponse(this CycleLogDayModel model) =>
+        new(
+            model.CycleProfileId,
             model.Date,
-            model.IsPeriod,
-            new DailySymptomsHttpModel(
-                model.Symptoms.Pain,
-                model.Symptoms.Mood,
-                model.Symptoms.Edema,
-                model.Symptoms.Headache,
-                model.Symptoms.Energy,
-                model.Symptoms.SleepQuality,
-                model.Symptoms.Libido
-            ),
-            model.Notes
-        );
-    }
+            model.BleedingEntries.ToHttpResponseList(ToHttpResponse),
+            model.Symptoms.ToHttpResponseList(ToHttpResponse),
+            model.FertilitySignal?.ToHttpResponse());
+
+    public static BleedingEntryHttpResponse ToHttpResponse(this BleedingEntryModel model) =>
+        new(
+            model.Id,
+            model.CycleProfileId,
+            model.Date,
+            (int)model.Type,
+            (int)model.Flow,
+            model.PainImpact,
+            model.Notes);
+
+    public static CycleSymptomEntryHttpResponse ToHttpResponse(this CycleSymptomEntryModel model) =>
+        new(
+            model.Id,
+            model.CycleProfileId,
+            model.Date,
+            (int)model.Category,
+            model.Intensity,
+            model.Tags,
+            model.Note);
+
+    public static CycleFactorHttpResponse ToHttpResponse(this CycleFactorModel model) =>
+        new(
+            model.Id,
+            model.CycleProfileId,
+            (int)model.Type,
+            model.StartDate,
+            model.EndDate,
+            model.Notes);
+
+    public static FertilitySignalHttpResponse ToHttpResponse(this FertilitySignalModel model) =>
+        new(
+            model.Id,
+            model.CycleProfileId,
+            model.Date,
+            model.BasalBodyTemperatureCelsius,
+            model.OvulationTestResult.HasValue ? (int)model.OvulationTestResult.Value : null,
+            model.CervicalFluid,
+            model.HadSex,
+            model.Notes);
 }

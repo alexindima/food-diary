@@ -6,59 +6,62 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
-    public async Task<Cycle> AddAsync(Cycle cycle, CancellationToken cancellationToken = default) {
-        await context.Cycles.AddAsync(cycle, cancellationToken).ConfigureAwait(false);
+    public async Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+        await context.CycleProfiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return cycle;
+        return profile;
     }
 
-    public async Task UpdateAsync(Cycle cycle, CancellationToken cancellationToken = default) {
-        context.Cycles.Update(cycle);
+    public async Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
+        context.CycleProfiles.Update(profile);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Cycle?> GetByIdAsync(
-        CycleId id,
+    public async Task<CycleProfile?> GetByIdAsync(
+        CycleProfileId id,
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
-        IQueryable<Cycle> query = BuildQuery(includeDays, asTracking)
-            .Where(cycle => cycle.Id == id && cycle.UserId == userId);
+        IQueryable<CycleProfile> query = BuildQuery(includeDetails, asTracking)
+            .Where(profile => profile.Id == id && profile.UserId == userId);
 
         return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Cycle?> GetLatestAsync(
+    public async Task<CycleProfile?> GetCurrentAsync(
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         CancellationToken cancellationToken = default) {
-        IOrderedQueryable<Cycle> query = BuildQuery(includeDays, asTracking: false)
-            .Where(cycle => cycle.UserId == userId)
-            .OrderByDescending(cycle => cycle.StartDate)
-            .ThenByDescending(cycle => cycle.CreatedOnUtc);
+        IOrderedQueryable<CycleProfile> query = BuildQuery(includeDetails, asTracking: false)
+            .Where(profile => profile.UserId == userId)
+            .OrderByDescending(profile => profile.CreatedOnUtc);
 
         return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<IReadOnlyList<Cycle>> GetByUserAsync(
+    public async Task<IReadOnlyList<CycleProfile>> GetByUserAsync(
         UserId userId,
-        bool includeDays = false,
+        bool includeDetails = false,
         CancellationToken cancellationToken = default) {
-        IOrderedQueryable<Cycle> query = BuildQuery(includeDays, asTracking: false)
-            .Where(cycle => cycle.UserId == userId)
-            .OrderByDescending(cycle => cycle.StartDate);
+        IOrderedQueryable<CycleProfile> query = BuildQuery(includeDetails, asTracking: false)
+            .Where(profile => profile.UserId == userId)
+            .OrderByDescending(profile => profile.CreatedOnUtc);
 
         return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private IQueryable<Cycle> BuildQuery(bool includeDays, bool asTracking) {
-        IQueryable<Cycle> query = asTracking
-            ? context.Cycles.AsQueryable()
-            : context.Cycles.AsNoTracking();
+    private IQueryable<CycleProfile> BuildQuery(bool includeDetails, bool asTracking) {
+        IQueryable<CycleProfile> query = asTracking
+            ? context.CycleProfiles.AsQueryable()
+            : context.CycleProfiles.AsNoTracking();
 
-        if (includeDays) {
-            query = query.Include(cycle => cycle.Days);
+        if (includeDetails) {
+            query = query
+                .Include(profile => profile.Factors)
+                .Include(profile => profile.BleedingEntries)
+                .Include(profile => profile.SymptomEntries)
+                .Include(profile => profile.FertilitySignals);
         }
 
         return query;

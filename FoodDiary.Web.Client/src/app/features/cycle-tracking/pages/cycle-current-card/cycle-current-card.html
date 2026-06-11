@@ -12,7 +12,9 @@
                 <span class="cycle-tracking__label fd-ui-summary-surface__label fd-ui-meta-text">{{
                     'CYCLE_TRACKING.STARTED' | translate
                 }}</span>
-                <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body"> {{ currentCycle.startDateLabel }} </strong>
+                <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
+                    {{ currentCycle.trackingStartDateLabel }}
+                </strong>
             </fd-ui-accent-surface>
             <fd-ui-accent-surface
                 class="cycle-tracking__summary-item fd-ui-summary-surface"
@@ -24,7 +26,7 @@
                     'CYCLE_TRACKING.AVG_LENGTH' | translate
                 }}</span>
                 <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                    {{ currentCycle.cycle.averageLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}
+                    {{ currentCycle.cycle.averageCycleLength }} {{ 'CYCLE_TRACKING.DAYS' | translate }}
                 </strong>
             </fd-ui-accent-surface>
             <fd-ui-accent-surface
@@ -54,7 +56,7 @@
                         'CYCLE_TRACKING.PRED_NEXT' | translate
                     }}</span>
                     <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.nextPeriodStartLabel }}
+                        {{ cyclePrediction.nextPeriodRangeLabel }}
                     </strong>
                 </fd-ui-accent-surface>
                 <fd-ui-accent-surface
@@ -67,7 +69,7 @@
                         'CYCLE_TRACKING.PRED_OVULATION' | translate
                     }}</span>
                     <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.ovulationDateLabel }}
+                        {{ cyclePrediction.ovulationRangeLabel }}
                     </strong>
                 </fd-ui-accent-surface>
                 <fd-ui-accent-surface
@@ -80,7 +82,7 @@
                         'CYCLE_TRACKING.PRED_PMS' | translate
                     }}</span>
                     <strong class="cycle-tracking__value fd-ui-summary-surface__value fd-ui-body">
-                        {{ cyclePrediction.pmsStartLabel }}
+                        {{ cyclePrediction.pmsRangeLabel }}
                     </strong>
                 </fd-ui-accent-surface>
             </div>

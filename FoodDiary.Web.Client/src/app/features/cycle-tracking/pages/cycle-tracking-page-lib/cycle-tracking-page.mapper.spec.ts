@@ -1,34 +1,48 @@
 import { describe, expect, it } from 'vitest';
 
-import type { CycleDay, CycleResponse } from '../../models/cycle.data';
+import type { BleedingEntry, CycleResponse, CycleSymptomEntry } from '../../models/cycle.data';
+import { BLEEDING_TYPE_BLEEDING, CYCLE_FLOW_MEDIUM } from '../../models/cycle.data';
 import { DEFAULT_DAY_ACCENT_COLOR, PERIOD_DAY_ACCENT_COLOR } from './cycle-tracking-page.config';
 import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page.mapper';
 
 const CYCLE: CycleResponse = {
     id: 'cycle-1',
     userId: 'user-1',
-    startDate: '2026-04-01T00:00:00.000Z',
-    averageLength: 28,
+    mode: 0,
+    confidence: 1,
+    trackingStartDate: '2026-04-01T00:00:00.000Z',
+    averageCycleLength: 28,
+    averagePeriodLength: 5,
     lutealLength: 14,
-    days: [],
+    isRegular: true,
+    isOnboardingComplete: true,
+    showFertilityEstimates: true,
+    discreetNotifications: true,
+    bleedingEntries: [],
+    symptoms: [],
+    factors: [],
+    fertilitySignals: [],
     predictions: null,
 };
 
-const PERIOD_DAY: CycleDay = {
-    id: 'day-1',
-    cycleId: 'cycle-1',
+const BLEEDING_ENTRY: BleedingEntry = {
+    id: 'bleeding-1',
+    cycleProfileId: 'cycle-1',
     date: '2026-04-02T00:00:00.000Z',
-    isPeriod: true,
-    symptoms: {
-        pain: 5,
-        mood: 3,
-        edema: 1,
-        headache: 2,
-        energy: 4,
-        sleepQuality: 6,
-        libido: 2,
-    },
+    type: BLEEDING_TYPE_BLEEDING,
+    flow: CYCLE_FLOW_MEDIUM,
+    painImpact: 5,
     notes: 'note',
+};
+
+const SYMPTOM_ENTRY: CycleSymptomEntry = {
+    id: 'symptom-1',
+    cycleProfileId: 'cycle-1',
+    date: '2026-04-03T00:00:00.000Z',
+    category: 0,
+    intensity: 4,
+    tags: [],
+    note: null,
 };
 
 describe('cycle tracking page mapper', () => {
@@ -37,7 +51,7 @@ describe('cycle tracking page mapper', () => {
 
         expect(view).toEqual({
             cycle: CYCLE,
-            startDateLabel: 'Apr 1, 2026',
+            trackingStartDateLabel: 'Apr 1, 2026',
         });
     });
 
@@ -48,53 +62,70 @@ describe('cycle tracking page mapper', () => {
     it('builds prediction labels using UTC dates', () => {
         const view = buildCyclePredictionView(
             {
-                nextPeriodStart: '2026-04-29T23:00:00.000Z',
-                ovulationDate: '2026-04-15T00:00:00.000Z',
-                pmsStart: null,
+                nextPeriodStartFrom: '2026-04-29T23:00:00.000Z',
+                nextPeriodStartTo: '2026-05-01T00:00:00.000Z',
+                ovulationFrom: '2026-04-15T00:00:00.000Z',
+                ovulationTo: '2026-04-16T00:00:00.000Z',
+                pmsWindowStart: null,
+                pmsWindowEnd: null,
+                confidence: 'Moderate',
+                rationale: 'Based on recent bleeding entries.',
             },
             'en-US',
         );
 
         expect(view).toEqual({
             prediction: {
-                nextPeriodStart: '2026-04-29T23:00:00.000Z',
-                ovulationDate: '2026-04-15T00:00:00.000Z',
-                pmsStart: null,
+                nextPeriodStartFrom: '2026-04-29T23:00:00.000Z',
+                nextPeriodStartTo: '2026-05-01T00:00:00.000Z',
+                ovulationFrom: '2026-04-15T00:00:00.000Z',
+                ovulationTo: '2026-04-16T00:00:00.000Z',
+                pmsWindowStart: null,
+                pmsWindowEnd: null,
+                confidence: 'Moderate',
+                rationale: 'Based on recent bleeding entries.',
             },
-            nextPeriodStartLabel: 'Apr 29',
-            ovulationDateLabel: 'Apr 15',
-            pmsStartLabel: '',
+            nextPeriodRangeLabel: 'Apr 29 - May 1',
+            ovulationRangeLabel: 'Apr 15 - Apr 16',
+            pmsRangeLabel: '',
+            confidenceLabel: 'Moderate',
         });
     });
 
     it('preserves invalid date values for diagnostics', () => {
         const view = buildCyclePredictionView(
             {
-                nextPeriodStart: 'not-a-date',
-                ovulationDate: '',
-                pmsStart: undefined,
+                nextPeriodStartFrom: 'not-a-date',
+                nextPeriodStartTo: null,
+                ovulationFrom: '',
+                ovulationTo: null,
+                pmsWindowStart: undefined,
+                pmsWindowEnd: undefined,
+                confidence: 'Low',
+                rationale: '',
             },
             'en-US',
         );
 
-        expect(view?.nextPeriodStartLabel).toBe('not-a-date');
-        expect(view?.ovulationDateLabel).toBe('');
-        expect(view?.pmsStartLabel).toBe('');
+        expect(view?.nextPeriodRangeLabel).toBe('not-a-date');
+        expect(view?.ovulationRangeLabel).toBe('');
+        expect(view?.pmsRangeLabel).toBe('');
     });
 
     it('builds day item styling and badges', () => {
-        const nonPeriodDay = { ...PERIOD_DAY, id: 'day-2', isPeriod: false };
+        const items = buildCycleDayItems([BLEEDING_ENTRY], [SYMPTOM_ENTRY], 'en-US');
 
-        const items = buildCycleDayItems([PERIOD_DAY, nonPeriodDay], 'en-US');
+        const bleedingItem = items.find(item => item.dateLabel === 'Apr 2, 2026');
+        const symptomItem = items.find(item => item.dateLabel === 'Apr 3, 2026');
 
-        expect(items[0]).toMatchObject({
+        expect(bleedingItem).toMatchObject({
             dateLabel: 'Apr 2, 2026',
             accentColor: PERIOD_DAY_ACCENT_COLOR,
             badgeLabelKey: 'CYCLE_TRACKING.BADGE_PERIOD',
         });
-        expect(items[1]).toMatchObject({
+        expect(symptomItem).toMatchObject({
             accentColor: DEFAULT_DAY_ACCENT_COLOR,
-            badgeLabelKey: 'CYCLE_TRACKING.BADGE_FOLLICULAR',
+            badgeLabelKey: 'CYCLE_TRACKING.BADGE_TRACKED',
         });
     });
 });

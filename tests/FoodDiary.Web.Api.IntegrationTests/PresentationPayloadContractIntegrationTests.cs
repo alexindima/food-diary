@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json;
 using System.Text.Json.Nodes;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
@@ -191,9 +192,15 @@ public sealed class PresentationPayloadContractIntegrationTests(
         HttpResponseMessage createResponse = await client.PostAsJsonAsync(
             "/api/v1/cycles",
             new CreateCycleHttpRequest(
-                new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
-                28,
-                14,
+                TrackingStartDate: new DateTime(2026, 3, 10, 0, 0, 0, DateTimeKind.Utc),
+                Mode: (int)CycleTrackingMode.PeriodTracking,
+                AverageCycleLength: 28,
+                AveragePeriodLength: 5,
+                LutealLength: 14,
+                IsRegular: true,
+                IsOnboardingComplete: true,
+                ShowFertilityEstimates: true,
+                DiscreetNotifications: true,
                 "Integration cycle"));
         createResponse.EnsureSuccessStatusCode();
 
@@ -429,9 +436,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
         return new JsonObject {
             ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["averageLength"] = root.GetProperty("averageLength").GetInt32(),
+            ["averageCycleLength"] = root.GetProperty("averageCycleLength").GetInt32(),
+            ["averagePeriodLength"] = root.GetProperty("averagePeriodLength").GetInt32(),
             ["lutealLength"] = root.GetProperty("lutealLength").GetInt32(),
-            ["daysCount"] = root.GetProperty("days").GetArrayLength(),
+            ["bleedingEntriesCount"] = root.GetProperty("bleedingEntries").GetArrayLength(),
+            ["symptomsCount"] = root.GetProperty("symptoms").GetArrayLength(),
+            ["factorsCount"] = root.GetProperty("factors").GetArrayLength(),
+            ["fertilitySignalsCount"] = root.GetProperty("fertilitySignals").GetArrayLength(),
             ["predictionKeys"] = ToJsonArray(predictions.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
         };
     }

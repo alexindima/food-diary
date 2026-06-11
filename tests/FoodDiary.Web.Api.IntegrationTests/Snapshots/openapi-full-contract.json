@@ -952,7 +952,7 @@
       ]
     },
     {
-      "Path": "/api/v{version}/cycles/{cycleid}/days",
+      "Path": "/api/v{version}/cycles/{cycleprofileid}/days",
       "Operations": [
         {
           "Method": "put",

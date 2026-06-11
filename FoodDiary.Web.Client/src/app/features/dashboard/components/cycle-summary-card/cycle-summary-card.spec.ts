@@ -14,8 +14,14 @@ describe('CycleSummaryCardComponent', () => {
             startDate: '2026-05-01',
             referenceDate: '2026-05-05',
             predictions: {
-                ovulationDate: null,
-                nextPeriodStart: '2026-05-29',
+                ovulationFrom: null,
+                ovulationTo: null,
+                nextPeriodStartFrom: '2026-05-29',
+                nextPeriodStartTo: '2026-05-31',
+                pmsWindowStart: null,
+                pmsWindowEnd: null,
+                confidence: 'Moderate',
+                rationale: 'Based on recent bleeding entries.',
             },
         });
 

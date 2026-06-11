@@ -4,35 +4,54 @@ import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import { environment } from '../../../../environments/environment';
-import type { CycleDay, CycleResponse } from '../models/cycle.data';
+import {
+    BLEEDING_TYPE_BLEEDING,
+    type CreateCyclePayload,
+    CYCLE_FLOW_MEDIUM,
+    CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    type CycleLogDay,
+    type CycleResponse,
+    type UpsertCycleDayPayload,
+} from '../models/cycle.data';
 import { CyclesService } from './cycles.service';
 
 const BASE_URL = environment.apiUrls.cycles;
 const MOCK_CYCLE: CycleResponse = {
     id: 'c-1',
     userId: 'user-1',
-    startDate: '2026-03-01',
-    averageLength: 28,
+    mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+    confidence: 1,
+    trackingStartDate: '2026-03-01',
+    averageCycleLength: 28,
+    averagePeriodLength: 5,
     lutealLength: 14,
+    isRegular: true,
+    isOnboardingComplete: true,
+    showFertilityEstimates: true,
+    discreetNotifications: true,
     notes: null,
-    days: [],
+    bleedingEntries: [],
+    symptoms: [],
+    factors: [],
+    fertilitySignals: [],
     predictions: null,
 };
-const MOCK_DAY: CycleDay = {
-    id: 'd-1',
-    cycleId: 'c-1',
+const MOCK_DAY: CycleLogDay = {
+    cycleProfileId: 'c-1',
     date: '2026-03-05',
-    isPeriod: true,
-    symptoms: {
-        pain: 2,
-        mood: 3,
-        edema: 0,
-        headache: 1,
-        energy: 3,
-        sleepQuality: 4,
-        libido: 2,
-    },
-    notes: null,
+    bleedingEntries: [
+        {
+            id: 'b-1',
+            cycleProfileId: 'c-1',
+            date: '2026-03-05',
+            type: BLEEDING_TYPE_BLEEDING,
+            flow: CYCLE_FLOW_MEDIUM,
+            painImpact: 2,
+            notes: null,
+        },
+    ],
+    symptoms: [],
+    fertilitySignal: null,
 };
 
 let service: CyclesService;
@@ -74,7 +93,18 @@ describe('CyclesService current cycle', () => {
 
 describe('CyclesService mutations', () => {
     it('should create cycle', () => {
-        const payload = { startDate: '2026-03-01', averageLength: 28, lutealLength: 14, notes: null };
+        const payload: CreateCyclePayload = {
+            trackingStartDate: '2026-03-01',
+            mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
+            averageCycleLength: 28,
+            averagePeriodLength: 5,
+            lutealLength: 14,
+            isRegular: true,
+            isOnboardingComplete: true,
+            showFertilityEstimates: true,
+            discreetNotifications: true,
+            notes: null,
+        };
 
         service.create(payload).subscribe(cycle => {
             expect(cycle).toEqual(MOCK_CYCLE);
@@ -87,19 +117,17 @@ describe('CyclesService mutations', () => {
     });
 
     it('should upsert cycle day', () => {
-        const payload = {
+        const payload: UpsertCycleDayPayload = {
             date: '2026-03-05',
-            isPeriod: true,
-            symptoms: {
-                pain: 2,
-                mood: 3,
-                edema: 0,
-                headache: 1,
-                energy: 3,
-                sleepQuality: 4,
-                libido: 2,
+            bleeding: {
+                type: BLEEDING_TYPE_BLEEDING,
+                flow: CYCLE_FLOW_MEDIUM,
+                painImpact: 2,
+                notes: null,
+                clearNotes: false,
             },
-            notes: null,
+            symptoms: [],
+            fertilitySignal: null,
         };
 
         service.upsertDay('c-1', payload).subscribe(day => {

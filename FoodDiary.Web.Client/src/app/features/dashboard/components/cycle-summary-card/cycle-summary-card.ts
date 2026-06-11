@@ -42,8 +42,8 @@ export class CycleSummaryCardComponent {
         }
 
         const predictions = this.predictions();
-        const ovulation = this.normalizeDate(predictions?.ovulationDate ?? null);
-        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStart ?? null);
+        const ovulation = this.normalizeDate(predictions?.ovulationFrom ?? null);
+        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStartFrom ?? null);
 
         if (ovulation !== null) {
             const days = this.daysBetween(reference, ovulation);
@@ -70,8 +70,8 @@ export class CycleSummaryCardComponent {
         }
 
         const predictions = this.predictions();
-        const ovulation = this.normalizeDate(predictions?.ovulationDate ?? null);
-        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStart ?? null);
+        const ovulation = this.normalizeDate(predictions?.ovulationFrom ?? null);
+        const nextPeriod = this.normalizeDate(predictions?.nextPeriodStartFrom ?? null);
 
         if (ovulation !== null) {
             const days = this.daysBetween(reference, ovulation);

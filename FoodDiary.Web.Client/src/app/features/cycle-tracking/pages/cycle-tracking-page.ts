@@ -13,10 +13,9 @@ import { PageHeaderComponent } from '../../../components/shared/page-header/page
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
-import type { DailySymptoms } from '../models/cycle.data';
 import { CycleCurrentCardComponent } from './cycle-current-card/cycle-current-card';
 import { CycleDaysCardComponent } from './cycle-days-card/cycle-days-card';
-import { CYCLE_SYMPTOM_FIELDS } from './cycle-tracking-page-lib/cycle-tracking-page.config';
+import { CYCLE_SYMPTOM_FIELDS, type CycleSymptomField } from './cycle-tracking-page-lib/cycle-tracking-page.config';
 import { buildCycleCurrentView, buildCycleDayItems, buildCyclePredictionView } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
 
 @Component({
@@ -55,10 +54,11 @@ export class CycleTrackingPageComponent {
     protected readonly symptomFields = CYCLE_SYMPTOM_FIELDS;
 
     protected readonly predictions = this.facade.predictions;
-    protected readonly days = this.facade.days;
+    protected readonly bleedingEntries = this.facade.bleedingEntries;
+    protected readonly symptoms = this.facade.symptoms;
     protected readonly currentCycleView = computed(() => buildCycleCurrentView(this.cycle(), this.appLocale()));
     protected readonly predictionView = computed(() => buildCyclePredictionView(this.predictions(), this.appLocale()));
-    protected readonly dayItems = computed(() => buildCycleDayItems(this.days(), this.appLocale()));
+    protected readonly dayItems = computed(() => buildCycleDayItems(this.bleedingEntries(), this.symptoms(), this.appLocale()));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -75,7 +75,7 @@ export class CycleTrackingPageComponent {
         this.facade.saveDay();
     }
 
-    protected symptomField(key: keyof DailySymptoms): FieldTree<number> {
+    protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {
         return this.dayForm[key];
     }
 

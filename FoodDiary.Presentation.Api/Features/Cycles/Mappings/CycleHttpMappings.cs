@@ -1,8 +1,6 @@
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
-using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
-using FoodDiary.Presentation.Api.Features.Cycles.Models;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 
 namespace FoodDiary.Presentation.Api.Features.Cycles.Mappings;
@@ -13,29 +11,48 @@ public static class CycleHttpMappings {
     public static CreateCycleCommand ToCommand(this CreateCycleHttpRequest request, Guid userId) =>
         new(
             userId,
-            request.StartDate,
-            request.AverageLength,
+            request.TrackingStartDate,
+            request.Mode,
+            request.AverageCycleLength,
+            request.AveragePeriodLength,
             request.LutealLength,
+            request.IsRegular,
+            request.IsOnboardingComplete,
+            request.ShowFertilityEstimates,
+            request.DiscreetNotifications,
             request.Notes);
 
-    public static UpsertCycleDayCommand ToCommand(this UpsertCycleDayHttpRequest request, Guid userId, Guid cycleId) =>
+    public static UpsertCycleDayCommand ToCommand(this UpsertCycleDayHttpRequest request, Guid userId, Guid cycleProfileId) =>
         new(
             userId,
-            cycleId,
+            cycleProfileId,
             request.Date,
-            request.IsPeriod,
-            request.Symptoms.ToModel(),
-            request.Notes,
-            request.ClearNotes);
+            request.Bleeding?.ToCommandModel(),
+            request.Symptoms.Select(static symptom => symptom.ToCommandModel()).ToList(),
+            request.FertilitySignal?.ToCommandModel());
 
-    private static DailySymptomsModel ToModel(this DailySymptomsHttpModel model) =>
+    private static BleedingLogCommandModel ToCommandModel(this BleedingLogHttpModel model) =>
         new(
-            model.Pain,
-            model.Mood,
-            model.Edema,
-            model.Headache,
-            model.Energy,
-            model.SleepQuality,
-            model.Libido
-        );
+            model.Type,
+            model.Flow,
+            model.PainImpact,
+            model.Notes,
+            model.ClearNotes);
+
+    private static SymptomLogCommandModel ToCommandModel(this SymptomLogHttpModel model) =>
+        new(
+            model.Category,
+            model.Intensity,
+            model.Tags,
+            model.Note,
+            model.ClearNote);
+
+    private static FertilitySignalCommandModel ToCommandModel(this FertilitySignalHttpModel model) =>
+        new(
+            model.BasalBodyTemperatureCelsius,
+            model.OvulationTestResult,
+            model.CervicalFluid,
+            model.HadSex,
+            model.Notes,
+            model.ClearNotes);
 }

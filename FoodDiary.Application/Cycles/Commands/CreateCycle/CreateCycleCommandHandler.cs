@@ -8,6 +8,7 @@ using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
@@ -28,16 +29,44 @@ public class CreateCycleCommandHandler(
             return Result.Failure<CycleModel>(accessError);
         }
 
-        var cycle = Cycle.Create(
+        CycleProfile? existing = await cycleRepository.GetCurrentAsync(
             userId,
-            command.StartDate,
-            command.AverageLength,
+            includeDetails: true,
+            cancellationToken: cancellationToken).ConfigureAwait(false);
+
+        if (existing is not null) {
+            existing.UpdateSettings(new CycleProfileSettings(
+                (CycleTrackingMode)command.Mode,
+                command.AverageCycleLength,
+                command.AveragePeriodLength,
+                command.LutealLength,
+                command.IsRegular,
+                command.IsOnboardingComplete,
+                command.ShowFertilityEstimates,
+                command.DiscreetNotifications,
+                command.Notes));
+
+            await cycleRepository.UpdateAsync(existing, cancellationToken).ConfigureAwait(false);
+            CyclePredictionsModel existingPredictions = CyclePredictionService.CalculatePredictions(existing);
+            return Result.Success(existing.ToModel(existingPredictions));
+        }
+
+        var profile = CycleProfile.Create(
+            userId,
+            command.TrackingStartDate,
+            (CycleTrackingMode)command.Mode,
+            command.AverageCycleLength,
+            command.AveragePeriodLength,
             command.LutealLength,
+            command.IsRegular,
+            command.IsOnboardingComplete,
+            command.ShowFertilityEstimates,
+            command.DiscreetNotifications,
             command.Notes);
 
-        cycle = await cycleRepository.AddAsync(cycle, cancellationToken).ConfigureAwait(false);
+        profile = await cycleRepository.AddAsync(profile, cancellationToken).ConfigureAwait(false);
 
-        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(cycle);
-        return Result.Success(cycle.ToModel(predictions));
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+        return Result.Success(profile.ToModel(predictions));
     }
 }

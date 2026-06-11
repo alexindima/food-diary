@@ -4,7 +4,7 @@ import { catchError, map, type Observable } from 'rxjs';
 import { environment } from '../../../../environments/environment';
 import { ApiService } from '../../../services/api.service';
 import { fallbackApiError, rethrowApiError } from '../../../shared/lib/api-error.utils';
-import type { CreateCyclePayload, CycleDay, CycleResponse, UpsertCycleDayPayload } from '../models/cycle.data';
+import type { CreateCyclePayload, CycleLogDay, CycleResponse, UpsertCycleDayPayload } from '../models/cycle.data';
 
 @Service()
 export class CyclesService extends ApiService {
@@ -20,12 +20,9 @@ export class CyclesService extends ApiService {
         return this.post<CycleResponse>('', payload).pipe(catchError((error: unknown) => rethrowApiError('Cycle create error', error)));
     }
 
-    public upsertDay(cycleId: string, payload: UpsertCycleDayPayload): Observable<CycleDay> {
-        return this.put<CycleDay>(`${cycleId}/days`, payload).pipe(
-            map(day => ({
-                ...day,
-                date: day.date,
-            })),
+    public upsertDay(cycleProfileId: string, payload: UpsertCycleDayPayload): Observable<CycleLogDay> {
+        return this.put<CycleLogDay>(`${cycleProfileId}/days`, payload).pipe(
+            map(day => day),
             catchError((error: unknown) => rethrowApiError('Cycle day upsert error', error)),
         );
     }

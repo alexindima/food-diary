@@ -46,8 +46,11 @@ public class FoodDiaryDbContext(DbContextOptions<FoodDiaryDbContext> options) : 
     public DbSet<ShoppingListItem> ShoppingListItems => Set<ShoppingListItem>();
     public DbSet<WeightEntry> WeightEntries => Set<WeightEntry>();
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
-    public DbSet<Cycle> Cycles => Set<Cycle>();
-    public DbSet<CycleDay> CycleDays => Set<CycleDay>();
+    public DbSet<CycleProfile> CycleProfiles => Set<CycleProfile>();
+    public DbSet<BleedingEntry> CycleBleedingEntries => Set<BleedingEntry>();
+    public DbSet<CycleSymptomEntry> CycleSymptomEntries => Set<CycleSymptomEntry>();
+    public DbSet<CycleFactor> CycleFactors => Set<CycleFactor>();
+    public DbSet<FertilitySignal> FertilitySignals => Set<FertilitySignal>();
     public DbSet<HydrationEntry> HydrationEntries => Set<HydrationEntry>();
     public DbSet<DailyAdvice> DailyAdvices => Set<DailyAdvice>();
     public DbSet<AiUsage> AiUsages => Set<AiUsage>();
