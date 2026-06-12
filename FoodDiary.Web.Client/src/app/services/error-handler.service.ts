@@ -3,14 +3,23 @@ import { type ErrorHandler, inject, Service } from '@angular/core';
 import { FrontendLoggerService } from './frontend-logger.service';
 import { FrontendObservabilityService } from './frontend-observability.service';
 
+const DUPLICATE_ERROR_SUPPRESSION_MS = 10_000;
+
 @Service()
 export class GlobalErrorHandler implements ErrorHandler {
     private readonly frontendObservabilityService = inject(FrontendObservabilityService);
     private readonly logger = inject(FrontendLoggerService);
+    private lastErrorKey: string | null = null;
+    private lastErrorReportedAt = 0;
 
     public handleError(error: unknown): void {
         try {
-            this.frontendObservabilityService.recordClientError(this.buildErrorPayload(error));
+            const payload = this.buildErrorPayload(error);
+            if (this.shouldSuppressDuplicate(payload)) {
+                return;
+            }
+
+            this.frontendObservabilityService.recordClientError(payload);
         } catch (error_) {
             this.logger.error('Failed to send log to backend:', error_);
         }
@@ -53,5 +62,16 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     private messageOrUnknown(value: unknown): string {
         return typeof value === 'string' && value.length > 0 ? value : 'Unknown error';
+    }
+
+    private shouldSuppressDuplicate(error: { message: string; stack: string; location: string }): boolean {
+        const key = `${error.message}|${error.stack}|${error.location}`;
+        const now = Date.now();
+        const shouldSuppress = key === this.lastErrorKey && now - this.lastErrorReportedAt < DUPLICATE_ERROR_SUPPRESSION_MS;
+
+        this.lastErrorKey = key;
+        this.lastErrorReportedAt = now;
+
+        return shouldSuppress;
     }
 }

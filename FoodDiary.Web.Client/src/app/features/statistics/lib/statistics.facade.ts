@@ -71,7 +71,11 @@ export class StatisticsFacade {
     public readonly waistSummaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly userHeightCm = signal<number | null>(null);
 
-    public readonly currentRange = computed<DateRange>(() => getCurrentDateRange(this.selectedRange(), this.customRangeModel().range));
+    public readonly currentRange = computed<DateRange>(() => {
+        const selectedRange = this.selectedRange();
+
+        return getCurrentDateRange(selectedRange, selectedRange === 'custom' ? this.customRangeModel().range : null);
+    });
     public readonly summaryMetrics = computed(() =>
         buildSummaryMetrics(this.chartStatisticsData(), getDateRangeDayCount(this.currentRange())),
     );
@@ -141,13 +145,13 @@ export class StatisticsFacade {
             }
 
             const range = this.selectedRange();
-            const customRange = this.customRangeModel().range;
 
             if (range !== 'custom') {
                 this.loadAllData();
                 return;
             }
 
+            const customRange = this.customRangeModel().range;
             if (customRange?.start !== null && customRange?.end !== null) {
                 this.loadAllData();
             }

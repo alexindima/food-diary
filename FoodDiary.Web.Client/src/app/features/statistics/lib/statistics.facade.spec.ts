@@ -135,6 +135,23 @@ describe('StatisticsFacade loading', () => {
         expect(facade.selectedRange()).toBe('month');
     });
 
+    it('keeps predefined ranges independent from custom range form changes', () => {
+        facade.initialize();
+        TestBed.tick();
+
+        const currentRange = facade.currentRange();
+
+        facade.customRangeModel.set({
+            range: {
+                start: new Date('2026-02-01T00:00:00Z'),
+                end: new Date('2026-02-28T00:00:00Z'),
+            },
+        });
+        TestBed.tick();
+
+        expect(facade.currentRange()).toBe(currentRange);
+    });
+
     it('uses capitalized month-only chart labels for year range', () => {
         currentLanguage = 'ru';
         languageChanges.next({});

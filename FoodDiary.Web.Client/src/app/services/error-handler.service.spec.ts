@@ -55,6 +55,15 @@ describe('GlobalErrorHandler', () => {
         expect((payload['stack'] as string).length).toBeGreaterThan(0);
     });
 
+    it('should suppress duplicate errors in a short burst', () => {
+        const error = new Error('Repeated runtime error');
+
+        handler.handleError(error);
+        handler.handleError(error);
+
+        expect(observabilitySpy.recordClientError).toHaveBeenCalledTimes(1);
+    });
+
     it('should handle logging failure gracefully', () => {
         observabilitySpy.recordClientError.mockImplementation(() => {
             throw new Error('Network error');
