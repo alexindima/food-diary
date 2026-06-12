@@ -84,7 +84,14 @@ def render_recent_logs(title: str, loki_url: str, query: str, hours: int, limit:
         labels = stream.get("stream", {})
         label_text = " ".join(
             f"{name}={labels[name]}"
-            for name in ["container", "unit", "detected_level", "logstream"]
+            for name in [
+                "container",
+                "unit",
+                "detected_level",
+                "logstream",
+                "log_source",
+                "client_telemetry_category",
+            ]
             if labels.get(name)
         )
         for timestamp_ns, line in stream.get("values", []):
@@ -134,14 +141,31 @@ def main() -> int:
         f'sum by (container) (count_over_time({{compose_project="fooddiary"}}[{args.hours}h]))',
     )
     render_loki_vector(
+        "Log volume by source",
+        args.loki_url,
+        f'sum by (log_source) (count_over_time({{compose_project="fooddiary"}}[{args.hours}h]))',
+    )
+    render_loki_vector(
+        "Frontend telemetry by category",
+        args.loki_url,
+        f'sum by (client_telemetry_category) (count_over_time({{compose_project="fooddiary", log_source="frontend", client_telemetry_category=~".+"}}[{args.hours}h]))',
+    )
+    render_loki_vector(
         "Problem-like logs by container",
         args.loki_url,
-        f'sum by (container) (count_over_time({{compose_project="fooddiary"}} |~ "{PROBLEM_PATTERN}" [{args.hours}h]))',
+        f'sum by (container) (count_over_time({{compose_project="fooddiary", log_source!="frontend"}} |~ "{PROBLEM_PATTERN}" [{args.hours}h]))',
     )
     render_recent_logs(
         "Recent application problems",
         args.loki_url,
-        f'{{compose_project="fooddiary"}} |~ "{PROBLEM_PATTERN}"',
+        f'{{compose_project="fooddiary", log_source!="frontend"}} |~ "{PROBLEM_PATTERN}"',
+        args.hours,
+        args.limit,
+    )
+    render_recent_logs(
+        "Recent frontend telemetry problems",
+        args.loki_url,
+        '{compose_project="fooddiary", log_source="frontend", client_telemetry_category="client_error"}',
         args.hours,
         args.limit,
     )

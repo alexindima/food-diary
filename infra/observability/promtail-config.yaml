@@ -25,6 +25,19 @@ scrape_configs:
         refresh_interval: 5s
     pipeline_stages:
       - docker: {}
+      - static_labels:
+          log_source: backend
+      - match:
+          selector: '{log_source="backend"} |~ "(Client telemetry event|FoodDiary\\.Presentation\\.Api\\.Features\\.Logs\\.LogsController)"'
+          stages:
+            - regex:
+                expression: '.*Client telemetry event (?P<client_telemetry_category>[^/]+)/(?P<client_telemetry_name>[^:]+):'
+            - template:
+                source: log_source
+                template: 'frontend'
+            - labels:
+                log_source:
+                client_telemetry_category:
     relabel_configs:
       - source_labels: ['__meta_docker_container_name']
         regex: '/(.*)'
