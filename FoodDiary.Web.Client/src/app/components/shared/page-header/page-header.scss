@@ -23,6 +23,8 @@
     gap: var(--fd-space-page-header-actions-gap) var(--fd-space-page-header-gap);
     min-height: var(--fd-page-header-height);
     width: 100%;
+    box-sizing: border-box;
+    padding-top: var(--fd-space-xs);
 }
 
 .fd-page-header__title-block {
