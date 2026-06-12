@@ -23,6 +23,16 @@
                     <option [value]="unit.value">{{ unit.labelKey | translate }}</option>
                 }
             </select>
+            <select
+                #resolutionSelect
+                class="photo-ai-dialog__edit-select photo-ai-dialog__edit-select--resolution"
+                [value]="item.resolution"
+                (change)="updateItem(i, 'resolution', resolutionSelect.value)"
+            >
+                @for (resolution of resolutionOptions(); track resolution.value) {
+                    <option [value]="resolution.value">{{ resolution.labelKey | translate }}</option>
+                }
+            </select>
             <fd-ui-button
                 class="photo-ai-dialog__edit-remove"
                 variant="danger"

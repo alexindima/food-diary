@@ -4,6 +4,7 @@ import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
@@ -22,6 +23,7 @@ type FieldErrors = Record<ErrorField, string | null>;
         FormField,
         TranslatePipe,
         FdUiCardComponent,
+        FdUiIconComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiSelectComponent,
@@ -38,6 +40,8 @@ export class RecipeBasicInfoComponent {
     private readonly languageVersion = signal(0);
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
+    protected readonly isAdvancedOpen = signal(false);
+    protected readonly advancedToggleIcon = computed(() => (this.isAdvancedOpen() ? 'expand_less' : 'expand_more'));
     protected readonly visibilitySelectOptions = computed<Array<FdUiSelectOption<RecipeVisibility>>>(() => {
         this.languageVersion();
 
@@ -56,6 +60,10 @@ export class RecipeBasicInfoComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
+    }
+
+    protected toggleAdvanced(): void {
+        this.isAdvancedOpen.update(isOpen => !isOpen);
     }
 
     private buildFieldErrors(): FieldErrors {

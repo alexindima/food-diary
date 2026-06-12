@@ -26,6 +26,24 @@ internal sealed class MealItemConfiguration : IEntityTypeConfiguration<MealItem>
             id => id.HasValue ? id.Value.Value : (Guid?)null,
             value => value.HasValue ? new RecipeId(value.Value) : null);
 
+        builder.Property(e => e.SourceAiItemId).HasConversion(
+            id => id.HasValue ? id.Value.Value : (Guid?)null,
+            value => value.HasValue ? new MealAiItemId(value.Value) : null);
+
+        builder.Property(e => e.Origin)
+            .HasConversion<string>()
+            .HasMaxLength(16)
+            .HasDefaultValue(FoodDiary.Domain.Enums.MealItemOrigin.Manual);
+
+        builder.Property(e => e.SnapshotName)
+            .HasMaxLength(256);
+
+        builder.Property(e => e.SnapshotImageUrl)
+            .HasMaxLength(2048);
+
+        builder.Property(e => e.SnapshotUnit)
+            .HasMaxLength(32);
+
         builder.HasOne(e => e.Meal)
             .WithMany(m => m.Items)
             .HasForeignKey(e => e.MealId);

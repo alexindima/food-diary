@@ -77,7 +77,9 @@ export function getEmptyNutritionTotals(): NutritionTotals {
 }
 
 export function getAiSessionTotals(session: ConsumptionAiSessionManageDto): NutritionTotals {
-    return session.items.reduce((totals, item) => addAiItemTotals(totals, item), getEmptyNutritionTotals());
+    return session.items
+        .filter(item => item.resolution !== 'Rejected')
+        .reduce((totals, item) => addAiItemTotals(totals, item), getEmptyNutritionTotals());
 }
 
 export function resolveMealManageControlError(

@@ -53,6 +53,8 @@ function createEditableItem(overrides: Partial<AiEditableFoodItem> = {}): AiEdit
         nameLocal: null,
         amount: SOURCE_AMOUNT,
         unit: 'g',
+        confidence: 1,
+        resolution: 'Accepted',
         ...overrides,
     };
 }
@@ -69,6 +71,8 @@ describe('ai photo edit utils', () => {
                 nameLocal: 'Яблоко',
                 amount: SOURCE_AMOUNT,
                 unit: 'g',
+                confidence: 1,
+                resolution: 'Accepted',
             },
         ]);
     });
@@ -99,6 +103,7 @@ describe('ai photo edit utils', () => {
 
         expect(updateAiEditableItem(source, 0, 'amount', UPDATED_AMOUNT)[0]?.amount).toBe(UPDATED_AMOUNT_VALUE);
         expect(updateAiEditableItem(source, 0, 'unit', 'ml')[0]?.unit).toBe('ml');
+        expect(updateAiEditableItem(source, 0, 'resolution', 'Rejected')[0]?.resolution).toBe('Rejected');
         expect(updateAiEditableItem(source, 0, 'name', 'Pear')[0]).toMatchObject({ name: 'Pear', nameEn: 'Pear', nameLocal: 'Pear' });
     });
 
@@ -110,6 +115,8 @@ describe('ai photo edit utils', () => {
             nameLocal: '',
             amount: 0,
             unit: 'pcs',
+            confidence: 1,
+            resolution: 'Accepted',
         });
     });
 

@@ -103,6 +103,39 @@ public class MealNutritionServiceTests {
         Assert.Equal(250, result.Value.Calories);
     }
 
+    [Fact]
+    public async Task CalculateAsync_WhenAiItemIsRejected_ExcludesItFromNutrition() {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Snack);
+        meal.AddAiSession(
+            imageAssetId: null,
+            source: AiRecognitionSource.Text,
+            recognizedAtUtc: DateTime.UtcNow,
+            notes: null,
+            items: [
+                MealAiItemData.Create("Cookie", nameLocal: null, 50, "g", 250, 3, 12, 34, 1, 0),
+                MealAiItemData.Create(
+                    "Sauce",
+                    nameLocal: null,
+                    20,
+                    "g",
+                    100,
+                    proteins: 1,
+                    fats: 2,
+                    carbs: 3,
+                    fiber: 0,
+                    alcohol: 0,
+                    resolution: MealAiItemResolution.Rejected),
+            ]);
+
+        MealNutritionService service = CreateService();
+
+        Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(250, result.Value.Calories);
+    }
+
     private static MealNutritionService CreateService(
         IReadOnlyDictionary<ProductId, Product>? products = null,
         IReadOnlyDictionary<RecipeId, Recipe>? recipes = null) {

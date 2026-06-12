@@ -33,6 +33,11 @@ internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<Meal
             .HasMaxLength(16)
             .HasDefaultValue(AiRecognitionSource.Text);
 
+        builder.Property(e => e.Status)
+            .HasConversion<string>()
+            .HasMaxLength(16)
+            .HasDefaultValue(MealAiSessionStatus.Reviewed);
+
         builder.Property(e => e.RecognizedAtUtc)
             .HasColumnType("timestamp with time zone");
 

@@ -82,32 +82,35 @@
     </div>
 </fd-ui-card>
 
-<fd-ui-card
-    class="recipe-basic-info__card recipe-basic-info__card--basic recipe-basic-info__card--tracking"
-    appearance="entry"
-    tone="editor-gradient"
-    density="relaxed"
-    headerAlign="center"
-    [title]="'RECIPE_MANAGE.TRACKING_PREFERENCES' | translate"
->
-    <div class="recipe-basic-info__basic-grid fd-grid fd-gap-lg">
-        <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
-            <fd-ui-select
-                size="lg"
-                [formField]="recipeForm.visibility"
-                [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
-                [options]="visibilitySelectOptions()"
-                [error]="errors.visibility"
-            />
+<fd-ui-card class="recipe-basic-info__card recipe-basic-info__card--advanced" appearance="entry" tone="editor-gradient" density="compact">
+    <button type="button" class="recipe-basic-info__advanced-toggle" [attr.aria-expanded]="isAdvancedOpen()" (click)="toggleAdvanced()">
+        <span class="recipe-basic-info__advanced-copy">
+            <span class="recipe-basic-info__advanced-title fd-ui-action-text">{{ 'RECIPE_MANAGE.ADVANCED_TITLE' | translate }}</span>
+            <span class="recipe-basic-info__advanced-subtitle fd-ui-caption">{{ 'RECIPE_MANAGE.ADVANCED_SUBTITLE' | translate }}</span>
+        </span>
+        <fd-ui-icon [name]="advancedToggleIcon()" />
+    </button>
+
+    @if (isAdvancedOpen()) {
+        <div class="recipe-basic-info__basic-grid recipe-basic-info__advanced-panel fd-grid fd-gap-lg">
+            <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
+                <fd-ui-select
+                    size="lg"
+                    [formField]="recipeForm.visibility"
+                    [label]="'RECIPE_MANAGE.VISIBILITY' | translate"
+                    [options]="visibilitySelectOptions()"
+                    [error]="errors.visibility"
+                />
+            </div>
+            <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
+                <fd-ui-textarea
+                    [formField]="recipeForm.comment"
+                    [label]="'RECIPE_MANAGE.COMMENT' | translate"
+                    [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
+                    [rows]="4"
+                    [error]="errors.comment"
+                />
+            </div>
         </div>
-        <div class="recipe-basic-info__field recipe-basic-info__field--full fd-stack fd-gap-xs">
-            <fd-ui-textarea
-                [formField]="recipeForm.comment"
-                [label]="'RECIPE_MANAGE.COMMENT' | translate"
-                [placeholder]="'RECIPE_MANAGE.COMMENT_PLACEHOLDER' | translate"
-                [rows]="4"
-                [error]="errors.comment"
-            />
-        </div>
-    </div>
+    }
 </fd-ui-card>

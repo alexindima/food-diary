@@ -15,4 +15,6 @@ public sealed record ConsumptionAiItemModel(
     double Fats,
     double Carbs,
     double Fiber,
-    double Alcohol);
+    double Alcohol,
+    double Confidence = 1,
+    string Resolution = "Accepted");

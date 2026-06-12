@@ -211,6 +211,8 @@
         "SUBTITLE": "Соберите ингредиенты, шаги и нутриенты",
         "GENERAL_GROUP_TITLE": "Общая информация",
         "TRACKING_PREFERENCES": "Параметры учета",
+        "ADVANCED_TITLE": "Дополнительные параметры",
+        "ADVANCED_SUBTITLE": "Видимость и личные заметки",
         "NAME": "Название",
         "NAME_PLACEHOLDER": "Введите название рецепта",
         "DESCRIPTION": "Описание",
@@ -273,7 +275,19 @@
         "DRAGGING_HINT": "Отпустите, чтобы изменить порядок",
         "DRAGGING_PLACEHOLDER": "Позиция вставки",
         "SAVE_BUTTON": "Сохранить изменения",
-        "ADD_BUTTON": "Создать рецепт"
+        "ADD_BUTTON": "Создать рецепт",
+        "IMPORT": {
+            "TITLE": "Начать с рецепта",
+            "SUBTITLE": "Вставьте текст или сохраните ссылку на источник, затем уточните ингредиенты и нутриенты перед сохранением.",
+            "URL_LABEL": "Ссылка на источник",
+            "URL_PLACEHOLDER": "https://example.com/recipe",
+            "TEXT_LABEL": "Текст рецепта",
+            "TEXT_PLACEHOLDER": "Вставьте название, ингредиенты и шаги рецепта",
+            "APPLY_BUTTON": "Использовать как черновик",
+            "EMPTY_ERROR": "Сначала вставьте текст рецепта или добавьте ссылку на источник.",
+            "SOURCE_LABEL": "Источник",
+            "INGREDIENTS_LABEL": "Ингредиенты"
+        }
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Категория",
@@ -298,7 +312,18 @@
         "ENTITY_NAME": "рецепт",
         "TABS": {
             "SUMMARY": "Сводка",
+            "COOK": "Готовка",
             "NUTRIENTS": "Нутриенты"
+        },
+        "COOK_MODE": {
+            "EMPTY": "Шагов приготовления пока нет.",
+            "PROGRESS": "Шаг {{current}} из {{total}}",
+            "READY": "Можно подавать",
+            "STEP_TITLE": "Шаг {{index}}",
+            "INGREDIENTS": "Для этого шага",
+            "PREVIOUS": "Назад",
+            "NEXT": "Далее",
+            "ADD_TO_MEAL": "Добавить в прием пищи"
         },
         "SUMMARY": {
             "CALORIES": "Калории",
@@ -689,7 +714,12 @@
             "SAVE": "Сохранить",
             "DONE": "Готово",
             "ADD_ITEM": "Добавить вручную",
-            "EDIT_BUTTON": "Редактировать"
+            "EDIT_BUTTON": "Редактировать",
+            "RESOLUTION_ACCEPTED": "Принято",
+            "RESOLUTION_REJECTED": "Отклонено",
+            "RESOLUTION_REPLACED": "Заменено",
+            "RESOLUTION_SPLIT": "Разделено",
+            "RESOLUTION_MERGED": "Объединено"
         },
         "ITEM_CARD_PLACEHOLDER": "Позиция №{{index}}",
         "ITEM_CARD_META": {

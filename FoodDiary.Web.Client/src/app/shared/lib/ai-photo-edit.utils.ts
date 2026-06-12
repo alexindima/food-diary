@@ -8,9 +8,13 @@ export type AiEditableFoodItem = {
     nameLocal: string | null;
     amount: number;
     unit: string;
+    confidence: number;
+    resolution: AiEditableFoodItemResolution;
 };
 
-export type AiEditableItemUpdateField = 'name' | 'amount' | 'unit';
+export type AiEditableFoodItemResolution = 'Candidate' | 'Accepted' | 'Replaced' | 'Rejected' | 'Split' | 'Merged';
+
+export type AiEditableItemUpdateField = 'name' | 'amount' | 'unit' | 'resolution';
 
 const AI_PHOTO_UNIT_TRANSLATION_KEYS: Readonly<Record<string, string>> = {
     g: 'GENERAL.UNITS.G',
@@ -61,6 +65,8 @@ export function buildAiEditableItems(
             nameLocal: localName.length > 0 ? localName : null,
             amount: item.amount,
             unit: item.unit,
+            confidence: item.confidence,
+            resolution: 'Accepted',
         };
     });
 }
@@ -73,7 +79,7 @@ export function normalizeAiEditableItems(edited: readonly AiEditableFoodItem[]):
             nameLocal: localName.length > 0 ? localName : null,
             amount: item.amount,
             unit: item.unit,
-            confidence: 1,
+            confidence: item.confidence,
         };
     });
 }
@@ -117,10 +123,25 @@ export function updateAiEditableItem(
             return { ...item, unit: value };
         }
 
+        if (field === 'resolution') {
+            return isAiEditableFoodItemResolution(value) ? { ...item, resolution: value } : item;
+        }
+
         return { ...item, name: value, nameEn: value, nameLocal: value };
     });
 }
 
 export function createEmptyAiEditableItem(createId: () => string, unit: string): AiEditableFoodItem {
-    return { id: createId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit };
+    return { id: createId(), name: '', nameEn: '', nameLocal: '', amount: 0, unit, confidence: 1, resolution: 'Accepted' };
+}
+
+function isAiEditableFoodItemResolution(value: string): value is AiEditableFoodItemResolution {
+    return (
+        value === 'Candidate' ||
+        value === 'Accepted' ||
+        value === 'Replaced' ||
+        value === 'Rejected' ||
+        value === 'Split' ||
+        value === 'Merged'
+    );
 }

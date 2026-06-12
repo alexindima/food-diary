@@ -245,7 +245,9 @@ public sealed class ConsumptionHttpMappingsTests {
                 null,
                 null,
                 85,
-                "A"),
+                "A",
+                SourceAiItemId: aiItemId,
+                Origin: "AIPhoto"),
         };
         var aiItems = new List<ConsumptionAiItemModel> {
             new(aiItemId, sessionId, "Rice", "Ð Ð¸Ñ", 200, "g", 260, 5, 0.6, 56, 0.4, 0),

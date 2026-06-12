@@ -16,6 +16,7 @@ import {
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { RecipeDetailFacade } from '../../../lib/detail/recipe-detail.facade';
 import type { Recipe } from '../../../models/recipe.data';
+import { RecipeCookModeComponent } from '../recipe-cook-mode/recipe-cook-mode';
 import type { IngredientPreviewItem, MacroBlock } from '../recipe-detail-lib/recipe-detail.types';
 import { buildRecipeDetailViewModel } from '../recipe-detail-lib/recipe-detail-nutrition.mapper';
 import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-detail-summary';
@@ -36,6 +37,7 @@ import { RecipeDetailSummaryComponent } from '../recipe-detail-summary/recipe-de
         FdUiTabsComponent,
         NutritionEditorComponent,
         RecipeDetailSummaryComponent,
+        RecipeCookModeComponent,
     ],
 })
 export class RecipeDetailComponent {
@@ -64,9 +66,10 @@ export class RecipeDetailComponent {
     protected readonly macroBarState: NutritionMacroState;
     protected readonly tabs: FdUiTab[] = [
         { value: 'summary', labelKey: 'RECIPE_DETAIL.TABS.SUMMARY' },
+        { value: 'cook', labelKey: 'RECIPE_DETAIL.TABS.COOK' },
         { value: 'nutrients', labelKey: 'RECIPE_DETAIL.TABS.NUTRIENTS' },
     ];
-    protected activeTab: 'summary' | 'nutrients' = 'summary';
+    protected activeTab: 'summary' | 'cook' | 'nutrients' = 'summary';
     protected readonly totalTime: number | null;
     protected readonly ingredientCount: number;
     protected readonly isDeleteDisabled: boolean;
@@ -110,7 +113,7 @@ export class RecipeDetailComponent {
     }
 
     protected onTabChange(tab: string): void {
-        if (tab === 'summary' || tab === 'nutrients') {
+        if (tab === 'summary' || tab === 'cook' || tab === 'nutrients') {
             this.activeTab = tab;
         }
     }
@@ -133,6 +136,10 @@ export class RecipeDetailComponent {
 
     protected onDuplicate(): void {
         this.recipeDetailFacade.duplicate(this.recipe);
+    }
+
+    protected onAddToMeal(): void {
+        this.recipeDetailFacade.addToMeal(this.recipe);
     }
 
     protected toggleFavorite(): void {

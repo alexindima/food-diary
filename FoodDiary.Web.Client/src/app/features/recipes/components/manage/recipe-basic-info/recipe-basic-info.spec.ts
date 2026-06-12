@@ -27,6 +27,18 @@ describe('RecipeBasicInfoComponent', () => {
 
         expect(component['fieldErrors']().name).toBe('FORM_ERRORS.REQUIRED');
     });
+
+    it('keeps advanced recipe options collapsed until toggled', () => {
+        const { component } = setupComponent();
+
+        expect(component['isAdvancedOpen']()).toBe(false);
+        expect(component['advancedToggleIcon']()).toBe('expand_more');
+
+        component['toggleAdvanced']();
+
+        expect(component['isAdvancedOpen']()).toBe(true);
+        expect(component['advancedToggleIcon']()).toBe('expand_less');
+    });
 });
 
 function setupComponent(): {

@@ -67,33 +67,36 @@ public static class ConsumptionMappings {
 
     private static ConsumptionItemModel ToItemModel(MealItem item) {
         FoodQualityScore? quality = item.Product?.GetQualityScore();
+        bool hasSnapshot = item.HasNutritionSnapshot;
         return new ConsumptionItemModel(
             item.Id.Value,
             item.MealId.Value,
             item.Amount,
             item.ProductId?.Value,
-            item.Product?.Name,
-            item.Product?.ImageUrl,
-            item.Product?.BaseUnit.ToString(),
-            item.Product?.BaseAmount,
-            item.Product?.CaloriesPerBase,
-            item.Product?.ProteinsPerBase,
-            item.Product?.FatsPerBase,
-            item.Product?.CarbsPerBase,
-            item.Product?.FiberPerBase,
-            item.Product?.AlcoholPerBase,
+            item.SnapshotName ?? item.Product?.Name,
+            item.SnapshotImageUrl ?? item.Product?.ImageUrl,
+            item.SnapshotUnit ?? item.Product?.BaseUnit.ToString(),
+            item.SnapshotBaseAmount ?? item.Product?.BaseAmount,
+            item.SnapshotCaloriesPerBase ?? item.Product?.CaloriesPerBase,
+            item.SnapshotProteinsPerBase ?? item.Product?.ProteinsPerBase,
+            item.SnapshotFatsPerBase ?? item.Product?.FatsPerBase,
+            item.SnapshotCarbsPerBase ?? item.Product?.CarbsPerBase,
+            item.SnapshotFiberPerBase ?? item.Product?.FiberPerBase,
+            item.SnapshotAlcoholPerBase ?? item.Product?.AlcoholPerBase,
             item.RecipeId?.Value,
-            item.Recipe?.Name,
-            item.Recipe?.ImageUrl,
-            item.Recipe?.Servings,
-            item.Recipe?.TotalCalories,
-            item.Recipe?.TotalProteins,
-            item.Recipe?.TotalFats,
-            item.Recipe?.TotalCarbs,
-            item.Recipe?.TotalFiber,
-            item.Recipe?.TotalAlcohol,
+            item.SnapshotName ?? item.Recipe?.Name,
+            item.SnapshotImageUrl ?? item.Recipe?.ImageUrl,
+            hasSnapshot ? 1 : item.Recipe?.Servings,
+            item.SnapshotCaloriesPerBase ?? item.Recipe?.TotalCalories,
+            item.SnapshotProteinsPerBase ?? item.Recipe?.TotalProteins,
+            item.SnapshotFatsPerBase ?? item.Recipe?.TotalFats,
+            item.SnapshotCarbsPerBase ?? item.Recipe?.TotalCarbs,
+            item.SnapshotFiberPerBase ?? item.Recipe?.TotalFiber,
+            item.SnapshotAlcoholPerBase ?? item.Recipe?.TotalAlcohol,
             quality?.Score,
-            quality?.Grade.ToString().ToLowerInvariant());
+            quality?.Grade.ToString().ToLowerInvariant(),
+            item.SourceAiItemId?.Value,
+            item.Origin.ToString());
     }
 
     private static ConsumptionAiSessionModel ToAiSessionModel(MealAiSession session) {
@@ -103,6 +106,7 @@ public static class ConsumptionMappings {
             session.ImageAssetId?.Value,
             session.ImageAsset?.Url,
             session.Source.ToString(),
+            session.Status.ToString(),
             session.RecognizedAtUtc,
             session.Notes,
             session.Items.OrderBy(i => i.Id.Value).Select(ToAiItemModel).ToList());
@@ -121,7 +125,9 @@ public static class ConsumptionMappings {
             aiItem.Fats,
             aiItem.Carbs,
             aiItem.Fiber,
-            aiItem.Alcohol);
+            aiItem.Alcohol,
+            aiItem.Confidence,
+            aiItem.Resolution.ToString());
     }
 
     public static PagedResponse<ConsumptionModel> ToPagedResponse(

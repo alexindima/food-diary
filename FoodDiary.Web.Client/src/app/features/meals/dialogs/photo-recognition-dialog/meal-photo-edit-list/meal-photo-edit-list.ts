@@ -7,6 +7,7 @@ import type {
     EditableAiItem,
     PhotoAiEditItemDrop,
     PhotoAiEditItemUpdate,
+    ResolutionOptionView,
     UnitOptionView,
 } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 
@@ -23,6 +24,7 @@ import type {
 export class MealPhotoEditListComponent {
     public readonly items = input.required<EditableAiItem[]>();
     public readonly unitOptions = input.required<readonly UnitOptionView[]>();
+    public readonly resolutionOptions = input.required<readonly ResolutionOptionView[]>();
 
     public readonly itemDropped = output<PhotoAiEditItemDrop>();
     public readonly itemUpdated = output<PhotoAiEditItemUpdate>();

@@ -10,4 +10,6 @@ public record ConsumptionAiItemInput(
     double Fats,
     double Carbs,
     double Fiber,
-    double Alcohol);
+    double Alcohol,
+    double? Confidence = null,
+    string? Resolution = null);

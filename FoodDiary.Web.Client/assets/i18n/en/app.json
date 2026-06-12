@@ -247,6 +247,8 @@
         "SUBTITLE": "Compose ingredients, steps, and nutrition",
         "GENERAL_GROUP_TITLE": "General information",
         "TRACKING_PREFERENCES": "Tracking preferences",
+        "ADVANCED_TITLE": "Advanced options",
+        "ADVANCED_SUBTITLE": "Visibility and private notes",
         "NAME": "Name",
         "NAME_PLACEHOLDER": "Enter recipe name",
         "DESCRIPTION": "Description",
@@ -309,7 +311,19 @@
         "DRAGGING_HINT": "Release to reorder",
         "DRAGGING_PLACEHOLDER": "Drop position",
         "SAVE_BUTTON": "Save changes",
-        "ADD_BUTTON": "Create recipe"
+        "ADD_BUTTON": "Create recipe",
+        "IMPORT": {
+            "TITLE": "Start from a recipe",
+            "SUBTITLE": "Paste text or keep the source URL, then refine ingredients and nutrition before saving.",
+            "URL_LABEL": "Source URL",
+            "URL_PLACEHOLDER": "https://example.com/recipe",
+            "TEXT_LABEL": "Recipe text",
+            "TEXT_PLACEHOLDER": "Paste the recipe title, ingredients, and steps",
+            "APPLY_BUTTON": "Use as draft",
+            "EMPTY_ERROR": "Paste recipe text or add a source URL first.",
+            "SOURCE_LABEL": "Source",
+            "INGREDIENTS_LABEL": "Ingredients"
+        }
     },
     "RECIPE_DETAIL": {
         "CATEGORY": "Category",
@@ -334,7 +348,18 @@
         "ENTITY_NAME": "recipe",
         "TABS": {
             "SUMMARY": "Summary",
+            "COOK": "Cook",
             "NUTRIENTS": "Nutrients"
+        },
+        "COOK_MODE": {
+            "EMPTY": "No cooking steps yet.",
+            "PROGRESS": "Step {{current}} of {{total}}",
+            "READY": "Ready to serve",
+            "STEP_TITLE": "Step {{index}}",
+            "INGREDIENTS": "For this step",
+            "PREVIOUS": "Previous",
+            "NEXT": "Next",
+            "ADD_TO_MEAL": "Add to meal"
         },
         "SUMMARY": {
             "CALORIES": "Calories",
@@ -725,7 +750,12 @@
             "SAVE": "Save",
             "DONE": "Done",
             "ADD_ITEM": "Add manually",
-            "EDIT_BUTTON": "Edit"
+            "EDIT_BUTTON": "Edit",
+            "RESOLUTION_ACCEPTED": "Accepted",
+            "RESOLUTION_REJECTED": "Rejected",
+            "RESOLUTION_REPLACED": "Replaced",
+            "RESOLUTION_SPLIT": "Split",
+            "RESOLUTION_MERGED": "Merged"
         },
         "ITEM_CARD_PLACEHOLDER": "Entry #{{index}}",
         "ITEM_CARD_META": {

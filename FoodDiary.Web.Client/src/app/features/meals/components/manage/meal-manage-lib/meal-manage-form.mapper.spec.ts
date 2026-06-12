@@ -75,7 +75,7 @@ describe('meal manage DTO mapping', () => {
             comment: 'Comment',
             imageUrl: image.url,
             imageAssetId: image.assetId,
-            items: [{ productId: product.id, recipeId: null, amount: PRODUCT_AMOUNT }],
+            items: [{ productId: product.id, recipeId: null, amount: PRODUCT_AMOUNT, origin: 'Manual' }],
             aiSessions: AI_SESSIONS,
             isNutritionAutoCalculated: true,
             manualCalories: undefined,
@@ -110,7 +110,7 @@ describe('meal manage DTO mapping', () => {
         });
 
         expect(convertRecipeGramsToServings).toHaveBeenCalledWith(recipe, RECIPE_AMOUNT_GRAMS);
-        expect(dto.items).toEqual([{ recipeId: recipe.id, productId: null, amount: RECIPE_AMOUNT_SERVINGS }]);
+        expect(dto.items).toEqual([{ recipeId: recipe.id, productId: null, amount: RECIPE_AMOUNT_SERVINGS, origin: 'Manual' }]);
         expect(dto.manualCalories).toBe(MANUAL_TOTALS.calories);
         expect(dto.manualAlcohol).toBe(MANUAL_TOTALS.alcohol);
     });

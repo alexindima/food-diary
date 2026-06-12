@@ -130,7 +130,7 @@ describe('MealPhotoRecognitionDialogComponent editing', () => {
         component['applyEditing']();
 
         expect(aiFoodService.calculateNutrition).toHaveBeenCalledWith({
-            items: [{ nameEn: 'Pear', nameLocal: 'Pear', amount: SOURCE_AMOUNT, unit: 'g', confidence: 1 }],
+            items: [{ nameEn: 'Pear', nameLocal: 'Pear', amount: SOURCE_AMOUNT, unit: 'g', confidence: 0.9 }],
         });
     });
 
@@ -148,6 +148,19 @@ describe('MealPhotoRecognitionDialogComponent editing', () => {
         component['addEditItem']();
         expect(component['editItems']()).toHaveLength(2);
         expect(component['editItems']()[1].unit).toBe('g');
+    });
+
+    it('should exclude rejected edit items from recalculated nutrition', async () => {
+        const { component } = await setupComponentAsync();
+        component['results'].set([visionItem]);
+        component['nutrition'].set(nutrition);
+        component['startEditing']();
+
+        component['updateEditItem'](0, 'resolution', 'Rejected');
+        component['applyEditing']();
+
+        expect(component['nutrition']()?.calories).toBe(0);
+        expect(component['nutrition']()?.items).toEqual([]);
     });
 });
 
@@ -190,6 +203,8 @@ describe('MealPhotoRecognitionDialogComponent session payload', () => {
                         nameLocal: 'Яблоко',
                         calories: BASE_CALORIES,
                         proteins: BASE_PROTEIN,
+                        confidence: 1,
+                        resolution: 'Accepted',
                     }),
                 ],
             }),
@@ -252,6 +267,8 @@ function createSession(): MealAiSessionManageDto {
                 carbs: BASE_CARBS,
                 fiber: BASE_FIBER,
                 alcohol: 0,
+                confidence: 1,
+                resolution: 'Accepted',
             },
         ],
     };

@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Common;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Diagnostics.CodeAnalysis;
@@ -17,6 +18,8 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
     public double Carbs { get; private set; }
     public double Fiber { get; private set; }
     public double Alcohol { get; private set; }
+    public double Confidence { get; private set; }
+    public MealAiItemResolution Resolution { get; private set; }
 
     public MealAiSession Session { get; private set; } = null!;
 
@@ -62,6 +65,8 @@ public sealed class MealAiItem : Entity<MealAiItemId> {
             Carbs = state.Carbs,
             Fiber = state.Fiber,
             Alcohol = state.Alcohol,
+            Confidence = state.Confidence,
+            Resolution = state.Resolution,
         };
         item.SetCreated();
         return item;

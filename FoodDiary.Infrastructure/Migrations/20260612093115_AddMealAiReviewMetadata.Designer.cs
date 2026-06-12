@@ -3,17 +3,19 @@ using System;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
+namespace FoodDiary.Infrastructure.Migrations {
     [DbContext(typeof(FoodDiaryDbContext))]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260612093115_AddMealAiReviewMetadata")]
+    partial class AddMealAiReviewMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1172,53 +1174,10 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Property<DateTime?>("ModifiedOnUtc")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<string>("Origin")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)")
-                        .HasDefaultValue("Manual");
-
                     b.Property<Guid?>("ProductId")
                         .HasColumnType("uuid");
 
                     b.Property<Guid?>("RecipeId")
-                        .HasColumnType("uuid");
-
-                    b.Property<double?>("SnapshotAlcoholPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("SnapshotBaseAmount")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("SnapshotCaloriesPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("SnapshotCarbsPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("SnapshotFatsPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<double?>("SnapshotFiberPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("SnapshotImageUrl")
-                        .HasMaxLength(2048)
-                        .HasColumnType("character varying(2048)");
-
-                    b.Property<string>("SnapshotName")
-                        .HasMaxLength(256)
-                        .HasColumnType("character varying(256)");
-
-                    b.Property<double?>("SnapshotProteinsPerBase")
-                        .HasColumnType("double precision");
-
-                    b.Property<string>("SnapshotUnit")
-                        .HasMaxLength(32)
-                        .HasColumnType("character varying(32)");
-
-                    b.Property<Guid?>("SourceAiItemId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");

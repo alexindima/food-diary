@@ -29,4 +29,6 @@ public sealed record ConsumptionItemModel(
     double? RecipeTotalFiber,
     double? RecipeTotalAlcohol,
     int? ProductQualityScore,
-    string? ProductQualityGrade);
+    string? ProductQualityGrade,
+    Guid? SourceAiItemId = null,
+    string Origin = "Manual");

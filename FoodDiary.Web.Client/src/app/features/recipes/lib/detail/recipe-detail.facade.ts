@@ -90,6 +90,10 @@ export class RecipeDetailFacade {
             });
     }
 
+    public addToMeal(recipe: Recipe): void {
+        this.dialogRef.close(new RecipeDetailActionResult(recipe.id, 'AddToMeal', this.hasFavoriteChanged()));
+    }
+
     public toggleFavorite(recipe: Recipe): void {
         if (this.isFavoriteLoading()) {
             return;

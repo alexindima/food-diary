@@ -6,6 +6,7 @@ public sealed record ConsumptionAiSessionHttpResponse(
     Guid? ImageAssetId,
     string? ImageUrl,
     string Source,
+    string Status,
     DateTime RecognizedAtUtc,
     string? Notes,
     IReadOnlyList<ConsumptionAiItemHttpResponse> Items);

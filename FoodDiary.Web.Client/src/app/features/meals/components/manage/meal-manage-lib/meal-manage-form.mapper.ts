@@ -115,7 +115,7 @@ function mapConsumptionItem(
     const sourceType = item.sourceType;
 
     if (sourceType === ConsumptionSourceType.Product && item.product !== null) {
-        return [{ productId: item.product.id, recipeId: null, amount }];
+        return [{ productId: item.product.id, recipeId: null, amount, origin: 'Manual' }];
     }
 
     if (sourceType === ConsumptionSourceType.Recipe && item.recipe !== null) {
@@ -124,6 +124,7 @@ function mapConsumptionItem(
                 recipeId: item.recipe.id,
                 productId: null,
                 amount: convertRecipeGramsToServings(item.recipe, amount),
+                origin: 'Manual',
             },
         ];
     }

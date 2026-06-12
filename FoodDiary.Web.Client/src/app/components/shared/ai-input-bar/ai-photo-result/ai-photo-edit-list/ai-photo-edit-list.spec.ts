@@ -15,6 +15,8 @@ const editableItem: EditableAiItem = {
     nameLocal: null,
     amount: ITEM_AMOUNT,
     unit: 'g',
+    confidence: 1,
+    resolution: 'Accepted',
 };
 
 async function setupAiPhotoEditListAsync(): Promise<ComponentFixture<AiPhotoEditListComponent>> {

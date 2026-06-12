@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Common.Validators;
 
@@ -40,6 +41,14 @@ public sealed class ConsumptionAiItemInputValidator : AbstractValidator<Consumpt
         RuleFor(x => x.Carbs).Must(BeNonNegativeFinite).WithErrorCode("Validation.Invalid").WithMessage("Carbs must be non-negative.");
         RuleFor(x => x.Fiber).Must(BeNonNegativeFinite).WithErrorCode("Validation.Invalid").WithMessage("Fiber must be non-negative.");
         RuleFor(x => x.Alcohol).Must(BeNonNegativeFinite).WithErrorCode("Validation.Invalid").WithMessage("Alcohol must be non-negative.");
+        RuleFor(x => x.Confidence)
+            .Must(value => value is null || BeConfidence(value.Value))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Confidence must be in range [0, 1].");
+        RuleFor(x => x.Resolution)
+            .Must(resolution => string.IsNullOrWhiteSpace(resolution) || Enum.TryParse<MealAiItemResolution>(resolution, ignoreCase: true, out _))
+            .WithErrorCode("Validation.Invalid")
+            .WithMessage("Unknown AI item resolution value.");
     }
 
     private static bool BePositiveFinite(double value) =>
@@ -47,4 +56,7 @@ public sealed class ConsumptionAiItemInputValidator : AbstractValidator<Consumpt
 
     private static bool BeNonNegativeFinite(double value) =>
         !double.IsNaN(value) && !double.IsInfinity(value) && value >= 0;
+
+    private static bool BeConfidence(double value) =>
+        !double.IsNaN(value) && !double.IsInfinity(value) && value is >= 0 and <= 1;
 }

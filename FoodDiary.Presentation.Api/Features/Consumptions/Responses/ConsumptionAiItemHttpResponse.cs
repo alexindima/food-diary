@@ -12,4 +12,6 @@ public sealed record ConsumptionAiItemHttpResponse(
     double Fats,
     double Carbs,
     double Fiber,
-    double Alcohol);
+    double Alcohol,
+    double Confidence,
+    string Resolution);

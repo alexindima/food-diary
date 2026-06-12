@@ -47,6 +47,9 @@
                     [readonly]="true"
                 />
             }
+            @case ('cook') {
+                <fd-recipe-cook-mode [recipe]="recipe" (addToMeal)="onAddToMeal()" />
+            }
         }
     </div>
 

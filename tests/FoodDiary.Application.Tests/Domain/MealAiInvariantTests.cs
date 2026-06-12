@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Tests.Domain;
 
@@ -55,6 +56,29 @@ public class MealAiInvariantTests {
     public void MealAiItemData_Create_WithTooLongUnit_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             MealAiItemData.Create("Chicken", nameLocal: null, 100, new string('u', 33), 100, 10, 5, 20, 3, 0));
+    }
+
+    [Fact]
+    public void MealAiItemData_Create_WithConfidenceOutOfRange_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            MealAiItemData.Create("Chicken", nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0, confidence: 1.1));
+    }
+
+    [Fact]
+    public void MealAiItemData_Create_WithUnknownResolution_Throws() {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            MealAiItemData.Create(
+                "Chicken",
+                nameLocal: null,
+                100,
+                "g",
+                100,
+                10,
+                5,
+                20,
+                3,
+                0,
+                resolution: (MealAiItemResolution)999));
     }
 
     [Fact]

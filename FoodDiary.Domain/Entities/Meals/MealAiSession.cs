@@ -13,6 +13,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
     public MealId MealId { get; private set; }
     public ImageAssetId? ImageAssetId { get; private set; }
     public AiRecognitionSource Source { get; private set; }
+    public MealAiSessionStatus Status { get; private set; }
     public DateTime RecognizedAtUtc { get; private set; }
     public string? Notes { get; private set; }
 
@@ -38,6 +39,7 @@ public sealed class MealAiSession : Entity<MealAiSessionId> {
             MealId = mealId,
             ImageAssetId = imageAssetId,
             Source = source,
+            Status = MealAiSessionStatus.Reviewed,
             RecognizedAtUtc = NormalizeUtc(recognizedAtUtc),
             Notes = NormalizeOptionalText(notes, NotesMaxLength, nameof(notes)),
         };

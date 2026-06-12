@@ -39,6 +39,8 @@ describe('ai input bar mapper', () => {
             carbs: CARBS,
             fiber: FIBER,
             alcohol: ALCOHOL,
+            confidence: CONFIDENCE,
+            resolution: 'Accepted',
         });
     });
 

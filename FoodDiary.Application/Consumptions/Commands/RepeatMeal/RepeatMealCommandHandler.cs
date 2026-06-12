@@ -90,11 +90,14 @@ public class RepeatMealCommandHandler(
 
     private static void CopyItems(Meal sourceMeal, Meal newMeal) {
         foreach (MealItem item in sourceMeal.Items) {
+            MealItem? copiedItem = null;
             if (item.ProductId.HasValue) {
-                newMeal.AddProduct(item.ProductId.Value, item.Amount);
+                copiedItem = newMeal.AddProduct(item.ProductId.Value, item.Amount);
             } else if (item.RecipeId.HasValue) {
-                newMeal.AddRecipe(item.RecipeId.Value, item.Amount);
+                copiedItem = newMeal.AddRecipe(item.RecipeId.Value, item.Amount);
             }
+
+            copiedItem?.CopySourceAndSnapshotFrom(item);
         }
     }
 
@@ -115,7 +118,9 @@ public class RepeatMealCommandHandler(
                     item.Fats,
                     item.Carbs,
                     item.Fiber,
-                    item.Alcohol))
+                    item.Alcohol,
+                    item.Confidence,
+                    item.Resolution))
                 .ToList();
 
             newMeal.AddAiSession(session.ImageAssetId, session.Source, targetRecognizedAtUtc, session.Notes, items);

@@ -1,4 +1,4 @@
-import type { AiEditableFoodItem } from '../../../../../shared/lib/ai-photo-edit.utils';
+import type { AiEditableFoodItem, AiEditableItemUpdateField } from '../../../../../shared/lib/ai-photo-edit.utils';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../../shared/models/ai.data';
 
 export type EditableAiItem = AiEditableFoodItem;
@@ -32,7 +32,7 @@ export type AiDetailsToggleView = {
 
 export type AiEditItemUpdate = {
     index: number;
-    field: 'name' | 'amount' | 'unit';
+    field: AiEditableItemUpdateField;
     value: string;
 };
 

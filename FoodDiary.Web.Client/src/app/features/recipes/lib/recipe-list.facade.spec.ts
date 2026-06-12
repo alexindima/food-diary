@@ -9,6 +9,7 @@ import { NavigationService } from '../../../services/navigation.service';
 import { QuickMealService } from '../../meals/lib/quick/quick-meal.service';
 import { FavoriteRecipeService } from '../api/favorite-recipe.service';
 import { RecipeService } from '../api/recipe.service';
+import { RecipeDetailActionResult } from '../components/detail/recipe-detail-lib/recipe-detail.types';
 import { type FavoriteRecipe, RecipeVisibility } from '../models/recipe.data';
 import { RecipeListFacade } from './recipe-list.facade';
 
@@ -239,6 +240,12 @@ describe('RecipeListFacade actions', () => {
 
     it('forwards add-to-meal to quick meal service', () => {
         facade.addToMeal(recipe);
+
+        expect(quickMealService.addRecipe).toHaveBeenCalledWith(recipe);
+    });
+
+    it('handles detail add-to-meal action', async () => {
+        await facade.handleDetailActionAsync(new RecipeDetailActionResult(recipe.id, 'AddToMeal'), recipe, null, false);
 
         expect(quickMealService.addRecipe).toHaveBeenCalledWith(recipe);
     });

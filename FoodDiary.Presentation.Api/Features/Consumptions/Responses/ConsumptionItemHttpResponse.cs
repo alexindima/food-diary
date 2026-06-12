@@ -26,4 +26,6 @@ public sealed record ConsumptionItemHttpResponse(
     double? RecipeTotalFiber,
     double? RecipeTotalAlcohol,
     int? ProductQualityScore,
-    string? ProductQualityGrade);
+    string? ProductQualityGrade,
+    Guid? SourceAiItemId,
+    string Origin);

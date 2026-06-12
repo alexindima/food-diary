@@ -40,7 +40,28 @@ public class MealNutritionService(
             return Result.Failure<MealNutritionSummary>(Errors.Recipe.NotAccessible(missingRecipe.Value));
         }
 
+        ApplyItemSnapshots(meal, products, recipes);
         MealNutritionSummary summary = MealNutritionCalculator.Calculate(meal, products, recipes);
         return Result.Success(summary);
+    }
+
+    private static void ApplyItemSnapshots(
+        Meal meal,
+        IReadOnlyDictionary<ProductId, Product> products,
+        IReadOnlyDictionary<RecipeId, Recipe> recipes) {
+        foreach (MealItem item in meal.Items) {
+            if (item.HasNutritionSnapshot) {
+                continue;
+            }
+
+            if (item.ProductId is { } productId && products.TryGetValue(productId, out Product? product)) {
+                item.ApplyProductSnapshot(product);
+                continue;
+            }
+
+            if (item.RecipeId is { } recipeId && recipes.TryGetValue(recipeId, out Recipe? recipe)) {
+                item.ApplyRecipeSnapshot(recipe);
+            }
+        }
     }
 }

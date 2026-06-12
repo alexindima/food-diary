@@ -38,6 +38,8 @@ export type ConsumptionItem = {
     consumptionId: string;
     amount: number;
     sourceType: ConsumptionSourceType;
+    sourceAiItemId?: string | null;
+    origin?: string | null;
     product?: Product | null;
     recipe?: Recipe | null;
 };
@@ -47,6 +49,7 @@ export type ConsumptionAiSession = {
     consumptionId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
+    status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItem[];
@@ -65,6 +68,8 @@ export type ConsumptionAiItem = {
     carbs: number;
     fiber: number;
     alcohol: number;
+    confidence?: number | null;
+    resolution?: string | null;
 };
 
 export type ConsumptionResponseDto = {
@@ -130,6 +135,8 @@ export type ConsumptionItemResponseDto = {
     recipeTotalAlcohol?: number | null;
     productQualityScore?: number | null;
     productQualityGrade?: string | null;
+    sourceAiItemId?: string | null;
+    origin?: string | null;
 };
 
 export type ConsumptionAiSessionResponseDto = {
@@ -137,6 +144,7 @@ export type ConsumptionAiSessionResponseDto = {
     consumptionId: string;
     imageAssetId?: string | null;
     imageUrl?: string | null;
+    status?: string | null;
     recognizedAtUtc: string;
     notes?: string | null;
     items: ConsumptionAiItemResponseDto[];
@@ -155,6 +163,8 @@ export type ConsumptionAiItemResponseDto = {
     carbs: number;
     fiber: number;
     alcohol: number;
+    confidence?: number | null;
+    resolution?: string | null;
 };
 
 export enum ConsumptionSourceType {
@@ -190,12 +200,15 @@ export type ConsumptionItemManageDto = {
     productId?: string | null;
     recipeId?: string | null;
     amount: number;
+    sourceAiItemId?: string | null;
+    origin?: string | null;
 };
 
 export type ConsumptionAiSessionManageDto = {
     imageAssetId?: string | null;
     imageUrl?: string | null;
     source?: string | null;
+    status?: string | null;
     recognizedAtUtc?: string | null;
     notes?: string | null;
     items: ConsumptionAiItemManageDto[];
@@ -212,6 +225,8 @@ export type ConsumptionAiItemManageDto = {
     carbs: number;
     fiber: number;
     alcohol: number;
+    confidence?: number | null;
+    resolution?: string | null;
 };
 
 export const createEmptyProductSnapshot = (): Product => ({

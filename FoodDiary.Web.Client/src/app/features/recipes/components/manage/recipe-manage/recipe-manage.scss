@@ -46,6 +46,27 @@
         gap: var(--fd-space-xl);
     }
 
+    &__import-title,
+    &__import-subtitle {
+        margin: 0;
+    }
+
+    &__import-subtitle {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__import-grid {
+        grid-template-columns: 1fr;
+    }
+
+    &__import-text {
+        min-width: 0;
+    }
+
+    &__import-actions {
+        width: 100%;
+    }
+
     &__sticky-stack {
         position: sticky;
         top: calc(var(--fd-space-xl) + var(--fd-space-xs));

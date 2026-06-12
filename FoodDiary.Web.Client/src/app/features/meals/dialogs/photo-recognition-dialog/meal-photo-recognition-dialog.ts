@@ -32,6 +32,7 @@ import type {
     PhotoAiEditItemDrop,
     PhotoAiEditItemUpdate,
     RecognizedItemView,
+    ResolutionOptionView,
     UnitOptionView,
 } from './meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 import { MealPhotoResultActionsComponent } from './meal-photo-result-actions/meal-photo-result-actions';
@@ -48,6 +49,13 @@ const UNIT_OPTIONS: readonly UnitOptionView[] = [
     { value: 'g', labelKey: 'GENERAL.UNITS.G' },
     { value: 'ml', labelKey: 'GENERAL.UNITS.ML' },
     { value: 'pcs', labelKey: 'GENERAL.UNITS.PCS' },
+];
+const RESOLUTION_OPTIONS: readonly ResolutionOptionView[] = [
+    { value: 'Accepted', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_ACCEPTED' },
+    { value: 'Rejected', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REJECTED' },
+    { value: 'Replaced', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_REPLACED' },
+    { value: 'Split', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_SPLIT' },
+    { value: 'Merged', labelKey: 'CONSUMPTION_MANAGE.PHOTO_AI_DIALOG.RESOLUTION_MERGED' },
 ];
 const NUTRITION_FRACTION_THRESHOLD = 0.01;
 
@@ -87,9 +95,11 @@ export class MealPhotoRecognitionDialogComponent {
     protected readonly isEditMode = signal(this.dialogData.mode === 'edit');
     protected readonly isEditing = signal(false);
     protected readonly editItems = signal<EditableAiItem[]>([]);
+    private readonly reviewItems = signal<EditableAiItem[]>([]);
     private readonly sourceItems = signal<EditableAiItem[]>([]);
     private shouldSkipNextImageChange = Boolean(this.dialogData.initialSession);
     protected readonly unitOptions = UNIT_OPTIONS;
+    protected readonly resolutionOptions = RESOLUTION_OPTIONS;
     protected readonly resultViews = computed<RecognizedItemView[]>(() =>
         this.results().map(item => ({
             item,
@@ -219,23 +229,12 @@ export class MealPhotoRecognitionDialogComponent {
             return null;
         }
 
-        const assetId = this.selection()?.assetId ?? null;
-        const items = nutrition.items.map(item => {
-            const match = this.findVisionMatch(item.name);
-            return {
-                nameEn: match?.nameEn ?? item.name,
-                nameLocal: match?.nameLocal ?? null,
-                amount: item.amount,
-                unit: item.unit,
-                calories: item.calories,
-                proteins: item.protein,
-                fats: item.fat,
-                carbs: item.carbs,
-                fiber: item.fiber,
-                alcohol: item.alcohol,
-            };
-        });
+        const nutritionByName = new Map(nutrition.items.map(item => [this.normalizeItemName(item.name), item]));
+        const reviewItems = this.reviewItems();
+        const sourceItems = reviewItems.length > 0 ? reviewItems : this.createReviewItemsFromNutrition(nutrition);
+        const items = sourceItems.map(item => this.toSessionItem(item, nutritionByName));
 
+        const assetId = this.selection()?.assetId ?? null;
         return {
             imageAssetId: assetId,
             imageUrl: this.selection()?.url ?? null,
@@ -245,17 +244,81 @@ export class MealPhotoRecognitionDialogComponent {
         };
     }
 
+    private createReviewItemsFromNutrition(nutrition: FoodNutritionResponse): EditableAiItem[] {
+        return nutrition.items.map(item => this.createReviewItemFromNutritionItem(item));
+    }
+
+    private toSessionItem(
+        item: EditableAiItem,
+        nutritionByName: ReadonlyMap<string, FoodNutritionResponse['items'][number]>,
+    ): MealAiSessionManageDto['items'][number] {
+        const nutritionItem = nutritionByName.get(this.normalizeItemName(item.name));
+        const isRejected = item.resolution === 'Rejected';
+        return {
+            nameEn: item.nameEn,
+            nameLocal: item.nameLocal,
+            amount: item.amount,
+            unit: item.unit,
+            calories: this.resolveNutritionValue(nutritionItem?.calories, isRejected),
+            proteins: this.resolveNutritionValue(nutritionItem?.protein, isRejected),
+            fats: this.resolveNutritionValue(nutritionItem?.fat, isRejected),
+            carbs: this.resolveNutritionValue(nutritionItem?.carbs, isRejected),
+            fiber: this.resolveNutritionValue(nutritionItem?.fiber, isRejected),
+            alcohol: this.resolveNutritionValue(nutritionItem?.alcohol, isRejected),
+            confidence: item.confidence,
+            resolution: item.resolution,
+        };
+    }
+
+    private createReviewItemFromNutritionItem(item: FoodNutritionResponse['items'][number]): EditableAiItem {
+        const match = this.findVisionMatch(item.name);
+        return {
+            id: this.createEditId(),
+            name: this.resolveReviewItemName(match, item.name),
+            nameEn: this.resolveReviewItemNameEn(match, item.name),
+            nameLocal: this.resolveReviewItemNameLocal(match),
+            amount: item.amount,
+            unit: item.unit,
+            confidence: this.resolveReviewItemConfidence(match),
+            resolution: 'Accepted',
+        };
+    }
+
+    private resolveReviewItemName(match: FoodVisionItem | null, fallback: string): string {
+        return match?.nameLocal ?? match?.nameEn ?? fallback;
+    }
+
+    private resolveReviewItemNameEn(match: FoodVisionItem | null, fallback: string): string {
+        return match?.nameEn ?? fallback;
+    }
+
+    private resolveReviewItemNameLocal(match: FoodVisionItem | null): string | null {
+        return match?.nameLocal ?? null;
+    }
+
+    private resolveReviewItemConfidence(match: FoodVisionItem | null): number {
+        return match?.confidence ?? 1;
+    }
+
+    private resolveNutritionValue(value: number | null | undefined, isRejected: boolean): number {
+        return isRejected ? 0 : (value ?? 0);
+    }
+
     private findVisionMatch(name: string | null | undefined): FoodVisionItem | null {
-        if (name === null || name === undefined) {
+        const normalized = this.normalizeItemName(name);
+        if (normalized.length === 0) {
             return null;
         }
 
-        const normalized = name.trim().toLowerCase();
         return (
             this.results().find(
-                item => item.nameEn.trim().toLowerCase() === normalized || item.nameLocal?.trim().toLowerCase() === normalized,
+                item => this.normalizeItemName(item.nameEn) === normalized || this.normalizeItemName(item.nameLocal) === normalized,
             ) ?? null
         );
+    }
+
+    private normalizeItemName(value?: string | null): string {
+        return (value ?? '').trim().toLowerCase();
     }
 
     private runAnalysis(assetId: string): void {
@@ -283,6 +346,7 @@ export class MealPhotoRecognitionDialogComponent {
                 }
                 const items = response.items;
                 this.results.set(items);
+                this.reviewItems.set(buildAiEditableItems(items, null, () => this.createEditId()));
                 if (items.length > 0) {
                     this.runNutrition(items);
                 }
@@ -317,7 +381,10 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     protected startEditing(): void {
-        const editable = buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
+        const editable =
+            this.reviewItems().length > 0
+                ? this.reviewItems()
+                : buildAiEditableItems(this.results(), this.nutrition(), () => this.createEditId());
         this.editItems.set(editable);
         this.sourceItems.set(editable.map(item => ({ ...item })));
         this.isEditing.set(true);
@@ -325,8 +392,10 @@ export class MealPhotoRecognitionDialogComponent {
 
     protected applyEditing(): void {
         const edited = this.editItems().filter(item => item.name.trim().length > 0 && item.amount > 0);
-        const normalized = normalizeAiEditableItems(edited);
+        const activeItems = edited.filter(item => item.resolution !== 'Rejected');
+        const normalized = normalizeAiEditableItems(activeItems);
         const requiresAi = requiresAiNutritionRecalculation(this.sourceItems(), edited);
+        this.reviewItems.set(edited);
         this.results.set(normalized);
         this.hasAnalyzed.set(true);
         this.isEditing.set(false);
@@ -336,7 +405,7 @@ export class MealPhotoRecognitionDialogComponent {
             return;
         }
 
-        const recalculated = recalculateEditedAiNutrition(this.nutrition(), this.sourceItems(), edited);
+        const recalculated = recalculateEditedAiNutrition(this.nutrition(), this.sourceItems(), activeItems);
         if (recalculated !== null) {
             this.nutrition.set(recalculated);
         } else {
@@ -367,7 +436,7 @@ export class MealPhotoRecognitionDialogComponent {
         this.updateEditItem(update.index, update.field, update.value);
     }
 
-    protected updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
+    protected updateEditItem(index: number, field: 'name' | 'amount' | 'unit' | 'resolution', value: string): void {
         this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 
@@ -398,7 +467,19 @@ export class MealPhotoRecognitionDialogComponent {
                 nameLocal: item.nameLocal ?? null,
                 amount: item.amount,
                 unit: item.unit,
-                confidence: 1,
+                confidence: item.confidence ?? 1,
+            })),
+        );
+        this.reviewItems.set(
+            session.items.map(item => ({
+                id: this.createEditId(),
+                name: item.nameLocal ?? item.nameEn,
+                nameEn: item.nameEn,
+                nameLocal: item.nameLocal ?? null,
+                amount: item.amount,
+                unit: item.unit,
+                confidence: item.confidence ?? 1,
+                resolution: this.normalizeResolution(item.resolution),
             })),
         );
         this.hasAnalyzed.set(true);
@@ -410,7 +491,8 @@ export class MealPhotoRecognitionDialogComponent {
     }
 
     private buildNutritionFromSession(items: MealAiSessionManageDto['items']): FoodNutritionResponse {
-        const totals = items.reduce(
+        const activeItems = items.filter(item => item.resolution !== 'Rejected');
+        const totals = activeItems.reduce(
             (acc, item) => ({
                 calories: acc.calories + item.calories,
                 protein: acc.protein + item.proteins,
@@ -424,7 +506,7 @@ export class MealPhotoRecognitionDialogComponent {
 
         return {
             ...totals,
-            items: items.map(item => ({
+            items: activeItems.map(item => ({
                 name: item.nameLocal ?? item.nameEn,
                 amount: item.amount,
                 unit: item.unit,
@@ -436,6 +518,21 @@ export class MealPhotoRecognitionDialogComponent {
                 alcohol: item.alcohol,
             })),
         };
+    }
+
+    private normalizeResolution(value?: string | null): EditableAiItem['resolution'] {
+        if (
+            value === 'Candidate' ||
+            value === 'Accepted' ||
+            value === 'Replaced' ||
+            value === 'Rejected' ||
+            value === 'Split' ||
+            value === 'Merged'
+        ) {
+            return value;
+        }
+
+        return 'Accepted';
     }
     private toMacroSummaryItem(key: MacroSummaryItem['key'], labelKey: string, value: number, unitKey: string): MacroSummaryItem {
         const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;

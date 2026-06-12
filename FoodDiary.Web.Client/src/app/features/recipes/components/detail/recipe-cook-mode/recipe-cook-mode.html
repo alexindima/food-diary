@@ -1,0 +1,75 @@
+@let step = currentStep();
+
+@if (step === null) {
+    <div class="recipe-cook-mode__empty fd-ui-helper-text">{{ 'RECIPE_DETAIL.COOK_MODE.EMPTY' | translate }}</div>
+} @else {
+    <section class="recipe-cook-mode fd-stack fd-gap-lg">
+        <div class="recipe-cook-mode__progress fd-stack fd-gap-xs">
+            <div class="recipe-cook-mode__progress-row">
+                <span class="fd-ui-caption">
+                    {{
+                        'RECIPE_DETAIL.COOK_MODE.PROGRESS'
+                            | translate
+                                : {
+                                      current: currentStepIndex() + 1,
+                                      total: stepCount(),
+                                  }
+                    }}
+                </span>
+                <strong class="recipe-cook-mode__done fd-ui-caption" [hidden]="!isDone()">{{
+                    'RECIPE_DETAIL.COOK_MODE.READY' | translate
+                }}</strong>
+            </div>
+            <div class="recipe-cook-mode__track" aria-hidden="true">
+                <span class="recipe-cook-mode__fill" [style.width.%]="progressPercent()"></span>
+            </div>
+        </div>
+
+        <img class="recipe-cook-mode__image" [src]="step.imageUrl ?? ''" [alt]="step.title ?? recipe().name" [hidden]="!step.imageUrl" />
+
+        <div class="recipe-cook-mode__step fd-stack fd-gap-sm">
+            <h3 class="recipe-cook-mode__title">
+                {{ step.title ?? ('RECIPE_DETAIL.COOK_MODE.STEP_TITLE' | translate: { index: step.stepNumber }) }}
+            </h3>
+            <p class="recipe-cook-mode__instruction fd-ui-body-sm">{{ step.instruction }}</p>
+        </div>
+
+        <section class="recipe-cook-mode__ingredients fd-stack fd-gap-xs" [hidden]="ingredients().length === 0">
+            <h4 class="recipe-cook-mode__ingredients-title fd-ui-card-title">{{ 'RECIPE_DETAIL.COOK_MODE.INGREDIENTS' | translate }}</h4>
+            @for (ingredient of ingredients(); track $index) {
+                <div class="recipe-cook-mode__ingredient-row">
+                    <span class="fd-ui-body-sm">{{ ingredient.name || ('RECIPE_DETAIL.UNKNOWN_INGREDIENT' | translate) }}</span>
+                    <strong class="fd-ui-body-sm"> {{ ingredient.amount }} {{ ingredient.unitKey | translate }} </strong>
+                </div>
+            }
+        </section>
+
+        <div class="recipe-cook-mode__actions fd-ui-actions fd-ui-actions--split">
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                fill="outline"
+                icon="arrow_back"
+                [disabled]="!canGoBack()"
+                (click)="previousStep()"
+            >
+                {{ 'RECIPE_DETAIL.COOK_MODE.PREVIOUS' | translate }}
+            </fd-ui-button>
+            <fd-ui-button type="button" appearance="brand-action" icon="arrow_forward" [disabled]="!canGoNext()" (click)="nextStep()">
+                {{ 'RECIPE_DETAIL.COOK_MODE.NEXT' | translate }}
+            </fd-ui-button>
+        </div>
+
+        <fd-ui-button
+            type="button"
+            class="recipe-cook-mode__log-button"
+            appearance="brand-action"
+            icon="restaurant"
+            [fullWidth]="true"
+            [hidden]="!isDone()"
+            (click)="addRecipeToMeal()"
+        >
+            {{ 'RECIPE_DETAIL.COOK_MODE.ADD_TO_MEAL' | translate }}
+        </fd-ui-button>
+    </section>
+}

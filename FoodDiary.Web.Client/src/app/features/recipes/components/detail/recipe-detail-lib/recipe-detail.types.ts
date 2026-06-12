@@ -1,4 +1,4 @@
-export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged';
+export type RecipeDetailAction = 'Edit' | 'Delete' | 'Duplicate' | 'FavoriteChanged' | 'AddToMeal';
 
 export type MacroBlock = {
     labelKey: string;

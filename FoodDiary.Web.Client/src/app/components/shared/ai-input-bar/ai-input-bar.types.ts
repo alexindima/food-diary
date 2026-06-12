@@ -20,6 +20,8 @@ export type AiInputBarResultItem = {
     carbs: number;
     fiber: number;
     alcohol: number;
+    confidence?: number | null;
+    resolution?: string | null;
 };
 
 export type AiInputBarResult = {

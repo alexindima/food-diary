@@ -100,7 +100,7 @@
 }
 
 .photo-ai-dialog__edit-row {
-    grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) 28px;
+    grid-template-columns: 28px minmax(0, 2fr) minmax(0, 0.8fr) minmax(0, 0.7fr) minmax(0, 1fr) 28px;
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--photo-ai-field-radius);
     border: var(--fd-border-width) solid var(--photo-ai-border);
@@ -332,5 +332,13 @@
 
     .photo-ai-dialog__nutrition-bar {
         width: 100%;
+    }
+
+    .photo-ai-dialog__edit-row {
+        grid-template-columns: 28px minmax(0, 1fr) minmax(72px, 0.7fr) minmax(72px, 0.7fr) 28px;
+    }
+
+    .photo-ai-dialog__edit-select--resolution {
+        grid-column: 2 / 5;
     }
 }

@@ -115,7 +115,7 @@ describe('recipe manage DTO mapping', () => {
             category: formValue.category,
             imageUrl: formValue.imageUrl?.url,
             imageAssetId: formValue.imageUrl?.assetId,
-            prepTime: 0,
+            prepTime: null,
             cookTime: formValue.cookTime,
             servings: DEFAULT_SERVINGS,
             visibility: RecipeVisibility.Private,
@@ -153,6 +153,20 @@ describe('recipe manage DTO mapping', () => {
         };
 
         expect(buildRecipeDto(formValue, 'recipe', 1, scaleValue).manualCalories).toBeNull();
+    });
+
+    it('should preserve empty optional timing fields as null in DTO', () => {
+        const formValue: RecipeFormValues = {
+            ...createRecipeFormValue(),
+            name: 'Recipe without timing',
+            prepTime: null,
+            cookTime: null,
+        };
+
+        const dto = buildRecipeDto(formValue, 'recipe', 1, scaleValue);
+
+        expect(dto.prepTime).toBeNull();
+        expect(dto.cookTime).toBeNull();
     });
 });
 

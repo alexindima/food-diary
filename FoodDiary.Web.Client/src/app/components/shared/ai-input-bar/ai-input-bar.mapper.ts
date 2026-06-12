@@ -20,6 +20,8 @@ export function mapNutritionItemsToAiInputBarItems(nutrition: FoodNutritionRespo
             carbs: item.carbs,
             fiber: item.fiber,
             alcohol: item.alcohol,
+            confidence: match?.confidence ?? 1,
+            resolution: 'Accepted',
         };
     });
 }

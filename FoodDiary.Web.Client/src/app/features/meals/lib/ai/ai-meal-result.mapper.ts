@@ -25,6 +25,7 @@ export function buildMealManageDtoFromAiResult(result: AiInputBarResult, mealDat
                 source: result.source,
                 imageAssetId: result.imageAssetId,
                 imageUrl: result.imageUrl,
+                status: 'Reviewed',
                 recognizedAtUtc: result.recognizedAtUtc,
                 notes: result.notes,
                 items: result.items,

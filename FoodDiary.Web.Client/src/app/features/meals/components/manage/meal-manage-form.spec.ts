@@ -106,7 +106,7 @@ describe('MealManageFormComponent submit behavior', () => {
                 mealType: 'BREAKFAST',
                 comment: 'Lunch',
                 isNutritionAutoCalculated: true,
-                items: [{ productId: 'product-1', recipeId: null, amount: PRODUCT_AMOUNT }],
+                items: [{ productId: 'product-1', recipeId: null, amount: PRODUCT_AMOUNT, origin: 'Manual' }],
             }),
         );
         expect(mealManageFacade.showSuccessRedirectAsync).toHaveBeenCalledWith(false);

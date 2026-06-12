@@ -115,6 +115,28 @@ public class CreateConsumptionCommandValidatorTests {
     }
 
     [Fact]
+    public async Task Validate_WhenAiItemConfidenceIsOutOfRange_HasError() {
+        CreateConsumptionCommand command = CreateCommand(
+            items: [],
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                new ConsumptionAiItemInput("Apple", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0, Confidence: 1.1),
+            ])]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
+    public async Task Validate_WhenAiItemResolutionIsUnknown_HasError() {
+        CreateConsumptionCommand command = CreateCommand(
+            items: [],
+            aiSessions: [new ConsumptionAiSessionInput(ImageAssetId: null, "Text", DateTime.UtcNow, Notes: null, [
+                new ConsumptionAiItemInput("Apple", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0, Resolution: "UnknownResolution"),
+            ])]);
+        TestValidationResult<CreateConsumptionCommand> result = await _validator.TestValidateAsync(command);
+        Assert.NotEmpty(result.Errors);
+    }
+
+    [Fact]
     public async Task Validate_WhenAiSessionRecognizedAtIsUnspecified_HasError() {
         CreateConsumptionCommand command = CreateCommand(
             items: [],

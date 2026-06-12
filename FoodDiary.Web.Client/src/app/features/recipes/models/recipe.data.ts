@@ -109,8 +109,8 @@ export type RecipeDto = {
     category?: string | null;
     imageUrl?: string | null;
     imageAssetId?: string | null;
-    prepTime: number;
-    cookTime: number;
+    prepTime?: number | null;
+    cookTime?: number | null;
     servings: number;
     visibility: RecipeVisibility;
     calculateNutritionAutomatically: boolean;

@@ -78,7 +78,9 @@ public static class ConsumptionHttpResponseMappings {
             model.RecipeTotalFiber,
             model.RecipeTotalAlcohol,
             model.ProductQualityScore,
-            model.ProductQualityGrade
+            model.ProductQualityGrade,
+            model.SourceAiItemId,
+            model.Origin
         );
     }
 
@@ -89,6 +91,7 @@ public static class ConsumptionHttpResponseMappings {
             model.ImageAssetId,
             model.ImageUrl,
             model.Source,
+            model.Status,
             model.RecognizedAtUtc,
             model.Notes,
             model.Items.ToHttpResponseList(ToHttpResponse)
@@ -108,7 +111,9 @@ public static class ConsumptionHttpResponseMappings {
             model.Fats,
             model.Carbs,
             model.Fiber,
-            model.Alcohol
+            model.Alcohol,
+            model.Confidence,
+            model.Resolution
         );
     }
 }

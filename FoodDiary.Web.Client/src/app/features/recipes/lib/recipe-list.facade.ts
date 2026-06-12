@@ -146,6 +146,11 @@ export class RecipeListFacade {
             return;
         }
 
+        if (result.action === 'AddToMeal') {
+            this.addToMeal(recipe);
+            return;
+        }
+
         if (result.action === 'Delete') {
             this.deleteRecipe(recipe, search, onlyMine).subscribe();
         }

@@ -192,9 +192,17 @@ public class UpdateConsumptionCommandHandler(
             }
 
             if (item.ProductId.HasValue) {
-                meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
+                MealItem mealItem = meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
+                Result sourceResult = ApplySource(mealItem, item);
+                if (sourceResult.IsFailure) {
+                    return sourceResult;
+                }
             } else if (item.RecipeId.HasValue) {
-                meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
+                MealItem mealItem = meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
+                Result sourceResult = ApplySource(mealItem, item);
+                if (sourceResult.IsFailure) {
+                    return sourceResult;
+                }
             }
         }
 
@@ -362,6 +370,38 @@ public class UpdateConsumptionCommandHandler(
         return Result.Success();
     }
 
+    private static Result ApplySource(MealItem mealItem, ConsumptionItemInput item) {
+        if (!TryParseMealItemOrigin(item.Origin, out MealItemOrigin origin)) {
+            return Result.Failure(
+                    Errors.Validation.Invalid(nameof(item.Origin), "Unknown meal item origin value."));
+        }
+
+        if (item.SourceAiItemId == Guid.Empty) {
+            return Result.Failure(
+                    Errors.Validation.Invalid(nameof(item.SourceAiItemId), "Source AI item id must not be empty."));
+        }
+
+        try {
+            MealAiItemId? sourceAiItemId = item.SourceAiItemId.HasValue
+                ? new MealAiItemId(item.SourceAiItemId.Value)
+                : null;
+            mealItem.ApplySource(sourceAiItemId, origin);
+        } catch (ArgumentException ex) {
+            return Result.Failure(Errors.Validation.Invalid("Items", ex.Message));
+        }
+
+        return Result.Success();
+    }
+
+    private static bool TryParseMealItemOrigin(string? origin, out MealItemOrigin result) {
+        if (string.IsNullOrWhiteSpace(origin)) {
+            result = MealItemOrigin.Manual;
+            return true;
+        }
+
+        return Enum.TryParse(origin, ignoreCase: true, out result);
+    }
+
     private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
         if (!string.IsNullOrWhiteSpace(source)) {
             return Enum.TryParse(source, ignoreCase: true, out result);
@@ -375,6 +415,11 @@ public class UpdateConsumptionCommandHandler(
     private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {
         var items = new List<MealAiItemData>(session.Items.Count);
         foreach (ConsumptionAiItemInput aiItem in session.Items) {
+            if (!TryParseAiItemResolution(aiItem.Resolution, out MealAiItemResolution resolution)) {
+                return Result.Failure<List<MealAiItemData>>(
+                    Errors.Validation.Invalid(nameof(aiItem.Resolution), "Unknown AI item resolution value."));
+            }
+
             if (!MealAiItemData.TryCreate(
                     aiItem.NameEn,
                     aiItem.NameLocal,
@@ -386,6 +431,8 @@ public class UpdateConsumptionCommandHandler(
                     aiItem.Carbs,
                     aiItem.Fiber,
                     aiItem.Alcohol,
+                    aiItem.Confidence ?? 1,
+                    resolution,
                     out MealAiItemData? data,
                     out string? error)) {
                 return Result.Failure<List<MealAiItemData>>(
@@ -396,5 +443,14 @@ public class UpdateConsumptionCommandHandler(
         }
 
         return Result.Success(items);
+    }
+
+    private static bool TryParseAiItemResolution(string? resolution, out MealAiItemResolution result) {
+        if (string.IsNullOrWhiteSpace(resolution)) {
+            result = MealAiItemResolution.Accepted;
+            return true;
+        }
+
+        return Enum.TryParse(resolution, ignoreCase: true, out result);
     }
 }

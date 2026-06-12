@@ -53,7 +53,7 @@ public static class ConsumptionHttpMappings {
             request.PostMealSatietyLevel);
 
     private static ConsumptionItemInput ToInput(ConsumptionItemHttpRequest request) =>
-        new(request.ProductId, request.RecipeId, request.Amount);
+        new(request.ProductId, request.RecipeId, request.Amount, request.SourceAiItemId, request.Origin);
 
     private static ConsumptionAiSessionInput ToInput(ConsumptionAiSessionHttpRequest request) =>
         new(
@@ -74,7 +74,9 @@ public static class ConsumptionHttpMappings {
             request.Fats,
             request.Carbs,
             request.Fiber,
-            request.Alcohol);
+            request.Alcohol,
+            request.Confidence,
+            request.Resolution);
 
     private static List<ConsumptionItemInput> ToItemInputs(IReadOnlyList<ConsumptionItemHttpRequest>? requests) =>
         requests?.Select(ToInput).ToList() ?? [];

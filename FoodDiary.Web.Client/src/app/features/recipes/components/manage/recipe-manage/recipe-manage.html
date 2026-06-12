@@ -22,6 +22,60 @@
 
             <div class="recipe-manage__grid fd-grid fd-gap-lg">
                 <div class="recipe-manage__column recipe-manage__column--primary fd-stack">
+                    @if (isImportPanelVisible()) {
+                        <fd-ui-card class="recipe-manage__import-card" appearance="entry" tone="editor-gradient" density="relaxed">
+                            <div class="recipe-manage__import fd-stack fd-gap-md">
+                                <div class="recipe-manage__import-header fd-stack fd-gap-xxs">
+                                    <h2 class="recipe-manage__import-title fd-ui-card-title">
+                                        {{ 'RECIPE_MANAGE.IMPORT.TITLE' | translate }}
+                                    </h2>
+                                    <p class="recipe-manage__import-subtitle fd-ui-body-sm">
+                                        {{ 'RECIPE_MANAGE.IMPORT.SUBTITLE' | translate }}
+                                    </p>
+                                </div>
+
+                                <div class="recipe-manage__import-grid fd-grid fd-gap-md">
+                                    <fd-ui-input
+                                        size="lg"
+                                        [value]="importUrl()"
+                                        [label]="'RECIPE_MANAGE.IMPORT.URL_LABEL' | translate"
+                                        [placeholder]="'RECIPE_MANAGE.IMPORT.URL_PLACEHOLDER' | translate"
+                                        (valueChange)="onImportUrlChange($event)"
+                                    />
+                                    <fd-ui-textarea
+                                        class="recipe-manage__import-text"
+                                        [value]="importText()"
+                                        [label]="'RECIPE_MANAGE.IMPORT.TEXT_LABEL' | translate"
+                                        [placeholder]="'RECIPE_MANAGE.IMPORT.TEXT_PLACEHOLDER' | translate"
+                                        [rows]="5"
+                                        (valueChange)="onImportTextChange($event)"
+                                    />
+                                </div>
+
+                                @if (importErrorKey()) {
+                                    <div
+                                        class="recipe-manage__import-error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm"
+                                        role="alert"
+                                    >
+                                        {{ importErrorKey() | translate }}
+                                    </div>
+                                }
+
+                                <div class="recipe-manage__import-actions fd-ui-actions fd-ui-actions--end">
+                                    <fd-ui-button
+                                        type="button"
+                                        variant="secondary"
+                                        fill="outline"
+                                        icon="auto_fix_high"
+                                        (click)="applyImportDraft()"
+                                    >
+                                        {{ 'RECIPE_MANAGE.IMPORT.APPLY_BUTTON' | translate }}
+                                    </fd-ui-button>
+                                </div>
+                            </div>
+                        </fd-ui-card>
+                    }
+
                     <fd-recipe-basic-info [form]="recipeSignalForm" />
 
                     <fd-recipe-steps-list

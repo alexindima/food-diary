@@ -119,7 +119,7 @@ describe('AiPhotoResultComponent editing', () => {
         component['applyEditing']();
 
         expect(editSpy).toHaveBeenCalledWith({
-            items: [{ nameEn: 'egg', nameLocal: 'яйцо', amount: HALF_AMOUNT, unit: 'g', confidence: 1 }],
+            items: [{ nameEn: 'egg', nameLocal: 'яйцо', amount: HALF_AMOUNT, unit: 'g', confidence: 0.9 }],
             nutrition: {
                 calories: HALF_CALORIES,
                 protein: HALF_PROTEIN,
@@ -158,7 +158,7 @@ describe('AiPhotoResultComponent editing', () => {
         component['applyEditing']();
 
         expect(editSpy).toHaveBeenCalledWith({
-            items: [{ nameEn: 'omelette', nameLocal: 'omelette', amount: ORIGINAL_AMOUNT, unit: 'g', confidence: 1 }],
+            items: [{ nameEn: 'omelette', nameLocal: 'omelette', amount: ORIGINAL_AMOUNT, unit: 'g', confidence: 0.9 }],
             nutrition: null,
         });
     });

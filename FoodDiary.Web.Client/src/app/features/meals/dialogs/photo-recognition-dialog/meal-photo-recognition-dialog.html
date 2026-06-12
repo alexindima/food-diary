@@ -31,6 +31,7 @@
                         <fd-meal-photo-edit-list
                             [items]="editItems()"
                             [unitOptions]="unitOptions"
+                            [resolutionOptions]="resolutionOptions"
                             (itemDropped)="onEditItemDrop($event)"
                             (itemUpdated)="updateEditItemFromView($event)"
                             (itemRemoved)="removeEditItem($event)"

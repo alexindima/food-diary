@@ -14,6 +14,11 @@ export type UnitOptionView = {
     labelKey: string;
 };
 
+export type ResolutionOptionView = {
+    value: EditableAiItem['resolution'];
+    labelKey: string;
+};
+
 export type MacroSummaryItem = {
     key: 'calories' | 'protein' | 'fat' | 'carbs' | 'fiber' | 'alcohol';
     labelKey: string;
@@ -31,6 +36,6 @@ export type PhotoAiEditItemDrop = {
 
 export type PhotoAiEditItemUpdate = {
     index: number;
-    field: 'name' | 'amount' | 'unit';
+    field: 'name' | 'amount' | 'unit' | 'resolution';
     value: string;
 };

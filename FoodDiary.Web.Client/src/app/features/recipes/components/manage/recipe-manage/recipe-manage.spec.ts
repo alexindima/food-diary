@@ -160,6 +160,34 @@ describe('RecipeManageComponent submission', () => {
     });
 });
 
+describe('RecipeManageComponent import draft shell', () => {
+    it('applies pasted recipe text to draft fields', async () => {
+        const { component } = await setupComponentAsync();
+
+        component['onImportUrlChange']('https://example.test/recipe');
+        component['onImportTextChange']('Pancakes\nIngredients:\nFlour\nMilk\nSteps:\n1. Mix batter\n2. Cook on pan');
+        component['applyImportDraft']();
+
+        expect(component['recipeFormModel']().name).toBe('Pancakes');
+        expect(component['recipeFormModel']().description).toContain('Flour\nMilk');
+        expect(component['recipeFormModel']().comment).toBe('RECIPE_MANAGE.IMPORT.SOURCE_LABEL: https://example.test/recipe');
+        expect(component['steps'].length).toBe(DEFAULT_SERVINGS);
+        expect(component['steps'][0]?.description).toBe('Mix batter');
+        expect(component['steps'][1]?.description).toBe('Cook on pan');
+        expect(component['expandedStepsSet'].has(0)).toBe(true);
+        expect(component['expandedStepsSet'].has(1)).toBe(true);
+        expect(component['importErrorKey']()).toBeNull();
+    });
+
+    it('requires pasted text or source URL before applying an import draft', async () => {
+        const { component } = await setupComponentAsync();
+
+        component['applyImportDraft']();
+
+        expect(component['importErrorKey']()).toBe('RECIPE_MANAGE.IMPORT.EMPTY_ERROR');
+    });
+});
+
 describe('RecipeManageComponent nutrition state', () => {
     it('should copy current summary into manual controls when switching to manual mode', async () => {
         const { component, facade } = await setupComponentAsync({

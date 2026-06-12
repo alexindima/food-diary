@@ -231,7 +231,7 @@ export class AiPhotoResultComponent {
         this.updateEditItem(update.index, update.field, update.value);
     }
 
-    protected updateEditItem(index: number, field: 'name' | 'amount' | 'unit', value: string): void {
+    protected updateEditItem(index: number, field: AiEditItemUpdate['field'], value: string): void {
         this.editItems.update(items => updateAiEditableItem(items, index, field, value));
     }
 

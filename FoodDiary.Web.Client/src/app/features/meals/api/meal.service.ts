@@ -209,6 +209,8 @@ export class MealService extends ApiService {
             consumptionId: response.consumptionId,
             amount: response.amount,
             sourceType,
+            sourceAiItemId: response.sourceAiItemId ?? null,
+            origin: response.origin ?? null,
             product,
             recipe,
         };
@@ -256,6 +258,7 @@ export class MealService extends ApiService {
             consumptionId: response.consumptionId,
             imageAssetId: response.imageAssetId ?? null,
             imageUrl: response.imageUrl ?? null,
+            status: response.status ?? null,
             recognizedAtUtc: response.recognizedAtUtc,
             notes: response.notes ?? null,
             items: response.items.map(item => ({
@@ -271,6 +274,8 @@ export class MealService extends ApiService {
                 carbs: item.carbs,
                 fiber: item.fiber,
                 alcohol: item.alcohol,
+                confidence: item.confidence ?? 1,
+                resolution: item.resolution ?? 'Accepted',
             })),
         };
     }
