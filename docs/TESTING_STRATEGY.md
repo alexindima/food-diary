@@ -20,8 +20,8 @@ These tests are also the best executable documentation for backend boundaries.
 | `tests/FoodDiary.Web.Api.IntegrationTests` | API host behavior, OpenAPI/Swagger snapshots, HTTP contract snapshots. |
 | `tests/FoodDiary.JobManager.Tests` | Job registration, recurring job behavior, job execution policy. |
 | `tests/FoodDiary.Telegram.Bot.Tests` | Bot parsing, command/callback behavior, worker edge cases. |
-| `tests/FoodDiary.MailRelay.Tests` | MailRelay application/client/host behavior. |
-| `tests/FoodDiary.MailInbox.Tests` | MailInbox application/infrastructure/presentation behavior. |
+| `MailRelay/tests/FoodDiary.MailRelay.Tests` | MailRelay application/client/host behavior. |
+| `MailInbox/tests/FoodDiary.MailInbox.Tests` | MailInbox application/infrastructure/presentation behavior. |
 | `tests/FoodDiary.Mediator.Tests` | Shared mediator behavior. |
 
 ## Frontend Checks

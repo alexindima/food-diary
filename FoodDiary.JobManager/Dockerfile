@@ -7,8 +7,8 @@ COPY Shared/FoodDiary.Mediator/*.csproj Shared/FoodDiary.Mediator/
 COPY FoodDiary.Domain/*.csproj FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/*.csproj FoodDiary.Application.Abstractions/
 COPY FoodDiary.Application/*.csproj FoodDiary.Application/
-COPY FoodDiary.MailInbox.Client/*.csproj FoodDiary.MailInbox.Client/
-COPY FoodDiary.MailRelay.Client/*.csproj FoodDiary.MailRelay.Client/
+COPY MailInbox/FoodDiary.MailInbox.Client/*.csproj MailInbox/FoodDiary.MailInbox.Client/
+COPY MailRelay/FoodDiary.MailRelay.Client/*.csproj MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/*.csproj FoodDiary.Infrastructure/
 COPY FoodDiary.Integrations/*.csproj FoodDiary.Integrations/
 COPY FoodDiary.Resources/*.csproj FoodDiary.Resources/
@@ -20,8 +20,8 @@ COPY Shared/FoodDiary.Mediator/ Shared/FoodDiary.Mediator/
 COPY FoodDiary.Domain/ FoodDiary.Domain/
 COPY FoodDiary.Application.Abstractions/ FoodDiary.Application.Abstractions/
 COPY FoodDiary.Application/ FoodDiary.Application/
-COPY FoodDiary.MailInbox.Client/ FoodDiary.MailInbox.Client/
-COPY FoodDiary.MailRelay.Client/ FoodDiary.MailRelay.Client/
+COPY MailInbox/FoodDiary.MailInbox.Client/ MailInbox/FoodDiary.MailInbox.Client/
+COPY MailRelay/FoodDiary.MailRelay.Client/ MailRelay/FoodDiary.MailRelay.Client/
 COPY FoodDiary.Infrastructure/ FoodDiary.Infrastructure/
 COPY FoodDiary.Integrations/ FoodDiary.Integrations/
 COPY FoodDiary.Resources/ FoodDiary.Resources/

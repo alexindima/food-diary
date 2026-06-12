@@ -59,7 +59,7 @@ services:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailrelay-initializer:${MAIL_RELAY_INITIALIZER_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: FoodDiary.MailRelay.Initializer/Dockerfile
+      dockerfile: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
     command: ["dotnet", "FoodDiary.MailRelay.Initializer.dll", "update"]
     env_file:
       - .env
@@ -95,7 +95,7 @@ services:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mailinbox-initializer:${MAIL_INBOX_INITIALIZER_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: FoodDiary.MailInbox.Initializer/Dockerfile
+      dockerfile: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
     command: ["dotnet", "FoodDiary.MailInbox.Initializer.dll", "update"]
     env_file:
       - .env
@@ -188,7 +188,7 @@ services:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-relay:${MAIL_RELAY_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: FoodDiary.MailRelay.WebApi/Dockerfile
+      dockerfile: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
     restart: unless-stopped
     ports:
       - "${MAIL_RELAY_PORT:-5088}:5088"
@@ -220,7 +220,7 @@ services:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/mail-inbox:${MAIL_INBOX_IMAGE_TAG:-latest}
     build:
       context: .
-      dockerfile: FoodDiary.MailInbox.WebApi/Dockerfile
+      dockerfile: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
     restart: unless-stopped
     ports:
       - "${MAIL_INBOX_PORT:-5098}:5098"

@@ -4,8 +4,8 @@
     <Project Path="tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj" />
     <Project Path="tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj" />
     <Project Path="tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj" />
-    <Project Path="tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj" />
-    <Project Path="tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj" />
+    <Project Path="MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj" />
+    <Project Path="MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj" />
     <Project Path="tests/FoodDiary.Mediator.Tests/FoodDiary.Mediator.Tests.csproj" />
     <Project Path="tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj" />
     <Project Path="tests/FoodDiary.Resources.Tests/FoodDiary.Resources.Tests.csproj" />
@@ -23,22 +23,22 @@
     <Project Path="Shared/FoodDiary.Mediator/FoodDiary.Mediator.csproj" />
   </Folder>
   <Folder Name="/MailInbox/">
-    <Project Path="FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
-    <Project Path="FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
-    <Project Path="FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj" />
-    <Project Path="FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj" />
-    <Project Path="FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj" />
-    <Project Path="FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj" />
-    <Project Path="FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj" />
+    <Project Path="MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj" />
   </Folder>
   <Folder Name="/MailRelay/">
-    <Project Path="FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
-    <Project Path="FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
-    <Project Path="FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj" />
-    <Project Path="FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj" />
-    <Project Path="FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj" />
-    <Project Path="FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj" />
-    <Project Path="FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj" />
+    <Project Path="MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj" />
   </Folder>
   <Project Path="FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj" />
   <Project Path="FoodDiary.Resources/FoodDiary.Resources.csproj" />

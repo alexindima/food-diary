@@ -3,11 +3,11 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ClientPackageBoundaryTests {
     [Theory]
-    [InlineData("FoodDiary.MailRelay.Client")]
-    [InlineData("FoodDiary.MailInbox.Client")]
-    public void ClientPackages_DoNotReferenceServerSideNamespaces(string projectFolder) {
+    [InlineData("FoodDiary.MailRelay.Client", "MailRelay/FoodDiary.MailRelay.Client")]
+    [InlineData("FoodDiary.MailInbox.Client", "MailInbox/FoodDiary.MailInbox.Client")]
+    public void ClientPackages_DoNotReferenceServerSideNamespaces(string projectName, string projectFolder) {
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);
-        string boundedContextPrefix = projectFolder[..projectFolder.LastIndexOf('.')];
+        string boundedContextPrefix = projectName[..projectName.LastIndexOf('.')];
         string[] forbiddenPatterns = [
             $"{boundedContextPrefix}.Application",
             $"{boundedContextPrefix}.Domain",
@@ -31,12 +31,12 @@ public sealed class ClientPackageBoundaryTests {
     }
 
     [Theory]
-    [InlineData("FoodDiary.MailRelay.Client")]
-    [InlineData("FoodDiary.MailInbox.Client")]
-    public void ClientPackages_ExposeOnlyClientModelsOptionsAndRegistrationSurface(string projectFolder) {
+    [InlineData("FoodDiary.MailRelay.Client", "MailRelay/FoodDiary.MailRelay.Client")]
+    [InlineData("FoodDiary.MailInbox.Client", "MailInbox/FoodDiary.MailInbox.Client")]
+    public void ClientPackages_ExposeOnlyClientModelsOptionsAndRegistrationSurface(string projectName, string projectFolder) {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string clientRoot = ArchitectureTestPaths.FromRoot(projectFolder);
-        string contextName = GetBoundedContextName(projectFolder);
+        string contextName = GetBoundedContextName(projectName);
         var allowedRootFiles = new HashSet<string>(StringComparer.Ordinal) {
             $"I{contextName}Client.cs",
             $"{contextName}Client.cs",

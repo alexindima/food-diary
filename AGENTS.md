@@ -21,20 +21,20 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Shared mediator: `Shared/FoodDiary.Mediator/AGENTS.md`
 - Tests: `tests/AGENTS.md`
 - Architecture tests: `tests/FoodDiary.ArchitectureTests/AGENTS.md`
-- Mail inbox application layer: `FoodDiary.MailInbox.Application/AGENTS.md`
-- Mail inbox client package: `FoodDiary.MailInbox.Client/AGENTS.md`
-- Mail inbox domain layer: `FoodDiary.MailInbox.Domain/AGENTS.md`
-- Mail inbox infrastructure layer: `FoodDiary.MailInbox.Infrastructure/AGENTS.md`
-- Mail inbox initializer: `FoodDiary.MailInbox.Initializer/AGENTS.md`
-- Mail inbox presentation layer: `FoodDiary.MailInbox.Presentation/AGENTS.md`
-- Mail inbox Web API host: `FoodDiary.MailInbox.WebApi/AGENTS.md`
-- Mail relay application layer: `FoodDiary.MailRelay.Application/AGENTS.md`
-- Mail relay client package: `FoodDiary.MailRelay.Client/AGENTS.md`
-- Mail relay domain layer: `FoodDiary.MailRelay.Domain/AGENTS.md`
-- Mail relay infrastructure layer: `FoodDiary.MailRelay.Infrastructure/AGENTS.md`
-- Mail relay initializer: `FoodDiary.MailRelay.Initializer/AGENTS.md`
-- Mail relay presentation layer: `FoodDiary.MailRelay.Presentation/AGENTS.md`
-- Mail relay Web API host: `FoodDiary.MailRelay.WebApi/AGENTS.md`
+- Mail inbox application layer: `MailInbox/FoodDiary.MailInbox.Application/AGENTS.md`
+- Mail inbox client package: `MailInbox/FoodDiary.MailInbox.Client/AGENTS.md`
+- Mail inbox domain layer: `MailInbox/FoodDiary.MailInbox.Domain/AGENTS.md`
+- Mail inbox infrastructure layer: `MailInbox/FoodDiary.MailInbox.Infrastructure/AGENTS.md`
+- Mail inbox initializer: `MailInbox/FoodDiary.MailInbox.Initializer/AGENTS.md`
+- Mail inbox presentation layer: `MailInbox/FoodDiary.MailInbox.Presentation/AGENTS.md`
+- Mail inbox Web API host: `MailInbox/FoodDiary.MailInbox.WebApi/AGENTS.md`
+- Mail relay application layer: `MailRelay/FoodDiary.MailRelay.Application/AGENTS.md`
+- Mail relay client package: `MailRelay/FoodDiary.MailRelay.Client/AGENTS.md`
+- Mail relay domain layer: `MailRelay/FoodDiary.MailRelay.Domain/AGENTS.md`
+- Mail relay infrastructure layer: `MailRelay/FoodDiary.MailRelay.Infrastructure/AGENTS.md`
+- Mail relay initializer: `MailRelay/FoodDiary.MailRelay.Initializer/AGENTS.md`
+- Mail relay presentation layer: `MailRelay/FoodDiary.MailRelay.Presentation/AGENTS.md`
+- Mail relay Web API host: `MailRelay/FoodDiary.MailRelay.WebApi/AGENTS.md`
 - Telegram bot: `FoodDiary.Telegram.Bot/AGENTS.md`
 
 ## Cross-Repo Rules

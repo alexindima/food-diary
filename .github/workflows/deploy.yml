@@ -169,7 +169,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: FoodDiary.MailRelay.WebApi/Dockerfile
+          file: MailRelay/FoodDiary.MailRelay.WebApi/Dockerfile
           push: true
           provenance: false
           tags: |
@@ -190,7 +190,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: FoodDiary.MailRelay.Initializer/Dockerfile
+          file: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
           push: true
           provenance: false
           tags: |
@@ -211,7 +211,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: FoodDiary.MailInbox.WebApi/Dockerfile
+          file: MailInbox/FoodDiary.MailInbox.WebApi/Dockerfile
           push: true
           provenance: false
           tags: |
@@ -232,7 +232,7 @@ jobs:
         uses: docker/build-push-action@v7
         with:
           context: .
-          file: FoodDiary.MailInbox.Initializer/Dockerfile
+          file: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
           push: true
           provenance: false
           tags: |

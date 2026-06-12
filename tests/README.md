@@ -1,4 +1,4 @@
-﻿# Tests Guide
+# Tests Guide
 
 ## Structure
 - `FoodDiary.ArchitectureTests`:
@@ -10,7 +10,7 @@
 - `FoodDiary.Web.Api.IntegrationTests`:
   - API-level integration tests via `WebApplicationFactory`.
   - Uses in-memory database setup in test host.
-- `FoodDiary.MailRelay.Tests`:
+- `MailRelay/tests/FoodDiary.MailRelay.Tests`:
   - Relay-level integration tests via `WebApplicationFactory`.
   - Uses PostgreSQL + RabbitMQ Testcontainers and a fake delivery transport.
 
@@ -18,7 +18,7 @@
 - New domain invariant/event behavior: `FoodDiary.Application.Tests/Domain/*`
 - New application use-case/handler logic: `FoodDiary.Application.Tests/<Feature>/*`
 - New API endpoint flow/auth contract: `FoodDiary.Web.Api.IntegrationTests/*`
-- New mail relay broker/queue flow: `FoodDiary.MailRelay.Tests/*`
+- New mail relay broker/queue flow: `MailRelay/tests/FoodDiary.MailRelay.Tests/*`
 - New architecture rule: `FoodDiary.ArchitectureTests/*`
 - Backend HTTP contract changes should also review/update snapshots and PR notes per `../docs/backend/BACKEND_API_CONTRACT_GOVERNANCE.md`
 - Swagger/OpenAPI contract changes must update the checked-in snapshot files in `FoodDiary.Web.Api.IntegrationTests/Snapshots/`
