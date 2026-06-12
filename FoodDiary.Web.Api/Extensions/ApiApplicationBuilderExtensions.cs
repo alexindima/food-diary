@@ -33,12 +33,23 @@ public static class ApiApplicationBuilderExtensions {
         app.UseMiddleware<ImpersonationAccessGuardMiddleware>();
         app.UseOutputCache();
 
+        app.MapOperationalEndpoints();
+        app.MapVersionEndpoints();
+        app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
+
+        return app;
+    }
+
+    private static void MapOperationalEndpoints(this WebApplication app) {
         app.MapHealthChecks("/health/live", new HealthCheckOptions {
             Predicate = ExcludeHealthChecks,
         }).WithMetadata(new SuppressRequestAccessLogAttribute());
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
             Predicate = IsReadyHealthCheck,
         }).WithMetadata(new SuppressRequestAccessLogAttribute());
+    }
+
+    private static void MapVersionEndpoints(this WebApplication app) {
         static IResult BuildVersionResponse(ApiBuildInfo buildInfo) {
             return Results.Ok(new ApiVersionResponse(
                 buildInfo.CommitSha,
@@ -52,9 +63,6 @@ public static class ApiApplicationBuilderExtensions {
             .ExcludeFromDescription();
         app.MapGet("/api/v1/version", BuildVersionResponse)
             .ExcludeFromDescription();
-        app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
-
-        return app;
     }
 
     private static bool ExcludeHealthChecks(HealthCheckRegistration _) => false;
