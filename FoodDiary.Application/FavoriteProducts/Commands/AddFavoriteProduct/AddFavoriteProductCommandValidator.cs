@@ -13,7 +13,7 @@ public sealed class AddFavoriteProductCommandValidator : AbstractValidator<AddFa
             .GreaterThan(0)
             .Must(value => !double.IsNaN(value!.Value) && !double.IsInfinity(value.Value))
             .When(x => x.PreferredPortionAmount.HasValue)
-            .WithErrorCode("Validation.Range")
+            .WithErrorCode("Validation.Invalid")
             .WithMessage("Preferred portion amount must be a positive finite number.");
     }
 }
