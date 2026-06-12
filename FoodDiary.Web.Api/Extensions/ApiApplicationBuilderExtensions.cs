@@ -1,4 +1,5 @@
 using FoodDiary.Presentation.Api.Extensions;
+using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Build;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -34,10 +35,10 @@ public static class ApiApplicationBuilderExtensions {
 
         app.MapHealthChecks("/health/live", new HealthCheckOptions {
             Predicate = ExcludeHealthChecks,
-        });
+        }).WithMetadata(new SuppressRequestAccessLogAttribute());
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
             Predicate = IsReadyHealthCheck,
-        });
+        }).WithMetadata(new SuppressRequestAccessLogAttribute());
         static IResult BuildVersionResponse(ApiBuildInfo buildInfo) {
             return Results.Ok(new ApiVersionResponse(
                 buildInfo.CommitSha,

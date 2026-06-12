@@ -4,10 +4,12 @@ using System.Security.Claims;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
+using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
@@ -193,6 +195,35 @@ public sealed class ExtensionsTests {
         WebApplication configured = app.UseApiPipeline();
 
         Assert.Same(app, configured);
+    }
+
+    [Fact]
+    public void UseApiPipeline_HealthChecksSuppressSuccessfulAccessLogs() {
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions {
+            EnvironmentName = Environments.Production,
+        });
+        builder.Configuration.AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+            ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+            ["Jwt:Issuer"] = "FoodDiaryApi",
+            ["Jwt:Audience"] = "FoodDiaryClient",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+            ["TelegramBot:ApiSecret"] = "",
+            ["Cors:Origins:0"] = "http://localhost:4200",
+        });
+        builder.Services.AddApiServices(builder.Configuration);
+        using WebApplication app = builder.Build();
+
+        app.UseApiPipeline();
+
+        foreach (string route in new[] { "/health/live", "/health/ready" }) {
+            RouteEndpoint endpoint = Assert.Single(
+                ((IEndpointRouteBuilder)app).DataSources.SelectMany(dataSource => dataSource.Endpoints).OfType<RouteEndpoint>(),
+                candidate => string.Equals(candidate.RoutePattern.RawText, route, StringComparison.Ordinal));
+            Assert.NotNull(endpoint.Metadata.GetMetadata<SuppressRequestAccessLogAttribute>());
+        }
     }
 
     private static Error CreateError(string errorCode, string message) =>
