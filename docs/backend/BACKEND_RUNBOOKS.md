@@ -19,6 +19,7 @@ Use this baseline before applying any recovery step:
 - runtime env file copied during deploy: `/opt/fooddiary/.env`
 - container images pulled from `ghcr.io/alexindima/food-diary/*`
 - database service inside compose network: `postgres:5432`
+- distributed cache service inside compose network: `redis:6379`
 - observability stack currently runs on the host through `systemd`, not inside the app compose project:
   - `grafana-server.service`
   - `loki.service`
@@ -45,6 +46,7 @@ Required server env keys for the current Docker path:
 - `POSTGRES_USER`
 - `POSTGRES_PASSWORD`
 - `ConnectionStrings__DefaultConnection`
+- `ConnectionStrings__Redis`
 - backend runtime secrets such as JWT, SMTP, S3, Telegram, and OpenAI settings
 
 Important rule:

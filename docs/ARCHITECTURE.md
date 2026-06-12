@@ -32,6 +32,7 @@ The Docker compose setup defines these major runtime units:
 - `mail-inbox` - inbound email service.
 - `postgres`, `mailrelay-postgres`, `mailinbox-postgres` - separate PostgreSQL stores.
 - `rabbitmq` - broker used by MailRelay.
+- `redis` - distributed cache for API idempotency and short-lived authentication flows.
 - initializer containers for database setup.
 
 ## Primary Backend Layering

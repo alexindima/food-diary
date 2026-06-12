@@ -47,9 +47,23 @@ public static class ApiServiceCollectionExtensions {
             services.AddIntegrations(configuration);
             services.AddSingleton<INotificationTextRenderer, NotificationResourceRenderer>();
             services.AddSingleton<IDiaryPdfReportTextProvider, DiaryPdfReportResourceTextProvider>();
-            services.AddDistributedMemoryCache();
+            services.AddApiDistributedCache(configuration);
             services.AddPresentationApi();
             services.AddEndpointsApiExplorer();
+
+            return services;
+        }
+        private IServiceCollection AddApiDistributedCache(IConfiguration configuration) {
+            string? redisConnectionString = configuration.GetConnectionString("Redis");
+            if (string.IsNullOrWhiteSpace(redisConnectionString)) {
+                services.AddDistributedMemoryCache();
+                return services;
+            }
+
+            services.AddStackExchangeRedisCache(options => {
+                options.Configuration = redisConnectionString;
+                options.InstanceName = "fooddiary:";
+            });
 
             return services;
         }
@@ -244,6 +258,7 @@ public static class ApiServiceCollectionExtensions {
             services
                 .AddHealthChecks()
                 .AddDbContextCheck<FoodDiaryDbContext>("postgresql", tags: ["ready"])
+                .AddCheck<DistributedCacheHealthCheck>("distributed-cache", tags: ["ready"])
                 .AddCheck<S3HealthCheck>("s3", tags: ["ready"]);
 
             return services;

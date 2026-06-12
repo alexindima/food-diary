@@ -354,6 +354,7 @@ jobs:
           docker compose --profile mail-inbox run -T --rm mailinbox-db-init update
 
           docker compose --profile backend up -d rabbitmq
+          docker compose --profile backend up -d redis
           docker compose --profile backend up -d --force-recreate --no-deps mail-relay
           docker compose --profile mail-inbox up -d --force-recreate --no-deps mail-inbox
           docker compose --profile backend up -d --force-recreate --no-deps api

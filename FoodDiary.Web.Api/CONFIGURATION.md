@@ -17,6 +17,7 @@ Example commands:
 
 ```powershell
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Host=localhost;Database=fooddiary;Username=postgres;Password=your-local-password" --project FoodDiary.Web.Api
+dotnet user-secrets set "ConnectionStrings:Redis" "localhost:6379,abortConnect=false" --project FoodDiary.Web.Api
 dotnet user-secrets set "Jwt:SecretKey" "your-32-character-or-longer-secret-key" --project FoodDiary.Web.Api
 dotnet user-secrets set "OpenAi:ApiKey" "your-openai-api-key" --project FoodDiary.Web.Api
 dotnet user-secrets set "TelegramAuth:BotToken" "your-telegram-bot-token" --project FoodDiary.Web.Api
@@ -45,6 +46,7 @@ Provide sensitive values through:
 At minimum, real deployments should provide these outside source control:
 
 - `ConnectionStrings:DefaultConnection`
+- `ConnectionStrings:Redis` when using Redis-backed distributed cache
 - `Jwt:SecretKey`
 - `OpenAi:ApiKey` when AI features are enabled
 - `TelegramAuth:BotToken` when Telegram auth is enabled

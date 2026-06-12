@@ -127,6 +127,20 @@ services:
       - full
       - backend
 
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 180s
+      timeout: 10s
+      retries: 5
+    profiles:
+      - full
+      - backend
+
   api:
     image: ${IMAGE_PREFIX:-ghcr.io/alexindima/food-diary}/api:${API_IMAGE_TAG:-latest}
     build:
@@ -137,6 +151,7 @@ services:
       - "${API_PORT:-5000}:5000"
     environment:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
+      ConnectionStrings__Redis: redis:6379,abortConnect=false
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       BuildInfo__CommitSha: ${DEPLOY_COMMIT_SHA:-unknown}
       BuildInfo__ImageTag: ${API_IMAGE_TAG:-unknown}
@@ -160,6 +175,8 @@ services:
       mail-relay:
         condition: service_healthy
       rabbitmq:
+        condition: service_healthy
+      redis:
         condition: service_healthy
     profiles:
       - full
