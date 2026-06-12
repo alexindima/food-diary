@@ -143,19 +143,19 @@ dotnet_diagnostic.RCS1170.severity = none
 [FoodDiary.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
-[FoodDiary.MailInbox.Domain/**/*.cs]
+[MailInbox/FoodDiary.MailInbox.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 
-[FoodDiary.MailInbox.Domain/Common/Entity.cs]
+[MailInbox/FoodDiary.MailInbox.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
-[FoodDiary.MailRelay.Domain/**/*.cs]
+[MailRelay/FoodDiary.MailRelay.Domain/**/*.cs]
 dotnet_diagnostic.MA0048.severity = error
 
-[FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
+[MailRelay/FoodDiary.MailRelay.Domain/Emails/QueuedEmail.cs]
 dotnet_diagnostic.RCS1170.severity = none
 
-[FoodDiary.MailRelay.Domain/Common/Entity.cs]
+[MailRelay/FoodDiary.MailRelay.Domain/Common/Entity.cs]
 dotnet_diagnostic.IDE0032.severity = none
 
 [FoodDiary.Application.Abstractions/**/*.cs]
