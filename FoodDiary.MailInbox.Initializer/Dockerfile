@@ -22,6 +22,7 @@ RUN dotnet publish FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializ
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
+RUN apk add --no-cache krb5-libs
 COPY --from=build /app/publish .
 
 ENTRYPOINT ["dotnet", "FoodDiary.MailInbox.Initializer.dll"]

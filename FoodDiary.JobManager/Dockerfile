@@ -32,7 +32,7 @@ RUN dotnet publish FoodDiary.JobManager/FoodDiary.JobManager.csproj -c Release -
 FROM mcr.microsoft.com/dotnet/aspnet:10.0-alpine
 
 WORKDIR /app
-RUN apk add --no-cache icu-libs
+RUN apk add --no-cache icu-libs krb5-libs
 COPY --from=build /app/publish .
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
