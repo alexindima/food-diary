@@ -60,9 +60,11 @@ public static class ApiApplicationBuilderExtensions {
         }
 
         app.MapGet("/api/version", BuildVersionResponse)
-            .ExcludeFromDescription();
+            .ExcludeFromDescription()
+            .WithMetadata(new SuppressRequestAccessLogAttribute());
         app.MapGet("/api/v1/version", BuildVersionResponse)
-            .ExcludeFromDescription();
+            .ExcludeFromDescription()
+            .WithMetadata(new SuppressRequestAccessLogAttribute());
     }
 
     private static bool ExcludeHealthChecks(HealthCheckRegistration _) => false;

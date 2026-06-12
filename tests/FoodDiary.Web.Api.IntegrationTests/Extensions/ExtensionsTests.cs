@@ -198,7 +198,7 @@ public sealed class ExtensionsTests {
     }
 
     [Fact]
-    public void UseApiPipeline_HealthChecksSuppressSuccessfulAccessLogs() {
+    public void UseApiPipeline_OperationalEndpointsSuppressSuccessfulAccessLogs() {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(new WebApplicationOptions {
             EnvironmentName = Environments.Production,
         });
@@ -218,7 +218,7 @@ public sealed class ExtensionsTests {
 
         app.UseApiPipeline();
 
-        foreach (string route in new[] { "/health/live", "/health/ready" }) {
+        foreach (string route in new[] { "/health/live", "/health/ready", "/api/version", "/api/v1/version" }) {
             RouteEndpoint endpoint = Assert.Single(
                 ((IEndpointRouteBuilder)app).DataSources.SelectMany(dataSource => dataSource.Endpoints).OfType<RouteEndpoint>(),
                 candidate => string.Equals(candidate.RoutePattern.RawText, route, StringComparison.Ordinal));
