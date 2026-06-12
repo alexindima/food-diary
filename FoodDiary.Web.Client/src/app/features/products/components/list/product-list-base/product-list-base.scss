@@ -145,6 +145,43 @@
         margin-top: var(--fd-space-micro);
     }
 
+    &__favorite-actions {
+        align-items: center;
+        flex-wrap: nowrap;
+    }
+
+    &__favorite-portion {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--fd-space-micro);
+        min-width: 0;
+    }
+
+    &__favorite-portion-input {
+        width: 72px;
+        min-width: 0;
+        height: var(--fd-size-control-sm);
+        box-sizing: border-box;
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface);
+        color: var(--fd-color-text);
+        font-family: inherit;
+        font-size: var(--fd-text-caption-size);
+        line-height: inherit;
+        padding: 0 var(--fd-space-xxs);
+    }
+
+    &__favorite-portion-input:focus {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+    }
+
+    &__favorite-portion-unit {
+        color: var(--fd-color-text-muted);
+        min-width: 1.4em;
+    }
+
     &__favorite-btn {
         --fd-button-width: var(--fd-size-control-sm);
         --fd-button-min-width: var(--fd-size-control-sm);

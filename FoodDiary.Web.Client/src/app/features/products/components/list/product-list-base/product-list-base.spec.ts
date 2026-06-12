@@ -15,6 +15,7 @@ const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 const PAGE_INDEX = 2;
 const PAGE_SIZE = 10;
+const FAVORITE_PORTION_AMOUNT = 150;
 
 describe('ProductListBaseComponent', () => {
     it('delegates list actions to facade', () => {
@@ -32,6 +33,7 @@ describe('ProductListBaseComponent', () => {
         component['onProductFavoriteToggle'](createProduct());
         component['toggleFavorites']();
         component['addFavoriteProductToMeal'](createFavoriteProduct());
+        component['updateFavoritePreferredPortion']({ favorite: createFavoriteProduct(), preferredPortionAmount: FAVORITE_PORTION_AMOUNT });
         component['removeFavorite'](createFavoriteProduct());
 
         expect(facade.retryLoad).toHaveBeenCalled();
@@ -46,6 +48,7 @@ describe('ProductListBaseComponent', () => {
         expect(facade.onProductFavoriteToggle).toHaveBeenCalledWith(createProduct());
         expect(facade.toggleFavorites).toHaveBeenCalled();
         expect(facade.addFavoriteProductToMeal).toHaveBeenCalledWith(createFavoriteProduct());
+        expect(facade.updateFavoritePreferredPortion).toHaveBeenCalledWith(createFavoriteProduct(), FAVORITE_PORTION_AMOUNT);
         expect(facade.removeFavorite).toHaveBeenCalledWith(createFavoriteProduct());
     });
 
@@ -124,6 +127,7 @@ type ProductListFacadeMock = Omit<ProductListFacade, 'fdDialogService' | 'naviga
     toggleFavorites: ReturnType<typeof vi.fn>;
     toggleMobileSearch: ReturnType<typeof vi.fn>;
     toggleOnlyMine: ReturnType<typeof vi.fn>;
+    updateFavoritePreferredPortion: ReturnType<typeof vi.fn>;
 };
 
 function createProductListFacadeMock(): ProductListFacadeMock {
@@ -140,6 +144,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         favoriteTotalCount: signal(0),
         isFavoritesOpen: signal(false),
         favoriteLoadingIds: signal<ReadonlySet<string>>(new Set<string>()),
+        favoritePortionSavingIds: signal<ReadonlySet<string>>(new Set<string>()),
         isFavoritesLoadingMore: signal(false),
         errorKey: signal<string | null>(null),
         searchValue: signal<string | null>(null),
@@ -173,6 +178,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         toggleFavorites: vi.fn(),
         openFavoriteProduct: vi.fn(),
         addFavoriteProductToMeal: vi.fn(),
+        updateFavoritePreferredPortion: vi.fn(),
         removeFavorite: vi.fn(),
         reloadCurrentPage: vi.fn(),
     } as unknown as ProductListFacadeMock;
@@ -220,6 +226,7 @@ function createFavoriteProduct(overrides: Partial<FavoriteProduct> = {}): Favori
         imageUrl: null,
         caloriesPerBase: PRODUCT_CALORIES,
         baseUnit: MeasurementUnit.G,
+        preferredPortionAmount: 100,
         defaultPortionAmount: 100,
         ...overrides,
     };

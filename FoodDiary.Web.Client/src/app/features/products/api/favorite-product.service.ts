@@ -22,9 +22,15 @@ export class FavoriteProductService extends ApiService {
         );
     }
 
-    public add(productId: string, name?: string): Observable<FavoriteProduct> {
-        return this.post<FavoriteProduct>('', { productId, name }).pipe(
+    public add(productId: string, name?: string, preferredPortionAmount?: number): Observable<FavoriteProduct> {
+        return this.post<FavoriteProduct>('', { productId, name, preferredPortionAmount }).pipe(
             catchError((error: unknown) => rethrowApiError('Add favorite product error', error)),
+        );
+    }
+
+    public update(id: string, name: string | null, preferredPortionAmount: number): Observable<FavoriteProduct> {
+        return this.put<FavoriteProduct>(id, { name, preferredPortionAmount }).pipe(
+            catchError((error: unknown) => rethrowApiError('Update favorite product error', error)),
         );
     }
 

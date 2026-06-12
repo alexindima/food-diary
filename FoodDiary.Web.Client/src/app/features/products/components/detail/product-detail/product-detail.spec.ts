@@ -45,6 +45,7 @@ const mockFavoriteProduct = {
     productName: mockProduct.name,
     caloriesPerBase: PRODUCT_CALORIES,
     baseUnit: MeasurementUnit.G,
+    preferredPortionAmount: 100,
     defaultPortionAmount: 100,
 };
 
@@ -240,7 +241,7 @@ describe('ProductDetailComponent favorite flow', () => {
     it('should add product to favorites', () => {
         component['toggleFavorite']();
 
-        expect(mockFavoriteProductService.add).toHaveBeenCalledWith(mockProduct.id);
+        expect(mockFavoriteProductService.add).toHaveBeenCalledWith(mockProduct.id, undefined, mockProduct.defaultPortionAmount);
         expect(component['isFavorite']()).toBe(true);
         expect(component['isFavoriteLoading']()).toBe(false);
     });

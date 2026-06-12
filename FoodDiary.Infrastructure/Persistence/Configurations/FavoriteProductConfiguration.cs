@@ -25,6 +25,8 @@ internal sealed class FavoriteProductConfiguration : IEntityTypeConfiguration<Fa
         builder.Property(e => e.Name)
             .HasMaxLength(500);
 
+        builder.Property(e => e.PreferredPortionAmount);
+
         builder.Property(e => e.CreatedAtUtc)
             .HasColumnType("timestamp with time zone");
 

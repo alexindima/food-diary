@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
@@ -27,7 +28,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new SingleUserRepository(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
-            new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Breakfast"),
+            new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Breakfast", 125),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
@@ -35,6 +36,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         Assert.Equal(product.Id.Value, result.Value.ProductId);
         Assert.Equal("Greek Yogurt", result.Value.ProductName);
         Assert.Equal("Breakfast", result.Value.Name);
+        Assert.Equal(125, result.Value.PreferredPortionAmount);
     }
 
     [Fact]
@@ -46,7 +48,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new SingleUserRepository(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
-            new AddFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing"),
+            new AddFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", PreferredPortionAmount: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -65,7 +67,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new SingleUserRepository(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
-            new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Again"),
+            new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Again", PreferredPortionAmount: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -80,7 +82,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new SingleUserRepository(User.Create("invalid-add-favorite-product@example.com", "hash")));
 
         Result<FavoriteProductModel> result = await handler.Handle(
-            new AddFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid"),
+            new AddFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", PreferredPortionAmount: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -96,7 +98,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new SingleUserRepository(user: null));
 
         Result<FavoriteProductModel> result = await handler.Handle(
-            new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack"),
+            new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack", PreferredPortionAmount: null),
             CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -118,6 +120,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Single(result.Value);
         Assert.Equal("Chicken", result.Value[0].ProductName);
+        Assert.Equal(product.DefaultPortionAmount, result.Value[0].PreferredPortionAmount);
     }
 
     [Fact]
@@ -235,6 +238,40 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateFavoriteProduct_WithExistingFavorite_UpdatesNameAndPreferredPortion() {
+        var user = User.Create("update-favorite-product@example.com", "hash");
+        Product product = CreateProduct(user.Id, "Cottage Cheese");
+        var favorite = FavoriteProduct.Create(user.Id, product.Id, "Old name", 100);
+        SetProductNavigation(favorite, product);
+        var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
+        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+
+        Result<FavoriteProductModel> result = await handler.Handle(
+            new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Evening snack", 180),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        Assert.Equal("Evening snack", result.Value.Name);
+        Assert.Equal(180, result.Value.PreferredPortionAmount);
+    }
+
+    [Fact]
+    public async Task UpdateFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
+        var user = User.Create("missing-update-favorite-product@example.com", "hash");
+        var repository = new InMemoryFavoriteProductRepository();
+        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+
+        Result<FavoriteProductModel> result = await handler.Handle(
+            new UpdateFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", 120),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("FavoriteProduct.NotFound", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task RemoveFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-remove-favorite-product@example.com", "hash");
         var repository = new InMemoryFavoriteProductRepository();
@@ -305,6 +342,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         private readonly List<FavoriteProduct> _favorites = favorites?.ToList() ?? [];
         public FavoriteProduct? AddedFavorite { get; private set; }
         public bool DeleteCalled { get; private set; }
+        public bool UpdateCalled { get; private set; }
 
         public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
             if (product is not null) {
@@ -319,6 +357,11 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
             DeleteCalled = true;
             _favorites.Remove(favorite);
+            return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
+            UpdateCalled = true;
             return Task.CompletedTask;
         }
 

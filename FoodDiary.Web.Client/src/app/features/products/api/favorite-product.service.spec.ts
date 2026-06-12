@@ -9,6 +9,8 @@ import { FavoriteProductService } from './favorite-product.service';
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-products';
 const PRODUCT_CALORIES = 52;
 const DEFAULT_PORTION_AMOUNT = 100;
+const CREATED_PORTION_AMOUNT = 125;
+const UPDATED_PORTION_AMOUNT = 150;
 
 let service: FavoriteProductService;
 let httpMock: HttpTestingController;
@@ -69,13 +71,26 @@ describe('FavoriteProductService', () => {
     it('should add favorite product', () => {
         const favorite = createFavoriteProduct();
 
-        service.add('product-1', 'Apple').subscribe(result => {
+        service.add('product-1', 'Apple', CREATED_PORTION_AMOUNT).subscribe(result => {
             expect(result).toEqual(favorite);
         });
 
         const req = httpMock.expectOne(`${BASE_URL}/`);
         expect(req.request.method).toBe('POST');
-        expect(req.request.body).toEqual({ productId: 'product-1', name: 'Apple' });
+        expect(req.request.body).toEqual({ productId: 'product-1', name: 'Apple', preferredPortionAmount: CREATED_PORTION_AMOUNT });
+        req.flush(favorite);
+    });
+
+    it('should update favorite product', () => {
+        const favorite = createFavoriteProduct();
+
+        service.update('favorite-1', 'Apple', UPDATED_PORTION_AMOUNT).subscribe(result => {
+            expect(result).toEqual(favorite);
+        });
+
+        const req = httpMock.expectOne(`${BASE_URL}/favorite-1`);
+        expect(req.request.method).toBe('PUT');
+        expect(req.request.body).toEqual({ name: 'Apple', preferredPortionAmount: UPDATED_PORTION_AMOUNT });
         req.flush(favorite);
     });
 
@@ -99,6 +114,7 @@ function createFavoriteProduct(): FavoriteProduct {
         imageUrl: null,
         caloriesPerBase: PRODUCT_CALORIES,
         baseUnit: 'G',
+        preferredPortionAmount: DEFAULT_PORTION_AMOUNT,
         defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
     };
 }

@@ -113,6 +113,7 @@ export type FavoriteProduct = {
     imageUrl?: string | null;
     caloriesPerBase: number;
     baseUnit: string;
+    preferredPortionAmount: number;
     defaultPortionAmount: number;
 };
 

@@ -22,9 +22,40 @@
                             <span>&middot;</span>
                         }
                         <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+                        <span>&middot;</span>
+                        <span>{{ favorite.preferredPortionAmount | number: '1.0-1' }} {{ favorite.baseUnit }}</span>
                     </div>
                 </button>
                 <div class="product-list__favorite-actions fd-row fd-gap-xxs">
+                    <div class="product-list__favorite-portion">
+                        <label class="cdk-visually-hidden" [attr.for]="`favorite-portion-${favorite.id}`">
+                            {{ 'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate }}
+                        </label>
+                        <input
+                            class="product-list__favorite-portion-input"
+                            type="number"
+                            min="0.001"
+                            step="0.1"
+                            [id]="`favorite-portion-${favorite.id}`"
+                            [value]="portionDraftValue(favorite)"
+                            [disabled]="portionSavingIds().has(favorite.id)"
+                            [attr.aria-label]="'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate"
+                            (input)="onPortionInput(favorite, $event)"
+                            (blur)="onPortionBlur(favorite)"
+                            (keydown)="onPortionKeydown(favorite, $event)"
+                        />
+                        <span class="product-list__favorite-portion-unit fd-ui-caption">{{ favorite.baseUnit }}</span>
+                    </div>
+                    <fd-ui-button
+                        class="product-list__favorite-btn"
+                        variant="secondary"
+                        fill="text"
+                        icon="save"
+                        [disabled]="portionSavingIds().has(favorite.id)"
+                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
+                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
+                        (click)="onPortionSave(favorite)"
+                    />
                     <fd-ui-button
                         class="product-list__favorite-btn"
                         variant="secondary"

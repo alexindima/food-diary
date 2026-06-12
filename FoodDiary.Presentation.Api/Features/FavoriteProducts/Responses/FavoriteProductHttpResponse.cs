@@ -10,4 +10,5 @@ public sealed record FavoriteProductHttpResponse(
     string? ImageUrl,
     double CaloriesPerBase,
     string BaseUnit,
+    double PreferredPortionAmount,
     double DefaultPortionAmount);

@@ -16,6 +16,7 @@ const PRODUCT_PROTEINS = 12;
 const PRODUCT_FATS = 4;
 const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
+const DEFAULT_PORTION_AMOUNT = 100;
 
 let facade: ProductDetailFacade;
 let productService: { duplicate: ReturnType<typeof vi.fn> };
@@ -88,7 +89,7 @@ describe('ProductDetailFacade favorites', () => {
 
         facade.toggleFavorite(product);
 
-        expect(favoriteProductService.add).toHaveBeenCalledWith('product-1');
+        expect(favoriteProductService.add).toHaveBeenCalledWith('product-1', undefined, DEFAULT_PORTION_AMOUNT);
         expect(facade.isFavorite()).toBe(true);
         expect(facade.isFavoriteLoading()).toBe(false);
         expect(facade.hasFavoriteChanged()).toBe(true);
@@ -184,8 +185,8 @@ function createProduct(overrides: Partial<Product> = {}): Product {
         imageUrl: null,
         imageAssetId: null,
         baseUnit: MeasurementUnit.G,
-        baseAmount: 100,
-        defaultPortionAmount: 100,
+        baseAmount: DEFAULT_PORTION_AMOUNT,
+        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
         caloriesPerBase: PRODUCT_CALORIES,
         proteinsPerBase: PRODUCT_PROTEINS,
         fatsPerBase: PRODUCT_FATS,
@@ -215,6 +216,7 @@ function createFavoriteProduct(): FavoriteProduct {
         imageUrl: null,
         caloriesPerBase: PRODUCT_CALORIES,
         baseUnit: MeasurementUnit.G,
-        defaultPortionAmount: 100,
+        preferredPortionAmount: DEFAULT_PORTION_AMOUNT,
+        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
     };
 }

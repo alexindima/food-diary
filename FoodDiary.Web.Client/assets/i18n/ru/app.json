@@ -50,6 +50,8 @@
         "FAVORITE_OPEN": "Открыть продукт",
         "FAVORITE_ADD_TO_MEAL": "Добавить в приём пищи",
         "FAVORITE_REMOVE": "Убрать из избранного",
+        "FAVORITE_PORTION_AMOUNT": "Порция избранного",
+        "FAVORITE_SAVE_PORTION": "Сохранить порцию",
         "ADD_FIRST_PRODUCT_BUTTON": "Добавить первый продукт",
         "CALORIES": "Калории",
         "BARCODE": "Штрихкод",

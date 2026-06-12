@@ -116,10 +116,12 @@
                     [totalCount]="favoriteTotalCount()"
                     [isOpen]="isFavoritesOpen()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
+                    [portionSavingIds]="favoritePortionSavingIds()"
                     (favoritesToggle)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
                     (openProduct)="openFavoriteProduct($event)"
                     (addToMeal)="addFavoriteProductToMeal($event)"
+                    (preferredPortionSave)="updateFavoritePreferredPortion($event)"
                     (favoriteRemove)="removeFavorite($event)"
                 />
             }

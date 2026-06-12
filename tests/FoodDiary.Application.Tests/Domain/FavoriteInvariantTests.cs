@@ -30,6 +30,23 @@ public class FavoriteInvariantTests {
     }
 
     [Fact]
+    public void FavoriteProduct_Create_WithPreferredPortionAmount_StoresValue() {
+        var favorite = FavoriteProduct.Create(UserId.New(), ProductId.New(), preferredPortionAmount: 125);
+
+        Assert.Equal(125, favorite.PreferredPortionAmount);
+    }
+
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    public void FavoriteProduct_Create_WithInvalidPreferredPortionAmount_Throws(double preferredPortionAmount) {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            FavoriteProduct.Create(UserId.New(), ProductId.New(), preferredPortionAmount: preferredPortionAmount));
+    }
+
+    [Fact]
     public void FavoriteProduct_Create_WithEmptyIds_Throws() {
         Assert.Throws<ArgumentException>(() => FavoriteProduct.Create(UserId.Empty, ProductId.New()));
         Assert.Throws<ArgumentException>(() => FavoriteProduct.Create(UserId.New(), ProductId.Empty));

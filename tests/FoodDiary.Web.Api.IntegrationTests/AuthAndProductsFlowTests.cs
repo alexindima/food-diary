@@ -171,8 +171,15 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
 
         HttpResponseMessage favoriteResponse = await client.PostAsJsonAsync(
             "/api/v1/favorite-products",
-            new AddFavoriteProductHttpRequest(favoriteProductId, "Favorite chicken"));
+            new AddFavoriteProductHttpRequest(favoriteProductId, "Favorite chicken", 155));
         favoriteResponse.EnsureSuccessStatusCode();
+        using var favoriteJson = JsonDocument.Parse(await favoriteResponse.Content.ReadAsStringAsync());
+        Guid favoriteId = favoriteJson.RootElement.GetProperty("id").GetGuid();
+
+        HttpResponseMessage updateFavoriteResponse = await client.PutAsJsonAsync(
+            $"/api/v1/favorite-products/{favoriteId}",
+            new UpdateFavoriteProductHttpRequest("Favorite chicken", 185));
+        updateFavoriteResponse.EnsureSuccessStatusCode();
 
         HttpResponseMessage consumptionResponse = await client.PostAsJsonAsync(
             "/api/v1/consumptions",
@@ -201,7 +208,8 @@ public sealed class AuthAndProductsFlowTests(ApiWebApplicationFactory factory, I
         JsonElement allProducts = overviewRoot.GetProperty("allProducts").GetProperty("data");
 
         Assert.Equal(1, overviewRoot.GetProperty("favoriteTotalCount").GetInt32());
-        Assert.Contains(favoriteItems.EnumerateArray(), item => item.GetProperty("productId").GetGuid() == favoriteProductId);
+        JsonElement favoritePreview = favoriteItems.EnumerateArray().Single(item => item.GetProperty("productId").GetGuid() == favoriteProductId);
+        Assert.Equal(185, favoritePreview.GetProperty("preferredPortionAmount").GetDouble());
         Assert.Contains(recentOverviewItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteProductId);
         Assert.Contains(recentItems.EnumerateArray(), item => item.GetProperty("id").GetGuid() == favoriteProductId);
 

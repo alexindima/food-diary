@@ -15,5 +15,6 @@ public static class FavoriteProductMappings {
             favorite.Product.ImageUrl,
             favorite.Product.CaloriesPerBase,
             favorite.Product.BaseUnit.ToString(),
+            favorite.PreferredPortionAmount ?? favorite.Product.DefaultPortionAmount,
             favorite.Product.DefaultPortionAmount);
 }

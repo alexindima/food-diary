@@ -7,4 +7,5 @@ namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 public record AddFavoriteProductCommand(
     Guid? UserId,
     Guid ProductId,
-    string? Name) : ICommand<Result<FavoriteProductModel>>, IUserRequest;
+    string? Name,
+    double? PreferredPortionAmount) : ICommand<Result<FavoriteProductModel>>, IUserRequest;

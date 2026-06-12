@@ -354,6 +354,7 @@ public sealed class ProductHttpMappingsTests {
             product.ImageUrl,
             product.CaloriesPerBase,
             product.BaseUnit,
+            45,
             product.DefaultPortionAmount);
         var overview = new ProductOverviewModel(
             [product],
@@ -369,5 +370,6 @@ public sealed class ProductHttpMappingsTests {
         Assert.Equal(1, response.FavoriteTotalCount);
         Assert.Equal(product.Id, response.AllProducts.Data[0].Id);
         Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
+        Assert.Equal(favorite.PreferredPortionAmount, response.FavoriteItems[0].PreferredPortionAmount);
     }
 }

@@ -1,7 +1,9 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
     debounceTime,
@@ -47,6 +49,8 @@ export class ProductListFacade {
     public readonly fdDialogService = inject(FdUiDialogService);
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly favoriteProductService = inject(FavoriteProductService);
+    private readonly toastService = inject(FdUiToastService);
+    private readonly translateService = inject(TranslateService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
@@ -65,6 +69,7 @@ export class ProductListFacade {
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
+    public readonly favoritePortionSavingIds = signal<ReadonlySet<string>>(new Set<string>());
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly searchValue = computed(() => this.searchModel().search);
@@ -321,7 +326,7 @@ export class ProductListFacade {
         }
 
         this.favoriteProductService
-            .add(product.id, product.name)
+            .add(product.id, product.name, product.defaultPortionAmount)
             .pipe(
                 takeUntilDestroyed(this.destroyRef),
                 finalize(() => {
@@ -355,7 +360,7 @@ export class ProductListFacade {
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(product => {
                 if (product !== null) {
-                    this.onAddToMeal(product);
+                    this.quickConsumptionService.addProduct(product, favorite.preferredPortionAmount);
                 }
             });
     }
@@ -369,6 +374,30 @@ export class ProductListFacade {
                     this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
                     this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                     this.syncProductFavoriteState(favorite.productId, false, null);
+                },
+            });
+    }
+
+    public updateFavoritePreferredPortion(favorite: FavoriteProduct, preferredPortionAmount: number): void {
+        if (this.favoritePortionSavingIds().has(favorite.id)) {
+            return;
+        }
+
+        this.setFavoritePortionSaving(favorite.id, true);
+        this.favoriteProductService
+            .update(favorite.id, favorite.name ?? null, preferredPortionAmount)
+            .pipe(
+                take(1),
+                finalize(() => {
+                    this.setFavoritePortionSaving(favorite.id, false);
+                }),
+            )
+            .subscribe({
+                next: updatedFavorite => {
+                    this.favorites.update(favorites => favorites.map(item => (item.id === updatedFavorite.id ? updatedFavorite : item)));
+                },
+                error: () => {
+                    this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
                 },
             });
     }
@@ -488,6 +517,19 @@ export class ProductListFacade {
                 next.add(productId);
             } else {
                 next.delete(productId);
+            }
+
+            return next;
+        });
+    }
+
+    private setFavoritePortionSaving(favoriteId: string, isSaving: boolean): void {
+        this.favoritePortionSavingIds.update(current => {
+            const next = new Set(current);
+            if (isSaving) {
+                next.add(favoriteId);
+            } else {
+                next.delete(favoriteId);
             }
 
             return next;

@@ -1,6 +1,8 @@
 import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -29,6 +31,8 @@ const PRODUCT_PROTEINS = 12;
 const PRODUCT_FATS = 4;
 const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
+const DEFAULT_PORTION_AMOUNT = 100;
+const UPDATED_PORTION_AMOUNT = 150;
 
 let facade: ProductListFacade;
 let productService: {
@@ -37,11 +41,18 @@ let productService: {
     getById: ReturnType<typeof vi.fn>;
     deleteById: ReturnType<typeof vi.fn>;
 };
-let favoriteProductService: { getAll: ReturnType<typeof vi.fn>; add: ReturnType<typeof vi.fn>; remove: ReturnType<typeof vi.fn> };
+let favoriteProductService: {
+    getAll: ReturnType<typeof vi.fn>;
+    add: ReturnType<typeof vi.fn>;
+    update: ReturnType<typeof vi.fn>;
+    remove: ReturnType<typeof vi.fn>;
+};
 let openFoodFactsService: { search: ReturnType<typeof vi.fn> };
 let quickMealService: { addProduct: ReturnType<typeof vi.fn> };
 let navigationService: { navigateToProductAddAsync: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
+let toastService: { error: ReturnType<typeof vi.fn> };
+let translateService: { instant: ReturnType<typeof vi.fn> };
 let isMobile: ReturnType<typeof signal<boolean>>;
 
 beforeEach(() => {
@@ -54,6 +65,7 @@ beforeEach(() => {
     favoriteProductService = {
         getAll: vi.fn(),
         add: vi.fn(),
+        update: vi.fn(),
         remove: vi.fn(),
     };
     openFoodFactsService = {
@@ -67,6 +79,12 @@ beforeEach(() => {
     };
     dialogService = {
         open: vi.fn(),
+    };
+    toastService = {
+        error: vi.fn(),
+    };
+    translateService = {
+        instant: vi.fn((key: string) => key),
     };
     isMobile = signal(false);
 
@@ -86,6 +104,7 @@ beforeEach(() => {
     productService.deleteById.mockReturnValue(of(void 0));
     favoriteProductService.getAll.mockReturnValue(of([createFavoriteProduct()]));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
+    favoriteProductService.update.mockReturnValue(of(createFavoriteProduct({ preferredPortionAmount: UPDATED_PORTION_AMOUNT })));
     favoriteProductService.remove.mockReturnValue(of(null));
     openFoodFactsService.search.mockReturnValue(of([createOpenFoodFactsProduct()]));
     dialogService.open.mockReturnValue({ afterClosed: () => of(null) });
@@ -99,6 +118,8 @@ beforeEach(() => {
             { provide: QuickMealService, useValue: quickMealService },
             { provide: NavigationService, useValue: navigationService },
             { provide: FdUiDialogService, useValue: dialogService },
+            { provide: FdUiToastService, useValue: toastService },
+            { provide: TranslateService, useValue: translateService },
             { provide: ViewportService, useValue: { isMobile } },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
@@ -204,7 +225,7 @@ describe('ProductListFacade favorites', () => {
 
         facade.onProductFavoriteToggle(product);
 
-        expect(favoriteProductService.add).toHaveBeenCalledWith('product-1', 'Test product');
+        expect(favoriteProductService.add).toHaveBeenCalledWith('product-1', 'Test product', DEFAULT_PORTION_AMOUNT);
         expect(favoriteProductService.getAll).toHaveBeenCalled();
         expect(facade.productData.items()[0]).toEqual(expect.objectContaining({ isFavorite: true, favoriteProductId: 'favorite-1' }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
@@ -220,6 +241,31 @@ describe('ProductListFacade favorites', () => {
         expect(favoriteProductService.remove).toHaveBeenCalledWith('favorite-1');
         expect(facade.productData.items()[0]).toEqual(expect.objectContaining({ isFavorite: false, favoriteProductId: null }));
         expect(facade.favoriteLoadingIds().size).toBe(0);
+    });
+
+    it('updates favorite preferred portion amount', () => {
+        const favorite = createFavoriteProduct();
+        facade.favorites.set([favorite]);
+
+        facade.updateFavoritePreferredPortion(favorite, UPDATED_PORTION_AMOUNT);
+
+        expect(favoriteProductService.update).toHaveBeenCalledWith('favorite-1', 'Test product', UPDATED_PORTION_AMOUNT);
+        expect(facade.favorites()[0]).toEqual(expect.objectContaining({ preferredPortionAmount: UPDATED_PORTION_AMOUNT }));
+        expect(facade.favoritePortionSavingIds().size).toBe(0);
+    });
+
+    it('shows toast when favorite preferred portion update fails', () => {
+        const favorite = createFavoriteProduct();
+        facade.favorites.set([favorite]);
+        favoriteProductService.update.mockReturnValueOnce(throwError(() => new Error('Update failed')));
+
+        facade.updateFavoritePreferredPortion(favorite, UPDATED_PORTION_AMOUNT);
+
+        expect(favoriteProductService.update).toHaveBeenCalledWith('favorite-1', 'Test product', UPDATED_PORTION_AMOUNT);
+        expect(translateService.instant).toHaveBeenCalledWith('ERRORS.FAVORITE_UPDATE_FAILED');
+        expect(toastService.error).toHaveBeenCalledWith('ERRORS.FAVORITE_UPDATE_FAILED');
+        expect(facade.favorites()[0]).toEqual(favorite);
+        expect(facade.favoritePortionSavingIds().size).toBe(0);
     });
 });
 
@@ -272,8 +318,8 @@ function createProduct(overrides: Partial<Product> = {}): Product {
         imageUrl: null,
         imageAssetId: null,
         baseUnit: MeasurementUnit.G,
-        baseAmount: 100,
-        defaultPortionAmount: 100,
+        baseAmount: DEFAULT_PORTION_AMOUNT,
+        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
         caloriesPerBase: PRODUCT_CALORIES,
         proteinsPerBase: PRODUCT_PROTEINS,
         fatsPerBase: PRODUCT_FATS,
@@ -290,7 +336,7 @@ function createProduct(overrides: Partial<Product> = {}): Product {
     };
 }
 
-function createFavoriteProduct(): FavoriteProduct {
+function createFavoriteProduct(overrides: Partial<FavoriteProduct> = {}): FavoriteProduct {
     return {
         id: 'favorite-1',
         productId: 'product-1',
@@ -301,7 +347,9 @@ function createFavoriteProduct(): FavoriteProduct {
         imageUrl: null,
         caloriesPerBase: PRODUCT_CALORIES,
         baseUnit: MeasurementUnit.G,
-        defaultPortionAmount: 100,
+        preferredPortionAmount: DEFAULT_PORTION_AMOUNT,
+        defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
+        ...overrides,
     };
 }
 

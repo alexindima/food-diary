@@ -1,5 +1,6 @@
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
+using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
@@ -10,7 +11,10 @@ namespace FoodDiary.Presentation.Api.Features.FavoriteProducts.Mappings;
 
 public static class FavoriteProductHttpMappings {
     public static AddFavoriteProductCommand ToCommand(this AddFavoriteProductHttpRequest request, Guid userId) =>
-        new(userId, request.ProductId, request.Name);
+        new(userId, request.ProductId, request.Name, request.PreferredPortionAmount);
+
+    public static UpdateFavoriteProductCommand ToCommand(this UpdateFavoriteProductHttpRequest request, Guid userId, Guid favoriteProductId) =>
+        new(userId, favoriteProductId, request.Name, request.PreferredPortionAmount);
 
     extension(Guid id) {
         public RemoveFavoriteProductCommand ToDeleteCommand(Guid userId) =>
@@ -32,5 +36,6 @@ public static class FavoriteProductHttpMappings {
             model.ImageUrl,
             model.CaloriesPerBase,
             model.BaseUnit,
+            model.PreferredPortionAmount,
             model.DefaultPortionAmount);
 }

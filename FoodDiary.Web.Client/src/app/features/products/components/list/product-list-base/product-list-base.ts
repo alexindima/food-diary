@@ -53,6 +53,7 @@ export class ProductListBaseComponent {
     protected readonly favoriteTotalCount = this.productListFacade.favoriteTotalCount;
     protected readonly isFavoritesOpen = this.productListFacade.isFavoritesOpen;
     protected readonly favoriteLoadingIds = this.productListFacade.favoriteLoadingIds;
+    protected readonly favoritePortionSavingIds = this.productListFacade.favoritePortionSavingIds;
     protected readonly isFavoritesLoadingMore = this.productListFacade.isFavoritesLoadingMore;
     protected readonly errorKey = this.productListFacade.errorKey;
     protected readonly onlyMineFilter = this.productListFacade.onlyMineFilter;
@@ -151,6 +152,10 @@ export class ProductListBaseComponent {
 
     protected removeFavorite(favorite: FavoriteProduct): void {
         this.productListFacade.removeFavorite(favorite);
+    }
+
+    protected updateFavoritePreferredPortion(event: { favorite: FavoriteProduct; preferredPortionAmount: number }): void {
+        this.productListFacade.updateFavoritePreferredPortion(event.favorite, event.preferredPortionAmount);
     }
 
     protected reloadCurrentPage(): void {

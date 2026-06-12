@@ -29,6 +29,13 @@ public class FavoriteProductsController(ISender mediator) : AuthorizedController
     public Task<IActionResult> Add([FromCurrentUser] Guid userId, [FromBody] AddFavoriteProductHttpRequest request) =>
         HandleOk(request.ToCommand(userId), static value => value.ToHttpResponse());
 
+    [HttpPut("{id:guid}")]
+    [ProducesResponseType<FavoriteProductHttpResponse>(StatusCodes.Status200OK)]
+    [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
+    [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> Update(Guid id, [FromCurrentUser] Guid userId, [FromBody] UpdateFavoriteProductHttpRequest request) =>
+        HandleOk(request.ToCommand(userId, id), static value => value.ToHttpResponse());
+
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

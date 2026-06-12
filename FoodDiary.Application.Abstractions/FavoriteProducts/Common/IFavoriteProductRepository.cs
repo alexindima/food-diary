@@ -6,6 +6,8 @@ namespace FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 public interface IFavoriteProductRepository {
     Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default);
 
+    Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default);
+
     Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default);
 
     Task<FavoriteProduct?> GetByIdAsync(

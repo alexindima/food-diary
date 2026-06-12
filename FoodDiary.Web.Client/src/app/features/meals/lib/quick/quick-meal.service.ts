@@ -46,12 +46,12 @@ export class QuickMealService {
     public readonly hasItems = computed(() => this.itemsSignal().length > 0);
     public readonly isSaving = computed(() => this.isSavingSignal());
 
-    public addProduct(product: Product): void {
+    public addProduct(product: Product, preferredAmount?: number): void {
         if (product.id.length === 0) {
             return;
         }
 
-        const amount = this.resolveProductAmount(product);
+        const amount = this.resolveProductAmount(product, preferredAmount);
         const key = `product-${product.id}`;
         this.refreshDetailsForFirstItem();
         this.upsertItem({
@@ -178,7 +178,11 @@ export class QuickMealService {
         this.isPreviewMode = false;
     }
 
-    private resolveProductAmount(product: Product): number {
+    private resolveProductAmount(product: Product, preferredAmount?: number): number {
+        if (preferredAmount !== undefined && preferredAmount > 0) {
+            return preferredAmount;
+        }
+
         if (product.defaultPortionAmount > 0) {
             return product.defaultPortionAmount;
         }

@@ -103,7 +103,7 @@ export class ProductDetailFacade {
         }
 
         this.favoriteProductService
-            .add(product.id)
+            .add(product.id, undefined, product.defaultPortionAmount)
             .pipe(take(1))
             .subscribe({
                 next: favorite => {

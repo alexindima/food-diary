@@ -12,6 +12,10 @@ public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoritePr
         return favorite;
     }
 
+    public async Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
+        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
         context.FavoriteProducts.Remove(favorite);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

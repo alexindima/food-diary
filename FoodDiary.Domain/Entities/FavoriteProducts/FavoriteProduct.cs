@@ -9,6 +9,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
     public UserId UserId { get; private set; }
     public ProductId ProductId { get; private set; }
     public string? Name { get; private set; }
+    public double? PreferredPortionAmount { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
 
     public User User { get; private set; } = null!;
@@ -17,7 +18,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
     private FavoriteProduct() {
     }
 
-    public static FavoriteProduct Create(UserId userId, ProductId productId, string? name = null) {
+    public static FavoriteProduct Create(UserId userId, ProductId productId, string? name = null, double? preferredPortionAmount = null) {
         if (userId == UserId.Empty) {
             throw new ArgumentException("UserId cannot be empty.", nameof(userId));
         }
@@ -31,6 +32,7 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
             UserId = userId,
             ProductId = productId,
             Name = NormalizeOptionalText(name),
+            PreferredPortionAmount = NormalizePreferredPortionAmount(preferredPortionAmount),
             CreatedAtUtc = DomainTime.UtcNow,
         };
 
@@ -46,6 +48,14 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
         }
     }
 
+    public void UpdatePreferredPortionAmount(double? preferredPortionAmount) {
+        double? normalized = NormalizePreferredPortionAmount(preferredPortionAmount);
+        if (PreferredPortionAmount != normalized) {
+            PreferredPortionAmount = normalized;
+            SetModified();
+        }
+    }
+
     private static string? NormalizeOptionalText(string? value) {
         if (string.IsNullOrWhiteSpace(value)) {
             return null;
@@ -55,5 +65,17 @@ public sealed class FavoriteProduct : Entity<FavoriteProductId> {
         return trimmed.Length > DomainConstants.CommentMaxLength
             ? trimmed[..DomainConstants.CommentMaxLength]
             : trimmed;
+    }
+
+    private static double? NormalizePreferredPortionAmount(double? value) {
+        if (!value.HasValue) {
+            return null;
+        }
+
+        if (double.IsNaN(value.Value) || double.IsInfinity(value.Value) || value.Value <= 0) {
+            throw new ArgumentOutOfRangeException(nameof(value), "Preferred portion amount must be a positive finite number.");
+        }
+
+        return value.Value;
     }
 }
