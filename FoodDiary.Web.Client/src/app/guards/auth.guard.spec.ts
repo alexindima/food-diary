@@ -5,19 +5,29 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
+import { LocalizationService } from '../shared/i18n/localization.service';
 import { authGuard } from './auth.guard';
 
+type AuthServiceMock = {
+    getToken: ReturnType<typeof vi.fn>;
+    isAuthenticated: ReturnType<typeof signal>;
+    isEmailConfirmed: ReturnType<typeof signal>;
+    ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
+};
+
+type NavigationServiceMock = {
+    navigateToAuthAsync: ReturnType<typeof vi.fn>;
+    navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
+};
+
+type LocalizationServiceMock = {
+    loadApplicationTranslationsAsync: ReturnType<typeof vi.fn>;
+};
+
 describe('authGuard', () => {
-    let authServiceMock: {
-        getToken: ReturnType<typeof vi.fn>;
-        isAuthenticated: ReturnType<typeof signal>;
-        isEmailConfirmed: ReturnType<typeof signal>;
-        ensureSessionReadyAsync: ReturnType<typeof vi.fn>;
-    };
-    let navigationServiceMock: {
-        navigateToAuthAsync: ReturnType<typeof vi.fn>;
-        navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
-    };
+    let authServiceMock: AuthServiceMock;
+    let navigationServiceMock: NavigationServiceMock;
+    let localizationServiceMock: LocalizationServiceMock;
     let route: ActivatedRouteSnapshot;
     let state: RouterStateSnapshot;
 
@@ -39,11 +49,15 @@ describe('authGuard', () => {
         };
         navigationServiceMock.navigateToAuthAsync.mockReturnValue(Promise.resolve());
         navigationServiceMock.navigateToEmailVerificationPendingAsync.mockReturnValue(Promise.resolve());
+        localizationServiceMock = {
+            loadApplicationTranslationsAsync: vi.fn().mockResolvedValue(void 0),
+        };
 
         TestBed.configureTestingModule({
             providers: [
                 { provide: AuthService, useValue: authServiceMock },
                 { provide: NavigationService, useValue: navigationServiceMock },
+                { provide: LocalizationService, useValue: localizationServiceMock },
             ],
         });
 
@@ -61,6 +75,7 @@ describe('authGuard', () => {
 
         expect(result).toBe(true);
         expect(authServiceMock.ensureSessionReadyAsync).toHaveBeenCalled();
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).toHaveBeenCalled();
         expect(navigationServiceMock.navigateToAuthAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).not.toHaveBeenCalled();
     });
@@ -72,6 +87,7 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(false);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).toHaveBeenCalled();
     });
 
@@ -81,6 +97,7 @@ describe('authGuard', () => {
         const result = await TestBed.runInInjectionContext(async () => authGuard(route, state));
 
         expect(result).toBe(false);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/products');
     });
 

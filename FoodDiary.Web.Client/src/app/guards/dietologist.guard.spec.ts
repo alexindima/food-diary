@@ -5,32 +5,35 @@ import { describe, expect, it, vi } from 'vitest';
 
 import { AuthService } from '../services/auth.service';
 import { NavigationService } from '../services/navigation.service';
+import { LocalizationService } from '../shared/i18n/localization.service';
 import { dietologistGuard } from './dietologist.guard';
 
 describe('dietologistGuard', () => {
     it('should redirect anonymous users to auth', async () => {
-        const { authServiceMock, navigationServiceMock, state } = setupGuard();
+        const { authServiceMock, localizationServiceMock, navigationServiceMock, state } = setupGuard();
         authServiceMock.isAuthenticated.set(false);
 
         const result = await TestBed.runInInjectionContext(async () => dietologistGuard(createRouteSnapshot(), state));
 
         expect(result).toBe(false);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToAuthAsync).toHaveBeenCalledWith('login', '/dietologist');
     });
 
     it('should redirect unconfirmed users to email verification', async () => {
-        const { authServiceMock, navigationServiceMock, state } = setupGuard();
+        const { authServiceMock, localizationServiceMock, navigationServiceMock, state } = setupGuard();
         authServiceMock.isAuthenticated.set(true);
         authServiceMock.isEmailConfirmed.set(false);
 
         const result = await TestBed.runInInjectionContext(async () => dietologistGuard(createRouteSnapshot(), state));
 
         expect(result).toBe(false);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(navigationServiceMock.navigateToEmailVerificationPendingAsync).toHaveBeenCalled();
     });
 
     it('should redirect non-dietologists home', async () => {
-        const { authServiceMock, routerMock, state, urlTree } = setupGuard();
+        const { authServiceMock, localizationServiceMock, routerMock, state, urlTree } = setupGuard();
         authServiceMock.isAuthenticated.set(true);
         authServiceMock.isEmailConfirmed.set(true);
         authServiceMock.isDietologist.set(false);
@@ -38,11 +41,12 @@ describe('dietologistGuard', () => {
         const result = await TestBed.runInInjectionContext(async () => dietologistGuard(createRouteSnapshot(), state));
 
         expect(result).toBe(urlTree);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).not.toHaveBeenCalled();
         expect(routerMock.createUrlTree).toHaveBeenCalledWith(['/']);
     });
 
     it('should allow dietologists', async () => {
-        const { authServiceMock, state } = setupGuard();
+        const { authServiceMock, localizationServiceMock, state } = setupGuard();
         authServiceMock.isAuthenticated.set(true);
         authServiceMock.isEmailConfirmed.set(true);
         authServiceMock.isDietologist.set(true);
@@ -50,6 +54,7 @@ describe('dietologistGuard', () => {
         const result = await TestBed.runInInjectionContext(async () => dietologistGuard(createRouteSnapshot(), state));
 
         expect(result).toBe(true);
+        expect(localizationServiceMock.loadApplicationTranslationsAsync).toHaveBeenCalled();
     });
 });
 
@@ -62,6 +67,9 @@ function setupGuard(): {
     navigationServiceMock: {
         navigateToAuthAsync: ReturnType<typeof vi.fn>;
         navigateToEmailVerificationPendingAsync: ReturnType<typeof vi.fn>;
+    };
+    localizationServiceMock: {
+        loadApplicationTranslationsAsync: ReturnType<typeof vi.fn>;
     };
     routerMock: {
         createUrlTree: ReturnType<typeof vi.fn>;
@@ -80,6 +88,9 @@ function setupGuard(): {
         navigateToAuthAsync: vi.fn().mockResolvedValue(void 0),
         navigateToEmailVerificationPendingAsync: vi.fn().mockResolvedValue(void 0),
     };
+    const localizationServiceMock = {
+        loadApplicationTranslationsAsync: vi.fn().mockResolvedValue(void 0),
+    };
     const routerMock = {
         createUrlTree: vi.fn().mockReturnValue(urlTree),
     };
@@ -88,6 +99,7 @@ function setupGuard(): {
         providers: [
             { provide: AuthService, useValue: authServiceMock },
             { provide: NavigationService, useValue: navigationServiceMock },
+            { provide: LocalizationService, useValue: localizationServiceMock },
             { provide: Router, useValue: routerMock },
         ],
     });
@@ -95,6 +107,7 @@ function setupGuard(): {
     return {
         authServiceMock,
         navigationServiceMock,
+        localizationServiceMock,
         routerMock,
         state: createRouterStateSnapshot('/dietologist'),
         urlTree,
