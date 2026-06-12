@@ -13,6 +13,7 @@ const ROUTE_DURATION_MS = 42.24;
 const ROUNDED_ROUTE_DURATION_MS = 42.2;
 const WEB_VITAL_LCP_INITIAL = 1000;
 const WEB_VITAL_LCP_DUPLICATE = 1200;
+const PREVIOUS_LOG_EVENT_CALL_INDEX = -2;
 
 let service: FrontendObservabilityService;
 let loggingSpy: { logEvent: ReturnType<typeof vi.fn> };
@@ -32,6 +33,7 @@ beforeEach(() => {
 
 afterEach(() => {
     environment.enableClientObservability = false;
+    sessionStorage.clear();
 });
 
 describe('FrontendObservabilityService errors and requests', () => {
@@ -91,8 +93,27 @@ describe('FrontendObservabilityService errors and requests', () => {
         const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
         expect(payload['category']).toBe('route_timing');
         expect(payload['route']).toBe('/meals');
+        expect(payload['pageRoute']).toBe('/meals');
+        expect(typeof payload['sessionId']).toBe('string');
         expect(payload['durationMs']).toBe(ROUNDED_ROUTE_DURATION_MS);
         expect(payload['level']).toBe('error');
+    });
+
+    it('should normalize dynamic route segments for page analytics', () => {
+        service.recordRouteTiming('/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc/edit?tab=items', ROUTE_DURATION_MS, 'success');
+
+        const payload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(payload['route']).toBe('/meals/5f8d9e1a-3b2c-4d5e-9f0a-123456789abc/edit?tab=items');
+        expect(payload['pageRoute']).toBe('/meals/:id/edit');
+    });
+
+    it('should reuse the same anonymous telemetry session for multiple events', () => {
+        service.recordRouteTiming('/dashboard', ROUTE_DURATION_MS, 'success');
+        service.recordRouteTiming('/products', ROUTE_DURATION_MS, 'success');
+
+        const firstPayload = loggingSpy.logEvent.mock.calls.at(PREVIOUS_LOG_EVENT_CALL_INDEX)?.[0] as Record<string, unknown>;
+        const secondPayload = loggingSpy.logEvent.mock.calls.at(-1)?.[0] as Record<string, unknown>;
+        expect(firstPayload['sessionId']).toBe(secondPayload['sessionId']);
     });
 });
 

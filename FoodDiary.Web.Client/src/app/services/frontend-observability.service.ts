@@ -3,6 +3,7 @@ import { NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Rout
 import { filter } from 'rxjs';
 
 import { environment } from '../../environments/environment';
+import { ClientTelemetrySessionService } from '../shared/observability/client-telemetry-session.service';
 import { type ClientTelemetryEvent, LoggingApiService } from './logging-api.service';
 
 type HttpOutcome = 'success' | 'client_error' | 'server_error' | 'network_error';
@@ -11,11 +12,15 @@ type RouteOutcome = 'success' | 'cancelled' | 'error';
 const FIRST_NAVIGATION_ENTRY_INDEX = 0;
 const DECIMAL_ROUNDING_FACTOR = 10;
 const DECIMAL_ROUNDING_DIVISOR = 10;
+const UUID_SEGMENT_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu;
+const NUMERIC_SEGMENT_PATTERN = /^\d+$/u;
+const NORMALIZED_ID_SEGMENT = ':id';
 
 @Service()
 export class FrontendObservabilityService {
     private readonly router = inject(Router);
     private readonly loggingApiService = inject(LoggingApiService);
+    private readonly telemetrySession = inject(ClientTelemetrySessionService);
     private readonly navigationStarts = new Map<number, number>();
     private initialized = false;
     private readonly reportedVitals = new Set<string>();
@@ -323,11 +328,17 @@ export class FrontendObservabilityService {
             return;
         }
 
-        this.loggingApiService.logEvent(event).subscribe({
-            error: () => {
-                // Observability failures should never affect app flow.
-            },
-        });
+        this.loggingApiService
+            .logEvent({
+                ...event,
+                sessionId: this.telemetrySession.getSessionId(),
+                pageRoute: this.normalizeRoute(event.route ?? this.router.url),
+            })
+            .subscribe({
+                error: () => {
+                    // Observability failures should never affect app flow.
+                },
+            });
     }
 
     private getLocation(): string {
@@ -340,6 +351,31 @@ export class FrontendObservabilityService {
             return new URL(url, location.length > 0 ? location : 'http://localhost').pathname;
         } catch {
             return url;
+        }
+    }
+
+    private normalizeRoute(route: string): string {
+        const path = route.split(/[?#]/u, 1)[0];
+        if (path.length === 0) {
+            return '/';
+        }
+
+        return path
+            .split('/')
+            .map(segment => (this.isDynamicRouteSegment(segment) ? NORMALIZED_ID_SEGMENT : segment))
+            .join('/');
+    }
+
+    private isDynamicRouteSegment(segment: string): boolean {
+        const decodedSegment = this.decodeRouteSegment(segment).toLowerCase();
+        return UUID_SEGMENT_PATTERN.test(decodedSegment) || NUMERIC_SEGMENT_PATTERN.test(decodedSegment);
+    }
+
+    private decodeRouteSegment(segment: string): string {
+        try {
+            return decodeURIComponent(segment);
+        } catch {
+            return segment;
         }
     }
 

@@ -10,6 +10,8 @@ public sealed record ClientTelemetryLogHttpRequest(
     string? Message = null,
     string? Location = null,
     string? Route = null,
+    string? PageRoute = null,
+    string? SessionId = null,
     string? HttpMethod = null,
     string? Outcome = null,
     double? DurationMs = null,

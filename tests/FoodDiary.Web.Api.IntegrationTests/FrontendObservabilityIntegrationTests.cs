@@ -21,6 +21,8 @@ public sealed class FrontendObservabilityIntegrationTests(ApiWebApplicationFacto
                 Timestamp: DateTime.UtcNow.ToString("O"),
                 Message: "API request completed",
                 Route: "/products",
+                PageRoute: "/products",
+                SessionId: "fd-session-test",
                 HttpMethod: "GET",
                 Outcome: "success",
                 DurationMs: 123.4,

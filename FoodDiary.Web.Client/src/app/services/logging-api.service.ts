@@ -14,6 +14,8 @@ export type ClientTelemetryEvent = {
     message?: string;
     location?: string;
     route?: string;
+    pageRoute?: string;
+    sessionId?: string;
     httpMethod?: string;
     outcome?: string;
     durationMs?: number;

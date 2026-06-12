@@ -34,6 +34,8 @@ public sealed class LogsController(
             ["ClientTelemetryCategory"] = request.Category,
             ["ClientTelemetryName"] = request.Name,
             ["ClientTelemetryRoute"] = request.Route,
+            ["ClientTelemetryPageRoute"] = request.PageRoute,
+            ["ClientTelemetrySessionId"] = request.SessionId,
             ["ClientTelemetryLocation"] = request.Location,
             ["ClientTelemetryHttpMethod"] = request.HttpMethod,
             ["ClientTelemetryStatusCode"] = request.StatusCode,
@@ -47,7 +49,7 @@ public sealed class LogsController(
 
         logger.Log(
             logLevel,
-            "Client telemetry event {Category}/{Name}: {Message}. Outcome={Outcome}; StatusCode={StatusCode}; DurationMs={DurationMs}; Value={Value}; Unit={Unit}; Route={Route}; Location={Location}; Method={HttpMethod}; BuildVersion={BuildVersion}; Details={Details}; Stack={Stack}",
+            "Client telemetry event {Category}/{Name}: {Message}. Outcome={Outcome}; StatusCode={StatusCode}; DurationMs={DurationMs}; Value={Value}; Unit={Unit}; Route={Route}; PageRoute={PageRoute}; SessionId={SessionId}; Location={Location}; Method={HttpMethod}; BuildVersion={BuildVersion}; Details={Details}; Stack={Stack}",
             request.Category,
             request.Name,
             request.Message ?? string.Empty,
@@ -57,6 +59,8 @@ public sealed class LogsController(
             request.Value,
             request.Unit,
             request.Route,
+            request.PageRoute,
+            request.SessionId,
             request.Location,
             request.HttpMethod,
             request.BuildVersion,
