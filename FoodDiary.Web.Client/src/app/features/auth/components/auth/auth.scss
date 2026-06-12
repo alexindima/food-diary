@@ -108,7 +108,7 @@
             border-color: var(--fd-color-primary-300);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-focus-ring-width) solid var(--fd-focus-ring-color);
             outline-offset: var(--fd-focus-ring-offset);
         }

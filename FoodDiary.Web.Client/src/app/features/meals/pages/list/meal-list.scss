@@ -40,12 +40,16 @@
         margin: var(--fd-space-lg) auto;
     }
 
-    &__no-results {
+    %consumption-list-no-results {
         font-size: var(--fd-text-title-compact-size);
         font-weight: var(--fd-text-title-compact-weight);
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: var(--fd-space-lg);
+    }
+
+    &__no-results {
+        @extend %consumption-list-no-results;
 
         &-icon {
             font-size: var(--fd-size-icon-xxl);
@@ -54,7 +58,7 @@
     }
 
     &__empty-state {
-        @extend .consumption-list__no-results;
+        @extend %consumption-list-no-results;
         padding: var(--fd-space-lg);
         border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);

@@ -1,5 +1,6 @@
 /** @type {import('stylelint').Config} */
 import designTokenValues from './stylelint-rules/design-token-values.js';
+import disableCommentReason from './stylelint-rules/disable-comment-reason.js';
 import noComponentFileSuffix from './stylelint-rules/no-component-file-suffix.js';
 import noSassUseAsWildcard from './stylelint-rules/no-sass-use-as-wildcard.js';
 
@@ -18,10 +19,9 @@ const restrictedValueRules = {
 };
 
 export default {
-    extends: ['stylelint-config-standard'],
-    customSyntax: 'postcss-scss',
+    extends: ['stylelint-config-standard-scss'],
     ignoreFiles: ['dist/**/*.css', 'dist-admin/**/*.css', 'dist-storybook/**/*.css'],
-    plugins: [designTokenValues, noComponentFileSuffix, noSassUseAsWildcard],
+    plugins: [designTokenValues, disableCommentReason, noComponentFileSuffix, noSassUseAsWildcard],
     rules: {
         'alpha-value-notation': null,
         'at-rule-no-unknown': null,
@@ -31,7 +31,14 @@ export default {
         'color-function-notation': null,
         'color-hex-length': null,
         'color-named': 'never',
+        'comment-word-disallowed-list': [
+            ['TODO', 'FIXME', 'HACK', 'temporary', 'quick fix'],
+            {
+                severity: 'error',
+            },
+        ],
         'custom-property-empty-line-before': null,
+        'custom-media-pattern': '^fd-[a-z0-9]+(?:-[a-z0-9]+)*$',
         'declaration-block-no-duplicate-custom-properties': null,
         'declaration-block-no-duplicate-properties': [
             true,
@@ -41,7 +48,12 @@ export default {
         ],
         'declaration-block-no-redundant-longhand-properties': null,
         'declaration-no-important': true,
-        'declaration-property-value-disallowed-list': restrictedValueRules,
+        'declaration-property-value-disallowed-list': {
+            ...restrictedValueRules,
+            height: [/100vh/],
+            position: [/fixed/],
+            width: [/100vw/],
+        },
         'declaration-property-value-keyword-no-deprecated': true,
         'font-family-no-duplicate-names': true,
         'font-family-no-missing-generic-family-keyword': true,
@@ -68,20 +80,29 @@ export default {
         'rule-selector-property-disallowed-list': {
             '/^.*$/': ['font'],
         },
+        'scss/at-import-partial-extension-disallowed-list': ['scss'],
+        'scss/load-no-partial-leading-underscore': true,
+        'scss/dollar-variable-pattern': '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$',
+        'scss/percent-placeholder-pattern': '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$',
+        'scss/selector-no-redundant-nesting-selector': true,
         'selector-class-pattern': [
             '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*(?:(?:__|--)[a-z0-9]+(?:-[a-z0-9]+)*)*$',
             {
                 resolveNestedSelectors: true,
             },
         ],
+        'selector-max-attribute': 2,
+        'selector-max-combinators': 3,
         'selector-max-compound-selectors': 5,
         'selector-max-id': 0,
+        'selector-max-specificity': '0,3,0',
         'selector-max-type': [
             2,
             {
                 ignore: ['child', 'compounded'],
             },
         ],
+        'selector-max-universal': 0,
         'selector-disallowed-list': [/::ng-deep/],
         'selector-not-notation': null,
         'selector-pseudo-class-no-unknown': [
@@ -90,8 +111,9 @@ export default {
                 ignorePseudoClasses: ['deep'],
             },
         ],
-        'keyframes-name-pattern': null,
+        'keyframes-name-pattern': '^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$',
         'food-diary/design-token-values': true,
+        'food-diary/disable-comment-reason': true,
         'food-diary/no-component-file-suffix': true,
         'food-diary/no-sass-use-as-wildcard': true,
         'shorthand-property-no-redundant-values': true,
@@ -105,14 +127,38 @@ export default {
                 'declaration-property-value-disallowed-list': {
                     '/^.*$/': [fdVarFallbackValue],
                     animation: restrictedValueRules.animation,
+                    height: [/100vh/],
+                    position: [/fixed/],
                     transition: restrictedValueRules.transition,
+                    width: [/100vw/],
                 },
                 'food-diary/design-token-values': null,
+                'selector-max-specificity': null,
+                'selector-max-universal': null,
+            },
+        },
+        {
+            files: [
+                'src/app/shell/**/*.scss',
+                'src/app/components/shared/ai-input-bar/ai-input-bar.scss',
+                'src/app/components/shared/image-upload-field/image-upload-field.scss',
+                'src/app/features/dashboard/pages/_dashboard-shell.scss',
+                'src/app/features/meals/components/quick-consumption-drawer/quick-consumption-drawer.scss',
+                'projects/fooddiary-admin/src/app/features/admin-billing/pages/admin-billing.scss',
+            ],
+            rules: {
+                'declaration-property-value-disallowed-list': {
+                    ...restrictedValueRules,
+                    height: [/100vh/],
+                    width: [/100vw/],
+                },
             },
         },
         {
             files: [
                 'src/app/features/public/**/*.scss',
+                'src/styles.scss',
+                'projects/fooddiary-admin/src/styles.scss',
                 'src/styles/design-tokens.scss',
                 'src/styles/mixins.scss',
                 'src/styles/utilities.scss',
@@ -120,6 +166,7 @@ export default {
                 'projects/fd-ui-kit/src/lib/**/*.scss',
             ],
             rules: {
+                'declaration-property-value-disallowed-list': restrictedValueRules,
                 'max-nesting-depth': [
                     4,
                     {
@@ -127,6 +174,7 @@ export default {
                     },
                 ],
                 'selector-max-type': null,
+                'selector-max-universal': null,
             },
         },
     ],

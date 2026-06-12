@@ -243,7 +243,6 @@
     }
 
     @container (max-width: 768px) {
-        /* stylelint-disable-next-line rule-empty-line-before */
         .fasting-timer-card__layout--setup,
         .fasting-timer-card__layout--page-summary {
             grid-template-columns: 1fr;

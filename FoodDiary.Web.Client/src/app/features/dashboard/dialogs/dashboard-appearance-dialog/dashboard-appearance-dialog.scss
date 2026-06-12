@@ -78,7 +78,7 @@
         box-shadow: var(--fd-shadow-lg);
     }
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: none;
         border-color: color-mix(in srgb, var(--fd-color-primary-600) 46%, transparent);
         box-shadow: var(--fd-shadow-focus);

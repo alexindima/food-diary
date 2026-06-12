@@ -276,7 +276,6 @@
     }
 
     @media #{variables.$media-phablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__entry {
             grid-template-columns: 1fr;
             text-align: left;

@@ -68,7 +68,7 @@
         grid-template-columns: var(--fd-size-icon-md) minmax(0, max-content);
         align-items: center;
         justify-content: center;
-        max-width: calc(100vw - var(--fd-layout-page-horizontal-padding) * 2);
+        max-width: calc(100dvw - var(--fd-layout-page-horizontal-padding) * 2);
         border: var(--fd-border-width) solid var(--fd-color-border-slate-strong);
         background: var(--fd-bg-landing-surface-translucent);
         color: var(--fd-color-text);
@@ -208,7 +208,7 @@
             justify-content: flex-start;
             padding: var(--fd-space-xs) var(--fd-space-sm);
 
-            &:last-child:nth-child(odd) {
+            &:where(:last-child:nth-child(odd)) {
                 grid-column: 1 / -1;
             }
         }

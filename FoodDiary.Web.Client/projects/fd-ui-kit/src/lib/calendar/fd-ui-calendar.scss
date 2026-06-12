@@ -75,12 +75,12 @@
         border-color 160ms ease,
         color 160ms ease;
 
-    &:hover:not(:disabled) {
+    &:where(:hover:not(:disabled)) {
         background: var(--fd-bg-brand-tint-subtle);
         border-color: var(--fd-color-border-calendar-hover);
     }
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: none;
         border-color: var(--fd-color-primary-500);
         box-shadow: var(--fd-shadow-focus);
@@ -106,7 +106,7 @@
     color: var(--fd-color-on-brand);
 }
 
-.fd-ui-calendar__day--active:not(.fd-ui-calendar__day--selected) {
+.fd-ui-calendar__day--active:where(:not(.fd-ui-calendar__day--selected)) {
     background: var(--fd-bg-brand-tint-medium);
     border-color: var(--fd-color-border-calendar-active);
 }

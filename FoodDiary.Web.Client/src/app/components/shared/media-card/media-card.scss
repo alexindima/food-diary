@@ -7,7 +7,7 @@
     cursor: pointer;
 }
 
-:host(:focus-visible) .media-card {
+:host(:where(:focus-visible)) .media-card {
     outline: var(--fd-border-width-strong) solid var(--fd-color-border-status-info);
     outline-offset: var(--fd-outline-offset);
 }

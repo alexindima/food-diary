@@ -70,17 +70,17 @@
     color: var(--fd-checkbox-label-color);
 }
 
-.fd-ui-checkbox__input:checked + .fd-ui-checkbox__label .fd-ui-checkbox__control {
+.fd-ui-checkbox__input:where(:checked) + .fd-ui-checkbox__label .fd-ui-checkbox__control {
     background: var(--fd-checkbox-control-checked-background);
     border-color: var(--fd-checkbox-control-checked-border);
 }
 
-.fd-ui-checkbox__input:checked + .fd-ui-checkbox__label .fd-ui-checkbox__checkmark {
+.fd-ui-checkbox__input:where(:checked) + .fd-ui-checkbox__label .fd-ui-checkbox__checkmark {
     border-left-color: var(--fd-color-white);
     border-bottom-color: var(--fd-color-white);
 }
 
-.fd-ui-checkbox__input:focus-visible + .fd-ui-checkbox__label .fd-ui-checkbox__control {
+.fd-ui-checkbox__input:where(:focus-visible) + .fd-ui-checkbox__label .fd-ui-checkbox__control {
     box-shadow: var(--fd-shadow-focus);
 }
 

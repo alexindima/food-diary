@@ -103,7 +103,7 @@
     cursor: default;
 }
 
-.fd-ui-autocomplete__suffix--button:hover:not(:disabled) {
+.fd-ui-autocomplete__suffix--button:where(:hover:not(:disabled)) {
     color: var(--fd-color-text);
 }
 
@@ -176,7 +176,7 @@
     background: var(--fd-bg-brand-tint);
 }
 
-.fd-ui-autocomplete__menu-item:focus-visible {
+.fd-ui-autocomplete__menu-item:where(:focus-visible) {
     outline: var(--fd-outline-focus);
     outline-offset: -2px;
 }

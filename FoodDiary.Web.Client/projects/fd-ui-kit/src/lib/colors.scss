@@ -9,7 +9,6 @@ $fd-color-primary-600: var(--fd-color-primary-600);
 $fd-color-primary-700: var(--fd-color-primary-700);
 $fd-color-primary-800: var(--fd-color-primary-800);
 $fd-color-primary-900: var(--fd-color-primary-900);
-
 $fd-color-secondary-50: var(--fd-color-secondary-50);
 $fd-color-secondary-100: var(--fd-color-secondary-100);
 $fd-color-secondary-200: var(--fd-color-secondary-200);
@@ -20,7 +19,6 @@ $fd-color-secondary-600: var(--fd-color-secondary-600);
 $fd-color-secondary-700: var(--fd-color-secondary-700);
 $fd-color-secondary-800: var(--fd-color-secondary-800);
 $fd-color-secondary-900: var(--fd-color-secondary-900);
-
 $fd-color-gray-50: var(--fd-color-gray-50);
 $fd-color-gray-100: var(--fd-color-gray-100);
 $fd-color-gray-200: var(--fd-color-gray-200);
@@ -31,7 +29,6 @@ $fd-color-gray-600: var(--fd-color-gray-600);
 $fd-color-gray-700: var(--fd-color-gray-700);
 $fd-color-gray-800: var(--fd-color-gray-800);
 $fd-color-gray-900: var(--fd-color-gray-900);
-
 $fd-color-success-50: var(--fd-color-success-50);
 $fd-color-success-100: var(--fd-color-success-100);
 $fd-color-success-200: var(--fd-color-success-200);
@@ -42,7 +39,6 @@ $fd-color-success-600: var(--fd-color-success-600);
 $fd-color-success-700: var(--fd-color-success-700);
 $fd-color-success-800: var(--fd-color-success-800);
 $fd-color-success-900: var(--fd-color-success-900);
-
 $fd-color-warning-50: var(--fd-color-warning-50);
 $fd-color-warning-100: var(--fd-color-warning-100);
 $fd-color-warning-200: var(--fd-color-warning-200);
@@ -53,7 +49,6 @@ $fd-color-warning-600: var(--fd-color-warning-600);
 $fd-color-warning-700: var(--fd-color-warning-700);
 $fd-color-warning-800: var(--fd-color-warning-800);
 $fd-color-warning-900: var(--fd-color-warning-900);
-
 $fd-color-danger-50: var(--fd-color-danger-50);
 $fd-color-danger-100: var(--fd-color-danger-100);
 $fd-color-danger-200: var(--fd-color-danger-200);
@@ -64,22 +59,18 @@ $fd-color-danger-600: var(--fd-color-danger-600);
 $fd-color-danger-700: var(--fd-color-danger-700);
 $fd-color-danger-800: var(--fd-color-danger-800);
 $fd-color-danger-900: var(--fd-color-danger-900);
-
 $fd-color-success: var(--fd-color-success);
 $fd-color-warning: var(--fd-color-warn);
 $fd-color-danger: var(--fd-color-danger);
 $fd-color-info: var(--fd-color-info);
-
 $fd-color-bg-page: var(--fd-color-background);
 $fd-color-bg-card: var(--fd-color-surface);
 $fd-color-bg-muted: var(--fd-color-surface-muted);
-
 $fd-color-chart-calories: var(--fd-color-chart-calories);
 $fd-color-chart-proteins: var(--fd-color-chart-proteins);
 $fd-color-chart-fats: var(--fd-color-chart-fats);
 $fd-color-chart-carbs: var(--fd-color-chart-carbs);
 $fd-color-chart-fiber: var(--fd-color-chart-fiber);
-
 $fd-color-dialog-surface: var(--fd-color-dialog-surface);
 $fd-color-dialog-surface-muted: var(--fd-color-dialog-surface-muted);
 $fd-color-dialog-border: color-mix(in srgb, var(--fd-color-gray-900-static) 8%, transparent);
@@ -546,7 +537,6 @@ $fd-colors-primary: (
     800: $fd-color-primary-800,
     900: $fd-color-primary-900,
 );
-
 $fd-colors-secondary: (
     50: $fd-color-secondary-50,
     100: $fd-color-secondary-100,
@@ -559,7 +549,6 @@ $fd-colors-secondary: (
     800: $fd-color-secondary-800,
     900: $fd-color-secondary-900,
 );
-
 $fd-colors-gray: (
     50: $fd-color-gray-50,
     100: $fd-color-gray-100,
@@ -572,7 +561,6 @@ $fd-colors-gray: (
     800: $fd-color-gray-800,
     900: $fd-color-gray-900,
 );
-
 $fd-colors-success: (
     50: $fd-color-success-50,
     100: $fd-color-success-100,
@@ -585,7 +573,6 @@ $fd-colors-success: (
     800: $fd-color-success-800,
     900: $fd-color-success-900,
 );
-
 $fd-colors-warning: (
     50: $fd-color-warning-50,
     100: $fd-color-warning-100,
@@ -598,7 +585,6 @@ $fd-colors-warning: (
     800: $fd-color-warning-800,
     900: $fd-color-warning-900,
 );
-
 $fd-colors-danger: (
     50: $fd-color-danger-50,
     100: $fd-color-danger-100,
@@ -611,14 +597,12 @@ $fd-colors-danger: (
     800: $fd-color-danger-800,
     900: $fd-color-danger-900,
 );
-
 $fd-colors-semantic: (
     success: $fd-color-success,
     warning: $fd-color-warning,
     danger: $fd-color-danger,
     info: $fd-color-info,
 );
-
 $fd-colors-chart: (
     calories: $fd-color-chart-calories,
     proteins: $fd-color-chart-proteins,
@@ -626,18 +610,10 @@ $fd-colors-chart: (
     carbs: $fd-color-chart-carbs,
     fiber: $fd-color-chart-fiber,
 );
-
 $fd-colors-dialog: (
     surface: $fd-color-dialog-surface,
     surface-muted: $fd-color-dialog-surface-muted,
     border: $fd-color-dialog-border,
     overlay: $fd-color-dialog-overlay,
 );
-
 $fd-button-styles: $fd-button-tokens;
-
-/* Usage:
- * 1) Angular global styles: @use 'src/app/ui-kit/colors';
- * 2) Component CSS variables: color: var(--fd-color-primary-500);
- * 3) Component SCSS variables: background-color: $fd-color-bg-card;
- */

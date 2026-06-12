@@ -98,7 +98,7 @@
     top: var(--fd-space-md);
     right: var(--fd-space-md);
     bottom: var(--fd-space-md);
-    width: min(520px, calc(100vw - calc(var(--fd-space-md) * 2)));
+    width: min(520px, calc(100dvw - calc(var(--fd-space-md) * 2)));
     display: grid;
     grid-template-rows: auto 1fr;
     border: var(--fd-border-strong);

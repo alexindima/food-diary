@@ -23,7 +23,7 @@
 }
 
 :host-context(.fd-ui-inline-alert--notice),
-:host(.fd-ui-inline-alert--notice) {
+:host(:where(.fd-ui-inline-alert--notice)) {
     --fd-inline-alert-radius: var(--fd-radius-card);
     --fd-inline-alert-padding: var(--fd-space-inline-alert-notice-padding);
     --fd-inline-alert-icon-size: var(--fd-size-control-sm);
@@ -41,7 +41,7 @@
 }
 
 :host-context(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__icon,
-:host(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__icon {
+:host(:where(.fd-ui-inline-alert--notice)) .fd-ui-inline-alert__icon {
     border-radius: var(--fd-radius-button);
 }
 
@@ -63,7 +63,7 @@
 }
 
 :host-context(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__message,
-:host(.fd-ui-inline-alert--notice) .fd-ui-inline-alert__message {
+:host(:where(.fd-ui-inline-alert--notice)) .fd-ui-inline-alert__message {
     line-height: 1.5;
 }
 
@@ -109,26 +109,25 @@
     color: var(--fd-color-text);
 }
 
-:host(.fd-ui-inline-alert--warning) {
+:host(:where(.fd-ui-inline-alert--warning)) {
     --fd-inline-alert-bg: var(--fd-bg-status-warning);
     --fd-inline-alert-border: var(--fd-color-border-status-warning);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-orange-400) 72%, var(--fd-color-text));
 }
 
-:host(.fd-ui-inline-alert--success) {
+:host(:where(.fd-ui-inline-alert--success)) {
     --fd-inline-alert-bg: var(--fd-bg-status-success);
     --fd-inline-alert-border: var(--fd-color-border-status-success);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-green-400) 74%, var(--fd-color-text));
 }
 
-:host(.fd-ui-inline-alert--danger) {
+:host(:where(.fd-ui-inline-alert--danger)) {
     --fd-inline-alert-bg: var(--fd-bg-status-danger);
     --fd-inline-alert-border: var(--fd-color-border-status-danger);
     --fd-inline-alert-accent: color-mix(in srgb, var(--fd-color-danger) 72%, var(--fd-color-text));
 }
 
 @media #{variables.$media-tablet} {
-    // stylelint-disable-next-line rule-empty-line-before
     :host {
         grid-template-columns: auto minmax(0, 1fr);
     }

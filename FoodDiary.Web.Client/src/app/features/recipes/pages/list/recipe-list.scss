@@ -96,10 +96,14 @@
         }
     }
 
-    &__no-results {
+    %recipe-list-no-results {
         color: var(--fd-color-text-muted);
         text-align: center;
         margin-top: var(--fd-space-lg);
+    }
+
+    &__no-results {
+        @extend %recipe-list-no-results;
 
         &-icon {
             font-size: var(--fd-size-icon-xxl);
@@ -108,7 +112,7 @@
     }
 
     &__empty-state {
-        @extend .recipe-list__no-results;
+        @extend %recipe-list-no-results;
         padding: var(--fd-space-lg);
         border: var(--fd-border-dashed);
         border-radius: var(--fd-radius-card);

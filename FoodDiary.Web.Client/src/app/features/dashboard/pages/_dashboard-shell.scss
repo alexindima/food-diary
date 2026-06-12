@@ -40,7 +40,7 @@
             cursor: pointer;
         }
 
-        .dashboard__block > * {
+        .dashboard__block > :where(:not(template)) {
             pointer-events: none;
         }
 
@@ -85,8 +85,8 @@
         position: fixed;
         top: 0;
         left: var(--fd-layout-sidebar-width);
-        width: calc(100vw - var(--fd-layout-sidebar-width));
-        height: 100vh;
+        width: calc(100dvw - var(--fd-layout-sidebar-width));
+        height: 100dvh;
         background: var(--fd-bg-overlay-muted);
         pointer-events: none;
         z-index: 1;

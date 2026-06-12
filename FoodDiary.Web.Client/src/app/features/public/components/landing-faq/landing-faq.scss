@@ -83,7 +83,7 @@
         }
     }
 
-    &__item[open] &__question::after {
+    &__item:where([open]) &__question::after {
         content: '-';
     }
 

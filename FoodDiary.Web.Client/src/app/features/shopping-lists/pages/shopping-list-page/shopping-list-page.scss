@@ -214,7 +214,7 @@
             border-color 0.15s ease,
             box-shadow 0.15s ease;
 
-        &:not(.shopping-list__list-card--active):hover {
+        &:where(:not(.shopping-list__list-card--active)):hover {
             border-color: color-mix(in srgb, var(--fd-color-primary-500) 35%, transparent);
             background: var(--fd-bg-surface-primary-soft);
         }
@@ -259,7 +259,7 @@
         text-align: left;
         cursor: pointer;
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus);
             outline-offset: var(--fd-outline-offset);
         }

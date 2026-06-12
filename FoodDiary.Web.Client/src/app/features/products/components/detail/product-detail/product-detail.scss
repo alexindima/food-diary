@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .product-detail {
-    /* stylelint-disable-next-line rule-empty-line-before */
     &__header {
         display: grid;
         gap: var(--fd-space-xs);
@@ -52,7 +51,7 @@
             color: var(--fd-color-primary-500);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: none;
             box-shadow: var(--fd-shadow-dialog-close-focus);
         }
@@ -150,7 +149,6 @@
     }
 
     &__quality-fill {
-        /* stylelint-disable-next-line rule-empty-line-before */
         &--green {
             background: var(--fd-bg-quality-good);
         }
@@ -248,14 +246,12 @@
     }
 
     @media #{variables.$media-desktop-sm} {
-        /* stylelint-disable-next-line rule-empty-line-before */
         &__overview {
             grid-template-columns: 1fr;
         }
     }
 
     @media #{variables.$media-compact} {
-        /* stylelint-disable-next-line rule-empty-line-before */
         &__macro-row {
             grid-template-columns: 1fr auto;
         }

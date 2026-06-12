@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 
 .admin-shell {
-    min-height: 100vh;
+    min-height: 100dvh;
     grid-template-columns: 280px minmax(0, 1fr);
     background: var(--fd-bg-page);
     color: var(--fd-color-slate-900);

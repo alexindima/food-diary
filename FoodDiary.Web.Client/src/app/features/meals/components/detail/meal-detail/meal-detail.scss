@@ -70,7 +70,7 @@
             color: var(--fd-color-primary-500);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: none;
             box-shadow: var(--fd-shadow-dialog-close-focus);
         }
@@ -242,7 +242,7 @@
             color: var(--fd-color-primary-400);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: none;
             border-radius: var(--fd-radius-sm);
             box-shadow: var(--fd-shadow-button-focus-ring);

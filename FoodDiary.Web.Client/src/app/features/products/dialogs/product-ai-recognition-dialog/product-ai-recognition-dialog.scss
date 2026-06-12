@@ -36,7 +36,7 @@
     background: var(--fd-bg-ai-scan-overlay);
 }
 
-.product-ai-dialog__scan-overlay:has(.product-ai-dialog__scan-line--nutrition) {
+.product-ai-dialog__scan-overlay:where(:has(.product-ai-dialog__scan-line--nutrition)) {
     background: var(--fd-bg-ai-scan-overlay-nutrition);
 }
 
@@ -59,7 +59,6 @@
 }
 
 @keyframes product-ai-scan {
-    // stylelint-disable-next-line rule-empty-line-before
     0% {
         top: var(--fd-space-sm);
         opacity: 0.6;

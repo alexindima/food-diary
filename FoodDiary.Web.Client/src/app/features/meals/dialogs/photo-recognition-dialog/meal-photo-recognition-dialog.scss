@@ -40,7 +40,7 @@
     background: var(--fd-bg-ai-scan-overlay);
 }
 
-.photo-ai-dialog__scan-overlay:has(.photo-ai-dialog__scan-line--nutrition) {
+.photo-ai-dialog__scan-overlay:where(:has(.photo-ai-dialog__scan-line--nutrition)) {
     background: var(--fd-bg-ai-scan-overlay-nutrition);
 }
 

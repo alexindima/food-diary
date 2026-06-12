@@ -178,7 +178,7 @@
     background: var(--fd-bg-brand-tint);
 }
 
-.fd-ui-select__menu-item:focus-visible {
+.fd-ui-select__menu-item:where(:focus-visible) {
     outline: var(--fd-outline-focus);
     outline-offset: -2px;
 }

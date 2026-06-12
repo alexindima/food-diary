@@ -68,7 +68,7 @@
     }
 }
 
-:host(.fd-ui-entity-card--hoverable) .fd-ui-entity-card {
+:host(:where(.fd-ui-entity-card--hoverable)) .fd-ui-entity-card {
     cursor: pointer;
     transition:
         transform 0.2s ease,

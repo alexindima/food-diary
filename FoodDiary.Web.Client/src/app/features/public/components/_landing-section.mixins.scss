@@ -41,7 +41,7 @@
     letter-spacing: $letter-spacing;
     line-height: $line-height;
 
-    @if $weight != null {
+    @if $weight {
         font-weight: $weight;
     }
 }
@@ -52,7 +52,7 @@
     font-size: $size;
     line-height: $line-height;
 
-    @if $max-width != null {
+    @if $max-width {
         max-width: $max-width;
     }
 }

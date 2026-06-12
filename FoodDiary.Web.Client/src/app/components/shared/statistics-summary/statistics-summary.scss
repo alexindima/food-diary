@@ -16,7 +16,7 @@
     padding-bottom: var(--fd-space-sm);
 }
 
-.stats-summary-card__row--top > * {
+.stats-summary-card__row--top > :where(:not(template)) {
     flex: 1 1 220px;
 }
 
@@ -91,12 +91,11 @@
 }
 
 @media #{variables.$media-compact} {
-    /* stylelint-disable-next-line rule-empty-line-before */
     .stats-summary-card__row--top {
         flex-direction: column;
     }
 
-    .stats-summary-card__row--top > * {
+    .stats-summary-card__row--top > :where(:not(template)) {
         min-width: 0;
     }
 

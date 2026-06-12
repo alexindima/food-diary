@@ -91,7 +91,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__form {
             padding: var(--fd-space-xs) 0 0;
         }
@@ -102,7 +101,6 @@
     }
 
     @media #{variables.$media-mobile} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__action-button {
             width: 100%;
         }

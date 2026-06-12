@@ -35,7 +35,7 @@
     cursor: pointer;
 }
 
-.users-table__row:focus-visible {
+.users-table__row:where(:focus-visible) {
     outline: var(--fd-outline-focus);
     outline-offset: -2px;
 }

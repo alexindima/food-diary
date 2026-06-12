@@ -32,7 +32,7 @@
     color: var(--fd-ui-sidebar-link-hover-text);
 }
 
-.fd-ui-sidebar__link:focus-visible {
+.fd-ui-sidebar__link:where(:focus-visible) {
     outline: var(--fd-outline-focus-strong);
     outline-offset: var(--fd-outline-offset);
 }
@@ -47,13 +47,13 @@
     color: var(--fd-ui-sidebar-link-active-icon);
 }
 
-.fd-ui-sidebar__link.is-pending:not(.is-active) {
+.fd-ui-sidebar__link.is-pending:where(:not(.is-active)) {
     background: var(--fd-bg-brand-tint-strong);
     color: var(--fd-color-text-strong);
     box-shadow: var(--fd-shadow-ring-inset-brand-strong);
 }
 
-.fd-ui-sidebar__link.is-pending:not(.is-active) fd-ui-icon {
+.fd-ui-sidebar__link.is-pending:where(:not(.is-active)) fd-ui-icon {
     color: var(--fd-color-primary-700);
 }
 

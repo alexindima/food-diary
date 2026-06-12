@@ -497,7 +497,6 @@
     }
 
     @media #{variables.$media-desktop} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__main-grid {
             grid-template-columns: 1fr;
         }
@@ -512,7 +511,6 @@
     }
 
     @media #{variables.$media-phablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__macro {
             grid-template-columns: minmax(0, 1fr);
             gap: var(--fd-space-xs);

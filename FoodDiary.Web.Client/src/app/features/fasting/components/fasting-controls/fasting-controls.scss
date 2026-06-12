@@ -208,7 +208,7 @@ fd-fasting-active-basic-controls {
             outline: none;
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             border-radius: var(--fd-radius-sm);
             box-shadow: var(--fd-shadow-focus-accent-subtle);
         }
@@ -265,7 +265,6 @@ fd-fasting-active-basic-controls {
 }
 
 @container (max-width: 520px) {
-    /* stylelint-disable-next-line rule-empty-line-before */
     .fasting-controls__session-actions-grid {
         grid-template-columns: 1fr;
     }

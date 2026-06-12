@@ -3,7 +3,7 @@
 .sidebar {
     position: sticky;
     top: 0;
-    height: 100vh;
+    height: 100dvh;
     overflow-y: auto;
     padding: var(--fd-space-lg) var(--fd-space-md) var(--fd-space-lg);
     background: var(--fd-bg-sidebar);
@@ -152,7 +152,7 @@
         cursor: pointer;
         letter-spacing: var(--fd-letter-spacing-subtle);
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus-strong);
             outline-offset: var(--fd-outline-offset);
             border-radius: var(--fd-radius-button);
@@ -205,7 +205,7 @@
             transform: translateY(-1px);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus-strong);
             outline-offset: var(--fd-outline-offset);
         }
@@ -303,7 +303,7 @@
             box-shadow: var(--fd-shadow-accent);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus-strong);
             outline-offset: var(--fd-outline-offset);
         }
@@ -319,7 +319,7 @@
             }
         }
 
-        &.is-pending:not(.is-active) {
+        &.is-pending:where(:not(.is-active)) {
             background: var(--fd-bg-brand-tint);
             border-color: var(--fd-color-border-primary-strong);
             box-shadow: var(--fd-shadow-accent);
@@ -440,7 +440,7 @@
             background: var(--fd-bg-brand-tint);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus-strong);
             outline-offset: var(--fd-outline-offset);
         }
@@ -455,7 +455,7 @@
             color: var(--fd-color-text-strong);
         }
 
-        &.is-pending:not(.is-active):not(.is-open) {
+        &.is-pending:where(:where(:not(.is-active)):not(.is-open)) {
             background: var(--fd-bg-brand-tint-medium);
             color: var(--fd-color-text-strong);
             transform: scale(0.98);
@@ -509,7 +509,7 @@
         gap: var(--sidebar-mobile-sheet-gap);
         z-index: var(--fd-z-index-sidebar-mobile-sheet);
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus-strong);
             outline-offset: var(--fd-outline-offset);
         }

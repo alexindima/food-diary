@@ -4,7 +4,7 @@
     &__grid {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }
@@ -73,7 +73,7 @@
         border-radius: var(--fd-radius-md);
         background: var(--fd-bg-surface-raised);
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }
@@ -103,7 +103,7 @@
     &__predictions {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }

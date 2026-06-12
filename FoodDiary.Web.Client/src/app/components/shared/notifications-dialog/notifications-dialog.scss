@@ -168,7 +168,6 @@
 }
 
 @media #{variables.$media-phablet} {
-    // stylelint-disable-next-line rule-empty-line-before
     .notifications-dialog__item-head {
         flex-direction: column;
         gap: var(--fd-space-xxs);

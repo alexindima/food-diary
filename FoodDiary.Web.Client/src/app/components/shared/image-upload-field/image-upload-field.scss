@@ -144,7 +144,7 @@
         --fd-button-icon-size: var(--fd-size-icon-sm);
     }
 
-    &__control > &__control-btn:not(:last-child) {
+    &__control > &__control-btn:where(:not(:last-child)) {
         border-right: var(--fd-border-inverse);
     }
 
@@ -192,8 +192,8 @@
         inset: 50% auto auto 50%;
         z-index: var(--fd-z-index-overlay-panel);
         width: min(720px, 100%);
-        max-width: calc(100vw - var(--fd-space-lg));
-        max-height: calc(100vh - var(--fd-space-lg));
+        max-width: calc(100dvw - var(--fd-space-lg));
+        max-height: calc(100dvh - var(--fd-space-lg));
         padding: var(--fd-space-card-profile-gap);
         border-radius: var(--fd-radius-dialog);
         background: var(--fd-bg-surface-raised);
@@ -289,7 +289,7 @@
             border: var(--fd-border-width-strong) solid var(--fd-bg-scrim-faint);
         }
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: var(--fd-outline-focus);
             outline-offset: var(--fd-outline-offset);
         }

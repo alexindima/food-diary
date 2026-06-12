@@ -51,7 +51,7 @@
     width: 100%;
 }
 
-:host(.fd-page-header--compact-actions) {
+:host(:where(.fd-page-header--compact-actions)) {
     .fd-page-header {
         align-items: flex-start;
     }
@@ -114,7 +114,7 @@
         width: auto;
     }
 
-    :host(.fd-page-header--with-back) .fd-page-header {
+    :host(:where(.fd-page-header--with-back)) .fd-page-header {
         grid-template-columns: auto minmax(0, 1fr) auto;
         grid-template-areas:
             'back title actions'

@@ -16,10 +16,10 @@
     overflow: hidden;
     transform: scale(0.97);
     opacity: 0;
-    animation: fdDialogShellIn 180ms ease-out forwards;
+    animation: fd-dialog-shell-in 180ms ease-out forwards;
 }
 
-.cdk-overlay-pane.fd-ui-dialog-panel--chart .fd-ui-dialog-shell .fd-ui-dialog {
+:where(.cdk-overlay-pane.fd-ui-dialog-panel--chart) :where(.fd-ui-dialog-shell) .fd-ui-dialog {
     animation: none;
     transform: none;
     opacity: 1;
@@ -37,7 +37,7 @@
     scrollbar-gutter: stable;
 }
 
-@keyframes fdDialogShellIn {
+@keyframes fd-dialog-shell-in {
     from {
         opacity: 0;
         transform: scale(0.97);

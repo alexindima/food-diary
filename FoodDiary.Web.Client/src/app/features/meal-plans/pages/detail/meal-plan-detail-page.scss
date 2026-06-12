@@ -5,7 +5,6 @@
 }
 
 .meal-plan-detail {
-    // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin: var(--fd-space-lg) 0;
     }
@@ -28,7 +27,6 @@
 }
 
 .meal-plan-day {
-    // stylelint-disable-next-line rule-empty-line-before
     &__title {
         margin: 0 0 var(--fd-space-sm);
     }
@@ -56,7 +54,6 @@
 }
 
 @media #{variables.$media-mobile} {
-    // stylelint-disable-next-line rule-empty-line-before
     .meal-plan-meal {
         flex-direction: column;
         align-items: flex-start;

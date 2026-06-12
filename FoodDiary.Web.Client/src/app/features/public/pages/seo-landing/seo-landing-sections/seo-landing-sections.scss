@@ -182,7 +182,7 @@
         }
     }
 
-    &__faq-item[open] &__faq-question::after {
+    &__faq-item:where([open]) &__faq-question::after {
         content: '-';
     }
 

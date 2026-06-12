@@ -38,7 +38,7 @@
         z-index: 1;
         max-width: 100%;
 
-        &.is-daily-hovered {
+        &:where(.is-daily-hovered) {
             .dashboard-summary-card__center {
                 transform: translateY(4px) scale(1.12);
             }
@@ -49,7 +49,7 @@
             }
         }
 
-        &.is-weekly-hovered {
+        &:where(.is-weekly-hovered) {
             .dashboard-summary-card__secondary-line {
                 transform: scale(1.12);
                 opacity: 1;
@@ -57,7 +57,7 @@
             }
         }
 
-        &.is-goal-missing {
+        &:where(.is-goal-missing) {
             .dashboard-summary-card__secondary-line,
             .dashboard-summary-card__percent,
             .dashboard-summary-card__primary-line {
@@ -83,7 +83,7 @@
     }
 
     &__ring:focus,
-    &__ring:focus-visible {
+    &__ring:where(:focus-visible) {
         outline: none;
     }
 
@@ -138,17 +138,17 @@
             opacity 0.2s ease;
         pointer-events: none;
 
-        &.is-daily-hovered .dashboard-summary-card__secondary-line {
+        &:where(.is-daily-hovered) .dashboard-summary-card__secondary-line {
             transform: scale(0.8);
             opacity: 0.6;
         }
 
-        &.is-weekly-hovered .dashboard-summary-card__secondary-line {
+        &:where(.is-weekly-hovered) .dashboard-summary-card__secondary-line {
             transform: scale(1.25);
         }
 
-        &.is-weekly-hovered .dashboard-summary-card__percent,
-        &.is-weekly-hovered .dashboard-summary-card__primary-line {
+        &:where(.is-weekly-hovered) .dashboard-summary-card__percent,
+        &:where(.is-weekly-hovered) .dashboard-summary-card__primary-line {
             transform: scale(0.85);
             opacity: 0.6;
         }
@@ -203,7 +203,7 @@
             transform 0.2s ease,
             filter 0.2s ease;
 
-        &:hover {
+        &:where(:hover) {
             transform: translateY(-2px) scale(1.02);
             filter: var(--fd-shadow-filter-drop-sm);
 

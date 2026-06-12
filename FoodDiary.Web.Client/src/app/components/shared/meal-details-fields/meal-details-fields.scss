@@ -56,7 +56,6 @@
 }
 
 .meal-details-fields--regular {
-    /* stylelint-disable rule-empty-line-before */
     .meal-details-fields__input,
     .meal-details-fields__textarea {
         border: var(--fd-border-muted);
@@ -72,7 +71,6 @@
         min-height: 88px;
         padding: var(--fd-space-sm);
     }
-    /* stylelint-enable rule-empty-line-before */
 }
 
 @media #{variables.$media-phablet} {

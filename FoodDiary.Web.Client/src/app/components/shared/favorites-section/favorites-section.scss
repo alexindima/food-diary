@@ -15,7 +15,7 @@
     cursor: pointer;
     text-align: left;
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: var(--fd-outline-focus);
         outline-offset: calc(var(--fd-outline-offset) * -1);
         border-radius: var(--fd-surface-radius);

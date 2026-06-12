@@ -127,7 +127,7 @@
     margin-top: 0;
 }
 
-.fd-ui-date-input__suffix:hover:not(:disabled) {
+.fd-ui-date-input__suffix:where(:hover:not(:disabled)) {
     color: var(--fd-color-text);
 }
 

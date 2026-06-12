@@ -57,7 +57,7 @@
     color: var(--fd-tabs-color-hover);
 }
 
-.fd-ui-tabs__tab:focus-visible {
+.fd-ui-tabs__tab:where(:focus-visible) {
     outline: none;
     background: var(--fd-tabs-focus-background);
     box-shadow: var(--fd-tabs-focus-shadow);

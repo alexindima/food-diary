@@ -9,7 +9,6 @@ $fd-radius-tokens: (
     xl: 16px,
     pill: 999px,
 );
-
 $fd-spacing-tokens: (
     micro: 2px,
     xxs: 4px,
@@ -20,7 +19,6 @@ $fd-spacing-tokens: (
     xl: clamp(20px, 3.5vw, 32px),
     xxl: clamp(28px, 4vw, 40px),
 );
-
 $fd-size-tokens: (
     icon-xs: 0.875rem,
     icon-sm: 1rem,
@@ -87,9 +85,9 @@ $fd-size-tokens: (
     dialog-panel-width-md: 640px,
     dialog-panel-width-lg: 840px,
     dialog-panel-width-xl: 1120px,
-    dialog-media-width: min(calc(100vw - 3rem), 1200px),
+    dialog-media-width: min(calc(100dvw - 3rem), 1200px),
     dialog-media-max-width: 1200px,
-    dialog-chart-width: min(1440px, calc(100vw - 40px)),
+    dialog-chart-width: min(1440px, calc(100dvw - 40px)),
     dialog-max-height: 80vh,
     dialog-max-height-detail: 90vh,
     dialog-max-height-admin: 94vh,
@@ -109,7 +107,6 @@ $fd-size-tokens: (
     fasting-ring-glow-offset-y: 18px,
     fasting-ring-glow-blur: 36px,
 );
-
 $fd-typography-tokens: (
     font-family: '"Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
     font-family-monospace: 'ui-monospace, SFMono-Regular, Consolas, monospace',
@@ -206,7 +203,6 @@ $fd-typography-tokens: (
     text-action-line-height: 1.3,
     text-action-weight: 600,
 );
-
 $fd-elevation-tokens: (
     none: none,
     xs: 0 1px 2px rgba(24, 39, 75, 0.08),
@@ -257,7 +253,6 @@ $fd-elevation-tokens: (
     fasting-overtime-ring-depth: 0 var(--fd-size-fasting-ring-glow-offset-y) var(--fd-size-fasting-ring-glow-blur)
         color-mix(in srgb, var(--fd-color-green-500) 12%, transparent),
 );
-
 $fd-border-tokens: (
     none: 0,
     width: 1px,
@@ -270,7 +265,6 @@ $fd-border-tokens: (
     inverse: 1px solid color-mix(in srgb, var(--fd-color-white) 12%, transparent),
     dashed: 1px dashed color-mix(in srgb, var(--fd-color-border-strong) 70%, transparent),
 );
-
 $fd-static-color-tokens: (
     white: #ffffff,
     slate-50: #f8fafc,
@@ -334,22 +328,18 @@ $fd-static-color-tokens: (
     rose-500: #ec4899,
     yellow-300: #fde68a,
 );
-
 $fd-period-filter-tokens: (
     gap: 24px,
 );
-
 $fd-page-body-tokens: (
     gap: 16px,
 );
-
 $fd-layout-shell-tokens: (
     sidebar-width: 260px,
     impersonation-banner-height: 48px,
     mobile-viewport-bottom-padding: 72px,
     mobile-sheet-bottom: 126px,
 );
-
 $fd-page-header-base-tokens: (
     title-size: clamp(1.4rem, 3vw, 2rem),
     title-line-height: 1.2,
@@ -361,7 +351,6 @@ $fd-page-header-base-tokens: (
     gap: clamp(10px, 2vw, 16px),
     actions-gap: 12px,
 );
-
 $fd-static-design-tokens: (
     colors: $fd-static-color-tokens,
     radius: $fd-radius-tokens,
@@ -374,7 +363,6 @@ $fd-static-design-tokens: (
     page-body: $fd-page-body-tokens,
     layout-shell: $fd-layout-shell-tokens,
 );
-
 $fd-theme-design-tokens: (
     ocean: (
         colors: (
@@ -600,13 +588,13 @@ $fd-theme-design-tokens: (
 @function fd-token($group, $name) {
     $group-map: map.get($fd-static-design-tokens, $group);
 
-    @if $group-map == null {
+    @if not $group-map {
         @error 'Unknown static design token group: #{$group}';
     }
 
     $value: map.get($group-map, $name);
 
-    @if $value == null {
+    @if not $value {
         @error 'Unknown design token "#{$name}" in static group "#{$group}"';
     }
 
@@ -651,19 +639,19 @@ $fd-theme-design-tokens: (
 @function fd-theme-token($theme, $group, $name) {
     $theme-map: map.get($fd-theme-design-tokens, $theme);
 
-    @if $theme-map == null {
+    @if not $theme-map {
         @error 'Unknown theme: #{$theme}';
     }
 
     $group-map: map.get($theme-map, $group);
 
-    @if $group-map == null {
+    @if not $group-map {
         @error 'Unknown theme token group "#{$group}" for theme "#{$theme}"';
     }
 
     $value: map.get($group-map, $name);
 
-    @if $value == null {
+    @if not $value {
         @error 'Unknown theme token "#{$name}" in group "#{$group}" for theme "#{$theme}"';
     }
 
@@ -705,16 +693,15 @@ $fd-theme-design-tokens: (
             menu-item: fd-token(radius, sm),
         ),
     );
-
     $tokens: map.get($style-map, $style);
 
-    @if $tokens == null {
+    @if not $tokens {
         @error 'Unknown UI style: #{$style}';
     }
 
     $value: map.get($tokens, $name);
 
-    @if $value == null {
+    @if not $value {
         @error 'Unknown UI style radius token "#{$name}" for style "#{$style}"';
     }
 
@@ -997,16 +984,15 @@ $fd-theme-design-tokens: (
             entity-card-title-gap: fd-token(spacing, micro),
         ),
     );
-
     $tokens: map.get($style-map, $style);
 
-    @if $tokens == null {
+    @if not $tokens {
         @error 'Unknown UI style: #{$style}';
     }
 
     $value: map.get($tokens, $name);
 
-    @if $value == null {
+    @if not $value {
         @error 'Unknown UI style spacing token "#{$name}" for style "#{$style}"';
     }
 

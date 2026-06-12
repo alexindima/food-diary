@@ -15,7 +15,7 @@
     text-align: center;
 }
 
-:host(.fd-ui-section-state--compact) .fd-ui-section-state__surface {
+:host(:where(.fd-ui-section-state--compact)) .fd-ui-section-state__surface {
     min-height: var(--fd-section-state-compact-min-height);
     padding: var(--fd-space-section-state-compact-padding);
 }

@@ -49,7 +49,7 @@
         text-align: left;
         cursor: pointer;
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             outline: none;
             box-shadow: var(--fd-shadow-focus);
         }
@@ -64,8 +64,8 @@
             transform 0.2s ease;
     }
 
-    &__item:hover &__card,
-    &__item:focus-visible &__card {
+    &__item:where(:hover) &__card,
+    &__item:where(:focus-visible) &__card {
         box-shadow: var(--fd-shadow-lg);
         transform: translateY(-1px);
     }
@@ -89,7 +89,7 @@
         color: var(--fd-color-text-muted);
     }
 
-    &__item:not(.is-read) &__status {
+    &__item:where(:not(.is-read)) &__status {
         color: var(--fd-color-primary);
     }
 

@@ -25,11 +25,11 @@
         color 140ms ease;
 }
 
-.fd-ui-pagination__button:hover:not(:disabled) {
+.fd-ui-pagination__button:where(:hover:not(:disabled)) {
     border-color: var(--fd-color-primary-500);
 }
 
-.fd-ui-pagination__button:focus-visible {
+.fd-ui-pagination__button:where(:focus-visible) {
     outline: var(--fd-outline-focus);
     outline-offset: 1px;
 }

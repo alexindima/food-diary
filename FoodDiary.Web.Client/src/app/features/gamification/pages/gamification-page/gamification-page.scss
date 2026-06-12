@@ -4,7 +4,7 @@
     &__stats-grid {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }
@@ -70,7 +70,7 @@
     &__grid {
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }
@@ -128,7 +128,7 @@
     &__badges {
         grid-template-columns: repeat(auto-fill, minmax(min(100%, 100px), 1fr));
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }

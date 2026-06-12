@@ -115,10 +115,10 @@
     margin-top: 0;
 }
 
-.fd-ui-input__control:-webkit-autofill,
-.fd-ui-input__control:-webkit-autofill:hover,
-.fd-ui-input__control:-webkit-autofill:focus,
-.fd-ui-input__control:-webkit-autofill:active {
+.fd-ui-input__control:where(:-webkit-autofill),
+.fd-ui-input__control:where(:where(:-webkit-autofill):hover),
+.fd-ui-input__control:where(:where(:-webkit-autofill):focus),
+.fd-ui-input__control:where(:where(:-webkit-autofill):active) {
     animation-name: fd-ui-input-autofill-start;
     animation-duration: 0.01s;
     -webkit-text-fill-color: var(--fd-color-text);
@@ -172,7 +172,7 @@
     cursor: default;
 }
 
-.fd-ui-input__suffix:hover:not(:disabled) {
+.fd-ui-input__suffix:where(:hover:not(:disabled)) {
     color: var(--fd-color-text);
 }
 
@@ -191,13 +191,13 @@
     padding-bottom: var(--fd-input-floating-padding-bottom);
 }
 
-.fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) .fd-ui-input__label {
+.fd-ui-input__control-wrap:where(:has(.fd-ui-input__control:where(:-webkit-autofill))) .fd-ui-input__label {
     top: 0;
     transform: translateY(-50%);
     font-size: var(--fd-text-label-floating-size);
 }
 
-.fd-ui-input__control-wrap:has(.fd-ui-input__control:-webkit-autofill) {
+.fd-ui-input__control-wrap:where(:has(.fd-ui-input__control:where(:-webkit-autofill))) {
     padding-top: var(--fd-space-control-floating-padding-top);
     padding-bottom: var(--fd-space-control-floating-padding-bottom);
 }
@@ -261,10 +261,10 @@
 
 /* stylelint-disable declaration-no-important -- Browser autofill applies user-agent font styles with high priority. */
 
-.fd-ui-input--appearance-auth .fd-ui-input__control:-webkit-autofill,
-.fd-ui-input--appearance-auth .fd-ui-input__control:-webkit-autofill:hover,
-.fd-ui-input--appearance-auth .fd-ui-input__control:-webkit-autofill:focus,
-.fd-ui-input--appearance-auth .fd-ui-input__control:-webkit-autofill:active {
+.fd-ui-input--appearance-auth .fd-ui-input__control:where(:-webkit-autofill),
+.fd-ui-input--appearance-auth .fd-ui-input__control:where(:where(:-webkit-autofill):hover),
+.fd-ui-input--appearance-auth .fd-ui-input__control:where(:where(:-webkit-autofill):focus),
+.fd-ui-input--appearance-auth .fd-ui-input__control:where(:where(:-webkit-autofill):active) {
     -webkit-text-fill-color: var(--fd-input-control-color);
     caret-color: var(--fd-input-control-color);
     font-family: inherit !important;
@@ -280,7 +280,7 @@
     color: var(--fd-input-control-muted-color);
 }
 
-.fd-ui-input--appearance-auth .fd-ui-input__suffix:hover:not(:disabled) {
+.fd-ui-input--appearance-auth .fd-ui-input__suffix:where(:hover:not(:disabled)) {
     color: var(--fd-input-control-color);
 }
 

@@ -41,7 +41,7 @@
         transform 0.15s ease
     );
 
-    &:hover:not(:disabled) {
+    &:where(:hover:not(:disabled)) {
         background: var(--fd-button-background-hover);
         border-color: var(--fd-button-border-hover);
         color: var(--fd-button-text-hover);
@@ -49,7 +49,7 @@
         transform: var(--fd-button-transform-hover);
     }
 
-    &:active:not(:disabled) {
+    &:where(:active:not(:disabled)) {
         background: var(--fd-button-background-active);
         border-color: var(--fd-button-border-active);
         color: var(--fd-button-text-active);
@@ -57,7 +57,7 @@
         transform: var(--fd-button-transform-active);
     }
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: none;
         box-shadow: var(--fd-button-focus-ring-shadow), var(--fd-button-shadow-hover);
     }
@@ -124,8 +124,8 @@
     &--text {
         box-shadow: var(--fd-shadow-none);
 
-        &:hover:not(:disabled),
-        &:active:not(:disabled) {
+        &:where(:hover:not(:disabled)),
+        &:where(:active:not(:disabled)) {
             box-shadow: var(--fd-shadow-none);
         }
     }
@@ -254,7 +254,7 @@
     --fd-button-shadow-hover: var(--fd-shadow-button-ai-hover);
 }
 
-.fd-ui-button--primary.fd-ui-button--solid:has(.fd-ui-button__label:empty) {
+.fd-ui-button--primary.fd-ui-button--solid:where(:has(.fd-ui-button__label:empty)) {
     --fd-button-text-default: var(--fd-color-on-brand-muted);
     color: var(--fd-button-text-default);
 }
@@ -268,7 +268,7 @@
 }
 
 .fd-ui-button--primary.fd-ui-button--outline,
-.fd-ui-button--outline:not(.fd-ui-button--secondary):not(.fd-ui-button--danger):not(.fd-ui-button--info) {
+.fd-ui-button--outline:where(:not(.fd-ui-button--secondary):not(.fd-ui-button--danger):not(.fd-ui-button--info)) {
     --fd-button-background-default: var(--fd-button-outline-background-default);
     --fd-button-background-hover: var(--fd-button-outline-background-hover);
     --fd-button-background-active: var(--fd-button-outline-background-active);
@@ -295,7 +295,7 @@
     --fd-button-text-disabled: var(--fd-button-ghost-text-disabled);
 }
 
-.fd-ui-button--secondary:not(.fd-ui-button--text) {
+.fd-ui-button--secondary:where(:not(.fd-ui-button--text)) {
     --fd-button-background-default: var(--fd-button-secondary-background-default);
     --fd-button-background-hover: var(--fd-button-secondary-background-hover);
     --fd-button-background-active: var(--fd-button-secondary-background-active);
@@ -321,7 +321,7 @@
     --fd-button-text-disabled: var(--fd-button-secondary-text-text-disabled);
 }
 
-.fd-ui-button--info:not(.fd-ui-button--text) {
+.fd-ui-button--info:where(:not(.fd-ui-button--text)) {
     --fd-button-background-default: var(--fd-button-info-background-default);
     --fd-button-background-hover: var(--fd-button-info-background-hover);
     --fd-button-background-active: var(--fd-button-info-background-active);

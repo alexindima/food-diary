@@ -12,7 +12,7 @@
     font-weight: var(--fd-font-weight-medium);
     border-radius: var(--fd-radius-button);
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         width: auto;
         height: auto;
         overflow: visible;
@@ -36,7 +36,7 @@
         align-self: stretch;
         position: sticky;
         top: 0;
-        height: 100vh;
+        height: 100dvh;
 
         &--placeholder {
             background: transparent;
@@ -121,7 +121,7 @@ html.cdk-global-scrollblock .fd-root__sidebar {
     top: 0;
     left: 0;
     width: var(--fd-layout-sidebar-width);
-    height: 100vh;
+    height: 100dvh;
     overflow-y: auto;
 }
 
@@ -146,7 +146,6 @@ html.cdk-global-scrollblock .fd-root__sidebar {
 }
 
 @media #{variables.$media-tablet} {
-    // stylelint-disable-next-line rule-empty-line-before
     .fd-root {
         display: block;
         height: auto;

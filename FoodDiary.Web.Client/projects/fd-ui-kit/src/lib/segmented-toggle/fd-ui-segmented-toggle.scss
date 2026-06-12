@@ -9,7 +9,7 @@
     container-name: fd-ui-segmented-toggle;
 }
 
-:host(.fd-ui-segmented-toggle-host--full-width) {
+:host(:where(.fd-ui-segmented-toggle-host--full-width)) {
     display: block;
     width: 100%;
 }
@@ -61,7 +61,7 @@
         color: var(--fd-color-primary-600);
     }
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: var(--fd-outline-focus);
         outline-offset: var(--fd-outline-offset);
     }

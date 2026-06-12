@@ -22,7 +22,7 @@ button.fd-ui-sidebar__section-header {
     cursor: pointer;
 }
 
-.fd-ui-sidebar__section-header:focus-visible {
+.fd-ui-sidebar__section-header:where(:focus-visible) {
     outline: var(--fd-outline-focus-strong);
     outline-offset: var(--fd-outline-offset);
     border-radius: var(--fd-radius-button);

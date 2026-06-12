@@ -80,7 +80,7 @@
             border 0.25s ease;
         border: var(--fd-border-subtle);
 
-        &:hover:not(:disabled) {
+        &:where(:hover:not(:disabled)) {
             transform: translateY(-2px);
             box-shadow: var(--fd-shadow-lg);
         }

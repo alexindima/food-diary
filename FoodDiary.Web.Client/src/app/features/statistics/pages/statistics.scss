@@ -33,7 +33,6 @@
     }
 
     &__card {
-        // stylelint-disable-next-line rule-empty-line-before
         &--summary {
             display: flex;
             flex-direction: column;
@@ -65,7 +64,6 @@
     }
 
     @media #{variables.$media-mobile} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__header {
             align-items: flex-start;
         }

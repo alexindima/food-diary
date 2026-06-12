@@ -1,7 +1,6 @@
 @use 'variables' as variables;
 
 .fasting {
-    // stylelint-disable-next-line rule-empty-line-before
     &__header {
         margin-bottom: var(--fd-page-header-gap);
     }
@@ -11,7 +10,7 @@
         align-items: start;
         align-content: start;
 
-        > * {
+        > :where(:not(template)) {
             min-width: 0;
         }
     }
@@ -231,7 +230,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__personal-summary-header {
             align-items: flex-start;
             flex-direction: column;
@@ -457,7 +455,7 @@
     &__history-checkin-entry {
         padding: var(--fd-space-xs) 0;
 
-        &:not(:last-child) {
+        &:where(:not(:last-child)) {
             border-bottom: var(--fd-border-dashed);
         }
     }
@@ -488,7 +486,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__history-heading {
             gap: var(--fd-space-xxs);
         }

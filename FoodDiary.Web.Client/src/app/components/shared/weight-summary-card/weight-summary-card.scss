@@ -4,21 +4,21 @@
     height: 100%;
 }
 
-:host(.dashboard__card) fd-ui-card {
+:host(:where(.dashboard__card)) fd-ui-card {
     height: 100%;
     border-radius: var(--fd-radius-card);
     overflow: hidden;
     display: block;
 }
 
-:host(.dashboard__card--clickable) fd-ui-card {
+:host(:where(.dashboard__card--clickable)) fd-ui-card {
     cursor: pointer;
     transition:
         box-shadow 0.2s ease,
         transform 0.2s ease;
 }
 
-:host(.dashboard__card--clickable) fd-ui-card:hover {
+:host(:where(.dashboard__card--clickable)) fd-ui-card:hover {
     box-shadow: var(--fd-shadow-lg);
     transform: translateY(-2px);
 }

@@ -63,14 +63,14 @@
         box-shadow 0.18s ease,
         transform 0.18s ease;
 
-    &:hover:not(:disabled) {
+    &:where(:hover:not(:disabled)) {
         background: var(--fd-emoji-picker-option-bg-hover);
         border-color: var(--fd-emoji-picker-option-border-hover);
         box-shadow: var(--fd-emoji-picker-option-shadow-hover);
         transform: translateY(-1px);
     }
 
-    &:focus-visible {
+    &:where(:focus-visible) {
         outline: var(--fd-outline-focus);
         outline-offset: var(--fd-outline-offset);
     }

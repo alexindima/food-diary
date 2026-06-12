@@ -1,7 +1,7 @@
 @use 'variables' as variables;
 @use './dashboard-shell' as dashboard-shell;
 
-:host(.dashboard-host) {
+:host(:where(.dashboard-host)) {
     display: flex;
     flex-direction: column;
     flex: 1 1 auto;
@@ -38,7 +38,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         border-radius: var(--fd-radius-card);
         outline: none;
 
-        &:focus-visible {
+        &:where(:focus-visible) {
             box-shadow: var(--fd-shadow-focus);
         }
     }
@@ -94,7 +94,7 @@ $color-text-secondary: var(--fd-color-text-muted);
                     box-shadow 0.2s ease,
                     transform 0.2s ease;
 
-                &:hover {
+                &:where(:hover) {
                     box-shadow: var(--fd-shadow-lg);
                     transform: translateY(-2px);
                 }
@@ -102,7 +102,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &--ring {
-            // stylelint-disable-next-line rule-empty-line-before
             > .fd-ui-card {
                 min-height: 340px;
             }
@@ -118,7 +117,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &--fasting-hero {
-            // stylelint-disable-next-line rule-empty-line-before
             > .fd-ui-card {
                 min-height: 0;
             }
@@ -129,7 +127,6 @@ $color-text-secondary: var(--fd-color-text-muted);
         }
 
         &--advice {
-            // stylelint-disable-next-line rule-empty-line-before
             > fd-daily-advice-card {
                 width: 100%;
             }
@@ -215,11 +212,11 @@ $color-text-secondary: var(--fd-color-text-muted);
             gap: var(--fd-space-xs);
         }
 
-        & > * {
+        > :where(:not(template)) {
             flex: none;
         }
 
-        & .consumption-card__comment {
+        .consumption-card__comment {
             font-style: italic;
             text-align: right;
             overflow: hidden;

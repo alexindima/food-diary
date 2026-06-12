@@ -119,7 +119,7 @@
     cursor: pointer;
 }
 
-.fd-ui-time-input__suffix:hover:not(:disabled) {
+.fd-ui-time-input__suffix:where(:hover:not(:disabled)) {
     color: var(--fd-color-text);
 }
 

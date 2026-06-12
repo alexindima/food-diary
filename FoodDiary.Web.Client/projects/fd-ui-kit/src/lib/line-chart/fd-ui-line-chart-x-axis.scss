@@ -54,7 +54,6 @@
 }
 
 @container (max-width: 560px) {
-    /* stylelint-disable-next-line rule-empty-line-before */
     .fd-ui-line-chart__x-axis {
         min-height: var(--fd-line-chart-angled-axis-height);
     }
@@ -77,8 +76,9 @@
 }
 
 @container (max-width: 380px) {
-    /* stylelint-disable-next-line rule-empty-line-before */
-    .fd-ui-line-chart__x-axis span:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end) {
+    .fd-ui-line-chart__x-axis span:where(
+        :nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)
+    ) {
         display: none;
     }
 }

@@ -90,7 +90,7 @@
     height: 100%;
 }
 
-.landing-preview__hero-card > * {
+.landing-preview__hero-card > :where(:not(template)) {
     width: 100%;
     margin: 0;
 }

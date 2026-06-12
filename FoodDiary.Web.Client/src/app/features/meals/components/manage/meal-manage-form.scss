@@ -77,7 +77,6 @@
     }
 
     @media #{variables.$media-mobile} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__image {
             width: 100%;
             height: auto;
@@ -129,7 +128,6 @@
     }
 
     @media #{variables.$media-tablet} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__form {
             padding: var(--fd-space-xs) 0 0;
         }
@@ -140,7 +138,6 @@
     }
 
     @media #{variables.$media-mobile} {
-        // stylelint-disable-next-line rule-empty-line-before
         &__footer-actions {
             grid-template-columns: 1fr;
             align-items: stretch;
@@ -356,7 +353,6 @@
 }
 
 .consumption-item__field {
-    // stylelint-disable-next-line rule-empty-line-before
     &--source {
         flex: 2 1 240px;
     }
