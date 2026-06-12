@@ -1,5 +1,6 @@
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Presentation.Api.Telemetry;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,7 @@ namespace FoodDiary.Presentation.Api.Features.Logs;
 [AllowAnonymous]
 [ApiExplorerSettings(IgnoreApi = true)]
 [Route("api/v{version:apiVersion}/logs")]
+[SuppressRequestAccessLog]
 public sealed class LogsController(
     ILogger<LogsController> logger,
     IFastingTelemetrySummaryService fastingTelemetrySummaryService) : ControllerBase {

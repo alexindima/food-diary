@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using System.Diagnostics.Metrics;
 using System.Security.Claims;
+using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.OutputCaching;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
@@ -409,6 +411,53 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         Assert.Equal("miss", outcome);
     }
 
+    [Fact]
+    public async Task Middleware_SuppressesSuccessfulAccessLog_WhenEndpointMetadataRequestsIt() {
+        var logger = new RecordingLogger<RequestObservabilityMiddleware>();
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status204NoContent;
+                return Task.CompletedTask;
+            },
+            logger);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Post;
+        httpContext.Request.Path = "/api/v1/logs";
+        httpContext.SetEndpoint(new Endpoint(
+            static _ => Task.CompletedTask,
+            new EndpointMetadataCollection(new SuppressRequestAccessLogAttribute()),
+            "logs"));
+
+        await middleware.InvokeAsync(httpContext);
+
+        Assert.Empty(logger.Messages);
+    }
+
+    [Fact]
+    public async Task Middleware_KeepsErrorAccessLog_WhenEndpointMetadataRequestsSuppression() {
+        var logger = new RecordingLogger<RequestObservabilityMiddleware>();
+        var middleware = new RequestObservabilityMiddleware(
+            next: context => {
+                context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+                return Task.CompletedTask;
+            },
+            logger);
+
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Post;
+        httpContext.Request.Path = "/api/v1/logs";
+        httpContext.SetEndpoint(new Endpoint(
+            static _ => Task.CompletedTask,
+            new EndpointMetadataCollection(new SuppressRequestAccessLogAttribute()),
+            "logs"));
+
+        await middleware.InvokeAsync(httpContext);
+
+        string message = Assert.Single(logger.Messages);
+        Assert.Contains("HTTP POST /api/v1/logs responded 500", message, StringComparison.Ordinal);
+    }
+
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
         foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
@@ -417,5 +466,25 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         }
 
         return null;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public List<string> Messages { get; } = [];
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull =>
+            null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            Messages.Add(formatter(state, exception));
+        }
     }
 }

@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Security.Claims;
+using FoodDiary.Presentation.Api.Telemetry;
 using Microsoft.AspNetCore.OutputCaching;
 
 namespace FoodDiary.Web.Api.Extensions;
@@ -78,6 +79,10 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
         ObserveBusinessFlow(request.Method, request.Path, statusCode);
         ObserveOutputCache(context, statusCode);
         RecordRequestMetrics(request.Method, observation.PathLabel, statusCode, elapsedMs);
+        if (ShouldSuppressSuccessfulAccessLog(context, statusCode)) {
+            return;
+        }
+
         logger.LogInformation(
             "HTTP {Method} {Path} responded {StatusCode} in {ElapsedMs} ms",
             request.Method,
@@ -85,6 +90,10 @@ public sealed class RequestObservabilityMiddleware(RequestDelegate next, ILogger
             statusCode,
             elapsedMs);
     }
+
+    private static bool ShouldSuppressSuccessfulAccessLog(HttpContext context, int statusCode) =>
+        statusCode < StatusCodes.Status400BadRequest &&
+        context.GetEndpoint()?.Metadata.GetMetadata<SuppressRequestAccessLogAttribute>() is not null;
 
     private static void ObserveBusinessFlow(string method, PathString path, int statusCode) {
         BusinessFlow? businessFlow = BusinessFlow.From(method, path);
