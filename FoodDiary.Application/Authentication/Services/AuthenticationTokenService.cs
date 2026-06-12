@@ -17,6 +17,8 @@ public sealed class AuthenticationTokenService(
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider)
     : IAuthenticationTokenService {
+    private static readonly TimeSpan PreviousRefreshTokenGracePeriod = TimeSpan.FromMinutes(2);
+
     public async Task<IssuedAuthenticationTokens> IssueAndStoreAsync(
         User user,
         CancellationToken cancellationToken,
@@ -36,7 +38,7 @@ public sealed class AuthenticationTokenService(
         if (refreshSessionId.HasValue) {
             UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);
             if (session is not null && session.UserId == user.Id && session.IsActive) {
-                session.Rotate(hashedRefreshToken, rememberMe, nowUtc);
+                session.Rotate(hashedRefreshToken, rememberMe, nowUtc, PreviousRefreshTokenGracePeriod);
                 await refreshTokenSessionRepository.UpdateAsync(session, cancellationToken).ConfigureAwait(false);
             }
         } else {

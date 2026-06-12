@@ -12,6 +12,8 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
     public string? UserAgent { get; private set; }
     public DateTime CreatedAtUtc { get; private set; }
     public DateTime LastRotatedAtUtc { get; private set; }
+    public string? PreviousRefreshTokenHash { get; private set; }
+    public DateTime? PreviousRefreshTokenValidUntilUtc { get; private set; }
     public DateTime? RevokedAtUtc { get; private set; }
 
     private UserRefreshTokenSession() {
@@ -52,12 +54,14 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
 
     public bool IsActive => RevokedAtUtc is null;
 
-    public void Rotate(string refreshTokenHash, bool rememberMe, DateTime nowUtc) {
+    public void Rotate(string refreshTokenHash, bool rememberMe, DateTime nowUtc, TimeSpan previousTokenGracePeriod) {
         if (!IsActive) {
             throw new InvalidOperationException("Revoked refresh token session cannot be rotated.");
         }
 
         DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
+        PreviousRefreshTokenHash = RefreshTokenHash;
+        PreviousRefreshTokenValidUntilUtc = NormalizePreviousTokenValidUntil(normalizedNow, previousTokenGracePeriod);
         RefreshTokenHash = NormalizeRequiredText(refreshTokenHash, nameof(refreshTokenHash), 512);
         RememberMe = rememberMe;
         LastRotatedAtUtc = normalizedNow;
@@ -71,6 +75,8 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
 
         DateTime normalizedNow = NormalizeUtcTimestamp(nowUtc, nameof(nowUtc));
         RevokedAtUtc = normalizedNow;
+        PreviousRefreshTokenHash = null;
+        PreviousRefreshTokenValidUntilUtc = null;
         SetModified(normalizedNow);
     }
 
@@ -95,4 +101,7 @@ public sealed class UserRefreshTokenSession : Entity<Guid> {
     private static DateTime NormalizeUtcTimestamp(DateTime value, string paramName) {
         return value.Kind == DateTimeKind.Unspecified ? throw new ArgumentOutOfRangeException(paramName, "UTC timestamp kind must be specified.") : value.ToUniversalTime();
     }
+
+    private static DateTime? NormalizePreviousTokenValidUntil(DateTime nowUtc, TimeSpan gracePeriod) =>
+        gracePeriod <= TimeSpan.Zero ? null : nowUtc.Add(gracePeriod);
 }

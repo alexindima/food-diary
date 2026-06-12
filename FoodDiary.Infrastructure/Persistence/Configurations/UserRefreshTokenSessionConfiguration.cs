@@ -15,6 +15,9 @@ internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfigur
             .IsRequired()
             .HasMaxLength(512);
 
+        builder.Property(e => e.PreviousRefreshTokenHash)
+            .HasMaxLength(512);
+
         builder.Property(e => e.AuthProvider)
             .HasMaxLength(64);
 
@@ -28,6 +31,9 @@ internal sealed class UserRefreshTokenSessionConfiguration : IEntityTypeConfigur
             .HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.LastRotatedAtUtc)
+            .HasColumnType("timestamp with time zone");
+
+        builder.Property(e => e.PreviousRefreshTokenValidUntilUtc)
             .HasColumnType("timestamp with time zone");
 
         builder.Property(e => e.RevokedAtUtc)

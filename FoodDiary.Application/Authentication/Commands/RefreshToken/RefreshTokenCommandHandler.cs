@@ -17,7 +17,8 @@ public class RefreshTokenCommandHandler(
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
     IRefreshTokenSessionRepository refreshTokenSessionRepository,
-    IAuthenticationTokenService authenticationTokenService) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
+    IAuthenticationTokenService authenticationTokenService,
+    TimeProvider dateTimeProvider) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {
         (UserId userId, string email, bool rememberMe, Guid? refreshSessionId)? validationResult = jwtTokenGenerator.ValidateToken(command.RefreshToken);
         if (validationResult == null) {
@@ -40,11 +41,8 @@ public class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        bool isRefreshTokenValid = SecurityTokenGenerator.IsFastStorageHash(session.RefreshTokenHash)
-            ? SecurityTokenGenerator.VerifyFastStorageHash(command.RefreshToken, session.RefreshTokenHash)
-            : passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(command.RefreshToken), session.RefreshTokenHash);
-
-        if (!isRefreshTokenValid) {
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
+        if (!IsRefreshTokenValid(command.RefreshToken, session, nowUtc)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
@@ -54,4 +52,19 @@ public class RefreshTokenCommandHandler(
             .ConfigureAwait(false);
         return Result.Success(currentUser.ToAuthenticationModel(tokens));
     }
+
+    private bool IsRefreshTokenValid(string refreshToken, UserRefreshTokenSession session, DateTime nowUtc) =>
+        VerifyRefreshToken(refreshToken, session.RefreshTokenHash) ||
+        IsPreviousRefreshTokenValid(refreshToken, session, nowUtc);
+
+    private bool IsPreviousRefreshTokenValid(string refreshToken, UserRefreshTokenSession session, DateTime nowUtc) =>
+        session.PreviousRefreshTokenHash is { Length: > 0 } previousHash &&
+        session.PreviousRefreshTokenValidUntilUtc is { } validUntilUtc &&
+        validUntilUtc > nowUtc &&
+        VerifyRefreshToken(refreshToken, previousHash);
+
+    private bool VerifyRefreshToken(string refreshToken, string refreshTokenHash) =>
+        SecurityTokenGenerator.IsFastStorageHash(refreshTokenHash)
+            ? SecurityTokenGenerator.VerifyFastStorageHash(refreshToken, refreshTokenHash)
+            : passwordHasher.Verify(SecurityTokenGenerator.NormalizeForSecureHashing(refreshToken), refreshTokenHash);
 }
