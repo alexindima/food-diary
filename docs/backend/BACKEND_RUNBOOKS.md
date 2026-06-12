@@ -467,6 +467,9 @@ Immediate actions:
 Diagnosis:
 
 - Check OpenTelemetry exporter endpoint, credentials, and collector availability.
+- For app containers that export to a collector running on the Docker host, use
+  `OpenTelemetry__Otlp__Endpoint=http://host.docker.internal:4317` and keep the
+  compose `host.docker.internal:host-gateway` mapping on exporting services.
 - Verify whether host logs still exist even if traces/metrics export is failing.
 - Confirm whether failures began after deploy or after telemetry backend changes.
 
@@ -487,6 +490,14 @@ Validation after recovery:
 - backend request latency and error rate stay normal during recovery
 - at least one auth flow, one AI flow, and one cleanup job metric appears again in the backend dashboard
 - output-cache hit/miss events appear again for cache-enabled routes after representative traffic
+
+Quick report:
+
+- From the server, run:
+  - `python3 /opt/fooddiary/infra/observability/observability_report.py`
+- From a checkout with an SSH tunnel to Loki/Prometheus, override endpoints:
+  - `python infra/observability/observability_report.py --loki-url http://127.0.0.1:3100 --prometheus-url http://127.0.0.1:9090`
+- Treat `Auth client outcomes` as expected user/client behavior unless volume spikes unexpectedly. Investigate `Recent application problems` first for operational incidents.
 
 ## Loki Or Docker Log Ingestion Loss
 

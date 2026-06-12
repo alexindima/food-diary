@@ -149,6 +149,8 @@ services:
     restart: unless-stopped
     ports:
       - "${API_PORT:-5000}:5000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       ConnectionStrings__DefaultConnection: Host=postgres;Port=5432;Database=${POSTGRES_DB:-fooddiary};Username=${POSTGRES_USER:-postgres};Password=${POSTGRES_PASSWORD:-change-me-local-password}
       ConnectionStrings__Redis: redis:6379,abortConnect=false
@@ -190,6 +192,8 @@ services:
     restart: unless-stopped
     ports:
       - "${MAIL_RELAY_PORT:-5088}:5088"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     environment:
       ConnectionStrings__DefaultConnection: Host=mailrelay-postgres;Port=5432;Database=${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay};Username=${MAIL_RELAY_POSTGRES_USER:-postgres};Password=${MAIL_RELAY_POSTGRES_PASSWORD:-change-me-local-password}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}

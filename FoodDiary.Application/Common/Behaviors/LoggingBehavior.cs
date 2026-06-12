@@ -25,9 +25,7 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
             stopwatch.Stop();
 
             if (response.IsFailure) {
-                logger.LogWarning(
-                    "Handled {RequestName} with error {ErrorCode}: {ErrorMessage} ({ElapsedMs}ms)",
-                    requestName, response.Error.Code, response.Error.Message, stopwatch.ElapsedMilliseconds);
+                LogFailure(requestName, response.Error, stopwatch.ElapsedMilliseconds);
             } else {
                 logger.LogDebug(
                     "Handled {RequestName} successfully ({ElapsedMs}ms)",
@@ -42,5 +40,23 @@ public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TReque
                 requestName, stopwatch.ElapsedMilliseconds);
             throw;
         }
+    }
+
+    private void LogFailure(string requestName, Error error, long elapsedMs) {
+        LogLevel level = ResolveFailureLogLevel(error);
+        logger.Log(
+            level,
+            "Handled {RequestName} with error {ErrorCode}: {ErrorMessage} ({ElapsedMs}ms)",
+            requestName,
+            error.Code,
+            error.Message,
+            elapsedMs);
+    }
+
+    private static LogLevel ResolveFailureLogLevel(Error error) {
+        ErrorKind? kind = error.Kind ?? ErrorKindResolver.Resolve(error.Code);
+        return kind is ErrorKind.Validation or ErrorKind.Unauthorized or ErrorKind.Forbidden
+            ? LogLevel.Information
+            : LogLevel.Warning;
     }
 }

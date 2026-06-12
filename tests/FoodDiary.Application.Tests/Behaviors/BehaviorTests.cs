@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Behaviors;
@@ -36,6 +37,29 @@ public class BehaviorTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Test.Error", result.Error.Code);
+    }
+
+    [Theory]
+    [InlineData("Authentication.InvalidCredentials", null, LogLevel.Information)]
+    [InlineData("Validation.Invalid", ErrorKind.Validation, LogLevel.Information)]
+    [InlineData("User.Forbidden", ErrorKind.Forbidden, LogLevel.Information)]
+    [InlineData("Billing.ProviderOperationFailed", ErrorKind.ExternalFailure, LogLevel.Warning)]
+    [InlineData("Test.Error", null, LogLevel.Warning)]
+    public async Task LoggingBehavior_WhenHandlerFails_UsesExpectedLogLevel(
+        string errorCode,
+        ErrorKind? errorKind,
+        LogLevel expectedLevel) {
+        var logger = new RecordingLogger<LoggingBehavior<TestQuery, Result<string>>>();
+        var behavior = new LoggingBehavior<TestQuery, Result<string>>(logger);
+        var error = new Error(errorCode, "Something went wrong", Kind: errorKind);
+
+        Result<string> result = await behavior.Handle(
+            new TestQuery(),
+            ct => Task.FromResult(Result.Failure<string>(error)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal(expectedLevel, logger.LastLogLevel);
     }
 
     [Fact]
@@ -79,6 +103,34 @@ public class BehaviorTests {
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
             SaveCount++;
             return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public LogLevel LastLogLevel { get; private set; } = LogLevel.None;
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull =>
+            NullScope.Instance;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            LastLogLevel = logLevel;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NullScope : IDisposable {
+        public static readonly NullScope Instance = new();
+
+        public void Dispose() {
         }
     }
 }

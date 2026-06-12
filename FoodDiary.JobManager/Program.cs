@@ -44,10 +44,10 @@ builder.Services.AddHangfire((sp, config) => {
 });
 builder.Services.AddHangfireServer();
 
-builder.Services.AddSingleton<ImageCleanupJob>();
-builder.Services.AddSingleton<BillingRenewalJob>();
-builder.Services.AddSingleton<NotificationCleanupJob>();
-builder.Services.AddSingleton<UserCleanupJob>();
+builder.Services.AddTransient<ImageCleanupJob>();
+builder.Services.AddTransient<BillingRenewalJob>();
+builder.Services.AddTransient<NotificationCleanupJob>();
+builder.Services.AddTransient<UserCleanupJob>();
 builder.Services.AddSingleton<IJobExecutionStateTracker, JobExecutionStateTracker>();
 builder.Services.AddSingleton<IRecurringJobRegistrationVerifier, HangfireRecurringJobRegistrationVerifier>();
 builder.Services.AddHostedService<RecurringJobsHostedService>();

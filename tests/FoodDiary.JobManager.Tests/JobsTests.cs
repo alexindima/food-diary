@@ -490,26 +490,7 @@ public sealed class JobsTests {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
             }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
-            new ImageCleanupJob(
-                new RecordingImageCleanupService([0]),
-                Options.Create(new ImageCleanupOptions()),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<ImageCleanupJob>.Instance),
-            CreateBillingRenewalJob(),
-            new NotificationCleanupJob(
-                new RecordingNotificationCleanupService([0]),
-                Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<NotificationCleanupJob>.Instance),
-            new UserCleanupJob(
-                new RecordingUserCleanupService([0]),
-                Options.Create(new UserCleanupOptions()),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<UserCleanupJob>.Instance));
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await service.StartAsync(CancellationToken.None);
 
@@ -544,26 +525,7 @@ public sealed class JobsTests {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
             }),
-            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }),
-            new ImageCleanupJob(
-                new RecordingImageCleanupService([0]),
-                Options.Create(new ImageCleanupOptions()),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<ImageCleanupJob>.Instance),
-            CreateBillingRenewalJob(),
-            new NotificationCleanupJob(
-                new RecordingNotificationCleanupService([0]),
-                Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"] }),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<NotificationCleanupJob>.Instance),
-            new UserCleanupJob(
-                new RecordingUserCleanupService([0]),
-                Options.Create(new UserCleanupOptions()),
-                new FixedDateTimeProvider(DateTime.UtcNow),
-                new JobExecutionStateTracker(),
-                NullLogger<UserCleanupJob>.Instance));
+            Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
     }
@@ -571,10 +533,6 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
-            null!,
-            null!,
-            null!,
-            null!,
             null!,
             null!,
             null!,

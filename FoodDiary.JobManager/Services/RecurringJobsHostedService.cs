@@ -1,4 +1,5 @@
 using Hangfire;
+using Hangfire.Common;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.JobManager.Services;
@@ -9,11 +10,7 @@ public sealed class RecurringJobsHostedService(
     IOptions<ImageCleanupOptions> options,
     IOptions<BillingRenewalOptions> billingRenewalOptions,
     IOptions<NotificationCleanupOptions> notificationCleanupOptions,
-    IOptions<UserCleanupOptions> userCleanupOptions,
-    ImageCleanupJob imageCleanupJob,
-    BillingRenewalJob billingRenewalJob,
-    NotificationCleanupJob notificationCleanupJob,
-    UserCleanupJob userCleanupJob) : IHostedService {
+    IOptions<UserCleanupOptions> userCleanupOptions) : IHostedService {
     public Task StartAsync(CancellationToken cancellationToken) {
         ImageCleanupOptions settings = options.Value;
         BillingRenewalOptions billingRenewalSettings = billingRenewalOptions.Value;
@@ -25,19 +22,19 @@ public sealed class RecurringJobsHostedService(
         string userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
-            () => imageCleanupJob.Execute(CancellationToken.None),
+            Job.FromExpression<ImageCleanupJob>(job => job.Execute(CancellationToken.None)),
             imageCron);
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.BillingRenewal,
-            () => billingRenewalJob.Execute(CancellationToken.None),
+            Job.FromExpression<BillingRenewalJob>(job => job.Execute(CancellationToken.None)),
             billingRenewalCron);
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationsCleanup,
-            () => notificationCleanupJob.Execute(CancellationToken.None),
+            Job.FromExpression<NotificationCleanupJob>(job => job.Execute(CancellationToken.None)),
             notificationCron);
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.UsersCleanup,
-            () => userCleanupJob.Execute(CancellationToken.None),
+            Job.FromExpression<UserCleanupJob>(job => job.Execute(CancellationToken.None)),
             userCron);
         recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
 
