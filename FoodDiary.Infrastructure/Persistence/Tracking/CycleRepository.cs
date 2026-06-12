@@ -58,6 +58,7 @@ public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
 
         if (includeDetails) {
             query = query
+                .AsSplitQuery()
                 .Include(profile => profile.Factors)
                 .Include(profile => profile.BleedingEntries)
                 .Include(profile => profile.SymptomEntries)
