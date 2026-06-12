@@ -36,7 +36,8 @@ internal sealed class MealAiSessionConfiguration : IEntityTypeConfiguration<Meal
         builder.Property(e => e.Status)
             .HasConversion<string>()
             .HasMaxLength(16)
-            .HasDefaultValue(MealAiSessionStatus.Reviewed);
+            .HasDefaultValue(MealAiSessionStatus.Reviewed)
+            .HasSentinel((MealAiSessionStatus)0);
 
         builder.Property(e => e.RecognizedAtUtc)
             .HasColumnType("timestamp with time zone");

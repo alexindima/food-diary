@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -33,7 +34,8 @@ internal sealed class MealItemConfiguration : IEntityTypeConfiguration<MealItem>
         builder.Property(e => e.Origin)
             .HasConversion<string>()
             .HasMaxLength(16)
-            .HasDefaultValue(FoodDiary.Domain.Enums.MealItemOrigin.Manual);
+            .HasDefaultValue(MealItemOrigin.Manual)
+            .HasSentinel((MealItemOrigin)0);
 
         builder.Property(e => e.SnapshotName)
             .HasMaxLength(256);
