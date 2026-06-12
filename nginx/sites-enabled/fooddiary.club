@@ -1,6 +1,8 @@
 server {
     listen 80;
-    server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
+    server_name fooddiary.club;
+    # Russian IDN disabled. Restore when дневникеды.рф should serve traffic again:
+    # server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
 
     location ^~ /.well-known/acme-challenge/ {
         root /var/www/fooddiary.club;
@@ -34,20 +36,31 @@ server {
 
 server {
     listen 80;
-    server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+    server_name xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
 
-    location ^~ /.well-known/acme-challenge/ {
-        root /var/www/fooddiary.club;
-        default_type text/plain;
-    }
+    return 410;
 
-    location / {
-        return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
-    }
-
-    error_log /var/log/nginx/fooddiary.error.log;
-    access_log /var/log/nginx/fooddiary.access.log;
+    error_log /var/log/nginx/fooddiary.disabled-idn.error.log;
+    access_log /var/log/nginx/fooddiary.disabled-idn.access.log;
 }
+
+# Russian IDN disabled. Restore this block when www.дневникеды.рф should redirect again.
+# server {
+#     listen 80;
+#     server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+#
+#     location ^~ /.well-known/acme-challenge/ {
+#         root /var/www/fooddiary.club;
+#         default_type text/plain;
+#     }
+#
+#     location / {
+#         return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
+#     }
+#
+#     error_log /var/log/nginx/fooddiary.error.log;
+#     access_log /var/log/nginx/fooddiary.access.log;
+# }
 
 server {
     listen 443 ssl;
@@ -66,7 +79,7 @@ server {
 server {
     listen 443 ssl;
     http2 on;
-    server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+    server_name xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
     ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
 
@@ -74,14 +87,34 @@ server {
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
 
-    return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
+    return 410;
+
+    error_log /var/log/nginx/fooddiary.disabled-idn.error.log;
+    access_log /var/log/nginx/fooddiary.disabled-idn.access.log;
 }
+
+# Russian IDN disabled. Restore this block when www.дневникеды.рф should redirect again.
+# server {
+#     listen 443 ssl;
+#     http2 on;
+#     server_name www.xn--b1adbcbrouc8l.xn--p1ai;
+#     ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
+#     ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
+#
+#     ssl_protocols TLSv1.2 TLSv1.3;
+#     ssl_ciphers HIGH:!aNULL:!MD5;
+#     ssl_prefer_server_ciphers on;
+#
+#     return 301 https://xn--b1adbcbrouc8l.xn--p1ai$request_uri;
+# }
 
 server {
     listen 443 ssl;
     listen 443 quic reuseport;
     http2 on;
-    server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
+    server_name fooddiary.club;
+    # Russian IDN disabled. Restore when дневникеды.рф should serve traffic again:
+    # server_name fooddiary.club xn--b1adbcbrouc8l.xn--p1ai;
     ssl_certificate /etc/letsencrypt/live/public.fooddiary.club/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/public.fooddiary.club/privkey.pem;
 
@@ -94,10 +127,11 @@ server {
     root /var/www/fooddiary.club;
     index index.html;
 
-    set $seo_prerender_root "";
-    if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
-        set $seo_prerender_root "/__ru";
-    }
+    # Russian IDN prerender disabled.
+    # set $seo_prerender_root "";
+    # if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
+    #     set $seo_prerender_root "/__ru";
+    # }
 
     location ^~ /__ru/ {
         internal;
@@ -105,17 +139,19 @@ server {
     }
 
     location = /sitemap.xml {
-        if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
-            rewrite ^ /sitemap-ru.xml break;
-        }
+        # Russian IDN sitemap disabled.
+        # if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
+        #     rewrite ^ /sitemap-ru.xml break;
+        # }
 
         try_files $uri =404;
     }
 
     location = /robots.txt {
-        if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
-            rewrite ^ /robots-ru.txt break;
-        }
+        # Russian IDN robots disabled.
+        # if ($host ~* ^(xn--b1adbcbrouc8l\.xn--p1ai|www\.xn--b1adbcbrouc8l\.xn--p1ai)$) {
+        #     rewrite ^ /robots-ru.txt break;
+        # }
 
         try_files $uri =404;
     }
@@ -169,7 +205,9 @@ server {
     }
 
     location / {
-        try_files $seo_prerender_root$uri/index.html $seo_prerender_root$uri $uri/index.html $uri $uri/ /index.html;
+        # Russian IDN prerender disabled.
+        # try_files $seo_prerender_root$uri/index.html $seo_prerender_root$uri $uri/index.html $uri $uri/ /index.html;
+        try_files $uri/index.html $uri $uri/ /index.html;
     }
 
     location /api/ {
