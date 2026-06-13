@@ -1,5 +1,6 @@
 using FoodDiary.MailRelay.Presentation.Filters;
 using FoodDiary.MailRelay.Presentation.Responses;
+using FoodDiary.MailRelay.Presentation.Security;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -9,6 +10,7 @@ public static class MailRelayPresentationServiceCollectionExtensions {
     public static IServiceCollection AddMailRelayPresentation(this IServiceCollection services) {
         services.AddScoped<MailRelayTelemetryActionFilter>();
         services.AddScoped<RelayApiKeyAuthorizationFilter>();
+        services.AddHttpClient<ProviderWebhookAuthorizer>();
         services
             .AddControllers(options => {
                 options.Filters.AddService<MailRelayTelemetryActionFilter>();

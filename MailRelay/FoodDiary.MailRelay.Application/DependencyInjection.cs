@@ -18,6 +18,7 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
         services.AddSingleton<MailRelayDeliveryEventIngestionService>();
         services.AddSingleton<MailRelayEmailUseCases>();
+        services.AddSingleton<IMailRelayDeliveryPolicy, NoOpMailRelayDeliveryPolicy>();
         services.AddSingleton<SmtpSubmissionService>();
         services.AddSingleton<MailRelayMessageProcessor>();
 

@@ -51,6 +51,28 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [RequiresDockerFact]
+    public async Task EnqueueAsync_WhenIdempotencyKeyAlreadyExists_DoesNotCreateAnotherOutboxMessage() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        RelayEmailMessageRequest request = CreateRequest();
+
+        Guid firstId = await store.EnqueueAsync(request, CancellationToken.None);
+        Guid secondId = await store.EnqueueAsync(request, CancellationToken.None);
+
+        Assert.Equal(firstId, secondId);
+        Assert.Equal(1, await CountRowsAsync(dataSource, "mailrelay_outbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task EnsureSchemaAsync_RecordsBaselineSchemaVersion() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+
+        Assert.Equal(1, await CountRowsAsync(dataSource, "mailrelay_schema_versions"));
+    }
+
+    [RequiresDockerFact]
     public async Task SuppressionsAndDeliveryEvents_AreStoredAndQueried() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -103,4 +125,12 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
             "Hello",
             "correlation",
             Guid.NewGuid().ToString("N"));
+
+    private static async Task<long> CountRowsAsync(NpgsqlDataSource dataSource, string tableName) {
+        NpgsqlConnection connection = await dataSource.OpenConnectionAsync().ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            var command = new NpgsqlCommand($"select count(*) from {tableName}", connection);
+            return (long)(await command.ExecuteScalarAsync().ConfigureAwait(false) ?? 0L);
+        }
+    }
 }

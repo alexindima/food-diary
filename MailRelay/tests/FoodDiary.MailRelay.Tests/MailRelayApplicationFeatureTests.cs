@@ -17,14 +17,31 @@ public sealed class MailRelayApplicationFeatureTests {
     public async Task EnqueueAsync_StoresMessageAndNotifiesDispatcher() {
         var store = new RecordingQueueStore { QueuedEmailId = Guid.NewGuid() };
         var notifier = new RecordingDispatchNotifier();
-        var useCases = new MailRelayEmailUseCases(store, notifier);
+        var useCases = new MailRelayEmailUseCases(store, notifier, new NoOpMailRelayDeliveryPolicy());
         RelayEmailMessageRequest request = CreateRelayRequest();
 
-        Guid id = await useCases.EnqueueAsync(request, CancellationToken.None);
+        Result<Guid> result = await useCases.EnqueueAsync(request, CancellationToken.None);
 
-        Assert.Equal(store.QueuedEmailId, id);
+        Assert.True(result.IsSuccess);
+        Assert.Equal(store.QueuedEmailId, result.Value);
         Assert.Same(request, store.EnqueueRequest);
         Assert.Equal(store.QueuedEmailId, notifier.NotifiedQueuedEmailId);
+    }
+
+    [Fact]
+    public async Task EnqueueAsync_WhenDeliveryPolicyRejectsRequest_DoesNotStoreOrNotify() {
+        var store = new RecordingQueueStore { QueuedEmailId = Guid.NewGuid() };
+        var notifier = new RecordingDispatchNotifier();
+        var useCases = new MailRelayEmailUseCases(
+            store,
+            notifier,
+            new RejectingMailRelayDeliveryPolicy());
+
+        Result<Guid> result = await useCases.EnqueueAsync(CreateRelayRequest(), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.False(store.EnqueueCalled);
+        Assert.Null(notifier.NotifiedQueuedEmailId);
     }
 
     [Fact]
@@ -210,7 +227,7 @@ public sealed class MailRelayApplicationFeatureTests {
     }
 
     private static MailRelayEmailUseCases CreateUseCases(RecordingQueueStore store) =>
-        new(store, new RecordingDispatchNotifier());
+        new(store, new RecordingDispatchNotifier(), new NoOpMailRelayDeliveryPolicy());
 
     private static RelayEmailMessageRequest CreateRelayRequest() =>
         new(
@@ -233,8 +250,15 @@ public sealed class MailRelayApplicationFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
+    private sealed class RejectingMailRelayDeliveryPolicy : IMailRelayDeliveryPolicy {
+        public Result CanEnqueue(RelayEmailMessageRequest request) =>
+            Result.Failure(MailRelayErrors.DirectMxRequiresSingleRecipientDomain());
+    }
+
+    [ExcludeFromCodeCoverage]
     private sealed class RecordingQueueStore : IMailRelayQueueStore {
         public Guid QueuedEmailId { get; init; } = Guid.NewGuid();
+        public bool EnqueueCalled { get; private set; }
         public RelayEmailMessageRequest? EnqueueRequest { get; private set; }
         public CreateSuppressionRequest? UpsertSuppressionRequest { get; private set; }
         public List<CreateSuppressionRequest> UpsertSuppressions { get; } = [];
@@ -246,6 +270,7 @@ public sealed class MailRelayApplicationFeatureTests {
         public MailRelayQueueStats Stats { get; init; } = new(0, 0, 0, 0, 0, 0);
 
         public Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+            EnqueueCalled = true;
             EnqueueRequest = request;
             return Task.FromResult(QueuedEmailId);
         }
@@ -325,7 +350,7 @@ public sealed class MailRelayApplicationFeatureTests {
         public Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
             Task.FromResult(MessageDetails);
 
-        public Task MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) =>
-            Task.CompletedTask;
+        public Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) =>
+            Task.FromResult<DateTimeOffset?>(decision.IsTerminalFailure ? null : DateTimeOffset.UtcNow.AddSeconds(1));
     }
 }

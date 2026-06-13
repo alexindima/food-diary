@@ -29,5 +29,5 @@ public interface IMailRelayQueueStore {
         CancellationToken cancellationToken);
     Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken);
     Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken);
-    Task MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken);
+    Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken);
 }

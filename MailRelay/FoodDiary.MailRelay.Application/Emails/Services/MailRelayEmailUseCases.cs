@@ -2,11 +2,17 @@ namespace FoodDiary.MailRelay.Application.Emails.Services;
 
 public sealed class MailRelayEmailUseCases(
     IMailRelayQueueStore queueStore,
-    IMailRelayDispatchNotifier dispatchNotifier) {
-    public async Task<Guid> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+    IMailRelayDispatchNotifier dispatchNotifier,
+    IMailRelayDeliveryPolicy deliveryPolicy) {
+    public async Task<Result<Guid>> EnqueueAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+        Result policyResult = deliveryPolicy.CanEnqueue(request);
+        if (policyResult.IsFailure) {
+            return Result.Failure<Guid>(policyResult.Error!);
+        }
+
         Guid queuedEmailId = await queueStore.EnqueueAsync(request, cancellationToken).ConfigureAwait(false);
         await dispatchNotifier.NotifyQueuedAsync(queuedEmailId, cancellationToken).ConfigureAwait(false);
-        return queuedEmailId;
+        return Result.Success(queuedEmailId);
     }
 
     public Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) {

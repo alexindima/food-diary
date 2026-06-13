@@ -2,7 +2,7 @@
 
 `FoodDiary.MailRelay` is FoodDiary's internal outbound email relay.
 
-It accepts internal send requests over HTTP, persists them to PostgreSQL, writes a transactional outbox record, publishes message ids to RabbitMQ, deduplicates consumer processing through an inbox table, and delivers them through a configured mail transport.
+It accepts internal send requests over HTTP, persists them to PostgreSQL, writes transactional outbox records, publishes due message ids to RabbitMQ, and delivers them through a configured mail transport.
 
 ## Current Responsibilities
 
@@ -10,7 +10,7 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `MailRelay/FoodDiary.MailRelay.Domain`: relay domain concepts and rules as they are extracted from application/infrastructure flows.
 - `MailRelay/FoodDiary.MailRelay.Presentation`: HTTP endpoints, internal request authorization, provider webhook adapters.
 - `MailRelay/FoodDiary.MailRelay.Application`: relay use cases, application models, queue/delivery abstractions, processing coordination.
-- `MailRelay/FoodDiary.MailRelay.Infrastructure`: PostgreSQL queue state, transactional outbox, inbox deduplication, RabbitMQ, delivery transports, DKIM, telemetry registration.
+- `MailRelay/FoodDiary.MailRelay.Infrastructure`: PostgreSQL queue state, transactional outbox, RabbitMQ, delivery transports, DKIM, telemetry registration.
 
 ## Runtime Responsibilities
 
@@ -18,11 +18,10 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - persist outbound email jobs
 - persist outbox messages transactionally with queued email state
 - publish queued jobs to RabbitMQ
-- deduplicate broker deliveries through inbox tracking
 - use publisher confirms for broker publishes
 - use main/retry/dead-letter RabbitMQ topology
 - consume queued jobs from RabbitMQ
-- retry failed deliveries with backoff
+- retry failed deliveries by scheduling new transactional outbox records with PostgreSQL backoff
 - optionally DKIM-sign outgoing mail before delivery
 - deliver either through upstream SMTP submission or experimental direct-to-MX SMTP
 - expose health and queue diagnostics endpoints
@@ -30,16 +29,15 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 ## Current Non-Goals
 
 - inbox placement guarantees
-- bounce / complaint ingestion
 - marketing-mail orchestration
 
 ## Messaging Semantics
 
 - PostgreSQL remains the source of truth for delivery state
 - `mailrelay_outbox_messages` provides transactional publish handoff to RabbitMQ
-- `mailrelay_inbox_messages` provides consumer-side deduplication
 - RabbitMQ drives near-real-time processing
-- PostgreSQL polling remains the recovery path for due retries and broker disruptions
+- failed attempts schedule the next RabbitMQ publish through the outbox at the same `available_at_utc` used by queue state
+- PostgreSQL polling can remain enabled as an additional recovery path for broker disruptions
 
 ## Main Endpoints
 
@@ -61,6 +59,9 @@ It accepts internal send requests over HTTP, persists them to PostgreSQL, writes
 - `ConnectionStrings__DefaultConnection`
 - `MailRelay__RequireApiKey`
 - `MailRelay__ApiKey`
+- `MailRelay__RequireMailgunWebhookSignature`
+- `MailRelay__MailgunWebhookSigningKey`
+- `MailRelay__RequireAwsSesSnsSignature`
 - `MailRelayQueue__*`
 - `MailRelayBroker__*`
 - `MailRelayDelivery__Mode`: `SmtpSubmission` or `DirectMx`

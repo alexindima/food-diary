@@ -18,9 +18,13 @@ public sealed class DirectMxRelayDeliveryTransport(
     private readonly DirectMxOptions _options = options.Value;
 
     public async Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
-        IEnumerable<IGrouping<string, MailboxAddress>> recipientsByDomain = request.To
+        IGrouping<string, MailboxAddress>[] recipientsByDomain = [.. request.To
             .Select(static recipient => MailboxAddress.Parse(recipient))
-            .GroupBy(static recipient => recipient.Domain, StringComparer.OrdinalIgnoreCase);
+            .GroupBy(static recipient => recipient.Domain, StringComparer.OrdinalIgnoreCase)];
+
+        if (recipientsByDomain.Length > 1) {
+            throw new InvalidOperationException("Direct MX delivery supports recipients from one domain per queued message to avoid partial cross-domain delivery.");
+        }
 
         foreach (IGrouping<string, MailboxAddress> recipientGroup in recipientsByDomain) {
             await SendToDomainAsync(request, recipientGroup.Key, recipientGroup.ToArray(), cancellationToken).ConfigureAwait(false);

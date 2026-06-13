@@ -10,7 +10,8 @@ namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 [ExcludeFromCodeCoverage]
 public sealed class MailRelayWebApplicationFactory(
     MailRelayEnvironmentFixture fixture,
-    RecordingRelayDeliveryTransport recordingTransport) : WebApplicationFactory<Program> {
+    RecordingRelayDeliveryTransport recordingTransport,
+    bool enablePollingFallback = true) : WebApplicationFactory<Program> {
     protected override void ConfigureWebHost(IWebHostBuilder builder) {
         string databaseConnectionString = fixture.CreateIsolatedDatabaseAsync().GetAwaiter().GetResult();
 
@@ -20,6 +21,7 @@ public sealed class MailRelayWebApplicationFactory(
                 ["ConnectionStrings:DefaultConnection"] = databaseConnectionString,
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "integration-relay-api-key",
+                ["MailRelay:MailgunWebhookSigningKey"] = "integration-mailgun-signing-key",
                 ["MailRelayBroker:Backend"] = "RabbitMq",
                 ["MailRelayBroker:HostName"] = fixture.RabbitMqHostName,
                 ["MailRelayBroker:Port"] = fixture.RabbitMqPort.ToString(),
@@ -30,6 +32,7 @@ public sealed class MailRelayWebApplicationFactory(
                 ["MailRelayBroker:RetryQueueName"] = $"fooddiary.mailrelay.retry.{Guid.NewGuid():N}",
                 ["MailRelayBroker:DeadLetterQueueName"] = $"fooddiary.mailrelay.dead.{Guid.NewGuid():N}",
                 ["MailRelayBroker:RetryDelayMilliseconds"] = "250",
+                ["MailRelayBroker:EnablePollingFallback"] = enablePollingFallback ? "true" : "false",
                 ["MailRelayQueue:PollIntervalSeconds"] = "1",
                 ["MailRelayQueue:BatchSize"] = "10",
                 ["MailRelayQueue:MaxAttempts"] = "3",

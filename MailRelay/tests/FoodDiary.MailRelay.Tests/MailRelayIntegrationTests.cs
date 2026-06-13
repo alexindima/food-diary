@@ -85,6 +85,34 @@ public sealed class MailRelayIntegrationTests(MailRelayEnvironmentFixture fixtur
     }
 
     [RequiresDockerFact]
+    public async Task SendEndpoint_WhenRabbitMqRetryIsRequiredWithoutPollingFallback_RetriesThroughRabbitMq() {
+        fixture.EnsureAvailable();
+        var transport = new RecordingRelayDeliveryTransport(remainingFailures: 1);
+        await using var factory = new MailRelayWebApplicationFactory(fixture, transport, enablePollingFallback: false);
+        using HttpClient client = factory.CreateClient();
+        AddRelayApiKey(client);
+
+        HttpResponseMessage response = await client.PostAsJsonAsync("/api/email/send", new EnqueueMailRelayEmailRequest(
+            "noreply@example.com",
+            "FoodDiary",
+            ["user@example.com"],
+            "Verify email",
+            "<p>Hello</p>",
+            "Hello"));
+
+        response.EnsureSuccessStatusCode();
+        QueuedResponse? payload = await response.Content.ReadFromJsonAsync<QueuedResponse>();
+        Assert.NotNull(payload);
+
+        await WaitForAsync(async () => {
+            MessageDetails? message = await client.GetFromJsonAsync<MessageDetails>($"/api/email/messages/{payload!.Id}").ConfigureAwait(false);
+            return string.Equals(message?.Status, "sent", StringComparison.Ordinal);
+        }, timeout: TimeSpan.FromSeconds(20));
+
+        Assert.Equal(2, transport.AttemptCount);
+    }
+
+    [RequiresDockerFact]
     public async Task SendEndpoint_WhenRecipientIsSuppressed_DoesNotDeliverAndMarksMessageSuppressed() {
         fixture.EnsureAvailable();
         var transport = new RecordingRelayDeliveryTransport();

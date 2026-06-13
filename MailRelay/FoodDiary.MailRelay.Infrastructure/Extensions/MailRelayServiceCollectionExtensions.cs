@@ -12,6 +12,8 @@ public static class MailRelayServiceCollectionExtensions {
             services.AddOptions<MailRelayOptions>()
                 .Bind(configuration.GetSection(MailRelayOptions.SectionName))
                 .Validate(MailRelayOptions.HasValidListenApiKey, "MailRelay:RequireApiKey must be true and MailRelay:ApiKey must be provided.")
+                .Validate(MailRelayOptions.HasValidProviderWebhookConfiguration,
+                    "MailRelay:MailgunWebhookSigningKey must be provided when MailRelay:RequireMailgunWebhookSignature is true.")
                 .ValidateOnStart();
             services.AddOptions<MailRelaySmtpOptions>()
                 .Bind(configuration.GetSection(MailRelaySmtpOptions.SectionName))
@@ -62,10 +64,11 @@ public static class MailRelayServiceCollectionExtensions {
             services.AddSingleton<MailRelayQueueStore>();
             services.AddSingleton<IMailRelayQueueStore>(sp => sp.GetRequiredService<MailRelayQueueStore>());
             services.AddSingleton<IMailRelaySchemaInitializer>(sp => sp.GetRequiredService<MailRelayQueueStore>());
-            services.AddSingleton<IMailRelayReadinessChecker, NpgsqlMailRelayReadinessChecker>();
+            services.AddSingleton<IMailRelayReadinessChecker, MailRelayReadinessChecker>();
             services.AddSingleton<DkimSigningService>();
             services.AddSingleton<SmtpRelayDeliveryTransport>();
             services.AddSingleton<DirectMxRelayDeliveryTransport>();
+            services.AddSingleton<IMailRelayDeliveryPolicy, ConfiguredMailRelayDeliveryPolicy>();
             services.AddSingleton<IMxResolver, DnsClientMxResolver>();
             services.AddSingleton<IRelayDeliveryTransport, ConfigurableRelayDeliveryTransport>();
             services.AddSingleton<RabbitMqMailRelayBroker>();
@@ -81,17 +84,16 @@ public static class MailRelayServiceCollectionExtensions {
         public IServiceCollection AddMailRelayTelemetry() {
             services.AddSingleton<MeterProvider>(static serviceProvider => {
                 OpenTelemetryOptions options = serviceProvider.GetRequiredService<IOptions<OpenTelemetryOptions>>().Value;
-                if (string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
-                    return null!;
+                MeterProviderBuilder builder = Sdk.CreateMeterProviderBuilder()
+                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.MailRelay"))
+                    .AddMeter(MailRelayTelemetry.MeterName);
+
+                if (!string.IsNullOrWhiteSpace(options.Otlp.Endpoint)) {
+                    var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
+                    builder.AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri);
                 }
 
-                var endpointUri = new Uri(options.Otlp.Endpoint, UriKind.Absolute);
-
-                return Sdk.CreateMeterProviderBuilder()
-                    .SetResourceBuilder(ResourceBuilder.CreateDefault().AddService("FoodDiary.MailRelay"))
-                    .AddMeter(MailRelayTelemetry.MeterName)
-                    .AddOtlpExporter(exporterOptions => exporterOptions.Endpoint = endpointUri)
-                    .Build();
+                return builder.Build();
             });
 
             return services;

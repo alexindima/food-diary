@@ -18,4 +18,10 @@ public static class MailRelayErrors {
             "MailRelay.Suppression.NotFound",
             $"Mail relay suppression for '{email}' was not found.",
             ErrorKind.NotFound);
+
+    public static MailRelayError DirectMxRequiresSingleRecipientDomain() =>
+        new(
+            "MailRelay.Delivery.DirectMxMultipleRecipientDomains",
+            "Direct MX delivery supports recipients from one domain per queued message.",
+            ErrorKind.Validation);
 }

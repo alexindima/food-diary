@@ -37,7 +37,7 @@ public sealed class MailRelayMessageProcessor(
             throw;
         } catch (Exception ex) {
             QueuedEmailFailureDecision failureDecision = queuedEmail.MarkFailedAttempt(ex.ToString());
-            await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
+            DateTimeOffset? retryAvailableAtUtc = await queueStore.MarkFailedAttemptAsync(failureDecision, cancellationToken).ConfigureAwait(false);
 
             logger.LogWarning(
                 ex,
@@ -47,7 +47,7 @@ public sealed class MailRelayMessageProcessor(
                 queuedEmail.MaxAttempts,
                 queuedEmail.CorrelationId);
             MailRelayTelemetry.RecordDeliveryEvent("failure", ex.GetType().Name);
-            return new MailRelayProcessResult(Succeeded: false, failureDecision.IsTerminalFailure);
+            return new MailRelayProcessResult(Succeeded: false, failureDecision.IsTerminalFailure, retryAvailableAtUtc);
         }
     }
 }

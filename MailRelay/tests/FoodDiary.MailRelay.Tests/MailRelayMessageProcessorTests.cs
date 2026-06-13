@@ -172,10 +172,10 @@ public sealed class MailRelayMessageProcessorTests {
         public Task<MailRelayMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
             Task.FromResult<MailRelayMessageDetails?>(null);
 
-        public Task MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) {
+        public Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) {
             FailureDecision = decision;
             Status = decision.Status;
-            return Task.CompletedTask;
+            return Task.FromResult<DateTimeOffset?>(decision.IsTerminalFailure ? null : DateTimeOffset.UtcNow.AddSeconds(1));
         }
     }
 }

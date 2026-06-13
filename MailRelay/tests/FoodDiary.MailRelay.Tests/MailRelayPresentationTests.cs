@@ -1,10 +1,14 @@
 using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Application.Options;
 using FoodDiary.MailRelay.Presentation.Extensions;
 using FoodDiary.MailRelay.Presentation.Features.Email;
+using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
 using FoodDiary.MailRelay.Presentation.Filters;
 using FoodDiary.MailRelay.Presentation.Responses;
+using FoodDiary.MailRelay.Presentation.Security;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
@@ -136,6 +140,62 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public void ProviderWebhookAuthorizer_WhenMailgunSignatureMatches_AllowsRequest() {
+        ProviderWebhookAuthorizer authorizer = CreateProviderWebhookAuthorizer("mailgun-secret");
+        string timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        const string token = "token";
+        string signature = CreateMailgunSignature("mailgun-secret", timestamp, token);
+        var request = new MailgunWebhookHttpRequest(
+            new MailgunEventDataHttpRequest("failed", "user@example.com"),
+            new MailgunSignatureHttpRequest(timestamp, token, signature));
+
+        Assert.True(authorizer.IsMailgunAuthorized(request));
+    }
+
+    [Fact]
+    public void ProviderWebhookAuthorizer_WhenMailgunSignatureDoesNotMatch_RejectsRequest() {
+        ProviderWebhookAuthorizer authorizer = CreateProviderWebhookAuthorizer("mailgun-secret");
+        var request = new MailgunWebhookHttpRequest(
+            new MailgunEventDataHttpRequest("failed", "user@example.com"),
+            new MailgunSignatureHttpRequest("1710000000", "token", "invalid"));
+
+        Assert.False(authorizer.IsMailgunAuthorized(request));
+    }
+
+    [Fact]
+    public void ProviderWebhookAuthorizer_WhenMailgunTimestampIsExpired_RejectsRequest() {
+        ProviderWebhookAuthorizer authorizer = CreateProviderWebhookAuthorizer("mailgun-secret");
+        string timestamp = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        const string token = "token";
+        string signature = CreateMailgunSignature("mailgun-secret", timestamp, token);
+        var request = new MailgunWebhookHttpRequest(
+            new MailgunEventDataHttpRequest("failed", "user@example.com"),
+            new MailgunSignatureHttpRequest(timestamp, token, signature));
+
+        Assert.False(authorizer.IsMailgunAuthorized(request));
+    }
+
+    [Fact]
+    public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertHostIsNotTrusted_RejectsBeforeDownloadingCertificate() {
+        var handler = new RecordingHttpMessageHandler();
+        var authorizer = new ProviderWebhookAuthorizer(
+            Options.Create(new MailRelayOptions()),
+            new HttpClient(handler));
+        var request = new AwsSesSnsWebhookHttpRequest(
+            Type: "Notification",
+            Message: "{}",
+            MessageId: "message-id",
+            TopicArn: "arn:aws:sns:us-east-1:123456789012:topic",
+            Timestamp: DateTimeOffset.UtcNow.ToString("O", CultureInfo.InvariantCulture),
+            SignatureVersion: "2",
+            Signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
+            SigningCertURL: "https://sns.extra.amazonaws.com/SimpleNotificationService-test.pem");
+
+        Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
+        Assert.False(handler.WasCalled);
+    }
+
+    [Fact]
     public async Task TelemetryActionFilter_ExecutesNextDelegate() {
         var filter = new MailRelayTelemetryActionFilter(NullLogger<MailRelayTelemetryActionFilter>.Instance);
         ActionExecutingContext context = CreateActionExecutingContext(new MailRelayQueueController(null!));
@@ -172,6 +232,30 @@ public sealed class MailRelayPresentationTests {
             [],
             new Dictionary<string, object?>(StringComparer.Ordinal),
             controller);
+
+    private static ProviderWebhookAuthorizer CreateProviderWebhookAuthorizer(string mailgunSigningKey) =>
+        new(
+            Options.Create(new MailRelayOptions {
+                RequireMailgunWebhookSignature = true,
+                MailgunWebhookSigningKey = mailgunSigningKey,
+            }),
+            new HttpClient());
+
+    private static string CreateMailgunSignature(string signingKey, string timestamp, string token) {
+        byte[] keyBytes = Encoding.UTF8.GetBytes(signingKey);
+        byte[] valueBytes = Encoding.UTF8.GetBytes(string.Concat(timestamp, token));
+        return Convert.ToHexString(HMACSHA256.HashData(keyBytes, valueBytes)).ToLowerInvariant();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingHttpMessageHandler : HttpMessageHandler {
+        public bool WasCalled { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
+            WasCalled = true;
+            return Task.FromResult(new HttpResponseMessage(System.Net.HttpStatusCode.OK));
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class TestController : ControllerBase {

@@ -8,10 +8,13 @@ namespace FoodDiary.MailRelay.Tests.TestInfrastructure;
 public sealed class RecordingRelayDeliveryTransport(int remainingFailures = 0) : IRelayDeliveryTransport {
     private readonly ConcurrentQueue<RelayEmailMessageRequest> _sent = new();
     private int _remainingFailures = remainingFailures;
+    private int _attemptCount;
 
     public IReadOnlyCollection<RelayEmailMessageRequest> SentMessages => _sent.ToArray();
+    public int AttemptCount => Interlocked.CompareExchange(ref _attemptCount, 0, 0);
 
     public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+        Interlocked.Increment(ref _attemptCount);
         if (Interlocked.CompareExchange(ref _remainingFailures, 0, 0) > 0) {
             Interlocked.Decrement(ref _remainingFailures);
             throw new InvalidOperationException("Simulated relay delivery failure.");

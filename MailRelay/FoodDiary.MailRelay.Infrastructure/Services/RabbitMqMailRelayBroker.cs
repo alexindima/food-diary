@@ -1,6 +1,7 @@
 using System.Text;
 using Microsoft.Extensions.Options;
 using RabbitMQ.Client;
+using System.Globalization;
 
 namespace FoodDiary.MailRelay.Infrastructure.Services;
 
@@ -32,6 +33,21 @@ public sealed class RabbitMqMailRelayBroker(
                     _brokerOptions.QueueName,
                     _brokerOptions.RetryQueueName,
                     _brokerOptions.DeadLetterQueueName);
+            }
+        }
+    }
+
+    public async Task CheckReadyAsync(CancellationToken cancellationToken) {
+        if (!IsEnabled) {
+            return;
+        }
+
+        ConnectionFactory factory = CreateFactory();
+        IConnection connection = await factory.CreateConnectionAsync(cancellationToken).ConfigureAwait(false);
+        await using (connection.ConfigureAwait(false)) {
+            IChannel channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
+            await using (channel.ConfigureAwait(false)) {
+                await channel.QueueDeclarePassiveAsync(_brokerOptions.QueueName, cancellationToken).ConfigureAwait(false);
             }
         }
     }
@@ -97,15 +113,26 @@ public sealed class RabbitMqMailRelayBroker(
         return PublishAsync(_brokerOptions.OutboundExchangeName, _brokerOptions.OutboundRoutingKey, emailId, cancellationToken);
     }
 
-    public Task PublishRetryAsync(Guid emailId, CancellationToken cancellationToken) {
-        return PublishAsync(_brokerOptions.RetryExchangeName, _brokerOptions.RetryRoutingKey, emailId, cancellationToken);
+    public Task PublishRetryAsync(Guid emailId, TimeSpan delay, CancellationToken cancellationToken) {
+        TimeSpan boundedDelay = delay > TimeSpan.Zero
+            ? delay
+            : TimeSpan.FromMilliseconds(_brokerOptions.RetryDelayMilliseconds);
+        return PublishAsync(_brokerOptions.RetryExchangeName, _brokerOptions.RetryRoutingKey, emailId, boundedDelay, cancellationToken);
     }
 
     public Task PublishDeadLetterAsync(Guid emailId, CancellationToken cancellationToken) {
-        return PublishAsync(_brokerOptions.DeadLetterExchangeName, _brokerOptions.DeadLetterRoutingKey, emailId, cancellationToken);
+        return PublishAsync(_brokerOptions.DeadLetterExchangeName, _brokerOptions.DeadLetterRoutingKey, emailId, delay: null, cancellationToken);
     }
 
-    private async Task PublishAsync(string exchangeName, string routingKey, Guid emailId, CancellationToken cancellationToken) {
+    private Task PublishAsync(string exchangeName, string routingKey, Guid emailId, CancellationToken cancellationToken) =>
+        PublishAsync(exchangeName, routingKey, emailId, delay: null, cancellationToken);
+
+    private async Task PublishAsync(
+        string exchangeName,
+        string routingKey,
+        Guid emailId,
+        TimeSpan? delay,
+        CancellationToken cancellationToken) {
         if (!IsEnabled) {
             return;
         }
@@ -128,6 +155,9 @@ public sealed class RabbitMqMailRelayBroker(
                     ContentType = "text/plain",
                     MessageId = emailId.ToString("D"),
                 };
+                if (delay is { } retryDelay) {
+                    properties.Expiration = Math.Max(1, (long)retryDelay.TotalMilliseconds).ToString(CultureInfo.InvariantCulture);
+                }
 
                 await channel.BasicPublishAsync(
                     exchange: exchangeName,

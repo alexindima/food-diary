@@ -1,9 +1,13 @@
 using FoodDiary.MailRelay.Application.Abstractions;
+using FoodDiary.MailRelay.Application.Common.Results;
+using FoodDiary.MailRelay.Application.Options;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Extensions;
 using FoodDiary.MailRelay.Client.Options;
+using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Extensions;
 using FoodDiary.MailRelay.Infrastructure.Options;
+using FoodDiary.MailRelay.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -40,6 +44,40 @@ public sealed class MailRelayInfrastructureOptionsTests {
         }));
     }
 
+    [Fact]
+    public void MailRelayOptions_WhenMailgunSignatureIsRequired_RequiresSigningKey() {
+        Assert.False(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
+            RequireMailgunWebhookSignature = true,
+            MailgunWebhookSigningKey = "",
+        }));
+        Assert.True(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
+            RequireMailgunWebhookSignature = true,
+            MailgunWebhookSigningKey = "secret",
+        }));
+        Assert.True(MailRelayOptions.HasValidProviderWebhookConfiguration(new MailRelayOptions {
+            RequireMailgunWebhookSignature = false,
+            MailgunWebhookSigningKey = "",
+        }));
+    }
+
+    [Fact]
+    public void ConfiguredMailRelayDeliveryPolicy_WhenDirectMxRecipientsSpanDomains_ReturnsValidationFailure() {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(Options.Create(new MailRelayDeliveryOptions {
+            Mode = MailRelayDeliveryOptions.DirectMxMode,
+        }));
+
+        Result result = policy.CanEnqueue(new RelayEmailMessageRequest(
+            "relay@example.com",
+            "FoodDiary",
+            ["first@example.com", "second@example.net"],
+            "Subject",
+            "<p>Hello</p>",
+            "Hello"));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MailRelay.Delivery.DirectMxMultipleRecipientDomains", result.Error?.Code);
+    }
+
     [Theory]
     [InlineData(null, true)]
     [InlineData("", true)]
@@ -61,6 +99,7 @@ public sealed class MailRelayInfrastructureOptionsTests {
             .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
                 ["MailRelay:RequireApiKey"] = "true",
                 ["MailRelay:ApiKey"] = "secret",
+                ["MailRelay:MailgunWebhookSigningKey"] = "mailgun-secret",
                 ["RelaySmtp:Port"] = "587",
                 ["MailRelayDelivery:Mode"] = MailRelayDeliveryOptions.DirectMxMode,
                 ["DirectMx:Port"] = "25",
