@@ -8,6 +8,7 @@ using FoodDiary.MailRelay.Domain.Emails;
 using FoodDiary.MailRelay.Infrastructure.Extensions;
 using FoodDiary.MailRelay.Infrastructure.Options;
 using FoodDiary.MailRelay.Infrastructure.Services;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -76,6 +77,80 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("MailRelay.Delivery.DirectMxMultipleRecipientDomains", result.Error?.Code);
+    }
+
+    [Fact]
+    public void ConfiguredMailRelayDeliveryPolicy_WhenModeIsNotDirectMx_AllowsMultipleDomains() {
+        var policy = new ConfiguredMailRelayDeliveryPolicy(Options.Create(new MailRelayDeliveryOptions {
+            Mode = MailRelayDeliveryOptions.SmtpSubmissionMode,
+        }));
+
+        Result result = policy.CanEnqueue(new RelayEmailMessageRequest(
+            "relay@example.com",
+            "FoodDiary",
+            ["first@example.com", "second@example.net"],
+            "Subject",
+            "<p>Hello</p>",
+            "Hello"));
+
+        Assert.True(result.IsSuccess);
+    }
+
+    [Fact]
+    public async Task NoOpMailRelayDispatchNotifier_CompletesWithoutPublishing() {
+        var notifier = new NoOpMailRelayDispatchNotifier();
+
+        await notifier.NotifyQueuedAsync(Guid.NewGuid(), CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task RabbitMqMailRelayDispatchNotifier_WhenBrokerIsDisabled_CompletesWithoutPublishing() {
+        var broker = new RabbitMqMailRelayBroker(
+            Options.Create(new MailRelayBrokerOptions {
+                Backend = MailRelayBrokerOptions.PostgresPollingBackend,
+            }),
+            NullLogger<RabbitMqMailRelayBroker>.Instance);
+        var notifier = new RabbitMqMailRelayDispatchNotifier(
+            broker,
+            NullLogger<RabbitMqMailRelayDispatchNotifier>.Instance);
+
+        await notifier.NotifyQueuedAsync(Guid.NewGuid(), CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task RabbitMqMailRelayBootstrapHostedService_WhenBrokerIsDisabled_StartsAndStopsWithoutDeclaringTopology() {
+        var broker = new RabbitMqMailRelayBroker(
+            Options.Create(new MailRelayBrokerOptions {
+                Backend = MailRelayBrokerOptions.PostgresPollingBackend,
+            }),
+            NullLogger<RabbitMqMailRelayBroker>.Instance);
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            broker,
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        await service.StopAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task ConfigurableRelayDeliveryTransport_WhenModeIsUnsupported_Throws() {
+        var transport = new ConfigurableRelayDeliveryTransport(
+            smtpTransport: null!,
+            directMxTransport: null!,
+            Options.Create(new MailRelayDeliveryOptions {
+                Mode = "Unknown",
+            }));
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            transport.SendAsync(new RelayEmailMessageRequest(
+                "relay@example.com",
+                "FoodDiary",
+                ["user@example.com"],
+                "Subject",
+                "<p>Hello</p>",
+                "Hello"), CancellationToken.None));
+
+        Assert.Contains("Unsupported", ex.Message, StringComparison.Ordinal);
     }
 
     [Theory]
@@ -153,5 +228,20 @@ public sealed class MailRelayInfrastructureOptionsTests {
 
         Assert.Equal("https://relay.example.test", provider.GetRequiredService<IOptions<MailRelayClientOptions>>().Value.BaseUrl);
         Assert.NotNull(provider.GetRequiredService<IMailRelayClient>());
+    }
+
+    [Fact]
+    public void AddMailRelayTelemetry_WhenOtlpEndpointIsEmpty_RegistersMeterProvider() {
+        var services = new ServiceCollection();
+
+        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Options.Create(new OpenTelemetryOptions {
+            Otlp = new OpenTelemetryOptions.OtlpOptions {
+                Endpoint = "",
+            },
+        }));
+        services.AddMailRelayTelemetry();
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>());
     }
 }

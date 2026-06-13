@@ -35,6 +35,36 @@ public sealed class MailRelayDkimSigningServiceTests {
         Assert.False(string.IsNullOrWhiteSpace(message.MessageId));
     }
 
+    [Fact]
+    public void Sign_WhenDomainOrSelectorIsMissing_ThrowsConfigurationError() {
+        var missingDomain = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+            Enabled = true,
+            Selector = "mail",
+            PrivateKeyPem = "invalid",
+        }));
+        var missingSelector = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+            Enabled = true,
+            Domain = "example.com",
+            PrivateKeyPem = "invalid",
+        }));
+
+        Assert.Throws<InvalidOperationException>(() => missingDomain.Sign(CreateMessage()));
+        Assert.Throws<InvalidOperationException>(() => missingSelector.Sign(CreateMessage()));
+    }
+
+    [Fact]
+    public void Sign_WhenPrivateKeyIsMissing_ThrowsConfigurationError() {
+        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+            Enabled = true,
+            Domain = "example.com",
+            Selector = "mail",
+        }));
+
+        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => service.Sign(CreateMessage()));
+
+        Assert.Contains("private key", ex.Message, StringComparison.Ordinal);
+    }
+
     private static MimeMessage CreateMessage() {
         var message = new MimeMessage();
         message.From.Add(MailboxAddress.Parse("relay@example.com"));

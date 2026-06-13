@@ -45,6 +45,32 @@ public sealed class MailRelayApplicationFeatureTests {
     }
 
     [Fact]
+    public async Task SmtpSubmissionService_SendAsync_DelegatesRequestShapesToTransport() {
+        var transport = new RecordingRelayDeliveryTransport();
+        var service = new SmtpSubmissionService(transport);
+        RelayEmailMessageRequest request = CreateRelayRequest();
+        var queuedMessage = new QueuedEmailMessage(
+            Guid.NewGuid(),
+            request.FromAddress,
+            request.FromName,
+            request.To,
+            request.Subject,
+            request.HtmlBody,
+            request.TextBody,
+            request.CorrelationId,
+            AttemptCount: 1,
+            MaxAttempts: 3);
+
+        await service.SendAsync(request, CancellationToken.None);
+        await service.SendAsync(queuedMessage, CancellationToken.None);
+
+        Assert.Equal(2, transport.Requests.Count);
+        Assert.Same(request, transport.Requests[0]);
+        Assert.Equal(queuedMessage.Subject, transport.Requests[1].Subject);
+        Assert.Equal(queuedMessage.CorrelationId, transport.Requests[1].CorrelationId);
+    }
+
+    [Fact]
     public async Task RemoveSuppressionHandler_WhenSuppressionDoesNotExist_ReturnsNotFound() {
         var handler = new RemoveMailRelaySuppressionCommandHandler(CreateUseCases(new RecordingQueueStore {
             RemoveSuppressionResult = false,
@@ -245,6 +271,16 @@ public sealed class MailRelayApplicationFeatureTests {
 
         public Task NotifyQueuedAsync(Guid queuedEmailId, CancellationToken cancellationToken) {
             NotifiedQueuedEmailId = queuedEmailId;
+            return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingRelayDeliveryTransport : IRelayDeliveryTransport {
+        public List<RelayEmailMessageRequest> Requests { get; } = [];
+
+        public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) {
+            Requests.Add(request);
             return Task.CompletedTask;
         }
     }
