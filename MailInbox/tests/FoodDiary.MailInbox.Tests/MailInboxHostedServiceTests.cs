@@ -67,5 +67,8 @@ public sealed class MailInboxHostedServiceTests {
 
         public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
     }
 }

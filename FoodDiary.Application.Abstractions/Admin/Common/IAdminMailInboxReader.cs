@@ -10,4 +10,8 @@ public interface IAdminMailInboxReader {
     Task<AdminMailInboxMessageDetailsModel?> GetMessageAsync(
         Guid id,
         CancellationToken cancellationToken);
+
+    Task<bool> MarkMessageReadAsync(
+        Guid id,
+        CancellationToken cancellationToken);
 }

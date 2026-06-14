@@ -72,6 +72,7 @@ public sealed class MailInboxPresentationTests {
                         "pass"),
                 ]),
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
 
         InboundMailMessageDetailsHttpResponse response = details.ToHttpResponse();
@@ -92,6 +93,7 @@ public sealed class MailInboxPresentationTests {
             "Hello",
             InboundMailMessageCategories.DmarcReport,
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
 
         InboundMailMessageSummaryHttpResponse response = summary.ToHttpResponse();
@@ -161,6 +163,7 @@ public sealed class MailInboxPresentationTests {
             "Hello",
             InboundMailMessageCategories.General,
             "received",
+            ReadAtUtc: null,
             receivedAtUtc);
         var details = new InboundMailMessageDetailsHttpResponse(
             id,
@@ -174,6 +177,7 @@ public sealed class MailInboxPresentationTests {
             InboundMailMessageCategories.DmarcReport,
             report,
             "received",
+            ReadAtUtc: null,
             receivedAtUtc);
 
         Assert.Equal(id, summary.Id);
@@ -390,6 +394,7 @@ public sealed class MailInboxPresentationTests {
             "Hello",
             InboundMailMessageCategories.General,
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         StubSender sender = new StubSender()
             .Register(new GetInboundMailMessagesQuery(25), Result.Success<IReadOnlyList<InboundMailMessageSummary>>([summary]));
@@ -430,6 +435,7 @@ public sealed class MailInboxPresentationTests {
             InboundMailMessageCategories.General,
             DmarcReport: null,
             "received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         StubSender sender = new StubSender()
             .Register(new GetInboundMailMessageDetailsQuery(id), Result.Success(details));

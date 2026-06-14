@@ -1,5 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
+using System.Globalization;
 using FoodDiary.MailInbox.Application;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Application.Common.Behaviors;
@@ -56,6 +57,7 @@ public sealed class MailInboxApplicationTests {
             "Hello",
             InboundMailMessageCategories.General,
             InboundMailMessageStatus.Received.ToString(),
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         var store = new RecordingInboundMailStore {
             MessageSummaries = [expected],
@@ -107,6 +109,37 @@ public sealed class MailInboxApplicationTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(details, result.Value);
+    }
+
+    [Fact]
+    public async Task MarkInboundMailMessageReadHandler_WhenFound_MarksMessageRead() {
+        using var cts = new CancellationTokenSource();
+        var id = Guid.NewGuid();
+        var now = DateTimeOffset.Parse("2026-06-14T10:00:00Z", CultureInfo.InvariantCulture);
+        var store = new RecordingInboundMailStore {
+            Details = CreateDetails(id),
+        };
+        var handler = new MarkInboundMailMessageReadCommandHandler(store, new FixedTimeProvider(now));
+
+        Result result = await handler.Handle(new MarkInboundMailMessageReadCommand(id), cts.Token);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(id, store.LastMessageId);
+        Assert.Equal(now, store.LastReadAtUtc);
+        Assert.Equal(cts.Token, store.LastMessagesCancellationToken);
+    }
+
+    [Fact]
+    public async Task MarkInboundMailMessageReadHandler_WhenMissing_ReturnsNotFound() {
+        var id = Guid.NewGuid();
+        var handler = new MarkInboundMailMessageReadCommandHandler(
+            new RecordingInboundMailStore(),
+            new FixedTimeProvider(DateTimeOffset.UtcNow));
+
+        Result result = await handler.Handle(new MarkInboundMailMessageReadCommand(id), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MailInbox.Message.NotFound", result.Error?.Code);
     }
 
     [Fact]
@@ -314,6 +347,8 @@ public sealed class MailInboxApplicationTests {
         public IReadOnlyList<InboundMailMessageSummary> MessageSummaries { get; init; } = [];
         public InboundMailMessageDetails? Details { get; init; }
         public int LastMessagesLimit { get; private set; }
+        public Guid LastMessageId { get; private set; }
+        public DateTimeOffset LastReadAtUtc { get; private set; }
         public CancellationToken LastMessagesCancellationToken { get; private set; }
 
         public Task<Guid> SaveAsync(InboundMailMessage message, CancellationToken cancellationToken) {
@@ -329,6 +364,13 @@ public sealed class MailInboxApplicationTests {
 
         public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
             Task.FromResult(Details is not null && Details.Id == id ? Details : null);
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) {
+            LastMessageId = id;
+            LastReadAtUtc = readAtUtc;
+            LastMessagesCancellationToken = cancellationToken;
+            return Task.FromResult(Details is not null && Details.Id == id);
+        }
     }
 
     [ExcludeFromCodeCoverage]
@@ -356,6 +398,7 @@ public sealed class MailInboxApplicationTests {
             InboundMailMessageCategories.General,
             DmarcReport: null,
             InboundMailMessageStatus.Received.ToString(),
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
 
     [ExcludeFromCodeCoverage]
@@ -399,4 +442,9 @@ public sealed class MailInboxApplicationTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class UnsupportedResult() : Result(isSuccess: true, error: null);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTimeOffset now) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => now;
+    }
 }

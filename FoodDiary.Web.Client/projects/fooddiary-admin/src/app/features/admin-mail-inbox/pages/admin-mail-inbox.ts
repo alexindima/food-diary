@@ -9,10 +9,12 @@ import type { AdminMailInboxMessageDetails, AdminMailInboxMessageSummary } from 
 
 type AdminMailInboxMessageSummaryViewModel = {
     categoryLabel: string;
+    readStateLabel: string;
 } & AdminMailInboxMessageSummary;
 
 type AdminMailInboxMessageDetailsViewModel = {
     categoryLabel: string;
+    readStateLabel: string;
     toRecipientsLabel: string;
 } & AdminMailInboxMessageDetails;
 
@@ -44,6 +46,7 @@ export class AdminMailInboxComponent {
         return messages.map(message => ({
             ...message,
             categoryLabel: this.formatCategory(message.category),
+            readStateLabel: this.formatReadState(message.readAtUtc),
         }));
     });
     protected readonly selectedMessageDetails = computed<AdminMailInboxMessageDetailsViewModel | null>(() => {
@@ -55,6 +58,7 @@ export class AdminMailInboxComponent {
         return {
             ...message,
             categoryLabel: this.formatCategory(message.category),
+            readStateLabel: this.formatReadState(message.readAtUtc),
             toRecipientsLabel: this.formatRecipients(message.toRecipients),
         };
     });
@@ -113,6 +117,10 @@ export class AdminMailInboxComponent {
             .subscribe({
                 next: response => {
                     this.selectedMessage.set(response);
+                    if (response.readAtUtc === null || response.readAtUtc === undefined) {
+                        this.markMessageRead(response.id);
+                    }
+
                     this.isDetailsLoading.set(false);
                 },
                 error: () => {
@@ -154,5 +162,22 @@ export class AdminMailInboxComponent {
 
     private formatCategory(category: string): string {
         return category === 'dmarc-report' ? 'DMARC' : 'Mail';
+    }
+
+    private formatReadState(readAtUtc: string | null | undefined): string {
+        return readAtUtc === null || readAtUtc === undefined ? 'Unread' : 'Read';
+    }
+
+    private markMessageRead(id: string): void {
+        this.mailInboxFacade
+            .markMessageRead(id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: () => {
+                    const readAtUtc = new Date().toISOString();
+                    this.messages.update(messages => messages.map(message => (message.id === id ? { ...message, readAtUtc } : message)));
+                    this.selectedMessage.update(message => (message?.id === id ? { ...message, readAtUtc } : message));
+                },
+            });
     }
 }

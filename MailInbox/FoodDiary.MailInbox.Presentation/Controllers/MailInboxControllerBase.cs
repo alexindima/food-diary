@@ -26,4 +26,9 @@ public abstract class MailInboxControllerBase(ISender sender) : ControllerBase {
         Result result = await Send(request);
         return result.ToOkActionResult(this, response);
     }
+
+    protected async Task<IActionResult> HandleNoContent(IRequest<Result> request) {
+        Result result = await Send(request);
+        return result.ToNoContentActionResult(this);
+    }
 }

@@ -19,6 +19,12 @@ internal sealed class MailInboxClientAdminMailInboxReader(IMailInboxClient mailI
         InboundMailMessageDetailsResponse? message = await mailInboxClient.GetMessageAsync(id, cancellationToken).ConfigureAwait(false);
         return message?.ToModel();
     }
+
+    public Task<bool> MarkMessageReadAsync(
+        Guid id,
+        CancellationToken cancellationToken) {
+        return mailInboxClient.MarkMessageReadAsync(id, cancellationToken);
+    }
 }
 
 file static class MailInboxClientAdminMailInboxMappings {
@@ -28,7 +34,9 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.FromAddress,
             response.ToRecipients,
             response.Subject,
+            response.Category,
             response.Status,
+            response.ReadAtUtc,
             response.ReceivedAtUtc);
     }
 
@@ -42,7 +50,9 @@ file static class MailInboxClientAdminMailInboxMappings {
             response.TextBody,
             response.HtmlBody,
             response.RawMime,
+            response.Category,
             response.Status,
+            response.ReadAtUtc,
             response.ReceivedAtUtc);
     }
 }

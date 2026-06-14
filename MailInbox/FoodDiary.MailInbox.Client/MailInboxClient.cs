@@ -62,6 +62,21 @@ public sealed class MailInboxClient(HttpClient httpClient, IOptions<MailInboxCli
         return payload ?? throw new InvalidOperationException("MailInbox returned an empty message details response.");
     }
 
+    public async Task<bool> MarkMessageReadAsync(
+        Guid id,
+        CancellationToken cancellationToken) {
+        EnsureBaseAddress();
+
+        using HttpRequestMessage request = CreateRequest(HttpMethod.Post, $"/api/mail-inbox/messages/{id}/read");
+        using HttpResponseMessage response = await httpClient.SendAsync(request, cancellationToken).ConfigureAwait(false);
+        if (response.StatusCode == HttpStatusCode.NotFound) {
+            return false;
+        }
+
+        response.EnsureSuccessStatusCode();
+        return true;
+    }
+
     private void EnsureBaseAddress() {
         if (httpClient.BaseAddress is null) {
             throw new InvalidOperationException("MailInbox client base URL is not configured.");

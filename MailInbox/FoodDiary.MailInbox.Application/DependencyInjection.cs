@@ -16,6 +16,7 @@ public static class DependencyInjection {
             configuration.AddOpenBehavior(typeof(MailInboxValidationBehavior<,>));
         });
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
+        services.AddSingleton(TimeProvider.System);
         return services;
     }
 }

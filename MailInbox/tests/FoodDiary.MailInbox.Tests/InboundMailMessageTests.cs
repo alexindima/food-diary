@@ -64,6 +64,19 @@ public sealed class InboundMailMessageTests {
     }
 
     [Fact]
+    public void MarkAsRead_WhenMessageIsUnread_SetsReadTimestampOnce() {
+        InboundMailMessage message = CreateMessage();
+        var readAt = new DateTimeOffset(2026, 6, 14, 14, 0, 0, TimeSpan.FromHours(4));
+
+        message.MarkAsRead(readAt);
+        DateTime? modifiedOnUtc = message.ModifiedOnUtc;
+        message.MarkAsRead(readAt.AddHours(1));
+
+        Assert.Equal(readAt.ToUniversalTime(), message.ReadAtUtc);
+        Assert.Equal(modifiedOnUtc, message.ModifiedOnUtc);
+    }
+
+    [Fact]
     public void Receive_WhenRecipientsAreEmpty_Throws() {
         Assert.Throws<ArgumentException>(() => InboundMailMessage.Receive(
             messageId: null,

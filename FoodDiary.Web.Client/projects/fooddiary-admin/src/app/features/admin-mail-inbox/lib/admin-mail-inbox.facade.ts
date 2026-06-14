@@ -15,4 +15,8 @@ export class AdminMailInboxFacade {
     public getMessage(id: string): Observable<AdminMailInboxMessageDetails> {
         return this.mailInboxService.getMessage(id);
     }
+
+    public markMessageRead(id: string): Observable<void> {
+        return this.mailInboxService.markMessageRead(id);
+    }
 }

@@ -114,7 +114,9 @@ public sealed class MailInboxClientTests {
             "text",
             "<p>text</p>",
             "raw",
+            "general",
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.OK) {
             Content = JsonContent.Create(expected),
@@ -151,6 +153,38 @@ public sealed class MailInboxClientTests {
     }
 
     [Fact]
+    public async Task MarkMessageReadAsync_WhenSuccessful_SendsExpectedRequestAndReturnsTrue() {
+        var id = Guid.Parse("11111111-1111-1111-1111-111111111111");
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.NoContent));
+        using var httpClient = new HttpClient(handler) {
+            BaseAddress = new Uri("https://inbox.example.test"),
+        };
+        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions {
+            ApiKey = "secret",
+        }));
+
+        bool result = await client.MarkMessageReadAsync(id, CancellationToken.None);
+
+        Assert.True(result);
+        Assert.Equal(HttpMethod.Post, handler.Request?.Method);
+        Assert.Equal("https://inbox.example.test/api/mail-inbox/messages/11111111-1111-1111-1111-111111111111/read", handler.Request?.RequestUri?.ToString());
+        Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single());
+    }
+
+    [Fact]
+    public async Task MarkMessageReadAsync_WhenNotFound_ReturnsFalse() {
+        var handler = new RecordingHandler(new HttpResponseMessage(HttpStatusCode.NotFound));
+        using var httpClient = new HttpClient(handler) {
+            BaseAddress = new Uri("https://inbox.example.test"),
+        };
+        var client = new MailInboxClient(httpClient, Options.Create(new MailInboxClientOptions()));
+
+        bool result = await client.MarkMessageReadAsync(Guid.NewGuid(), CancellationToken.None);
+
+        Assert.False(result);
+    }
+
+    [Fact]
     public void InboundMailMessageSummaryResponse_ExposesConfiguredValues() {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
@@ -160,7 +194,9 @@ public sealed class MailInboxClientTests {
             "sender@example.com",
             ["admin@fooddiary.club"],
             "Hello",
+            "general",
             "received",
+            ReadAtUtc: null,
             receivedAtUtc);
 
         Assert.Equal(id, response.Id);
@@ -168,6 +204,8 @@ public sealed class MailInboxClientTests {
         Assert.Equal(["admin@fooddiary.club"], response.ToRecipients);
         Assert.Equal("Hello", response.Subject);
         Assert.Equal("received", response.Status);
+        Assert.Equal("general", response.Category);
+        Assert.Null(response.ReadAtUtc);
         Assert.Equal(receivedAtUtc, response.ReceivedAtUtc);
     }
 

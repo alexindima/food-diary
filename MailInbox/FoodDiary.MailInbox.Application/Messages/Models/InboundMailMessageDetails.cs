@@ -12,4 +12,5 @@ public sealed record InboundMailMessageDetails(
     string Category,
     DmarcReportPreview? DmarcReport,
     string Status,
+    DateTimeOffset? ReadAtUtc,
     DateTimeOffset ReceivedAtUtc);

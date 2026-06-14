@@ -13,6 +13,9 @@ Rules for `MailInbox/FoodDiary.MailInbox.Infrastructure/`.
 - Keep inbound parsing and persistence implementation details here.
 - Keep SMTP listener options and hosted services here.
 - Keep storage changes idempotent where ingestion can retry.
+- Add MailInbox schema changes as idempotent entries in `NpgsqlInboundMailStore` schema migrations.
+- Treat SMTP envelope recipients as authoritative for accepted delivery; MIME `To:` headers are only fallback metadata.
+- Readiness checks should verify required MailInbox schema objects, not only database connectivity.
 - Avoid logging message bodies or secrets by default.
 
 ## Commands

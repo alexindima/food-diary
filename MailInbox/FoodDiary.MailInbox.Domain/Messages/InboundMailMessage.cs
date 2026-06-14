@@ -30,6 +30,8 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
 
     public InboundMailMessageStatus Status { get; private set; }
 
+    public DateTimeOffset? ReadAtUtc { get; private set; }
+
     public DateTimeOffset ReceivedAtUtc { get; private set; }
 
     public static InboundMailMessage Receive(
@@ -73,6 +75,16 @@ public sealed class InboundMailMessage : AggregateRoot<InboundMailMessageId> {
 
         Status = InboundMailMessageStatus.Archived;
         SetModified(archivedAtUtc.UtcDateTime);
+    }
+
+    public void MarkAsRead(DateTimeOffset readAtUtc) {
+        if (ReadAtUtc is not null) {
+            return;
+        }
+
+        DateTimeOffset normalizedReadAtUtc = readAtUtc.ToUniversalTime();
+        ReadAtUtc = normalizedReadAtUtc;
+        SetModified(normalizedReadAtUtc.UtcDateTime);
     }
 
     private static string NormalizeRecipient(string recipient) {

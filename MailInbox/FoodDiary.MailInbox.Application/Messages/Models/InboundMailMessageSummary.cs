@@ -7,4 +7,5 @@ public sealed record InboundMailMessageSummary(
     string? Subject,
     string Category,
     string Status,
+    DateTimeOffset? ReadAtUtc,
     DateTimeOffset ReceivedAtUtc);

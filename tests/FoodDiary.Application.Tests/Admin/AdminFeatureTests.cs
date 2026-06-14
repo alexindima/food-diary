@@ -1,5 +1,6 @@
 using System.Net.Mail;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
+using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
@@ -1103,7 +1104,9 @@ public class AdminFeatureTests {
             "sender@example.com",
             ["recipient@example.com"],
             "Subject",
+            "general",
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         var reader = new RecordingAdminMailInboxReader { Messages = [message] };
         var handler = new GetAdminMailInboxMessagesQueryHandler(reader);
@@ -1137,7 +1140,9 @@ public class AdminFeatureTests {
             "Text",
             "<p>Text</p>",
             "raw",
+            "general",
             "Received",
+            ReadAtUtc: null,
             DateTimeOffset.UtcNow);
         var reader = new RecordingAdminMailInboxReader { Message = message };
         var handler = new GetAdminMailInboxMessageDetailsQueryHandler(reader);
@@ -1147,6 +1152,31 @@ public class AdminFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(message, result.Value);
         Assert.Equal(message.Id, reader.LastMessageId);
+    }
+
+    [Fact]
+    public async Task MarkAdminMailInboxMessageReadCommandHandler_WhenMessageExists_ReturnsSuccess() {
+        var messageId = Guid.NewGuid();
+        var reader = new RecordingAdminMailInboxReader {
+            MarkReadResult = true,
+        };
+        var handler = new MarkAdminMailInboxMessageReadCommandHandler(reader);
+
+        Result result = await handler.Handle(new MarkAdminMailInboxMessageReadCommand(messageId), CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(messageId, reader.LastReadMessageId);
+    }
+
+    [Fact]
+    public async Task MarkAdminMailInboxMessageReadCommandHandler_WhenMessageMissing_ReturnsNotFound() {
+        var messageId = Guid.NewGuid();
+        var handler = new MarkAdminMailInboxMessageReadCommandHandler(new RecordingAdminMailInboxReader());
+
+        Result result = await handler.Handle(new MarkAdminMailInboxMessageReadCommand(messageId), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
     }
 
     [Fact]
@@ -1646,8 +1676,10 @@ public class AdminFeatureTests {
     private sealed class RecordingAdminMailInboxReader : IAdminMailInboxReader {
         public IReadOnlyList<AdminMailInboxMessageSummaryModel> Messages { get; init; } = [];
         public AdminMailInboxMessageDetailsModel? Message { get; init; }
+        public bool MarkReadResult { get; init; }
         public int LastLimit { get; private set; }
         public Guid LastMessageId { get; private set; }
+        public Guid LastReadMessageId { get; private set; }
 
         public Task<IReadOnlyList<AdminMailInboxMessageSummaryModel>> GetMessagesAsync(
             int limit,
@@ -1661,6 +1693,13 @@ public class AdminFeatureTests {
             CancellationToken cancellationToken) {
             LastMessageId = id;
             return Task.FromResult(Message is not null && Message.Id == id ? Message : null);
+        }
+
+        public Task<bool> MarkMessageReadAsync(
+            Guid id,
+            CancellationToken cancellationToken) {
+            LastReadMessageId = id;
+            return Task.FromResult(MarkReadResult);
         }
     }
 

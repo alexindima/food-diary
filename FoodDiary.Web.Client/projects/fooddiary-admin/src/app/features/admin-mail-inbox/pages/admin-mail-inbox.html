@@ -24,6 +24,7 @@
                             <th>Type</th>
                             <th>From</th>
                             <th>Subject</th>
+                            <th>Read</th>
                             <th>Status</th>
                         </tr>
                     </thead>
@@ -32,6 +33,7 @@
                             <tr
                                 class="mail-table__row"
                                 [class.mail-table__row--active]="selectedMessage()?.id === message.id"
+                                [class.mail-table__row--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
                                 (click)="selectMessage(message)"
                             >
                                 <td>{{ message.receivedAtUtc | date: 'short' }}</td>
@@ -45,11 +47,19 @@
                                 </td>
                                 <td>{{ message.fromAddress || '-' }}</td>
                                 <td>{{ message.subject || '(no subject)' }}</td>
+                                <td>
+                                    <span
+                                        class="mail-read-state fd-ui-helper-strong"
+                                        [class.mail-read-state--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
+                                    >
+                                        {{ message.readStateLabel }}
+                                    </span>
+                                </td>
                                 <td>{{ message.status }}</td>
                             </tr>
                         } @empty {
                             <tr>
-                                <td colspan="5">No inbound messages found.</td>
+                                <td colspan="6">No inbound messages found.</td>
                             </tr>
                         }
                     </tbody>
@@ -69,6 +79,12 @@
                     <div class="mail-details__badges fd-row fd-align-start fd-justify-end fd-gap-xs fd-wrap">
                         <span class="mail-badge fd-ui-helper-strong" [class.mail-badge--dmarc]="message.category === 'dmarc-report'">
                             {{ message.categoryLabel }}
+                        </span>
+                        <span
+                            class="mail-read-state fd-ui-helper-strong"
+                            [class.mail-read-state--unread]="message.readAtUtc === null || message.readAtUtc === undefined"
+                        >
+                            {{ message.readStateLabel }}
                         </span>
                         <span class="mail-details__status fd-ui-helper-strong">{{ message.status }}</span>
                     </div>

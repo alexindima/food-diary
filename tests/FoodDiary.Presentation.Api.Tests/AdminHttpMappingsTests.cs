@@ -371,8 +371,8 @@ public sealed class AdminHttpMappingsTests {
         var device = new AdminUserLoginDeviceSummaryModel("Chrome|Windows", 3, now);
         var audit = new AdminUserRoleAuditEventReadModel(Guid.NewGuid(), Guid.NewGuid(), "Admin", "Added", Guid.NewGuid(), "actor@example.com", "manual", now);
         var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: null, now, ReviewedAtUtc: null);
-        var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "received", offsetNow);
-        var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "received", offsetNow);
+        var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "general", "received", ReadAtUtc: null, offsetNow);
+        var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, offsetNow);
 
         Assert.Equal("key", prompt.ToAiPromptHttpResponse().Key);
         Assert.Equal("Title", lesson.ToLessonHttpResponse().Title);
@@ -385,6 +385,7 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal("Admin", audit.ToHttpResponse().RoleName);
         Assert.Equal("Spam", report.ToHttpResponse().Reason);
         Assert.Equal("from@example.com", mailSummary.ToHttpResponse().FromAddress);
+        Assert.Equal("general", mailSummary.ToHttpResponse().Category);
         Assert.Equal("raw", mailDetails.ToHttpResponse().RawMime);
     }
 

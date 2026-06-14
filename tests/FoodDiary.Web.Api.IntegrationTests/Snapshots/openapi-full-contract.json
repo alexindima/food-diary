@@ -260,6 +260,22 @@
       ]
     },
     {
+      "Path": "/api/v{version}/admin/mail-inbox/messages/{id}/read",
+      "Operations": [
+        {
+          "Method": "post",
+          "HasRequestBody": false,
+          "ResponseCodes": [
+            "204",
+            "401",
+            "403",
+            "404",
+            "500"
+          ]
+        }
+      ]
+    },
+    {
       "Path": "/api/v{version}/admin/moderation",
       "Operations": [
         {

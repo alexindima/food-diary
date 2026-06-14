@@ -18,4 +18,8 @@ export class AdminMailInboxService {
     public getMessage(id: string): Observable<AdminMailInboxMessageDetails> {
         return this.http.get<AdminMailInboxMessageDetails>(`${this.baseUrl}/${id}`);
     }
+
+    public markMessageRead(id: string): Observable<void> {
+        return this.http.post<void>(`${this.baseUrl}/${id}/read`, null);
+    }
 }

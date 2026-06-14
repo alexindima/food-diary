@@ -43,6 +43,10 @@
     cursor: pointer;
 }
 
+.mail-table__row--unread {
+    font-weight: var(--fd-font-weight-bold);
+}
+
 .mail-table__row--active,
 .mail-table__row:hover {
     background: var(--fd-bg-surface-muted);
@@ -80,6 +84,22 @@
 .mail-badge--dmarc {
     background: var(--fd-bg-status-success);
     color: var(--fd-color-emerald-700);
+}
+
+.mail-read-state {
+    display: inline-flex;
+    align-items: center;
+    min-height: 1.5rem;
+    padding: calc(var(--fd-space-xxs) / 2) var(--fd-space-xs);
+    border-radius: var(--fd-radius-pill);
+    background: var(--fd-bg-surface-muted);
+    color: var(--fd-color-slate-700);
+    white-space: nowrap;
+}
+
+.mail-read-state--unread {
+    background: var(--fd-bg-status-warning);
+    color: var(--fd-color-amber-500);
 }
 
 .mail-fields {

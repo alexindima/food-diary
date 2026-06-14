@@ -1,3 +1,4 @@
+using FoodDiary.MailInbox.Application.Messages.Commands;
 using FoodDiary.MailInbox.Application.Messages.Queries;
 using FoodDiary.MailInbox.Presentation.Controllers;
 using FoodDiary.MailInbox.Presentation.Features.Messages.Mappings;
@@ -20,4 +21,10 @@ public sealed class MailInboxMessagesController(ISender sender) : AuthorizedMail
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public Task<IActionResult> GetById(Guid id) =>
         HandleOk(new GetInboundMailMessageDetailsQuery(id), static value => value.ToHttpResponse());
+
+    [HttpPost("{id:guid}/read")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public Task<IActionResult> MarkRead(Guid id) =>
+        HandleNoContent(new MarkInboundMailMessageReadCommand(id));
 }

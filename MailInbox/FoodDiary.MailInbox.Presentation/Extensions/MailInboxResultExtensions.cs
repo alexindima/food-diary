@@ -22,6 +22,13 @@ public static class MailInboxResultExtensions {
             ? controller.Ok(response)
             : ErrorResult(result.Error!, controller.HttpContext.TraceIdentifier);
 
+    public static IActionResult ToNoContentActionResult(
+        this Result result,
+        ControllerBase controller) =>
+        result.IsSuccess
+            ? controller.NoContent()
+            : ErrorResult(result.Error!, controller.HttpContext.TraceIdentifier);
+
     public static IActionResult ErrorResult(MailInboxError error, string? traceId) =>
         new ObjectResult(new MailInboxApiErrorHttpResponse(
             error.Code,

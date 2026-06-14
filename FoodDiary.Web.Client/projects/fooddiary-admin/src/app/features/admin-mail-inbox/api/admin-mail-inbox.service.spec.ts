@@ -34,7 +34,9 @@ describe('AdminMailInboxService', () => {
                 fromAddress: 'user@example.com',
                 toRecipients: ['admin@fooddiary.club'],
                 subject: 'Feedback',
+                category: 'general',
                 status: 'Received',
+                readAtUtc: null,
                 receivedAtUtc: '2026-04-25T21:37:55Z',
             },
         ];
@@ -61,9 +63,24 @@ describe('AdminMailInboxService', () => {
             fromAddress: 'user@example.com',
             toRecipients: ['admin@fooddiary.club'],
             subject: 'Feedback',
+            category: 'general',
             status: 'Received',
+            readAtUtc: null,
             receivedAtUtc: '2026-04-25T21:37:55Z',
             rawMime: 'raw',
         });
+    });
+
+    it('should mark one inbound message as read', () => {
+        let completed = false;
+        service.markMessageRead('message-1').subscribe(() => {
+            completed = true;
+        });
+
+        const req = httpMock.expectOne(`${baseUrl}/message-1/read`);
+        expect(req.request.method).toBe('POST');
+        expect(req.request.body).toBeNull();
+        req.flush(null);
+        expect(completed).toBe(true);
     });
 });

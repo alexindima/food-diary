@@ -15,21 +15,21 @@ namespace FoodDiary.MailInbox.Tests;
 [ExcludeFromCodeCoverage]
 public sealed class SmtpInboundMessageStoreTests {
     [Fact]
-    public async Task SaveAsync_WhenMessageHasToRecipients_StoresParsedInboundMessage() {
+    public async Task SaveAsync_WhenMessageHasToRecipients_StoresEnvelopeRecipients() {
         var store = new RecordingInboundMailStore();
         var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
         string rawMime = CreateRawMime(includeToHeader: true);
 
         SmtpResponse response = await messageStore.SaveAsync(
             context: null!,
-            new TestMessageTransaction(["fallback@fooddiary.club"]),
+            new TestMessageTransaction(["envelope@fooddiary.club"]),
             new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
             CancellationToken.None);
 
         Assert.Equal(SmtpResponse.Ok.ReplyCode, response.ReplyCode);
         Assert.NotNull(store.LastSaved);
         Assert.Equal("sender@example.com", store.LastSaved.FromAddress);
-        Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
+        Assert.Equal(["envelope@fooddiary.club"], store.LastSaved.ToRecipients);
         Assert.Equal("Hello", store.LastSaved.Subject);
         Assert.Contains("plain text", store.LastSaved.TextBody, StringComparison.Ordinal);
         Assert.Equal(rawMime, store.LastSaved.RawMime);
@@ -99,6 +99,9 @@ public sealed class SmtpInboundMessageStoreTests {
             throw new NotSupportedException();
 
         public Task<InboundMailMessageDetails?> GetMessageDetailsAsync(Guid id, CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        public Task<bool> MarkAsReadAsync(Guid id, DateTimeOffset readAtUtc, CancellationToken cancellationToken) =>
             throw new NotSupportedException();
     }
 }

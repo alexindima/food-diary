@@ -5,6 +5,7 @@ export type AdminMailInboxMessageSummary = {
     subject?: string | null;
     category: string;
     status: string;
+    readAtUtc?: string | null;
     receivedAtUtc: string;
 };
 

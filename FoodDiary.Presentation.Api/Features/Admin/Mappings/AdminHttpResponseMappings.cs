@@ -299,7 +299,9 @@ public static class AdminHttpResponseMappings {
             model.FromAddress,
             model.ToRecipients,
             model.Subject,
+            model.Category,
             model.Status,
+            model.ReadAtUtc,
             model.ReceivedAtUtc);
     }
 
@@ -313,7 +315,9 @@ public static class AdminHttpResponseMappings {
             model.TextBody,
             model.HtmlBody,
             model.RawMime,
+            model.Category,
             model.Status,
+            model.ReadAtUtc,
             model.ReceivedAtUtc);
     }
 

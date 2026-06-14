@@ -18,7 +18,9 @@ public sealed class MailInboxAdminReaderTests {
                     "from@example.com",
                     ["to@example.com"],
                     "Subject",
+                    "general",
                     "received",
+                    ReadAtUtc: null,
                     receivedAtUtc),
             ],
         };
@@ -31,7 +33,9 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("from@example.com", message.FromAddress);
         Assert.Equal(["to@example.com"], message.ToRecipients);
         Assert.Equal("Subject", message.Subject);
+        Assert.Equal("general", message.Category);
         Assert.Equal("received", message.Status);
+        Assert.Null(message.ReadAtUtc);
         Assert.Equal(receivedAtUtc, message.ReceivedAtUtc);
         Assert.Equal(25, client.LastLimit);
     }
@@ -50,7 +54,9 @@ public sealed class MailInboxAdminReaderTests {
                 "text",
                 "<p>html</p>",
                 "raw",
+                "general",
                 "received",
+                ReadAtUtc: null,
                 receivedAtUtc),
         };
         var reader = new MailInboxClientAdminMailInboxReader(client);
@@ -62,6 +68,7 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("text", result.TextBody);
         Assert.Equal("<p>html</p>", result.HtmlBody);
         Assert.Equal("raw", result.RawMime);
+        Assert.Equal("general", result.Category);
         Assert.Equal(id, client.LastMessageId);
     }
 
@@ -74,12 +81,39 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Null(result);
     }
 
+    [Fact]
+    public async Task MarkMessageReadAsync_DelegatesToClient() {
+        var id = Guid.NewGuid();
+        var client = new StubMailInboxClient {
+            Details = new InboundMailMessageDetailsResponse(
+                id,
+                "message-id",
+                "from@example.com",
+                ["to@example.com"],
+                "Subject",
+                "text",
+                "<p>html</p>",
+                "raw",
+                "general",
+                "received",
+                ReadAtUtc: null,
+                DateTimeOffset.UtcNow),
+        };
+        var reader = new MailInboxClientAdminMailInboxReader(client);
+
+        bool result = await reader.MarkMessageReadAsync(id, CancellationToken.None);
+
+        Assert.True(result);
+        Assert.Equal(id, client.LastReadMessageId);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class StubMailInboxClient : IMailInboxClient {
         public IReadOnlyList<InboundMailMessageSummaryResponse> Summaries { get; init; } = [];
         public InboundMailMessageDetailsResponse? Details { get; init; }
         public int? LastLimit { get; private set; }
         public Guid LastMessageId { get; private set; }
+        public Guid LastReadMessageId { get; private set; }
 
         public Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(
             int? limit,
@@ -93,6 +127,13 @@ public sealed class MailInboxAdminReaderTests {
             CancellationToken cancellationToken) {
             LastMessageId = id;
             return Task.FromResult(Details);
+        }
+
+        public Task<bool> MarkMessageReadAsync(
+            Guid id,
+            CancellationToken cancellationToken) {
+            LastReadMessageId = id;
+            return Task.FromResult(Details is not null && Details.Id == id);
         }
     }
 }
