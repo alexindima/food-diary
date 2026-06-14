@@ -6,6 +6,7 @@ using FoodDiary.Application.Wearables.Commands.SyncWearableData;
 using FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 using FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 using FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Wearables;
 using FoodDiary.Presentation.Api.Features.Wearables.Requests;
 using FoodDiary.Presentation.Api.Features.Wearables.Responses;
@@ -20,7 +21,8 @@ public sealed class WearablesControllerTests {
     public async Task GetConnections_SendsQueryAndReturnsConnections() {
         DateTime connectedAtUtc = DateTime.UtcNow.AddDays(-30);
         var model = new WearableConnectionModel("fitbit", "external-1", IsActive: true, LastSyncedAtUtc: null, connectedAtUtc);
-        RecordingSender sender = new(Result.Success<IReadOnlyList<WearableConnectionModel>>([model]));
+        IRequest<Result<IReadOnlyList<WearableConnectionModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<WearableConnectionModel>>([model]), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -30,13 +32,14 @@ public sealed class WearablesControllerTests {
         IReadOnlyList<WearableConnectionHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<WearableConnectionHttpResponse>>(ok.Value);
         WearableConnectionHttpResponse item = Assert.Single(response);
         Assert.Equal("fitbit", item.Provider);
-        GetWearableConnectionsQuery query = Assert.IsType<GetWearableConnectionsQuery>(sender.Request);
+        GetWearableConnectionsQuery query = Assert.IsType<GetWearableConnectionsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task GetAuthUrl_SendsQueryAndReturnsAuthUrlResponse() {
-        RecordingSender sender = new(Result.Success("https://wearable.example/oauth"));
+        IRequest<Result<string>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success("https://wearable.example/oauth"), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -45,7 +48,7 @@ public sealed class WearablesControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         WearableAuthUrlHttpResponse response = Assert.IsType<WearableAuthUrlHttpResponse>(ok.Value);
         Assert.Equal("https://wearable.example/oauth", response.AuthorizationUrl);
-        GetWearableAuthUrlQuery query = Assert.IsType<GetWearableAuthUrlQuery>(sender.Request);
+        GetWearableAuthUrlQuery query = Assert.IsType<GetWearableAuthUrlQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal("fitbit", query.Provider);
         Assert.Equal("state-123", query.State);
@@ -55,7 +58,8 @@ public sealed class WearablesControllerTests {
     public async Task Connect_SendsCommandAndReturnsConnection() {
         DateTime connectedAtUtc = DateTime.UtcNow;
         var model = new WearableConnectionModel("fitbit", "external-1", IsActive: true, LastSyncedAtUtc: null, connectedAtUtc);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<WearableConnectionModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new ConnectWearableHttpRequest("auth-code", "state-123");
@@ -65,7 +69,7 @@ public sealed class WearablesControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         WearableConnectionHttpResponse response = Assert.IsType<WearableConnectionHttpResponse>(ok.Value);
         Assert.Equal("fitbit", response.Provider);
-        ConnectWearableCommand command = Assert.IsType<ConnectWearableCommand>(sender.Request);
+        ConnectWearableCommand command = Assert.IsType<ConnectWearableCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
         Assert.Equal("auth-code", command.Code);
@@ -73,14 +77,15 @@ public sealed class WearablesControllerTests {
 
     [Fact]
     public async Task Disconnect_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.Disconnect(userId, "fitbit");
 
         Assert.IsType<NoContentResult>(result);
-        DisconnectWearableCommand command = Assert.IsType<DisconnectWearableCommand>(sender.Request);
+        DisconnectWearableCommand command = Assert.IsType<DisconnectWearableCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
     }
@@ -89,7 +94,8 @@ public sealed class WearablesControllerTests {
     public async Task Sync_SendsCommandAndReturnsDailySummary() {
         DateTime date = new(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc);
         WearableDailySummaryModel model = CreateDailySummary(date);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<WearableDailySummaryModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -99,7 +105,7 @@ public sealed class WearablesControllerTests {
         WearableDailySummaryHttpResponse response = Assert.IsType<WearableDailySummaryHttpResponse>(ok.Value);
         Assert.Equal(date, response.Date);
         Assert.Equal(8500, response.Steps);
-        SyncWearableDataCommand command = Assert.IsType<SyncWearableDataCommand>(sender.Request);
+        SyncWearableDataCommand command = Assert.IsType<SyncWearableDataCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("fitbit", command.Provider);
         Assert.Equal(date, command.Date);
@@ -109,7 +115,8 @@ public sealed class WearablesControllerTests {
     public async Task GetDailySummary_SendsQueryAndReturnsDailySummary() {
         DateTime date = new(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc);
         WearableDailySummaryModel model = CreateDailySummary(date);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<WearableDailySummaryModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         WearablesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -118,12 +125,12 @@ public sealed class WearablesControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         WearableDailySummaryHttpResponse response = Assert.IsType<WearableDailySummaryHttpResponse>(ok.Value);
         Assert.Equal(72, response.HeartRate);
-        GetWearableDailySummaryQuery query = Assert.IsType<GetWearableDailySummaryQuery>(sender.Request);
+        GetWearableDailySummaryQuery query = Assert.IsType<GetWearableDailySummaryQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
     }
 
-    private static WearablesController CreateController(RecordingSender sender) =>
+    private static WearablesController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

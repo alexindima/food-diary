@@ -10,7 +10,11 @@ namespace FoodDiary.Infrastructure.Tests.Events;
 public sealed class MediatorDomainEventPublisherTests {
     [Fact]
     public async Task PublishAsync_WrapsConcreteDomainEventTypeInNotificationEnvelope() {
-        var publisher = new RecordingPublisher();
+        IPublisher publisher = Substitute.For<IPublisher>();
+        object? publishedNotification = null;
+        publisher
+            .Publish(Arg.Do<object>(notification => publishedNotification = notification), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
         IDomainEventPublisher sut = CreatePublisher(publisher);
         var domainEvent = new RecommendationCreatedDomainEvent(
             RecommendationId.New(),
@@ -19,8 +23,8 @@ public sealed class MediatorDomainEventPublisherTests {
 
         await sut.PublishAsync(domainEvent, CancellationToken.None);
 
-        Assert.NotNull(publisher.PublishedNotification);
-        Type notificationType = publisher.PublishedNotification.GetType();
+        Assert.NotNull(publishedNotification);
+        Type notificationType = publishedNotification.GetType();
         Assert.True(notificationType.IsGenericType);
         Assert.Equal(typeof(NotificationEnvelope<>), notificationType.GetGenericTypeDefinition());
         Assert.Equal(typeof(RecommendationCreatedDomainEvent), notificationType.GetGenericArguments()[0]);
@@ -35,21 +39,5 @@ public sealed class MediatorDomainEventPublisherTests {
                 System.Reflection.BindingFlags.NonPublic)
             .Single();
         return (FoodDiary.Application.Abstractions.Common.Abstractions.Events.IDomainEventPublisher)constructor.Invoke([publisher]);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingPublisher : IPublisher {
-        public object? PublishedNotification { get; private set; }
-
-        public Task Publish(object notification, CancellationToken cancellationToken = default) {
-            PublishedNotification = notification;
-            return Task.CompletedTask;
-        }
-
-        public Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
-            where TNotification : INotification {
-            PublishedNotification = notification;
-            return Task.CompletedTask;
-        }
     }
 }

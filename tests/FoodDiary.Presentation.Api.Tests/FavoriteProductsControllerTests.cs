@@ -5,6 +5,7 @@ using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Queries.GetFavoriteProducts;
 using FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteProducts.Responses;
@@ -18,7 +19,8 @@ public sealed class FavoriteProductsControllerTests {
     [Fact]
     public async Task GetAll_SendsQueryAndReturnsFavorites() {
         FavoriteProductModel favorite = CreateFavorite();
-        RecordingSender sender = new(Result.Success<IReadOnlyList<FavoriteProductModel>>([favorite]));
+        IRequest<Result<IReadOnlyList<FavoriteProductModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<FavoriteProductModel>>([favorite]), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -28,13 +30,14 @@ public sealed class FavoriteProductsControllerTests {
         List<FavoriteProductHttpResponse> response = Assert.IsType<List<FavoriteProductHttpResponse>>(ok.Value);
         Assert.Single(response);
         Assert.Equal(favorite.Id, response[0].Id);
-        GetFavoriteProductsQuery query = Assert.IsType<GetFavoriteProductsQuery>(sender.Request);
+        GetFavoriteProductsQuery query = Assert.IsType<GetFavoriteProductsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task IsFavorite_SendsQueryAndReturnsFlag() {
-        RecordingSender sender = new(Result.Success(value: true));
+        IRequest<Result<bool>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(value: true), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
@@ -43,7 +46,7 @@ public sealed class FavoriteProductsControllerTests {
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Equal(true, ok.Value);
-        IsProductFavoriteQuery query = Assert.IsType<IsProductFavoriteQuery>(sender.Request);
+        IsProductFavoriteQuery query = Assert.IsType<IsProductFavoriteQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(productId, query.ProductId);
     }
@@ -51,7 +54,8 @@ public sealed class FavoriteProductsControllerTests {
     [Fact]
     public async Task Add_SendsCommandAndReturnsFavorite() {
         FavoriteProductModel favorite = CreateFavorite();
-        RecordingSender sender = new(Result.Success(favorite));
+        IRequest<Result<FavoriteProductModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(favorite), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var productId = Guid.NewGuid();
@@ -62,7 +66,7 @@ public sealed class FavoriteProductsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         FavoriteProductHttpResponse response = Assert.IsType<FavoriteProductHttpResponse>(ok.Value);
         Assert.Equal(favorite.Id, response.Id);
-        AddFavoriteProductCommand command = Assert.IsType<AddFavoriteProductCommand>(sender.Request);
+        AddFavoriteProductCommand command = Assert.IsType<AddFavoriteProductCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(productId, command.ProductId);
         Assert.Equal("Breakfast", command.Name);
@@ -72,7 +76,8 @@ public sealed class FavoriteProductsControllerTests {
     [Fact]
     public async Task Update_SendsCommandAndReturnsFavorite() {
         FavoriteProductModel favorite = CreateFavorite();
-        RecordingSender sender = new(Result.Success(favorite));
+        IRequest<Result<FavoriteProductModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(favorite), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var favoriteProductId = Guid.NewGuid();
@@ -83,7 +88,7 @@ public sealed class FavoriteProductsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         FavoriteProductHttpResponse response = Assert.IsType<FavoriteProductHttpResponse>(ok.Value);
         Assert.Equal(favorite.Id, response.Id);
-        UpdateFavoriteProductCommand command = Assert.IsType<UpdateFavoriteProductCommand>(sender.Request);
+        UpdateFavoriteProductCommand command = Assert.IsType<UpdateFavoriteProductCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(favoriteProductId, command.FavoriteProductId);
         Assert.Equal("Breakfast", command.Name);
@@ -92,7 +97,8 @@ public sealed class FavoriteProductsControllerTests {
 
     [Fact]
     public async Task Remove_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         FavoriteProductsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var favoriteProductId = Guid.NewGuid();
@@ -100,12 +106,12 @@ public sealed class FavoriteProductsControllerTests {
         IActionResult result = await controller.Remove(favoriteProductId, userId);
 
         Assert.IsType<NoContentResult>(result);
-        RemoveFavoriteProductCommand command = Assert.IsType<RemoveFavoriteProductCommand>(sender.Request);
+        RemoveFavoriteProductCommand command = Assert.IsType<RemoveFavoriteProductCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(favoriteProductId, command.FavoriteProductId);
     }
 
-    private static FavoriteProductsController CreateController(RecordingSender sender) =>
+    private static FavoriteProductsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

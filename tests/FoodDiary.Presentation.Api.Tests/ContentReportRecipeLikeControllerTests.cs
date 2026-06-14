@@ -4,6 +4,7 @@ using FoodDiary.Application.ContentReports.Models;
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 using FoodDiary.Application.RecipeLikes.Models;
 using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.ContentReports;
 using FoodDiary.Presentation.Api.Features.ContentReports.Requests;
 using FoodDiary.Presentation.Api.Features.ContentReports.Responses;
@@ -30,13 +31,14 @@ public sealed class ContentReportRecipeLikeControllerTests {
             AdminNote: null,
             DateTime.UtcNow,
             ReviewedAtUtc: null);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<ContentReportModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         ContentReportsController controller = CreateController(new ContentReportsController(sender));
 
         IActionResult result = await controller.Create(userId, new CreateContentReportHttpRequest("Recipe", targetId, "Spam"));
 
         Assert.IsType<ContentReportHttpResponse>(Assert.IsType<CreatedResult>(result).Value);
-        CreateContentReportCommand command = Assert.IsType<CreateContentReportCommand>(sender.Request);
+        CreateContentReportCommand command = Assert.IsType<CreateContentReportCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(targetId, command.TargetId);
         Assert.Equal("Recipe", command.TargetType);
@@ -47,14 +49,17 @@ public sealed class ContentReportRecipeLikeControllerTests {
     public async Task RecipeLikesController_Toggle_SendsCommandAndReturnsStatus() {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
-        RecordingSender sender = new(Result.Success(new RecipeLikeStatusModel(IsLiked: true, TotalLikes: 12)));
+        IRequest<Result<RecipeLikeStatusModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new RecipeLikeStatusModel(IsLiked: true, TotalLikes: 12)),
+            request => sentRequest = request);
         RecipeLikesController controller = CreateController(new RecipeLikesController(sender));
 
         IActionResult result = await controller.Toggle(userId, recipeId);
 
         RecipeLikeStatusHttpResponse response = Assert.IsType<RecipeLikeStatusHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         Assert.True(response.IsLiked);
-        ToggleRecipeLikeCommand command = Assert.IsType<ToggleRecipeLikeCommand>(sender.Request);
+        ToggleRecipeLikeCommand command = Assert.IsType<ToggleRecipeLikeCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
     }
@@ -63,14 +68,17 @@ public sealed class ContentReportRecipeLikeControllerTests {
     public async Task RecipeLikesController_GetStatus_SendsQueryAndReturnsStatus() {
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
-        RecordingSender sender = new(Result.Success(new RecipeLikeStatusModel(IsLiked: false, TotalLikes: 3)));
+        IRequest<Result<RecipeLikeStatusModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new RecipeLikeStatusModel(IsLiked: false, TotalLikes: 3)),
+            request => sentRequest = request);
         RecipeLikesController controller = CreateController(new RecipeLikesController(sender));
 
         IActionResult result = await controller.GetStatus(userId, recipeId);
 
         RecipeLikeStatusHttpResponse response = Assert.IsType<RecipeLikeStatusHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         Assert.False(response.IsLiked);
-        GetRecipeLikeStatusQuery query = Assert.IsType<GetRecipeLikeStatusQuery>(sender.Request);
+        GetRecipeLikeStatusQuery query = Assert.IsType<GetRecipeLikeStatusQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(recipeId, query.RecipeId);
     }

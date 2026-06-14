@@ -10,4 +10,6 @@ internal static class SubstituteSender {
             .Returns(Task.FromResult(response));
         return sender;
     }
+
+    public static CapturedSender Capture<TResponse>(TResponse response) => CapturedSender.Create(response);
 }

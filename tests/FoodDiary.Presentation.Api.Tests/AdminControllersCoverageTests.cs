@@ -32,7 +32,6 @@ using FoodDiary.Application.Common.Models;
 using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Responses;
 using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +44,7 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminLessonsController_CoversCrudEndpoints() {
         AdminLessonModel lesson = CreateLesson();
-        RecordingSender createSender = new(Result.Success(lesson));
+        CapturedSender createSender = SubstituteSender.Capture(Result.Success(lesson));
         AdminLessonsController createController = CreateController(new AdminLessonsController(createSender));
         var lessonId = Guid.NewGuid();
 
@@ -55,7 +54,7 @@ public sealed class AdminControllersCoverageTests {
         Assert.IsType<AdminLessonHttpResponse>(created.Value);
         Assert.IsType<CreateAdminLessonCommand>(createSender.Request);
 
-        RecordingSender updateSender = new(Result.Success(lesson));
+        CapturedSender updateSender = SubstituteSender.Capture(Result.Success(lesson));
         AdminLessonsController updateController = CreateController(new AdminLessonsController(updateSender));
         IActionResult update = await updateController.Update(lessonId, UpdateLessonRequest());
 
@@ -64,7 +63,7 @@ public sealed class AdminControllersCoverageTests {
         UpdateAdminLessonCommand updateCommand = Assert.IsType<UpdateAdminLessonCommand>(updateSender.Request);
         Assert.Equal(lessonId, updateCommand.Id);
 
-        RecordingSender deleteSender = new(Result.Success());
+        CapturedSender deleteSender = SubstituteSender.Capture(Result.Success());
         AdminLessonsController deleteController = CreateController(new AdminLessonsController(deleteSender));
         IActionResult delete = await deleteController.Delete(lessonId);
 
@@ -74,7 +73,7 @@ public sealed class AdminControllersCoverageTests {
 
     [Fact]
     public async Task AdminLessonsController_CoversListAndImportEndpoints() {
-        RecordingSender listSender = new(Result.Success<IReadOnlyList<AdminLessonModel>>([CreateLesson()]));
+        CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminLessonModel>>([CreateLesson()]));
         AdminLessonsController listController = CreateController(new AdminLessonsController(listSender));
 
         IActionResult list = await listController.GetAll();
@@ -84,7 +83,7 @@ public sealed class AdminControllersCoverageTests {
         Assert.IsType<GetAdminLessonsQuery>(listSender.Request);
 
         var importModel = new AdminLessonsImportModel(1, [CreateLesson()]);
-        RecordingSender importSender = new(Result.Success(importModel));
+        CapturedSender importSender = SubstituteSender.Capture(Result.Success(importModel));
         AdminLessonsController importController = CreateController(new AdminLessonsController(importSender));
 
         IActionResult import = await importController.Import(new AdminLessonsImportHttpRequest(1, [CreateImportLessonRequest()]));
@@ -96,7 +95,7 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminUsersController_CoversUserReadAuditAndImpersonationEndpoints() {
         AdminUserModel user = CreateUser();
-        RecordingSender sender = new(Result.Success(user));
+        CapturedSender sender = SubstituteSender.Capture(Result.Success(user));
         AdminUsersController controller = CreateController(new AdminUsersController(sender));
         var userId = Guid.NewGuid();
 
@@ -106,7 +105,7 @@ public sealed class AdminControllersCoverageTests {
         Assert.Equal(userId, Assert.IsType<GetAdminUserQuery>(sender.Request).UserId);
 
         var audit = new AdminUserRoleAuditEventReadModel(Guid.NewGuid(), userId, "Admin", "Added", Guid.NewGuid(), "actor@example.com", "manual", DateTime.UtcNow);
-        RecordingSender auditSender = new(Result.Success<IReadOnlyList<AdminUserRoleAuditEventReadModel>>([audit]));
+        CapturedSender auditSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminUserRoleAuditEventReadModel>>([audit]));
         AdminUsersController auditController = CreateController(new AdminUsersController(auditSender));
 
         IActionResult roleAudit = await auditController.GetUserRoleAudit(userId, new GetAdminUserRoleAuditHttpQuery(12));
@@ -115,7 +114,7 @@ public sealed class AdminControllersCoverageTests {
         Assert.Equal(12, Assert.IsType<GetAdminUserRoleAuditQuery>(auditSender.Request).Limit);
 
         var startModel = new AdminImpersonationStartModel("token", userId, "target@example.com", Guid.NewGuid(), "Support");
-        RecordingSender impersonationSender = new(Result.Success(startModel));
+        CapturedSender impersonationSender = SubstituteSender.Capture(Result.Success(startModel));
         AdminUsersController impersonationController = CreateController(new AdminUsersController(impersonationSender));
         impersonationController.HttpContext.Connection.RemoteIpAddress = IPAddress.Parse("203.0.113.1");
         impersonationController.Request.Headers.UserAgent = "Agent/1.0";
@@ -136,7 +135,7 @@ public sealed class AdminControllersCoverageTests {
         var targetUserId = Guid.NewGuid();
         var actorUserId = Guid.NewGuid();
         var model = new AdminImpersonationStartModel("token", targetUserId, "target@example.com", actorUserId, "Support");
-        RecordingSender sender = new(Result.Success(model));
+        CapturedSender sender = SubstituteSender.Capture(Result.Success(model));
         AdminUsersController controller = CreateController(new AdminUsersController(sender));
 
         IActionResult result = await controller.StartImpersonation(targetUserId, actorUserId, new AdminImpersonationStartHttpRequest("Support"));
@@ -151,7 +150,7 @@ public sealed class AdminControllersCoverageTests {
     public async Task AdminUsersController_CoversPagedAndUpdateEndpoints() {
         AdminUserModel user = CreateUser();
         var pagedUsers = new PagedResponse<AdminUserModel>([user], 2, 10, 3, 21);
-        RecordingSender usersSender = new(Result.Success(pagedUsers));
+        CapturedSender usersSender = SubstituteSender.Capture(Result.Success(pagedUsers));
         AdminUsersController usersController = CreateController(new AdminUsersController(usersSender));
 
         IActionResult users = await usersController.GetUsers(new GetAdminUsersHttpQuery(Page: 2, Limit: 10));
@@ -159,27 +158,27 @@ public sealed class AdminControllersCoverageTests {
         Assert.IsType<PagedHttpResponse<AdminUserHttpResponse>>(Assert.IsType<OkObjectResult>(users).Value);
 
         var session = new AdminImpersonationSessionReadModel(Guid.NewGuid(), Guid.NewGuid(), "actor@example.com", Guid.NewGuid(), "target@example.com", "Support", "ip", "agent", DateTime.UtcNow);
-        RecordingSender sessionSender = new(Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>([session], 1, 10, 1, 1)));
+        CapturedSender sessionSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminImpersonationSessionReadModel>([session], 1, 10, 1, 1)));
         AdminUsersController sessionController = CreateController(new AdminUsersController(sessionSender));
         IActionResult sessions = await sessionController.GetImpersonationSessions(new GetAdminImpersonationSessionsHttpQuery(Search: "target"));
         Assert.IsType<PagedHttpResponse<AdminImpersonationSessionHttpResponse>>(Assert.IsType<OkObjectResult>(sessions).Value);
         Assert.Equal("target", Assert.IsType<GetAdminImpersonationSessionsQuery>(sessionSender.Request).Search);
 
         var login = new AdminUserLoginEventModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", "password", "ip", "agent", "Chrome", "1", "Windows", "Desktop", DateTime.UtcNow);
-        RecordingSender loginSender = new(Result.Success(new PagedResponse<AdminUserLoginEventModel>([login], 1, 10, 1, 1)));
+        CapturedSender loginSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminUserLoginEventModel>([login], 1, 10, 1, 1)));
         AdminUsersController loginController = CreateController(new AdminUsersController(loginSender));
         IActionResult loginEvents = await loginController.GetLoginEvents(new GetAdminUserLoginEventsHttpQuery(Search: "user"));
         Assert.IsType<PagedHttpResponse<AdminUserLoginEventHttpResponse>>(Assert.IsType<OkObjectResult>(loginEvents).Value);
         Assert.Equal("user", Assert.IsType<GetAdminUserLoginEventsQuery>(loginSender.Request).Search);
 
         var device = new AdminUserLoginDeviceSummaryModel("Chrome|Windows", 3, DateTime.UtcNow);
-        RecordingSender summarySender = new(Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>([device]));
+        CapturedSender summarySender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>([device]));
         AdminUsersController summaryController = CreateController(new AdminUsersController(summarySender));
         IActionResult summary = await summaryController.GetLoginSummary(new GetAdminUserLoginSummaryHttpQuery());
         Assert.IsType<List<AdminUserLoginDeviceSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(summary).Value);
         Assert.IsType<GetAdminUserLoginSummaryQuery>(summarySender.Request);
 
-        RecordingSender updateSender = new(Result.Success(user));
+        CapturedSender updateSender = SubstituteSender.Capture(Result.Success(user));
         AdminUsersController updateController = CreateController(new AdminUsersController(updateSender));
         var targetUserId = Guid.NewGuid();
         var actorUserId = Guid.NewGuid();
@@ -196,7 +195,7 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminAiPromptsAndUsageControllers_CoverEndpoints() {
         AdminAiPromptModel prompt = new(Guid.NewGuid(), "key", "en", "Prompt", 1, IsActive: true, DateTime.UtcNow, UpdatedOnUtc: null);
-        RecordingSender promptsSender = new(Result.Success<IReadOnlyList<AdminAiPromptModel>>([prompt]));
+        CapturedSender promptsSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminAiPromptModel>>([prompt]));
         AdminAiPromptsController promptsController = CreateController(new AdminAiPromptsController(promptsSender));
 
         IActionResult prompts = await promptsController.GetAll();
@@ -204,14 +203,14 @@ public sealed class AdminControllersCoverageTests {
         Assert.IsType<List<AdminAiPromptHttpResponse>>(Assert.IsType<OkObjectResult>(prompts).Value);
         Assert.IsType<GetAdminAiPromptsQuery>(promptsSender.Request);
 
-        RecordingSender upsertSender = new(Result.Success(prompt));
+        CapturedSender upsertSender = SubstituteSender.Capture(Result.Success(prompt));
         AdminAiPromptsController upsertController = CreateController(new AdminAiPromptsController(upsertSender));
         IActionResult upsert = await upsertController.Upsert("key", "en", new AdminAiPromptUpsertHttpRequest("Prompt", IsActive: true));
         Assert.IsType<AdminAiPromptHttpResponse>(Assert.IsType<OkObjectResult>(upsert).Value);
         Assert.IsType<UpsertAdminAiPromptCommand>(upsertSender.Request);
 
         AdminAiUsageSummaryModel usage = new(300, 100, 200, [], [], [], []);
-        RecordingSender usageSender = new(Result.Success(usage));
+        CapturedSender usageSender = SubstituteSender.Capture(Result.Success(usage));
         AdminAiUsageController usageController = CreateController(new AdminAiUsageController(usageSender));
         IActionResult summary = await usageController.GetSummary(new GetAdminAiUsageSummaryHttpQuery(From: null, To: null));
         Assert.IsType<AdminAiUsageSummaryHttpResponse>(Assert.IsType<OkObjectResult>(summary).Value);
@@ -225,17 +224,17 @@ public sealed class AdminControllersCoverageTests {
         var payment = new AdminBillingPaymentReadModel(Guid.NewGuid(), Guid.NewGuid(), "user@example.com", BillingSubscriptionId: null, "stripe", "payment", ExternalCustomerId: null, ExternalSubscriptionId: null, ExternalPaymentMethodId: null, ExternalPriceId: null, Plan: null, "succeeded", "invoice", Amount: null, Currency: null, CurrentPeriodStartUtc: null, CurrentPeriodEndUtc: null, WebhookEventId: null, ProviderMetadataJson: null, now, ModifiedOnUtc: null);
         var webhook = new AdminBillingWebhookEventReadModel(Guid.NewGuid(), "stripe", "event", "invoice.paid", ExternalObjectId: null, "processed", now, PayloadJson: null, ErrorMessage: null, now, ModifiedOnUtc: null);
 
-        RecordingSender subscriptionSender = new(Result.Success(new PagedResponse<AdminBillingSubscriptionReadModel>([subscription], 1, 10, 1, 1)));
+        CapturedSender subscriptionSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminBillingSubscriptionReadModel>([subscription], 1, 10, 1, 1)));
         AdminBillingController subscriptionController = CreateController(new AdminBillingController(subscriptionSender));
         Assert.IsType<PagedHttpResponse<AdminBillingSubscriptionHttpResponse>>(Assert.IsType<OkObjectResult>(await subscriptionController.GetSubscriptions(new GetAdminBillingHttpQuery(Provider: "stripe"))).Value);
         Assert.Equal("stripe", Assert.IsType<GetAdminBillingSubscriptionsQuery>(subscriptionSender.Request).Provider);
 
-        RecordingSender paymentSender = new(Result.Success(new PagedResponse<AdminBillingPaymentReadModel>([payment], 1, 10, 1, 1)));
+        CapturedSender paymentSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminBillingPaymentReadModel>([payment], 1, 10, 1, 1)));
         AdminBillingController paymentController = CreateController(new AdminBillingController(paymentSender));
         Assert.IsType<PagedHttpResponse<AdminBillingPaymentHttpResponse>>(Assert.IsType<OkObjectResult>(await paymentController.GetPayments(new GetAdminBillingHttpQuery(Kind: "invoice"))).Value);
         Assert.Equal("invoice", Assert.IsType<GetAdminBillingPaymentsQuery>(paymentSender.Request).Kind);
 
-        RecordingSender webhookSender = new(Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>([webhook], 1, 10, 1, 1)));
+        CapturedSender webhookSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>([webhook], 1, 10, 1, 1)));
         AdminBillingController webhookController = CreateController(new AdminBillingController(webhookSender));
         Assert.IsType<PagedHttpResponse<AdminBillingWebhookEventHttpResponse>>(Assert.IsType<OkObjectResult>(await webhookController.GetWebhookEvents(new GetAdminBillingHttpQuery(Status: "processed"))).Value);
         Assert.Equal("processed", Assert.IsType<GetAdminBillingWebhookEventsQuery>(webhookSender.Request).Status);
@@ -244,18 +243,18 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminEmailTemplatesController_CoversAllEndpoints() {
         AdminEmailTemplateModel template = new(Guid.NewGuid(), "welcome", "en", "Subject", "<p>Body</p>", "Body", IsActive: true, DateTime.UtcNow, UpdatedOnUtc: null);
-        RecordingSender listSender = new(Result.Success<IReadOnlyList<AdminEmailTemplateModel>>([template]));
+        CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminEmailTemplateModel>>([template]));
         AdminEmailTemplatesController listController = CreateController(new AdminEmailTemplatesController(listSender));
         Assert.IsType<List<AdminEmailTemplateHttpResponse>>(Assert.IsType<OkObjectResult>(await listController.GetAll()).Value);
         Assert.IsType<GetAdminEmailTemplatesQuery>(listSender.Request);
 
-        RecordingSender upsertSender = new(Result.Success(template));
+        CapturedSender upsertSender = SubstituteSender.Capture(Result.Success(template));
         AdminEmailTemplatesController upsertController = CreateController(new AdminEmailTemplatesController(upsertSender));
         IActionResult upsert = await upsertController.Upsert("welcome", "en", new AdminEmailTemplateUpsertHttpRequest("Subject", "<p>Body</p>", "Body", IsActive: true));
         Assert.IsType<AdminEmailTemplateHttpResponse>(Assert.IsType<OkObjectResult>(upsert).Value);
         Assert.IsType<UpsertAdminEmailTemplateCommand>(upsertSender.Request);
 
-        RecordingSender testSender = new(Result.Success());
+        CapturedSender testSender = SubstituteSender.Capture(Result.Success());
         AdminEmailTemplatesController testController = CreateController(new AdminEmailTemplatesController(testSender));
         IActionResult sendTest = await testController.SendTest(new AdminEmailTemplateTestHttpRequest("user@example.com", "welcome", "Subject", "<p>Body</p>", "Body"));
         Assert.IsType<NoContentResult>(sendTest);
@@ -266,20 +265,20 @@ public sealed class AdminControllersCoverageTests {
     public async Task AdminMailInboxController_CoversAllEndpoints() {
         DateTimeOffset now = DateTimeOffset.UtcNow;
         var summary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "general", "received", ReadAtUtc: null, now);
-        RecordingSender listSender = new(Result.Success<IReadOnlyList<AdminMailInboxMessageSummaryModel>>([summary]));
+        CapturedSender listSender = SubstituteSender.Capture(Result.Success<IReadOnlyList<AdminMailInboxMessageSummaryModel>>([summary]));
         AdminMailInboxController listController = CreateController(new AdminMailInboxController(listSender));
         IActionResult list = await listController.GetMessages(new GetAdminMailInboxMessagesHttpQuery(25));
         Assert.IsType<List<AdminMailInboxMessageSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(list).Value);
         Assert.Equal(25, Assert.IsType<GetAdminMailInboxMessagesQuery>(listSender.Request).Limit);
 
         var details = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, now);
-        RecordingSender detailSender = new(Result.Success(details));
+        CapturedSender detailSender = SubstituteSender.Capture(Result.Success(details));
         AdminMailInboxController detailController = CreateController(new AdminMailInboxController(detailSender));
         IActionResult detail = await detailController.GetMessage(details.Id);
         Assert.IsType<AdminMailInboxMessageDetailsHttpResponse>(Assert.IsType<OkObjectResult>(detail).Value);
         Assert.Equal(details.Id, Assert.IsType<GetAdminMailInboxMessageDetailsQuery>(detailSender.Request).Id);
 
-        RecordingSender markSender = new(Result.Success());
+        CapturedSender markSender = SubstituteSender.Capture(Result.Success());
         AdminMailInboxController markController = CreateController(new AdminMailInboxController(markSender));
         IActionResult mark = await markController.MarkRead(details.Id);
         Assert.IsType<NoContentResult>(mark);
@@ -289,7 +288,7 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminModerationController_CoversAllEndpoints() {
         var report = new AdminContentReportModel(Guid.NewGuid(), Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam", "Pending", AdminNote: null, DateTime.UtcNow, ReviewedAtUtc: null);
-        RecordingSender listSender = new(Result.Success(new PagedResponse<AdminContentReportModel>([report], 1, 10, 1, 1)));
+        CapturedSender listSender = SubstituteSender.Capture(Result.Success(new PagedResponse<AdminContentReportModel>([report], 1, 10, 1, 1)));
         AdminModerationController listController = CreateController(new AdminModerationController(listSender));
         IActionResult list = await listController.GetReports(new GetAdminContentReportsHttpQuery("pending", 1, 10));
         Assert.IsType<PagedHttpResponse<AdminContentReportHttpResponse>>(Assert.IsType<OkObjectResult>(list).Value);
@@ -297,12 +296,12 @@ public sealed class AdminControllersCoverageTests {
 
         var reportId = Guid.NewGuid();
         var action = new AdminReportActionHttpRequest("done");
-        RecordingSender reviewSender = new(Result.Success());
+        CapturedSender reviewSender = SubstituteSender.Capture(Result.Success());
         AdminModerationController reviewController = CreateController(new AdminModerationController(reviewSender));
         Assert.IsType<NoContentResult>(await reviewController.Review(reportId, action));
         Assert.Equal(reportId, Assert.IsType<ReviewContentReportCommand>(reviewSender.Request).ReportId);
 
-        RecordingSender dismissSender = new(Result.Success());
+        CapturedSender dismissSender = SubstituteSender.Capture(Result.Success());
         AdminModerationController dismissController = CreateController(new AdminModerationController(dismissSender));
         Assert.IsType<NoContentResult>(await dismissController.Dismiss(reportId, action));
         Assert.Equal(reportId, Assert.IsType<DismissContentReportCommand>(dismissSender.Request).ReportId);
@@ -311,7 +310,7 @@ public sealed class AdminControllersCoverageTests {
     [Fact]
     public async Task AdminTelemetryController_GetFastingSummary_ReturnsSummaryAndUsesRequestAborted() {
         var snapshot = new FastingTelemetrySummarySnapshot(24, DateTime.UtcNow, 1, 1, 1, 0, 0, 0, 0, 100, 100, 18, LastCheckInAtUtc: null, LastEventAtUtc: null, TopPresets: []);
-        var service = new StubFastingTelemetrySummaryService(snapshot);
+        IFastingTelemetrySummaryService service = Substitute.For<IFastingTelemetrySummaryService>();
         var controller = new AdminTelemetryController(service) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
@@ -319,13 +318,13 @@ public sealed class AdminControllersCoverageTests {
         };
         using var cts = new CancellationTokenSource();
         controller.HttpContext.RequestAborted = cts.Token;
+        service.GetSummaryAsync(48, cts.Token).Returns(Task.FromResult(snapshot));
 
         IActionResult result = await controller.GetFastingSummary(new GetFastingTelemetrySummaryHttpQuery(48));
 
         FastingTelemetrySummaryHttpResponse response = Assert.IsType<FastingTelemetrySummaryHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         Assert.Equal(24, response.WindowHours);
-        Assert.Equal(48, service.WindowHours);
-        Assert.Equal(cts.Token, service.CancellationToken);
+        await service.Received(1).GetSummaryAsync(48, cts.Token);
     }
 
     private static TController CreateController<TController>(TController controller)
@@ -401,18 +400,4 @@ public sealed class AdminControllersCoverageTests {
             AiOutputTokenLimit: 2000,
             AiConsentAcceptedAt: null);
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubFastingTelemetrySummaryService(FastingTelemetrySummarySnapshot snapshot) : IFastingTelemetrySummaryService {
-        public int WindowHours { get; private set; }
-        public CancellationToken CancellationToken { get; private set; }
-
-        public Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken) =>
-            Task.CompletedTask;
-
-        public Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {
-            WindowHours = windowHours;
-            CancellationToken = cancellationToken;
-            return Task.FromResult(snapshot);
-        }
-    }
 }

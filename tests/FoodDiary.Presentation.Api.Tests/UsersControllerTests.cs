@@ -8,6 +8,7 @@ using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Queries.GetDesiredWaist;
 using FoodDiary.Application.Users.Queries.GetDesiredWeight;
 using FoodDiary.Application.Users.Queries.GetUserById;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Users;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using FoodDiary.Presentation.Api.Features.Users.Responses;
@@ -21,7 +22,8 @@ public sealed class UsersControllerTests {
     [Fact]
     public async Task GetCurrentUserInfo_SendsUserQueryAndReturnsUser() {
         UserModel model = CreateUserModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         UsersController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -30,14 +32,15 @@ public sealed class UsersControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        GetUserByIdQuery query = Assert.IsType<GetUserByIdQuery>(sender.Request);
+        GetUserByIdQuery query = Assert.IsType<GetUserByIdQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task UpdateCurrentUser_SendsUpdateCommandAndReturnsUser() {
         UserModel model = CreateUserModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         UsersController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new UpdateUserHttpRequest(
@@ -67,7 +70,7 @@ public sealed class UsersControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        UpdateUserCommand command = Assert.IsType<UpdateUserCommand>(sender.Request);
+        UpdateUserCommand command = Assert.IsType<UpdateUserCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("alex", command.Username);
         Assert.Equal("light", command.Theme);
@@ -76,7 +79,8 @@ public sealed class UsersControllerTests {
     [Fact]
     public async Task UpdateAppearance_SendsAppearanceCommandAndReturnsUser() {
         UserModel model = CreateUserModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         UsersController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new UpdateUserAppearanceHttpRequest("dark", "dense");
@@ -86,7 +90,7 @@ public sealed class UsersControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        UpdateUserAppearanceCommand command = Assert.IsType<UpdateUserAppearanceCommand>(sender.Request);
+        UpdateUserAppearanceCommand command = Assert.IsType<UpdateUserAppearanceCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("dark", command.Theme);
         Assert.Equal("dense", command.UiStyle);
@@ -95,7 +99,8 @@ public sealed class UsersControllerTests {
     [Fact]
     public async Task DesiredWeightEndpoints_SendQueriesAndCommands() {
         var userId = Guid.NewGuid();
-        RecordingSender getSender = new(Result.Success(new UserDesiredWeightModel(76.5)));
+        IRequest<Result<UserDesiredWeightModel>>? getSentRequest = null;
+        ISender getSender = SubstituteSender.Create(Result.Success(new UserDesiredWeightModel(76.5)), request => getSentRequest = request);
         UsersController getController = CreateController(getSender);
 
         IActionResult getResult = await getController.GetDesiredWeight(userId);
@@ -103,10 +108,11 @@ public sealed class UsersControllerTests {
         OkObjectResult getOk = Assert.IsType<OkObjectResult>(getResult);
         UserDesiredWeightHttpResponse getResponse = Assert.IsType<UserDesiredWeightHttpResponse>(getOk.Value);
         Assert.Equal(76.5, getResponse.DesiredWeight);
-        GetDesiredWeightQuery getQuery = Assert.IsType<GetDesiredWeightQuery>(getSender.Request);
+        GetDesiredWeightQuery getQuery = Assert.IsType<GetDesiredWeightQuery>(getSentRequest);
         Assert.Equal(userId, getQuery.UserId);
 
-        RecordingSender updateSender = new(Result.Success(new UserDesiredWeightModel(75)));
+        IRequest<Result<UserDesiredWeightModel>>? updateSentRequest = null;
+        ISender updateSender = SubstituteSender.Create(Result.Success(new UserDesiredWeightModel(75)), request => updateSentRequest = request);
         UsersController updateController = CreateController(updateSender);
         var request = new UpdateDesiredWeightHttpRequest(75);
 
@@ -115,7 +121,7 @@ public sealed class UsersControllerTests {
         OkObjectResult updateOk = Assert.IsType<OkObjectResult>(updateResult);
         UserDesiredWeightHttpResponse updateResponse = Assert.IsType<UserDesiredWeightHttpResponse>(updateOk.Value);
         Assert.Equal(75, updateResponse.DesiredWeight);
-        UpdateDesiredWeightCommand command = Assert.IsType<UpdateDesiredWeightCommand>(updateSender.Request);
+        UpdateDesiredWeightCommand command = Assert.IsType<UpdateDesiredWeightCommand>(updateSentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(75, command.DesiredWeight);
     }
@@ -123,7 +129,8 @@ public sealed class UsersControllerTests {
     [Fact]
     public async Task DesiredWaistEndpoints_SendQueriesAndCommands() {
         var userId = Guid.NewGuid();
-        RecordingSender getSender = new(Result.Success(new UserDesiredWaistModel(84)));
+        IRequest<Result<UserDesiredWaistModel>>? getSentRequest = null;
+        ISender getSender = SubstituteSender.Create(Result.Success(new UserDesiredWaistModel(84)), request => getSentRequest = request);
         UsersController getController = CreateController(getSender);
 
         IActionResult getResult = await getController.GetDesiredWaist(userId);
@@ -131,10 +138,11 @@ public sealed class UsersControllerTests {
         OkObjectResult getOk = Assert.IsType<OkObjectResult>(getResult);
         UserDesiredWaistHttpResponse getResponse = Assert.IsType<UserDesiredWaistHttpResponse>(getOk.Value);
         Assert.Equal(84, getResponse.DesiredWaist);
-        GetDesiredWaistQuery getQuery = Assert.IsType<GetDesiredWaistQuery>(getSender.Request);
+        GetDesiredWaistQuery getQuery = Assert.IsType<GetDesiredWaistQuery>(getSentRequest);
         Assert.Equal(userId, getQuery.UserId);
 
-        RecordingSender updateSender = new(Result.Success(new UserDesiredWaistModel(82)));
+        IRequest<Result<UserDesiredWaistModel>>? updateSentRequest = null;
+        ISender updateSender = SubstituteSender.Create(Result.Success(new UserDesiredWaistModel(82)), request => updateSentRequest = request);
         UsersController updateController = CreateController(updateSender);
         var request = new UpdateDesiredWaistHttpRequest(82);
 
@@ -143,25 +151,26 @@ public sealed class UsersControllerTests {
         OkObjectResult updateOk = Assert.IsType<OkObjectResult>(updateResult);
         UserDesiredWaistHttpResponse updateResponse = Assert.IsType<UserDesiredWaistHttpResponse>(updateOk.Value);
         Assert.Equal(82, updateResponse.DesiredWaist);
-        UpdateDesiredWaistCommand command = Assert.IsType<UpdateDesiredWaistCommand>(updateSender.Request);
+        UpdateDesiredWaistCommand command = Assert.IsType<UpdateDesiredWaistCommand>(updateSentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(82, command.DesiredWaist);
     }
 
     [Fact]
     public async Task DeleteCurrentUser_SendsDeleteCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         UsersController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.DeleteCurrentUser(userId);
 
         Assert.IsType<NoContentResult>(result);
-        DeleteUserCommand command = Assert.IsType<DeleteUserCommand>(sender.Request);
+        DeleteUserCommand command = Assert.IsType<DeleteUserCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
     }
 
-    private static UsersController CreateController(RecordingSender sender) =>
+    private static UsersController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

@@ -5,6 +5,7 @@ using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
@@ -17,7 +18,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class DietologistControllerTests {
     [Fact]
     public async Task Invite_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new InviteDietologistHttpRequest("diet@example.com", CreatePermissionsRequest());
@@ -25,27 +27,29 @@ public sealed class DietologistControllerTests {
         IActionResult result = await controller.Invite(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        InviteDietologistCommand command = Assert.IsType<InviteDietologistCommand>(sender.Request);
+        InviteDietologistCommand command = Assert.IsType<InviteDietologistCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("diet@example.com", command.DietologistEmail);
     }
 
     [Fact]
     public async Task RevokeOrDisconnect_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.RevokeOrDisconnect(userId);
 
         Assert.IsType<NoContentResult>(result);
-        RevokeInvitationCommand command = Assert.IsType<RevokeInvitationCommand>(sender.Request);
+        RevokeInvitationCommand command = Assert.IsType<RevokeInvitationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
     }
 
     [Fact]
     public async Task UpdatePermissions_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var permissions = new DietologistPermissionsHttpRequest(
@@ -62,7 +66,7 @@ public sealed class DietologistControllerTests {
         IActionResult result = await controller.UpdatePermissions(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        UpdateDietologistPermissionsCommand command = Assert.IsType<UpdateDietologistPermissionsCommand>(sender.Request);
+        UpdateDietologistPermissionsCommand command = Assert.IsType<UpdateDietologistPermissionsCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.True(command.Permissions.ShareMeals);
         Assert.False(command.Permissions.ShareStatistics);
@@ -81,7 +85,8 @@ public sealed class DietologistControllerTests {
             "Doc",
             CreatePermissions(),
             acceptedAtUtc);
-        RecordingSender sender = new(Result.Success<DietologistInfoModel?>(model));
+        IRequest<Result<DietologistInfoModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<DietologistInfoModel?>(model), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -91,13 +96,14 @@ public sealed class DietologistControllerTests {
         DietologistInfoHttpResponse response = Assert.IsType<DietologistInfoHttpResponse>(ok.Value);
         Assert.Equal(invitationId, response.InvitationId);
         Assert.Equal(dietologistUserId, response.DietologistUserId);
-        GetMyDietologistQuery query = Assert.IsType<GetMyDietologistQuery>(sender.Request);
+        GetMyDietologistQuery query = Assert.IsType<GetMyDietologistQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task GetMyDietologist_WhenMissing_ReturnsNullResponse() {
-        RecordingSender sender = new(Result.Success<DietologistInfoModel?>(value: null));
+        IRequest<Result<DietologistInfoModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<DietologistInfoModel?>(value: null), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -105,7 +111,7 @@ public sealed class DietologistControllerTests {
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Null(ok.Value);
-        GetMyDietologistQuery query = Assert.IsType<GetMyDietologistQuery>(sender.Request);
+        GetMyDietologistQuery query = Assert.IsType<GetMyDietologistQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
@@ -127,7 +133,8 @@ public sealed class DietologistControllerTests {
             createdAtUtc,
             expiresAtUtc,
             acceptedAtUtc);
-        RecordingSender sender = new(Result.Success<DietologistRelationshipModel?>(model));
+        IRequest<Result<DietologistRelationshipModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<DietologistRelationshipModel?>(model), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -137,13 +144,14 @@ public sealed class DietologistControllerTests {
         DietologistRelationshipHttpResponse response = Assert.IsType<DietologistRelationshipHttpResponse>(ok.Value);
         Assert.Equal(invitationId, response.InvitationId);
         Assert.Equal("Accepted", response.Status);
-        GetMyDietologistRelationshipQuery query = Assert.IsType<GetMyDietologistRelationshipQuery>(sender.Request);
+        GetMyDietologistRelationshipQuery query = Assert.IsType<GetMyDietologistRelationshipQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task GetRelationship_WhenMissing_ReturnsNullResponse() {
-        RecordingSender sender = new(Result.Success<DietologistRelationshipModel?>(value: null));
+        IRequest<Result<DietologistRelationshipModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<DietologistRelationshipModel?>(value: null), request => sentRequest = request);
         DietologistController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -151,11 +159,11 @@ public sealed class DietologistControllerTests {
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Null(ok.Value);
-        GetMyDietologistRelationshipQuery query = Assert.IsType<GetMyDietologistRelationshipQuery>(sender.Request);
+        GetMyDietologistRelationshipQuery query = Assert.IsType<GetMyDietologistRelationshipQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
-    private static DietologistController CreateController(RecordingSender sender) =>
+    private static DietologistController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

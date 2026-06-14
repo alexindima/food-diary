@@ -19,20 +19,22 @@ public sealed class DomainEventDispatchInterceptorTests {
         var list = ShoppingList.Create(UserId.New(), "Before");
         context.ShoppingLists.Add(list);
         list.UpdateName("After");
-        var publisher = new RecordingDomainEventPublisher();
+        IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
+        publisher.PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         var interceptor = new DomainEventDispatchInterceptor(
             publisher,
             NullLogger<DomainEventDispatchInterceptor>.Instance);
 
         await InvokeDispatchDomainEventsAsync(interceptor, context);
 
-        Assert.Single(publisher.PublishedEvents);
+        await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
         Assert.Empty(list.DomainEvents);
     }
 
     [Fact]
     public async Task SavingChangesAsync_WhenContextIsPresent_DispatchesDomainEventsThroughEfPipeline() {
-        var publisher = new RecordingDomainEventPublisher();
+        IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
+        publisher.PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         var interceptor = new DomainEventDispatchInterceptor(
             publisher,
             NullLogger<DomainEventDispatchInterceptor>.Instance);
@@ -43,7 +45,7 @@ public sealed class DomainEventDispatchInterceptorTests {
 
         await context.SaveChangesAsync();
 
-        Assert.Single(publisher.PublishedEvents);
+        await publisher.Received(1).PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
         Assert.Empty(list.DomainEvents);
     }
 
@@ -51,14 +53,14 @@ public sealed class DomainEventDispatchInterceptorTests {
     public async Task DispatchDomainEventsAsync_WhenNoEvents_DoesNotPublish() {
         await using FoodDiaryDbContext context = CreateContext();
         context.ShoppingLists.Add(ShoppingList.Create(UserId.New(), "List"));
-        var publisher = new RecordingDomainEventPublisher();
+        IDomainEventPublisher publisher = Substitute.For<IDomainEventPublisher>();
         var interceptor = new DomainEventDispatchInterceptor(
             publisher,
             NullLogger<DomainEventDispatchInterceptor>.Instance);
 
         await InvokeDispatchDomainEventsAsync(interceptor, context);
 
-        Assert.Empty(publisher.PublishedEvents);
+        await publisher.DidNotReceive().PublishAsync(Arg.Any<IDomainEvent>(), Arg.Any<CancellationToken>());
     }
 
     private static FoodDiaryDbContext CreateContext(SaveChangesInterceptor? interceptor = null) {
@@ -80,15 +82,4 @@ public sealed class DomainEventDispatchInterceptorTests {
         return (Task)method.Invoke(interceptor, [context, CancellationToken.None])!;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingDomainEventPublisher : IDomainEventPublisher {
-        private readonly List<IDomainEvent> publishedEvents = [];
-
-        public IReadOnlyList<IDomainEvent> PublishedEvents => publishedEvents;
-
-        public Task PublishAsync(IDomainEvent domainEvent, CancellationToken cancellationToken = default) {
-            publishedEvents.Add(domainEvent);
-            return Task.CompletedTask;
-        }
-    }
 }

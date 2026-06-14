@@ -8,6 +8,7 @@ using FoodDiary.Application.Authentication.Commands.RestoreAccount;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
@@ -23,7 +24,8 @@ public sealed class AuthSessionControllerTests {
     [Fact]
     public async Task Register_SendsRegisterCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var request = new RegisterHttpRequest("alex@example.com", "password", "en", "https://fooddiary.club");
 
@@ -32,7 +34,7 @@ public sealed class AuthSessionControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        RegisterCommand command = Assert.IsType<RegisterCommand>(sender.Request);
+        RegisterCommand command = Assert.IsType<RegisterCommand>(sentRequest);
         Assert.Equal("alex@example.com", command.Email);
         Assert.Equal("password-register", command.ClientContext!.AuthProvider);
     }
@@ -40,7 +42,8 @@ public sealed class AuthSessionControllerTests {
     [Fact]
     public async Task Login_SendsLoginCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var request = new LoginHttpRequest("alex@example.com", "password", RememberMe: true);
 
@@ -49,7 +52,7 @@ public sealed class AuthSessionControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        LoginCommand command = Assert.IsType<LoginCommand>(sender.Request);
+        LoginCommand command = Assert.IsType<LoginCommand>(sentRequest);
         Assert.Equal("alex@example.com", command.Email);
         Assert.True(command.RememberMe);
         Assert.Equal("password", command.ClientContext!.AuthProvider);
@@ -58,7 +61,8 @@ public sealed class AuthSessionControllerTests {
     [Fact]
     public async Task GoogleLogin_SendsCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var request = new GoogleLoginHttpRequest("google-credential", RememberMe: true);
 
@@ -67,7 +71,7 @@ public sealed class AuthSessionControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        GoogleLoginCommand command = Assert.IsType<GoogleLoginCommand>(sender.Request);
+        GoogleLoginCommand command = Assert.IsType<GoogleLoginCommand>(sentRequest);
         Assert.Equal("google-credential", command.Credential);
         Assert.True(command.RememberMe);
         Assert.Equal("google", command.ClientContext!.AuthProvider);
@@ -75,7 +79,8 @@ public sealed class AuthSessionControllerTests {
 
     [Fact]
     public async Task VerifyEmail_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new VerifyEmailHttpRequest(userId, "verification-token");
@@ -83,7 +88,7 @@ public sealed class AuthSessionControllerTests {
         IActionResult result = await controller.VerifyEmail(request);
 
         Assert.IsType<NoContentResult>(result);
-        VerifyEmailCommand command = Assert.IsType<VerifyEmailCommand>(sender.Request);
+        VerifyEmailCommand command = Assert.IsType<VerifyEmailCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("verification-token", command.Token);
     }
@@ -91,7 +96,8 @@ public sealed class AuthSessionControllerTests {
     [Fact]
     public async Task Refresh_SendsRefreshCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var request = new RefreshTokenHttpRequest("refresh-token");
 
@@ -100,14 +106,15 @@ public sealed class AuthSessionControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        RefreshTokenCommand command = Assert.IsType<RefreshTokenCommand>(sender.Request);
+        RefreshTokenCommand command = Assert.IsType<RefreshTokenCommand>(sentRequest);
         Assert.Equal("refresh-token", command.RefreshToken);
     }
 
     [Fact]
     public async Task RestoreAccount_SendsRestoreCommandAndReturnsAuthenticationResponse() {
         AuthenticationModel model = CreateAuthenticationModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var request = new RestoreAccountHttpRequest("alex@example.com", "password", RememberMe: true);
 
@@ -116,7 +123,7 @@ public sealed class AuthSessionControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        RestoreAccountCommand command = Assert.IsType<RestoreAccountCommand>(sender.Request);
+        RestoreAccountCommand command = Assert.IsType<RestoreAccountCommand>(sentRequest);
         Assert.Equal("alex@example.com", command.Email);
         Assert.True(command.RememberMe);
         Assert.Equal("password-restore", command.ClientContext!.AuthProvider);
@@ -124,7 +131,8 @@ public sealed class AuthSessionControllerTests {
 
     [Fact]
     public async Task ResendVerifyEmail_WithRequest_SendsClientOriginAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new ResendEmailVerificationHttpRequest("https://fooddiary.club");
@@ -132,26 +140,27 @@ public sealed class AuthSessionControllerTests {
         IActionResult result = await controller.ResendVerifyEmail(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        ResendEmailVerificationCommand command = Assert.IsType<ResendEmailVerificationCommand>(sender.Request);
+        ResendEmailVerificationCommand command = Assert.IsType<ResendEmailVerificationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("https://fooddiary.club", command.ClientOrigin);
     }
 
     [Fact]
     public async Task ResendVerifyEmail_WithNullRequest_SendsNullClientOrigin() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         AuthSessionController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.ResendVerifyEmail(userId);
 
         Assert.IsType<NoContentResult>(result);
-        ResendEmailVerificationCommand command = Assert.IsType<ResendEmailVerificationCommand>(sender.Request);
+        ResendEmailVerificationCommand command = Assert.IsType<ResendEmailVerificationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Null(command.ClientOrigin);
     }
 
-    private static AuthSessionController CreateController(RecordingSender sender) =>
+    private static AuthSessionController CreateController(ISender sender) =>
         new(sender, NullLogger<AuthSessionController>.Instance) {
             ControllerContext = new ControllerContext {
                 HttpContext = CreateHttpContext(),

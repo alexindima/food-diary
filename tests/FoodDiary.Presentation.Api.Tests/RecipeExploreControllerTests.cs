@@ -17,7 +17,10 @@ public sealed class RecipeExploreControllerTests {
     [Fact]
     public async Task Explore_SendsExploreRecipesQueryAndReturnsPagedResponse() {
         RecipeModel recipe = CreateRecipe();
-        RecordingSender sender = new(Result.Success(new PagedResponse<RecipeModel>([recipe], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 12)));
+        IRequest<Result<PagedResponse<RecipeModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new PagedResponse<RecipeModel>([recipe], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 12)),
+            request => sentRequest = request);
         RecipeExploreController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         ExploreRecipesHttpQuery query = new(
@@ -40,7 +43,7 @@ public sealed class RecipeExploreControllerTests {
         Assert.Equal(recipe.Id, item.Id);
         Assert.Equal(recipe.Name, item.Name);
 
-        ExploreRecipesQuery sentQuery = Assert.IsType<ExploreRecipesQuery>(sender.Request);
+        ExploreRecipesQuery sentQuery = Assert.IsType<ExploreRecipesQuery>(sentRequest);
         Assert.Equal(userId, sentQuery.UserId);
         Assert.Equal(2, sentQuery.Page);
         Assert.Equal(5, sentQuery.Limit);
@@ -92,36 +95,4 @@ public sealed class RecipeExploreControllerTests {
             IsFavorite: true,
             FavoriteRecipeId: Guid.NewGuid());
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingSender(object response) : ISender {
-        public object? Request { get; private set; }
-
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            Request = request;
-            return Task.FromResult((TResponse)response);
-        }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest {
-            Request = request;
-            return Task.CompletedTask;
-        }
-
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
-            Request = request;
-            return Task.FromResult<object?>(response);
-        }
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-
-        public IAsyncEnumerable<object?> CreateStream(
-            object request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
 }

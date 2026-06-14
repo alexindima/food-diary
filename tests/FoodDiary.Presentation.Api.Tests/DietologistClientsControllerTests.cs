@@ -9,6 +9,7 @@ using FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 using FoodDiary.Application.Dietologist.Queries.GetMyClients;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
@@ -24,7 +25,8 @@ public sealed class DietologistClientsControllerTests {
     [Fact]
     public async Task GetMyClients_SendsQueryAndReturnsClients() {
         ClientSummaryModel client = CreateClient();
-        RecordingSender sender = new(Result.Success<IReadOnlyList<ClientSummaryModel>>([client]));
+        IRequest<Result<IReadOnlyList<ClientSummaryModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<ClientSummaryModel>>([client]), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -34,13 +36,14 @@ public sealed class DietologistClientsControllerTests {
         List<ClientSummaryHttpResponse> response = Assert.IsType<List<ClientSummaryHttpResponse>>(ok.Value);
         Assert.Single(response);
         Assert.Equal(client.UserId, response[0].UserId);
-        GetMyClientsQuery query = Assert.IsType<GetMyClientsQuery>(sender.Request);
+        GetMyClientsQuery query = Assert.IsType<GetMyClientsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task DisconnectClient_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
@@ -48,7 +51,7 @@ public sealed class DietologistClientsControllerTests {
         IActionResult result = await controller.DisconnectClient(clientUserId, userId);
 
         Assert.IsType<NoContentResult>(result);
-        DisconnectDietologistCommand command = Assert.IsType<DisconnectDietologistCommand>(sender.Request);
+        DisconnectDietologistCommand command = Assert.IsType<DisconnectDietologistCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(clientUserId, command.ClientUserId);
     }
@@ -57,7 +60,8 @@ public sealed class DietologistClientsControllerTests {
     public async Task GetClientDashboard_SendsQueryAndReturnsDashboard() {
         DateTime date = new(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc);
         DashboardSnapshotModel model = CreateDashboardSnapshot(date);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<DashboardSnapshotModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
@@ -68,7 +72,7 @@ public sealed class DietologistClientsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         DashboardSnapshotHttpResponse response = Assert.IsType<DashboardSnapshotHttpResponse>(ok.Value);
         Assert.Equal(date, response.Date);
-        GetClientDashboardQuery sentQuery = Assert.IsType<GetClientDashboardQuery>(sender.Request);
+        GetClientDashboardQuery sentQuery = Assert.IsType<GetClientDashboardQuery>(sentRequest);
         Assert.Equal(userId, sentQuery.UserId);
         Assert.Equal(clientUserId, sentQuery.ClientUserId);
         Assert.Equal(date, sentQuery.Date);
@@ -78,7 +82,8 @@ public sealed class DietologistClientsControllerTests {
     [Fact]
     public async Task GetClientGoals_SendsQueryAndReturnsUser() {
         UserModel model = CreateUser();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
@@ -88,7 +93,7 @@ public sealed class DietologistClientsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        GetClientGoalsQuery query = Assert.IsType<GetClientGoalsQuery>(sender.Request);
+        GetClientGoalsQuery query = Assert.IsType<GetClientGoalsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
     }
@@ -96,7 +101,8 @@ public sealed class DietologistClientsControllerTests {
     [Fact]
     public async Task GetRecommendationsForClient_SendsQueryAndReturnsRecommendations() {
         RecommendationModel recommendation = CreateRecommendation();
-        RecordingSender sender = new(Result.Success<IReadOnlyList<RecommendationModel>>([recommendation]));
+        IRequest<Result<IReadOnlyList<RecommendationModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<RecommendationModel>>([recommendation]), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
@@ -107,7 +113,7 @@ public sealed class DietologistClientsControllerTests {
         List<RecommendationHttpResponse> response = Assert.IsType<List<RecommendationHttpResponse>>(ok.Value);
         Assert.Single(response);
         Assert.Equal(recommendation.Id, response[0].Id);
-        GetRecommendationsForClientQuery query = Assert.IsType<GetRecommendationsForClientQuery>(sender.Request);
+        GetRecommendationsForClientQuery query = Assert.IsType<GetRecommendationsForClientQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
     }
@@ -115,7 +121,8 @@ public sealed class DietologistClientsControllerTests {
     [Fact]
     public async Task CreateRecommendation_SendsCommandAndReturnsCreatedResponse() {
         RecommendationModel recommendation = CreateRecommendation();
-        RecordingSender sender = new(Result.Success(recommendation));
+        IRequest<Result<RecommendationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(recommendation), request => sentRequest = request);
         DietologistClientsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var clientUserId = Guid.NewGuid();
@@ -127,13 +134,13 @@ public sealed class DietologistClientsControllerTests {
         RecommendationHttpResponse response = Assert.IsType<RecommendationHttpResponse>(created.Value);
         Assert.Equal(recommendation.Id, response.Id);
         Assert.Equal(nameof(DietologistClientsController.CreateRecommendation), created.ActionName);
-        CreateRecommendationCommand command = Assert.IsType<CreateRecommendationCommand>(sender.Request);
+        CreateRecommendationCommand command = Assert.IsType<CreateRecommendationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(clientUserId, command.ClientUserId);
         Assert.Equal("Eat more fiber", command.Text);
     }
 
-    private static DietologistClientsController CreateController(RecordingSender sender) =>
+    private static DietologistClientsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

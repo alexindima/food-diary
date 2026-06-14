@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 using FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Dietologist;
 using FoodDiary.Presentation.Api.Features.Dietologist.Requests;
 using FoodDiary.Presentation.Api.Features.Dietologist.Responses;
@@ -18,7 +19,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class DietologistInvitationsControllerTests {
     [Fact]
     public async Task Accept_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var invitationId = Guid.NewGuid();
@@ -27,7 +29,7 @@ public sealed class DietologistInvitationsControllerTests {
         IActionResult result = await controller.Accept(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        AcceptInvitationCommand command = Assert.IsType<AcceptInvitationCommand>(sender.Request);
+        AcceptInvitationCommand command = Assert.IsType<AcceptInvitationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(invitationId, command.InvitationId);
         Assert.Equal("accept-token", command.Token);
@@ -35,7 +37,8 @@ public sealed class DietologistInvitationsControllerTests {
 
     [Fact]
     public async Task Decline_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var invitationId = Guid.NewGuid();
@@ -44,7 +47,7 @@ public sealed class DietologistInvitationsControllerTests {
         IActionResult result = await controller.Decline(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        DeclineInvitationCommand command = Assert.IsType<DeclineInvitationCommand>(sender.Request);
+        DeclineInvitationCommand command = Assert.IsType<DeclineInvitationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(invitationId, command.InvitationId);
         Assert.Equal("decline-token", command.Token);
@@ -56,7 +59,8 @@ public sealed class DietologistInvitationsControllerTests {
         DateTime createdAtUtc = DateTime.UtcNow.AddDays(-1);
         DateTime expiresAtUtc = DateTime.UtcNow.AddDays(6);
         var model = new InvitationModel(invitationId, "client@example.com", "Client", "User", "Pending", createdAtUtc, expiresAtUtc);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<InvitationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -66,7 +70,7 @@ public sealed class DietologistInvitationsControllerTests {
         InvitationHttpResponse response = Assert.IsType<InvitationHttpResponse>(ok.Value);
         Assert.Equal(invitationId, response.InvitationId);
         Assert.Equal("client@example.com", response.ClientEmail);
-        GetInvitationByTokenQuery query = Assert.IsType<GetInvitationByTokenQuery>(sender.Request);
+        GetInvitationByTokenQuery query = Assert.IsType<GetInvitationByTokenQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(invitationId, query.InvitationId);
     }
@@ -86,7 +90,8 @@ public sealed class DietologistInvitationsControllerTests {
             "Pending",
             createdAtUtc,
             expiresAtUtc);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<DietologistInvitationForCurrentUserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -96,14 +101,15 @@ public sealed class DietologistInvitationsControllerTests {
         DietologistInvitationForCurrentUserHttpResponse response = Assert.IsType<DietologistInvitationForCurrentUserHttpResponse>(ok.Value);
         Assert.Equal(invitationId, response.InvitationId);
         Assert.Equal(clientUserId, response.ClientUserId);
-        GetInvitationForCurrentUserQuery query = Assert.IsType<GetInvitationForCurrentUserQuery>(sender.Request);
+        GetInvitationForCurrentUserQuery query = Assert.IsType<GetInvitationForCurrentUserQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(invitationId, query.InvitationId);
     }
 
     [Fact]
     public async Task AcceptForCurrentUser_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var invitationId = Guid.NewGuid();
@@ -111,14 +117,15 @@ public sealed class DietologistInvitationsControllerTests {
         IActionResult result = await controller.AcceptForCurrentUser(invitationId, userId);
 
         Assert.IsType<NoContentResult>(result);
-        AcceptInvitationForCurrentUserCommand command = Assert.IsType<AcceptInvitationForCurrentUserCommand>(sender.Request);
+        AcceptInvitationForCurrentUserCommand command = Assert.IsType<AcceptInvitationForCurrentUserCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(invitationId, command.InvitationId);
     }
 
     [Fact]
     public async Task DeclineForCurrentUser_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DietologistInvitationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var invitationId = Guid.NewGuid();
@@ -126,12 +133,12 @@ public sealed class DietologistInvitationsControllerTests {
         IActionResult result = await controller.DeclineForCurrentUser(invitationId, userId);
 
         Assert.IsType<NoContentResult>(result);
-        DeclineInvitationForCurrentUserCommand command = Assert.IsType<DeclineInvitationForCurrentUserCommand>(sender.Request);
+        DeclineInvitationForCurrentUserCommand command = Assert.IsType<DeclineInvitationForCurrentUserCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(invitationId, command.InvitationId);
     }
 
-    private static DietologistInvitationsController CreateController(RecordingSender sender) =>
+    private static DietologistInvitationsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

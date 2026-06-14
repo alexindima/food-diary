@@ -7,6 +7,7 @@ using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Cycles;
 using FoodDiary.Presentation.Api.Features.Cycles.Requests;
 using FoodDiary.Presentation.Api.Features.Cycles.Responses;
@@ -21,19 +22,20 @@ public sealed class CyclesControllerCoverageTests {
     public async Task GetCurrent_ReturnsCycleAndSendsQuery() {
         var userId = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
-        RecordingSender sender = new(Result.Success<CycleModel?>(CreateCycle(cycleProfileId, userId)));
+        IRequest<Result<CycleModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<CycleModel?>(CreateCycle(cycleProfileId, userId)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.GetCurrent(userId);
 
         Assert.IsType<CycleHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        Assert.Equal(userId, Assert.IsType<GetCurrentCycleQuery>(sender.Request).UserId);
+        Assert.Equal(userId, Assert.IsType<GetCurrentCycleQuery>(sentRequest).UserId);
     }
 
     [Fact]
     public async Task GetCurrent_ReturnsNullWhenNoCycle() {
         var userId = Guid.NewGuid();
-        RecordingSender sender = new(Result.Success<CycleModel?>(value: null));
+        ISender sender = SubstituteSender.Create(Result.Success<CycleModel?>(value: null));
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.GetCurrent(userId);
@@ -46,13 +48,14 @@ public sealed class CyclesControllerCoverageTests {
         var userId = Guid.NewGuid();
         DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime dateTo = dateFrom.AddDays(7);
-        RecordingSender sender = new(Result.Success<CycleNutritionSummaryModel?>(CreateNutritionSummary(dateFrom, dateTo)));
+        IRequest<Result<CycleNutritionSummaryModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<CycleNutritionSummaryModel?>(CreateNutritionSummary(dateFrom, dateTo)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.GetNutritionSummary(userId, dateFrom, dateTo);
 
         Assert.IsType<CycleNutritionSummaryHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        GetCycleNutritionSummaryQuery query = Assert.IsType<GetCycleNutritionSummaryQuery>(sender.Request);
+        GetCycleNutritionSummaryQuery query = Assert.IsType<GetCycleNutritionSummaryQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(dateFrom, query.DateFrom);
         Assert.Equal(dateTo, query.DateTo);
@@ -62,7 +65,7 @@ public sealed class CyclesControllerCoverageTests {
     public async Task GetNutritionSummary_ReturnsNullWhenNoSummary() {
         var userId = Guid.NewGuid();
         DateTime dateFrom = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        RecordingSender sender = new(Result.Success<CycleNutritionSummaryModel?>(value: null));
+        ISender sender = SubstituteSender.Create(Result.Success<CycleNutritionSummaryModel?>(value: null));
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.GetNutritionSummary(userId, dateFrom, dateFrom.AddDays(7));
@@ -75,7 +78,8 @@ public sealed class CyclesControllerCoverageTests {
         var userId = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
         DateTime trackingStartDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        RecordingSender sender = new(Result.Success(CreateCycle(cycleProfileId, userId)));
+        IRequest<Result<CycleModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateCycle(cycleProfileId, userId)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
         var request = new CreateCycleHttpRequest(
             trackingStartDate,
@@ -92,7 +96,7 @@ public sealed class CyclesControllerCoverageTests {
         IActionResult result = await controller.Create(userId, request);
 
         Assert.IsType<CycleHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        CreateCycleCommand command = Assert.IsType<CreateCycleCommand>(sender.Request);
+        CreateCycleCommand command = Assert.IsType<CreateCycleCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(trackingStartDate, command.TrackingStartDate);
         Assert.Equal((int)CycleTrackingMode.TryingToConceive, command.Mode);
@@ -104,13 +108,14 @@ public sealed class CyclesControllerCoverageTests {
         var userId = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        RecordingSender sender = new(Result.Success(CreateLogDay(cycleProfileId, date)));
+        IRequest<Result<CycleLogDayModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateLogDay(cycleProfileId, date)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.UpsertDay(cycleProfileId, userId, CreateUpsertDayRequest(date));
 
         Assert.IsType<CycleLogDayHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        UpsertCycleDayCommand command = Assert.IsType<UpsertCycleDayCommand>(sender.Request);
+        UpsertCycleDayCommand command = Assert.IsType<UpsertCycleDayCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal(date, command.Date);
@@ -124,13 +129,14 @@ public sealed class CyclesControllerCoverageTests {
         var userId = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
 
         IActionResult result = await controller.ClearDay(cycleProfileId, userId, date);
 
         Assert.IsType<NoContentResult>(result);
-        ClearCycleDayCommand command = Assert.IsType<ClearCycleDayCommand>(sender.Request);
+        ClearCycleDayCommand command = Assert.IsType<ClearCycleDayCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal(date, command.Date);
@@ -141,7 +147,8 @@ public sealed class CyclesControllerCoverageTests {
         var userId = Guid.NewGuid();
         var cycleProfileId = Guid.NewGuid();
         DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
-        RecordingSender sender = new(Result.Success(CreateCycle(cycleProfileId, userId)));
+        IRequest<Result<CycleModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateCycle(cycleProfileId, userId)), request => sentRequest = request);
         CyclesController controller = CreateController(new CyclesController(sender));
         var request = new UpsertCycleFactorHttpRequest(
             (int)CycleFactorType.HormonalContraception,
@@ -153,7 +160,7 @@ public sealed class CyclesControllerCoverageTests {
         IActionResult result = await controller.UpsertFactor(cycleProfileId, userId, request);
 
         Assert.IsType<CycleHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        UpsertCycleFactorCommand command = Assert.IsType<UpsertCycleFactorCommand>(sender.Request);
+        UpsertCycleFactorCommand command = Assert.IsType<UpsertCycleFactorCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(cycleProfileId, command.CycleProfileId);
         Assert.Equal((int)CycleFactorType.HormonalContraception, command.Type);

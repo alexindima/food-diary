@@ -5,6 +5,7 @@ using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
@@ -20,7 +21,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class AuthTelegramControllerTests {
     [Fact]
     public async Task TelegramVerify_SendsVerifyCommandAndReturnsAuthenticationResponse() {
-        RecordingSender sender = new(Result.Success(CreateAuthenticationModel()));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateAuthenticationModel()), request => sentRequest = request);
         AuthTelegramController controller = CreateController(sender);
         var request = new TelegramAuthHttpRequest("query_id=1&hash=abc");
 
@@ -29,14 +31,15 @@ public sealed class AuthTelegramControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        TelegramVerifyCommand command = Assert.IsType<TelegramVerifyCommand>(sender.Request);
+        TelegramVerifyCommand command = Assert.IsType<TelegramVerifyCommand>(sentRequest);
         Assert.Equal(request.InitData, command.InitData);
         Assert.Equal("telegram-mini-app", command.ClientContext!.AuthProvider);
     }
 
     [Fact]
     public async Task TelegramLoginWidget_SendsWidgetCommandAndReturnsAuthenticationResponse() {
-        RecordingSender sender = new(Result.Success(CreateAuthenticationModel()));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateAuthenticationModel()), request => sentRequest = request);
         AuthTelegramController controller = CreateController(sender);
         var request = new TelegramLoginWidgetHttpRequest(
             Id: 123,
@@ -52,7 +55,7 @@ public sealed class AuthTelegramControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        TelegramLoginWidgetCommand command = Assert.IsType<TelegramLoginWidgetCommand>(sender.Request);
+        TelegramLoginWidgetCommand command = Assert.IsType<TelegramLoginWidgetCommand>(sentRequest);
         Assert.Equal(123, command.Id);
         Assert.Equal("alex", command.Username);
         Assert.Equal("telegram-login-widget", command.ClientContext!.AuthProvider);
@@ -61,7 +64,8 @@ public sealed class AuthTelegramControllerTests {
     [Fact]
     public async Task LinkTelegram_SendsLinkCommandAndReturnsUserResponse() {
         UserModel model = CreateUserModel();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<UserModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AuthTelegramController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new TelegramAuthHttpRequest("query_id=2&hash=def");
@@ -71,14 +75,15 @@ public sealed class AuthTelegramControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UserHttpResponse response = Assert.IsType<UserHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        LinkTelegramCommand command = Assert.IsType<LinkTelegramCommand>(sender.Request);
+        LinkTelegramCommand command = Assert.IsType<LinkTelegramCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(request.InitData, command.InitData);
     }
 
     [Fact]
     public async Task TelegramBotAuth_SendsBotAuthCommandAndReturnsAuthenticationResponse() {
-        RecordingSender sender = new(Result.Success(CreateAuthenticationModel()));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateAuthenticationModel()), request => sentRequest = request);
         AuthTelegramController controller = CreateController(sender);
         var request = new TelegramBotAuthHttpRequest(TelegramUserId: 987);
 
@@ -87,12 +92,12 @@ public sealed class AuthTelegramControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        TelegramBotAuthCommand command = Assert.IsType<TelegramBotAuthCommand>(sender.Request);
+        TelegramBotAuthCommand command = Assert.IsType<TelegramBotAuthCommand>(sentRequest);
         Assert.Equal(987, command.TelegramUserId);
         Assert.Equal("telegram-bot", command.ClientContext!.AuthProvider);
     }
 
-    private static AuthTelegramController CreateController(RecordingSender sender) =>
+    private static AuthTelegramController CreateController(ISender sender) =>
         new(sender, NullLogger<AuthTelegramController>.Instance) {
             ControllerContext = new ControllerContext {
                 HttpContext = CreateHttpContext(),

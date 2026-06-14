@@ -17,7 +17,8 @@ public sealed class LogsControllerTests {
     [InlineData("debug", LogLevel.Information)]
     public async Task Create_MapsClientLogLevelAndRecordsTelemetry(string level, LogLevel expectedLogLevel) {
         var logger = new RecordingLogger();
-        var summaryService = new RecordingFastingTelemetrySummaryService();
+        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
+        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         LogsController controller = CreateController(logger, summaryService);
         var request = new ClientTelemetryLogHttpRequest(
             Category: "user_action",
@@ -30,13 +31,14 @@ public sealed class LogsControllerTests {
 
         Assert.IsType<NoContentResult>(result);
         Assert.Equal(expectedLogLevel, logger.LogLevel);
-        Assert.Same(request, summaryService.Request);
+        await summaryService.Received(1).RecordAsync(request, Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task Create_WithDetails_LogsRawDetails() {
         var logger = new RecordingLogger();
-        var summaryService = new RecordingFastingTelemetrySummaryService();
+        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
+        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         LogsController controller = CreateController(logger, summaryService);
         JsonElement details = JsonSerializer.Deserialize<JsonElement>("""
             {"source":"test"}
@@ -57,7 +59,8 @@ public sealed class LogsControllerTests {
     [Fact]
     public async Task Create_WhenLoggerScopeIsNull_ReturnsNoContent() {
         var logger = new RecordingLogger(returnNullScope: true);
-        var summaryService = new RecordingFastingTelemetrySummaryService();
+        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
+        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         LogsController controller = CreateController(logger, summaryService);
         var request = new ClientTelemetryLogHttpRequest(
             Category: "user_action",
@@ -97,35 +100,6 @@ public sealed class LogsControllerTests {
             Func<TState, Exception?, string> formatter) {
             LogLevel = logLevel;
             Message = formatter(state, exception);
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingFastingTelemetrySummaryService : IFastingTelemetrySummaryService {
-        public ClientTelemetryLogHttpRequest? Request { get; private set; }
-
-        public Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken) {
-            Request = request;
-            return Task.CompletedTask;
-        }
-
-        public Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {
-            return Task.FromResult(new FastingTelemetrySummarySnapshot(
-                windowHours,
-                DateTime.UtcNow,
-                StartedSessions: 0,
-                CompletedSessions: 0,
-                SavedCheckIns: 0,
-                ReminderPresetSelections: 0,
-                ReminderTimingSaves: 0,
-                PresetReminderTimingSaves: 0,
-                ManualReminderTimingSaves: 0,
-                CompletionRatePercent: 0,
-                CheckInRatePercent: 0,
-                AverageCompletedDurationHours: null,
-                LastCheckInAtUtc: null,
-                LastEventAtUtc: null,
-                TopPresets: []));
         }
     }
 

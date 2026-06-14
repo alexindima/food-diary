@@ -7,6 +7,7 @@ using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Notifications;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
@@ -28,7 +29,8 @@ public sealed class NotificationsControllerTests {
             "ref-1",
             IsRead: false,
             DateTime.UtcNow);
-        RecordingSender sender = new(Result.Success<IReadOnlyList<NotificationModel>>([notification]));
+        IRequest<Result<IReadOnlyList<NotificationModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<NotificationModel>>([notification]), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -38,13 +40,14 @@ public sealed class NotificationsControllerTests {
         List<NotificationHttpResponse> response = Assert.IsType<List<NotificationHttpResponse>>(ok.Value);
         Assert.Single(response);
         Assert.Equal(notification.Id, response[0].Id);
-        GetNotificationsQuery query = Assert.IsType<GetNotificationsQuery>(sender.Request);
+        GetNotificationsQuery query = Assert.IsType<GetNotificationsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task GetUnreadCount_SendsQueryAndReturnsCountResponse() {
-        RecordingSender sender = new(Result.Success(7));
+        IRequest<Result<int>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(7), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -53,7 +56,7 @@ public sealed class NotificationsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         UnreadCountHttpResponse response = Assert.IsType<UnreadCountHttpResponse>(ok.Value);
         Assert.Equal(7, response.Count);
-        GetUnreadCountQuery query = Assert.IsType<GetUnreadCountQuery>(sender.Request);
+        GetUnreadCountQuery query = Assert.IsType<GetUnreadCountQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
@@ -61,7 +64,8 @@ public sealed class NotificationsControllerTests {
     public async Task ScheduleTestNotification_SendsCommandAndReturnsAcceptedResponse() {
         DateTime scheduledAtUtc = DateTime.UtcNow.AddSeconds(45);
         var model = new ScheduledNotificationModel("fasting.completed", 45, scheduledAtUtc);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<ScheduledNotificationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new ScheduleTestNotificationHttpRequest(45, "fasting.completed");
@@ -73,7 +77,7 @@ public sealed class NotificationsControllerTests {
         Assert.Equal("fasting.completed", response.Type);
         Assert.Equal(45, response.DelaySeconds);
         Assert.Equal(scheduledAtUtc, response.ScheduledAtUtc);
-        ScheduleTestNotificationCommand command = Assert.IsType<ScheduleTestNotificationCommand>(sender.Request);
+        ScheduleTestNotificationCommand command = Assert.IsType<ScheduleTestNotificationCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(45, command.DelaySeconds);
         Assert.Equal("fasting.completed", command.Type);
@@ -81,7 +85,8 @@ public sealed class NotificationsControllerTests {
 
     [Fact]
     public async Task MarkAsRead_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var notificationId = Guid.NewGuid();
@@ -89,21 +94,22 @@ public sealed class NotificationsControllerTests {
         IActionResult result = await controller.MarkAsRead(notificationId, userId);
 
         Assert.IsType<NoContentResult>(result);
-        MarkNotificationReadCommand command = Assert.IsType<MarkNotificationReadCommand>(sender.Request);
+        MarkNotificationReadCommand command = Assert.IsType<MarkNotificationReadCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(notificationId, command.NotificationId);
     }
 
     [Fact]
     public async Task MarkAllAsRead_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.MarkAllAsRead(userId);
 
         Assert.IsType<NoContentResult>(result);
-        MarkAllNotificationsReadCommand command = Assert.IsType<MarkAllNotificationsReadCommand>(sender.Request);
+        MarkAllNotificationsReadCommand command = Assert.IsType<MarkAllNotificationsReadCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
     }
 
@@ -115,7 +121,8 @@ public sealed class NotificationsControllerTests {
             SocialPushNotificationsEnabled: true,
             FastingCheckInReminderHours: 12,
             FastingCheckInFollowUpReminderHours: 20);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<NotificationPreferencesModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -124,7 +131,7 @@ public sealed class NotificationsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         NotificationPreferencesHttpResponse response = Assert.IsType<NotificationPreferencesHttpResponse>(ok.Value);
         Assert.True(response.PushNotificationsEnabled);
-        GetNotificationPreferencesQuery query = Assert.IsType<GetNotificationPreferencesQuery>(sender.Request);
+        GetNotificationPreferencesQuery query = Assert.IsType<GetNotificationPreferencesQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
@@ -136,7 +143,8 @@ public sealed class NotificationsControllerTests {
             SocialPushNotificationsEnabled: false,
             FastingCheckInReminderHours: 10,
             FastingCheckInFollowUpReminderHours: 18);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<NotificationPreferencesModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         NotificationsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new UpdateNotificationPreferencesHttpRequest(
@@ -151,12 +159,12 @@ public sealed class NotificationsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         NotificationPreferencesHttpResponse response = Assert.IsType<NotificationPreferencesHttpResponse>(ok.Value);
         Assert.True(response.FastingPushNotificationsEnabled);
-        UpdateNotificationPreferencesCommand command = Assert.IsType<UpdateNotificationPreferencesCommand>(sender.Request);
+        UpdateNotificationPreferencesCommand command = Assert.IsType<UpdateNotificationPreferencesCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(10, command.FastingCheckInReminderHours);
     }
 
-    private static NotificationsController CreateController(RecordingSender sender) =>
+    private static NotificationsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

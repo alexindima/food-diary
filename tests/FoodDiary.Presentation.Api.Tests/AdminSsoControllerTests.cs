@@ -3,6 +3,7 @@ using FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 using FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Auth;
 using FoodDiary.Presentation.Api.Features.Auth.Requests;
 using FoodDiary.Presentation.Api.Features.Auth.Responses;
@@ -18,7 +19,10 @@ public sealed class AdminSsoControllerTests {
     [Fact]
     public async Task AdminSsoStart_SendsStartCommandAndReturnsResponse() {
         DateTime expiresAtUtc = DateTime.UtcNow.AddMinutes(5);
-        RecordingSender sender = new(Result.Success(new AdminSsoStartModel("sso-code", expiresAtUtc)));
+        IRequest<Result<AdminSsoStartModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new AdminSsoStartModel("sso-code", expiresAtUtc)),
+            request => sentRequest = request);
         AdminSsoController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -27,13 +31,14 @@ public sealed class AdminSsoControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AdminSsoStartHttpResponse response = Assert.IsType<AdminSsoStartHttpResponse>(ok.Value);
         Assert.Equal("sso-code", response.Code);
-        AdminSsoStartCommand command = Assert.IsType<AdminSsoStartCommand>(sender.Request);
+        AdminSsoStartCommand command = Assert.IsType<AdminSsoStartCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
     }
 
     [Fact]
     public async Task AdminSsoExchange_SendsExchangeCommandAndReturnsAuthenticationResponse() {
-        RecordingSender sender = new(Result.Success(CreateAuthenticationModel()));
+        IRequest<Result<AuthenticationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(CreateAuthenticationModel()), request => sentRequest = request);
         AdminSsoController controller = CreateController(sender);
         var request = new AdminSsoExchangeHttpRequest("exchange-code");
 
@@ -42,12 +47,12 @@ public sealed class AdminSsoControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         AuthenticationHttpResponse response = Assert.IsType<AuthenticationHttpResponse>(ok.Value);
         Assert.Equal("access-token", response.AccessToken);
-        AdminSsoExchangeCommand command = Assert.IsType<AdminSsoExchangeCommand>(sender.Request);
+        AdminSsoExchangeCommand command = Assert.IsType<AdminSsoExchangeCommand>(sentRequest);
         Assert.Equal("exchange-code", command.Code);
         Assert.Equal("admin-sso", command.ClientContext!.AuthProvider);
     }
 
-    private static AdminSsoController CreateController(RecordingSender sender) =>
+    private static AdminSsoController CreateController(ISender sender) =>
         new(sender, NullLogger<AdminSsoController>.Instance) {
             ControllerContext = new ControllerContext {
                 HttpContext = CreateHttpContext(),

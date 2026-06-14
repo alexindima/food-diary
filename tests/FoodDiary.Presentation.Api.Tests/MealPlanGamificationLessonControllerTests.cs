@@ -16,6 +16,7 @@ using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
 using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 using FoodDiary.Application.ShoppingLists.Models;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Requests;
 using FoodDiary.Presentation.Api.Features.FavoriteMeals.Responses;
@@ -39,43 +40,48 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var planId = Guid.NewGuid();
         MealPlanModel mealPlan = CreateMealPlan(planId);
 
-        RecordingSender allSender = new(Result.Success<IReadOnlyList<MealPlanSummaryModel>>([
+        IRequest<Result<IReadOnlyList<MealPlanSummaryModel>>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<MealPlanSummaryModel>>([
             new MealPlanSummaryModel(planId, "Balanced", "Desc", "Balanced", 7, 2100, IsCurated: true, TotalRecipes: 14),
-        ]));
+        ]), request => allRequest = request);
         MealPlansController allController = CreateController(new MealPlansController(allSender));
         IActionResult all = await allController.GetAll(userId, "Balanced");
         Assert.IsAssignableFrom<IReadOnlyList<MealPlanSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
-        Assert.Equal("Balanced", Assert.IsType<GetMealPlansQuery>(allSender.Request).DietType);
+        Assert.Equal("Balanced", Assert.IsType<GetMealPlansQuery>(allRequest).DietType);
 
-        RecordingSender byIdSender = new(Result.Success(mealPlan));
+        IRequest<Result<MealPlanModel>>? byIdRequest = null;
+        ISender byIdSender = SubstituteSender.Create(Result.Success(mealPlan), request => byIdRequest = request);
         MealPlansController byIdController = CreateController(new MealPlansController(byIdSender));
         IActionResult byId = await byIdController.GetById(userId, planId);
         Assert.IsType<MealPlanHttpResponse>(Assert.IsType<OkObjectResult>(byId).Value);
-        Assert.Equal(planId, Assert.IsType<GetMealPlanByIdQuery>(byIdSender.Request).PlanId);
+        Assert.Equal(planId, Assert.IsType<GetMealPlanByIdQuery>(byIdRequest).PlanId);
 
-        RecordingSender adoptSender = new(Result.Success(mealPlan));
+        IRequest<Result<MealPlanModel>>? adoptRequest = null;
+        ISender adoptSender = SubstituteSender.Create(Result.Success(mealPlan), request => adoptRequest = request);
         MealPlansController adoptController = CreateController(new MealPlansController(adoptSender));
         Assert.IsType<CreatedResult>(await adoptController.Adopt(userId, planId));
-        Assert.Equal(planId, Assert.IsType<AdoptMealPlanCommand>(adoptSender.Request).PlanId);
+        Assert.Equal(planId, Assert.IsType<AdoptMealPlanCommand>(adoptRequest).PlanId);
 
-        RecordingSender shoppingSender = new(Result.Success(CreateShoppingList()));
+        IRequest<Result<ShoppingListModel>>? shoppingRequest = null;
+        ISender shoppingSender = SubstituteSender.Create(Result.Success(CreateShoppingList()), request => shoppingRequest = request);
         MealPlansController shoppingController = CreateController(new MealPlansController(shoppingSender));
         IActionResult shopping = await shoppingController.GenerateShoppingList(userId, planId);
         Assert.IsType<ShoppingListHttpResponse>(Assert.IsType<CreatedResult>(shopping).Value);
-        Assert.Equal(planId, Assert.IsType<GenerateShoppingListCommand>(shoppingSender.Request).PlanId);
+        Assert.Equal(planId, Assert.IsType<GenerateShoppingListCommand>(shoppingRequest).PlanId);
     }
 
     [Fact]
     public async Task GamificationController_Get_SendsQueryAndReturnsResponse() {
         var userId = Guid.NewGuid();
         var model = new GamificationModel(3, 7, 20, 88, 0.9, [new BadgeModel("streak", "Streak", 3, IsEarned: true)]);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<GamificationModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         GamificationController controller = CreateController(new GamificationController(sender));
 
         IActionResult result = await controller.Get(userId);
 
         Assert.IsType<GamificationHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
-        Assert.Equal(userId, Assert.IsType<GetGamificationQuery>(sender.Request).UserId);
+        Assert.Equal(userId, Assert.IsType<GetGamificationQuery>(sentRequest).UserId);
     }
 
     [Fact]
@@ -85,28 +91,32 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var favoriteId = Guid.NewGuid();
         FavoriteMealModel favorite = CreateFavoriteMeal(favoriteId, mealId);
 
-        RecordingSender allSender = new(Result.Success<IReadOnlyList<FavoriteMealModel>>([favorite]));
+        IRequest<Result<IReadOnlyList<FavoriteMealModel>>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<FavoriteMealModel>>([favorite]), request => allRequest = request);
         FavoriteMealsController allController = CreateController(new FavoriteMealsController(allSender));
         IActionResult all = await allController.GetAll(userId);
         Assert.IsType<List<FavoriteMealHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
-        Assert.Equal(userId, Assert.IsType<GetFavoriteMealsQuery>(allSender.Request).UserId);
+        Assert.Equal(userId, Assert.IsType<GetFavoriteMealsQuery>(allRequest).UserId);
 
-        RecordingSender checkSender = new(Result.Success(value: true));
+        IRequest<Result<bool>>? checkRequest = null;
+        ISender checkSender = SubstituteSender.Create(Result.Success(value: true), request => checkRequest = request);
         FavoriteMealsController checkController = CreateController(new FavoriteMealsController(checkSender));
         IActionResult check = await checkController.IsFavorite(mealId, userId);
         Assert.True(Assert.IsType<bool>(Assert.IsType<OkObjectResult>(check).Value));
-        Assert.Equal(mealId, Assert.IsType<IsMealFavoriteQuery>(checkSender.Request).MealId);
+        Assert.Equal(mealId, Assert.IsType<IsMealFavoriteQuery>(checkRequest).MealId);
 
-        RecordingSender addSender = new(Result.Success(favorite));
+        IRequest<Result<FavoriteMealModel>>? addRequest = null;
+        ISender addSender = SubstituteSender.Create(Result.Success(favorite), request => addRequest = request);
         FavoriteMealsController addController = CreateController(new FavoriteMealsController(addSender));
         IActionResult add = await addController.Add(userId, new AddFavoriteMealHttpRequest(mealId, "Breakfast"));
         Assert.IsType<FavoriteMealHttpResponse>(Assert.IsType<OkObjectResult>(add).Value);
-        Assert.Equal(mealId, Assert.IsType<AddFavoriteMealCommand>(addSender.Request).MealId);
+        Assert.Equal(mealId, Assert.IsType<AddFavoriteMealCommand>(addRequest).MealId);
 
-        RecordingSender removeSender = new(Result.Success());
+        IRequest<Result>? removeRequest = null;
+        ISender removeSender = SubstituteSender.Create(Result.Success(), request => removeRequest = request);
         FavoriteMealsController removeController = CreateController(new FavoriteMealsController(removeSender));
         Assert.IsType<NoContentResult>(await removeController.Remove(favoriteId, userId));
-        Assert.Equal(favoriteId, Assert.IsType<RemoveFavoriteMealCommand>(removeSender.Request).FavoriteMealId);
+        Assert.Equal(favoriteId, Assert.IsType<RemoveFavoriteMealCommand>(removeRequest).FavoriteMealId);
     }
 
     [Fact]
@@ -114,26 +124,31 @@ public sealed class MealPlanGamificationLessonControllerTests {
         var userId = Guid.NewGuid();
         var lessonId = Guid.NewGuid();
 
-        RecordingSender allSender = new(Result.Success<IReadOnlyList<LessonSummaryModel>>([
+        IRequest<Result<IReadOnlyList<LessonSummaryModel>>>? allRequest = null;
+        ISender allSender = SubstituteSender.Create(Result.Success<IReadOnlyList<LessonSummaryModel>>([
             new LessonSummaryModel(lessonId, "Basics", "Summary", "nutrition", "beginner", 5, IsRead: false),
-        ]));
+        ]), request => allRequest = request);
         LessonsController allController = CreateController(new LessonsController(allSender));
         IActionResult all = await allController.GetAll(userId, "ru", "nutrition");
         Assert.IsAssignableFrom<IReadOnlyList<LessonSummaryHttpResponse>>(Assert.IsType<OkObjectResult>(all).Value);
-        GetLessonsQuery allQuery = Assert.IsType<GetLessonsQuery>(allSender.Request);
+        GetLessonsQuery allQuery = Assert.IsType<GetLessonsQuery>(allRequest);
         Assert.Equal("ru", allQuery.Locale);
         Assert.Equal("nutrition", allQuery.Category);
 
-        RecordingSender byIdSender = new(Result.Success(new LessonDetailModel(lessonId, "Title", "Content", "Summary", "nutrition", "beginner", 6, IsRead: true)));
+        IRequest<Result<LessonDetailModel>>? byIdRequest = null;
+        ISender byIdSender = SubstituteSender.Create(
+            Result.Success(new LessonDetailModel(lessonId, "Title", "Content", "Summary", "nutrition", "beginner", 6, IsRead: true)),
+            request => byIdRequest = request);
         LessonsController byIdController = CreateController(new LessonsController(byIdSender));
         IActionResult byId = await byIdController.GetById(userId, lessonId);
         Assert.IsType<LessonDetailHttpResponse>(Assert.IsType<OkObjectResult>(byId).Value);
-        Assert.Equal(lessonId, Assert.IsType<GetLessonByIdQuery>(byIdSender.Request).LessonId);
+        Assert.Equal(lessonId, Assert.IsType<GetLessonByIdQuery>(byIdRequest).LessonId);
 
-        RecordingSender readSender = new(Result.Success());
+        IRequest<Result>? readRequest = null;
+        ISender readSender = SubstituteSender.Create(Result.Success(), request => readRequest = request);
         LessonsController readController = CreateController(new LessonsController(readSender));
         Assert.IsType<NoContentResult>(await readController.MarkRead(userId, lessonId));
-        Assert.Equal(lessonId, Assert.IsType<MarkLessonReadCommand>(readSender.Request).LessonId);
+        Assert.Equal(lessonId, Assert.IsType<MarkLessonReadCommand>(readRequest).LessonId);
     }
 
     private static TController CreateController<TController>(TController controller)
