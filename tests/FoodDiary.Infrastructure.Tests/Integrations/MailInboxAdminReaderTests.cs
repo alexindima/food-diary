@@ -11,20 +11,23 @@ public sealed class MailInboxAdminReaderTests {
     public async Task GetMessagesAsync_MapsClientSummaries() {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
-        var client = new StubMailInboxClient {
-            Summaries = [
-                new InboundMailMessageSummaryResponse(
-                    id,
-                    "from@example.com",
-                    ["to@example.com"],
-                    "Subject",
-                    "general",
-                    "received",
-                    ReadAtUtc: null,
-                    receivedAtUtc),
-            ],
-        };
-        var reader = new MailInboxClientAdminMailInboxReader(client);
+        IReadOnlyList<InboundMailMessageSummaryResponse> summaries = [
+            new InboundMailMessageSummaryResponse(
+                id,
+                "from@example.com",
+                ["to@example.com"],
+                "Subject",
+                "general",
+                "received",
+                ReadAtUtc: null,
+                receivedAtUtc),
+        ];
+        IMailInboxClient client = Substitute.For<IMailInboxClient>();
+        int? lastLimit = null;
+        client
+            .GetMessagesAsync(Arg.Do<int?>(limit => lastLimit = limit), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(summaries));
+        MailInboxClientAdminMailInboxReader reader = new(client);
 
         IReadOnlyList<AdminMailInboxMessageSummaryModel> result = await reader.GetMessagesAsync(25, CancellationToken.None);
 
@@ -37,29 +40,32 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("received", message.Status);
         Assert.Null(message.ReadAtUtc);
         Assert.Equal(receivedAtUtc, message.ReceivedAtUtc);
-        Assert.Equal(25, client.LastLimit);
+        Assert.Equal(25, lastLimit);
     }
 
     [Fact]
     public async Task GetMessageAsync_WhenClientReturnsDetails_MapsDetails() {
         var id = Guid.NewGuid();
         DateTimeOffset receivedAtUtc = DateTimeOffset.UtcNow;
-        var client = new StubMailInboxClient {
-            Details = new InboundMailMessageDetailsResponse(
-                id,
-                "message-id",
-                "from@example.com",
-                ["to@example.com"],
-                "Subject",
-                "text",
-                "<p>html</p>",
-                "raw",
-                "general",
-                "received",
-                ReadAtUtc: null,
-                receivedAtUtc),
-        };
-        var reader = new MailInboxClientAdminMailInboxReader(client);
+        InboundMailMessageDetailsResponse details = new(
+            id,
+            "message-id",
+            "from@example.com",
+            ["to@example.com"],
+            "Subject",
+            "text",
+            "<p>html</p>",
+            "raw",
+            "general",
+            "received",
+            ReadAtUtc: null,
+            receivedAtUtc);
+        IMailInboxClient client = Substitute.For<IMailInboxClient>();
+        Guid lastMessageId = Guid.Empty;
+        client
+            .GetMessageAsync(Arg.Do<Guid>(value => lastMessageId = value), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<InboundMailMessageDetailsResponse?>(details));
+        MailInboxClientAdminMailInboxReader reader = new(client);
 
         AdminMailInboxMessageDetailsModel? result = await reader.GetMessageAsync(id, CancellationToken.None);
 
@@ -69,12 +75,16 @@ public sealed class MailInboxAdminReaderTests {
         Assert.Equal("<p>html</p>", result.HtmlBody);
         Assert.Equal("raw", result.RawMime);
         Assert.Equal("general", result.Category);
-        Assert.Equal(id, client.LastMessageId);
+        Assert.Equal(id, lastMessageId);
     }
 
     [Fact]
     public async Task GetMessageAsync_WhenClientReturnsNull_ReturnsNull() {
-        var reader = new MailInboxClientAdminMailInboxReader(new StubMailInboxClient());
+        IMailInboxClient client = Substitute.For<IMailInboxClient>();
+        client
+            .GetMessageAsync(Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<InboundMailMessageDetailsResponse?>(null));
+        MailInboxClientAdminMailInboxReader reader = new(client);
 
         AdminMailInboxMessageDetailsModel? result = await reader.GetMessageAsync(Guid.NewGuid(), CancellationToken.None);
 
@@ -84,56 +94,16 @@ public sealed class MailInboxAdminReaderTests {
     [Fact]
     public async Task MarkMessageReadAsync_DelegatesToClient() {
         var id = Guid.NewGuid();
-        var client = new StubMailInboxClient {
-            Details = new InboundMailMessageDetailsResponse(
-                id,
-                "message-id",
-                "from@example.com",
-                ["to@example.com"],
-                "Subject",
-                "text",
-                "<p>html</p>",
-                "raw",
-                "general",
-                "received",
-                ReadAtUtc: null,
-                DateTimeOffset.UtcNow),
-        };
-        var reader = new MailInboxClientAdminMailInboxReader(client);
+        IMailInboxClient client = Substitute.For<IMailInboxClient>();
+        Guid lastReadMessageId = Guid.Empty;
+        client
+            .MarkMessageReadAsync(Arg.Do<Guid>(value => lastReadMessageId = value), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(true));
+        MailInboxClientAdminMailInboxReader reader = new(client);
 
         bool result = await reader.MarkMessageReadAsync(id, CancellationToken.None);
 
         Assert.True(result);
-        Assert.Equal(id, client.LastReadMessageId);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubMailInboxClient : IMailInboxClient {
-        public IReadOnlyList<InboundMailMessageSummaryResponse> Summaries { get; init; } = [];
-        public InboundMailMessageDetailsResponse? Details { get; init; }
-        public int? LastLimit { get; private set; }
-        public Guid LastMessageId { get; private set; }
-        public Guid LastReadMessageId { get; private set; }
-
-        public Task<IReadOnlyList<InboundMailMessageSummaryResponse>> GetMessagesAsync(
-            int? limit,
-            CancellationToken cancellationToken) {
-            LastLimit = limit;
-            return Task.FromResult(Summaries);
-        }
-
-        public Task<InboundMailMessageDetailsResponse?> GetMessageAsync(
-            Guid id,
-            CancellationToken cancellationToken) {
-            LastMessageId = id;
-            return Task.FromResult(Details);
-        }
-
-        public Task<bool> MarkMessageReadAsync(
-            Guid id,
-            CancellationToken cancellationToken) {
-            LastReadMessageId = id;
-            return Task.FromResult(Details is not null && Details.Id == id);
-        }
+        Assert.Equal(id, lastReadMessageId);
     }
 }

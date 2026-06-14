@@ -22,7 +22,7 @@ public sealed class EmailSenderTests {
             template = GetTagValue(tags, "fooddiary.email.template");
         });
 
-        EmailSender sender = CreateSender(new RecordingEmailTransport());
+        EmailSender sender = CreateSender(CreateSuccessfulTransport());
 
         await sender.SendEmailVerificationAsync(
             new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en"),
@@ -44,7 +44,7 @@ public sealed class EmailSenderTests {
             errorType = GetTagValue(tags, "error.type");
         });
 
-        EmailSender sender = CreateSender(new ThrowingEmailTransport(new InvalidOperationException("boom")));
+        EmailSender sender = CreateSender(CreateThrowingTransport(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendPasswordResetAsync(
@@ -58,7 +58,7 @@ public sealed class EmailSenderTests {
 
     [Fact]
     public async Task SendPasswordResetAsync_WithAllowedClientOrigin_UsesThatOriginInLink() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<string> getBody);
         EmailSender sender = CreateSender(
             transport,
             new EmailOptions {
@@ -74,12 +74,12 @@ public sealed class EmailSenderTests {
             new PasswordResetMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "ru", "https://xn--b1adbcbrouc8l.xn--p1ai"),
             CancellationToken.None);
 
-        Assert.Contains("https://дневникеды.рф/reset-password?", transport.Body, StringComparison.Ordinal);
+        Assert.Contains("https://дневникеды.рф/reset-password?", getBody(), StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendEmailVerificationAsync_WithUntrustedClientOrigin_FallsBackToDefaultFrontendBaseUrl() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<string> getBody);
         EmailSender sender = CreateSender(
             transport,
             new EmailOptions {
@@ -95,8 +95,8 @@ public sealed class EmailSenderTests {
             new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en", "https://evil.example.com"),
             CancellationToken.None);
 
-        Assert.Contains("https://fooddiary.club/verify-email?", transport.Body, StringComparison.Ordinal);
-        Assert.DoesNotContain("evil.example.com", transport.Body, StringComparison.Ordinal);
+        Assert.Contains("https://fooddiary.club/verify-email?", getBody(), StringComparison.Ordinal);
+        Assert.DoesNotContain("evil.example.com", getBody(), StringComparison.Ordinal);
     }
 
     private static EmailSender CreateSender(IEmailTransport transport, EmailOptions? options = null) {
@@ -108,8 +108,42 @@ public sealed class EmailSenderTests {
                 VerificationPath = "/verify-email",
                 PasswordResetPath = "/reset-password",
             },
-            new StubEmailTemplateProvider(),
+            CreateTemplateProvider(),
             transport);
+    }
+
+    private static IEmailTemplateProvider CreateTemplateProvider() {
+        IEmailTemplateProvider templateProvider = Substitute.For<IEmailTemplateProvider>();
+        templateProvider
+            .GetActiveTemplateAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<EmailTemplateContent?>(null));
+        return templateProvider;
+    }
+
+    private static IEmailTransport CreateSuccessfulTransport() {
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        transport
+            .SendAsync(Arg.Any<MailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return transport;
+    }
+
+    private static IEmailTransport CreateCapturingTransport(out Func<string> getBody) {
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        string body = string.Empty;
+        transport
+            .SendAsync(Arg.Do<MailMessage>(message => body = message.Body), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getBody = () => body;
+        return transport;
+    }
+
+    private static IEmailTransport CreateThrowingTransport(Exception exception) {
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        transport
+            .SendAsync(Arg.Any<MailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(exception));
+        return transport;
     }
 
     private static MeterListener CreateInfrastructureListener(
@@ -143,24 +177,4 @@ public sealed class EmailSenderTests {
         return null;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubEmailTemplateProvider : IEmailTemplateProvider {
-        public Task<EmailTemplateContent?> GetActiveTemplateAsync(string key, string locale, CancellationToken cancellationToken = default) =>
-            Task.FromResult<EmailTemplateContent?>(null);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingEmailTransport : IEmailTransport {
-        public string Body { get; private set; } = string.Empty;
-
-        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
-            Body = message.Body;
-            return Task.CompletedTask;
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class ThrowingEmailTransport(Exception exception) : IEmailTransport {
-        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) => Task.FromException(exception);
-    }
 }

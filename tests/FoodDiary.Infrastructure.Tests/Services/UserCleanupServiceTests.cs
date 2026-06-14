@@ -2,7 +2,6 @@ using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
@@ -13,7 +12,7 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class UserCleanupServiceTests {
     [Fact]
     public async Task CleanupDeletedUsersAsync_WithNonPositiveBatchSize_Throws() {
-        var service = new UserCleanupService(dbContext: null!, imageStorageService: new NoOpImageStorageService(), logger: NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(dbContext: null!, imageStorageService: CreateImageStorageService(), logger: NullLogger<UserCleanupService>.Instance);
 
         ArgumentOutOfRangeException ex = await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
             service.CleanupDeletedUsersAsync(DateTime.UtcNow, 0, reassignUserId: null, CancellationToken.None));
@@ -28,7 +27,7 @@ public sealed class UserCleanupServiceTests {
         deletedUser.MarkDeleted(DateTime.UtcNow.AddDays(-10));
         context.Users.Add(deletedUser);
         await context.SaveChangesAsync();
-        var service = new UserCleanupService(context, new NoOpImageStorageService(), NullLogger<UserCleanupService>.Instance);
+        var service = new UserCleanupService(context, CreateImageStorageService(), NullLogger<UserCleanupService>.Instance);
 
         int removed = await service.CleanupDeletedUsersAsync(
             DateTime.UtcNow.AddDays(-1),
@@ -42,7 +41,7 @@ public sealed class UserCleanupServiceTests {
     public async Task DeleteImageObjectAsync_WhenStorageDeleteFails_DoesNotThrow() {
         var service = new UserCleanupService(
             dbContext: null!,
-            imageStorageService: new ThrowingImageStorageService(),
+            imageStorageService: CreateThrowingImageStorageService(),
             logger: NullLogger<UserCleanupService>.Instance);
 
         await InvokePrivateAsync(service, "DeleteImageObjectAsync", "users/deleted/image.webp", CancellationToken.None);
@@ -69,6 +68,20 @@ public sealed class UserCleanupServiceTests {
         return new FoodDiaryDbContext(options);
     }
 
+    private static IImageStorageService CreateImageStorageService() {
+        IImageStorageService storage = Substitute.For<IImageStorageService>();
+        storage.DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        return storage;
+    }
+
+    private static IImageStorageService CreateThrowingImageStorageService() {
+        IImageStorageService storage = Substitute.For<IImageStorageService>();
+        storage
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("storage failed")));
+        return storage;
+    }
+
     private static async Task InvokePrivateAsync(object instance, string methodName, params object[] args) {
         MethodInfo method = instance.GetType().GetMethod(
             methodName,
@@ -84,40 +97,4 @@ public sealed class UserCleanupServiceTests {
         return (T)method.Invoke(null, args)!;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class NoOpImageStorageService : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class ThrowingImageStorageService : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
-            throw new InvalidOperationException("storage failed");
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
-    }
 }

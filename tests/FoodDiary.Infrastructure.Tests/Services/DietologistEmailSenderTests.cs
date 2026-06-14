@@ -16,41 +16,41 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_SendsEmailToRecipient() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         DietologistInvitationMessage message = CreateMessage("diet@example.com");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Equal(1, transport.SentCount);
-        Assert.Equal("diet@example.com", transport.LastRecipient);
+        Assert.Equal(1, getSent().Count);
+        Assert.Equal("diet@example.com", getSent().Recipient);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithEnglishLocale_HasEnglishSubject() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Invitation", transport.LastSubject, StringComparison.Ordinal);
+        Assert.Contains("Invitation", getSent().Subject, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithRussianLocale_HasRussianSubject() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "ru");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", transport.LastSubject, StringComparison.Ordinal);
+        Assert.Contains("\u041f\u0440\u0438\u0433\u043b\u0430\u0448\u0435\u043d\u0438\u0435", getSent().Subject, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesInvitationLink() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         var invitationId = Guid.NewGuid();
         var message = new DietologistInvitationMessage(
@@ -58,105 +58,105 @@ public sealed class DietologistEmailSenderTests {
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("dietologist/accept", transport.LastHtmlBody, StringComparison.Ordinal);
-        Assert.Contains(invitationId.ToString(), transport.LastHtmlBody, StringComparison.Ordinal);
-        Assert.Contains("test-token", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains("dietologist/accept", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains(invitationId.ToString(), getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("test-token", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesClientName() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "\u0410\u043b\u0435\u043a\u0441\u0435\u0439", "\u0418\u0432\u0430\u043d\u043e\u0432", "ru");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0418\u0432\u0430\u043d\u043e\u0432", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains("\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u0418\u0432\u0430\u043d\u043e\u0432", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullClientName_UsesDefaultName() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", ClientFirstName: null, ClientLastName: null, "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("A user", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Contains("A user", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullLanguage_DefaultsToEnglish() {
-        var transport = new RecordingEmailTransport();
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         DietologistEmailSender sender = CreateSender(transport);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", ClientLastName: null, Language: null);
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Contains("Invitation", transport.LastSubject, StringComparison.Ordinal);
+        Assert.Contains("Invitation", getSent().Subject, StringComparison.Ordinal);
     }
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithStoredTemplate_UsesTemplateTokens() {
-        var transport = new RecordingEmailTransport();
-        var templateProvider = new StubEmailTemplateProvider(new EmailTemplateContent(
+        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        string lastKey = string.Empty;
+        string lastLocale = string.Empty;
+        IEmailTemplateProvider templateProvider = CreateTemplateProvider(new EmailTemplateContent(
             "Invite {{clientName}} to {{brand}}",
             "<p>{{clientName}}</p><a href=\"{{link}}\">{{brand}}</a>",
-            "{{clientName}} {{link}} {{brand}}"));
+            "{{clientName}} {{link}} {{brand}}"),
+            key => lastKey = key,
+            locale => lastLocale = locale);
         DietologistEmailSender sender = CreateSender(transport, templateProvider: templateProvider);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", "Doe", "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
 
-        Assert.Equal("dietologist_invitation", templateProvider.LastKey);
-        Assert.Equal("en", templateProvider.LastLocale);
-        Assert.Equal("Invite John Doe to FoodDiary", transport.LastSubject);
-        Assert.Contains("John Doe", transport.LastHtmlBody, StringComparison.Ordinal);
-        Assert.Contains("dietologist/accept", transport.LastHtmlBody, StringComparison.Ordinal);
+        Assert.Equal("dietologist_invitation", lastKey);
+        Assert.Equal("en", lastLocale);
+        Assert.Equal("Invite John Doe to FoodDiary", getSent().Subject);
+        Assert.Contains("John Doe", getSent().HtmlBody, StringComparison.Ordinal);
+        Assert.Contains("dietologist/accept", getSent().HtmlBody, StringComparison.Ordinal);
     }
 
     private static DietologistEmailSender CreateSender(
         IEmailTransport transport,
         EmailOptions? options = null,
         IEmailTemplateProvider? templateProvider = null) =>
-        new(options ?? DefaultOptions, templateProvider ?? new StubEmailTemplateProvider(), transport);
+        new(options ?? DefaultOptions, templateProvider ?? CreateTemplateProvider(), transport);
 
     private static DietologistInvitationMessage CreateMessage(
         string toEmail, string language = "en") =>
         new(toEmail, Guid.NewGuid(), "token-value", "Test", "User", language);
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingEmailTransport : IEmailTransport {
-        public int SentCount { get; private set; }
-        public string LastRecipient { get; private set; } = string.Empty;
-        public string LastSubject { get; private set; } = string.Empty;
-        public string LastHtmlBody { get; private set; } = string.Empty;
-
-        public Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
-            SentCount++;
-            LastRecipient = message.To[0].Address;
-            LastSubject = message.Subject;
-            LastHtmlBody = message.Body;
-            return Task.CompletedTask;
-        }
+    private static IEmailTransport CreateCapturingTransport(
+        out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent) {
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        (int Count, string Recipient, string Subject, string HtmlBody) sent = (0, string.Empty, string.Empty, string.Empty);
+        transport
+            .SendAsync(Arg.Do<MailMessage>(message => {
+                sent = (sent.Count + 1, message.To[0].Address, message.Subject, message.Body);
+            }), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getSent = () => sent;
+        return transport;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubEmailTemplateProvider(EmailTemplateContent? template = null) : IEmailTemplateProvider {
-        public string LastKey { get; private set; } = string.Empty;
-        public string LastLocale { get; private set; } = string.Empty;
-
-        public Task<EmailTemplateContent?> GetActiveTemplateAsync(
-            string key,
-            string locale,
-            CancellationToken cancellationToken = default) {
-            LastKey = key;
-            LastLocale = locale;
-            return Task.FromResult(template);
-        }
+    private static IEmailTemplateProvider CreateTemplateProvider(
+        EmailTemplateContent? template = null,
+        Action<string>? captureKey = null,
+        Action<string>? captureLocale = null) {
+        IEmailTemplateProvider templateProvider = Substitute.For<IEmailTemplateProvider>();
+        templateProvider
+            .GetActiveTemplateAsync(
+                Arg.Do<string>(key => captureKey?.Invoke(key)),
+                Arg.Do<string>(locale => captureLocale?.Invoke(locale)),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(template));
+        return templateProvider;
     }
 }

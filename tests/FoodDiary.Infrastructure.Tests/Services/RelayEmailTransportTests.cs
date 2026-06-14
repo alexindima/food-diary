@@ -11,8 +11,12 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 public sealed class RelayEmailTransportTests {
     [Fact]
     public async Task SendAsync_EnqueuesRelayPayloadWithPlainTextAlternateView() {
-        var client = new RecordingMailRelayClient();
-        var transport = new RelayEmailTransport(client);
+        IMailRelayClient client = Substitute.For<IMailRelayClient>();
+        EnqueueMailRelayEmailRequest? request = null;
+        client
+            .EnqueueAsync(Arg.Do<EnqueueMailRelayEmailRequest>(value => request = value), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new EnqueueMailRelayEmailResponse(Guid.NewGuid(), "queued")));
+        RelayEmailTransport transport = new(client);
         using var message = new MailMessage {
             From = new MailAddress("from@example.com", "Sender"),
             Subject = "Subject",
@@ -25,20 +29,20 @@ public sealed class RelayEmailTransportTests {
 
         await transport.SendAsync(message, CancellationToken.None);
 
-        Assert.NotNull(client.Request);
-        Assert.Equal("from@example.com", client.Request.FromAddress);
-        Assert.Equal("Sender", client.Request.FromName);
-        Assert.Equal(["to@example.com"], client.Request.To);
-        Assert.Equal("Subject", client.Request.Subject);
-        Assert.Equal("<p>Hello</p>", client.Request.HtmlBody);
-        Assert.Equal("Hello", client.Request.TextBody);
-        Assert.False(string.IsNullOrWhiteSpace(client.Request.CorrelationId));
+        Assert.NotNull(request);
+        Assert.Equal("from@example.com", request.FromAddress);
+        Assert.Equal("Sender", request.FromName);
+        Assert.Equal(["to@example.com"], request.To);
+        Assert.Equal("Subject", request.Subject);
+        Assert.Equal("<p>Hello</p>", request.HtmlBody);
+        Assert.Equal("Hello", request.TextBody);
+        Assert.False(string.IsNullOrWhiteSpace(request.CorrelationId));
     }
 
     [Fact]
     public async Task SendAsync_WhenFromMissing_ThrowsInvalidOperationException() {
-        var client = new RecordingMailRelayClient();
-        var transport = new RelayEmailTransport(client);
+        IMailRelayClient client = Substitute.For<IMailRelayClient>();
+        RelayEmailTransport transport = new(client);
         using var message = new MailMessage {
             Subject = "Subject",
             Body = "<p>Hello</p>",
@@ -48,13 +52,17 @@ public sealed class RelayEmailTransportTests {
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             transport.SendAsync(message, CancellationToken.None));
 
-        Assert.Null(client.Request);
+        await client.DidNotReceive().EnqueueAsync(Arg.Any<EnqueueMailRelayEmailRequest>(), Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task SendAsync_WhenPlainTextAlternateViewMissing_EnqueuesNullTextBody() {
-        var client = new RecordingMailRelayClient();
-        var transport = new RelayEmailTransport(client);
+        IMailRelayClient client = Substitute.For<IMailRelayClient>();
+        EnqueueMailRelayEmailRequest? request = null;
+        client
+            .EnqueueAsync(Arg.Do<EnqueueMailRelayEmailRequest>(value => request = value), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new EnqueueMailRelayEmailResponse(Guid.NewGuid(), "queued")));
+        RelayEmailTransport transport = new(client);
         using var message = new MailMessage {
             From = new MailAddress("from@example.com"),
             Subject = "Subject",
@@ -67,19 +75,7 @@ public sealed class RelayEmailTransportTests {
 
         await transport.SendAsync(message, CancellationToken.None);
 
-        Assert.NotNull(client.Request);
-        Assert.Null(client.Request.TextBody);
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingMailRelayClient : IMailRelayClient {
-        public EnqueueMailRelayEmailRequest? Request { get; private set; }
-
-        public Task<EnqueueMailRelayEmailResponse> EnqueueAsync(
-            EnqueueMailRelayEmailRequest request,
-            CancellationToken cancellationToken) {
-            Request = request;
-            return Task.FromResult(new EnqueueMailRelayEmailResponse(Guid.NewGuid(), "queued"));
-        }
+        Assert.NotNull(request);
+        Assert.Null(request.TextBody);
     }
 }
