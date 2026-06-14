@@ -37,6 +37,55 @@ public sealed class IdempotencyFilterTests {
     }
 
     [Fact]
+    public async Task OnActionExecutionAsync_WithCachedNullEntry_ExecutesNextAndRefreshesCache() {
+        var cache = new InMemoryDistributedCache();
+        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-null", userId: "user-null");
+        const string cacheKey = "idempotency:user-null:/api/v1/products:key-null";
+        await cache.SetStringAsync(cacheKey, "null");
+
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        bool nextCalled = false;
+
+        await filter.OnActionExecutionAsync(context, () => {
+            nextCalled = true;
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                Result = new ObjectResult(new { id = "created-after-null-cache" }) {
+                    StatusCode = StatusCodes.Status200OK,
+                },
+            });
+        });
+
+        string? cached = await cache.GetStringAsync(cacheKey);
+
+        Assert.True(nextCalled);
+        Assert.Null(context.Result);
+        Assert.NotNull(cached);
+        using var cacheDoc = JsonDocument.Parse(cached);
+        Assert.Equal(StatusCodes.Status200OK, cacheDoc.RootElement.GetProperty("StatusCode").GetInt32());
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithCachedMalformedEntry_ThrowsAndDoesNotExecuteNext() {
+        var cache = new InMemoryDistributedCache();
+        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-bad", userId: "user-bad");
+        const string cacheKey = "idempotency:user-bad:/api/v1/products:key-bad";
+        await cache.SetStringAsync(cacheKey, "{");
+
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        bool nextCalled = false;
+
+        await Assert.ThrowsAsync<JsonException>(() => filter.OnActionExecutionAsync(context, () => {
+            nextCalled = true;
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()));
+        }));
+
+        Assert.False(nextCalled);
+        Assert.Null(context.Result);
+    }
+
+    [Fact]
     public async Task OnActionExecutionAsync_WithSuccessfulPostAndIdempotencyKey_CachesObjectResult() {
         var cache = new InMemoryDistributedCache();
         var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
@@ -66,6 +115,48 @@ public sealed class IdempotencyFilterTests {
         using var bodyDoc = JsonDocument.Parse(body);
         Assert.Equal("created", bodyDoc.RootElement.GetProperty("id").GetString());
         Assert.Null(context.Result);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WhenCacheMiss_ExecutesNextAndSetsCache() {
+        var cache = new InMemoryDistributedCache();
+        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", "/api/v1/products", "key-miss", userId: "user-miss");
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+        bool nextCalled = false;
+
+        await filter.OnActionExecutionAsync(context, () => {
+            nextCalled = true;
+            return Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+                Result = new ObjectResult(new { id = "created-after-miss" }) {
+                    StatusCode = StatusCodes.Status200OK,
+                },
+            });
+        });
+
+        string? cached = await cache.GetStringAsync("idempotency:user-miss:/api/v1/products:key-miss");
+
+        Assert.True(nextCalled);
+        Assert.NotNull(cached);
+        Assert.Null(context.Result);
+    }
+
+    [Fact]
+    public async Task OnActionExecutionAsync_WithoutUserAndPath_UsesAnonymousEmptyPathCacheKey() {
+        var cache = new InMemoryDistributedCache();
+        var filter = new IdempotencyFilter(cache, NullLogger<IdempotencyFilter>.Instance);
+        DefaultHttpContext httpContext = CreateHttpContext("POST", path: null, "key-anonymous", userId: null);
+        ActionExecutingContext context = CreateActionExecutingContext(httpContext, new EnableIdempotencyAttribute());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(context, [], new object()) {
+            Result = new ObjectResult(new { id = "created-for-anonymous" }) {
+                StatusCode = StatusCodes.Status200OK,
+            },
+        }));
+
+        string? cached = await cache.GetStringAsync("idempotency:anonymous::key-anonymous");
+
+        Assert.NotNull(cached);
     }
 
     [Fact]
@@ -114,10 +205,12 @@ public sealed class IdempotencyFilterTests {
         Assert.Null(cached);
     }
 
-    private static DefaultHttpContext CreateHttpContext(string method, string path, string? idempotencyKey, string? userId) {
+    private static DefaultHttpContext CreateHttpContext(string method, string? path, string? idempotencyKey, string? userId) {
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Method = method;
-        httpContext.Request.Path = path;
+        if (path is not null) {
+            httpContext.Request.Path = path;
+        }
 
         if (!string.IsNullOrWhiteSpace(idempotencyKey)) {
             httpContext.Request.Headers["Idempotency-Key"] = idempotencyKey;

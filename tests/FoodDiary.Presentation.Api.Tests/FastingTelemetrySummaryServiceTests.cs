@@ -62,12 +62,126 @@ public sealed class FastingTelemetrySummaryServiceTests {
         Assert.Empty(summary.TopPresets);
     }
 
+    [Fact]
+    public async Task RecordAsync_WithInvalidTimestamp_UsesCurrentUtcTimestamp() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+        DateTime before = DateTime.UtcNow;
+
+        await service.RecordAsync(CreateRequest("fasting.session.started", "not-a-date", "{}"), CancellationToken.None);
+
+        DateTime after = DateTime.UtcNow;
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.InRange(record.OccurredAtUtc, before, after);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithNullDetails_RecordsEventWithoutDetailValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+
+        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O")), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Null(record.SessionId);
+        Assert.Null(record.Protocol);
+        Assert.Null(record.PlannedDurationHours);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithUndefinedDetails_RecordsEventWithoutDetailValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+        JsonElement? details = default(JsonElement);
+
+        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Null(record.SessionId);
+        Assert.Null(record.Protocol);
+        Assert.Null(record.PlannedDurationHours);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithJsonNullDetails_RecordsEventWithoutDetailValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+        JsonElement details = JsonSerializer.Deserialize<JsonElement>("null");
+
+        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Null(record.SessionId);
+        Assert.Null(record.Protocol);
+        Assert.Null(record.PlannedDurationHours);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithNonObjectDetails_RecordsEventWithoutDetailValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+        JsonElement details = JsonSerializer.Deserialize<JsonElement>("\"not-an-object\"");
+
+        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Null(record.SessionId);
+        Assert.Null(record.Protocol);
+        Assert.Null(record.PlannedDurationHours);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithBooleanAndUnsupportedDetails_ParsesBooleansAndIgnoresUnsupportedValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+
+        await service.RecordAsync(CreateRequest("fasting.check-in.saved", DateTime.UtcNow.ToString("O"), """
+            {
+                "hadNotes": true,
+                "protocol": false,
+                "sessionId": {"value":"ignored"},
+                "hungerLevel": "",
+                "actualDurationHours": "not-a-number"
+            }
+            """), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.True(record.HadNotes);
+        Assert.Equal(bool.FalseString, record.Protocol);
+        Assert.Null(record.SessionId);
+        Assert.Null(record.HungerLevel);
+        Assert.Null(record.ActualDurationHours);
+    }
+
+    [Fact]
+    public async Task RecordAsync_WithInvalidNumericAndBooleanDetails_RecordsNullParsedValues() {
+        var repository = new InMemoryFastingTelemetryEventRepository();
+        var service = new FastingTelemetrySummaryService(repository);
+
+        await service.RecordAsync(CreateRequest("fasting.session.completed", DateTime.UtcNow.ToString("O"), """
+            {
+                "firstReminderHours": "bad",
+                "actualDurationHours": "bad",
+                "hadNotes": "bad"
+            }
+            """), CancellationToken.None);
+
+        FastingTelemetryEventRecord record = Assert.Single(repository.Events);
+        Assert.Null(record.FirstReminderHours);
+        Assert.Null(record.ActualDurationHours);
+        Assert.Null(record.HadNotes);
+    }
+
     private static ClientTelemetryLogHttpRequest CreateRequest(string name, string timestamp, string? detailsJson = null) {
         JsonElement? details = null;
         if (detailsJson is not null) {
             details = JsonSerializer.Deserialize<JsonElement>(detailsJson);
         }
 
+        return CreateRequest(name, timestamp, details);
+    }
+
+    private static ClientTelemetryLogHttpRequest CreateRequest(string name, string timestamp, JsonElement? details) {
         return new ClientTelemetryLogHttpRequest(
             Category: "user_action",
             Name: name,
@@ -79,6 +193,8 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryFastingTelemetryEventRepository : IFastingTelemetryEventRepository {
         private readonly List<FastingTelemetryEventRecord> _events = [];
+
+        public IReadOnlyList<FastingTelemetryEventRecord> Events => _events;
 
         public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) {
             _events.Add(record);

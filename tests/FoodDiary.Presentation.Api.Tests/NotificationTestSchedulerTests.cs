@@ -60,6 +60,57 @@ public sealed class NotificationTestSchedulerTests {
         Assert.Equal(0, pusher.UnreadCount);
     }
 
+    [Theory]
+    [InlineData(NotificationTypes.FastingCompleted)]
+    [InlineData(NotificationTypes.FastingCheckInReminder)]
+    [InlineData(NotificationTypes.EatingWindowStarted)]
+    [InlineData(NotificationTypes.FastingWindowStarted)]
+    public async Task ScheduleAsync_WithSupportedType_NormalizesAndDispatchesMatchingNotification(string type) {
+        var repository = new RecordingNotificationRepository();
+        var pusher = new RecordingNotificationPusher();
+        var sender = new RecordingWebPushNotificationSender();
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using var lifetime = new TestHostApplicationLifetime();
+        var scheduler = new NotificationTestScheduler(
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            lifetime,
+            NullLogger<NotificationTestScheduler>.Instance);
+        var userId = Guid.NewGuid();
+
+        ScheduledNotificationData response = await scheduler.ScheduleAsync(userId, 1, $" {type} ", CancellationToken.None);
+
+        Assert.Equal(type, response.Type);
+        Assert.Equal(1, response.DelaySeconds);
+
+        await sender.WaitAsync();
+
+        Notification notification = Assert.Single(repository.Notifications);
+        Assert.Equal(type, notification.Type);
+        Assert.Equal(new UserId(userId), notification.UserId);
+        Assert.Equal(1, pusher.UnreadCount);
+        Assert.Equal(userId, pusher.UserId);
+        Assert.True(pusher.NotificationsChangedPushed);
+    }
+
+    [Theory]
+    [InlineData("")]
+    [InlineData(" ")]
+    public async Task ScheduleAsync_WithBlankType_DefaultsToFastingCompleted(string type) {
+        var repository = new RecordingNotificationRepository();
+        var pusher = new RecordingNotificationPusher();
+        var sender = new RecordingWebPushNotificationSender();
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using var lifetime = new TestHostApplicationLifetime();
+        var scheduler = new NotificationTestScheduler(
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            lifetime,
+            NullLogger<NotificationTestScheduler>.Instance);
+
+        ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, type, CancellationToken.None);
+
+        Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
+    }
+
     private static ServiceProvider BuildServiceProvider(
         INotificationRepository repository,
         INotificationPusher pusher,

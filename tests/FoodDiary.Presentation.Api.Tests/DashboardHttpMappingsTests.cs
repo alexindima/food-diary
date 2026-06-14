@@ -9,6 +9,7 @@ using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Presentation.Api.Features.Dashboard.Mappings;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
 using FoodDiary.Domain.Enums;
@@ -44,6 +45,15 @@ public sealed class DashboardHttpMappingsTests {
         Assert.Equal(userId, query.UserId);
         Assert.Equal(date, query.Date);
         Assert.Equal("en", query.Locale);
+    }
+
+    [Fact]
+    public void UserId_ToTestEmailCommand_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        SendDashboardTestEmailCommand command = userId.ToTestEmailCommand();
+
+        Assert.Equal(userId, command.UserId);
     }
 
     [Fact]
