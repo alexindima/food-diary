@@ -5,6 +5,7 @@ using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using System.Net.Sockets;
 
 namespace FoodDiary.MailInbox.Tests;
 
@@ -41,6 +42,59 @@ public sealed class MailInboxHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
         await service.StopAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_WhenEnabled_StartsListenerUntilStopped() {
+        int port = GetFreeTcpPort();
+        var messageStore = new SmtpInboundMessageStore(
+            new ThrowingInboundMailStore(),
+            NullLogger<SmtpInboundMessageStore>.Instance);
+        var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
+        var service = new MailInboxSmtpHostedService(
+            Options.Create(new MailInboxSmtpOptions {
+                Enabled = true,
+                ServerName = "localhost",
+                Port = port,
+                MaxMessageSizeBytes = 1024,
+            }),
+            messageStore,
+            mailboxFilter,
+            NullLogger<MailInboxSmtpHostedService>.Instance);
+
+        await service.StartAsync(CancellationToken.None);
+        try {
+            Assert.True(await WaitForPortAsync(port, CancellationToken.None));
+        } finally {
+            await service.StopAsync(CancellationToken.None);
+        }
+    }
+
+    private static int GetFreeTcpPort() {
+        var listener = new TcpListener(System.Net.IPAddress.Loopback, port: 0);
+        listener.Start();
+        try {
+            return ((System.Net.IPEndPoint)listener.LocalEndpoint).Port;
+        } finally {
+            listener.Stop();
+        }
+    }
+
+    private static async Task<bool> WaitForPortAsync(int port, CancellationToken cancellationToken) {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
+
+        while (!linked.IsCancellationRequested) {
+            try {
+                using var client = new TcpClient();
+                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, linked.Token).ConfigureAwait(false);
+                return true;
+            } catch (SocketException) {
+                await Task.Delay(TimeSpan.FromMilliseconds(25), linked.Token).ConfigureAwait(false);
+            }
+        }
+
+        return false;
     }
 
     [ExcludeFromCodeCoverage]

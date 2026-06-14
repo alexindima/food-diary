@@ -1,4 +1,3 @@
-using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -32,5 +31,5 @@ public sealed class AdminMailInboxController(ISender mediator) : BaseApiControll
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> MarkRead(Guid id) =>
-        HandleNoContent(new MarkAdminMailInboxMessageReadCommand(id));
+        HandleNoContent(id.ToMarkMailInboxMessageReadCommand());
 }

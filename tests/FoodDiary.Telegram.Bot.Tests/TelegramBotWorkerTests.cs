@@ -86,6 +86,7 @@ public sealed class TelegramBotWorkerTests {
         TelegramBotWorker worker = CreateWorker(botClient, new RecordingHttpClientFactory(), CreateOptions());
 
         await worker.StartAsync(CancellationToken.None);
+        await WaitForRequestAsync(botClient, "GetMeRequest");
         await worker.StopAsync(CancellationToken.None);
 
         Assert.Contains(botClient.Requests, request => string.Equals(request.GetType().Name, "GetMeRequest", StringComparison.Ordinal));
@@ -470,6 +471,17 @@ public sealed class TelegramBotWorkerTests {
 
     private static TValue GetPropertyValue<TValue>(object instance, string propertyName) =>
         (TValue)instance.GetType().GetProperty(propertyName)!.GetValue(instance)!;
+
+    private static async Task WaitForRequestAsync(RecordingTelegramBotClient botClient, string requestTypeName) {
+        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+        while (!timeout.IsCancellationRequested) {
+            if (botClient.Requests.Any(request => string.Equals(request.GetType().Name, requestTypeName, StringComparison.Ordinal))) {
+                return;
+            }
+
+            await Task.Delay(TimeSpan.FromMilliseconds(10), timeout.Token).ConfigureAwait(false);
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingLogger<T> : ILogger<T> {

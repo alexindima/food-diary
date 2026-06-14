@@ -1,6 +1,7 @@
 using System.Globalization;
 using FoodDiary.MailInbox.Application.Common.Results;
 using FoodDiary.MailInbox.Application.Health;
+using FoodDiary.MailInbox.Application.Messages.Commands;
 using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Application.Messages.Queries;
 using FoodDiary.MailInbox.Presentation.Controllers;
@@ -255,6 +256,30 @@ public sealed class MailInboxPresentationTests {
     }
 
     [Fact]
+    public void MailInboxResultExtensions_ToNoContentActionResult_WhenSuccessful_ReturnsNoContent() {
+        var controller = new TestMailInboxController(new StubSender()) {
+            ControllerContext = CreateControllerContext(),
+        };
+
+        IActionResult result = Result.Success().ToNoContentActionResult(controller);
+
+        Assert.IsType<NoContentResult>(result);
+    }
+
+    [Fact]
+    public void MailInboxResultExtensions_ToNoContentActionResult_WhenFailed_ReturnsErrorResult() {
+        var controller = new TestMailInboxController(new StubSender()) {
+            ControllerContext = CreateControllerContext(),
+        };
+
+        IActionResult result = Result.Failure(MailInboxErrors.MessageNotFound(Guid.NewGuid()))
+            .ToNoContentActionResult(controller);
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(StatusCodes.Status404NotFound, objectResult.StatusCode);
+    }
+
+    [Fact]
     public async Task MailInboxControllerBase_HandleOk_WhenCommandSucceeds_ReturnsConfiguredResponse() {
         StubSender sender = new StubSender()
             .Register(new TestMailInboxCommand(), Result.Success());
@@ -266,6 +291,20 @@ public sealed class MailInboxPresentationTests {
 
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         Assert.Equal("accepted", ok.Value);
+    }
+
+    [Fact]
+    public async Task MailInboxControllerBase_HandleNoContent_WhenCommandSucceeds_ReturnsNoContent() {
+        StubSender sender = new StubSender()
+            .Register(new TestMailInboxCommand(), Result.Success());
+        var controller = new TestMailInboxController(sender) {
+            ControllerContext = CreateControllerContext(),
+        };
+
+        IActionResult result = await controller.HandleNoContentCommand(new TestMailInboxCommand());
+
+        Assert.IsType<NoContentResult>(result);
+        Assert.IsType<TestMailInboxCommand>(sender.LastRequest);
     }
 
     [Fact]
@@ -449,6 +488,20 @@ public sealed class MailInboxPresentationTests {
         Assert.Equal("raw", response.RawMime);
     }
 
+    [Fact]
+    public async Task MailInboxMessagesController_MarkRead_WhenSuccessful_ReturnsNoContent() {
+        var id = Guid.NewGuid();
+        StubSender sender = new StubSender()
+            .Register(new MarkInboundMailMessageReadCommand(id), Result.Success());
+        MailInboxMessagesController controller = CreateMessagesController(sender);
+
+        IActionResult result = await controller.MarkRead(id);
+
+        Assert.IsType<NoContentResult>(result);
+        MarkInboundMailMessageReadCommand command = Assert.IsType<MarkInboundMailMessageReadCommand>(sender.LastRequest);
+        Assert.Equal(id, command.Id);
+    }
+
     private static AuthorizationFilterContext CreateAuthorizationContext() =>
         new(
             new ActionContext(
@@ -515,6 +568,10 @@ public sealed class MailInboxPresentationTests {
     private sealed class TestMailInboxController(ISender sender) : MailInboxControllerBase(sender) {
         public Task<IActionResult> HandleCommand(IRequest<Result> request) {
             return HandleOk(request, "accepted");
+        }
+
+        public Task<IActionResult> HandleNoContentCommand(IRequest<Result> request) {
+            return HandleNoContent(request);
         }
 
         public Task SendCommand(IRequest request) {

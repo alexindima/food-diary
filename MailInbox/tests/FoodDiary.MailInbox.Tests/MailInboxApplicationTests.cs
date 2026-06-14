@@ -167,6 +167,17 @@ public sealed class MailInboxApplicationTests {
         Assert.Equal(expectedValid, result.IsValid);
     }
 
+    [Theory]
+    [InlineData("00000000-0000-0000-0000-000000000000", false)]
+    [InlineData("1f25ea80-d126-42ec-804c-b793c4d9435e", true)]
+    public async Task MarkInboundMailMessageReadValidator_ValidatesMessageId(string id, bool expectedValid) {
+        var validator = new MarkInboundMailMessageReadCommandValidator();
+
+        ValidationResult result = await validator.ValidateAsync(new MarkInboundMailMessageReadCommand(Guid.Parse(id)));
+
+        Assert.Equal(expectedValid, result.IsValid);
+    }
+
     [Fact]
     public async Task MailInboxValidationBehavior_WhenValidationFails_ReturnsTypedFailureAndDoesNotInvokeNext() {
         var behavior = new MailInboxValidationBehavior<GetInboundMailMessagesQuery, Result<IReadOnlyList<InboundMailMessageSummary>>>(
@@ -314,6 +325,9 @@ public sealed class MailInboxApplicationTests {
         Assert.Contains(
             provider.GetServices<IValidator<ReceiveInboundMailCommand>>(),
             validator => validator is ReceiveInboundMailCommandValidator);
+        Assert.Contains(
+            provider.GetServices<IValidator<MarkInboundMailMessageReadCommand>>(),
+            validator => validator is MarkInboundMailMessageReadCommandValidator);
     }
 
     [Fact]

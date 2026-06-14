@@ -2,6 +2,7 @@ using FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 using FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
+using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
@@ -130,5 +131,9 @@ public static class AdminHttpMappings {
 
     public static DeleteAdminLessonCommand ToDeleteCommand(this Guid id) {
         return new DeleteAdminLessonCommand(id);
+    }
+
+    public static MarkAdminMailInboxMessageReadCommand ToMarkMailInboxMessageReadCommand(this Guid id) {
+        return new MarkAdminMailInboxMessageReadCommand(id);
     }
 }

@@ -51,6 +51,22 @@ public sealed class SmtpInboundMessageStoreTests {
         Assert.Equal(["fallback@fooddiary.club"], store.LastSaved.ToRecipients);
     }
 
+    [Fact]
+    public async Task SaveAsync_WhenTransactionRecipientsAreEmpty_UsesMimeToHeaderRecipients() {
+        var store = new RecordingInboundMailStore();
+        var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
+        string rawMime = CreateRawMime(includeToHeader: true);
+
+        await messageStore.SaveAsync(
+            context: null!,
+            new TestMessageTransaction([]),
+            new ReadOnlySequence<byte>(Encoding.UTF8.GetBytes(rawMime)),
+            CancellationToken.None);
+
+        Assert.NotNull(store.LastSaved);
+        Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
+    }
+
     private static string CreateRawMime(bool includeToHeader) {
         var message = new MimeMessage();
         message.MessageId = "message-id";
