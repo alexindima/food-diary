@@ -23,6 +23,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminBillingSubscriptions;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 using FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
+using FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 
@@ -222,6 +223,11 @@ public sealed class AdminHttpMappingsTests {
         Assert.Equal(30, loginEvents.Limit);
         Assert.Equal(userId, loginEvents.UserId);
         Assert.Equal("mail", loginEvents.Search);
+
+        GetAdminImpersonationSessionsQuery impersonationSessions = new GetAdminImpersonationSessionsHttpQuery(3, 40, "target@example.com").ToQuery();
+        Assert.Equal(3, impersonationSessions.Page);
+        Assert.Equal(40, impersonationSessions.Limit);
+        Assert.Equal("target@example.com", impersonationSessions.Search);
 
         GetAdminUserLoginSummaryQuery loginSummary = new GetAdminUserLoginSummaryHttpQuery(from, to).ToQuery();
         Assert.Equal(from, loginSummary.FromUtc);

@@ -1,12 +1,41 @@
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
+using FoodDiary.Application.Billing.Commands.CreatePortalSession;
 using FoodDiary.Application.Billing.Models;
+using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Presentation.Api.Features.Billing.Mappings;
+using FoodDiary.Presentation.Api.Features.Billing.Requests;
 using FoodDiary.Presentation.Api.Features.Billing.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
 public sealed class BillingHttpMappingsTests {
+    [Fact]
+    public void CreateCheckoutSessionHttpRequest_ToCommand_MapsAllFields() {
+        var userId = Guid.NewGuid();
+        var request = new CreateCheckoutSessionHttpRequest("premium", "stripe");
+
+        CreateCheckoutSessionCommand command = request.ToCommand(userId);
+
+        Assert.Equal(userId, command.UserId);
+        Assert.Equal("premium", command.Plan);
+        Assert.Equal("stripe", command.Provider);
+    }
+
+    [Fact]
+    public void UserId_ToBillingCommandsAndQuery_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        CreatePortalSessionCommand portalCommand = userId.ToPortalSessionCommand();
+        var trialCommand = userId.ToStartPremiumTrialCommand();
+        GetBillingOverviewQuery overviewQuery = userId.ToBillingOverviewQuery();
+
+        Assert.Equal(userId, portalCommand.UserId);
+        Assert.Equal(userId, trialCommand.UserId);
+        Assert.Equal(userId, overviewQuery.UserId);
+    }
+
     [Fact]
     public void BillingOverviewModel_ToHttpResponse_MapsAllFields() {
         DateTime periodStart = DateTime.UtcNow.AddDays(-1);

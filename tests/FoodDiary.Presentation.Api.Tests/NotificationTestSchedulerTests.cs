@@ -60,6 +60,28 @@ public sealed class NotificationTestSchedulerTests {
         Assert.Equal(0, pusher.UnreadCount);
     }
 
+    [Fact]
+    public async Task ScheduleAsync_WhenApplicationStopsBeforeDelivery_SwallowsCancellation() {
+        var repository = new RecordingNotificationRepository();
+        var pusher = new RecordingNotificationPusher();
+        var sender = new RecordingWebPushNotificationSender();
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using var lifetime = new TestHostApplicationLifetime();
+        var scheduler = new NotificationTestScheduler(
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            lifetime,
+            NullLogger<NotificationTestScheduler>.Instance);
+
+        ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, CancellationToken.None);
+        lifetime.StopApplication();
+
+        await Task.Delay(100);
+
+        Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
+        Assert.Empty(repository.Notifications);
+        Assert.False(pusher.NotificationsChangedPushed);
+    }
+
     [Theory]
     [InlineData(NotificationTypes.FastingCompleted)]
     [InlineData(NotificationTypes.FastingCheckInReminder)]
@@ -109,6 +131,30 @@ public sealed class NotificationTestSchedulerTests {
         ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, type, CancellationToken.None);
 
         Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
+    }
+
+    [Fact]
+    public async Task RunScheduledAsync_WithUnsupportedInternalType_UsesFastingCompletedFallback() {
+        var repository = new RecordingNotificationRepository();
+        var pusher = new RecordingNotificationPusher();
+        var sender = new RecordingWebPushNotificationSender();
+        await using ServiceProvider serviceProvider = BuildServiceProvider(repository, pusher, sender);
+        using var lifetime = new TestHostApplicationLifetime();
+        var scheduler = new NotificationTestScheduler(
+            serviceProvider.GetRequiredService<IServiceScopeFactory>(),
+            lifetime,
+            NullLogger<NotificationTestScheduler>.Instance);
+        System.Reflection.MethodInfo method = typeof(NotificationTestScheduler).GetMethod(
+            "RunScheduledAsync",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+
+        var task = (Task)method.Invoke(scheduler, [Guid.NewGuid(), 1, "unsupported-internal-type", CancellationToken.None])!;
+
+        await sender.WaitAsync();
+        await task;
+
+        Notification notification = Assert.Single(repository.Notifications);
+        Assert.Equal(NotificationTypes.FastingCompleted, notification.Type);
     }
 
     private static ServiceProvider BuildServiceProvider(
