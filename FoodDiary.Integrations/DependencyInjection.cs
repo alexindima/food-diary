@@ -133,6 +133,7 @@ public static class DependencyInjection {
         services.AddScoped<IBillingProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingRecurringProviderGateway>(sp => sp.GetRequiredService<YooKassaBillingGateway>());
         services.AddScoped<IBillingProviderGatewayAccessor, ConfigurableBillingProviderGatewayAccessor>();
+        services.AddSingleton<IWebPushClientAdapter, WebPushClientAdapter>();
         services.AddScoped<IWebPushNotificationSender, WebPushNotificationSender>();
         services.AddScoped<IWebPushConfigurationProvider, WebPushNotificationSender>();
         services.AddHttpClient<IOpenAiFoodClient, OpenAiFoodClient>(client => {

@@ -15,7 +15,7 @@ public class CyclesController(ISender mediator) : AuthorizedController(mediator)
     [HttpGet("current")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>
-        HandleOk(userId.ToCurrentQuery(), static value => value is null ? null : value.ToHttpResponse());
+        HandleOk(userId.ToCurrentQuery(), static value => value?.ToHttpResponse());
 
     [HttpGet("current/nutrition-summary")]
     [ProducesResponseType<CycleNutritionSummaryHttpResponse>(StatusCodes.Status200OK)]

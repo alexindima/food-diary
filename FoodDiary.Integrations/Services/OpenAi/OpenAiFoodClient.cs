@@ -196,14 +196,23 @@ public sealed class OpenAiFoodClient(
             : null;
         string summary = SummarizeErrorBody(responseBody);
 
-        if (attempt < MaxTransientRetries && IsTransientStatusCode(response.StatusCode)) {
-            logger.LogWarning(
-                "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
-                attempt + 1,
-                statusCode,
-                requestId ?? "n/a",
-                summary);
-            await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
+        if (IsTransientStatusCode(response.StatusCode)) {
+            if (attempt < MaxTransientRetries) {
+                logger.LogWarning(
+                    "OpenAI transient failure on attempt {Attempt}. Status={Status} RequestId={RequestId} Summary={Summary}. Retrying.",
+                    attempt + 1,
+                    statusCode,
+                    requestId ?? "n/a",
+                    summary);
+                await Task.Delay(RetryDelays[attempt], cancellationToken).ConfigureAwait(false);
+            } else {
+                logger.LogWarning(
+                    "OpenAI transient failure exhausted retries. Status={Status} RequestId={RequestId} Summary={Summary}",
+                    statusCode,
+                    requestId ?? "n/a",
+                    summary);
+            }
+
             return (true, Error.None);
         }
 

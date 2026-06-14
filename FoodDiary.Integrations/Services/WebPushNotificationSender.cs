@@ -15,6 +15,7 @@ public sealed class WebPushNotificationSender(
     IUserRepository userRepository,
     INotificationTextRenderer notificationTextRenderer,
     IOptions<WebPushOptions> optionsAccessor,
+    IWebPushClientAdapter webPushClient,
     ILogger<WebPushNotificationSender> logger)
     : IWebPushNotificationSender, IWebPushConfigurationProvider {
     private readonly WebPushOptions options = optionsAccessor.Value;
@@ -140,7 +141,6 @@ public sealed class WebPushNotificationSender(
         Notification notification,
         IReadOnlyCollection<WebPushSubscription> subscriptions,
         CancellationToken cancellationToken) {
-        var client = new WebPushClient();
         var vapidDetails = new VapidDetails(options.Subject, options.PublicKey, options.PrivateKey);
         var invalidSubscriptions = new List<WebPushSubscription>();
         int deliveredCount = 0;
@@ -152,7 +152,7 @@ public sealed class WebPushNotificationSender(
 
             try {
                 cancellationToken.ThrowIfCancellationRequested();
-                await client.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
+                await webPushClient.SendNotificationAsync(pushSubscription, payload, vapidDetails, cancellationToken).ConfigureAwait(false);
                 deliveredCount++;
             } catch (WebPushException ex) when (IsExpiredSubscription(ex)) {
                 invalidSubscriptions.Add(subscription);

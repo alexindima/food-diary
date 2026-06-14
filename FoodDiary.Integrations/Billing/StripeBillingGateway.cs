@@ -16,6 +16,12 @@ namespace FoodDiary.Integrations.Billing;
 
 public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBillingProviderGateway {
     private readonly StripeOptions _options = options.Value;
+    private IStripeClient StripeClient => field ?? StripeConfiguration.StripeClient;
+
+    internal StripeBillingGateway(IOptions<StripeOptions> options, IStripeClient stripeClient)
+        : this(options) {
+        StripeClient = stripeClient;
+    }
 
     public string Provider => Domain.Entities.Billing.BillingProviderNames.Stripe;
 
@@ -30,7 +36,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
 
         string? customerId = request.ExistingCustomerId;
         if (string.IsNullOrWhiteSpace(customerId)) {
-            var customerService = new CustomerService();
+            var customerService = new CustomerService(StripeClient);
             Customer customer = await customerService.CreateAsync(
                 new CustomerCreateOptions {
                     Email = request.Email,
@@ -43,7 +49,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
         }
 
         string priceId = ResolvePriceId(request.Plan);
-        var sessionService = new CheckoutSessionService();
+        var sessionService = new CheckoutSessionService(StripeClient);
         CheckoutSession session = await sessionService.CreateAsync(
             new CheckoutSessionCreateOptions {
                 Mode = "subscription",
@@ -86,7 +92,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
 
         StripeConfiguration.ApiKey = _options.SecretKey;
 
-        var portalSessionService = new BillingPortalSessionService();
+        var portalSessionService = new BillingPortalSessionService(StripeClient);
         Stripe.BillingPortal.Session portalSession = await portalSessionService.CreateAsync(
             new BillingPortalSessionCreateOptions {
                 Customer = request.CustomerId,
@@ -140,7 +146,7 @@ public sealed class StripeBillingGateway(IOptions<StripeOptions> options) : IBil
             return null;
         }
 
-        var subscriptionService = new SubscriptionService();
+        var subscriptionService = new SubscriptionService(StripeClient);
         Subscription subscription = await subscriptionService.GetAsync(session.SubscriptionId, cancellationToken: cancellationToken).ConfigureAwait(false);
         return MapSubscriptionEvent(subscription, stripeEvent, session.Metadata);
     }

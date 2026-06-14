@@ -16,10 +16,18 @@ public sealed class GoogleTokenValidator(IOptions<GoogleAuthOptions> options, IL
     private const string MetadataAddress = "https://accounts.google.com/.well-known/openid-configuration";
     private static readonly string[] ValidIssuers = ["https://accounts.google.com", "accounts.google.com"];
     private readonly GoogleAuthOptions _options = options.Value;
-    private readonly ConfigurationManager<OpenIdConnectConfiguration> _configurationManager = new(
-        MetadataAddress,
-        new OpenIdConnectConfigurationRetriever(),
-        new HttpDocumentRetriever { RequireHttps = true });
+    private readonly IConfigurationManager<OpenIdConnectConfiguration> _configurationManager = new ConfigurationManager<OpenIdConnectConfiguration>(
+            MetadataAddress,
+            new OpenIdConnectConfigurationRetriever(),
+            new HttpDocumentRetriever { RequireHttps = true });
+
+    internal GoogleTokenValidator(
+        IOptions<GoogleAuthOptions> options,
+        ILogger<GoogleTokenValidator> logger,
+        IConfigurationManager<OpenIdConnectConfiguration> configurationManager)
+        : this(options, logger) {
+        _configurationManager = configurationManager;
+    }
 
     public async Task<Result<GoogleIdentityPayload>> ValidateCredentialAsync(string credential, CancellationToken cancellationToken) {
         if (string.IsNullOrWhiteSpace(credential)) {

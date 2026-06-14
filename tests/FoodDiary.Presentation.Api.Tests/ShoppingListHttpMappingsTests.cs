@@ -167,4 +167,55 @@ public sealed class ShoppingListHttpMappingsTests {
         Assert.Equal(productId, response.Items[0].ProductId);
         Assert.Equal("Bread", response.Items[0].Name);
     }
+
+    [Fact]
+    public void ShoppingListModel_ToHttpResponse_MapsItemSources() {
+        var listId = Guid.NewGuid();
+        var itemId = Guid.NewGuid();
+        var sourceId = Guid.NewGuid();
+        var mealPlanId = Guid.NewGuid();
+        var mealPlanMealId = Guid.NewGuid();
+        var recipeId = Guid.NewGuid();
+        DateTime createdAt = DateTime.UtcNow;
+        var source = new ShoppingListItemSourceModel(
+            sourceId,
+            "meal-plan",
+            mealPlanId,
+            mealPlanMealId,
+            recipeId,
+            "Breakfast",
+            DayNumber: 2,
+            MealType: "breakfast",
+            Amount: 150,
+            Unit: "g");
+        var item = new ShoppingListItemModel(
+            itemId,
+            listId,
+            ProductId: null,
+            "Oats",
+            Amount: 150,
+            Unit: "g",
+            Category: "Grains",
+            Aisle: "5",
+            Note: "rolled",
+            IsChecked: true,
+            CheckedOnUtc: createdAt,
+            SortOrder: 1,
+            Sources: [source]);
+        var model = new ShoppingListModel(listId, "Shopping", createdAt, [item]);
+
+        ShoppingListHttpResponse response = model.ToHttpResponse();
+
+        ShoppingListItemSourceHttpResponse mappedSource = Assert.Single(Assert.Single(response.Items).Sources);
+        Assert.Equal(sourceId, mappedSource.Id);
+        Assert.Equal("meal-plan", mappedSource.SourceType);
+        Assert.Equal(mealPlanId, mappedSource.MealPlanId);
+        Assert.Equal(mealPlanMealId, mappedSource.MealPlanMealId);
+        Assert.Equal(recipeId, mappedSource.RecipeId);
+        Assert.Equal("Breakfast", mappedSource.Label);
+        Assert.Equal(2, mappedSource.DayNumber);
+        Assert.Equal("breakfast", mappedSource.MealType);
+        Assert.Equal(150, mappedSource.Amount);
+        Assert.Equal("g", mappedSource.Unit);
+    }
 }

@@ -1,11 +1,29 @@
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.ValueObjects.Ids;
+using Amazon.S3;
+using FoodDiary.Application.Abstractions.Admin.Common;
+using FoodDiary.Application.Abstractions.Ai.Common;
+using FoodDiary.Application.Abstractions.Authentication.Abstractions;
+using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
+using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Domain.Entities.Ai;
+using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Integrations;
+using FoodDiary.Integrations.Billing;
+using FoodDiary.Integrations.Options;
+using FoodDiary.Integrations.Services;
+using FoodDiary.Integrations.Services.MailInbox;
+using FoodDiary.Integrations.Services.OpenAi;
+using FoodDiary.Integrations.Wearables;
 using FoodDiary.MailRelay.Client.Options;
 using FoodDiary.Mediator;
 using Microsoft.EntityFrameworkCore;
@@ -102,6 +120,142 @@ public sealed class DependencyInjectionTests {
 
         OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<FoodDiary.Integrations.Options.S3Options>>().Value);
         Assert.Contains("ServiceUrl", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddIntegrations_RegistersIntegrationServicesAndTypedHttpClients() {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddSingleton(TimeProvider.System);
+        IConfiguration configuration = CreateValidIntegrationsConfiguration();
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        Assert.IsType<AmazonS3Client>(provider.GetRequiredService<IAmazonS3>());
+        Assert.IsType<S3ObjectStorageClient>(provider.GetRequiredService<IObjectStorageClient>());
+        Assert.IsType<S3ImageStorageService>(provider.GetRequiredService<IImageStorageService>());
+        Assert.IsType<RelayEmailTransport>(provider.GetRequiredService<RelayEmailTransport>());
+        Assert.IsType<RelayEmailTransport>(provider.GetRequiredService<IEmailTransport>());
+        Assert.NotNull(provider.GetRequiredService<IGoogleTokenValidator>());
+        Assert.NotNull(provider.GetRequiredService<ITelegramAuthValidator>());
+        Assert.NotNull(provider.GetRequiredService<ITelegramLoginWidgetValidator>());
+        Assert.IsType<BillingPublicConfigProvider>(provider.GetRequiredService<IBillingPublicConfigProvider>());
+        Assert.IsType<ConfigurableBillingProviderGatewayAccessor>(scope.ServiceProvider.GetRequiredService<IBillingProviderGatewayAccessor>());
+        Assert.Contains(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IWebPushNotificationSender) &&
+                          descriptor.ImplementationType == typeof(WebPushNotificationSender) &&
+                          descriptor.Lifetime == ServiceLifetime.Scoped);
+        Assert.Contains(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IWebPushConfigurationProvider) &&
+                          descriptor.ImplementationType == typeof(WebPushNotificationSender) &&
+                          descriptor.Lifetime == ServiceLifetime.Scoped);
+        Assert.IsType<OpenAiFoodClient>(scope.ServiceProvider.GetRequiredService<IOpenAiFoodClient>());
+        Assert.IsType<UsdaFoodSearchService>(scope.ServiceProvider.GetRequiredService<IUsdaFoodSearchService>());
+        Assert.IsType<OpenFoodFactsService>(scope.ServiceProvider.GetRequiredService<IOpenFoodFactsService>());
+        Assert.IsType<MailInboxClientAdminMailInboxReader>(scope.ServiceProvider.GetRequiredService<IAdminMailInboxReader>());
+
+        IReadOnlyList<IBillingProviderGateway> gateways = scope.ServiceProvider.GetServices<IBillingProviderGateway>().ToList();
+        Assert.Contains(gateways, gateway => gateway is StripeBillingGateway);
+        Assert.Contains(gateways, gateway => gateway is PaddleBillingGateway);
+        Assert.Contains(gateways, gateway => gateway is YooKassaBillingGateway);
+        Assert.IsType<YooKassaBillingGateway>(scope.ServiceProvider.GetRequiredService<IBillingRecurringProviderGateway>());
+
+        IReadOnlyList<IWearableClient> wearableClients = scope.ServiceProvider.GetServices<IWearableClient>().ToList();
+        Assert.Contains(wearableClients, client => client.Provider == WearableProvider.Fitbit);
+        Assert.Contains(wearableClients, client => client.Provider == WearableProvider.GoogleFit);
+    }
+
+    [Fact]
+    public void AddIntegrations_ConfiguresNamedHttpClientTimeoutsAndHeaders() {
+        var services = new ServiceCollection();
+        services.AddLogging();
+        services.AddSingleton(TimeProvider.System);
+        IConfiguration configuration = CreateValidIntegrationsConfiguration();
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        IHttpClientFactory factory = provider.GetRequiredService<IHttpClientFactory>();
+
+        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(PaddleBillingGateway)).Timeout);
+        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(YooKassaBillingGateway)).Timeout);
+        Assert.Equal(TimeSpan.FromSeconds(15), factory.CreateClient(nameof(IUsdaFoodSearchService)).Timeout);
+        HttpClient openFoodFactsClient = factory.CreateClient(nameof(IOpenFoodFactsService));
+        Assert.Equal(TimeSpan.FromSeconds(10), openFoodFactsClient.Timeout);
+        Assert.Contains(openFoodFactsClient.DefaultRequestHeaders.UserAgent, value => string.Equals(value.Product?.Name, "FoodDiaryTests", StringComparison.Ordinal));
+        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(FitbitClient)).Timeout);
+        Assert.Equal(TimeSpan.FromSeconds(30), factory.CreateClient(nameof(GoogleFitClient)).Timeout);
+    }
+
+    [Fact]
+    public void AddIntegrations_WithInvalidBillingProvider_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["Billing:Provider"] = "unsupported",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<BillingOptions>>().Value);
+        Assert.Contains("supported billing provider", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddIntegrations_WithIncompleteStripeConfiguration_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["Stripe:SecretKey"] = "sk_test",
+            ["Stripe:WebhookSecret"] = "whsec_test",
+            ["Stripe:PremiumMonthlyPriceId"] = "price_monthly",
+            ["Stripe:PremiumYearlyPriceId"] = "price_yearly",
+            ["Stripe:SuccessUrl"] = "not-a-url",
+            ["Stripe:CancelUrl"] = "https://example.com/cancel",
+            ["Stripe:PortalReturnUrl"] = "https://example.com/portal",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<StripeOptions>>().Value);
+        Assert.Contains("Stripe configuration is incomplete", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddIntegrations_WithInvalidWebPushConfiguration_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["WebPush:Enabled"] = "true",
+            ["WebPush:Subject"] = "not-a-url",
+            ["WebPush:PublicKey"] = "public",
+            ["WebPush:PrivateKey"] = "private",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<WebPushOptions>>().Value);
+        Assert.Contains("WebPush configuration is invalid", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public void AddIntegrations_WithOpenAiApiKeyAndMissingTextModel_FailsOptionsValidation() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["OpenAi:ApiKey"] = "test-key",
+            ["OpenAi:TextModel"] = "",
+            ["OpenAi:VisionModel"] = "vision-model",
+            ["OpenAi:VisionFallbackModel"] = "vision-fallback",
+        });
+
+        services.AddIntegrations(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        OptionsValidationException ex = Assert.Throws<OptionsValidationException>(() => provider.GetRequiredService<IOptions<OpenAiOptions>>().Value);
+        Assert.Contains("TextModel", ex.Message, StringComparison.OrdinalIgnoreCase);
     }
 
     [Fact]
@@ -217,6 +371,60 @@ public sealed class DependencyInjectionTests {
         return new ConfigurationBuilder()
             .AddInMemoryCollection(values)
             .Build();
+    }
+
+    private static IConfiguration CreateValidIntegrationsConfiguration() {
+        return CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["S3:AccessKeyId"] = "access",
+            ["S3:SecretAccessKey"] = "secret",
+            ["S3:Region"] = "eu-central-1",
+            ["S3:Bucket"] = "food-diary-test",
+            ["S3:ServiceUrl"] = "https://s3.example.com",
+            ["S3:PublicBaseUrl"] = "https://cdn.example.com",
+            ["S3:MaxUploadSizeBytes"] = "1048576",
+            ["OpenAi:ApiKey"] = "test-key",
+            ["OpenAi:VisionModel"] = "vision-model",
+            ["OpenAi:VisionFallbackModel"] = "vision-fallback",
+            ["OpenAi:TextModel"] = "text-model",
+            ["GoogleAuth:ClientId"] = "google-client",
+            ["Billing:Provider"] = BillingProviderNames.Stripe,
+            ["Stripe:SecretKey"] = "sk_test",
+            ["Stripe:WebhookSecret"] = "whsec_test",
+            ["Stripe:PremiumMonthlyPriceId"] = "price_monthly",
+            ["Stripe:PremiumYearlyPriceId"] = "price_yearly",
+            ["Stripe:SuccessUrl"] = "https://example.com/success",
+            ["Stripe:CancelUrl"] = "https://example.com/cancel",
+            ["Stripe:PortalReturnUrl"] = "https://example.com/portal",
+            ["Paddle:ApiKey"] = "paddle-key",
+            ["Paddle:WebhookSecret"] = "paddle-secret",
+            ["Paddle:MonthlyPriceId"] = "paddle-monthly",
+            ["Paddle:YearlyPriceId"] = "paddle-yearly",
+            ["Paddle:SuccessUrl"] = "https://example.com/success",
+            ["Paddle:CancelUrl"] = "https://example.com/cancel",
+            ["YooKassa:ShopId"] = "shop",
+            ["YooKassa:SecretKey"] = "secret",
+            ["YooKassa:WebhookSecret"] = "webhook",
+            ["YooKassa:MonthlyAmount"] = "199.00",
+            ["YooKassa:YearlyAmount"] = "1990.00",
+            ["YooKassa:ReturnUrl"] = "https://example.com/return",
+            ["WebPush:Enabled"] = "true",
+            ["WebPush:Subject"] = "https://example.com",
+            ["WebPush:PublicKey"] = "public",
+            ["WebPush:PrivateKey"] = "private",
+            ["WebPush:DefaultUrl"] = "/",
+            ["MailRelayClient:BaseUrl"] = "https://mail-relay.example.com",
+            ["MailRelayClient:ApiKey"] = "relay-key",
+            ["MailInboxClient:BaseUrl"] = "https://mail-inbox.example.com",
+            ["MailInboxClient:ApiKey"] = "inbox-key",
+            ["UsdaApi:ApiKey"] = "usda-key",
+            ["OpenFoodFacts:UserAgent"] = "FoodDiaryTests/1.0",
+            ["Fitbit:ClientId"] = "fitbit-client",
+            ["Fitbit:ClientSecret"] = "fitbit-secret",
+            ["Fitbit:RedirectUri"] = "https://example.com/fitbit",
+            ["GoogleFit:ClientId"] = "google-fit-client",
+            ["GoogleFit:ClientSecret"] = "google-fit-secret",
+            ["GoogleFit:RedirectUri"] = "https://example.com/google-fit",
+        });
     }
 
     [ExcludeFromCodeCoverage]

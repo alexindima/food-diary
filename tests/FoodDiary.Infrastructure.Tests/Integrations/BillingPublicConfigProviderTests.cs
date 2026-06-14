@@ -39,6 +39,21 @@ public sealed class BillingPublicConfigProviderTests {
     }
 
     [Fact]
+    public void GetPublicConfig_WithYooKassaPrimary_UsesYooKassaCheckoutValidation() {
+        BillingPublicConfigProvider provider = CreateProvider(
+            billing: new BillingOptions { Provider = " YooKassa " },
+            stripe: new StripeOptions(),
+            paddle: new PaddleOptions(),
+            yooKassa: ValidYooKassaOptions());
+
+        BillingPublicConfigModel config = provider.GetPublicConfig();
+
+        Assert.Equal("YooKassa", config.Provider);
+        Assert.Equal([BillingProviderNames.YooKassa], config.AvailableProviders);
+        Assert.Null(config.PaddleClientToken);
+    }
+
+    [Fact]
     public void GetPublicConfig_WithInvalidConfigurations_ReturnsNoAvailableProviders() {
         BillingPublicConfigProvider provider = CreateProvider(
             billing: new BillingOptions { Provider = BillingProviderNames.Stripe },

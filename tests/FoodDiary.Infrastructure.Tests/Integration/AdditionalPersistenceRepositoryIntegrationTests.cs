@@ -1,0 +1,380 @@
+using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Domain.Entities.Admin;
+using FoodDiary.Domain.Entities.Billing;
+using FoodDiary.Domain.Entities.MealPlans;
+using FoodDiary.Domain.Entities.Recipes;
+using FoodDiary.Domain.Entities.Social;
+using FoodDiary.Domain.Entities.Usda;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Entities.Wearables;
+using FoodDiary.Domain.Enums;
+using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Admin;
+using FoodDiary.Infrastructure.Persistence.Billing;
+using FoodDiary.Infrastructure.Persistence.MealPlans;
+using FoodDiary.Infrastructure.Persistence.OpenFoodFacts;
+using FoodDiary.Infrastructure.Persistence.RecipeComments;
+using FoodDiary.Infrastructure.Persistence.RecipeLikes;
+using FoodDiary.Infrastructure.Persistence.Usda;
+using FoodDiary.Infrastructure.Persistence.Wearables;
+
+namespace FoodDiary.Infrastructure.Tests.Integration;
+
+[Collection(PostgresDatabaseCollection.Name)]
+[ExcludeFromCodeCoverage]
+public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    [RequiresDockerFact]
+    public async Task WearableRepositories_AddUpdateAndQueryConnectionsAndSyncEntries() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"wearable-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var connectionRepository = new WearableConnectionRepository(context);
+        var connection = WearableConnection.Create(
+            user.Id,
+            WearableProvider.Fitbit,
+            "external-user",
+            "access-token",
+            "refresh-token",
+            DateTime.UtcNow.AddHours(1));
+
+        await connectionRepository.AddAsync(connection);
+        connection.UpdateTokens("access-token-2", "refresh-token-2", DateTime.UtcNow.AddHours(2));
+        await connectionRepository.UpdateAsync(connection);
+
+        WearableConnection? savedConnection = await connectionRepository.GetAsync(user.Id, WearableProvider.Fitbit);
+        IReadOnlyList<WearableConnection> allConnections = await connectionRepository.GetAllForUserAsync(user.Id);
+
+        Assert.NotNull(savedConnection);
+        Assert.Equal("access-token-2", savedConnection.AccessToken);
+        Assert.Single(allConnections);
+
+        var syncRepository = new WearableSyncRepository(context);
+        DateTime date = DateTime.UtcNow.Date;
+        var syncEntry = WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date.AddHours(9), 1200);
+
+        await syncRepository.AddAsync(syncEntry);
+        syncEntry.UpdateValue(1500);
+        await syncRepository.UpdateAsync(syncEntry);
+
+        WearableSyncEntry? savedEntry = await syncRepository.GetAsync(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date);
+        IReadOnlyList<WearableSyncEntry> summary = await syncRepository.GetDailySummaryAsync(user.Id, date.AddHours(12));
+
+        Assert.NotNull(savedEntry);
+        Assert.Equal(1500, savedEntry.Value);
+        Assert.Single(summary);
+    }
+
+    [RequiresDockerFact]
+    public async Task OpenFoodFactsRepository_UpsertsSearchesAndEscapesLikePattern() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new OpenFoodFactsProductCacheRepository(context);
+        var product = new OpenFoodFactsProductModel(
+            Barcode: "123",
+            Name: "100% Cocoa",
+            Brand: "Brand",
+            Category: "Chocolate",
+            ImageUrl: "https://example.com/cocoa.png",
+            CaloriesPer100G: 500,
+            ProteinsPer100G: 12,
+            FatsPer100G: 30,
+            CarbsPer100G: 40,
+            FiberPer100G: 8);
+
+        await repository.UpsertAsync([
+            product,
+            product with { Name = "Duplicate ignored" },
+            product with { Barcode = " ", Name = "No barcode" },
+        ]);
+        await repository.UpsertAsync([product with { Name = "100% Cocoa Updated" }]);
+
+        IReadOnlyList<OpenFoodFactsProductModel> matches = await repository.SearchAsync("100% Cocoa", limit: 5);
+        IReadOnlyList<OpenFoodFactsProductModel> blankMatches = await repository.SearchAsync("   ", limit: 5);
+
+        OpenFoodFactsProductModel match = Assert.Single(matches);
+        Assert.Equal("100% Cocoa Updated", match.Name);
+        Assert.Empty(blankMatches);
+    }
+
+    [RequiresDockerFact]
+    public async Task UsdaFoodRepository_ReturnsFoodsNutrientsPortionsAndReferenceValues() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        context.UsdaFoods.AddRange(
+            new UsdaFood { FdcId = 1001, Description = "Apple raw" },
+            new UsdaFood { FdcId = 1002, Description = "Banana raw" });
+        context.UsdaNutrients.AddRange(
+            new UsdaNutrient { Id = 1, Name = "Carbohydrate", UnitName = "g" },
+            new UsdaNutrient { Id = 2, Name = "Protein", UnitName = "g" });
+        context.UsdaFoodNutrients.AddRange(
+            new UsdaFoodNutrient { Id = 1, FdcId = 1001, NutrientId = 1, Amount = 14 },
+            new UsdaFoodNutrient { Id = 2, FdcId = 1001, NutrientId = 2, Amount = 0.3 });
+        context.UsdaFoodPortions.Add(new UsdaFoodPortion {
+            Id = 1,
+            FdcId = 1001,
+            Amount = 1,
+            MeasureUnitName = "medium",
+            GramWeight = 182,
+            PortionDescription = "Medium apple",
+        });
+        context.DailyReferenceValues.Add(new DailyReferenceValue {
+            Id = 1,
+            NutrientId = 1,
+            Value = 275,
+            Unit = "g",
+            AgeGroup = "adult",
+            Gender = "all",
+        });
+        await context.SaveChangesAsync();
+
+        var repository = new UsdaFoodRepository(context);
+
+        IReadOnlyList<UsdaFood> foods = await repository.SearchAsync("apple", limit: 10);
+        UsdaFood? food = await repository.GetByFdcIdAsync(1001);
+        IReadOnlyList<UsdaFoodNutrient> nutrients = await repository.GetNutrientsAsync(1001);
+        IReadOnlyList<UsdaFoodPortion> portions = await repository.GetPortionsAsync(1001);
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientMap = await repository.GetNutrientsByFdcIdsAsync([1001, 1002]);
+        IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> emptyMap = await repository.GetNutrientsByFdcIdsAsync([]);
+        IReadOnlyDictionary<int, DailyReferenceValue> referenceValues = await repository.GetDailyReferenceValuesAsync();
+
+        Assert.Single(foods);
+        Assert.NotNull(food);
+        Assert.Equal(2, nutrients.Count);
+        Assert.Equal("Carbohydrate", nutrients[0].Nutrient.Name);
+        Assert.Single(portions);
+        Assert.True(nutrientMap.ContainsKey(1001));
+        Assert.Empty(emptyMap);
+        Assert.True(referenceValues.ContainsKey(1));
+    }
+
+    [RequiresDockerFact]
+    public async Task RecipeSocialRepositories_AddQueryUpdateAndDeleteLikesAndComments() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"social-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "Shared recipe", servings: 2, description: "Description");
+        context.Users.Add(user);
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
+
+        var likeRepository = new RecipeLikeRepository(context);
+        RecipeLike like = await likeRepository.AddAsync(RecipeLike.Create(user.Id, recipe.Id));
+
+        Assert.NotNull(await likeRepository.GetByUserAndRecipeAsync(user.Id, recipe.Id));
+        Assert.Equal(1, await likeRepository.CountByRecipeAsync(recipe.Id));
+
+        await likeRepository.DeleteAsync(like);
+        Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
+
+        var commentRepository = new RecipeCommentRepository(context);
+        RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
+        comment.UpdateText("Updated comment");
+        await commentRepository.UpdateAsync(comment);
+
+        RecipeComment? savedComment = await commentRepository.GetByIdAsync(comment.Id, asTracking: false);
+        (IReadOnlyList<RecipeComment> comments, int totalComments) = await commentRepository.GetPagedByRecipeAsync(recipe.Id, page: 1, limit: 10);
+
+        Assert.NotNull(savedComment);
+        Assert.Equal("Updated comment", savedComment.Text);
+        Assert.Single(comments);
+        Assert.Equal(1, totalComments);
+
+        await commentRepository.DeleteAsync(comment);
+        Assert.Null(await commentRepository.GetByIdAsync(comment.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task MealPlanRepository_AddsAndQueriesCuratedAndUserPlans() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meal-plans-{Guid.NewGuid():N}@example.com", "hash");
+        var recipe = Recipe.Create(user.Id, "Plan recipe", servings: 2, description: "Description");
+        context.Users.Add(user);
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
+
+        var curated = MealPlan.CreateCurated("Balanced curated", "Curated", DietType.Balanced, durationDays: 7, targetCaloriesPerDay: 2000);
+        curated.AddDay(1).AddMeal(MealType.Breakfast, recipe.Id, servings: 1);
+        var keto = MealPlan.CreateCurated("Keto curated", "Curated", DietType.Keto, durationDays: 7, targetCaloriesPerDay: 1800);
+        var userPlan = MealPlan.CreateForUser(user.Id, "User plan", description: null, DietType.Balanced, durationDays: 3, targetCaloriesPerDay: null);
+        var repository = new MealPlanRepository(context);
+
+        await repository.AddAsync(curated);
+        await repository.AddAsync(keto);
+        await repository.AddAsync(userPlan);
+
+        MealPlan? withDays = await repository.GetByIdAsync(curated.Id, includeDays: true);
+        IReadOnlyList<MealPlan> balancedCurated = await repository.GetCuratedAsync(DietType.Balanced);
+        IReadOnlyList<MealPlan> allCurated = await repository.GetCuratedAsync();
+        IReadOnlyList<MealPlan> userPlans = await repository.GetByUserAsync(user.Id);
+
+        Assert.NotNull(withDays);
+        Assert.Single(withDays.Days);
+        Assert.Single(balancedCurated);
+        Assert.Equal(2, allCurated.Count);
+        Assert.Single(userPlans);
+    }
+
+    [RequiresDockerFact]
+    public async Task AdminImpersonationSessionRepository_ReturnsProjectedRows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var actor = User.Create($"admin-actor-{Guid.NewGuid():N}@example.com", "hash");
+        var target = User.Create($"admin-target-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.AddRange(actor, target);
+        await context.SaveChangesAsync();
+
+        var sessionRepository = new AdminImpersonationSessionRepository(context);
+        await sessionRepository.AddAsync(AdminImpersonationSession.Start(
+            actor.Id,
+            target.Id,
+            "Investigating support ticket",
+            "127.0.0.1",
+            "UnitTest",
+            DateTime.UtcNow));
+
+        (IReadOnlyList<AdminImpersonationSessionReadModel> sessions, int totalSessions) =
+            await sessionRepository.GetPagedAsync(page: 0, limit: 500, search: "support");
+
+        Assert.Single(sessions);
+        Assert.Equal(1, totalSessions);
+    }
+
+    [RequiresDockerFact]
+    public async Task BillingRepositories_ReturnRows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var target = User.Create($"billing-target-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(target);
+        await context.SaveChangesAsync();
+
+        var subscriptionRepository = new BillingSubscriptionRepository(context);
+        BillingSubscription subscription = CreateActiveSubscription(target);
+        await subscriptionRepository.AddAsync(subscription);
+
+        Assert.NotNull(await subscriptionRepository.GetByUserIdAsync(target.Id));
+        Assert.NotNull(await subscriptionRepository.GetByExternalCustomerIdAsync(BillingProviderNames.Stripe, "customer-1"));
+        Assert.NotNull(await subscriptionRepository.GetByExternalSubscriptionIdAsync(BillingProviderNames.Stripe, "subscription-1"));
+        Assert.NotNull(await subscriptionRepository.GetByExternalPaymentMethodIdAsync(BillingProviderNames.Stripe, "payment-method-1"));
+        Assert.Single(await subscriptionRepository.GetDueForRenewalAsync(BillingProviderNames.Stripe, DateTime.UtcNow.AddDays(30), limit: 10));
+
+        var paymentRepository = new BillingPaymentRepository(context);
+        BillingPayment payment = await paymentRepository.AddAsync(CreatePayment(target, subscription.Id));
+
+        Assert.Same(payment, await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "payment-1"));
+
+        var webhookRepository = new BillingWebhookEventRepository(context);
+        await webhookRepository.AddAsync(CreateWebhookEvent());
+
+        Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "event-1"));
+    }
+
+    [RequiresDockerFact]
+    public async Task AdminBillingRepository_ReturnsProjectedRows() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var target = User.Create($"admin-billing-target-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(target);
+        await context.SaveChangesAsync();
+
+        BillingSubscription subscription = CreateActiveSubscription(target);
+        context.BillingSubscriptions.Add(subscription);
+        context.BillingPayments.Add(CreatePayment(target, subscription.Id));
+        BillingWebhookEvent webhookEvent = CreateWebhookEvent();
+        context.BillingWebhookEvents.Add(webhookEvent);
+        await context.SaveChangesAsync();
+
+        var adminBillingRepository = new AdminBillingRepository(context);
+        AdminBillingListFilter filter = new(
+            Page: 1,
+            Limit: 20,
+            Provider: BillingProviderNames.Stripe,
+            Status: null,
+            Kind: null,
+            Search: "customer-1",
+            FromUtc: DateTime.UtcNow.AddDays(-1),
+            ToUtc: DateTime.UtcNow.AddDays(1));
+
+        Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter)).Items);
+        Assert.Single((await adminBillingRepository.GetPaymentsAsync(filter with { Status = "succeeded", Kind = "subscription" })).Items);
+        Assert.Single((await adminBillingRepository.GetWebhookEventsAsync(filter with { Status = "processed", Search = webhookEvent.EventId })).Items);
+    }
+
+    private static BillingSubscription CreateActiveSubscription(User user) {
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.Stripe,
+            "customer-1",
+            "price-monthly",
+            "monthly");
+        subscription.ApplyProviderSnapshot(
+            BillingProviderNames.Stripe,
+            "subscription-1",
+            "payment-method-1",
+            "price-monthly",
+            "monthly",
+            "active",
+            DateTime.UtcNow.AddDays(-10),
+            DateTime.UtcNow.AddDays(20),
+            cancelAtPeriodEnd: false,
+            canceledAtUtc: null,
+            trialStartUtc: null,
+            trialEndUtc: null,
+            webhookEventId: "event-subscription",
+            syncedAtUtc: DateTime.UtcNow,
+            providerMetadataJson: "{}");
+        return subscription;
+    }
+
+    private static BillingPayment CreatePayment(User user, Guid subscriptionId) {
+        return BillingPayment.Create(
+            user.Id,
+            subscriptionId,
+            BillingProviderNames.Stripe,
+            "payment-1",
+            "customer-1",
+            "subscription-1",
+            "payment-method-1",
+            "price-monthly",
+            "monthly",
+            "succeeded",
+            "subscription",
+            199m,
+            "USD",
+            DateTime.UtcNow.AddDays(-10),
+            DateTime.UtcNow.AddDays(20),
+            "event-payment",
+            "{}");
+    }
+
+    private static BillingWebhookEvent CreateWebhookEvent() {
+        return BillingWebhookEvent.CreateProcessed(
+            BillingProviderNames.Stripe,
+            "event-1",
+            "invoice.paid",
+            "payment-1",
+            DateTime.UtcNow,
+            "{}");
+    }
+
+    [RequiresDockerFact]
+    public async Task EmailTemplateRepository_GetsOrdersAndUpsertsTemplates() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var repository = new EmailTemplateRepository(context);
+
+        await repository.UpsertAsync("welcome", "en", "Welcome", "<p>Hello</p>", "Hello", isActive: true);
+        await repository.UpsertAsync("welcome", "en", "Welcome back", "<p>Hi</p>", "Hi", isActive: false);
+        await repository.UpsertAsync("reset", "ru", "Reset", "<p>Reset</p>", "Reset", isActive: true);
+
+        IReadOnlyList<FoodDiary.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
+        FoodDiary.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");
+
+        Assert.Contains(
+            templates,
+            item => string.Equals(item.Key, "reset", StringComparison.Ordinal) &&
+                    string.Equals(item.Locale, "ru", StringComparison.Ordinal));
+        Assert.Contains(
+            templates,
+            item => string.Equals(item.Key, "welcome", StringComparison.Ordinal) &&
+                    string.Equals(item.Locale, "en", StringComparison.Ordinal));
+        Assert.NotNull(template);
+        Assert.Equal("Welcome back", template.Subject);
+        Assert.False(template.IsActive);
+    }
+}

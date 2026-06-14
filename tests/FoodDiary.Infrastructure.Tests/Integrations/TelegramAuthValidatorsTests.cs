@@ -78,6 +78,31 @@ public sealed class TelegramAuthValidatorsTests {
     }
 
     [Fact]
+    public void ValidateInitData_WithBlankHash_ReturnsInvalidDataFailure() {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        TelegramAuthValidator validator = CreateInitDataValidator();
+
+        Result<TelegramInitData> result = validator.ValidateInitData(string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&user={{\"id\":42}}&hash=%20%20"));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
+    public void ValidateInitData_WithValidHashButMissingUser_ReturnsInvalidDataFailure() {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        string dataCheckString = string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}");
+        byte[] secretKey = ComputeHmacSha256(Encoding.UTF8.GetBytes(BotToken), "WebAppData");
+        string hash = ComputeHmacSha256Hex(secretKey, dataCheckString);
+        TelegramAuthValidator validator = CreateInitDataValidator();
+
+        Result<TelegramInitData> result = validator.ValidateInitData(string.Create(CultureInfo.InvariantCulture, $"auth_date={authDate}&hash={hash}"));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
     public void ValidateInitData_WithMalformedUserJson_ReturnsInvalidDataFailure() {
         long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
         string initData = CreateSignedInitData(authDate, userJson: "{bad-json");
@@ -159,6 +184,24 @@ public sealed class TelegramAuthValidatorsTests {
         TelegramLoginWidgetValidator validator = CreateWidgetValidator();
 
         Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(0, 0, "", Username: null, FirstName: null, LastName: null, PhotoUrl: null));
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);
+    }
+
+    [Fact]
+    public void ValidateLoginWidget_WithInvalidHash_ReturnsInvalidDataFailure() {
+        long authDate = new DateTimeOffset(NowUtc).ToUnixTimeSeconds();
+        TelegramLoginWidgetValidator validator = CreateWidgetValidator();
+
+        Result<TelegramInitData> result = validator.ValidateLoginWidget(new TelegramLoginWidgetData(
+            42,
+            authDate,
+            "bad",
+            Username: "alex",
+            FirstName: "Alex",
+            LastName: null,
+            PhotoUrl: null));
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.TelegramInvalidData", result.Error.Code);

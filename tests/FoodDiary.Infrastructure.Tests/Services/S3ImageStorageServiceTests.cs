@@ -62,6 +62,34 @@ public sealed class S3ImageStorageServiceTests {
         Assert.Equal(nameof(InvalidOperationException), errorType);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public async Task CreatePresignedUploadAsync_WhenFileSizeIsNotPositive_ThrowsOutOfRange(long fileSizeBytes) {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        await Assert.ThrowsAsync<ArgumentOutOfRangeException>(() =>
+            service.CreatePresignedUploadAsync(
+                UserId.New(),
+                "meal.webp",
+                "image/webp",
+                fileSizeBytes,
+                CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task CreatePresignedUploadAsync_WhenFileTooLarge_ThrowsInvalidOperationException() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.CreatePresignedUploadAsync(
+                UserId.New(),
+                "meal.webp",
+                "image/webp",
+                6 * 1024 * 1024,
+                CancellationToken.None));
+    }
+
     [Fact]
     public async Task CreatePresignedUploadAsync_WithUnsafeFileName_EscapesPublicUrlKeySegments() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient());
@@ -77,6 +105,79 @@ public sealed class S3ImageStorageServiceTests {
         Assert.DoesNotContain("meal-#1?.webp", result.FileUrl, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task CreatePresignedUploadAsync_WithPathOnlyFileName_UsesImageFallbackName() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        PresignedUpload result = await service.CreatePresignedUploadAsync(
+            UserId.New(),
+            "/",
+            "image/webp",
+            1024,
+            CancellationToken.None);
+
+        Assert.EndsWith("-image", result.ObjectKey, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task CreatePresignedUploadAsync_WithVeryLongFileName_TruncatesName() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+        string longName = new('a', 140);
+
+        PresignedUpload result = await service.CreatePresignedUploadAsync(
+            UserId.New(),
+            longName,
+            "image/webp",
+            1024,
+            CancellationToken.None);
+
+        string storedName = result.ObjectKey.Split('-').Last();
+        Assert.Equal(128, storedName.Length);
+    }
+
+    [Fact]
+    public async Task CreatePresignedUploadAsync_WithPublicBaseUrl_UsesPublicBaseUrl() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(), publicBaseUrl: "https://cdn.example.com/assets/");
+
+        PresignedUpload result = await service.CreatePresignedUploadAsync(
+            UserId.New(),
+            "meal.webp",
+            "image/webp",
+            1024,
+            CancellationToken.None);
+
+        Assert.StartsWith("https://cdn.example.com/assets/users/", result.FileUrl, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WhenObjectKeyBlank_ReturnsWithoutCallingStorage() {
+        var storageClient = new CountingObjectStorageClient();
+        S3ImageStorageService service = CreateService(storageClient);
+
+        await service.DeleteAsync("   ", CancellationToken.None);
+
+        Assert.Equal(0, storageClient.DeleteCount);
+    }
+
+    [Fact]
+    public async Task DeleteAsync_WhenObjectDeleted_RecordsSuccessMetric() {
+        long? count = null;
+        string? operation = null;
+        string? outcome = null;
+        using MeterListener listener = CreateInfrastructureListener((value, tags) => {
+            count = value;
+            operation = GetTagValue(tags, "fooddiary.storage.operation");
+            outcome = GetTagValue(tags, "fooddiary.storage.outcome");
+        });
+
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        await service.DeleteAsync("users/test/image.webp", CancellationToken.None);
+
+        Assert.Equal(1, count);
+        Assert.Equal("delete", operation);
+        Assert.Equal("success", outcome);
+    }
 
     [Fact]
     public async Task DeleteAsync_WhenTransportFails_RecordsFailureMetric() {
@@ -109,6 +210,36 @@ public sealed class S3ImageStorageServiceTests {
     }
 
     [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectKeyBlank_ReturnsInvalidKey() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient());
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("   ", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("invalid_key", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectInfoMissing_ReturnsNotFound() {
+        S3ImageStorageService service = CreateService(new NullObjectStorageClient());
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("not_found", result.ErrorCode);
+    }
+
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenObjectIsEmpty_ReturnsEmpty() {
+        S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(0, "image/webp")));
+
+        ImageObjectValidationResult result = await service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None);
+
+        Assert.False(result.IsValid);
+        Assert.Equal("empty", result.ErrorCode);
+    }
+
+    [Fact]
     public async Task ValidateUploadedObjectAsync_WhenObjectIsTooLarge_ReturnsInvalid() {
         S3ImageStorageService service = CreateService(new StubObjectStorageClient(new StoredObjectInfo(6 * 1024 * 1024, "image/webp")));
 
@@ -128,13 +259,22 @@ public sealed class S3ImageStorageServiceTests {
         Assert.Equal("unsupported_type", result.ErrorCode);
     }
 
-    private static S3ImageStorageService CreateService(IObjectStorageClient storageClient) {
+    [Fact]
+    public async Task ValidateUploadedObjectAsync_WhenStorageThrows_Rethrows() {
+        S3ImageStorageService service = CreateService(new ThrowingObjectStorageClient(new InvalidOperationException("boom")));
+
+        await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            service.ValidateUploadedObjectAsync("users/test/image.webp", CancellationToken.None));
+    }
+
+    private static S3ImageStorageService CreateService(IObjectStorageClient storageClient, string publicBaseUrl = "") {
         return new S3ImageStorageService(
             storageClient,
             Microsoft.Extensions.Options.Options.Create(new S3Options {
                 Bucket = "fooddiary-assets",
                 Region = "eu-central-1",
                 MaxUploadSizeBytes = 5 * 1024 * 1024,
+                PublicBaseUrl = publicBaseUrl,
             }),
             new StubDateTimeProvider());
     }
@@ -184,6 +324,42 @@ public sealed class S3ImageStorageServiceTests {
 
         public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
             Task.FromResult<StoredObjectInfo?>(objectInfo ?? new StoredObjectInfo(1024, "image/webp"));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CountingObjectStorageClient : IObjectStorageClient {
+        public int DeleteCount { get; private set; }
+
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            DateTime expiresAt) =>
+            $"https://storage.example.com/{bucketName}/{key}";
+
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) {
+            DeleteCount++;
+            return Task.CompletedTask;
+        }
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromResult<StoredObjectInfo?>(new StoredObjectInfo(1024, "image/webp"));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NullObjectStorageClient : IObjectStorageClient {
+        public string GetPreSignedUploadUrl(
+            string bucketName,
+            string key,
+            string contentType,
+            DateTime expiresAt) =>
+            $"https://storage.example.com/{bucketName}/{key}";
+
+        public Task DeleteObjectAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.CompletedTask;
+
+        public Task<StoredObjectInfo?> GetObjectInfoAsync(string bucketName, string key, CancellationToken cancellationToken) =>
+            Task.FromResult<StoredObjectInfo?>(null);
     }
 
     [ExcludeFromCodeCoverage]

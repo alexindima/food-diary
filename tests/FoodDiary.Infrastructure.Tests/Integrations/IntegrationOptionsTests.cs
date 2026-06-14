@@ -56,6 +56,16 @@ public sealed class IntegrationOptionsTests {
     }
 
     [Theory]
+    [InlineData(0, false)]
+    [InlineData(-1, false)]
+    [InlineData(1, true)]
+    public void TelegramAuthOptions_HasValidAuthTtl_RequiresPositiveValue(int authTtlSeconds, bool expected) {
+        var options = new TelegramAuthOptions { AuthTtlSeconds = authTtlSeconds };
+
+        Assert.Equal(expected, TelegramAuthOptions.HasValidAuthTtl(options));
+    }
+
+    [Theory]
     [InlineData(null, true)]
     [InlineData("", true)]
     [InlineData("https://cdn.example.com", true)]

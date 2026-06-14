@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Net;
 using System.Text;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
@@ -191,6 +192,32 @@ public sealed class ExternalFoodServiceTests {
         Assert.Empty(result);
     }
 
+    [Fact]
+    public async Task OpenFoodFactsSearchAsync_WhenRequestFailsWithStaleCache_ReturnsCachedProducts() {
+        string query = $"stale-{Guid.NewGuid():N}";
+        const int limit = 3;
+        var warmupHandler = new RecordingHttpMessageHandler(_ => JsonResponse("""
+            {
+              "products": [
+                { "code": "cached-1", "product_name": "Cached milk", "brands": "Farm" }
+              ]
+            }
+            """));
+        OpenFoodFactsService warmupService = CreateOpenFoodFactsService(warmupHandler);
+        IReadOnlyList<OpenFoodFactsProductModel> warmup = await warmupService.SearchAsync(query, limit, CancellationToken.None);
+        MakeOpenFoodFactsSearchCacheStale(query, limit, TimeSpan.FromMinutes(30));
+        var failingHandler = new RecordingHttpMessageHandler(_ => new HttpResponseMessage(HttpStatusCode.InternalServerError));
+        OpenFoodFactsService failingService = CreateOpenFoodFactsService(failingHandler);
+
+        IReadOnlyList<OpenFoodFactsProductModel> result = await failingService.SearchAsync(query, limit, CancellationToken.None);
+
+        Assert.Single(warmup);
+        OpenFoodFactsProductModel product = Assert.Single(result);
+        Assert.Equal("cached-1", product.Barcode);
+        Assert.Equal("Cached milk", product.Name);
+        Assert.Single(failingHandler.Requests);
+    }
+
     private static UsdaFoodSearchService CreateUsdaService(RecordingHttpMessageHandler handler, string apiKey = "key") {
         return new UsdaFoodSearchService(
             new HttpClient(handler),
@@ -208,6 +235,19 @@ public sealed class ExternalFoodServiceTests {
                 BaseUrl = "https://off.test",
             }),
             NullLogger<OpenFoodFactsService>.Instance);
+    }
+
+    private static void MakeOpenFoodFactsSearchCacheStale(string query, int limit, TimeSpan age) {
+        System.Reflection.FieldInfo field = typeof(OpenFoodFactsService).GetField(
+            "SearchCache",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        object cache = field.GetValue(null)!;
+        string cacheKey = string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{Math.Clamp(limit, 1, 50)}");
+        object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
+        Type cachedType = cached.GetType();
+        object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
+        object stale = Activator.CreateInstance(cachedType, DateTimeOffset.UtcNow - age, products)!;
+        cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
     }
 
     private static HttpResponseMessage JsonResponse(string json) =>

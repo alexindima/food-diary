@@ -2,10 +2,14 @@ using FoodDiary.Presentation.Api.Features.Fasting.Mappings;
 using FoodDiary.Presentation.Api.Features.Fasting.Requests;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Commands.StartFasting;
+using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
+using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 using FoodDiary.Application.Fasting.Queries.GetFastingOverview;
+using FoodDiary.Application.Fasting.Queries.GetFastingStats;
+using FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 using FoodDiary.Presentation.Api.Features.Fasting.Responses;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -80,6 +84,35 @@ public sealed class FastingHttpMappingsTests {
         GetFastingOverviewQuery query = userId.ToOverviewQuery();
 
         Assert.Equal(userId, query.UserId);
+    }
+
+    [Fact]
+    public void CurrentQuery_ToQuery_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        GetCurrentFastingQuery query = userId.ToCurrentQuery();
+
+        Assert.Equal(userId, query.UserId);
+    }
+
+    [Fact]
+    public void EndFasting_ToCommand_MapsUserId() {
+        var userId = Guid.NewGuid();
+
+        EndFastingCommand command = userId.ToEndCommand();
+
+        Assert.Equal(userId, command.UserId);
+    }
+
+    [Fact]
+    public void FastingInsightsQueries_MapUserId() {
+        var userId = Guid.NewGuid();
+
+        GetFastingStatsQuery stats = userId.ToStatsQuery();
+        GetFastingInsightsQuery insights = userId.ToInsightsQuery();
+
+        Assert.Equal(userId, stats.UserId);
+        Assert.Equal(userId, insights.UserId);
     }
 
     [Fact]

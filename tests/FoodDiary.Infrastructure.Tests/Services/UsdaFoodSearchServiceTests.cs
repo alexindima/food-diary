@@ -9,6 +9,15 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 [ExcludeFromCodeCoverage]
 public sealed class UsdaFoodSearchServiceTests {
     [Fact]
+    public async Task SearchBrandedAsync_WhenFoodsNull_ReturnsEmpty() {
+        UsdaFoodSearchService service = CreateService(new SuccessHttpMessageHandler("""{"foods": null}"""));
+
+        IReadOnlyList<UsdaFoodModel> result = await service.SearchBrandedAsync("milk");
+
+        Assert.Empty(result);
+    }
+
+    [Fact]
     public async Task GetFoodDetailAsync_WhenBrandedFoodFound_ReturnsMappedNutrients() {
         const string json = """
             {
@@ -73,12 +82,41 @@ public sealed class UsdaFoodSearchServiceTests {
         Assert.Null(result);
     }
 
-    private static UsdaFoodSearchService CreateService(HttpMessageHandler handler) {
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenApiKeyMissing_ReturnsNullWithoutRequest() {
+        var handler = new CountingHttpMessageHandler("""{}""");
+        UsdaFoodSearchService service = CreateService(handler, apiKey: "");
+
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
+
+        Assert.Null(result);
+        Assert.Equal(0, handler.RequestCount);
+    }
+
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenResponseBodyIsNull_ReturnsNull() {
+        UsdaFoodSearchService service = CreateService(new SuccessHttpMessageHandler("null"));
+
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
+
+        Assert.Null(result);
+    }
+
+    [Fact]
+    public async Task GetFoodDetailAsync_WhenRequestFails_ReturnsNull() {
+        UsdaFoodSearchService service = CreateService(new ErrorHttpMessageHandler(HttpStatusCode.InternalServerError));
+
+        UsdaFoodDetailModel? result = await service.GetFoodDetailAsync(539789);
+
+        Assert.Null(result);
+    }
+
+    private static UsdaFoodSearchService CreateService(HttpMessageHandler handler, string apiKey = "test-key") {
         var httpClient = new HttpClient(handler);
         return new UsdaFoodSearchService(
             httpClient,
             Microsoft.Extensions.Options.Options.Create(new UsdaApiOptions {
-                ApiKey = "test-key",
+                ApiKey = apiKey,
             }),
             NullLogger<UsdaFoodSearchService>.Instance);
     }
@@ -97,5 +135,18 @@ public sealed class UsdaFoodSearchServiceTests {
         protected override Task<HttpResponseMessage> SendAsync(
             HttpRequestMessage request, CancellationToken cancellationToken) =>
             Task.FromResult(new HttpResponseMessage(statusCode));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class CountingHttpMessageHandler(string json) : HttpMessageHandler {
+        public int RequestCount { get; private set; }
+
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, CancellationToken cancellationToken) {
+            RequestCount++;
+            return Task.FromResult(new HttpResponseMessage(HttpStatusCode.OK) {
+                Content = new StringContent(json, System.Text.Encoding.UTF8, "application/json"),
+            });
+        }
     }
 }

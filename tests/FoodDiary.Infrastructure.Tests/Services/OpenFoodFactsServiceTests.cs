@@ -215,6 +215,27 @@ public sealed class OpenFoodFactsServiceTests {
     }
 
     [Fact]
+    public async Task SearchAsync_WhenTransportFailsWithStaleCache_ReturnsCachedResult() {
+        string query = $"stale-{Guid.NewGuid():N}";
+        const string json = """
+            {
+              "products": [
+                { "code": "111", "product_name": "Cached milk", "nutriments": {} }
+              ]
+            }
+            """;
+        OpenFoodFactsService warmup = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService failing = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
+
+        IReadOnlyList<OpenFoodFactsProductModel> cached = await warmup.SearchAsync(query);
+        IReadOnlyList<OpenFoodFactsProductModel> result = await failing.SearchAsync(query);
+
+        Assert.Single(cached);
+        OpenFoodFactsProductModel product = Assert.Single(result);
+        Assert.Equal("Cached milk", product.Name);
+    }
+
+    [Fact]
     public async Task SearchAsync_WhenNullProducts_ReturnsEmptyList() {
         const string json = """{"products": null}""";
         OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
