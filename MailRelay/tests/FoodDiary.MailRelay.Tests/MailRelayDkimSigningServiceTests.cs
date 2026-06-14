@@ -28,11 +28,40 @@ public sealed class MailRelayDkimSigningServiceTests {
             PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem(),
         }));
         MimeMessage message = CreateMessage();
+        message.Date = DateTimeOffset.MinValue;
+        message.Headers.Remove(HeaderId.MessageId);
 
         service.Sign(message);
 
         Assert.True(message.Headers.Contains("DKIM-Signature"));
         Assert.False(string.IsNullOrWhiteSpace(message.MessageId));
+    }
+
+    [Fact]
+    public void Sign_WhenPrivateKeyPathIsConfigured_ReadsKeyFromFileAndKeepsExistingHeaders() {
+        using var rsa = RSA.Create(1024);
+        string privateKeyPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.pem");
+        File.WriteAllText(privateKeyPath, rsa.ExportPkcs8PrivateKeyPem());
+        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+            Enabled = true,
+            Domain = "example.com",
+            Selector = "mail",
+            PrivateKeyPath = privateKeyPath,
+        }));
+        MimeMessage message = CreateMessage();
+        DateTimeOffset date = new(2026, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        message.Date = date;
+        message.MessageId = "existing@example.com";
+
+        try {
+            service.Sign(message);
+        } finally {
+            File.Delete(privateKeyPath);
+        }
+
+        Assert.True(message.Headers.Contains("DKIM-Signature"));
+        Assert.Equal(date, message.Date);
+        Assert.Equal("existing@example.com", message.MessageId);
     }
 
     [Fact]

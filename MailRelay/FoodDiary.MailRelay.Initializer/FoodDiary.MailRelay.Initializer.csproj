@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>FoodDiary.MailRelay.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\FoodDiary.MailRelay.Application\FoodDiary.MailRelay.Application.csproj" />
     <ProjectReference Include="..\FoodDiary.MailRelay.Infrastructure\FoodDiary.MailRelay.Infrastructure.csproj" />
   </ItemGroup>

@@ -207,6 +207,26 @@ public sealed class MailRelayEmailHttpMappingsTests {
     }
 
     [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenMessageIsBlank_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(Type: "Notification", Message: " ");
+
+        MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("Message is required", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void AwsSesWebhook_ToMappedCommand_WhenMessageIsNullJson_ReturnsFailure() {
+        var request = new AwsSesSnsWebhookHttpRequest(Type: "Notification", Message: "null");
+
+        MailRelayMappedRequest<IReadOnlyList<MailRelayDeliveryEventEntry>> mapped = request.ToMappedCommand();
+
+        Assert.False(mapped.IsSuccess);
+        Assert.Contains("could not be deserialized", mapped.Error, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void AwsSesWebhook_ToMappedCommand_WhenNotificationTypeUnsupported_ReturnsFailure() {
         var request = new AwsSesSnsWebhookHttpRequest(
             Type: "Notification",

@@ -35,6 +35,33 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [RequiresDockerFact]
+    public async Task EmptyQueueQueries_ReturnEmptyResults() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+
+        Assert.Empty(await store.ClaimDueBatchAsync(CancellationToken.None));
+        Assert.Empty(await store.ClaimOutboxBatchAsync(CancellationToken.None));
+        Assert.Null(await store.TryClaimMessageByIdAsync(Guid.NewGuid(), CancellationToken.None));
+        Assert.Null(await store.GetMessageDetailsAsync(Guid.NewGuid(), CancellationToken.None));
+        Assert.Empty(await store.GetDeliveryEventsAsync(email: null, CancellationToken.None));
+        Assert.Empty(await store.GetSuppressionsAsync(email: null, CancellationToken.None));
+        Assert.False(await store.RemoveSuppressionAsync("missing@example.com", CancellationToken.None));
+    }
+
+    [Fact]
+    public void QueueRowMapper_ConvertsTimestampsAndNormalizesEmail() {
+        var dateTimeOffset = new DateTimeOffset(2026, 1, 2, 3, 4, 5, TimeSpan.FromHours(1));
+        var dateTime = new DateTime(2026, 1, 2, 3, 4, 5, DateTimeKind.Unspecified);
+
+        Assert.Equal(dateTimeOffset.ToUniversalTime(), MailRelayQueueRowMapper.ToDateTimeOffset(dateTimeOffset));
+        Assert.Equal(DateTimeKind.Utc, MailRelayQueueRowMapper.ToDateTimeOffset(dateTime).UtcDateTime.Kind);
+        Assert.Equal("user@example.com", MailRelayQueueRowMapper.NormalizeEmail(" USER@Example.COM "));
+        Assert.Null(MailRelayQueueRowMapper.NormalizeEmail(" "));
+        Assert.Throws<InvalidOperationException>(() => MailRelayQueueRowMapper.ToDateTimeOffset("unexpected"));
+    }
+
+    [RequiresDockerFact]
     public async Task MarkFailedAttemptAsync_WhenDecisionIsRetry_StoresRetryStateAndError() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
@@ -64,6 +91,26 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
 
         Assert.Equal(firstId, secondId);
         Assert.Equal(1, await CountRowsAsync(dataSource, "mailrelay_outbox_messages"));
+    }
+
+    [RequiresDockerFact]
+    public async Task EnqueueAsync_WhenRequestIsInvalid_ThrowsBeforeOpeningConnection() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+
+        await Assert.ThrowsAsync<ArgumentException>(() => store.EnqueueAsync(
+            CreateRequest() with { FromAddress = " " },
+            CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.EnqueueAsync(
+            CreateRequest() with { Subject = " " },
+            CancellationToken.None));
+        await Assert.ThrowsAsync<ArgumentException>(() => store.EnqueueAsync(
+            CreateRequest() with { HtmlBody = " " },
+            CancellationToken.None));
+        await Assert.ThrowsAsync<InvalidOperationException>(() => store.EnqueueAsync(
+            CreateRequest() with { To = [] },
+            CancellationToken.None));
     }
 
     [RequiresDockerFact]

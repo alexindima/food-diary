@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.MailRelay.Initializer;
 using FoodDiary.MailRelay.Infrastructure.Options;
@@ -145,3 +146,6 @@ Examples:
   dotnet run --project MailRelay/FoodDiary.MailRelay.Initializer -- update --connection-string "Host=..."
 """);
 }
+
+[ExcludeFromCodeCoverage]
+public partial class Program;

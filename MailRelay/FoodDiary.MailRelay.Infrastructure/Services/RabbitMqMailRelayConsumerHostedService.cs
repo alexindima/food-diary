@@ -53,7 +53,8 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
         try {
             await Task.Delay(Timeout.InfiniteTimeSpan, stoppingToken).ConfigureAwait(false);
-        } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+        } catch (OperationCanceledException) {
+            logger.LogDebug("RabbitMQ relay consumer stop was requested.");
         }
 
         if (channel.IsOpen) {

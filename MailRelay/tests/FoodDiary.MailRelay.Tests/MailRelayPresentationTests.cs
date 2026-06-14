@@ -1,11 +1,19 @@
 using System.Globalization;
+using System.Reflection;
+using System.Reflection.Emit;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using FoodDiary.MailRelay.Client.Models;
 using FoodDiary.MailRelay.Application.Common.Results;
 using FoodDiary.MailRelay.Application.Emails.Commands;
+using FoodDiary.MailRelay.Application.Emails.Models;
+using FoodDiary.MailRelay.Application.Emails.Queries;
 using FoodDiary.MailRelay.Application.Health;
 using FoodDiary.MailRelay.Application.Options;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
+using FoodDiary.MailRelay.Domain.Emails;
+using FoodDiary.MailRelay.Presentation.Controllers;
 using FoodDiary.MailRelay.Presentation.Extensions;
 using FoodDiary.MailRelay.Presentation.Features.Email;
 using FoodDiary.MailRelay.Presentation.Features.Email.Requests;
@@ -27,7 +35,6 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using System.Reflection;
 
 namespace FoodDiary.MailRelay.Tests;
 
@@ -307,6 +314,63 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public async Task ProviderWebhookAuthorizer_WhenAwsSnsSignatureIsValid_AllowsRequest() {
+        using var rsa = RSA.Create(2048);
+        using X509Certificate2 certificate = CreateSelfSignedCertificate(rsa);
+        AwsSesSnsWebhookHttpRequest request = CreateSignedAwsSnsRequest(
+            signature: "placeholder",
+            signingCertUrl: "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-test.pem");
+        string canonical = InvokeSnsCanonicalString(request);
+        byte[] signature = rsa.SignData(
+            Encoding.UTF8.GetBytes(canonical),
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+        request = request with {
+            Signature = Convert.ToBase64String(signature),
+        };
+        var authorizer = new ProviderWebhookAuthorizer(
+            Options.Create(new MailRelayOptions()),
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+                Content = new StringContent(certificate.ExportCertificatePem()),
+            })),
+            _ => true);
+
+        Assert.True(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificateHasNoRsaKey_RejectsRequest() {
+        using var ecdsa = ECDsa.Create();
+        CertificateRequest certificateRequest = new("CN=sns.amazonaws.com", ecdsa, HashAlgorithmName.SHA256);
+        using X509Certificate2 certificate = certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(10));
+        var authorizer = new ProviderWebhookAuthorizer(
+            Options.Create(new MailRelayOptions()),
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+                Content = new StringContent(certificate.ExportCertificatePem()),
+            })),
+            _ => true);
+
+        Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
+            signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
+            signingCertUrl: "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-test.pem"), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificateChainIsInvalid_RejectsRequest() {
+        using var rsa = RSA.Create(2048);
+        using X509Certificate2 certificate = CreateSelfSignedCertificate(rsa);
+        var authorizer = new ProviderWebhookAuthorizer(
+            Options.Create(new MailRelayOptions()),
+            new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+                Content = new StringContent(certificate.ExportCertificatePem()),
+            })));
+
+        Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
+            signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
+            signingCertUrl: "https://sns.us-east-1.amazonaws.com/SimpleNotificationService-test.pem"), CancellationToken.None));
+    }
+
+    [Fact]
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsConfirmationMessageHasInvalidPem_BuildsConfirmationCanonicalString() {
         var authorizer = new ProviderWebhookAuthorizer(
             Options.Create(new MailRelayOptions()),
@@ -318,6 +382,63 @@ public sealed class MailRelayPresentationTests {
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
             signingCertUrl: "https://sns.amazonaws.com/SimpleNotificationService-test.pem",
             type: "SubscriptionConfirmation"), CancellationToken.None));
+    }
+
+    [Theory]
+    [InlineData("sns.amazonaws.com", true)]
+    [InlineData("sns.us-east-1.amazonaws.com", true)]
+    [InlineData("sns.eu-central-1.amazonaws.com", true)]
+    [InlineData("sns.cn-north-1.amazonaws.com.cn", true)]
+    [InlineData("email.amazonaws.com", false)]
+    [InlineData("sns.extra.amazonaws.com", false)]
+    [InlineData("sns.us-east.amazonaws.com", false)]
+    [InlineData("example.com", false)]
+    public void ProviderWebhookAuthorizer_IsTrustedSnsCertificateHost_ReturnsExpectedResult(
+        string host,
+        bool expected) {
+        MethodInfo method = typeof(ProviderWebhookAuthorizer).GetMethod(
+            "IsTrustedSnsCertificateHost",
+            BindingFlags.NonPublic | BindingFlags.Static,
+            [typeof(string)])!;
+
+        bool actual = (bool)method.Invoke(null, [host])!;
+
+        Assert.Equal(expected, actual);
+    }
+
+    [Fact]
+    public void ProviderWebhookAuthorizer_CreateSnsCanonicalString_IncludesSubjectAndConfirmationFields() {
+        AwsSesSnsWebhookHttpRequest request = CreateSignedAwsSnsRequest(
+            signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
+            signingCertUrl: "https://sns.amazonaws.com/SimpleNotificationService-test.pem",
+            type: "SubscriptionConfirmation");
+        string canonical = InvokeSnsCanonicalString(request);
+
+        Assert.Contains("Subject\nsubject\n", canonical, StringComparison.Ordinal);
+        Assert.Contains("SubscribeURL\nhttps://sns.us-east-1.amazonaws.com/?Action=ConfirmSubscription\n", canonical, StringComparison.Ordinal);
+        Assert.Contains("Token\ntoken\n", canonical, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProviderWebhookAuthorizer_TryValidateMailgunTimestamp_WhenTimestampOverflows_ReturnsFalse() {
+        MethodInfo method = typeof(ProviderWebhookAuthorizer).GetMethod(
+            "TryValidateMailgunTimestamp",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        bool actual = (bool)method.Invoke(null, [long.MaxValue.ToString(CultureInfo.InvariantCulture)])!;
+
+        Assert.False(actual);
+    }
+
+    [Fact]
+    public void ProviderWebhookAuthorizer_FixedTimeEquals_NormalizesActualSignature() {
+        MethodInfo method = typeof(ProviderWebhookAuthorizer).GetMethod(
+            "FixedTimeEquals",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        bool actual = (bool)method.Invoke(null, ["abcdef", " ABCDEF "])!;
+
+        Assert.True(actual);
     }
 
     [Fact]
@@ -441,6 +562,108 @@ public sealed class MailRelayPresentationTests {
     }
 
     [Fact]
+    public async Task QueueController_ReturnsStatsAndAcceptedEnqueueResponse() {
+        var sender = new RecordingSender {
+            QueueStatsResult = Result.Success(new MailRelayQueueStats(1, 2, 3, 4, 5, 6)),
+            EnqueueResult = Result.Success(Guid.Parse("11111111-1111-1111-1111-111111111111")),
+        };
+        var controller = new MailRelayQueueController(sender) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext {
+                    TraceIdentifier = "trace",
+                },
+            },
+        };
+
+        OkObjectResult statsResult = Assert.IsType<OkObjectResult>(await controller.GetStats());
+        MailRelayQueueStatsHttpResponse stats = Assert.IsType<MailRelayQueueStatsHttpResponse>(statsResult.Value);
+        Assert.Equal(1, stats.PendingCount);
+        Assert.IsType<GetMailRelayQueueStatsQuery>(sender.LastRequest);
+
+        AcceptedResult enqueueResult = Assert.IsType<AcceptedResult>(await controller.Enqueue(new EnqueueMailRelayEmailRequest(
+            "relay@example.com",
+            "Relay",
+            ["user@example.com"],
+            "Subject",
+            "<p>Hello</p>",
+            "Hello")));
+        EnqueueMailRelayEmailResponse enqueueResponse = Assert.IsType<EnqueueMailRelayEmailResponse>(enqueueResult.Value);
+        Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), enqueueResponse.Id);
+        Assert.Equal("/api/email/messages/11111111-1111-1111-1111-111111111111", enqueueResult.Location);
+        Assert.IsType<EnqueueMailRelayEmailCommand>(sender.LastRequest);
+    }
+
+    [Fact]
+    public async Task SuppressionsController_ReturnsListCreatedAndNoContentResponses() {
+        var suppression = new MailRelaySuppressionEntry(
+            "user@example.com",
+            "manual",
+            "test",
+            DateTimeOffset.UtcNow,
+            DateTimeOffset.UtcNow,
+            ExpiresAtUtc: null);
+        var sender = new RecordingSender {
+            SuppressionsResult = Result.Success<IReadOnlyList<MailRelaySuppressionEntry>>([suppression]),
+            SuppressionCreateResult = Result.Success(),
+            SuppressionRemoveResult = Result.Success(),
+        };
+        var controller = new MailRelaySuppressionsController(sender) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext {
+                    TraceIdentifier = "trace",
+                },
+            },
+        };
+
+        OkObjectResult getResult = Assert.IsType<OkObjectResult>(await controller.Get("user@example.com"));
+        IReadOnlyList<MailRelaySuppressionHttpResponse> suppressions = Assert.IsAssignableFrom<IReadOnlyList<MailRelaySuppressionHttpResponse>>(getResult.Value);
+        Assert.Single(suppressions);
+        Assert.IsType<GetMailRelaySuppressionsQuery>(sender.LastRequest);
+
+        CreatedResult createResult = Assert.IsType<CreatedResult>(await controller.Create(new CreateMailRelaySuppressionHttpRequest(
+            "user@example.com",
+            "manual",
+            "test")));
+        Assert.Equal("/api/email/suppressions?email=user%40example.com", createResult.Location);
+        Assert.IsType<CreateMailRelaySuppressionCommand>(sender.LastRequest);
+
+        NoContentResult deleteResult = Assert.IsType<NoContentResult>(await controller.Delete("user@example.com"));
+        Assert.Equal(StatusCodes.Status204NoContent, deleteResult.StatusCode);
+        Assert.IsType<RemoveMailRelaySuppressionCommand>(sender.LastRequest);
+    }
+
+    [Fact]
+    public async Task ControllerBase_SendWithoutResponse_UsesHttpContextCancellationToken() {
+        var sender = new RecordingSender();
+        var controller = new ExposedMailRelayController(sender) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext {
+                    TraceIdentifier = "trace",
+                },
+            },
+        };
+
+        await controller.SendCommandAsync(new SimpleCommand());
+
+        Assert.IsType<SimpleCommand>(sender.LastRequest);
+    }
+
+    [Fact]
+    public void MailRelayApiErrorHttpResponse_CanCarryMessageTraceAndErrors() {
+        var response = new MailRelayApiErrorHttpResponse(
+            "error",
+            "message",
+            "trace",
+            new Dictionary<string, string[]>(StringComparer.Ordinal) {
+                ["field"] = ["invalid"],
+            });
+
+        Assert.Equal("message", response.Message);
+        Assert.Equal("trace", response.TraceId);
+        Assert.Contains("field", response.Errors!.Keys);
+    }
+
+    [Fact]
     public async Task HealthController_ReturnsHealthAndReadinessResponses() {
         var sender = new RecordingSender {
             ReadinessResult = Result.Success(),
@@ -520,6 +743,34 @@ public sealed class MailRelayPresentationTests {
         }));
     }
 
+    [Fact]
+    public async Task TelemetryActionFilter_WhenControllerHasNoFeatureNamespace_UsesUnknownFeature() {
+        var filter = new MailRelayTelemetryActionFilter(NullLogger<MailRelayTelemetryActionFilter>.Instance);
+        ActionExecutingContext context = CreateActionExecutingContext(new ControllerWithoutNamespace());
+
+        await filter.OnActionExecutionAsync(context, () => Task.FromResult(new ActionExecutedContext(
+            context,
+            context.Filters,
+            context.Controller)));
+    }
+
+    [Fact]
+    public void TelemetryActionFilter_ResolveFeatureName_WhenTypeHasNoNamespace_ReturnsUnknown() {
+        AssemblyName assemblyName = new("MailRelayDynamicTestAssembly");
+        var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+        ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("MailRelayDynamicTestModule");
+        Type controllerType = moduleBuilder
+            .DefineType("NoNamespaceController", TypeAttributes.Public, typeof(ControllerBase))
+            .CreateType()!;
+        MethodInfo method = typeof(MailRelayTelemetryActionFilter).GetMethod(
+            "ResolveFeatureName",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        string feature = (string)method.Invoke(null, [controllerType])!;
+
+        Assert.Equal("Unknown", feature);
+    }
+
     private static AuthorizationFilterContext CreateAuthorizationContext() =>
         new(
             new ActionContext(
@@ -572,6 +823,24 @@ public sealed class MailRelayPresentationTests {
             SubscribeURL: "https://sns.us-east-1.amazonaws.com/?Action=ConfirmSubscription",
             Token: "token");
 
+    private static string InvokeSnsCanonicalString(AwsSesSnsWebhookHttpRequest request) {
+        MethodInfo method = typeof(ProviderWebhookAuthorizer).GetMethod(
+            "CreateSnsCanonicalString",
+            BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        return (string)method.Invoke(null, [request])!;
+    }
+
+    private static X509Certificate2 CreateSelfSignedCertificate(RSA rsa) {
+        CertificateRequest certificateRequest = new(
+            "CN=sns.amazonaws.com",
+            rsa,
+            HashAlgorithmName.SHA256,
+            RSASignaturePadding.Pkcs1);
+
+        return certificateRequest.CreateSelfSigned(DateTimeOffset.UtcNow.AddMinutes(-1), DateTimeOffset.UtcNow.AddMinutes(10));
+    }
+
     private static MailRelayProviderEventsController CreateProviderEventsController(
         ISender sender,
         ProviderWebhookAuthorizer authorizer) =>
@@ -613,6 +882,13 @@ public sealed class MailRelayPresentationTests {
         public Result<IReadOnlyList<MailRelayDeliveryEventEntry>> DeliveryEventsResult { get; init; } =
             Result.Success<IReadOnlyList<MailRelayDeliveryEventEntry>>([CreateDeliveryEvent()]);
         public Result ReadinessResult { get; init; } = Result.Success();
+        public Result<MailRelayQueueStats> QueueStatsResult { get; init; } =
+            Result.Success(new MailRelayQueueStats(0, 0, 0, 0, 0, 0));
+        public Result<Guid> EnqueueResult { get; init; } = Result.Success(Guid.NewGuid());
+        public Result<IReadOnlyList<MailRelaySuppressionEntry>> SuppressionsResult { get; init; } =
+            Result.Success<IReadOnlyList<MailRelaySuppressionEntry>>([]);
+        public Result SuppressionCreateResult { get; init; } = Result.Success();
+        public Result SuppressionRemoveResult { get; init; } = Result.Success();
 
         public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
             LastRequest = request;
@@ -620,6 +896,11 @@ public sealed class MailRelayPresentationTests {
                 IngestMailRelayDeliveryEventCommand => DeliveryEventResult,
                 IngestManyMailRelayDeliveryEventsCommand => DeliveryEventsResult,
                 CheckMailRelayReadinessQuery => ReadinessResult,
+                GetMailRelayQueueStatsQuery => QueueStatsResult,
+                EnqueueMailRelayEmailCommand => EnqueueResult,
+                GetMailRelaySuppressionsQuery => SuppressionsResult,
+                CreateMailRelaySuppressionCommand => SuppressionCreateResult,
+                RemoveMailRelaySuppressionCommand => SuppressionRemoveResult,
                 _ => throw new InvalidOperationException($"Unexpected request type {request.GetType().FullName}."),
             };
             return Task.FromResult((TResponse)result);
@@ -655,4 +936,16 @@ public sealed class MailRelayPresentationTests {
             };
         }
     }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ControllerWithoutNamespace : ControllerBase {
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ExposedMailRelayController(ISender sender) : MailRelayControllerBase(sender) {
+        public Task SendCommandAsync(IRequest request) => Send(request);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record SimpleCommand : IRequest;
 }

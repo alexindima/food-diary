@@ -62,6 +62,22 @@ public sealed class MailRelayMessageProcessorTests {
         Assert.Equal(attemptCount, store.FailureDecision?.AttemptCount);
     }
 
+    [Fact]
+    public async Task ProcessAsync_WhenCancellationIsRequested_RethrowsOperationCanceledException() {
+        var store = new RecordingQueueStore();
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        var transport = new RecordingTransport {
+            Exception = new OperationCanceledException(cancellationTokenSource.Token),
+        };
+        MailRelayMessageProcessor processor = CreateProcessor(store, transport);
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() =>
+            processor.ProcessAsync(CreateMessage(), cancellationTokenSource.Token));
+
+        Assert.Null(store.FailureDecision);
+    }
+
     private static MailRelayMessageProcessor CreateProcessor(RecordingQueueStore store, RecordingTransport transport) =>
         new(
             store,

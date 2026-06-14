@@ -1,3 +1,4 @@
+using System.Reflection;
 using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Common;
 using FoodDiary.MailRelay.Domain.Emails;
@@ -129,7 +130,10 @@ public sealed class MailRelayDomainTests {
         var entity = new TestEntity(id);
 
         Assert.True(entity.Equals((object)entity));
+        Assert.True(entity.Equals(entity));
+        Assert.False(entity.Equals((object?)null));
         Assert.False(entity.Equals(other: null));
+        Assert.False(entity.Equals(new object()));
         Assert.False(entity.Equals(new DifferentTestEntity(id)));
         Assert.False(new TestEntity().Equals(new TestEntity()));
         Assert.True(entity == new TestEntity(id));
@@ -143,9 +147,12 @@ public sealed class MailRelayDomainTests {
 
         int second = persisted.GetHashCode();
         var transient = new TestEntity();
+        var materialized = new TestEntity();
+        materialized.SetBackingId(Guid.NewGuid());
 
         Assert.Equal(first, second);
         Assert.Equal(RuntimeHelpers.GetHashCode(transient), transient.GetHashCode());
+        Assert.Equal(materialized.GetHashCode(), materialized.GetHashCode());
     }
 
     [Fact]
@@ -159,6 +166,22 @@ public sealed class MailRelayDomainTests {
         Assert.Empty(aggregate.DomainEvents);
     }
 
+    [Fact]
+    public void AggregateRoot_DefaultConstructor_CreatesTransientAggregate() {
+        var aggregate = new TestAggregate();
+
+        Assert.Empty(aggregate.DomainEvents);
+    }
+
+    [Fact]
+    public void DomainTime_UtcNow_ReturnsCurrentUtcTime() {
+        DateTimeOffset before = DateTimeOffset.UtcNow;
+        DateTimeOffset now = DomainTime.UtcNow;
+        DateTimeOffset after = DateTimeOffset.UtcNow;
+
+        Assert.InRange(now, before, after);
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class TestEntity : Entity<Guid> {
         public TestEntity() {
@@ -166,13 +189,25 @@ public sealed class MailRelayDomainTests {
 
         public TestEntity(Guid id) : base(id) {
         }
+
+        public void SetBackingId(Guid id) {
+            typeof(Entity<Guid>)
+                .GetField("_id", BindingFlags.Instance | BindingFlags.NonPublic)!
+                .SetValue(this, id);
+        }
     }
 
     [ExcludeFromCodeCoverage]
     private sealed class DifferentTestEntity(Guid id) : Entity<Guid>(id);
 
     [ExcludeFromCodeCoverage]
-    private sealed class TestAggregate(Guid id) : AggregateRoot<Guid>(id) {
+    private sealed class TestAggregate : AggregateRoot<Guid> {
+        public TestAggregate() {
+        }
+
+        public TestAggregate(Guid id) : base(id) {
+        }
+
         public void Record(IDomainEvent domainEvent) {
             RaiseDomainEvent(domainEvent);
         }

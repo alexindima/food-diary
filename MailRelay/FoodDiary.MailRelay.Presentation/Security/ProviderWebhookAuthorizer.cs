@@ -7,9 +7,13 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailRelay.Presentation.Security;
 
-public sealed class ProviderWebhookAuthorizer(IOptions<MailRelayOptions> relayOptions, HttpClient httpClient) {
+public sealed class ProviderWebhookAuthorizer(
+    IOptions<MailRelayOptions> relayOptions,
+    HttpClient httpClient,
+    Func<X509Certificate2, bool>? certificateChainValidator = null) {
     private static readonly TimeSpan MailgunTimestampTolerance = TimeSpan.FromMinutes(15);
     private readonly MailRelayOptions _options = relayOptions.Value;
+    private readonly Func<X509Certificate2, bool> _certificateChainValidator = certificateChainValidator ?? HasValidCertificateChain;
 
     public bool IsMailgunAuthorized(MailgunWebhookHttpRequest request) {
         if (!_options.RequireMailgunWebhookSignature) {
@@ -68,7 +72,7 @@ public sealed class ProviderWebhookAuthorizer(IOptions<MailRelayOptions> relayOp
         }
 
         using (certificate) {
-            if (!HasValidCertificateChain(certificate)) {
+            if (!_certificateChainValidator(certificate)) {
                 return false;
             }
 

@@ -41,6 +41,9 @@ public sealed class MailRelayInfrastructureOptionsTests {
             Backend = MailRelayBrokerOptions.PostgresPollingBackend,
         }));
         Assert.False(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
+            Port = 0,
+        }));
+        Assert.False(MailRelayBrokerOptions.HasValidConfiguration(new MailRelayBrokerOptions {
             QueueName = "",
         }));
     }
@@ -115,6 +118,21 @@ public sealed class MailRelayInfrastructureOptionsTests {
             NullLogger<RabbitMqMailRelayDispatchNotifier>.Instance);
 
         await notifier.NotifyQueuedAsync(Guid.NewGuid(), CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task RabbitMqMailRelayBroker_WhenDisabled_SkipsReadyTopologyAndPublishOperations() {
+        var broker = new RabbitMqMailRelayBroker(
+            Options.Create(new MailRelayBrokerOptions {
+                Backend = MailRelayBrokerOptions.PostgresPollingBackend,
+            }),
+            NullLogger<RabbitMqMailRelayBroker>.Instance);
+
+        await broker.DeclareTopologyAsync(CancellationToken.None);
+        await broker.CheckReadyAsync(CancellationToken.None);
+        await broker.PublishOutboundAsync(Guid.NewGuid(), CancellationToken.None);
+        await broker.PublishRetryAsync(Guid.NewGuid(), TimeSpan.Zero, CancellationToken.None);
+        await broker.PublishDeadLetterAsync(Guid.NewGuid(), CancellationToken.None);
     }
 
     [Fact]
@@ -237,6 +255,21 @@ public sealed class MailRelayInfrastructureOptionsTests {
         services.AddSingleton<IOptions<OpenTelemetryOptions>>(Options.Create(new OpenTelemetryOptions {
             Otlp = new OpenTelemetryOptions.OtlpOptions {
                 Endpoint = "",
+            },
+        }));
+        services.AddMailRelayTelemetry();
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<OpenTelemetry.Metrics.MeterProvider>());
+    }
+
+    [Fact]
+    public void AddMailRelayTelemetry_WhenOtlpEndpointIsConfigured_RegistersMeterProvider() {
+        var services = new ServiceCollection();
+
+        services.AddSingleton<IOptions<OpenTelemetryOptions>>(Options.Create(new OpenTelemetryOptions {
+            Otlp = new OpenTelemetryOptions.OtlpOptions {
+                Endpoint = "http://localhost:4317",
             },
         }));
         services.AddMailRelayTelemetry();
