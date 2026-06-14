@@ -38,12 +38,12 @@ public static class ShoppingListItemBuilder {
             .ToList();
 
         IReadOnlyDictionary<ProductId, Product> products = await productLookupService.GetAccessibleByIdsAsync(normalizedProductIds, userId, cancellationToken).ConfigureAwait(false);
-        if (products.Count != normalizedProductIds.Count) {
-            ProductId missing = normalizedProductIds.First(id => !products.ContainsKey(id));
-            return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
+        if (products.Count == normalizedProductIds.Count) {
+            return BuildNormalizedItems(items, products);
         }
 
-        return BuildNormalizedItems(items, products);
+        ProductId missing = normalizedProductIds.First(id => !products.ContainsKey(id));
+        return Result.Failure<IReadOnlyList<ShoppingListItemData>>(Errors.Product.NotAccessible(missing.Value));
     }
 
     private static Result<IReadOnlyList<ShoppingListItemData>> BuildNormalizedItems(

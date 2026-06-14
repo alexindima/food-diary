@@ -96,6 +96,22 @@ public sealed class RefreshTokenCommandHandlerTests {
     }
 
     [Fact]
+    public async Task Handle_WhenRefreshTokenDoesNotContainSessionId_ReturnsInvalidToken() {
+        User user = CreateUser("refresh-no-session@example.com");
+        var repository = new InMemoryUserRepository(user);
+        var jwt = new FakeJwtTokenGenerator(user.Id, user.Email);
+        var hasher = new FakePasswordHasher();
+        var authTokenService = new FakeAuthenticationTokenService();
+        var handler = new RefreshTokenCommandHandler(repository, jwt, hasher, new InMemoryRefreshTokenSessionRepository(), authTokenService, new FixedDateTimeProvider());
+
+        Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("refresh-token-without-session"), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
+    }
+
+    [Fact]
     public async Task Handle_WhenUserIsMissing_ReturnsInvalidToken() {
         User jwtUser = CreateUser("jwt@example.com");
         User repositoryUser = CreateUser("other@example.com");
@@ -297,6 +313,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             token switch {
                 "current-refresh-token" => (userId, email, false, RefreshSessionId),
                 "remember-refresh-token" => (userId, email, true, RefreshSessionId),
+                "refresh-token-without-session" => (userId, email, false, null),
                 _ => null,
             };
     }

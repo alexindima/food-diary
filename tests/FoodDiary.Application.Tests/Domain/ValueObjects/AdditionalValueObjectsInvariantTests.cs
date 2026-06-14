@@ -49,6 +49,15 @@ public class AdditionalValueObjectsInvariantTests {
             MealAiItemState.Create("Chicken", nameLocal: null, 100, "g", double.PositiveInfinity, 10, 5, 20, 3, 0));
     }
 
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void MealAiItemState_Create_WithNonFiniteConfidence_Throws(double confidence) {
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            MealAiItemState.Create("Chicken", nameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0, confidence));
+    }
+
     [Fact]
     public void MealAiItemState_Create_TrimsAndNormalizesText() {
         var state = MealAiItemState.Create(

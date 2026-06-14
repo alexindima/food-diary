@@ -46,8 +46,8 @@ public sealed class PostponeCyclicDayCommandHandler(
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        var postponedUntil = DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc);
         try {
+            var postponedUntil = DateTime.SpecifyKind(now.Date.AddDays(1), DateTimeKind.Utc);
             current.Postpone(now, postponedUntil);
             plan.ScheduleNextCyclicPhase(postponedUntil);
         } catch (ArgumentOutOfRangeException) {

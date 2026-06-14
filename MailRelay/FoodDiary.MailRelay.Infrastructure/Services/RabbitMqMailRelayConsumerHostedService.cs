@@ -51,11 +51,17 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
         logger.LogInformation("RabbitMQ relay consumer started. Queue={QueueName}, ConsumerTag={ConsumerTag}", _brokerOptions.QueueName, consumerTag);
 
-        try {
-            await Task.Delay(Timeout.InfiniteTimeSpan, stoppingToken).ConfigureAwait(false);
-        } catch (OperationCanceledException) {
-            logger.LogDebug("RabbitMQ relay consumer stop was requested.");
+        // Wait until shutdown is requested. Completing a TaskCompletionSource from the cancellation
+        // callback lets the wait finish normally, so there is no unreachable "delay elapsed" branch
+        // (Task.Delay(Infinite) can only ever end by throwing) and no exception flow to handle.
+        var stopRequested = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
+        CancellationTokenRegistration registration =
+            stoppingToken.Register(static state => ((TaskCompletionSource)state!).TrySetResult(), stopRequested);
+        await using (registration.ConfigureAwait(false)) {
+            await stopRequested.Task.ConfigureAwait(false);
         }
+
+        logger.LogDebug("RabbitMQ relay consumer stop was requested.");
 
         if (channel.IsOpen) {
             await channel.BasicCancelAsync(consumerTag, noWait: false, cancellationToken: CancellationToken.None).ConfigureAwait(false);

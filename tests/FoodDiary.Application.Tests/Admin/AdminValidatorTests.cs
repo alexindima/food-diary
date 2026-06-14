@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
@@ -167,6 +168,22 @@ public class AdminValidatorTests {
     public async Task GetAdminMailInboxMessageDetails_WithValidId_NoErrors() {
         TestValidationResult<GetAdminMailInboxMessageDetailsQuery> result = await new GetAdminMailInboxMessageDetailsQueryValidator().TestValidateAsync(
             new GetAdminMailInboxMessageDetailsQuery(Guid.NewGuid()));
+
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task MarkAdminMailInboxMessageRead_WithEmptyId_HasError() {
+        TestValidationResult<MarkAdminMailInboxMessageReadCommand> result = await new MarkAdminMailInboxMessageReadCommandValidator().TestValidateAsync(
+            new MarkAdminMailInboxMessageReadCommand(Guid.Empty));
+
+        result.ShouldHaveValidationErrorFor(command => command.Id);
+    }
+
+    [Fact]
+    public async Task MarkAdminMailInboxMessageRead_WithValidId_NoErrors() {
+        TestValidationResult<MarkAdminMailInboxMessageReadCommand> result = await new MarkAdminMailInboxMessageReadCommandValidator().TestValidateAsync(
+            new MarkAdminMailInboxMessageReadCommand(Guid.NewGuid()));
 
         result.ShouldNotHaveAnyValidationErrors();
     }

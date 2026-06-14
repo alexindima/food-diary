@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 
 namespace FoodDiary.Application.Tests.Export;
@@ -6,6 +7,7 @@ namespace FoodDiary.Application.Tests.Export;
 [ExcludeFromCodeCoverage]
 public class ExportValidatorTests {
     private readonly ExportDiaryQueryValidator _validator = new();
+    private readonly ExportCycleQueryValidator _cycleValidator = new();
 
     [Fact]
     public async Task Validate_WithNullUserId_HasError() {
@@ -46,6 +48,48 @@ public class ExportValidatorTests {
         var date = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         var query = new ExportDiaryQuery(Guid.NewGuid(), date, date);
         TestValidationResult<ExportDiaryQuery> result = await _validator.TestValidateAsync(query);
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+
+    [Fact]
+    public async Task ValidateCycle_WithNullUserId_HasError() {
+        var query = new ExportCycleQuery(UserId: null, DateTime.UtcNow, DateTime.UtcNow.AddDays(7));
+
+        TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.UserId);
+    }
+
+    [Fact]
+    public async Task ValidateCycle_WithDateFromAfterDateTo_HasError() {
+        var query = new ExportCycleQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(7), DateTime.UtcNow);
+
+        TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
+
+        result.ShouldHaveValidationErrorFor(q => q.DateFrom);
+    }
+
+    [Fact]
+    public async Task ValidateCycle_WithRangeOverOneYear_HasError() {
+        var query = new ExportCycleQuery(
+            Guid.NewGuid(),
+            new DateTime(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc));
+
+        TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
+
+        Assert.False(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateCycle_WithValidQuery_NoErrors() {
+        var query = new ExportCycleQuery(
+            Guid.NewGuid(),
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 4, 7, 0, 0, 0, DateTimeKind.Utc));
+
+        TestValidationResult<ExportCycleQuery> result = await _cycleValidator.TestValidateAsync(query);
+
         result.ShouldNotHaveAnyValidationErrors();
     }
 }

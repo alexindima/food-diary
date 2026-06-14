@@ -1,4 +1,5 @@
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Events;
 using FoodDiary.Domain.Enums;
 using System.Reflection;
@@ -273,6 +274,40 @@ public class MealInvariantTests {
         item.UpdateAmount(1000000d);
 
         Assert.Equal(1000000d, item.Amount);
+        Assert.NotNull(item.ModifiedOnUtc);
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(double.NegativeInfinity)]
+    public void MealItem_ApplyProductSnapshot_WithNonFiniteNutrition_Throws(double caloriesPerBase) {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        Product product = CreateProduct();
+        SetPrivateProperty(product, nameof(Product.CaloriesPerBase), caloriesPerBase);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => item.ApplyProductSnapshot(product));
+    }
+
+    [Fact]
+    public void MealItem_ApplySource_WithSourceAndManualOrigin_Throws() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+
+        Assert.Throws<ArgumentException>(() => item.ApplySource(MealAiItemId.New(), MealItemOrigin.Manual));
+    }
+
+    [Fact]
+    public void MealItem_ApplySource_WithAiOrigin_UpdatesSourceOriginAndModifiedTimestamp() {
+        var meal = Meal.Create(UserId.New(), DateTime.UtcNow);
+        MealItem item = meal.AddProduct(ProductId.New(), 100);
+        var sourceAiItemId = MealAiItemId.New();
+
+        item.ApplySource(sourceAiItemId, MealItemOrigin.AIText);
+
+        Assert.Equal(sourceAiItemId, item.SourceAiItemId);
+        Assert.Equal(MealItemOrigin.AIText, item.Origin);
         Assert.NotNull(item.ModifiedOnUtc);
     }
 
@@ -887,5 +922,25 @@ public class MealInvariantTests {
         attachMethod.Invoke(item, [sessionId]);
 
         Assert.Equal(sessionId, item.MealAiSessionId);
+    }
+
+    private static Product CreateProduct() =>
+        Product.Create(
+            UserId.New(),
+            "Apple",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0);
+
+    private static void SetPrivateProperty<TValue>(object instance, string propertyName, TValue value) {
+        instance.GetType()
+            .GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)!
+            .SetValue(instance, value);
     }
 }

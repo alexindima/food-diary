@@ -411,6 +411,26 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
+    public async Task VerifyEmailHandler_WhenVerifierRejectsToken_ReturnsInvalidToken() {
+        var user = User.Create("verify-rejected-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        user.SetEmailConfirmationToken(new UserTokenIssue("valid-token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
+        var handler = new VerifyEmailCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            dateTimeProvider,
+            new StubEmailVerificationNotifier());
+
+        Result result = await handler.Handle(
+            new VerifyEmailCommand(user.Id.Value, "invalid-token"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(user.IsEmailConfirmed);
+    }
+
+    [Fact]
     public async Task VerifyEmailHandler_WithValidToken_CompletesVerification() {
         var user = User.Create("verify@example.com", "secret");
         var dateTimeProvider = new StubDateTimeProvider();
@@ -693,6 +713,28 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ConfirmPasswordResetHandler_WhenVerifierRejectsToken_ReturnsInvalidToken() {
+        var user = User.Create("reset-rejected-token@example.com", "secret");
+        var dateTimeProvider = new StubDateTimeProvider();
+        user.SetPasswordResetToken(new UserTokenIssue("valid-token", dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(1), dateTimeProvider.GetUtcNow().UtcDateTime));
+        var tokenService = new StubAuthenticationTokenService();
+        var handler = new ConfirmPasswordResetCommandHandler(
+            new StubUserRepository(user),
+            new StubPasswordHasher(),
+            dateTimeProvider,
+            tokenService,
+            new NullAuditLogger());
+
+        Result<AuthenticationModel> result = await handler.Handle(
+            new ConfirmPasswordResetCommand(user.Id.Value, "invalid-token", "StrongPass123"),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Null(tokenService.LastUser);
     }
 
     [Fact]

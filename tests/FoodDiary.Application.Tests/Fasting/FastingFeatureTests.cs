@@ -1544,6 +1544,26 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task PostponeCyclicDay_WhenNextDateCannotBeCalculated_ReturnsInvalidCyclicAction() {
+        var userId = UserId.New();
+        var now = DateTime.SpecifyKind(DateTime.MaxValue.Date, DateTimeKind.Utc);
+        var plan = FastingPlan.CreateCyclic(userId, 1, 3, 16, 8, FixedNow, FixedNow);
+        var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var handler = new PostponeCyclicDayCommandHandler(
+            new InMemoryFastingPlanRepository(active: plan),
+            new InMemoryFastingOccurrenceRepository(current: occurrence),
+            CreateUserRepository(userId),
+            new FixedDateTimeProvider(now),
+            new StubUnitOfWork());
+
+        Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Fasting.InvalidCyclicAction", result.Error.Code);
+        Assert.Contains("later date", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
     public async Task GetFastingInsights_WithCurrentAndHistory_ReturnsInsightsAndPrompt() {
         var userId = UserId.New();
         var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-5));
@@ -2883,8 +2903,10 @@ public class FastingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FixedDateTimeProvider : TimeProvider {
-        public override DateTimeOffset GetUtcNow() => new(FixedNow);
+    private sealed class FixedDateTimeProvider(DateTime? utcNow = null) : TimeProvider {
+        private readonly DateTimeOffset _utcNow = new(utcNow ?? FixedNow);
+
+        public override DateTimeOffset GetUtcNow() => _utcNow;
     }
 
     private static void AttachNavigation(FastingOccurrence occurrence, FastingPlan plan, User user) {

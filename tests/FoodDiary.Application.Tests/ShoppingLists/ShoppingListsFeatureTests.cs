@@ -320,6 +320,50 @@ public class ShoppingListsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateShoppingListCommandHandler_WithExistingItemId_UpdatesExistingItem() {
+        var user = User.Create("shopping-update-existing-item@example.com", "hash");
+        var list = ShoppingList.Create(user.Id, "Weekly");
+        ShoppingListItem existing = list.AddItem(
+            "Milk",
+            productId: null,
+            1,
+            MeasurementUnit.Ml,
+            "Dairy",
+            isChecked: false,
+            1);
+        var checkedOnUtc = new DateTime(2030, 3, 28, 10, 0, 0, DateTimeKind.Utc);
+        var repository = new SingleShoppingListRepository(list);
+        var handler = new UpdateShoppingListCommandHandler(
+            repository,
+            new NoopProductLookupService(),
+            new StubUserRepository(user));
+
+        Result<ShoppingListModel> result = await handler.Handle(
+            new UpdateShoppingListCommand(
+                user.Id.Value,
+                list.Id.Value,
+                Name: null,
+                [
+                    new ShoppingListItemInput(existing.Id.Value, ProductId: null, "  Eggs  ", Amount: 12, Unit: "Pcs", Category: "Protein", Aisle: "A1", Note: "organic", IsChecked: true, checkedOnUtc, SortOrder: 3),
+                ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+        ShoppingListItemModel item = Assert.Single(result.Value.Items);
+        Assert.Equal(existing.Id.Value, item.Id);
+        Assert.Equal("Eggs", item.Name);
+        Assert.Equal(12, item.Amount);
+        Assert.Equal("Pcs", item.Unit);
+        Assert.Equal("Protein", item.Category);
+        Assert.Equal("A1", item.Aisle);
+        Assert.Equal("organic", item.Note);
+        Assert.True(item.IsChecked);
+        Assert.Equal(checkedOnUtc, item.CheckedOnUtc);
+        Assert.Equal(3, item.SortOrder);
+    }
+
+    [Fact]
     public async Task UpdateShoppingListCommandHandler_WithNameOnly_UpdatesWithoutReplacingItems() {
         var user = User.Create("shopping-update-name-only@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Old");
@@ -533,6 +577,23 @@ public class ShoppingListsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ShoppingListItemBuilder_WithEmptyItemId_FailsWithValidationError() {
+        ShoppingListItemInput[] items = [
+            new ShoppingListItemInput(Id: Guid.Empty, ProductId: null, Name: "Milk", Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: 1),
+        ];
+
+        Result<IReadOnlyList<ShoppingListItemData>> result = await ShoppingListItemBuilder.BuildItemsAsync(
+            items,
+            UserId.New(),
+            new NoopProductLookupService(),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Id", result.Error.Message, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -100,19 +100,19 @@ public sealed class ShoppingListItemSource : Entity<ShoppingListItemSourceId> {
         }
     }
 
-    private static void EnsureMealPlanId(global::FoodDiary.Domain.ValueObjects.Ids.MealPlanId mealPlanId) {
+    private static void EnsureMealPlanId(MealPlanId mealPlanId) {
         if (mealPlanId == global::FoodDiary.Domain.ValueObjects.Ids.MealPlanId.Empty) {
             throw new ArgumentException("MealPlanId is required.", nameof(mealPlanId));
         }
     }
 
-    private static void EnsureMealPlanMealId(global::FoodDiary.Domain.ValueObjects.Ids.MealPlanMealId mealPlanMealId) {
+    private static void EnsureMealPlanMealId(MealPlanMealId mealPlanMealId) {
         if (mealPlanMealId == global::FoodDiary.Domain.ValueObjects.Ids.MealPlanMealId.Empty) {
             throw new ArgumentException("MealPlanMealId is required.", nameof(mealPlanMealId));
         }
     }
 
-    private static void EnsureRecipeId(global::FoodDiary.Domain.ValueObjects.Ids.RecipeId recipeId) {
+    private static void EnsureRecipeId(RecipeId recipeId) {
         if (recipeId == global::FoodDiary.Domain.ValueObjects.Ids.RecipeId.Empty) {
             throw new ArgumentException("RecipeId is required.", nameof(recipeId));
         }

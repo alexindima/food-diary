@@ -256,6 +256,24 @@ public class ExportFeatureTests {
     }
 
     [Fact]
+    public async Task ExportCycle_WithValidTimeZoneOffset_UsesOffsetForFileName() {
+        var userId = UserId.New();
+        var profile = CycleProfile.Create(userId, TestDate);
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(
+                userId.Value,
+                new DateTime(2026, 5, 3, 21, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc),
+                TimeZoneOffsetMinutes: 240),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Contains("cycle-tracking-2026-05-04-to-2026-05-05.csv", result.Value.FileName, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public async Task ExportCycle_WithNoCurrentProfile_ReturnsNotFound() {
         var userId = UserId.New();
         var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
@@ -266,6 +284,60 @@ public class ExportFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithNullUserId_ReturnsFailure() {
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("cycle-export-deleted@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        var handler = new ExportCycleQueryHandler(
+            new StubCycleRepository(profile: null),
+            new SingleUserRepository(user));
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithDateFromAfterDateTo_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(userId.Value, TestDate.AddDays(1), TestDate),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ExportCycle_WithRangeOverOneYear_ReturnsValidationFailure() {
+        var userId = UserId.New();
+        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+
+        Result<FileExportResult> result = await handler.Handle(
+            new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(367)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
     [Fact]
