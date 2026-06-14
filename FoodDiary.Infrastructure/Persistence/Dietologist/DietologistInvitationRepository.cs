@@ -96,16 +96,15 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
         EntityEntry<DietologistInvitation> entry = context.Entry(invitation);
         if (entry.State == EntityState.Detached) {
-            context.Attach(invitation);
-            entry.State = EntityState.Modified;
+            DietologistInvitation? existing = await context.DietologistInvitations
+                .FirstOrDefaultAsync(i => i.Id == invitation.Id, cancellationToken).ConfigureAwait(false);
 
-            if (invitation.ClientUser is not null) {
-                context.Entry(invitation.ClientUser).State = EntityState.Unchanged;
+            if (existing is null) {
+                throw new DbUpdateConcurrencyException(
+                    $"Dietologist invitation '{invitation.Id.Value}' was not found while updating.");
             }
 
-            if (invitation.DietologistUser is not null) {
-                context.Entry(invitation.DietologistUser).State = EntityState.Unchanged;
-            }
+            context.Entry(existing).CurrentValues.SetValues(invitation);
         }
 
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

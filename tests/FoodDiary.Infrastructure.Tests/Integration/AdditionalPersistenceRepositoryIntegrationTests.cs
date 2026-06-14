@@ -88,6 +88,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             product with { Name = "Duplicate ignored" },
             product with { Barcode = " ", Name = "No barcode" },
         ]);
+        await repository.UpsertAsync([]);
         await repository.UpsertAsync([product with { Name = "100% Cocoa Updated" }]);
 
         IReadOnlyList<OpenFoodFactsProductModel> matches = await repository.SearchAsync("100% Cocoa", limit: 5);
@@ -292,6 +293,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             ToUtc: DateTime.UtcNow.AddDays(1));
 
         Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter)).Items);
+        Assert.Single((await adminBillingRepository.GetSubscriptionsAsync(filter with { Status = "active" })).Items);
         Assert.Single((await adminBillingRepository.GetPaymentsAsync(filter with { Status = "succeeded", Kind = "subscription" })).Items);
         Assert.Single((await adminBillingRepository.GetWebhookEventsAsync(filter with { Status = "processed", Search = webhookEvent.EventId })).Items);
     }

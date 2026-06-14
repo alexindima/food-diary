@@ -108,8 +108,15 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     public async Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         EntityEntry<Recipe> entry = context.Entry(recipe);
         if (entry.State == EntityState.Detached) {
-            context.Attach(recipe);
-            entry = context.Entry(recipe);
+            Recipe? existing = await context.Recipes
+                .FirstOrDefaultAsync(r => r.Id == recipe.Id, cancellationToken).ConfigureAwait(false);
+
+            if (existing is null) {
+                throw new DbUpdateConcurrencyException($"Recipe '{recipe.Id.Value}' was not found while updating nutrition.");
+            }
+
+            entry = context.Entry(existing);
+            entry.CurrentValues.SetValues(recipe);
         }
 
         entry.Property(r => r.TotalCalories).IsModified = true;

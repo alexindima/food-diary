@@ -1,4 +1,7 @@
 using Amazon.S3;
+using System.Net;
+using System.Net.Sockets;
+using System.Reflection;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
@@ -302,6 +305,130 @@ public sealed class DependencyInjectionTests {
     }
 
     [Fact]
+    public async Task ConnectToAllowedRemoteImageEndpointAsync_WhenHostResolvesToLoopback_RejectsConnection() {
+        SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
+            new DnsEndPoint("localhost", 80),
+            new HttpRequestMessage(HttpMethod.Get, "http://localhost/"));
+
+        HttpRequestException ex = await Assert.ThrowsAsync<HttpRequestException>(async () => {
+            await InvokePrivateStatic<ValueTask<Stream>>(
+                "ConnectToAllowedRemoteImageEndpointAsync",
+                context,
+                CancellationToken.None).ConfigureAwait(true);
+        }).ConfigureAwait(true);
+
+        Assert.Contains("private or loopback", ex.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task ConnectToAllowedRemoteImageEndpointAsync_WhenHostResolvesToPublicAddress_UsesSocketConnector() {
+        Func<string, CancellationToken, ValueTask<IPAddress[]>> originalResolver =
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync;
+        Func<IPAddress, int, CancellationToken, ValueTask<Stream>> originalConnector =
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync;
+        try {
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync =
+                static (_, _) => ValueTask.FromResult<IPAddress[]>([IPAddress.Parse("8.8.8.8")]);
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync =
+                static (address, port, _) => {
+                    Assert.Equal(IPAddress.Parse("8.8.8.8"), address);
+                    Assert.Equal(443, port);
+                    return ValueTask.FromResult<Stream>(new MemoryStream([1, 2, 3]));
+                };
+            SocketsHttpConnectionContext context = CreateSocketsHttpConnectionContext(
+                new DnsEndPoint("push.example.com", 443),
+                new HttpRequestMessage(HttpMethod.Get, "https://push.example.com/"));
+
+            await using Stream stream = await InvokePrivateStatic<ValueTask<Stream>>(
+                "ConnectToAllowedRemoteImageEndpointAsync",
+                context,
+                CancellationToken.None);
+
+            Assert.Equal(3, stream.Length);
+        } finally {
+            FoodDiary.Infrastructure.DependencyInjection.ResolveRemoteImageHostAddressesAsync = originalResolver;
+            FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync = originalConnector;
+        }
+    }
+
+    [Fact]
+    public async Task ConnectRemoteImageSocketAsync_WhenListenerAcceptsConnection_ReturnsNetworkStream() {
+        var listener = new TcpListener(IPAddress.Loopback, port: 0);
+        listener.Start();
+        try {
+            int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+            ValueTask<Stream> streamTask = FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync(
+                IPAddress.Loopback,
+                port,
+                CancellationToken.None);
+            using TcpClient client = await listener.AcceptTcpClientAsync();
+            await using Stream stream = await streamTask;
+
+            Assert.True(stream.CanRead);
+        } finally {
+            listener.Stop();
+        }
+    }
+
+    [Fact]
+    public async Task ConnectRemoteImageSocketAsync_WhenConnectionFails_DisposesSocketAndThrows() {
+        var listener = new TcpListener(IPAddress.Loopback, port: 0);
+        listener.Start();
+        int port = ((IPEndPoint)listener.LocalEndpoint).Port;
+        listener.Stop();
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+
+        await Assert.ThrowsAnyAsync<SocketException>(async () => {
+            await FoodDiary.Infrastructure.DependencyInjection.ConnectRemoteImageSocketAsync(
+                IPAddress.Loopback,
+                port,
+                cancellationTokenSource.Token).ConfigureAwait(false);
+        });
+    }
+
+    [Theory]
+    [InlineData("8.8.8.8", true)]
+    [InlineData("127.0.0.1", false)]
+    [InlineData("0.0.0.0", false)]
+    [InlineData("255.255.255.255", false)]
+    [InlineData("10.1.2.3", false)]
+    [InlineData("172.16.0.1", false)]
+    [InlineData("172.31.255.255", false)]
+    [InlineData("172.32.0.1", true)]
+    [InlineData("192.168.1.1", false)]
+    [InlineData("169.254.1.1", false)]
+    [InlineData("100.64.0.1", false)]
+    [InlineData("100.127.255.255", false)]
+    [InlineData("100.128.0.1", true)]
+    [InlineData("224.0.0.1", false)]
+    [InlineData("::1", false)]
+    [InlineData("::", false)]
+    [InlineData("2001:4860:4860::8888", true)]
+    [InlineData("fe80::1", false)]
+    [InlineData("fec0::1", false)]
+    [InlineData("fc00::1", false)]
+    [InlineData("ff02::1", false)]
+    [InlineData("::ffff:8.8.8.8", true)]
+    [InlineData("::ffff:10.1.2.3", false)]
+    public void IsPublicAddress_ReturnsExpectedResult(string address, bool expected) {
+        bool result = InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse(address));
+
+        Assert.Equal(expected, result);
+    }
+
+    [Fact]
+    public void IsPublicAddressCore_WhenAddressFamilyIsUnsupported_ReturnsFalse() {
+        bool result = FoodDiary.Infrastructure.DependencyInjection.IsPublicAddressCore(
+            AddressFamily.Unknown,
+            [1, 2, 3, 4],
+            isIPv6LinkLocal: false,
+            isIPv6SiteLocal: false,
+            isIPv6Multicast: false);
+
+        Assert.False(result);
+    }
+
+    [Fact]
     public void AddInfrastructure_WithInvalidDatabaseRetryCount_FailsOptionsValidation() {
         var services = new ServiceCollection();
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
@@ -425,6 +552,25 @@ public sealed class DependencyInjectionTests {
             ["GoogleFit:ClientSecret"] = "google-fit-secret",
             ["GoogleFit:RedirectUri"] = "https://example.com/google-fit",
         });
+    }
+
+    private static T InvokePrivateStatic<T>(string methodName, params object[] args) {
+        MethodInfo method = typeof(FoodDiary.Infrastructure.DependencyInjection).GetMethod(
+            methodName,
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        return (T)method.Invoke(null, args)!;
+    }
+
+    private static SocketsHttpConnectionContext CreateSocketsHttpConnectionContext(
+        DnsEndPoint dnsEndPoint,
+        HttpRequestMessage request) {
+        ConstructorInfo constructor = typeof(SocketsHttpConnectionContext).GetConstructor(
+            BindingFlags.Instance | BindingFlags.NonPublic,
+            binder: null,
+            [typeof(DnsEndPoint), typeof(HttpRequestMessage)],
+            modifiers: null)!;
+
+        return (SocketsHttpConnectionContext)constructor.Invoke([dnsEndPoint, request]);
     }
 
     [ExcludeFromCodeCoverage]
