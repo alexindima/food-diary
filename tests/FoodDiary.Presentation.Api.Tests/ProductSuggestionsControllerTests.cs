@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Products;
 using FoodDiary.Presentation.Api.Features.Products.Responses;
 using Microsoft.AspNetCore.Http;
@@ -25,7 +26,8 @@ public sealed class ProductSuggestionsControllerTests {
             FatsPer100G: 0.2,
             CarbsPer100G: 14,
             FiberPer100G: 2.4);
-        RecordingSender sender = new(Result.Success<IReadOnlyList<ProductSearchSuggestionModel>>([suggestion]));
+        IRequest<Result<IReadOnlyList<ProductSearchSuggestionModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<ProductSearchSuggestionModel>>([suggestion]), request => sentRequest = request);
         ProductSuggestionsController controller = CreateController(sender);
 
         IActionResult result = await controller.SearchSuggestions("apple", limit: 7);
@@ -34,12 +36,12 @@ public sealed class ProductSuggestionsControllerTests {
         IReadOnlyList<ProductSearchSuggestionHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<ProductSearchSuggestionHttpResponse>>(ok.Value);
         ProductSearchSuggestionHttpResponse item = Assert.Single(response);
         Assert.Equal("Apple", item.Name);
-        SearchProductSuggestionsQuery query = Assert.IsType<SearchProductSuggestionsQuery>(sender.Request);
+        SearchProductSuggestionsQuery query = Assert.IsType<SearchProductSuggestionsQuery>(sentRequest);
         Assert.Equal("apple", query.Search);
         Assert.Equal(7, query.Limit);
     }
 
-    private static ProductSuggestionsController CreateController(RecordingSender sender) =>
+    private static ProductSuggestionsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

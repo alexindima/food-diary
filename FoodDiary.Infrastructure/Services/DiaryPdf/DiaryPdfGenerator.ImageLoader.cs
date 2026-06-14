@@ -120,6 +120,7 @@ internal sealed partial class DiaryPdfGenerator {
             }
 
             Stream stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+            byte[] downloaded;
             await using (stream.ConfigureAwait(false)) {
                 var memory = new MemoryStream();
                 await using (memory.ConfigureAwait(false)) {
@@ -133,9 +134,11 @@ internal sealed partial class DiaryPdfGenerator {
                         }
                     }
 
-                    return memory.Length == 0 ? null : PrepareMealImage(memory.ToArray());
+                    downloaded = memory.ToArray();
                 }
             }
+
+            return downloaded.Length == 0 ? null : PrepareMealImage(downloaded);
         } catch (Exception ex) when (ex is HttpRequestException or InvalidOperationException or TaskCanceledException or FormatException or IOException or SocketException) {
             return null;
         }
@@ -201,30 +204,25 @@ internal sealed partial class DiaryPdfGenerator {
             return false;
         }
 
-        switch (address.AddressFamily) {
-            case AddressFamily.InterNetwork: {
-                    byte[] bytes = address.GetAddressBytes();
-                    return bytes[0] is not (0 or 10 or 127) &&
-                           (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
-                           (bytes[0] != 169 || bytes[1] != 254) &&
-                           (bytes[0] != 172 || bytes[1] < 16 || bytes[1] > 31) &&
-                           (bytes[0] != 192 || bytes[1] != 0 || bytes[2] != 0) &&
-                           (bytes[0] != 192 || bytes[1] != 168) &&
-                           (bytes[0] != 198 || bytes[1] is not (18 or 19)) &&
-                           bytes[0] < 224;
-                }
-            case AddressFamily.InterNetworkV6: {
-                    byte[] bytes = address.GetAddressBytes();
-                    return !address.IsIPv6LinkLocal &&
-                           !address.IsIPv6Multicast &&
-                           !address.IsIPv6SiteLocal &&
-                           !address.Equals(IPAddress.IPv6Any) &&
-                           !address.Equals(IPAddress.IPv6Loopback) &&
-                           (bytes[0] & 0xfe) != 0xfc;
-                }
-            default:
-                return false;
+        byte[] bytes = address.GetAddressBytes();
+        if (address.AddressFamily == AddressFamily.InterNetwork) {
+            return bytes[0] is not (0 or 10 or 127) &&
+                   (bytes[0] != 100 || bytes[1] < 64 || bytes[1] > 127) &&
+                   (bytes[0] != 169 || bytes[1] != 254) &&
+                   (bytes[0] != 172 || bytes[1] < 16 || bytes[1] > 31) &&
+                   (bytes[0] != 192 || bytes[1] != 0 || bytes[2] != 0) &&
+                   (bytes[0] != 192 || bytes[1] != 168) &&
+                   (bytes[0] != 198 || bytes[1] is not (18 or 19)) &&
+                   bytes[0] < 224;
         }
+
+        // A parsed or DNS-resolved address is always IPv4 or IPv6, so this handles IPv6.
+        return !address.IsIPv6LinkLocal &&
+               !address.IsIPv6Multicast &&
+               !address.IsIPv6SiteLocal &&
+               !address.Equals(IPAddress.IPv6Any) &&
+               !address.Equals(IPAddress.IPv6Loopback) &&
+               (bytes[0] & 0xfe) != 0xfc;
     }
 
     private static byte[]? PrepareMealImage(byte[] imageBytes) {

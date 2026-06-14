@@ -76,7 +76,9 @@ public class BehaviorTests {
 
     [Fact]
     public async Task UnitOfWorkBehavior_WhenPendingChanges_SavesAfterHandler() {
-        var unitOfWork = new FakeUnitOfWork(hasPendingChanges: true);
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: true);
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         var behavior = new UnitOfWorkBehavior<TestCommand, Result<string>>(unitOfWork);
 
         Result<string> result = await behavior.Handle(
@@ -86,7 +88,7 @@ public class BehaviorTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal("saved", result.Value);
-        Assert.Equal(1, unitOfWork.SaveCount);
+        await unitOfWork.Received(requiredNumberOfCalls: 1).SaveChangesAsync(CancellationToken.None);
     }
 
     [ExcludeFromCodeCoverage]
@@ -94,17 +96,6 @@ public class BehaviorTests {
 
     [ExcludeFromCodeCoverage]
     private record TestCommand : ICommand<Result<string>>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed class FakeUnitOfWork(bool hasPendingChanges) : IUnitOfWork {
-        public int SaveCount { get; private set; }
-        public bool HasPendingChanges => hasPendingChanges;
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
-            SaveCount++;
-            return Task.CompletedTask;
-        }
-    }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingLogger<T> : ILogger<T> {

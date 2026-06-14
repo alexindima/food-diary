@@ -4,6 +4,7 @@ using FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 using FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 using FoodDiary.Application.Exercises.Models;
 using FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Exercises;
 using FoodDiary.Presentation.Api.Features.Exercises.Requests;
 using FoodDiary.Presentation.Api.Features.Exercises.Responses;
@@ -17,7 +18,8 @@ public sealed class ExercisesControllerTests {
     [Fact]
     public async Task GetAll_SendsQueryAndReturnsEntries() {
         ExerciseEntryModel model = CreateExercise();
-        RecordingSender sender = new(Result.Success<IReadOnlyList<ExerciseEntryModel>>([model]));
+        IRequest<Result<IReadOnlyList<ExerciseEntryModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<ExerciseEntryModel>>([model]), request => sentRequest = request);
         ExercisesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         DateTime dateFrom = DateTime.UtcNow.AddDays(-7);
@@ -28,7 +30,7 @@ public sealed class ExercisesControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         IReadOnlyList<ExerciseEntryHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<ExerciseEntryHttpResponse>>(ok.Value);
         Assert.Single(response);
-        GetExerciseEntriesQuery query = Assert.IsType<GetExerciseEntriesQuery>(sender.Request);
+        GetExerciseEntriesQuery query = Assert.IsType<GetExerciseEntriesQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(dateFrom, query.DateFrom);
         Assert.Equal(dateTo, query.DateTo);
@@ -37,7 +39,8 @@ public sealed class ExercisesControllerTests {
     [Fact]
     public async Task Create_SendsCommandAndReturnsCreatedResponse() {
         ExerciseEntryModel model = CreateExercise();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<ExerciseEntryModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         ExercisesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         DateTime date = DateTime.UtcNow;
@@ -48,7 +51,7 @@ public sealed class ExercisesControllerTests {
         CreatedResult created = Assert.IsType<CreatedResult>(result);
         ExerciseEntryHttpResponse response = Assert.IsType<ExerciseEntryHttpResponse>(created.Value);
         Assert.Equal(model.Id, response.Id);
-        CreateExerciseEntryCommand command = Assert.IsType<CreateExerciseEntryCommand>(sender.Request);
+        CreateExerciseEntryCommand command = Assert.IsType<CreateExerciseEntryCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(date, command.Date);
     }
@@ -56,7 +59,8 @@ public sealed class ExercisesControllerTests {
     [Fact]
     public async Task Update_SendsCommandAndReturnsResponse() {
         ExerciseEntryModel model = CreateExercise();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<ExerciseEntryModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         ExercisesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
@@ -67,14 +71,15 @@ public sealed class ExercisesControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         ExerciseEntryHttpResponse response = Assert.IsType<ExerciseEntryHttpResponse>(ok.Value);
         Assert.Equal(model.Id, response.Id);
-        UpdateExerciseEntryCommand command = Assert.IsType<UpdateExerciseEntryCommand>(sender.Request);
+        UpdateExerciseEntryCommand command = Assert.IsType<UpdateExerciseEntryCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.EntryId);
     }
 
     [Fact]
     public async Task Delete_SendsDeleteCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         ExercisesController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var entryId = Guid.NewGuid();
@@ -82,12 +87,12 @@ public sealed class ExercisesControllerTests {
         IActionResult result = await controller.Delete(userId, entryId);
 
         Assert.IsType<NoContentResult>(result);
-        DeleteExerciseEntryCommand command = Assert.IsType<DeleteExerciseEntryCommand>(sender.Request);
+        DeleteExerciseEntryCommand command = Assert.IsType<DeleteExerciseEntryCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(entryId, command.EntryId);
     }
 
-    private static ExercisesController CreateController(RecordingSender sender) =>
+    private static ExercisesController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

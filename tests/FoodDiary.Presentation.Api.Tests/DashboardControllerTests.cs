@@ -4,6 +4,7 @@ using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Dashboard;
 using FoodDiary.Presentation.Api.Features.Dashboard.Requests;
 using FoodDiary.Presentation.Api.Features.Dashboard.Responses;
@@ -18,7 +19,8 @@ public sealed class DashboardControllerTests {
     public async Task Get_SendsDashboardQueryAndReturnsResponse() {
         DateTime date = new(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc);
         DashboardSnapshotModel model = CreateDashboardSnapshot(date);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<DashboardSnapshotModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DashboardController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var query = new GetDashboardSnapshotHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
@@ -29,7 +31,7 @@ public sealed class DashboardControllerTests {
         DashboardSnapshotHttpResponse response = Assert.IsType<DashboardSnapshotHttpResponse>(ok.Value);
         Assert.Equal(date, response.Date);
         Assert.Equal(2100, response.DailyGoal);
-        GetDashboardSnapshotQuery sentQuery = Assert.IsType<GetDashboardSnapshotQuery>(sender.Request);
+        GetDashboardSnapshotQuery sentQuery = Assert.IsType<GetDashboardSnapshotQuery>(sentRequest);
         Assert.Equal(userId, sentQuery.UserId);
         Assert.Equal(date, sentQuery.Date);
         Assert.Equal(2, sentQuery.Page);
@@ -40,14 +42,15 @@ public sealed class DashboardControllerTests {
 
     [Fact]
     public async Task SendTestEmail_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         DashboardController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
         IActionResult result = await controller.SendTestEmail(userId);
 
         Assert.IsType<NoContentResult>(result);
-        SendDashboardTestEmailCommand command = Assert.IsType<SendDashboardTestEmailCommand>(sender.Request);
+        SendDashboardTestEmailCommand command = Assert.IsType<SendDashboardTestEmailCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
     }
 
@@ -55,7 +58,8 @@ public sealed class DashboardControllerTests {
     public async Task GetAdvice_SendsAdviceQueryAndReturnsResponse() {
         var adviceId = Guid.NewGuid();
         DailyAdviceModel model = new(adviceId, "en", "Drink water", "hydration", 3);
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<DailyAdviceModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         DashboardController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         DateTime date = new(2026, 6, 14, 0, 0, 0, DateTimeKind.Utc);
@@ -67,13 +71,13 @@ public sealed class DashboardControllerTests {
         DailyAdviceHttpResponse response = Assert.IsType<DailyAdviceHttpResponse>(ok.Value);
         Assert.Equal(adviceId, response.Id);
         Assert.Equal("Drink water", response.Value);
-        GetDailyAdviceQuery sentQuery = Assert.IsType<GetDailyAdviceQuery>(sender.Request);
+        GetDailyAdviceQuery sentQuery = Assert.IsType<GetDailyAdviceQuery>(sentRequest);
         Assert.Equal(userId, sentQuery.UserId);
         Assert.Equal(date, sentQuery.Date);
         Assert.Equal("en", sentQuery.Locale);
     }
 
-    private static DashboardController CreateController(RecordingSender sender) =>
+    private static DashboardController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

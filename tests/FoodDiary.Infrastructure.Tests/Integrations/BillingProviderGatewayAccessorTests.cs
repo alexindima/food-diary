@@ -1,6 +1,4 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Integrations.Billing;
 using FoodDiary.Integrations.Options;
@@ -12,8 +10,8 @@ namespace FoodDiary.Infrastructure.Tests.Integrations;
 public sealed class BillingProviderGatewayAccessorTests {
     [Fact]
     public void GetActiveProvider_WithConfiguredProvider_ReturnsMatchingProvider() {
-        var stripe = new StubBillingProviderGateway(BillingProviderNames.Stripe);
-        var paddle = new StubBillingProviderGateway(BillingProviderNames.Paddle);
+        IBillingProviderGateway stripe = CreateGateway(BillingProviderNames.Stripe);
+        IBillingProviderGateway paddle = CreateGateway(BillingProviderNames.Paddle);
         var accessor = new ConfigurableBillingProviderGatewayAccessor(
             [stripe, paddle],
             MsOptions.Create(new BillingOptions { Provider = " paddle " }));
@@ -26,7 +24,7 @@ public sealed class BillingProviderGatewayAccessorTests {
     [Fact]
     public void GetActiveProvider_WithMissingProvider_Throws() {
         var accessor = new ConfigurableBillingProviderGatewayAccessor(
-            [new StubBillingProviderGateway(BillingProviderNames.Stripe)],
+            [CreateGateway(BillingProviderNames.Stripe)],
             MsOptions.Create(new BillingOptions { Provider = BillingProviderNames.YooKassa }));
 
         Assert.Throws<InvalidOperationException>(accessor.GetActiveProvider);
@@ -35,7 +33,7 @@ public sealed class BillingProviderGatewayAccessorTests {
     [Fact]
     public void GetProviderOrDefault_WithBlankProvider_ReturnsNull() {
         var accessor = new ConfigurableBillingProviderGatewayAccessor(
-            [new StubBillingProviderGateway(BillingProviderNames.Stripe)],
+            [CreateGateway(BillingProviderNames.Stripe)],
             MsOptions.Create(new BillingOptions()));
 
         Assert.Null(accessor.GetProviderOrDefault("   "));
@@ -43,7 +41,7 @@ public sealed class BillingProviderGatewayAccessorTests {
 
     [Fact]
     public void GetProviderOrDefault_WithDifferentCasing_ReturnsProvider() {
-        var stripe = new StubBillingProviderGateway(BillingProviderNames.Stripe);
+        IBillingProviderGateway stripe = CreateGateway(BillingProviderNames.Stripe);
         var accessor = new ConfigurableBillingProviderGatewayAccessor(
             [stripe],
             MsOptions.Create(new BillingOptions()));
@@ -51,24 +49,9 @@ public sealed class BillingProviderGatewayAccessorTests {
         Assert.Same(stripe, accessor.GetProviderOrDefault(" STRIPE "));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubBillingProviderGateway(string provider) : IBillingProviderGateway {
-        public string Provider { get; } = provider;
-
-        public Task<Result<BillingCheckoutSessionModel>> CreateCheckoutSessionAsync(
-            BillingCheckoutSessionRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<Result<BillingPortalSessionModel>> CreatePortalSessionAsync(
-            BillingPortalSessionRequestModel request,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<Result<BillingWebhookEventModel?>> ParseWebhookEventAsync(
-            string payload,
-            string signatureHeader,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+    private static IBillingProviderGateway CreateGateway(string provider) {
+        IBillingProviderGateway gateway = Substitute.For<IBillingProviderGateway>();
+        gateway.Provider.Returns(provider);
+        return gateway;
     }
 }

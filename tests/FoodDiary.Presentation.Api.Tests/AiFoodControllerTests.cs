@@ -19,7 +19,8 @@ public sealed class AiFoodControllerTests {
     [Fact]
     public async Task AnalyzeFood_SendsVisionCommandAndReturnsResponse() {
         FoodVisionModel model = new([new FoodVisionItemModel("egg", "egg", 2, "pcs", 0.9m)], "vision notes");
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<FoodVisionModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AiFoodController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var imageAssetId = Guid.NewGuid();
@@ -33,7 +34,7 @@ public sealed class AiFoodControllerTests {
         FoodVisionItemHttpModel item = Assert.Single(response.Items);
         Assert.Equal("egg", item.NameEn);
 
-        AnalyzeFoodImageCommand command = Assert.IsType<AnalyzeFoodImageCommand>(sender.Request);
+        AnalyzeFoodImageCommand command = Assert.IsType<AnalyzeFoodImageCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(imageAssetId, command.ImageAssetId);
         Assert.Equal("Dinner plate", command.Description);
@@ -42,7 +43,8 @@ public sealed class AiFoodControllerTests {
     [Fact]
     public async Task ParseFoodText_SendsTextCommandAndReturnsResponse() {
         FoodVisionModel model = new([new FoodVisionItemModel("toast", "toast", 1, "slice", 0.8m)], "text notes");
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<FoodVisionModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AiFoodController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         FoodTextHttpRequest request = new("toast");
@@ -55,7 +57,7 @@ public sealed class AiFoodControllerTests {
         FoodVisionItemHttpModel item = Assert.Single(response.Items);
         Assert.Equal("toast", item.NameEn);
 
-        ParseFoodTextCommand command = Assert.IsType<ParseFoodTextCommand>(sender.Request);
+        ParseFoodTextCommand command = Assert.IsType<ParseFoodTextCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("toast", command.Text);
     }
@@ -71,7 +73,8 @@ public sealed class AiFoodControllerTests {
             Alcohol: 0,
             Items: [new FoodNutritionItemModel("egg", 2, "pcs", 160, 12, 10, 1, 0, 0)],
             Notes: "nutrition notes");
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<FoodNutritionModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         AiFoodController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         FoodNutritionHttpRequest request = new([
@@ -87,7 +90,7 @@ public sealed class AiFoodControllerTests {
         FoodNutritionItemHttpResponse item = Assert.Single(response.Items);
         Assert.Equal("egg", item.Name);
 
-        CalculateFoodNutritionCommand command = Assert.IsType<CalculateFoodNutritionCommand>(sender.Request);
+        CalculateFoodNutritionCommand command = Assert.IsType<CalculateFoodNutritionCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         FoodVisionItemModel sentItem = Assert.Single(command.Items);
         Assert.Equal("egg", sentItem.NameEn);
@@ -100,36 +103,4 @@ public sealed class AiFoodControllerTests {
             },
         };
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingSender(object response) : ISender {
-        public object? Request { get; private set; }
-
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            Request = request;
-            return Task.FromResult((TResponse)response);
-        }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest {
-            Request = request;
-            return Task.CompletedTask;
-        }
-
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
-            Request = request;
-            return Task.FromResult<object?>(response);
-        }
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-
-        public IAsyncEnumerable<object?> CreateStream(
-            object request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
 }

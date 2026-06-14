@@ -5,6 +5,7 @@ using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.RecipeComments;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Requests;
 using FoodDiary.Presentation.Api.Features.RecipeComments.Responses;
@@ -20,7 +21,8 @@ public sealed class RecipeCommentsControllerTests {
     public async Task GetAll_SendsQueryAndReturnsPagedComments() {
         RecipeCommentModel comment = CreateComment();
         var paged = new PagedResponse<RecipeCommentModel>([comment], Page: 2, Limit: 10, TotalPages: 3, TotalItems: 25);
-        RecordingSender sender = new(Result.Success(paged));
+        IRequest<Result<PagedResponse<RecipeCommentModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(paged), request => sentRequest = request);
         RecipeCommentsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
@@ -31,7 +33,7 @@ public sealed class RecipeCommentsControllerTests {
         PagedHttpResponse<RecipeCommentHttpResponse> response = Assert.IsType<PagedHttpResponse<RecipeCommentHttpResponse>>(ok.Value);
         Assert.Equal(2, response.Page);
         Assert.Single(response.Data);
-        GetRecipeCommentsQuery query = Assert.IsType<GetRecipeCommentsQuery>(sender.Request);
+        GetRecipeCommentsQuery query = Assert.IsType<GetRecipeCommentsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(recipeId, query.RecipeId);
         Assert.Equal(2, query.Page);
@@ -41,7 +43,8 @@ public sealed class RecipeCommentsControllerTests {
     [Fact]
     public async Task Create_SendsCommandAndReturnsCreatedComment() {
         RecipeCommentModel comment = CreateComment();
-        RecordingSender sender = new(Result.Success(comment));
+        IRequest<Result<RecipeCommentModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(comment), request => sentRequest = request);
         RecipeCommentsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
@@ -52,7 +55,7 @@ public sealed class RecipeCommentsControllerTests {
         CreatedResult created = Assert.IsType<CreatedResult>(result);
         RecipeCommentHttpResponse response = Assert.IsType<RecipeCommentHttpResponse>(created.Value);
         Assert.Equal(comment.Id, response.Id);
-        CreateRecipeCommentCommand command = Assert.IsType<CreateRecipeCommentCommand>(sender.Request);
+        CreateRecipeCommentCommand command = Assert.IsType<CreateRecipeCommentCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
         Assert.Equal("Great recipe!", command.Text);
@@ -61,7 +64,8 @@ public sealed class RecipeCommentsControllerTests {
     [Fact]
     public async Task Update_SendsCommandAndReturnsComment() {
         RecipeCommentModel comment = CreateComment();
-        RecordingSender sender = new(Result.Success(comment));
+        IRequest<Result<RecipeCommentModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(comment), request => sentRequest = request);
         RecipeCommentsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
@@ -73,7 +77,7 @@ public sealed class RecipeCommentsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         RecipeCommentHttpResponse response = Assert.IsType<RecipeCommentHttpResponse>(ok.Value);
         Assert.Equal(comment.Id, response.Id);
-        UpdateRecipeCommentCommand command = Assert.IsType<UpdateRecipeCommentCommand>(sender.Request);
+        UpdateRecipeCommentCommand command = Assert.IsType<UpdateRecipeCommentCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(commentId, command.CommentId);
         Assert.Equal("Updated text", command.Text);
@@ -81,7 +85,8 @@ public sealed class RecipeCommentsControllerTests {
 
     [Fact]
     public async Task Delete_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         RecipeCommentsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var recipeId = Guid.NewGuid();
@@ -90,13 +95,13 @@ public sealed class RecipeCommentsControllerTests {
         IActionResult result = await controller.Delete(userId, recipeId, commentId);
 
         Assert.IsType<NoContentResult>(result);
-        DeleteRecipeCommentCommand command = Assert.IsType<DeleteRecipeCommentCommand>(sender.Request);
+        DeleteRecipeCommentCommand command = Assert.IsType<DeleteRecipeCommentCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(recipeId, command.RecipeId);
         Assert.Equal(commentId, command.CommentId);
     }
 
-    private static RecipeCommentsController CreateController(RecordingSender sender) =>
+    private static RecipeCommentsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

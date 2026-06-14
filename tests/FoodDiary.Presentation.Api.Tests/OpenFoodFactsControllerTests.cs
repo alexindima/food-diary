@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 using FoodDiary.Presentation.Api.Features.OpenFoodFacts.Responses;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +15,8 @@ public sealed class OpenFoodFactsControllerTests {
     [Fact]
     public async Task SearchByBarcode_SendsQueryAndReturnsProduct() {
         OpenFoodFactsProductModel product = CreateProduct("4600000000001");
-        RecordingSender sender = new(Result.Success<OpenFoodFactsProductModel?>(product));
+        IRequest<Result<OpenFoodFactsProductModel?>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<OpenFoodFactsProductModel?>(product), request => sentRequest = request);
         OpenFoodFactsController controller = CreateController(sender);
 
         IActionResult result = await controller.SearchByBarcode("4600000000001");
@@ -22,14 +24,15 @@ public sealed class OpenFoodFactsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         OpenFoodFactsProductHttpResponse response = Assert.IsType<OpenFoodFactsProductHttpResponse>(ok.Value);
         Assert.Equal("4600000000001", response.Barcode);
-        SearchByBarcodeQuery query = Assert.IsType<SearchByBarcodeQuery>(sender.Request);
+        SearchByBarcodeQuery query = Assert.IsType<SearchByBarcodeQuery>(sentRequest);
         Assert.Equal("4600000000001", query.Barcode);
     }
 
     [Fact]
     public async Task Search_SendsQueryAndReturnsProducts() {
         OpenFoodFactsProductModel product = CreateProduct("111");
-        RecordingSender sender = new(Result.Success<IReadOnlyList<OpenFoodFactsProductModel>>([product]));
+        IRequest<Result<IReadOnlyList<OpenFoodFactsProductModel>>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success<IReadOnlyList<OpenFoodFactsProductModel>>([product]), request => sentRequest = request);
         OpenFoodFactsController controller = CreateController(sender);
 
         IActionResult result = await controller.Search("milk", limit: 15);
@@ -38,12 +41,12 @@ public sealed class OpenFoodFactsControllerTests {
         IReadOnlyList<OpenFoodFactsProductHttpResponse> response = Assert.IsAssignableFrom<IReadOnlyList<OpenFoodFactsProductHttpResponse>>(ok.Value);
         OpenFoodFactsProductHttpResponse item = Assert.Single(response);
         Assert.Equal("111", item.Barcode);
-        SearchOpenFoodFactsQuery query = Assert.IsType<SearchOpenFoodFactsQuery>(sender.Request);
+        SearchOpenFoodFactsQuery query = Assert.IsType<SearchOpenFoodFactsQuery>(sentRequest);
         Assert.Equal("milk", query.Search);
         Assert.Equal(15, query.Limit);
     }
 
-    private static OpenFoodFactsController CreateController(RecordingSender sender) =>
+    private static OpenFoodFactsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

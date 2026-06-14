@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Users.Commands.ChangePassword;
 using FoodDiary.Application.Users.Commands.SetPassword;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Users;
 using FoodDiary.Presentation.Api.Features.Users.Requests;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,8 @@ namespace FoodDiary.Presentation.Api.Tests;
 public sealed class UsersPasswordControllerTests {
     [Fact]
     public async Task ChangePassword_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         UsersPasswordController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new ChangePasswordHttpRequest("old-password", "new-password");
@@ -20,7 +22,7 @@ public sealed class UsersPasswordControllerTests {
         IActionResult result = await controller.ChangePassword(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        ChangePasswordCommand command = Assert.IsType<ChangePasswordCommand>(sender.Request);
+        ChangePasswordCommand command = Assert.IsType<ChangePasswordCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("old-password", command.CurrentPassword);
         Assert.Equal("new-password", command.NewPassword);
@@ -28,7 +30,8 @@ public sealed class UsersPasswordControllerTests {
 
     [Fact]
     public async Task SetPassword_SendsCommandAndReturnsNoContent() {
-        RecordingSender sender = new(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         UsersPasswordController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new SetPasswordHttpRequest("new-password");
@@ -36,12 +39,12 @@ public sealed class UsersPasswordControllerTests {
         IActionResult result = await controller.SetPassword(userId, request);
 
         Assert.IsType<NoContentResult>(result);
-        SetPasswordCommand command = Assert.IsType<SetPasswordCommand>(sender.Request);
+        SetPasswordCommand command = Assert.IsType<SetPasswordCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal("new-password", command.NewPassword);
     }
 
-    private static UsersPasswordController CreateController(RecordingSender sender) =>
+    private static UsersPasswordController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

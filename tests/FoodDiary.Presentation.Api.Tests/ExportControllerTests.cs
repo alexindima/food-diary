@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Export;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,10 @@ public sealed class ExportControllerTests {
     [Fact]
     public async Task ExportDiary_SendsDiaryQueryAndReturnsFile() {
         byte[] content = [1, 2, 3];
-        RecordingSender sender = new(Result.Success(new FileExportResult(content, "text/csv", "diary.csv")));
+        IRequest<Result<FileExportResult>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new FileExportResult(content, "text/csv", "diary.csv")),
+            request => sentRequest = request);
         ExportController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         DateTime dateFrom = DateTime.UtcNow.AddDays(-7);
@@ -32,7 +36,7 @@ public sealed class ExportControllerTests {
         Assert.Equal(content, file.FileContents);
         Assert.Equal("text/csv", file.ContentType);
         Assert.Equal("diary.csv", file.FileDownloadName);
-        ExportDiaryQuery query = Assert.IsType<ExportDiaryQuery>(sender.Request);
+        ExportDiaryQuery query = Assert.IsType<ExportDiaryQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(dateFrom, query.DateFrom);
         Assert.Equal(dateTo, query.DateTo);
@@ -45,7 +49,10 @@ public sealed class ExportControllerTests {
     [Fact]
     public async Task ExportCycle_SendsCycleQueryAndReturnsFile() {
         byte[] content = [4, 5, 6];
-        RecordingSender sender = new(Result.Success(new FileExportResult(content, "application/pdf", "cycle.pdf")));
+        IRequest<Result<FileExportResult>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(
+            Result.Success(new FileExportResult(content, "application/pdf", "cycle.pdf")),
+            request => sentRequest = request);
         ExportController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         DateTime dateFrom = DateTime.UtcNow.AddDays(-30);
@@ -57,14 +64,14 @@ public sealed class ExportControllerTests {
         Assert.Equal(content, file.FileContents);
         Assert.Equal("application/pdf", file.ContentType);
         Assert.Equal("cycle.pdf", file.FileDownloadName);
-        ExportCycleQuery query = Assert.IsType<ExportCycleQuery>(sender.Request);
+        ExportCycleQuery query = Assert.IsType<ExportCycleQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
         Assert.Equal(dateFrom, query.DateFrom);
         Assert.Equal(dateTo, query.DateTo);
         Assert.Equal(180, query.TimeZoneOffsetMinutes);
     }
 
-    private static ExportController CreateController(RecordingSender sender) =>
+    private static ExportController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

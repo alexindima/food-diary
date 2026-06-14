@@ -11,12 +11,14 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace FoodDiary.Presentation.Api.Features;
 
 [ExcludeFromCodeCoverage]
+[Collection(FoodDiary.Presentation.Api.Tests.PresentationTelemetryCollection.Name)]
 public sealed class BaseApiControllerFeaturesRootNamespaceTests {
     [Fact]
     public async Task HandleObservedOk_WhenFeaturesSegmentIsLast_UsesUnknownFeatureName() {
         var request = new TestRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success("value"));
+        ISender mediator = Substitute.For<ISender>();
+        mediator.Send(request, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success("value")));
         var controller = new FeaturesRootController(mediator) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
@@ -38,40 +40,6 @@ public sealed class BaseApiControllerFeaturesRootNamespaceTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestRequest : IRequest<Result<string>>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubSender : ISender {
-        private readonly Dictionary<object, object> _responses = [];
-
-        public StubSender Register<TResponse>(IRequest<TResponse> request, TResponse response) {
-            _responses[request] = response!;
-            return this;
-        }
-
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            return Task.FromResult((TResponse)_responses[request]!);
-        }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest =>
-            Task.CompletedTask;
-
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
-            return Task.FromResult<object?>(_responses[request]);
-        }
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-
-        public IAsyncEnumerable<object?> CreateStream(
-            object request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
 
     [ExcludeFromCodeCoverage]
     private sealed class TestActivityListener : IDisposable {

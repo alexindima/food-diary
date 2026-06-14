@@ -678,6 +678,38 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.Null(tooLargeByLoop);
     }
 
+    [Fact]
+    public async Task LoadMealImagesAsync_WhenMealImageDecodes_ReturnsDictionaryEntry() {
+        string dataUrl = $"data:image/png;base64,{Convert.ToBase64String(CreatePngBytes(width: 16, height: 16))}";
+        var userId = UserId.New();
+        Meal meal = CreateMeal(userId, new DateTime(2026, 5, 4, 15, 2, 0, DateTimeKind.Utc), 41, 1, 0, 10, 3);
+        meal.UpdateImage(dataUrl);
+        var generator = new DiaryPdfGenerator();
+
+        IReadOnlyDictionary<MealId, byte[]> images = await InvokePrivateInstance<Task<IReadOnlyDictionary<MealId, byte[]>>>(
+            generator,
+            "LoadMealImagesAsync",
+            (IReadOnlyList<Meal>)[meal],
+            CancellationToken.None);
+
+        Assert.True(images.ContainsKey(meal.Id));
+        Assert.NotEmpty(images[meal.Id]);
+    }
+
+    [Fact]
+    public void CreateMealImageCollage_WhenTileFailsToDecode_SkipsItAndRendersRemaining() {
+        // SKBitmap.Decode returns null (without throwing) for this 1x1 transparent PNG.
+        byte[] undecodableTile = Convert.FromBase64String(
+            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/p9sAAAAASUVORK5CYII=");
+        byte[] validTile = CreatePngBytes(width: 16, height: 16);
+
+        byte[]? collage = InvokePrivateStatic<byte[]?>(
+            "CreateMealImageCollage",
+            (object)new[] { undecodableTile, validTile });
+
+        Assert.NotNull(collage);
+    }
+
     private static Meal CreateMeal(
         UserId userId,
         DateTime date,

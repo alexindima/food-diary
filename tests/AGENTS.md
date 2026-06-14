@@ -17,6 +17,8 @@ Rules for `tests/`.
 
 ## Rules
 - Prefer focused tests near the layer being changed.
+- Use NSubstitute for simple interface substitutes in unit tests when it avoids noisy hand-written `Fake`/`Stub`/`Recording` types.
+- Do not replace persistence, HTTP contract, or other integration coverage with mocks; keep Testcontainers/Postgres and WebApplicationFactory tests for behavior that depends on real infrastructure.
 - For HTTP contract changes, update snapshots under `tests/FoodDiary.Web.Api.IntegrationTests/Snapshots/`.
 - Do not weaken architecture tests to make a feature pass; update the architecture intentionally and document why.
 - Keep test helpers local to the test project unless reuse is clear.

@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Queries.GetUserGoals;
+using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Features.Goals;
 using FoodDiary.Presentation.Api.Features.Goals.Requests;
 using FoodDiary.Presentation.Api.Features.Goals.Responses;
@@ -15,7 +16,8 @@ public sealed class GoalsControllerTests {
     [Fact]
     public async Task GetGoals_SendsQueryAndReturnsGoals() {
         GoalsModel model = CreateGoals();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<GoalsModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         GoalsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
 
@@ -24,14 +26,15 @@ public sealed class GoalsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         GoalsHttpResponse response = Assert.IsType<GoalsHttpResponse>(ok.Value);
         Assert.Equal(2000, response.DailyCalorieTarget);
-        GetUserGoalsQuery query = Assert.IsType<GetUserGoalsQuery>(sender.Request);
+        GetUserGoalsQuery query = Assert.IsType<GetUserGoalsQuery>(sentRequest);
         Assert.Equal(userId, query.UserId);
     }
 
     [Fact]
     public async Task UpdateGoals_SendsCommandAndReturnsGoals() {
         GoalsModel model = CreateGoals();
-        RecordingSender sender = new(Result.Success(model));
+        IRequest<Result<GoalsModel>>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(model), request => sentRequest = request);
         GoalsController controller = CreateController(sender);
         var userId = Guid.NewGuid();
         var request = new UpdateGoalsHttpRequest(
@@ -57,13 +60,13 @@ public sealed class GoalsControllerTests {
         OkObjectResult ok = Assert.IsType<OkObjectResult>(result);
         GoalsHttpResponse response = Assert.IsType<GoalsHttpResponse>(ok.Value);
         Assert.True(response.CalorieCyclingEnabled);
-        UpdateGoalsCommand command = Assert.IsType<UpdateGoalsCommand>(sender.Request);
+        UpdateGoalsCommand command = Assert.IsType<UpdateGoalsCommand>(sentRequest);
         Assert.Equal(userId, command.UserId);
         Assert.Equal(2000, command.DailyCalorieTarget);
         Assert.Equal(1800, command.MondayCalories);
     }
 
-    private static GoalsController CreateController(RecordingSender sender) =>
+    private static GoalsController CreateController(ISender sender) =>
         new(sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),

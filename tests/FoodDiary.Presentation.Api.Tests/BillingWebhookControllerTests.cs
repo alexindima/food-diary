@@ -15,14 +15,15 @@ public sealed class BillingWebhookControllerTests {
     [InlineData("Paddle", "Paddle-Signature", "paddle-signature")]
     [InlineData("Stripe", "Stripe-Signature", "stripe-signature")]
     public async Task HandleWebhook_WithSignedProvider_SendsPayloadAndSignature(string provider, string headerName, string signature) {
-        var sender = new RecordingSender(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         BillingWebhookController controller = CreateController(sender, payload: "{\"event\":\"paid\"}");
         controller.Request.Headers[headerName] = signature;
 
         IActionResult result = await controller.HandleWebhook(provider);
 
         Assert.IsType<NoContentResult>(result);
-        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sender.Request);
+        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sentRequest);
         Assert.Equal(provider, command.Provider);
         Assert.Equal("{\"event\":\"paid\"}", command.Payload);
         Assert.Equal(signature, command.SignatureHeader);
@@ -31,7 +32,8 @@ public sealed class BillingWebhookControllerTests {
 
     [Fact]
     public async Task HandleWebhook_WithYooKassaProvider_SendsEmptySignatureHeader() {
-        var sender = new RecordingSender(Result.Success());
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
         BillingWebhookController controller = CreateController(sender, payload: "{\"event\":\"payment.succeeded\"}");
         controller.Request.Headers["Stripe-Signature"] = "ignored-stripe-signature";
         controller.Request.Headers["Paddle-Signature"] = "ignored-paddle-signature";
@@ -39,7 +41,7 @@ public sealed class BillingWebhookControllerTests {
         IActionResult result = await controller.HandleWebhook("YooKassa");
 
         Assert.IsType<NoContentResult>(result);
-        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sender.Request);
+        ProcessBillingWebhookCommand command = Assert.IsType<ProcessBillingWebhookCommand>(sentRequest);
         Assert.Equal("YooKassa", command.Provider);
         Assert.Equal("{\"event\":\"payment.succeeded\"}", command.Payload);
         Assert.Equal(string.Empty, command.SignatureHeader);
@@ -47,7 +49,7 @@ public sealed class BillingWebhookControllerTests {
 
     [Fact]
     public async Task HandleWebhook_WhenCommandFails_ReturnsApiErrorResponse() {
-        var sender = new RecordingSender(Result.Failure(Errors.Validation.Invalid("Provider", "Unsupported provider.")));
+        ISender sender = SubstituteSender.Create(Result.Failure(Errors.Validation.Invalid("Provider", "Unsupported provider.")));
         BillingWebhookController controller = CreateController(sender, payload: "{}");
         controller.HttpContext.TraceIdentifier = "trace-webhook";
 
@@ -59,7 +61,7 @@ public sealed class BillingWebhookControllerTests {
         Assert.Equal("trace-webhook", response.TraceId);
     }
 
-    private static BillingWebhookController CreateController(RecordingSender sender, string payload) {
+    private static BillingWebhookController CreateController(ISender sender, string payload) {
         var httpContext = new DefaultHttpContext();
         httpContext.Request.Body = new MemoryStream(Encoding.UTF8.GetBytes(payload));
         httpContext.Request.ContentLength = httpContext.Request.Body.Length;
@@ -71,40 +73,4 @@ public sealed class BillingWebhookControllerTests {
         };
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingSender(Result response) : ISender {
-        public object? Request { get; private set; }
-        public CancellationToken CancellationToken { get; private set; }
-
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            Request = request;
-            CancellationToken = cancellationToken;
-            return Task.FromResult((TResponse)(object)response);
-        }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest {
-            Request = request;
-            CancellationToken = cancellationToken;
-            return Task.CompletedTask;
-        }
-
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
-            Request = request;
-            CancellationToken = cancellationToken;
-            return Task.FromResult<object?>(response);
-        }
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-
-        public IAsyncEnumerable<object?> CreateStream(
-            object request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
 }

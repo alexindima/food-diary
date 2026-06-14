@@ -14,12 +14,12 @@ using Microsoft.Extensions.Logging.Abstractions;
 namespace FoodDiary.Presentation.Api.Tests;
 
 [ExcludeFromCodeCoverage]
+[Collection(PresentationTelemetryCollection.Name)]
 public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleOk_ReturnsMappedOkResult() {
         var request = new TestOkRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success("value"));
+        ISender mediator = CreateSender(request, Result.Success("value"));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleOkPublic(request, static value => value.ToUpperInvariant());
@@ -31,8 +31,9 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleCreated_ReturnsCreatedAtActionResult() {
         var request = new TestCreatedRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success(new CreatedModel(Guid.Parse("11111111-1111-1111-1111-111111111111"))));
+        ISender mediator = CreateSender(
+            request,
+            Result.Success(new CreatedModel(Guid.Parse("11111111-1111-1111-1111-111111111111"))));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleCreatedPublic(
@@ -49,8 +50,7 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleNoContent_ReturnsNoContentResult() {
         var request = new TestNoContentRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success());
+        ISender mediator = CreateSender(request, Result.Success());
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleNoContentPublic(request);
@@ -61,22 +61,21 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task Send_UsesRequestAbortedCancellationToken() {
         var request = new TestVoidRequest();
-        var mediator = new StubSender();
+        ISender mediator = Substitute.For<ISender>();
+        mediator.Send(request, Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         TestController controller = CreateController(mediator);
         using var cts = new CancellationTokenSource();
         controller.HttpContext.RequestAborted = cts.Token;
 
         await controller.SendPublic(request);
 
-        Assert.Same(request, mediator.VoidRequest);
-        Assert.Equal(cts.Token, mediator.CancellationToken);
+        await mediator.Received(1).Send(request, cts.Token);
     }
 
     [Fact]
     public async Task HandleAccepted_ReturnsMappedAcceptedResult() {
         var request = new TestOkRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success("value"));
+        ISender mediator = CreateSender(request, Result.Success("value"));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleAcceptedPublic(request, static value => value.ToUpperInvariant());
@@ -89,8 +88,9 @@ public sealed class BaseApiControllerTests {
     public async Task HandleFile_ReturnsFileResult() {
         byte[] content = [1, 2, 3];
         var request = new TestFileRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success(new FileExportResult(content, "text/csv", "export.csv")));
+        ISender mediator = CreateSender(
+            request,
+            Result.Success(new FileExportResult(content, "text/csv", "export.csv")));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleFilePublic(request);
@@ -104,8 +104,9 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleOk_MapsFailureThroughStandardApiErrorContract() {
         var request = new TestOkRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Failure<string>(Errors.Validation.Invalid("Email", "Invalid email format")));
+        ISender mediator = CreateSender(
+            request,
+            Result.Failure<string>(Errors.Validation.Invalid("Email", "Invalid email format")));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleOkPublic(request, static value => value);
@@ -121,8 +122,7 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedOk_CreatesPresentationActivity() {
         var request = new TestOkRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success("value"));
+        ISender mediator = CreateSender(request, Result.Success("value"));
         TestController controller = CreateController(mediator);
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
 
@@ -138,8 +138,9 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedCreated_ReturnsCreatedAtActionResultAndCreatesPresentationActivity() {
         var request = new TestCreatedRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success(new CreatedModel(Guid.Parse("22222222-2222-2222-2222-222222222222"))));
+        ISender mediator = CreateSender(
+            request,
+            Result.Success(new CreatedModel(Guid.Parse("22222222-2222-2222-2222-222222222222"))));
         TestController controller = CreateController(mediator);
         controller.HttpContext.SetEndpoint(new Endpoint(_ => Task.CompletedTask, EndpointMetadataCollection.Empty, "GET /test/{id}"));
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
@@ -164,8 +165,9 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedNoContent_WithFailure_ReturnsApiErrorAndCreatesFailureActivity() {
         var request = new TestNoContentRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Failure(Errors.Validation.Invalid("Name", "Name is required.")));
+        ISender mediator = CreateSender(
+            request,
+            Result.Failure(Errors.Validation.Invalid("Name", "Name is required.")));
         TestController controller = CreateController(mediator);
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
 
@@ -184,8 +186,7 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedOk_WithoutActivityListener_ReturnsResult() {
         var request = new TestOkRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Success("value"));
+        ISender mediator = CreateSender(request, Result.Success("value"));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleObservedOkPublic(request, static value => value, NullLogger.Instance, "test.no-activity");
@@ -197,8 +198,9 @@ public sealed class BaseApiControllerTests {
     [Fact]
     public async Task HandleObservedNoContent_WithFailureAndWithoutActivityListener_ReturnsApiError() {
         var request = new TestNoContentRequest();
-        StubSender mediator = new StubSender()
-            .Register(request, Result.Failure(Errors.Validation.Invalid("Name", "Name is required.")));
+        ISender mediator = CreateSender(
+            request,
+            Result.Failure(Errors.Validation.Invalid("Name", "Name is required.")));
         TestController controller = CreateController(mediator);
 
         IActionResult result = await controller.HandleObservedNoContentPublic(request, NullLogger.Instance, "test.failure-no-activity");
@@ -216,6 +218,12 @@ public sealed class BaseApiControllerTests {
         controller.ControllerContext.HttpContext.TraceIdentifier = "trace-base-controller";
 
         return controller;
+    }
+
+    private static ISender CreateSender<TResponse>(IRequest<TResponse> request, TResponse response) {
+        ISender mediator = Substitute.For<ISender>();
+        mediator.Send(request, Arg.Any<CancellationToken>()).Returns(Task.FromResult(response));
+        return mediator;
     }
 
     [ExcludeFromCodeCoverage]
@@ -289,46 +297,6 @@ public sealed class BaseApiControllerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestFileRequest : IRequest<Result<FileExportResult>>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubSender : ISender {
-        private readonly Dictionary<object, object> _responses = [];
-
-        public IRequest? VoidRequest { get; private set; }
-        public CancellationToken CancellationToken { get; private set; }
-
-        public StubSender Register<TResponse>(IRequest<TResponse> request, TResponse response) {
-            _responses[request] = response!;
-            return this;
-        }
-
-        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
-            return Task.FromResult((TResponse)_responses[request]!);
-        }
-
-        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
-            where TRequest : IRequest {
-            VoidRequest = request;
-            CancellationToken = cancellationToken;
-            return Task.CompletedTask;
-        }
-
-        public Task<object?> Send(object request, CancellationToken cancellationToken = default) {
-            return Task.FromResult<object?>(_responses[request]);
-        }
-
-        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
-            IStreamRequest<TResponse> request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-
-        public IAsyncEnumerable<object?> CreateStream(
-            object request,
-            CancellationToken cancellationToken = default) {
-            throw new NotSupportedException();
-        }
-    }
 
     [ExcludeFromCodeCoverage]
     private sealed class TestActivityListener : IDisposable {
