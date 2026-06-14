@@ -272,6 +272,41 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateFavoriteProduct_WithEmptyUserId_ReturnsInvalidToken() {
+        var repository = new InMemoryFavoriteProductRepository();
+        var handler = new UpdateFavoriteProductCommandHandler(
+            repository,
+            new SingleUserRepository(User.Create("invalid-update-favorite-product@example.com", "hash")));
+
+        Result<FavoriteProductModel> result = await handler.Handle(
+            new UpdateFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", 120),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateFavoriteProduct_WhenUserDeleted_ReturnsAccountDeleted() {
+        var user = User.Create("deleted-update-favorite-product@example.com", "hash");
+        user.DeleteAccount(DateTime.UtcNow);
+        Product product = CreateProduct(user.Id, "Deleted User Pear");
+        var favorite = FavoriteProduct.Create(user.Id, product.Id, "Snack");
+        SetProductNavigation(favorite, product);
+        var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
+        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+
+        Result<FavoriteProductModel> result = await handler.Handle(
+            new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Updated", 120),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task RemoveFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-remove-favorite-product@example.com", "hash");
         var repository = new InMemoryFavoriteProductRepository();

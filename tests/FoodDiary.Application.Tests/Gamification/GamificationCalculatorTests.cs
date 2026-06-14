@@ -174,4 +174,15 @@ public class GamificationCalculatorTests {
 
         Assert.Equal(0.0, adherence);
     }
+
+    [Fact]
+    public void CalculateWeeklyAdherence_WithGoalButNoPositiveCalories_DoesNotCountDayAsMet() {
+        var userId = UserId.New();
+        var meal = Meal.Create(userId, Today, MealType.Lunch);
+
+        double adherence = GamificationCalculator.CalculateWeeklyAdherence(
+            [meal], _ => 2000, Today);
+
+        Assert.Equal(0.0, adherence);
+    }
 }

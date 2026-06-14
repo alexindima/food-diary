@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Export.Models;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
 using Microsoft.AspNetCore.Http;
@@ -82,6 +83,57 @@ public sealed class ResultExtensionsTests {
 
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(actionResult);
         Assert.Equal("VALUE", okResult.Value);
+    }
+
+    [Fact]
+    public void ToAcceptedActionResult_WithMap_MapsSuccessfulValue() {
+        var result = Result.Success("value");
+        TestController controller = CreateController("trace-accepted-success");
+
+        IActionResult actionResult = result.ToAcceptedActionResult(controller, value => value.ToUpperInvariant());
+
+        AcceptedResult acceptedResult = Assert.IsType<AcceptedResult>(actionResult);
+        Assert.Equal("VALUE", acceptedResult.Value);
+    }
+
+    [Fact]
+    public void ToAcceptedActionResult_FailedResult_UsesControllerTraceIdentifier() {
+        var result = Result.Failure<string>(CreateError("Validation.Invalid", "Failure"));
+        TestController controller = CreateController("trace-accepted-failure");
+
+        IActionResult actionResult = result.ToAcceptedActionResult(controller, value => value.ToUpperInvariant());
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
+        Assert.Equal("trace-accepted-failure", response.TraceId);
+    }
+
+    [Fact]
+    public void ToFileActionResult_SuccessfulResult_ReturnsFileContentResult() {
+        byte[] content = [1, 2, 3];
+        var result = Result.Success(new FileExportResult(content, "text/csv", "export.csv"));
+        TestController controller = CreateController("trace-file-success");
+
+        IActionResult actionResult = result.ToFileActionResult(controller);
+
+        FileContentResult fileResult = Assert.IsType<FileContentResult>(actionResult);
+        Assert.Equal(content, fileResult.FileContents);
+        Assert.Equal("text/csv", fileResult.ContentType);
+        Assert.Equal("export.csv", fileResult.FileDownloadName);
+    }
+
+    [Fact]
+    public void ToFileActionResult_FailedResult_UsesControllerTraceIdentifier() {
+        var result = Result.Failure<FileExportResult>(CreateError("Validation.Invalid", "Failure"));
+        TestController controller = CreateController("trace-file-failure");
+
+        IActionResult actionResult = result.ToFileActionResult(controller);
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(actionResult);
+        ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
+        Assert.Equal(StatusCodes.Status400BadRequest, objectResult.StatusCode);
+        Assert.Equal("trace-file-failure", response.TraceId);
     }
 
     [Fact]

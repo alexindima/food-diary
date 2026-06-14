@@ -512,6 +512,124 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task CreateConsumptionCommandHandler_WithInvalidItemOrigin_ReturnsValidationFailure() {
+        var user = User.Create("create-invalid-item-origin@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: null, Origin: "Scanner"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown meal item origin value.", result.Error.Message, StringComparison.Ordinal);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithEmptySourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("create-empty-source-ai-item-id@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.Empty, Origin: "AIText"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("create-manual-source-ai-item-id@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "Manual"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithRecipeManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("create-recipe-manual-source-ai-item-id@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [
+                new ConsumptionItemInput(ProductId: null, RecipeId.New().Value, 1, SourceAiItemId: Guid.NewGuid(), Origin: "Manual"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithAiTextItemOrigin_Succeeds() {
+        var user = User.Create("create-ai-text-item-origin@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(user.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "AIText"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.StoredMeal);
+    }
+
+    [Fact]
     public async Task CreateConsumptionCommandHandler_WithInvalidAiItem_ReturnsValidationFailure() {
         var userId = UserId.New();
         var repository = new CreatingMealRepository();
@@ -549,6 +667,58 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithInvalidAiItemResolution_ReturnsValidationFailure() {
+        var user = User.Create("create-invalid-ai-resolution@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new NoopMealNutritionService(),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(
+                user.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(items: [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0, Resolution: "Maybe"),
+                ])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown AI item resolution value.", result.Error.Message, StringComparison.Ordinal);
+        Assert.Null(repository.StoredMeal);
+    }
+
+    [Fact]
+    public async Task CreateConsumptionCommandHandler_WithAiItemResolution_Succeeds() {
+        var user = User.Create("create-ai-resolution@example.com", "hash");
+        var repository = new CreatingMealRepository();
+        var handler = new CreateConsumptionCommandHandler(
+            repository,
+            new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
+            new RecordingRecentItemRepository(),
+            new StubUserRepository(user),
+            new StubDateTimeProvider(),
+            FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            CreateConsumptionCommand(
+                user.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(items: [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0, Resolution: "Candidate"),
+                ])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.NotNull(repository.StoredMeal);
     }
 
     [Fact]
@@ -1656,6 +1826,99 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithInvalidItemOrigin_ReturnsValidationFailure() {
+        var user = User.Create("update-invalid-item-origin@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: null, Origin: "Scanner"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown meal item origin value.", result.Error.Message, StringComparison.Ordinal);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithEmptySourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("update-empty-source-ai-item-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.Empty, Origin: "AIText"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("update-manual-source-ai-item-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "Manual"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithRecipeManualOriginAndSourceAiItemId_ReturnsValidationFailure() {
+        var user = User.Create("update-recipe-manual-source-ai-item-id@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [
+                new ConsumptionItemInput(ProductId: null, RecipeId.New().Value, 1, SourceAiItemId: Guid.NewGuid(), Origin: "Manual"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithAiTextItemOrigin_Succeeds() {
+        var user = User.Create("update-ai-text-item-origin@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [
+                new ConsumptionItemInput(ProductId.New().Value, RecipeId: null, 150, SourceAiItemId: Guid.NewGuid(), Origin: "AIText"),
+            ]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
+    }
+
+    [Fact]
     public async Task UpdateConsumptionCommandHandler_WithRecipeItem_RegistersRecipeUsage() {
         var user = User.Create("update-recipe-item@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
@@ -1771,6 +2034,50 @@ public class ConsumptionsFeatureTests {
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithInvalidAiItemResolution_ReturnsValidationFailure() {
+        var user = User.Create("update-invalid-ai-resolution@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(items: [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0, Resolution: "Maybe"),
+                ])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("Unknown AI item resolution value.", result.Error.Message, StringComparison.Ordinal);
+        Assert.False(repository.UpdateCalled);
+    }
+
+    [Fact]
+    public async Task UpdateConsumptionCommandHandler_WithAiItemResolution_Succeeds() {
+        var user = User.Create("update-ai-resolution@example.com", "hash");
+        var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        var repository = new SingleMealRepository(meal);
+        UpdateConsumptionCommandHandler handler = CreateUpdateHandler(repository, user);
+
+        Result<ConsumptionModel> result = await handler.Handle(
+            UpdateConsumptionCommand(
+                user.Id.Value,
+                meal.Id.Value,
+                items: [],
+                aiSessions: [ValidAiSession(items: [
+                    new ConsumptionAiItemInput("Soup", NameLocal: null, 250, "g", 120, 8, 3, 16, 2, 0, Resolution: "Candidate"),
+                ])]),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.True(repository.UpdateCalled);
     }
 
     [Fact]

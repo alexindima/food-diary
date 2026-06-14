@@ -5,6 +5,8 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
+using System.Reflection.Emit;
 
 namespace FoodDiary.Presentation.Api.Tests {
     [ExcludeFromCodeCoverage]
@@ -55,6 +57,26 @@ namespace FoodDiary.Presentation.Api.Tests {
                 }));
 
             Assert.Equal(StatusCodes.Status500InternalServerError, context.HttpContext.Response.StatusCode);
+        }
+
+        [Fact]
+        public void ResolveFeature_WhenControllerNamespaceIsMissing_ReturnsUnknown() {
+            Type controllerType = CreateControllerTypeWithoutNamespace();
+            MethodInfo method = typeof(TelemetryActionFilter).GetMethod(
+                "ResolveFeature",
+                BindingFlags.Static | BindingFlags.NonPublic)!;
+
+            string feature = Assert.IsType<string>(method.Invoke(null, [controllerType]));
+
+            Assert.Equal("Unknown", feature);
+        }
+
+        private static Type CreateControllerTypeWithoutNamespace() {
+            var assemblyName = new AssemblyName("TelemetryActionFilterTests.Dynamic");
+            var assembly = AssemblyBuilder.DefineDynamicAssembly(assemblyName, AssemblyBuilderAccess.Run);
+            ModuleBuilder module = assembly.DefineDynamicModule("Main");
+            TypeBuilder type = module.DefineType("NoNamespaceController", TypeAttributes.Public);
+            return type.CreateType()!;
         }
 
         private static ActionExecutingContext CreateActionExecutingContext(

@@ -35,6 +35,15 @@ public sealed class PresentationErrorHttpMapperTests {
         Assert.Equal(expectedStatusCode, actual);
     }
 
+    [Fact]
+    public void MapStatusCode_WhenKindIsMissingButCodeCanBeResolved_ReturnsResolvedStatusCode() {
+        var error = new Error("Validation.Invalid", "Failure");
+
+        int actual = PresentationErrorHttpMapper.MapStatusCode(error);
+
+        Assert.Equal(StatusCodes.Status400BadRequest, actual);
+    }
+
     private static Error CreateError(string factoryName) =>
         factoryName switch {
             nameof(CreateTelegramInvalidData) => CreateTelegramInvalidData(),

@@ -11,6 +11,7 @@ using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 using FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 using FoodDiary.Application.Cycles.Services;
+using System.Reflection;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
@@ -92,6 +93,51 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task CreateCycleCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new CreateCycleCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("cycle-create-empty-user@example.com", "hash")));
+
+        Result<CycleModel> result = await handler.Handle(CreateCommand(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task CreateCycleCommandHandler_WhenCurrentProfileExists_UpdatesExistingProfile() {
+        var user = User.Create("cycle-create-existing@example.com", "hash");
+        var profile = CycleProfile.Create(
+            user.Id,
+            new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
+            notes: "old");
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new CreateCycleCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new CreateCycleCommand(
+                user.Id.Value,
+                new DateTime(2026, 4, 10, 0, 0, 0, DateTimeKind.Utc),
+                (int)CycleTrackingMode.TryingToConceive,
+                AverageCycleLength: 30,
+                AveragePeriodLength: 4,
+                LutealLength: 13,
+                IsRegular: true,
+                IsOnboardingComplete: true,
+                ShowFertilityEstimates: true,
+                DiscreetNotifications: false,
+                Notes: " updated "),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Equal(profile.Id.Value, result.Value.Id);
+        Assert.Equal(CycleTrackingMode.TryingToConceive, result.Value.Mode);
+        Assert.Equal(30, result.Value.AverageCycleLength);
+        Assert.Equal("updated", result.Value.Notes);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
     public async Task GetCurrentCycleQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-current-deleted@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
@@ -101,6 +147,61 @@ public class CyclesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetCurrentCycleQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetCurrentCycleQueryHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("cycle-current-empty@example.com", "hash")));
+
+        Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new UpsertCycleDayCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("cycle-day-empty-user@example.com", "hash")));
+
+        Result<CycleLogDayModel> result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                Guid.Empty,
+                Guid.NewGuid(),
+                DateTime.UtcNow,
+                Bleeding: null,
+                Symptoms: [],
+                FertilitySignal: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("cycle-day-deleted-user@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleDayCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleLogDayModel> result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                DateTime.UtcNow,
+                Bleeding: null,
+                Symptoms: [],
+                FertilitySignal: null),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repository.WasUpdated);
     }
 
     [Fact]
@@ -148,6 +249,41 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertCycleDayCommandHandler_WithNoBleedingAndFertilitySignal_UpdatesProfileAndReturnsDay() {
+        var user = User.Create("cycle-day-fertility@example.com", "hash");
+        DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleDayCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleLogDayModel> result = await handler.Handle(
+            new UpsertCycleDayCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                date,
+                Bleeding: null,
+                Symptoms: [],
+                new FertilitySignalCommandModel(
+                    BasalBodyTemperatureCelsius: 36.62,
+                    OvulationTestResult: (int)OvulationTestResult.Positive,
+                    CervicalFluid: "egg white",
+                    HadSex: true,
+                    Notes: "peak",
+                    ClearNotes: false)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        Assert.Empty(result.Value.BleedingEntries);
+        FertilitySignalModel signal = Assert.IsType<FertilitySignalModel>(result.Value.FertilitySignal);
+        Assert.Equal(36.62, signal.BasalBodyTemperatureCelsius);
+        Assert.Equal(OvulationTestResult.Positive, signal.OvulationTestResult);
+        Assert.Equal("egg white", signal.CervicalFluid);
+        Assert.True(signal.HadSex);
+        Assert.Equal("peak", signal.Notes);
+        Assert.True(repository.WasUpdated);
+    }
+
+    [Fact]
     public async Task ClearCycleDayCommandHandler_WithExistingDay_RemovesAllDayLogs() {
         var user = User.Create("cycle-day-clear@example.com", "hash");
         DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
@@ -170,6 +306,63 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task ClearCycleDayCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new ClearCycleDayCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("cycle-clear-empty-user@example.com", "hash")));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ClearCycleDayCommandHandler_WithEmptyProfileId_ReturnsValidationFailure() {
+        var user = User.Create("cycle-clear-empty-profile@example.com", "hash");
+        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(user.Id.Value, Guid.Empty, DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task ClearCycleDayCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("cycle-clear-deleted-user@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new ClearCycleDayCommandHandler(repository, new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task ClearCycleDayCommandHandler_WhenProfileMissing_ReturnsNotFound() {
+        var user = User.Create("cycle-clear-missing-profile@example.com", "hash");
+        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
+
+        Result result = await handler.Handle(
+            new ClearCycleDayCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Cycle.NotFound", result.Error.Code);
+    }
+
+    [Fact]
     public async Task UpsertCycleFactorCommandHandler_WithInvalidType_ReturnsValidationFailure() {
         var user = User.Create("cycle-factor-invalid@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
@@ -188,6 +381,91 @@ public class CyclesFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new UpsertCycleFactorCommandHandler(
+            new NoopCycleRepository(),
+            new StubUserRepository(User.Create("cycle-factor-empty-user@example.com", "hash")));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                Guid.Empty,
+                Guid.NewGuid(),
+                (int)CycleFactorType.HormonalContraception,
+                DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithEmptyProfileId_ReturnsValidationFailure() {
+        var user = User.Create("cycle-factor-empty-profile@example.com", "hash");
+        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                Guid.Empty,
+                (int)CycleFactorType.HormonalContraception,
+                DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("cycle-factor-deleted-user@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
+        var repository = new InMemoryCycleRepository(profile);
+        var handler = new UpsertCycleFactorCommandHandler(repository, new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                profile.Id.Value,
+                (int)CycleFactorType.HormonalContraception,
+                DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+        Assert.False(repository.WasUpdated);
+    }
+
+    [Fact]
+    public async Task UpsertCycleFactorCommandHandler_WhenProfileMissing_ReturnsNotFound() {
+        var user = User.Create("cycle-factor-missing-profile@example.com", "hash");
+        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), new StubUserRepository(user));
+
+        Result<CycleModel> result = await handler.Handle(
+            new UpsertCycleFactorCommand(
+                user.Id.Value,
+                Guid.NewGuid(),
+                (int)CycleFactorType.HormonalContraception,
+                DateTime.UtcNow,
+                EndDate: null,
+                Notes: null,
+                ClearNotes: false),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
     [Fact]
@@ -290,16 +568,116 @@ public class CyclesFeatureTests {
     }
 
     [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(User.Create("cycle-nutrition-empty-user@example.com", "hash")));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(Guid.Empty, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithInvertedDates_ReturnsValidationFailure() {
+        var user = User.Create("cycle-nutrition-inverted@example.com", "hash");
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("DateFrom", result.Error.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithTooLargeRange_ReturnsValidationFailure() {
+        var user = User.Create("cycle-nutrition-long-range@example.com", "hash");
+        DateTime from = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, from, from.AddDays(367)),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Contains("one year", result.Error.Message, StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
+        var user = User.Create("cycle-nutrition-deleted@example.com", "hash");
+        user.MarkDeleted(DateTime.UtcNow);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new NoopCycleRepository(),
+            new StubMealRepository([]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
+            CancellationToken.None);
+
+        Assert.True(result.IsFailure);
+        Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
+    }
+
+    [Fact]
+    public async Task GetCycleNutritionSummaryQueryHandler_WithFertilitySignalOnly_IncludesLoggedDay() {
+        var user = User.Create("cycle-nutrition-fertility@example.com", "hash");
+        DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(user.Id, startDate);
+        profile.UpsertFertilitySignal(startDate.AddDays(1), 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
+        var handler = new GetCycleNutritionSummaryQueryHandler(
+            new InMemoryCycleRepository(profile),
+            new StubMealRepository([CreateMeal(user.Id, startDate.AddDays(1), calories: 1900, fiber: 22)]),
+            new StubUserRepository(user));
+
+        Result<CycleNutritionSummaryModel?> result = await handler.Handle(
+            new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess);
+        CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
+        Assert.Equal(1, summary.LoggedCycleDays);
+        Assert.Equal(1, summary.DaysWithMeals);
+        Assert.Equal(0, summary.BleedingDays);
+        Assert.Equal(1900, summary.AverageCaloriesOnNonBleedingCycleDays);
+    }
+
+    [Fact]
     public void CycleMappings_ToModel_SortsLogsByDate() {
         var profile = CycleProfile.Create(UserId.New(), DateTime.UtcNow);
         profile.UpsertBleedingEntry(new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Light, painImpact: null, notes: null);
         profile.UpsertBleedingEntry(new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: null, notes: null);
+        profile.UpsertSymptomEntry(new DateTime(2026, 2, 3, 0, 0, 0, DateTimeKind.Utc), CycleSymptomCategory.Pain, 4, [], note: null);
+        profile.UpsertSymptomEntry(new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), CycleSymptomCategory.Craving, 6, [], note: null);
+        profile.UpsertFertilitySignal(new DateTime(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc), 36.7, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
+        profile.UpsertFertilitySignal(new DateTime(2026, 2, 4, 0, 0, 0, DateTimeKind.Utc), 36.5, OvulationTestResult.Negative, "sticky", hadSex: false, notes: null);
 
         CycleModel response = profile.ToModel();
 
         Assert.Equal(
             [new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 10, 0, 0, 0, DateTimeKind.Utc)],
             response.BleedingEntries.Select(day => day.Date));
+        Assert.Equal(
+            [new DateTime(2026, 2, 2, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 3, 0, 0, 0, DateTimeKind.Utc)],
+            response.Symptoms.Select(day => day.Date));
+        Assert.Equal(
+            [new DateTime(2026, 2, 4, 0, 0, 0, DateTimeKind.Utc), new DateTime(2026, 2, 5, 0, 0, 0, DateTimeKind.Utc)],
+            response.FertilitySignals.Select(day => day.Date));
     }
 
     [Fact]
@@ -347,6 +725,67 @@ public class CyclesFeatureTests {
         Assert.NotNull(predictions.OvulationFrom);
     }
 
+    [Theory]
+    [InlineData(CycleConfidence.High, 1)]
+    [InlineData(CycleConfidence.Medium, 2)]
+    [InlineData(CycleConfidence.Low, 4)]
+    [InlineData(CycleConfidence.Learning, 7)]
+    public void CyclePredictionService_CalculatePredictions_UsesConfidenceWindow(CycleConfidence confidence, int expectedWindowDays) {
+        DateTime trackingStart = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var profile = CycleProfile.Create(UserId.New(), trackingStart, showFertilityEstimates: true);
+        SetPrivateProperty(profile, nameof(CycleProfile.Confidence), confidence);
+
+        CyclePredictionsModel predictions = CyclePredictionService.CalculatePredictions(profile);
+
+        DateTime expectedNextPeriodStart = trackingStart.AddDays(profile.AverageCycleLength);
+        Assert.Equal(expectedNextPeriodStart.AddDays(-expectedWindowDays), predictions.NextPeriodStartFrom);
+        Assert.Equal(expectedNextPeriodStart.AddDays(expectedWindowDays), predictions.NextPeriodStartTo);
+    }
+
+    [Fact]
+    public void FertilitySignalModel_ConstructsExpectedValues() {
+        var id = Guid.NewGuid();
+        var profileId = Guid.NewGuid();
+        var date = new DateTime(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
+
+        var model = new FertilitySignalModel(
+            id,
+            profileId,
+            date,
+            BasalBodyTemperatureCelsius: 36.62,
+            OvulationTestResult.Positive,
+            CervicalFluid: "egg white",
+            HadSex: true,
+            Notes: "peak");
+
+        Assert.Equal(id, model.Id);
+        Assert.Equal(profileId, model.CycleProfileId);
+        Assert.Equal(date, model.Date);
+        Assert.Equal(36.62, model.BasalBodyTemperatureCelsius);
+        Assert.Equal(OvulationTestResult.Positive, model.OvulationTestResult);
+        Assert.Equal("egg white", model.CervicalFluid);
+        Assert.True(model.HadSex);
+        Assert.Equal("peak", model.Notes);
+    }
+
+    [Fact]
+    public void FertilitySignalCommandModel_ConstructsExpectedValues() {
+        var model = new FertilitySignalCommandModel(
+            BasalBodyTemperatureCelsius: 36.62,
+            OvulationTestResult: (int)FoodDiary.Domain.Enums.OvulationTestResult.Positive,
+            CervicalFluid: "egg white",
+            HadSex: true,
+            Notes: "peak",
+            ClearNotes: false);
+
+        Assert.Equal(36.62, model.BasalBodyTemperatureCelsius);
+        Assert.Equal((int)FoodDiary.Domain.Enums.OvulationTestResult.Positive, model.OvulationTestResult);
+        Assert.Equal("egg white", model.CervicalFluid);
+        Assert.True(model.HadSex);
+        Assert.Equal("peak", model.Notes);
+        Assert.False(model.ClearNotes);
+    }
+
     private static CreateCycleCommand CreateCommand(Guid userId) =>
         new(
             userId,
@@ -365,6 +804,12 @@ public class CyclesFeatureTests {
         var meal = Meal.Create(userId, date, MealType.Lunch, comment: null);
         meal.ApplyNutrition(new MealNutritionUpdate(calories, 30, 20, 60, fiber, 0, IsAutoCalculated: true));
         return meal;
+    }
+
+    private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
+        PropertyInfo? property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        Assert.NotNull(property);
+        property!.SetValue(target, value);
     }
 
     [ExcludeFromCodeCoverage]

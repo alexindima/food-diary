@@ -363,11 +363,7 @@ public class UpdateConsumptionCommandHandler(
         }
 
         Result recipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.RecipeId, nameof(item.RecipeId), "Recipe id");
-        if (recipeIdResult.IsFailure) {
-            return recipeIdResult;
-        }
-
-        return Result.Success();
+        return recipeIdResult.IsFailure ? recipeIdResult : Result.Success();
     }
 
     private static Result ApplySource(MealItem mealItem, ConsumptionItemInput item) {
@@ -394,12 +390,13 @@ public class UpdateConsumptionCommandHandler(
     }
 
     private static bool TryParseMealItemOrigin(string? origin, out MealItemOrigin result) {
-        if (string.IsNullOrWhiteSpace(origin)) {
-            result = MealItemOrigin.Manual;
-            return true;
+        if (!string.IsNullOrWhiteSpace(origin)) {
+            return Enum.TryParse(origin, ignoreCase: true, out result);
         }
 
-        return Enum.TryParse(origin, ignoreCase: true, out result);
+        result = MealItemOrigin.Manual;
+        return true;
+
     }
 
     private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
@@ -446,11 +443,12 @@ public class UpdateConsumptionCommandHandler(
     }
 
     private static bool TryParseAiItemResolution(string? resolution, out MealAiItemResolution result) {
-        if (string.IsNullOrWhiteSpace(resolution)) {
-            result = MealAiItemResolution.Accepted;
-            return true;
+        if (!string.IsNullOrWhiteSpace(resolution)) {
+            return Enum.TryParse(resolution, ignoreCase: true, out result);
         }
 
-        return Enum.TryParse(resolution, ignoreCase: true, out result);
+        result = MealAiItemResolution.Accepted;
+        return true;
+
     }
 }

@@ -97,15 +97,13 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
     }
 
     private static DateTime ParseTimestampUtc(string? timestamp) {
-        if (DateTime.TryParse(
-                timestamp,
-                CultureInfo.InvariantCulture,
-                DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-                out DateTime parsed)) {
-            return parsed;
-        }
-
-        return DateTime.UtcNow;
+        return DateTime.TryParse(
+            timestamp,
+            CultureInfo.InvariantCulture,
+            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
+            out DateTime parsed)
+            ? parsed
+            : DateTime.UtcNow;
     }
 
     private static IReadOnlyDictionary<string, string> ReadDetails(JsonElement? details) {
