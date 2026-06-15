@@ -26,7 +26,6 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
-        await Task.Delay(100);
         await service.StopAsync(CancellationToken.None);
 
         Assert.Equal(0, repository.DeleteCallCount);
@@ -153,8 +152,10 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(_completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(_completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                _completion.Task,
+                TimeSpan.FromSeconds(3),
+                "User login event cleanup repository was not called before the timeout.").ConfigureAwait(false);
         }
     }
 
@@ -192,8 +193,10 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                completion.Task,
+                TimeSpan.FromSeconds(3),
+                "Canceling user login event cleanup repository was not called before the timeout.").ConfigureAwait(false);
         }
     }
 
@@ -230,8 +233,10 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                completion.Task,
+                TimeSpan.FromSeconds(3),
+                "Throwing user login event cleanup repository was not called before the timeout.").ConfigureAwait(false);
         }
     }
 }

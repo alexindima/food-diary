@@ -19,7 +19,7 @@ public class ContentReportsFeatureTests {
             new CreateContentReportCommand(Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam content"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Pending", result.Value.Status);
         Assert.Equal("Spam content", result.Value.Reason);
         Assert.Equal("Recipe", result.Value.TargetType);
@@ -36,7 +36,7 @@ public class ContentReportsFeatureTests {
             new CreateContentReportCommand(userId, "Recipe", targetId, "Spam"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AlreadyReported", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -48,7 +48,7 @@ public class ContentReportsFeatureTests {
             new CreateContentReportCommand(UserId: null, "Recipe", Guid.NewGuid(), "Spam"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     private static IContentReportRepository CreateContentReportRepository(

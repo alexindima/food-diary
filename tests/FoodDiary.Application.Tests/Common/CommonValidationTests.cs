@@ -13,8 +13,8 @@ public class CommonValidationTests {
         Result<UserId> nullResult = UserIdParser.Parse(null);
         Result<UserId> emptyResult = UserIdParser.Parse(Guid.Empty);
 
-        Assert.True(nullResult.IsFailure);
-        Assert.True(emptyResult.IsFailure);
+        ResultAssert.Failure(nullResult);
+        ResultAssert.Failure(emptyResult);
         Assert.Equal(Errors.Authentication.InvalidToken.Code, nullResult.Error.Code);
         Assert.Equal(Errors.Authentication.InvalidToken.Code, emptyResult.Error.Code);
     }
@@ -25,7 +25,7 @@ public class CommonValidationTests {
 
         Result<UserId> result = UserIdParser.Parse(value);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new UserId(value), result.Value);
     }
 
@@ -36,7 +36,7 @@ public class CommonValidationTests {
     public void StringCodeParser_ParseOptionalLanguage_WithBlankValue_ReturnsNull(string? value) {
         Result<string?> result = StringCodeParser.ParseOptionalLanguage(value, "language", "invalid language");
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(result.Value);
     }
 
@@ -47,10 +47,10 @@ public class CommonValidationTests {
         Result<string?> theme = StringCodeParser.ParseOptionalTheme("dark", "theme", "invalid theme");
         Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("modern", "uiStyle", "invalid ui style");
 
-        Assert.True(language.IsSuccess);
-        Assert.True(gender.IsSuccess);
-        Assert.True(theme.IsSuccess);
-        Assert.True(uiStyle.IsSuccess);
+        ResultAssert.Success(language);
+        ResultAssert.Success(gender);
+        ResultAssert.Success(theme);
+        ResultAssert.Success(uiStyle);
         Assert.Equal("ru", language.Value);
         Assert.Equal("F", gender.Value);
         Assert.Equal("dark", theme.Value);
@@ -65,7 +65,7 @@ public class CommonValidationTests {
         Result<string?> uiStyle = StringCodeParser.ParseOptionalUiStyle("retro", "uiStyle", "invalid ui style");
 
         Assert.All([language, gender, theme, uiStyle], result => {
-            Assert.True(result.IsFailure);
+            ResultAssert.Failure(result);
             Assert.Equal("Validation.Invalid", result.Error.Code);
         });
     }
@@ -75,9 +75,9 @@ public class CommonValidationTests {
         Result<string> success = StringCodeParser.ParseRequiredLanguage("en", "language", "invalid language");
         Result<string> failure = StringCodeParser.ParseRequiredLanguage("de-DE", "language", "invalid language");
 
-        Assert.True(success.IsSuccess);
+        ResultAssert.Success(success);
         Assert.Equal("en", success.Value);
-        Assert.True(failure.IsFailure);
+        ResultAssert.Failure(failure);
         Assert.Equal("Validation.Invalid", failure.Error.Code);
     }
 
@@ -87,11 +87,11 @@ public class CommonValidationTests {
         Result<MealType?> parsed = EnumValueParser.ParseOptional<MealType>("lunch", "mealType", "invalid meal type");
         Result<MealType?> invalid = EnumValueParser.ParseOptional<MealType>("snack-time", "mealType", "invalid meal type");
 
-        Assert.True(blank.IsSuccess);
+        ResultAssert.Success(blank);
         Assert.Null(blank.Value);
-        Assert.True(parsed.IsSuccess);
+        ResultAssert.Success(parsed);
         Assert.Equal(MealType.Lunch, parsed.Value);
-        Assert.True(invalid.IsFailure);
+        ResultAssert.Failure(invalid);
         Assert.Equal("Validation.Invalid", invalid.Error.Code);
     }
 
@@ -100,9 +100,9 @@ public class CommonValidationTests {
         Result<MealType> parsed = EnumValueParser.ParseRequired<MealType>("Dinner", "mealType", "invalid meal type");
         Result<MealType> invalid = EnumValueParser.ParseRequired<MealType>(value: null, "mealType", "invalid meal type");
 
-        Assert.True(parsed.IsSuccess);
+        ResultAssert.Success(parsed);
         Assert.Equal(MealType.Dinner, parsed.Value);
-        Assert.True(invalid.IsFailure);
+        ResultAssert.Failure(invalid);
         Assert.Equal("Validation.Invalid", invalid.Error.Code);
     }
 
@@ -112,9 +112,9 @@ public class CommonValidationTests {
         Result valueResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.NewGuid(), "productId", "Product id");
         Result emptyResult = OptionalEntityIdValidator.EnsureNotEmpty(Guid.Empty, "productId", "Product id");
 
-        Assert.True(nullResult.IsSuccess);
-        Assert.True(valueResult.IsSuccess);
-        Assert.True(emptyResult.IsFailure);
+        ResultAssert.Success(nullResult);
+        ResultAssert.Success(valueResult);
+        ResultAssert.Failure(emptyResult);
         Assert.Equal("Validation.Invalid", emptyResult.Error.Code);
         Assert.Contains("Product id", emptyResult.Error.Message, StringComparison.Ordinal);
     }
@@ -126,11 +126,11 @@ public class CommonValidationTests {
         Result<ImageAssetId?> parsed = ImageAssetIdParser.ParseOptional(id, "imageAssetId");
         Result<ImageAssetId?> invalid = ImageAssetIdParser.ParseOptional(Guid.Empty, "imageAssetId");
 
-        Assert.True(blank.IsSuccess);
+        ResultAssert.Success(blank);
         Assert.Null(blank.Value);
-        Assert.True(parsed.IsSuccess);
+        ResultAssert.Success(parsed);
         Assert.Equal(new ImageAssetId(id), parsed.Value);
-        Assert.True(invalid.IsFailure);
+        ResultAssert.Failure(invalid);
         Assert.Equal("Validation.Invalid", invalid.Error.Code);
     }
 

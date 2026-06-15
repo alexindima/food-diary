@@ -27,7 +27,7 @@ public class MealPlansFeatureTests {
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -41,7 +41,7 @@ public class MealPlansFeatureTests {
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotCurated", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -52,7 +52,7 @@ public class MealPlansFeatureTests {
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class MealPlansFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(userId.Value, plan.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(shoppingLists.Added);
         Assert.Equal("High protein", result.Value.Name);
         ShoppingListItemModel item = Assert.Single(result.Value.Items);
@@ -111,7 +111,7 @@ public class MealPlansFeatureTests {
             new GenerateShoppingListCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -124,7 +124,7 @@ public class MealPlansFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), planId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("MealPlan.NotFound", result.Error.Code);
     }
 
@@ -137,7 +137,7 @@ public class MealPlansFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GenerateShoppingListCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
         Assert.Null(shoppingLists.Added);
     }
@@ -152,7 +152,7 @@ public class MealPlansFeatureTests {
             new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -166,7 +166,7 @@ public class MealPlansFeatureTests {
 
         Result<MealPlanModel> result = await handler.Handle(new AdoptMealPlanCommand(userId.Value, curated.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.AddedPlan);
         Assert.Equal(userId, repository.AddedPlan.UserId);
         Assert.Equal("Starter plan", result.Value.Name);
@@ -179,7 +179,7 @@ public class MealPlansFeatureTests {
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -190,7 +190,7 @@ public class MealPlansFeatureTests {
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), planId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("MealPlan.NotFound", result.Error.Code);
     }
 
@@ -201,7 +201,7 @@ public class MealPlansFeatureTests {
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(plan.Id.Value, result.Value.Id);
         Assert.Equal("Curated", result.Value.Name);
     }
@@ -212,7 +212,7 @@ public class MealPlansFeatureTests {
 
         Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -228,7 +228,7 @@ public class MealPlansFeatureTests {
             new GetMealPlansQuery(userId.Value, "keto"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietType.Keto, repository.LastDietTypeFilter);
         Assert.Equal(["Keto curated", "User plan"], result.Value.Select(plan => plan.Name));
     }

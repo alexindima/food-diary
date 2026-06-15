@@ -21,7 +21,7 @@ public class GamificationFeatureTests {
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -32,7 +32,7 @@ public class GamificationFeatureTests {
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class GamificationFeatureTests {
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(3, result.Value.CurrentStreak);
         Assert.Equal(15, result.Value.TotalMealsLogged);
     }
@@ -65,7 +65,7 @@ public class GamificationFeatureTests {
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.CurrentStreak);
         Assert.Equal(0, result.Value.TotalMealsLogged);
     }

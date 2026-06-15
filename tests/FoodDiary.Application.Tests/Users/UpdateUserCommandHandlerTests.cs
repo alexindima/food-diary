@@ -45,7 +45,7 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(user.DashboardLayoutJson);
         DashboardLayoutModel? deserialized = JsonSerializer.Deserialize<DashboardLayoutModel>(user.DashboardLayoutJson!);
         Assert.NotNull(deserialized);
@@ -91,7 +91,7 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(newAssetId, user.ProfileImageAssetId);
         Assert.Equal([oldAssetId], requestedAssetIds);
     }
@@ -129,7 +129,7 @@ public sealed class UpdateUserCommandHandlerTests {
                 IsActive: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProfileImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -144,7 +144,7 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -159,7 +159,7 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -192,7 +192,7 @@ public sealed class UpdateUserCommandHandlerTests {
                 gender: gender),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -230,7 +230,7 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Result<UserModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("leaf", user.Theme);
         Assert.Equal("leaf", result.Value.Theme);
         Assert.Equal("modern", user.UiStyle);
@@ -252,7 +252,7 @@ public sealed class UpdateUserCommandHandlerTests {
             CreateCommand(user.Id.Value, profileImageAssetId: assetId),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
         Assert.Equal([new ImageAssetId(assetId)], imageAccess.RequestedAssetIds);
     }
@@ -269,7 +269,7 @@ public sealed class UpdateUserCommandHandlerTests {
             CreateCommand(user.Id.Value, isActive: false),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(user.IsActive);
         Assert.False(result.Value.IsActive);
     }
@@ -286,7 +286,7 @@ public sealed class UpdateUserCommandHandlerTests {
             CreateCommand(user.Id.Value, isActive: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.IsActive);
         Assert.True(result.Value.IsActive);
     }

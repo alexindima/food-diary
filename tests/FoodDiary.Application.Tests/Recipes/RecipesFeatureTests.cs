@@ -70,7 +70,7 @@ public class RecipesFeatureTests {
 
         Result result = await handler.Handle(new DeleteRecipeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([recipeAssetId, stepAssetId], cleanup.RequestedAssetIds);
     }
@@ -85,7 +85,7 @@ public class RecipesFeatureTests {
             new DeleteRecipeCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -99,7 +99,7 @@ public class RecipesFeatureTests {
             new DeleteRecipeCommand(Guid.Empty, RecipeId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -114,7 +114,7 @@ public class RecipesFeatureTests {
             new DeleteRecipeCommand(userId.Value, RecipeId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -131,7 +131,7 @@ public class RecipesFeatureTests {
             new DeleteRecipeCommand(userId.Value, recipe.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -302,7 +302,7 @@ public class RecipesFeatureTests {
                 Steps: []),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -355,7 +355,7 @@ public class RecipesFeatureTests {
                 Steps: []),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(cleanup.RequestedAssetIds);
     }
 
@@ -390,7 +390,7 @@ public class RecipesFeatureTests {
                 Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -430,7 +430,7 @@ public class RecipesFeatureTests {
                 steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.LastAddedRecipe);
@@ -460,7 +460,7 @@ public class RecipesFeatureTests {
                 steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -477,7 +477,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(userId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -494,7 +494,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(CreateRecipeCommand(UserId.New().Value, visibility: "secret"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -515,7 +515,7 @@ public class RecipesFeatureTests {
             CreateRecipeCommand(UserId.New().Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -545,7 +545,7 @@ public class RecipesFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -574,7 +574,7 @@ public class RecipesFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedRecipe);
     }
@@ -605,7 +605,7 @@ public class RecipesFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         RecipeIngredient ingredient = Assert.Single(Assert.Single(repository.LastAddedRecipe!.Steps).Ingredients);
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
@@ -644,7 +644,7 @@ public class RecipesFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedRecipe);
         Assert.Equal("Tomato Soup", repository.LastAddedRecipe.Name);
         Assert.Equal(2, repository.LastAddedRecipe.Steps.Count);
@@ -688,7 +688,7 @@ public class RecipesFeatureTests {
                 Steps: [CreateRecipeStepWithProduct(order: 1, "Chop vegetables", productId)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Product", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.LastAddedRecipe);
@@ -702,7 +702,7 @@ public class RecipesFeatureTests {
             new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, IncludePublic: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -715,7 +715,7 @@ public class RecipesFeatureTests {
             new GetRecipeByIdQuery(UserId: null, Guid.NewGuid(), IncludePublic: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -730,7 +730,7 @@ public class RecipesFeatureTests {
             new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -752,7 +752,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(recipe.Id.Value, result.Value.Id);
         Assert.Equal(3, result.Value.UsageCount);
         Assert.True(result.Value.IsOwnedByCurrentUser);
@@ -767,7 +767,7 @@ public class RecipesFeatureTests {
             new DuplicateRecipeCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -780,7 +780,7 @@ public class RecipesFeatureTests {
             new DuplicateRecipeCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -793,7 +793,7 @@ public class RecipesFeatureTests {
             new DuplicateRecipeCommand(userId, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotFound", result.Error.Code);
     }
 
@@ -822,7 +822,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedRecipe);
         Assert.NotEqual(original.Id, repository.LastAddedRecipe.Id);
         Assert.Equal(original.Name, repository.LastAddedRecipe.Name);
@@ -846,7 +846,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedRecipe);
         Assert.Equal([1, 2, 3], [.. repository.LastAddedRecipe.Steps.Select(step => step.StepNumber)]);
     }
@@ -862,7 +862,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedRecipe);
         Assert.False(repository.LastAddedRecipe.IsNutritionAutoCalculated);
         Assert.Equal(250, repository.LastAddedRecipe.ManualCalories);
@@ -882,7 +882,7 @@ public class RecipesFeatureTests {
 
         Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.InvalidData", result.Error.Code);
         Assert.NotNull(repository.LastAddedRecipe);
     }
@@ -898,7 +898,7 @@ public class RecipesFeatureTests {
             new GetRecipesOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -939,7 +939,7 @@ public class RecipesFeatureTests {
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.AllRecipes.Data.Count);
         Assert.Single(result.Value.RecentItems);
         Assert.Single(result.Value.FavoriteItems);
@@ -965,7 +965,7 @@ public class RecipesFeatureTests {
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
     }
@@ -992,7 +992,7 @@ public class RecipesFeatureTests {
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentRecipesCallCount);
     }
@@ -1003,7 +1003,7 @@ public class RecipesFeatureTests {
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1015,7 +1015,7 @@ public class RecipesFeatureTests {
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
         Assert.Equal(1, recentRepository.GetRecentRecipesCallCount);
     }
@@ -1052,7 +1052,7 @@ public class RecipesFeatureTests {
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal([publicRecipe.Id.Value, owned.Id.Value], [.. result.Value.Select(x => x.Id)]);
         Assert.False(result.Value[0].IsOwnedByCurrentUser);
@@ -1075,7 +1075,7 @@ public class RecipesFeatureTests {
             new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "Lunch", MaxPrepTime: 20, SortBy: "popular"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         Assert.Equal(2, result.Value.TotalItems);
@@ -1115,7 +1115,7 @@ public class RecipesFeatureTests {
                 Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1157,7 +1157,7 @@ public class RecipesFeatureTests {
                     Ingredients: [new RecipeIngredientInput(ProductId: Guid.NewGuid(), NestedRecipeId: null, Amount: 100)])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1199,7 +1199,7 @@ public class RecipesFeatureTests {
                     Ingredients: [new RecipeIngredientInput(ProductId: Guid.Empty, NestedRecipeId: null, Amount: 100)])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1221,7 +1221,7 @@ public class RecipesFeatureTests {
             new GetRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", IncludePublic: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         Assert.Equal(2, result.Value.TotalPages);
@@ -1245,7 +1245,7 @@ public class RecipesFeatureTests {
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1257,7 +1257,7 @@ public class RecipesFeatureTests {
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -1681,7 +1681,7 @@ public class RecipesFeatureTests {
                 Steps: [CreateRecipeCreateStep(order: 1, "Step 1")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -1695,7 +1695,7 @@ public class RecipesFeatureTests {
             new AllowAllRecipeLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Product", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1719,7 +1719,7 @@ public class RecipesFeatureTests {
             new AllowAllRecipeLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1742,7 +1742,7 @@ public class RecipesFeatureTests {
             new EmptyRecipeLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Nested recipe", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }

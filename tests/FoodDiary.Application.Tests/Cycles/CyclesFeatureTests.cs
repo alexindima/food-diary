@@ -76,7 +76,7 @@ public class CyclesFeatureTests {
                 FertilitySignal: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("CycleProfileId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
@@ -88,7 +88,7 @@ public class CyclesFeatureTests {
 
         Result<CycleModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -100,7 +100,7 @@ public class CyclesFeatureTests {
 
         Result<CycleModel> result = await handler.Handle(CreateCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -129,7 +129,7 @@ public class CyclesFeatureTests {
                 Notes: " updated "),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(profile.Id.Value, result.Value.Id);
         Assert.Equal(CycleTrackingMode.TryingToConceive, result.Value.Mode);
         Assert.Equal(30, result.Value.AverageCycleLength);
@@ -145,7 +145,7 @@ public class CyclesFeatureTests {
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -157,7 +157,7 @@ public class CyclesFeatureTests {
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -177,7 +177,7 @@ public class CyclesFeatureTests {
                 FertilitySignal: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -199,7 +199,7 @@ public class CyclesFeatureTests {
                 FertilitySignal: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.WasUpdated);
     }
@@ -219,7 +219,7 @@ public class CyclesFeatureTests {
                 FertilitySignal: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
@@ -241,7 +241,7 @@ public class CyclesFeatureTests {
                 FertilitySignal: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(profile.Id.Value, result.Value.CycleProfileId);
         Assert.Single(result.Value.BleedingEntries);
         Assert.Single(result.Value.Symptoms);
@@ -272,7 +272,7 @@ public class CyclesFeatureTests {
                     ClearNotes: false)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value.BleedingEntries);
         FertilitySignalModel signal = Assert.IsType<FertilitySignalModel>(result.Value.FertilitySignal);
         Assert.Equal(36.62, signal.BasalBodyTemperatureCelsius);
@@ -298,7 +298,7 @@ public class CyclesFeatureTests {
             new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, date),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(profile.BleedingEntries);
         Assert.Empty(profile.SymptomEntries);
         Assert.Empty(profile.FertilitySignals);
@@ -315,7 +315,7 @@ public class CyclesFeatureTests {
             new ClearCycleDayCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -328,7 +328,7 @@ public class CyclesFeatureTests {
             new ClearCycleDayCommand(user.Id.Value, Guid.Empty, DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -344,7 +344,7 @@ public class CyclesFeatureTests {
             new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.WasUpdated);
     }
@@ -358,7 +358,7 @@ public class CyclesFeatureTests {
             new ClearCycleDayCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
@@ -379,7 +379,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -400,7 +400,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -420,7 +420,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -443,7 +443,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.WasUpdated);
     }
@@ -464,7 +464,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
@@ -486,7 +486,7 @@ public class CyclesFeatureTests {
                 ClearNotes: false),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value.Factors);
         Assert.Equal(CycleFactorType.HormonalContraception, result.Value.Factors.Single().Type);
         Assert.True(repository.WasUpdated);
@@ -510,7 +510,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
         Assert.Equal(2, summary.LoggedCycleDays);
         Assert.Equal(2, summary.DaysWithMeals);
@@ -546,7 +546,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(4)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
         Assert.True(summary.HasEnoughNutritionData);
     }
@@ -563,7 +563,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(result.Value);
     }
 
@@ -578,7 +578,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(Guid.Empty, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -594,7 +594,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("DateFrom", result.Error.Message, StringComparison.Ordinal);
     }
@@ -612,7 +612,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, from, from.AddDays(367)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("one year", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -630,7 +630,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -649,7 +649,7 @@ public class CyclesFeatureTests {
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         CycleNutritionSummaryModel summary = Assert.IsType<CycleNutritionSummaryModel>(result.Value);
         Assert.Equal(1, summary.LoggedCycleDays);
         Assert.Equal(1, summary.DaysWithMeals);

@@ -67,7 +67,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(user.Id.Value, " Monthly ", $" {BillingProviderNames.YooKassa} "),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("https://checkout.example/pay_123", result.Value.Url);
         BillingSubscription subscription = Assert.Single(subscriptionRepository.Subscriptions);
         Assert.Equal(BillingProviderNames.YooKassa, subscription.Provider);
@@ -115,7 +115,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(user.Id.Value, " Yearly ", Provider: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, subscriptionRepository.UpdateCount);
         Assert.Equal("customer_new", subscription.ExternalCustomerId);
         Assert.Equal("price_yearly", subscription.ExternalPriceId);
@@ -141,7 +141,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(userId, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -158,7 +158,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(Guid.NewGuid(), "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -191,7 +191,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.SubscriptionAlreadyActive", result.Error.Code);
         Assert.Empty(paymentRepository.Payments);
     }
@@ -210,7 +210,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", "missing"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderNotConfigured", result.Error.Code);
     }
 
@@ -232,7 +232,7 @@ public sealed class BillingFeatureTests {
             new CreateCheckoutSessionCommand(user.Id.Value, "monthly", BillingProviderNames.Paddle),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
         Assert.Empty(paymentRepository.Payments);
     }
@@ -276,7 +276,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{\"event\":\"payment.succeeded\"}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         BillingSubscription subscription = Assert.Single(subscriptionRepository.Subscriptions);
         Assert.Equal("active", subscription.Status);
         Assert.Equal("pay_456", subscription.ExternalSubscriptionId);
@@ -337,7 +337,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(subscriptionRepository.Subscriptions);
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
@@ -357,7 +357,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand("unknown", "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.InvalidProvider", result.Error.Code);
     }
 
@@ -376,7 +376,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", "bad"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
     }
 
@@ -396,7 +396,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(subscriptionRepository.Subscriptions);
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
@@ -450,7 +450,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
         Assert.Equal(0, subscriptionRepository.UpdateCount);
@@ -489,7 +489,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
     }
 
@@ -534,7 +534,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(subscriptionRepository.Subscriptions);
         Assert.Empty(paymentRepository.Payments);
         Assert.Empty(webhookEventRepository.Events);
@@ -579,7 +579,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(paymentRepository.Payments);
     }
 
@@ -632,7 +632,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(paymentRepository.Payments);
         Assert.Same(existingPayment, paymentRepository.Payments[0]);
         Assert.Single(webhookEventRepository.Events);
@@ -677,7 +677,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
         Assert.Empty(subscriptionRepository.Subscriptions);
         Assert.Empty(webhookEventRepository.Events);
@@ -727,7 +727,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.WebhookValidationFailed", result.Error.Code);
         Assert.Empty(subscriptionRepository.Subscriptions);
         Assert.Empty(webhookEventRepository.Events);
@@ -784,7 +784,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.Paddle, "{}", "signature"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.HasRole(RoleNames.Premium));
         Assert.False(subscription.PremiumRoleManagedByBilling);
     }
@@ -840,7 +840,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("active", subscription.Status);
         Assert.Single(webhookEventRepository.Events);
         Assert.Single(paymentRepository.Payments);
@@ -897,7 +897,7 @@ public sealed class BillingFeatureTests {
             new ProcessBillingWebhookCommand(BillingProviderNames.YooKassa, "{}", string.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(subscription.PremiumRoleManagedByBilling);
         Assert.Equal(2, subscriptionRepository.UpdateCount);
     }
@@ -1290,7 +1290,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.IsPremium);
         Assert.Equal(BillingProviderNames.YooKassa, result.Value.SubscriptionProvider);
         Assert.Equal("yearly", result.Value.Plan);
@@ -1334,7 +1334,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value.IsPremium);
         Assert.Null(result.Value.SubscriptionStatus);
         Assert.Null(result.Value.CurrentPeriodStartUtc);
@@ -1352,7 +1352,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1366,7 +1366,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1393,7 +1393,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value.IsPremium);
         Assert.Equal(" ", result.Value.SubscriptionStatus);
         Assert.True(result.Value.CanStartPremiumTrial);
@@ -1434,7 +1434,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new GetBillingOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedPremium, result.Value.IsPremium);
         Assert.Equal(expectedCanStartTrial, result.Value.CanStartPremiumTrial);
     }
@@ -1460,7 +1460,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("https://billing.example/portal", result.Value.Url);
     }
 
@@ -1473,7 +1473,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1486,7 +1486,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1500,7 +1500,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
     }
 
@@ -1520,7 +1520,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.CustomerPortalUnavailable", result.Error.Code);
     }
 
@@ -1543,7 +1543,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingPortalSessionModel> result = await handler.Handle(new CreatePortalSessionCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.ProviderOperationFailed", result.Error.Code);
     }
 
@@ -1559,7 +1559,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(Now, user.PremiumTrialStartedAtUtc);
         Assert.Equal(Now.AddDays(7), user.PremiumTrialEndsAtUtc);
         Assert.True(user.HasActivePremiumTrial(Now));
@@ -1583,7 +1583,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.TrialAlreadyUsed", result.Error.Code);
     }
 
@@ -1597,7 +1597,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1611,7 +1611,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1641,7 +1641,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Billing.SubscriptionAlreadyActive", result.Error.Code);
         Assert.Equal(0, userRepository.UpdateCount);
     }
@@ -1672,7 +1672,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.PremiumTrialActive);
         Assert.Equal(1, userRepository.UpdateCount);
     }
@@ -1701,7 +1701,7 @@ public sealed class BillingFeatureTests {
 
         Result<BillingOverviewModel> result = await handler.Handle(new StartPremiumTrialCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.PremiumTrialActive);
         Assert.Equal(1, userRepository.UpdateCount);
     }

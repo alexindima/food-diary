@@ -22,7 +22,7 @@ public class ExercisesFeatureTests {
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "Running", 30, 250, "Jog", Notes: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Running", result.Value.ExerciseType);
         Assert.Equal(30, result.Value.DurationMinutes);
         Assert.Equal("Jog", result.Value.Name);
@@ -37,7 +37,7 @@ public class ExercisesFeatureTests {
             new CreateExerciseEntryCommand(Guid.NewGuid(), DateTime.UtcNow, "UnknownType", 30, 100, Name: null, Notes: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Other", result.Value.ExerciseType);
     }
 
@@ -49,7 +49,7 @@ public class ExercisesFeatureTests {
             new CreateExerciseEntryCommand(UserId: null, DateTime.UtcNow, "Running", 30, 100, Name: null, Notes: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -63,7 +63,7 @@ public class ExercisesFeatureTests {
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(userId.Value, entry.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repo.DeleteCalled);
     }
 
@@ -74,7 +74,7 @@ public class ExercisesFeatureTests {
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class ExercisesFeatureTests {
         Result result = await handler.Handle(
             new DeleteExerciseEntryCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -99,7 +99,7 @@ public class ExercisesFeatureTests {
             new UpdateExerciseEntryCommand(userId.Value, entry.Id.Value, "Swimming", 45, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(45, result.Value.DurationMinutes);
     }
 
@@ -111,7 +111,7 @@ public class ExercisesFeatureTests {
             new UpdateExerciseEntryCommand(Guid.NewGuid(), Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -122,7 +122,7 @@ public class ExercisesFeatureTests {
             new UpdateExerciseEntryCommand(UserId: null, Guid.NewGuid(), ExerciseType: null, DurationMinutes: null, CaloriesBurned: null, Name: null, ClearName: false, Notes: null, ClearNotes: false, Date: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -137,7 +137,7 @@ public class ExercisesFeatureTests {
             new GetExerciseEntriesQuery(userId.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value);
     }
 
@@ -149,7 +149,7 @@ public class ExercisesFeatureTests {
             new GetExerciseEntriesQuery(UserId: null, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [ExcludeFromCodeCoverage]

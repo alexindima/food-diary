@@ -26,7 +26,7 @@ public class FavoriteMealsFeatureTests {
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(UserId: null, Guid.NewGuid(), Name: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -37,7 +37,7 @@ public class FavoriteMealsFeatureTests {
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class FavoriteMealsFeatureTests {
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), Name: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -66,7 +66,7 @@ public class FavoriteMealsFeatureTests {
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, Name: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AlreadyExists", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -78,7 +78,7 @@ public class FavoriteMealsFeatureTests {
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -90,7 +90,7 @@ public class FavoriteMealsFeatureTests {
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -103,7 +103,7 @@ public class FavoriteMealsFeatureTests {
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -117,7 +117,7 @@ public class FavoriteMealsFeatureTests {
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, favorite.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         await favRepo.Received(1).DeleteAsync(favorite, Arg.Any<CancellationToken>());
     }
 
@@ -133,7 +133,7 @@ public class FavoriteMealsFeatureTests {
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, meal.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value);
     }
 
@@ -147,7 +147,7 @@ public class FavoriteMealsFeatureTests {
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value);
     }
 
@@ -160,7 +160,7 @@ public class FavoriteMealsFeatureTests {
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -172,7 +172,7 @@ public class FavoriteMealsFeatureTests {
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -202,7 +202,7 @@ public class FavoriteMealsFeatureTests {
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         FavoriteMealModel model = Assert.Single(result.Value);
         Assert.Equal(favorite.Id.Value, model.Id);
         Assert.Equal(meal.Id.Value, model.MealId);
@@ -224,7 +224,7 @@ public class FavoriteMealsFeatureTests {
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -235,7 +235,7 @@ public class FavoriteMealsFeatureTests {
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     private static IFavoriteMealRepository CreateFavoriteMealRepository(

@@ -30,21 +30,21 @@ public class ConsumptionsAdditionalValidatorTests {
     public void ConsumptionItem_WithNoProductOrRecipe_ReturnsFailure() {
         var item = new ConsumptionItemInput(ProductId: null, RecipeId: null, 100);
         Result result = ConsumptionItemValidator.Validate(item);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
     public void ConsumptionItem_WithBothProductAndRecipe_ReturnsFailure() {
         var item = new ConsumptionItemInput(Guid.NewGuid(), Guid.NewGuid(), 100);
         Result result = ConsumptionItemValidator.Validate(item);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
     public void ConsumptionItem_WithZeroAmount_ReturnsFailure() {
         var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 0);
         Result result = ConsumptionItemValidator.Validate(item);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Theory]
@@ -56,7 +56,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
         Result result = ConsumptionItemValidator.Validate(item);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -66,7 +66,7 @@ public class ConsumptionsAdditionalValidatorTests {
 
         Result result = ConsumptionItemValidator.Validate(item);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -74,7 +74,7 @@ public class ConsumptionsAdditionalValidatorTests {
     public void ConsumptionItem_WithValidProductAndAmount_ReturnsSuccess() {
         var item = new ConsumptionItemInput(Guid.NewGuid(), RecipeId: null, 150);
         Result result = ConsumptionItemValidator.Validate(item);
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     // â”€â”€ ManualNutritionValidator â”€â”€
@@ -82,7 +82,7 @@ public class ConsumptionsAdditionalValidatorTests {
     [Fact]
     public void ManualNutrition_WithNullCalories_ReturnsFailure() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(calories: null, 30, 10, 50, 5, 0);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Theory]
@@ -99,28 +99,28 @@ public class ConsumptionsAdditionalValidatorTests {
             string.Equals(missingField, "fiber", StringComparison.Ordinal) ? null : 5,
             0);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
     }
 
     [Fact]
     public void ManualNutrition_WithNegativeValue_ReturnsFailure() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, -1, 10, 50, 5, 0);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
     public void ManualNutrition_WithNegativeAlcohol_ReturnsFailure() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, -0.1);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
     [Fact]
     public void ManualNutrition_WithValidData_ReturnsSuccess() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, 0);
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(200, result.Value.Calories);
         Assert.Equal(30, result.Value.Proteins);
     }
@@ -128,7 +128,7 @@ public class ConsumptionsAdditionalValidatorTests {
     [Fact]
     public void ManualNutrition_WithNullAlcohol_DefaultsToZero() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, alcohol: null);
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.Alcohol);
     }
 
@@ -137,24 +137,24 @@ public class ConsumptionsAdditionalValidatorTests {
     [Fact]
     public void SatietyLevel_WithValidLevels_ReturnsSuccess() {
         Result result = SatietyLevelValidator.Validate(3, 5);
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
     public void SatietyLevel_WithOutOfRangePre_ReturnsFailure() {
         Result result = SatietyLevelValidator.Validate(6, 5);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
     public void SatietyLevel_WithOutOfRangePost_ReturnsFailure() {
         Result result = SatietyLevelValidator.Validate(5, -1);
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
     public void SatietyLevel_WithNullValues_ReturnsSuccess() {
         Result result = SatietyLevelValidator.Validate(preMealSatietyLevel: null, postMealSatietyLevel: null);
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 }

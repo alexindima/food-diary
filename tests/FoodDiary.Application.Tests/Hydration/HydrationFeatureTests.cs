@@ -74,7 +74,7 @@ public class HydrationFeatureTests {
     public void HydrationValidators_ValidateAmount_WithOutOfRangeValue_Fails(int amountMl) {
         Result result = HydrationValidators.ValidateAmount(amountMl);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -82,7 +82,7 @@ public class HydrationFeatureTests {
     public void HydrationValidators_ValidateAmount_WithValidValue_Passes() {
         Result result = HydrationValidators.ValidateAmount(500);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
@@ -97,7 +97,7 @@ public class HydrationFeatureTests {
             new GetHydrationDailyTotalQuery(user.Id.Value, queryDate),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), repository.LastDailyTotalDateUtc);
         Assert.Equal(new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Utc), result.Value.DateUtc);
     }
@@ -112,7 +112,7 @@ public class HydrationFeatureTests {
             new GetHydrationDailyTotalQuery(Guid.Empty, DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -128,7 +128,7 @@ public class HydrationFeatureTests {
             new GetHydrationDailyTotalQuery(user.Id.Value, DateTime.UtcNow),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -143,7 +143,7 @@ public class HydrationFeatureTests {
             new CreateHydrationEntryCommand(user.Id.Value, timestamp, 250),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DateTimeKind.Utc, result.Value.TimestampUtc.Kind);
         Assert.Equal(DateTime.SpecifyKind(timestamp, DateTimeKind.Utc), result.Value.TimestampUtc);
         Assert.Equal(result.Value.TimestampUtc, repository.AddedEntry?.Timestamp);
@@ -159,7 +159,7 @@ public class HydrationFeatureTests {
             new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -175,7 +175,7 @@ public class HydrationFeatureTests {
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -190,7 +190,7 @@ public class HydrationFeatureTests {
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -206,7 +206,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, timestamp, AmountMl: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DateTimeKind.Utc, result.Value.TimestampUtc.Kind);
         Assert.Equal(DateTime.SpecifyKind(timestamp, DateTimeKind.Utc), result.Value.TimestampUtc);
     }
@@ -222,7 +222,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 750),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(750, result.Value.AmountMl);
     }
 
@@ -236,7 +236,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow, 250),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -253,7 +253,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -269,7 +269,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entryId, DateTime.UtcNow, 500),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
     }
 
@@ -285,7 +285,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
     }
 
@@ -301,7 +301,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -315,7 +315,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -330,7 +330,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -347,7 +347,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -362,7 +362,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
     }
 
@@ -378,7 +378,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("HydrationEntry.NotFound", result.Error.Code);
     }
 
@@ -393,7 +393,7 @@ public class HydrationFeatureTests {
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Same(entry, repository.DeletedEntry);
     }
 
@@ -407,7 +407,7 @@ public class HydrationFeatureTests {
             new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 250),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("HydrationEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -420,7 +420,7 @@ public class HydrationFeatureTests {
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -434,7 +434,7 @@ public class HydrationFeatureTests {
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, DateTime.UtcNow), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -455,7 +455,7 @@ public class HydrationFeatureTests {
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, dateOnly), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), repository.LastGetByDateDateUtc);
         HydrationEntryModel model = Assert.Single(result.Value);
         Assert.Equal(entry.Id.Value, model.Id);

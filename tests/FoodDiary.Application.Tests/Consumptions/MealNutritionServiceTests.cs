@@ -20,7 +20,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.Calories);
         Assert.Equal(0, result.Value.Proteins);
     }
@@ -37,7 +37,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -53,7 +53,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -79,7 +79,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(410, result.Value.Calories, 1);
         Assert.Equal(10.4, result.Value.Proteins, 1);
     }
@@ -99,7 +99,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(250, result.Value.Calories);
     }
 
@@ -132,7 +132,7 @@ public class MealNutritionServiceTests {
 
         Result<MealNutritionSummary> result = await service.CalculateAsync(meal, userId);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(250, result.Value.Calories);
     }
 

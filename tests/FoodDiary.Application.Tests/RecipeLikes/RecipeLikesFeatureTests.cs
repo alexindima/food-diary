@@ -24,7 +24,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.IsLiked);
         Assert.Equal(1, result.Value.TotalLikes);
     }
@@ -41,7 +41,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value.IsLiked);
         Assert.Equal(0, result.Value.TotalLikes);
     }
@@ -55,7 +55,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -67,7 +67,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -81,7 +81,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(userId.Value, recipeId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.IsLiked);
         Assert.Equal(1, result.Value.TotalLikes);
     }
@@ -94,7 +94,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value.IsLiked);
         Assert.Equal(0, result.Value.TotalLikes);
     }
@@ -106,7 +106,7 @@ public class RecipeLikesFeatureTests {
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [ExcludeFromCodeCoverage]

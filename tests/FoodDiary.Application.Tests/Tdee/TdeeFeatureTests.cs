@@ -23,7 +23,7 @@ public class TdeeFeatureTests {
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -33,7 +33,7 @@ public class TdeeFeatureTests {
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -46,7 +46,7 @@ public class TdeeFeatureTests {
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -61,7 +61,7 @@ public class TdeeFeatureTests {
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.DataDaysUsed);
     }
 

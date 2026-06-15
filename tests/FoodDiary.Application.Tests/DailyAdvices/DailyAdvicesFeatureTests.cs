@@ -101,7 +101,7 @@ public class DailyAdvicesFeatureTests {
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -113,7 +113,7 @@ public class DailyAdvicesFeatureTests {
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -129,7 +129,7 @@ public class DailyAdvicesFeatureTests {
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("en", result.Value.Locale);
         Assert.Equal(["en"], requestedLocales);
     }
@@ -141,7 +141,7 @@ public class DailyAdvicesFeatureTests {
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
     }
 
@@ -156,7 +156,7 @@ public class DailyAdvicesFeatureTests {
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("DailyAdvice.NotFound", result.Error.Code);
     }
 

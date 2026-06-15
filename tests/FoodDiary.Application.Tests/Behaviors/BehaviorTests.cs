@@ -20,7 +20,7 @@ public class BehaviorTests {
             ct => Task.FromResult(Result.Success("ok")),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("ok", result.Value);
     }
 
@@ -35,7 +35,7 @@ public class BehaviorTests {
             ct => Task.FromResult(Result.Failure<string>(error)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Test.Error", result.Error.Code);
     }
 
@@ -58,7 +58,7 @@ public class BehaviorTests {
             ct => Task.FromResult(Result.Failure<string>(error)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal(expectedLevel, logger.LastLogLevel);
     }
 
@@ -86,7 +86,7 @@ public class BehaviorTests {
             ct => Task.FromResult(Result.Success("saved")),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("saved", result.Value);
         await unitOfWork.Received(requiredNumberOfCalls: 1).SaveChangesAsync(CancellationToken.None);
     }

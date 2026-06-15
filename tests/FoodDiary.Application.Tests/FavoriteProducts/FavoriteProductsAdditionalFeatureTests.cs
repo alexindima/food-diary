@@ -31,7 +31,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Breakfast", 125),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(favoriteRepository.AddedFavorite);
         Assert.Equal(product.Id.Value, result.Value.ProductId);
         Assert.Equal("Greek Yogurt", result.Value.ProductName);
@@ -51,7 +51,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new AddFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", PreferredPortionAmount: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotFound", result.Error.Code);
     }
 
@@ -70,7 +70,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Again", PreferredPortionAmount: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("FavoriteProduct.AlreadyExists", result.Error.Code);
     }
 
@@ -85,7 +85,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new AddFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", PreferredPortionAmount: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -101,7 +101,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack", PreferredPortionAmount: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -117,7 +117,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value);
         Assert.Equal("Chicken", result.Value[0].ProductName);
         Assert.Equal(product.DefaultPortionAmount, result.Value[0].PreferredPortionAmount);
@@ -131,7 +131,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -143,7 +143,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -157,7 +157,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -172,7 +172,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new IsProductFavoriteQuery(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value);
     }
 
@@ -188,7 +188,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new IsProductFavoriteQuery(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -202,7 +202,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new IsProductFavoriteQuery(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -216,7 +216,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new IsProductFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -233,7 +233,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new RemoveFavoriteProductCommand(user.Id.Value, favorite.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.DeleteCalled);
     }
 
@@ -250,7 +250,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Evening snack", 180),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal("Evening snack", result.Value.Name);
         Assert.Equal(180, result.Value.PreferredPortionAmount);
@@ -266,7 +266,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new UpdateFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", 120),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("FavoriteProduct.NotFound", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -282,7 +282,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new UpdateFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", 120),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -301,7 +301,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Updated", 120),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -316,7 +316,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new RemoveFavoriteProductCommand(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("FavoriteProduct.NotFound", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -332,7 +332,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new RemoveFavoriteProductCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -350,7 +350,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
             new RemoveFavoriteProductCommand(userId, favorite.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }

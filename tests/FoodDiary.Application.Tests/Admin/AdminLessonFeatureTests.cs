@@ -32,7 +32,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 1),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Basics of Nutrition", result.Value.Title);
         Assert.Equal("<p>Content here</p>", result.Value.Content);
         Assert.Equal("A short summary", result.Value.Summary);
@@ -61,7 +61,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("category", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -83,7 +83,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("difficulty", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -108,7 +108,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 5),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("New Title", result.Value.Title);
         Assert.Equal("<p>New HTML Content</p>", result.Value.Content);
         Assert.Equal("Updated summary", result.Value.Summary);
@@ -137,7 +137,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Lesson.NotFound", result.Error.Code);
     }
 
@@ -161,7 +161,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -185,7 +185,7 @@ public class AdminLessonFeatureTests {
                 SortOrder: 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("difficulty", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -201,7 +201,7 @@ public class AdminLessonFeatureTests {
             new DeleteAdminLessonCommand(lesson.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(repo.Lessons);
     }
 
@@ -214,7 +214,7 @@ public class AdminLessonFeatureTests {
             new DeleteAdminLessonCommand(Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Lesson.NotFound", result.Error.Code);
     }
 
@@ -229,7 +229,7 @@ public class AdminLessonFeatureTests {
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
     }
 
@@ -240,7 +240,7 @@ public class AdminLessonFeatureTests {
 
         Result<IReadOnlyList<AdminLessonModel>> result = await handler.Handle(new GetAdminLessonsQuery(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
     }
 
@@ -258,7 +258,7 @@ public class AdminLessonFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.ImportedCount);
         Assert.Equal(2, repo.Lessons.Count);
         Assert.Equal("Intro", result.Value.Lessons[0].Title);
@@ -277,7 +277,7 @@ public class AdminLessonFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("lessons[0].category", result.Error.Message, StringComparison.Ordinal);
     }
@@ -294,7 +294,7 @@ public class AdminLessonFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("lessons[0].difficulty", result.Error.Message, StringComparison.Ordinal);
     }
@@ -311,7 +311,7 @@ public class AdminLessonFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("lessons[0]", result.Error.Message, StringComparison.Ordinal);
     }

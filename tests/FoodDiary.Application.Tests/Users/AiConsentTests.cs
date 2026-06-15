@@ -16,7 +16,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(user.AiConsentAcceptedAt);
     }
 
@@ -29,7 +29,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(originalTimestamp, user.AiConsentAcceptedAt);
     }
 
@@ -40,7 +40,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new AcceptAiConsentCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -52,7 +52,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new AcceptAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -64,7 +64,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(user.AiConsentAcceptedAt);
     }
 
@@ -75,7 +75,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(user.AiConsentAcceptedAt);
     }
 
@@ -86,7 +86,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new RevokeAiConsentCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -98,7 +98,7 @@ public class AiConsentTests {
 
         Result result = await handler.Handle(new RevokeAiConsentCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 

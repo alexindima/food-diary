@@ -51,7 +51,7 @@ public class NotificationsFeatureTests {
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(notification.IsRead);
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
@@ -71,7 +71,7 @@ public class NotificationsFeatureTests {
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -84,7 +84,7 @@ public class NotificationsFeatureTests {
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public class NotificationsFeatureTests {
             new MarkNotificationReadCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -113,7 +113,7 @@ public class NotificationsFeatureTests {
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(notification.IsRead);
     }
@@ -131,7 +131,7 @@ public class NotificationsFeatureTests {
             new MarkAllNotificationsReadCommand(userId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repo.MarkAllReadCalled);
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
@@ -149,7 +149,7 @@ public class NotificationsFeatureTests {
             new MarkAllNotificationsReadCommand(UserId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -162,7 +162,7 @@ public class NotificationsFeatureTests {
             new MarkAllNotificationsReadCommand(userId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repo.MarkAllReadCalled);
     }
@@ -179,7 +179,7 @@ public class NotificationsFeatureTests {
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value);
     }
 
@@ -191,7 +191,7 @@ public class NotificationsFeatureTests {
 
         Result<int> result = await handler.Handle(new GetUnreadCountQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -208,7 +208,7 @@ public class NotificationsFeatureTests {
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value);
     }
 
@@ -223,7 +223,7 @@ public class NotificationsFeatureTests {
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -238,7 +238,7 @@ public class NotificationsFeatureTests {
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.PushNotificationsEnabled);
         Assert.False(user.FastingPushNotificationsEnabled);
         Assert.True(user.SocialPushNotificationsEnabled);
@@ -263,7 +263,7 @@ public class NotificationsFeatureTests {
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 20, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Equal(12, user.FastingCheckInReminderHours);
         Assert.Equal(20, user.FastingCheckInFollowUpReminderHours);
@@ -280,7 +280,7 @@ public class NotificationsFeatureTests {
             new UpdateNotificationPreferencesCommand(Guid.Empty, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -296,7 +296,7 @@ public class NotificationsFeatureTests {
             new UpdateNotificationPreferencesCommand(userId.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Equal(string.Empty, auditLogger.Action);
     }
@@ -309,7 +309,7 @@ public class NotificationsFeatureTests {
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -319,7 +319,7 @@ public class NotificationsFeatureTests {
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -332,7 +332,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -346,7 +346,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -361,7 +361,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value);
         Assert.Equal(NotificationTypes.FastingCompleted, result.Value[0].Type);
         Assert.Equal([NotificationTypes.FastingCompleted], renderer.RenderedTypes);
@@ -391,7 +391,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         WebPushSubscriptionModel item = Assert.Single(result.Value);
         Assert.Equal(active.Endpoint, item.Endpoint);
         Assert.Equal([expired.Endpoint], repository.DeletedEndpoints);
@@ -406,7 +406,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -420,7 +420,7 @@ public class NotificationsFeatureTests {
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -431,7 +431,7 @@ public class NotificationsFeatureTests {
 
         Result<WebPushConfigurationModel> result = await handler.Handle(new GetWebPushConfigurationQuery(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.Enabled);
         Assert.Equal("public-key", result.Value.PublicKey);
     }
@@ -454,7 +454,7 @@ public class NotificationsFeatureTests {
                 "Chrome"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         WebPushSubscription subscription = Assert.Single(repository.Subscriptions);
         Assert.Equal(user.Id, subscription.UserId);
         Assert.Equal("notifications.push-subscription.connected", auditLogger.Action);
@@ -481,7 +481,7 @@ public class NotificationsFeatureTests {
                 "Chrome"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Empty(repository.Subscriptions);
     }
@@ -505,7 +505,7 @@ public class NotificationsFeatureTests {
                 "Chrome"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Empty(repository.Subscriptions);
     }
@@ -536,7 +536,7 @@ public class NotificationsFeatureTests {
                 "Chrome"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(user.Id, subscription.UserId);
         Assert.Equal("new-p256", subscription.P256Dh);
         Assert.Equal("new-auth", subscription.Auth);
@@ -564,7 +564,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(repository.Subscriptions);
         Assert.Equal("notifications.push-subscription.disconnected", auditLogger.Action);
         Assert.Contains("endpointHost=push.example.com", auditLogger.Details, StringComparison.Ordinal);
@@ -582,7 +582,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(Guid.Empty, "https://push.example.com/remove"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Empty(repository.DeletedEndpoints);
     }
@@ -600,7 +600,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(userId.Value, "https://push.example.com/remove"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Empty(repository.DeletedEndpoints);
     }
@@ -616,7 +616,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(user.Id.Value, "   "),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, repository.EndpointLookupCount);
         Assert.Equal(string.Empty, auditLogger.Action);
     }
@@ -634,7 +634,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(user.Id.Value, "https://push.example.com/missing"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(repository.DeletedEndpoints);
     }
 
@@ -656,7 +656,7 @@ public class NotificationsFeatureTests {
             new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(repository.Subscriptions);
         Assert.Empty(repository.DeletedEndpoints);
     }
@@ -677,7 +677,7 @@ public class NotificationsFeatureTests {
             new ScheduleTestNotificationCommand(user.Id.Value, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(NotificationTypes.FastingCompleted, result.Value.Type);
         Assert.Equal(15, scheduler.DelaySeconds);
         Assert.Equal(user.Id.Value, scheduler.UserId);
@@ -700,7 +700,7 @@ public class NotificationsFeatureTests {
             new ScheduleTestNotificationCommand(userId.Value, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(scheduler.WasCalled);
     }
@@ -718,7 +718,7 @@ public class NotificationsFeatureTests {
             new ScheduleTestNotificationCommand(Guid.Empty, 15, NotificationTypes.FastingCompleted),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(scheduler.WasCalled);
     }

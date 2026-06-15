@@ -17,7 +17,7 @@ public class DietologistAccessPolicyTests {
         Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, UserId.New(), UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccessDenied", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -36,7 +36,7 @@ public class DietologistAccessPolicyTests {
         Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, dietologistId, clientId, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.ShareMeals);
         Assert.False(result.Value.ShareStatistics);
         Assert.True(result.Value.ShareWeight);

@@ -162,7 +162,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStep(order: 1, "Initial step")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("calories", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -205,7 +205,7 @@ public class UpdateRecipeCommandHandlerTests {
                 manualAlcohol: alcohol),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains(expectedField, result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -237,7 +237,7 @@ public class UpdateRecipeCommandHandlerTests {
                 manualAlcohol: -1),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -257,7 +257,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId: null, recipeId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -277,7 +277,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, RecipeId.New().Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotAccessible", result.Error.Code);
     }
 
@@ -297,7 +297,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: "secret"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -318,7 +318,7 @@ public class UpdateRecipeCommandHandlerTests {
 
         Result<RecipeModel> result = await handler.Handle(UpdateCommand(userId.Value, recipeId.Value, visibility: " "), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(Visibility.Private, recipe.Visibility);
     }
 
@@ -342,7 +342,7 @@ public class UpdateRecipeCommandHandlerTests {
             UpdateCommand(userId.Value, recipeId.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -391,7 +391,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStep(order: 1, "Initial step")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -425,7 +425,7 @@ public class UpdateRecipeCommandHandlerTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -459,7 +459,7 @@ public class UpdateRecipeCommandHandlerTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -514,7 +514,7 @@ public class UpdateRecipeCommandHandlerTests {
                     Ingredients: [new RecipeIngredientInput(ProductId: null, NestedRecipeId: Guid.Empty, Amount: 100)])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("NestedRecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -561,7 +561,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStep(order: 1, "Initial step")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -610,7 +610,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStepWithNestedRecipe(order: 1, "Initial step", recipeId.Value)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("itself", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -644,7 +644,7 @@ public class UpdateRecipeCommandHandlerTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -672,7 +672,7 @@ public class UpdateRecipeCommandHandlerTests {
                 steps: [CreateStepWithNestedRecipe(order: 1, "Updated step", nestedRecipeId.Value)]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         RecipeIngredient ingredient = Assert.Single(Assert.Single(recipe.Steps).Ingredients);
         Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
     }
@@ -722,7 +722,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStep(order: 1, "Initial step")]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(15, recipe.PrepTime);
     }
 
@@ -771,7 +771,7 @@ public class UpdateRecipeCommandHandlerTests {
                 Steps: [CreateStep(order: 1, "Updated step")]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.InvalidData", result.Error.Code);
         Assert.True(repository.UpdateCalled);
     }
@@ -831,7 +831,7 @@ public class UpdateRecipeCommandHandlerTests {
                     Ingredients: [new RecipeIngredientInput(ProductId: ProductId.New().Value, NestedRecipeId: null, Amount: 100)])]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(newRecipeAssetId, recipe.ImageAssetId);
         Assert.Equal([oldRecipeAssetId, oldStepAssetId], cleanup.RequestedAssetIds);
     }

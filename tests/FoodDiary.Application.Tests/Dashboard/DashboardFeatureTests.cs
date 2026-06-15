@@ -180,7 +180,7 @@ public class DashboardFeatureTests {
             new GetDashboardSnapshotQuery(userId.Value, date, Page: 2, PageSize: 25, Locale: "ru", TrendDays: 14),
             cts.Token);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         DashboardSnapshotRequest request = Assert.IsType<DashboardSnapshotRequest>(getLastRequest());
         Assert.Equal(userId.Value, request.UserId);
         Assert.Equal(date, request.Date);
@@ -203,7 +203,7 @@ public class DashboardFeatureTests {
             new GetDashboardSnapshotQuery(userId, DateTime.UtcNow, Page: 1, PageSize: 10, Locale: "en", TrendDays: 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(getLastRequest());
     }
@@ -218,7 +218,7 @@ public class DashboardFeatureTests {
 
         Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("TestEmail", result.Error.Message, StringComparison.Ordinal);
     }
@@ -235,7 +235,7 @@ public class DashboardFeatureTests {
 
         Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         TestEmailMessage message = Assert.IsType<TestEmailMessage>(getLastMessage());
         Assert.Equal("dashboard-email-ok@example.com", message.ToEmail);
         Assert.Equal("ru", message.Language);
@@ -251,7 +251,7 @@ public class DashboardFeatureTests {
 
         Result result = await handler.Handle(new SendDashboardTestEmailCommand(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(getLastMessage());
     }

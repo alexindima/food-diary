@@ -39,7 +39,7 @@ public class ConsumptionsFeatureTests {
     public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
         Result result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(ProductId: null, RecipeId: null, 100));
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -47,7 +47,7 @@ public class ConsumptionsFeatureTests {
     public void ManualNutritionValidator_WhenAlcoholIsNull_DefaultsToZero() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(100, 10, 5, 20, 3, alcohol: null);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.Alcohol);
     }
 
@@ -55,7 +55,7 @@ public class ConsumptionsFeatureTests {
     public void SatietyLevelValidator_WhenPreMealOutOfRange_UsesContractFieldName() {
         Result result = SatietyLevelValidator.Validate(-1, 5);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("PreMealSatietyLevel", result.Error.Message, StringComparison.Ordinal);
     }
 
@@ -211,7 +211,7 @@ public class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(mealRepository.UpdateCalled);
         Assert.Equal(newAssetId, meal.ImageAssetId);
         Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
@@ -250,7 +250,7 @@ public class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
     }
@@ -294,7 +294,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.StoredMeal);
         Assert.Equal("Created", repository.StoredMeal.Comment);
         Assert.Equal(2, repository.StoredMeal.Items.Count);
@@ -315,7 +315,7 @@ public class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(CreateConsumptionCommand(userId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -333,7 +333,7 @@ public class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(CreateConsumptionCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -354,7 +354,7 @@ public class ConsumptionsFeatureTests {
             CreateConsumptionCommand(user.Id.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
     }
 
@@ -391,7 +391,7 @@ public class ConsumptionsFeatureTests {
                 PostMealSatietyLevel: 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("ManualCalories", result.Error.Message, StringComparison.Ordinal);
     }
@@ -429,7 +429,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -467,7 +467,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -487,7 +487,7 @@ public class ConsumptionsFeatureTests {
             CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(ProductId: null, RecipeId: null, 150)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -506,7 +506,7 @@ public class ConsumptionsFeatureTests {
             CreateConsumptionCommand(user.Id.Value, items: [new ConsumptionItemInput(ProductId: null, Guid.Empty, 1)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -529,7 +529,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal item origin value.", result.Error.Message, StringComparison.Ordinal);
         Assert.Null(repository.StoredMeal);
@@ -553,7 +553,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.StoredMeal);
@@ -577,7 +577,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.StoredMeal);
@@ -601,7 +601,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Null(repository.StoredMeal);
@@ -625,7 +625,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.StoredMeal);
     }
 
@@ -664,7 +664,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.StoredMeal);
     }
@@ -690,7 +690,7 @@ public class ConsumptionsFeatureTests {
                 ])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown AI item resolution value.", result.Error.Message, StringComparison.Ordinal);
         Assert.Null(repository.StoredMeal);
@@ -717,7 +717,7 @@ public class ConsumptionsFeatureTests {
                 ])]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.StoredMeal);
     }
 
@@ -739,7 +739,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(imageAssetId: ImageAssetId.New().Value)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -762,7 +762,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(imageAssetId: Guid.Empty)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.StoredMeal);
     }
@@ -785,7 +785,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(notes: new string('x', 2049))]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Notes", result.Error.Message, StringComparison.Ordinal);
     }
@@ -825,7 +825,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown AI recognition source value.", result.Error.Message, StringComparison.Ordinal);
         Assert.Null(repository.StoredMeal);
@@ -866,7 +866,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
         Assert.Null(repository.StoredMeal);
@@ -907,7 +907,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         MealAiSession session = Assert.Single(repository.StoredMeal!.AiSessions);
         Assert.Equal(AiRecognitionSource.Text, session.Source);
         Assert.Equal(new StubDateTimeProvider().GetUtcNow().UtcDateTime, session.RecognizedAtUtc);
@@ -947,7 +947,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.InvalidData", result.Error.Code);
         Assert.NotNull(repository.StoredMeal);
     }
@@ -985,7 +985,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.InvalidData", result.Error.Code);
         Assert.Null(repository.StoredMeal);
     }
@@ -1029,7 +1029,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1073,7 +1073,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecipeId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1086,7 +1086,7 @@ public class ConsumptionsFeatureTests {
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1099,7 +1099,7 @@ public class ConsumptionsFeatureTests {
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
     }
 
@@ -1114,7 +1114,7 @@ public class ConsumptionsFeatureTests {
             new DeleteConsumptionCommand(user.Id.Value, meal.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(meal, repository.DeletedMeal);
     }
 
@@ -1170,7 +1170,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1212,7 +1212,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -1258,7 +1258,7 @@ public class ConsumptionsFeatureTests {
                  4),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(cleanup.RequestedAssetIds);
     }
 
@@ -1297,7 +1297,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal type value.", result.Error.Message, StringComparison.Ordinal);
     }
@@ -1339,7 +1339,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown AI recognition source value.", result.Error.Message, StringComparison.Ordinal);
     }
@@ -1381,7 +1381,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("RecognizedAtUtc timestamp kind must be specified.", result.Error.Message, StringComparison.Ordinal);
     }
@@ -1422,7 +1422,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.InvalidData", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1463,7 +1463,7 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.InvalidData", result.Error.Code);
         Assert.True(repository.UpdateCalled);
     }
@@ -1515,7 +1515,7 @@ public class ConsumptionsFeatureTests {
                 5),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal(MealType.Dinner, meal.MealType);
         Assert.Equal(newAssetId, meal.ImageAssetId);
@@ -1541,7 +1541,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionByIdQuery(userId.Value, Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ConsumptionId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -1561,7 +1561,7 @@ public class ConsumptionsFeatureTests {
 
         Result<ConsumptionModel> result = await handler.Handle(new GetConsumptionByIdQuery(userId.Value, meal.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(meal.Id.Value, result.Value.Id);
         Assert.Equal("Owner note", result.Value.Comment);
         Assert.Single(result.Value.Items);
@@ -1578,7 +1578,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1597,7 +1597,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsQuery(userId.Value, 1, 25, from, to),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(from, repository.LastDateFrom);
         Assert.Equal(to, repository.LastDateTo);
         Assert.Equal(DateTimeKind.Utc, repository.LastDateFrom!.Value.Kind);
@@ -1622,7 +1622,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Data.Count);
         Assert.False(result.Value.Data.Single(item => item.Id == lunch.Id.Value).IsFavorite);
         ConsumptionModel favoriteMeal = result.Value.Data.Single(item => item.Id == dinner.Id.Value);
@@ -1652,7 +1652,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.AllConsumptions.Data.Count);
         Assert.Single(result.Value.FavoriteItems);
         Assert.Equal(1, result.Value.FavoriteTotalCount);
@@ -1677,7 +1677,7 @@ public class ConsumptionsFeatureTests {
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedMeal);
         Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), repository.LastAddedMeal.Date);
         Assert.Equal(MealType.Dinner, repository.LastAddedMeal.MealType);
@@ -1729,7 +1729,7 @@ public class ConsumptionsFeatureTests {
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 19, 30, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedMeal);
         Assert.Single(repository.LastAddedMeal.AiSessions);
         Assert.Single(repository.LastAddedMeal.AiSessions.Single().Items);
@@ -1755,7 +1755,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, imageAssetId: ImageAssetId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1771,7 +1771,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(userId: null, meal.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1787,7 +1787,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, preMealSatietyLevel: -1),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1803,7 +1803,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(ProductId: null, RecipeId: null, 150)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1819,7 +1819,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(Guid.Empty, RecipeId: null, 150)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
@@ -1838,7 +1838,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown meal item origin value.", result.Error.Message, StringComparison.Ordinal);
         Assert.False(repository.UpdateCalled);
@@ -1857,7 +1857,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Source AI item id", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
@@ -1876,7 +1876,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
@@ -1895,7 +1895,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("manual meal item", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.False(repository.UpdateCalled);
@@ -1914,7 +1914,7 @@ public class ConsumptionsFeatureTests {
             ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
     }
 
@@ -1931,7 +1931,7 @@ public class ConsumptionsFeatureTests {
             UpdateConsumptionCommand(user.Id.Value, meal.Id.Value, items: [new ConsumptionItemInput(ProductId: null, recipeId.Value, 1)]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal(recipeId, recentItems.LastRecipeIds.Single());
     }
@@ -1951,7 +1951,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(imageAssetId: Guid.Empty)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1971,7 +1971,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(imageAssetId: ImageAssetId.New().Value)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -1991,7 +1991,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(notes: new string('x', 2049))]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -2011,7 +2011,7 @@ public class ConsumptionsFeatureTests {
                 manualCalories: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -2031,7 +2031,7 @@ public class ConsumptionsFeatureTests {
                 aiSessions: [ValidAiSession(items: [new ConsumptionAiItemInput("", NameLocal: null, 100, "g", 100, 10, 5, 20, 3, 0)])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -2053,7 +2053,7 @@ public class ConsumptionsFeatureTests {
                 ])]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown AI item resolution value.", result.Error.Message, StringComparison.Ordinal);
         Assert.False(repository.UpdateCalled);
@@ -2076,7 +2076,7 @@ public class ConsumptionsFeatureTests {
                 ])]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
     }
 
@@ -2091,7 +2091,7 @@ public class ConsumptionsFeatureTests {
             new RepeatMealCommand(UserId: null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -2108,7 +2108,7 @@ public class ConsumptionsFeatureTests {
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -2124,7 +2124,7 @@ public class ConsumptionsFeatureTests {
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Consumption.NotFound", result.Error.Code);
     }
 
@@ -2136,7 +2136,7 @@ public class ConsumptionsFeatureTests {
             new DeleteConsumptionCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -2148,7 +2148,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionByIdQuery(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -2163,7 +2163,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsOverviewQuery(UserId: null, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -2180,7 +2180,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsOverviewQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -2656,7 +2656,7 @@ public class ConsumptionsFeatureTests {
             new GetConsumptionsQuery(user.Id.Value, 1, 10, DateFrom: null, DateTo: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 

@@ -25,7 +25,7 @@ public class UsdaFeatureTests {
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 171077),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         await productRepo.Received(1).GetByIdForUpdateAsync(
             product.Id,
             userId,
@@ -43,7 +43,7 @@ public class UsdaFeatureTests {
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotAccessible", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -58,7 +58,7 @@ public class UsdaFeatureTests {
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("FoodNotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -73,7 +73,7 @@ public class UsdaFeatureTests {
             new UnlinkProductFromUsdaFoodCommand(userId.Value, product.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         await productRepo.Received(1).GetByIdForUpdateAsync(
             product.Id,
             userId,
@@ -90,7 +90,7 @@ public class UsdaFeatureTests {
             new UnlinkProductFromUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -101,7 +101,7 @@ public class UsdaFeatureTests {
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(UserId: null, Guid.NewGuid(), 1), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -111,7 +111,7 @@ public class UsdaFeatureTests {
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     private static IProductRepository CreateProductRepository(Product? product) {

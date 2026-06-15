@@ -59,7 +59,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -76,7 +76,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -94,7 +94,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.ImageNotFound", result.Error.Code);
     }
 
@@ -113,7 +113,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.Forbidden", result.Error.Code);
     }
 
@@ -131,7 +131,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
         Assert.Contains("upload incomplete", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -151,7 +151,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(openAiCalls.WasAnalyzeFoodImageCalled);
     }
@@ -172,7 +172,7 @@ public class AiValidatorsTests {
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(openAiCalls.WasAnalyzeFoodImageCalled);
         Assert.Equal(asset.Url, openAiCalls.LastImageUrl);
         Assert.Equal("ru", openAiCalls.LastLanguage);
@@ -242,7 +242,7 @@ public class AiValidatorsTests {
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -259,7 +259,7 @@ public class AiValidatorsTests {
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -274,7 +274,7 @@ public class AiValidatorsTests {
             new CalculateFoodNutritionCommand(Guid.NewGuid(), []),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.EmptyItems", result.Error.Code);
     }
 
@@ -291,7 +291,7 @@ public class AiValidatorsTests {
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(openAiCalls.WasCalculateNutritionCalled);
     }
@@ -308,7 +308,7 @@ public class AiValidatorsTests {
                 [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(openAiCalls.WasCalculateNutritionCalled);
     }
 
@@ -320,7 +320,7 @@ public class AiValidatorsTests {
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -331,7 +331,7 @@ public class AiValidatorsTests {
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(openAiCalls.WasParseFoodTextCalled);
     }
@@ -345,7 +345,7 @@ public class AiValidatorsTests {
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(openAiCalls.WasParseFoodTextCalled);
         Assert.Equal("apple 100g", openAiCalls.LastText);
         Assert.Equal("ru", openAiCalls.LastLanguage);
@@ -361,7 +361,7 @@ public class AiValidatorsTests {
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc), getLastPeriod().FromUtc);
         Assert.Equal(new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), getLastPeriod().ToUtc);
         Assert.Equal(new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), result.Value.ResetAtUtc);
@@ -378,7 +378,7 @@ public class AiValidatorsTests {
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 

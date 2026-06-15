@@ -23,7 +23,7 @@ public class LessonsFeatureTests {
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(wasProgressAdded());
     }
 
@@ -37,7 +37,7 @@ public class LessonsFeatureTests {
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(wasProgressAdded());
     }
 
@@ -49,7 +49,7 @@ public class LessonsFeatureTests {
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -61,7 +61,7 @@ public class LessonsFeatureTests {
         Result result = await handler.Handle(
             new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -80,7 +80,7 @@ public class LessonsFeatureTests {
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, " RU ", "macronutrients"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Collection(
             result.Value,
             item => {
@@ -109,7 +109,7 @@ public class LessonsFeatureTests {
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(userId.Value, "fr", Category: null), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         LessonSummaryModel lesson = Assert.Single(result.Value);
         Assert.Equal(englishLesson.Id.Value, lesson.Id);
         Assert.Equal([("fr", null), ("en", null)], localeRequests);
@@ -126,7 +126,7 @@ public class LessonsFeatureTests {
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(Guid.NewGuid(), "en", "unknown"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
         Assert.Equal(("en", null), localeRequests.Single());
     }
@@ -138,7 +138,7 @@ public class LessonsFeatureTests {
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(UserId: null, "en", Category: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -151,7 +151,7 @@ public class LessonsFeatureTests {
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(userId.Value, lesson.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(lesson.Id.Value, result.Value.Id);
         Assert.Equal("Protein basics", result.Value.Title);
         Assert.True(result.Value.IsRead);
@@ -164,7 +164,7 @@ public class LessonsFeatureTests {
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotFound", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -175,7 +175,7 @@ public class LessonsFeatureTests {
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]

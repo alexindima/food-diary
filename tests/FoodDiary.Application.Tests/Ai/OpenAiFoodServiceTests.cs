@@ -27,7 +27,7 @@ public sealed class OpenAiFoodServiceTests {
             UserId.New(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
         Assert.Equal(0, client.CalculateNutritionCalls);
     }
@@ -49,7 +49,7 @@ public sealed class OpenAiFoodServiceTests {
             user.Id,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, client.CalculateNutritionCalls);
     }
@@ -70,7 +70,7 @@ public sealed class OpenAiFoodServiceTests {
             userId,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
         Assert.Equal(0, client.CalculateNutritionCalls);
     }
@@ -91,7 +91,7 @@ public sealed class OpenAiFoodServiceTests {
             UserId.New(),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(52m, result.Value.Calories);
         Assert.Equal(1, client.CalculateNutritionCalls);
         Assert.Single(usageRepository.Items);
@@ -115,7 +115,7 @@ public sealed class OpenAiFoodServiceTests {
             UserId.New(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.EmptyItems", result.Error.Code);
         Assert.Empty(usageRepository.Items);
     }
@@ -137,7 +137,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AiUsage usage = Assert.Single(usageRepository.Items);
         Assert.Equal("vision", usage.Operation);
         Assert.Equal("test-model", usage.Model);
@@ -161,7 +161,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
         Assert.Equal(0, client.AnalyzeFoodImageCalls);
     }
@@ -184,7 +184,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
         Assert.Equal(0, client.AnalyzeFoodImageCalls);
     }
@@ -206,7 +206,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
         Assert.Equal(0, client.AnalyzeFoodImageCalls);
     }
@@ -231,7 +231,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.Forbidden", result.Error.Code);
         Assert.Empty(usageRepository.Items);
     }
@@ -260,7 +260,7 @@ public sealed class OpenAiFoodServiceTests {
             description: null,
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(usageRepository.Items);
     }
 
@@ -277,7 +277,7 @@ public sealed class OpenAiFoodServiceTests {
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value.Items);
         Assert.Equal(1, client.ParseFoodTextCalls);
         Assert.Single(usageRepository.Items);
@@ -295,7 +295,7 @@ public sealed class OpenAiFoodServiceTests {
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.QuotaExceeded", result.Error.Code);
         Assert.Equal(0, client.ParseFoodTextCalls);
     }
@@ -315,7 +315,7 @@ public sealed class OpenAiFoodServiceTests {
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Ai.EmptyItems", result.Error.Code);
         Assert.Empty(usageRepository.Items);
     }

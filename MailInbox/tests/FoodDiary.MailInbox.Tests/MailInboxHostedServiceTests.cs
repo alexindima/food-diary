@@ -5,6 +5,8 @@ using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using System.Diagnostics;
+using System.Globalization;
 using System.Net.Sockets;
 
 namespace FoodDiary.MailInbox.Tests;
@@ -64,7 +66,7 @@ public sealed class MailInboxHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
         try {
-            Assert.True(await WaitForPortAsync(port, CancellationToken.None));
+            await WaitForPortAsync(port, CancellationToken.None);
         } finally {
             await service.StopAsync(CancellationToken.None);
         }
@@ -80,21 +82,20 @@ public sealed class MailInboxHostedServiceTests {
         }
     }
 
-    private static async Task<bool> WaitForPortAsync(int port, CancellationToken cancellationToken) {
-        using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-        using var linked = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, timeout.Token);
+    private static async Task WaitForPortAsync(int port, CancellationToken cancellationToken) {
+        var stopwatch = Stopwatch.StartNew();
 
-        while (!linked.IsCancellationRequested) {
+        while (stopwatch.Elapsed < TimeSpan.FromSeconds(5)) {
             try {
                 using var client = new TcpClient();
-                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, linked.Token).ConfigureAwait(false);
-                return true;
+                await client.ConnectAsync(System.Net.IPAddress.Loopback, port, cancellationToken).ConfigureAwait(false);
+                return;
             } catch (SocketException) {
-                await Task.Delay(TimeSpan.FromMilliseconds(25), linked.Token).ConfigureAwait(false);
+                await Task.Delay(TimeSpan.FromMilliseconds(25), cancellationToken).ConfigureAwait(false);
             }
         }
 
-        return false;
+        Assert.Fail($"SMTP listener did not open port {port.ToString(CultureInfo.InvariantCulture)} before the timeout.");
     }
 
     [ExcludeFromCodeCoverage]

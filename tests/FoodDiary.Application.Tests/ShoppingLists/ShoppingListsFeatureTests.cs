@@ -27,7 +27,7 @@ public class ShoppingListsFeatureTests {
         var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -39,7 +39,7 @@ public class ShoppingListsFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -48,7 +48,7 @@ public class ShoppingListsFeatureTests {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -57,7 +57,7 @@ public class ShoppingListsFeatureTests {
         var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -70,7 +70,7 @@ public class ShoppingListsFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -82,7 +82,7 @@ public class ShoppingListsFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("ShoppingList.NotFound", result.Error.Code);
     }
 
@@ -95,7 +95,7 @@ public class ShoppingListsFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Weekly", result.Value.Name);
         Assert.Single(result.Value.Items);
     }
@@ -105,7 +105,7 @@ public class ShoppingListsFeatureTests {
         var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -118,7 +118,7 @@ public class ShoppingListsFeatureTests {
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         ShoppingListSummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(list.Id.Value, summary.Id);
         Assert.Equal("Weekly", summary.Name);
@@ -130,7 +130,7 @@ public class ShoppingListsFeatureTests {
         var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
         Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -141,7 +141,7 @@ public class ShoppingListsFeatureTests {
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -153,7 +153,7 @@ public class ShoppingListsFeatureTests {
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -165,7 +165,7 @@ public class ShoppingListsFeatureTests {
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, shoppingListId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("ShoppingList.NotFound", result.Error.Code);
     }
 
@@ -178,7 +178,7 @@ public class ShoppingListsFeatureTests {
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, list.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.DeleteCalled);
     }
 
@@ -192,7 +192,7 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", Items: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ShoppingListId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -208,7 +208,7 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(UserId: null, Guid.NewGuid(), "Weekly", Items: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -223,7 +223,7 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("Items", result.Error.Message, StringComparison.Ordinal);
     }
@@ -240,7 +240,7 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(Guid.NewGuid(), shoppingListId, "Weekly", Items: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("ShoppingList.NotFound", result.Error.Code);
         Assert.Contains(shoppingListId.ToString(), result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -262,7 +262,7 @@ public class ShoppingListsFeatureTests {
                 [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
@@ -301,7 +301,7 @@ public class ShoppingListsFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal("Weekly groceries", result.Value.Name);
         Assert.Equal(2, result.Value.Items.Count);
@@ -348,7 +348,7 @@ public class ShoppingListsFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         ShoppingListItemModel item = Assert.Single(result.Value.Items);
         Assert.Equal(existing.Id.Value, item.Id);
@@ -378,7 +378,7 @@ public class ShoppingListsFeatureTests {
             new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", Items: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal("New", result.Value.Name);
         Assert.Single(result.Value.Items);
@@ -395,7 +395,7 @@ public class ShoppingListsFeatureTests {
             new CreateShoppingListCommand(UserId: null, "Weekly", []),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -410,7 +410,7 @@ public class ShoppingListsFeatureTests {
 
         Result<ShoppingListModel> result = await handler.Handle(new CreateShoppingListCommand(user.Id.Value, "Weekly", []), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -426,7 +426,7 @@ public class ShoppingListsFeatureTests {
             new CreateShoppingListCommand(user.Id.Value, " ", []),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
     }
 
@@ -445,7 +445,7 @@ public class ShoppingListsFeatureTests {
                 [new ShoppingListItemInput(Id: null, ProductId: ProductId.New().Value, Name: null, Amount: 1, Unit: null, Category: null, Aisle: null, Note: null, IsChecked: false, CheckedOnUtc: null, SortOrder: null)]),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
@@ -481,7 +481,7 @@ public class ShoppingListsFeatureTests {
                 ]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.AddedList);
         Assert.Equal("Weekly", result.Value.Name);
         Assert.Equal(2, result.Value.Items.Count);
@@ -508,7 +508,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("Unit", result.Error.Message, StringComparison.Ordinal);
     }
 
@@ -520,7 +520,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         ShoppingListItemData item = Assert.Single(result.Value);
         Assert.Null(item.Unit);
         Assert.Equal("Milk", item.Name);
@@ -538,7 +538,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -557,7 +557,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("finite", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -574,7 +574,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.Ordinal);
     }
@@ -591,7 +591,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Id", result.Error.Message, StringComparison.Ordinal);
     }
@@ -604,7 +604,7 @@ public class ShoppingListsFeatureTests {
             CreateThrowingProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
     }
 
@@ -620,7 +620,7 @@ public class ShoppingListsFeatureTests {
             new NoopProductLookupService(),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
         Assert.Contains("Name", result.Error.Message, StringComparison.Ordinal);
     }
@@ -650,7 +650,7 @@ public class ShoppingListsFeatureTests {
             new ProductLookupService(product),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         ShoppingListItemData item = Assert.Single(result.Value);
         Assert.Equal("Sale", item.Category);
         Assert.Equal(1, item.SortOrder);
@@ -805,7 +805,7 @@ public class ShoppingListsFeatureTests {
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 

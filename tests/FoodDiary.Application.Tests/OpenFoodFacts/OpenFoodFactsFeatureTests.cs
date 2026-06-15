@@ -21,7 +21,7 @@ public class OpenFoodFactsFeatureTests {
             new SearchByBarcodeQuery("4600000000001"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal("4600000000001", result.Value.Barcode);
         Assert.Equal("Test Product", result.Value.Name);
@@ -38,7 +38,7 @@ public class OpenFoodFactsFeatureTests {
             new SearchByBarcodeQuery("0000000000000"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(result.Value);
     }
 
@@ -57,7 +57,7 @@ public class OpenFoodFactsFeatureTests {
             new SearchOpenFoodFactsQuery("test", 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("111", result.Value[0].Barcode);
         Assert.Equal("222", result.Value[1].Barcode);
@@ -73,7 +73,7 @@ public class OpenFoodFactsFeatureTests {
             new SearchOpenFoodFactsQuery("nonexistent", 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
     }
 
@@ -95,7 +95,7 @@ public class OpenFoodFactsFeatureTests {
             new SearchOpenFoodFactsQuery("test", 2),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("cached-1", result.Value[0].Barcode);
         Assert.Equal(0, getSearchCallCount());

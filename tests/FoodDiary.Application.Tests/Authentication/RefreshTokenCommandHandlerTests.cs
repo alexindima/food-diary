@@ -30,7 +30,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("new-access-token", result.Value.AccessToken);
         Assert.Equal("new-refresh-token", result.Value.RefreshToken);
         Assert.Equal(user.Email, result.Value.User.Email);
@@ -54,7 +54,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("remember-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(authTokenService.LastRememberMe);
     }
 
@@ -74,7 +74,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -90,7 +90,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("invalid-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -106,7 +106,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("refresh-token-without-session"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -123,7 +123,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -139,7 +139,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -160,7 +160,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("new-access-token", result.Value.AccessToken);
         Assert.Equal(1, authTokenService.IssueAndStoreCallCount);
     }
@@ -188,7 +188,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("new-access-token", result.Value.AccessToken);
         Assert.Equal(1, authTokenService.IssueAndStoreCallCount);
     }
@@ -216,7 +216,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -234,7 +234,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }
@@ -252,7 +252,7 @@ public sealed class RefreshTokenCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new RefreshTokenCommand("current-refresh-token"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Equal(0, authTokenService.IssueAndStoreCallCount);
     }

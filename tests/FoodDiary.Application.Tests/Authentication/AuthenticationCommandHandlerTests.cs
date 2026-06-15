@@ -40,7 +40,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -53,7 +53,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
         Assert.Equal(0, adminSsoService.CreateCodeCallCount);
     }
@@ -65,7 +65,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
         Assert.Equal(0, adminSsoService.CreateCodeCallCount);
     }
@@ -79,7 +79,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AdminSsoStartModel> result = await handler.Handle(new AdminSsoStartCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("admin-sso-code", result.Value.Code);
         Assert.Equal(1, adminSsoService.CreateCodeCallCount);
     }
@@ -93,7 +93,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("bad-code"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AdminSsoInvalidCode", result.Error.Code);
     }
 
@@ -106,7 +106,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -123,7 +123,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(tokenService.LastUser);
     }
@@ -138,7 +138,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AdminSsoForbidden", result.Error.Code);
     }
 
@@ -154,7 +154,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new AdminSsoExchangeCommand("admin-sso-code"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -175,7 +175,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RegisterCommand("new@example.com", "secret", "ru", "https://client.test"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal("refresh", result.Value.RefreshToken);
         Assert.Equal("new@example.com", sender.LastEmailVerification?.ToEmail);
@@ -198,7 +198,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RegisterCommand("email-failure@example.com", "secret", Language: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
     }
 
@@ -214,7 +214,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(tokenService.LastUser);
     }
@@ -230,7 +230,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new LoginCommand(user.Email, "secret"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -247,7 +247,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(sender.LastPasswordReset);
     }
 
@@ -266,7 +266,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(sender.LastPasswordReset);
     }
 
@@ -285,7 +285,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RequestPasswordResetCommand(user.Email, "https://client.test"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(user.PasswordResetTokenHash);
         Assert.Equal(user.Email, sender.LastPasswordReset?.ToEmail);
         Assert.Equal("https://client.test", sender.LastPasswordReset?.ClientOrigin);
@@ -303,7 +303,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(user.PasswordResetTokenHash);
     }
 
@@ -320,7 +320,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(Guid.Empty, "token", "StrongPass123"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -337,7 +337,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(Guid.Empty, "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -354,7 +354,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(Guid.NewGuid(), "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -372,7 +372,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
@@ -388,7 +388,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -406,7 +406,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "actual"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -425,7 +425,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "invalid-token"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(user.IsEmailConfirmed);
     }
@@ -446,7 +446,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.IsEmailConfirmed);
         Assert.Equal(user.Id.Value, notifier.LastUserId);
     }
@@ -466,7 +466,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new VerifyEmailCommand(user.Id.Value, "token"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.IsEmailConfirmed);
     }
 
@@ -483,7 +483,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ResendEmailVerificationCommand(Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -497,7 +497,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(sender.LastEmailVerification);
     }
 
@@ -509,7 +509,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("recently", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -525,7 +525,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -539,7 +539,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(sender.LastEmailVerification);
     }
 
@@ -551,7 +551,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value, "https://client.test"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(user.EmailConfirmationTokenHash);
         Assert.NotNull(sender.LastEmailVerification);
         Assert.Equal("resend@example.com", sender.LastEmailVerification.ToEmail);
@@ -565,7 +565,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Failed to send", result.Error.Message, StringComparison.Ordinal);
     }
@@ -580,7 +580,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(Guid.Empty, "init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -596,7 +596,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(user.Id.Value, "bad-init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -610,7 +610,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(Guid.NewGuid(), "valid-init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -625,7 +625,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(123456, user.TelegramUserId);
     }
 
@@ -642,7 +642,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.TelegramAlreadyLinked", result.Error.Code);
     }
 
@@ -657,7 +657,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(123456, user.TelegramUserId);
     }
 
@@ -674,7 +674,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(Guid.NewGuid(), "token", "StrongPass123"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -692,7 +692,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "StrongPass123"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -711,7 +711,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(user.Id.Value, "actual", "StrongPass123"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -732,7 +732,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(user.Id.Value, "invalid-token", "StrongPass123"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.Null(tokenService.LastUser);
     }
@@ -754,7 +754,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new ConfirmPasswordResetCommand(user.Id.Value, "token", "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -768,7 +768,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("bad-init-data"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -781,7 +781,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
     }
 
@@ -797,7 +797,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramVerifyCommand("valid-init-data"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -813,7 +813,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new TelegramLoginWidgetCommand(123456, 123, "bad-hash", Username: null, FirstName: null, LastName: null, PhotoUrl: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -828,7 +828,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new TelegramLoginWidgetCommand(123456, 123, "hash", Username: null, FirstName: null, LastName: null, PhotoUrl: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
     }
 
@@ -846,7 +846,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new TelegramLoginWidgetCommand(123456, 123, "hash", "alex", "Alex", "User", PhotoUrl: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -859,7 +859,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.TelegramNotLinked", result.Error.Code);
     }
 
@@ -874,7 +874,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new TelegramBotAuthCommand(123456), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("access", result.Value.AccessToken);
         Assert.Equal(user, tokenService.LastUser);
     }
@@ -893,7 +893,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RestoreAccountCommand(user.Email, "secret"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.IsActive);
         Assert.Null(user.DeletedAt);
     }
@@ -910,7 +910,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RestoreAccountCommand("missing@example.com", "secret"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidCredentials", result.Error.Code);
     }
 
@@ -927,7 +927,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new RestoreAccountCommand(user.Email, "secret"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountNotDeleted", result.Error.Code);
     }
 
@@ -945,7 +945,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("bad-credential"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(tokenService.LastUser);
     }
@@ -965,7 +965,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(tokenService.LastUser);
         Assert.Empty(notificationRepository.Notifications);
@@ -984,7 +984,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(notificationRepository.Notifications);
     }
 
@@ -1000,7 +1000,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Notification notification = Assert.Single(notificationRepository.Notifications);
         Assert.Equal(NotificationTypes.PasswordSetupSuggested, notification.Type);
         Assert.StartsWith("password-setup:", notification.ReferenceId, StringComparison.Ordinal);
@@ -1020,7 +1020,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
         Result<AuthenticationModel> result = await handler.Handle(new GoogleLoginCommand("credential"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(notificationRepository.Notifications);
     }
 

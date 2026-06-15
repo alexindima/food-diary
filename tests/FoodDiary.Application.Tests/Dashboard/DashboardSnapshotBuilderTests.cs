@@ -52,7 +52,7 @@ public sealed class DashboardSnapshotBuilderTests {
                 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -81,7 +81,7 @@ public sealed class DashboardSnapshotBuilderTests {
                 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("DateTo", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -110,7 +110,7 @@ public sealed class DashboardSnapshotBuilderTests {
                 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -151,7 +151,7 @@ public sealed class DashboardSnapshotBuilderTests {
                     IncludeCycle: false)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(result.Value.DashboardLayout);
         Assert.Equal(0, result.Value.CaloriesBurned);
     }
@@ -206,7 +206,7 @@ public sealed class DashboardSnapshotBuilderTests {
                     IncludeCycle: false)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(selectedDate.Date, weightRepository.LastDateTo?.Date);
         Assert.Equal(selectedDate.Date, waistRepository.LastDateTo?.Date);
         Assert.Equal(82, result.Value.Weight.Latest?.Weight);
@@ -252,7 +252,7 @@ public sealed class DashboardSnapshotBuilderTests {
                     IncludeCycle: false)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(sender.LastConsumptionsQuery);
         Assert.Equal(1, sender.LastConsumptionsQuery.Page);
         Assert.Equal(100, sender.LastConsumptionsQuery.Limit);
@@ -270,7 +270,7 @@ public sealed class DashboardSnapshotBuilderTests {
             CreateRequest(user.Id.Value, Sections(includeStatistics: true)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Single(sender.StatisticsQueries);
     }
@@ -288,7 +288,7 @@ public sealed class DashboardSnapshotBuilderTests {
             CreateRequest(user.Id.Value, Sections(includeStatistics: true), date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Equal(2, sender.StatisticsQueries.Count);
         Assert.Equal(date.Date.AddDays(-6), sender.StatisticsQueries[1].DateFrom);
@@ -306,7 +306,7 @@ public sealed class DashboardSnapshotBuilderTests {
             CreateRequest(user.Id.Value, Sections(includeStatistics: true, includeMeals: true)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.NotNull(sender.LastConsumptionsQuery);
     }
@@ -328,7 +328,7 @@ public sealed class DashboardSnapshotBuilderTests {
             CreateRequest(user.Id.Value, Sections(includeHydration: true), date, date.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value.Hydration);
         Assert.Equal(1200, result.Value.Hydration!.TotalMl);
         Assert.Equal(3600, result.Value.Hydration.GoalMl);

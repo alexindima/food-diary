@@ -33,7 +33,7 @@ public class RecipeCommentsFeatureTests {
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Delicious!", result.Value.Text);
         Assert.True(result.Value.IsOwnedByCurrentUser);
         Assert.Single(addedNotifications); // notification for recipe owner
@@ -53,7 +53,7 @@ public class RecipeCommentsFeatureTests {
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(addedNotifications);
     }
 
@@ -68,7 +68,7 @@ public class RecipeCommentsFeatureTests {
             new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -82,7 +82,7 @@ public class RecipeCommentsFeatureTests {
             new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -98,7 +98,7 @@ public class RecipeCommentsFeatureTests {
             new UpdateRecipeCommentCommand(userId.Value, comment.Id.Value, "New text"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("New text", result.Value.Text);
     }
 
@@ -115,7 +115,7 @@ public class RecipeCommentsFeatureTests {
             new UpdateRecipeCommentCommand(otherUserId.Value, comment.Id.Value, "Hacked"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotAuthor", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -127,7 +127,7 @@ public class RecipeCommentsFeatureTests {
             new UpdateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -139,7 +139,7 @@ public class RecipeCommentsFeatureTests {
             new UpdateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("RecipeComment.NotFound", result.Error.Code);
     }
 
@@ -156,7 +156,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(userId.Value, recipeId.Value, comment.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
@@ -168,7 +168,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -185,7 +185,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(ownerId.Value, ownedRecipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("RecipeComment.NotFound", result.Error.Code);
         Assert.NotNull(await repo.GetByIdAsync(comment.Id));
     }
@@ -200,7 +200,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -216,7 +216,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(Guid.NewGuid(), recipeId.Value, comment.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("RecipeComment.NotAuthor", result.Error.Code);
     }
 
@@ -233,7 +233,7 @@ public class RecipeCommentsFeatureTests {
             new DeleteRecipeCommentCommand(ownerId.Value, recipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(await repo.GetByIdAsync(comment.Id));
     }
 
@@ -245,7 +245,7 @@ public class RecipeCommentsFeatureTests {
             new GetRecipeCommentsQuery(Guid.Empty, Guid.NewGuid(), 1, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -263,7 +263,7 @@ public class RecipeCommentsFeatureTests {
             new GetRecipeCommentsQuery(userId.Value, recipeId.Value, 0, 0),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         Assert.Equal(2, result.Value.TotalItems);

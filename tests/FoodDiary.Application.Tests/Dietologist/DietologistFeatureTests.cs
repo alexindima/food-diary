@@ -201,7 +201,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(UserId: null, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -212,7 +212,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(Guid.NewGuid(), "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -228,7 +228,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "user@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -248,7 +248,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -268,7 +268,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -287,7 +287,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(invRepo.Added);
         Assert.True(emailSender.SentCount > 0);
     }
@@ -316,7 +316,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(notificationRepo.Added);
         Assert.True(notificationPusher.PushCalled);
         Assert.Equal(dietologist.Id, notificationRepo.Added[0].UserId);
@@ -339,7 +339,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Empty(invitationRepo.Added);
     }
 
@@ -364,7 +364,7 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(invitationRepo.Added);
         Assert.Single(notificationRepo.Added);
     }
@@ -379,7 +379,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(Guid.NewGuid(), "token", UserId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -395,7 +395,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(Guid.NewGuid(), "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -419,7 +419,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "wrong-token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -442,7 +442,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal(DietologistInvitationStatus.Pending, invitation.Status);
     }
 
@@ -466,7 +466,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -497,7 +497,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
         Notification notification = Assert.Single(notificationRepo.Added);
         Assert.Equal(NotificationTypes.DietologistInvitationAccepted, notification.Type);
@@ -522,7 +522,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
         Assert.Equal(DietologistInvitationStatus.Pending, invitation.Status);
     }
@@ -544,7 +544,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationCommand(invitation.Id.Value, "token", dietologistId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -576,7 +576,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
         Assert.Contains(notificationRepo.Added, x => string.Equals(x.Type, NotificationTypes.DietologistInvitationAccepted, StringComparison.Ordinal) && x.UserId == clientId);
         Assert.True(notificationPusher.PushCalled);
@@ -591,7 +591,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -607,7 +607,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -623,7 +623,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -639,7 +639,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -660,7 +660,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -680,7 +680,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -703,7 +703,7 @@ public class DietologistFeatureTests {
             new AcceptInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationExpired", result.Error.Code);
     }
 
@@ -727,7 +727,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Accepted", result.Value.Status);
     }
 
@@ -740,7 +740,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -755,7 +755,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -770,7 +770,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -785,7 +785,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -804,7 +804,7 @@ public class DietologistFeatureTests {
             new GetInvitationForCurrentUserQuery(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -818,7 +818,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationCommand(Guid.NewGuid(), "token", UserId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -836,7 +836,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationCommand(invitation.Id.Value, "wrong", UserId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -860,7 +860,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationCommand(invitation.Id.Value, "token", UserId: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Declined, invitation.Status);
         Notification notification = Assert.Single(notificationRepo.Added);
         Assert.Equal(NotificationTypes.DietologistInvitationDeclined, notification.Type);
@@ -896,7 +896,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Declined, invitation.Status);
         Assert.Contains(notificationRepo.Added, x => string.Equals(x.Type, NotificationTypes.DietologistInvitationDeclined, StringComparison.Ordinal) && x.UserId == clientId);
         Assert.True(notificationPusher.PushCalled);
@@ -913,7 +913,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -929,7 +929,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -943,7 +943,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -959,7 +959,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -980,7 +980,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -1000,7 +1000,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -1023,7 +1023,7 @@ public class DietologistFeatureTests {
             new DeclineInvitationForCurrentUserCommand(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationExpired", result.Error.Code);
     }
 
@@ -1035,7 +1035,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new RevokeInvitationCommand(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1051,7 +1051,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new RevokeInvitationCommand(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1066,7 +1066,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new RevokeInvitationCommand(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1086,7 +1086,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new RevokeInvitationCommand(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Revoked, invitation.Status);
     }
 
@@ -1106,7 +1106,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new RevokeInvitationCommand(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     // â”€â”€ DisconnectDietologist â”€â”€
@@ -1119,7 +1119,7 @@ public class DietologistFeatureTests {
         Result result = await handler.Handle(
             new DisconnectDietologistCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1136,7 +1136,7 @@ public class DietologistFeatureTests {
             new DisconnectDietologistCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1152,7 +1152,7 @@ public class DietologistFeatureTests {
             new DisconnectDietologistCommand(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1174,7 +1174,7 @@ public class DietologistFeatureTests {
             new DisconnectDietologistCommand(dietologistId.Value, clientId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     // â”€â”€ UpdateDietologistPermissions â”€â”€
@@ -1188,7 +1188,7 @@ public class DietologistFeatureTests {
             new UpdateDietologistPermissionsCommand(UserId: null, AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1205,7 +1205,7 @@ public class DietologistFeatureTests {
             new UpdateDietologistPermissionsCommand(userId.Value, AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1221,7 +1221,7 @@ public class DietologistFeatureTests {
             new UpdateDietologistPermissionsCommand(userId.Value, AllPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1243,7 +1243,7 @@ public class DietologistFeatureTests {
             new UpdateDietologistPermissionsCommand(userId.Value, newPermissions),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     // â”€â”€ CreateRecommendation â”€â”€
@@ -1256,7 +1256,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(UserId: null, Guid.NewGuid(), "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1270,7 +1270,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, Guid.NewGuid(), "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1289,7 +1289,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1312,7 +1312,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Eat more veggies", result.Value.Text);
         Assert.Single(recRepo.Added);
         Notification notification = Assert.Single(notificationRepo.Added);
@@ -1339,7 +1339,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(
             Assert.Single(notificationRepo.Added).PayloadJson);
         Assert.Equal(string.Empty, payload?.DietologistName);
@@ -1373,7 +1373,7 @@ public class DietologistFeatureTests {
             new CreateRecommendationCommand(dietologistId.Value, clientId.Value, "Eat more veggies"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("PermissionDenied", result.Error.Code, StringComparison.Ordinal);
         Assert.Empty(recRepo.Added);
     }
@@ -1389,7 +1389,7 @@ public class DietologistFeatureTests {
             new MarkRecommendationReadCommand(UserId: null, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1403,7 +1403,7 @@ public class DietologistFeatureTests {
             new MarkRecommendationReadCommand(userId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1422,7 +1422,7 @@ public class DietologistFeatureTests {
             new MarkRecommendationReadCommand(otherId.Value, recommendation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1440,7 +1440,7 @@ public class DietologistFeatureTests {
             new MarkRecommendationReadCommand(clientId.Value, recommendation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(recommendation.IsRead);
     }
 
@@ -1459,7 +1459,7 @@ public class DietologistFeatureTests {
             new MarkRecommendationReadCommand(clientId.Value, recommendation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
         Assert.False(recommendation.IsRead);
     }
@@ -1474,7 +1474,7 @@ public class DietologistFeatureTests {
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1490,7 +1490,7 @@ public class DietologistFeatureTests {
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(result.Value);
     }
 
@@ -1506,7 +1506,7 @@ public class DietologistFeatureTests {
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1520,7 +1520,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1536,7 +1536,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
     }
 
@@ -1552,7 +1552,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1595,7 +1595,7 @@ public class DietologistFeatureTests {
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(new GetMyClientsQuery(dietologistId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         ClientSummaryModel clientSummary = Assert.Single(result.Value);
         Assert.Equal("client@example.com", clientSummary.Email);
         Assert.Null(clientSummary.FirstName);
@@ -1619,7 +1619,7 @@ public class DietologistFeatureTests {
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1631,7 +1631,7 @@ public class DietologistFeatureTests {
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1652,7 +1652,7 @@ public class DietologistFeatureTests {
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1671,7 +1671,7 @@ public class DietologistFeatureTests {
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1689,7 +1689,7 @@ public class DietologistFeatureTests {
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
@@ -1709,7 +1709,7 @@ public class DietologistFeatureTests {
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(invitation.Id.Value, result.Value.InvitationId);
         Assert.Equal("client@example.com", result.Value.ClientEmail);
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), result.Value.Status);
@@ -1726,7 +1726,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(UserId: null, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1741,7 +1741,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1772,7 +1772,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, dateFrom, dateTo, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Meals.Total);
         Assert.Equal(0, result.Value.Statistics.TotalCalories);
         Assert.Null(result.Value.Weight.Latest);
@@ -1810,7 +1810,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1830,7 +1830,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1851,7 +1851,7 @@ public class DietologistFeatureTests {
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -1865,7 +1865,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1876,7 +1876,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1891,7 +1891,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -1911,7 +1911,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -1932,7 +1932,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
@@ -1951,7 +1951,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -1970,7 +1970,7 @@ public class DietologistFeatureTests {
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Dietologist.AccessDenied", result.Error.Code);
     }
 
@@ -1984,7 +1984,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -2005,7 +2005,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
     }
 
@@ -2021,7 +2021,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -2035,7 +2035,7 @@ public class DietologistFeatureTests {
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -2050,7 +2050,7 @@ public class DietologistFeatureTests {
             new GetRecommendationsForClientQuery(dietologistId.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -2073,7 +2073,7 @@ public class DietologistFeatureTests {
             new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value);
     }
 
@@ -2094,7 +2094,7 @@ public class DietologistFeatureTests {
             new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -2166,7 +2166,7 @@ public class DietologistFeatureTests {
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -2182,7 +2182,7 @@ public class DietologistFeatureTests {
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AccountDeleted", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -2201,7 +2201,7 @@ public class DietologistFeatureTests {
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal(invitation.Id.Value, result.Value.InvitationId);
         Assert.Equal(DietologistInvitationStatus.Pending.ToString(), result.Value.Status);

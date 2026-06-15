@@ -54,7 +54,7 @@ public sealed class ProductSearchSuggestionTests {
 
         Result<IReadOnlyList<ProductSearchSuggestionModel>> result = await handler.Handle(new SearchProductSuggestionsQuery("fanta", 5), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("openFoodFacts", result.Value[0].Source);
         Assert.Equal("usda", result.Value[1].Source);

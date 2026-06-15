@@ -56,7 +56,7 @@ public class WaistEntriesFeatureTests {
             new CreateWaistEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -73,7 +73,7 @@ public class WaistEntriesFeatureTests {
             new CreateWaistEntryCommand(userId.Value, localDate, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(DateTimeKind.Utc, repository.LastGetByDateDate.Kind);
     }
@@ -90,7 +90,7 @@ public class WaistEntriesFeatureTests {
             new CreateWaistEntryCommand(user.Id.Value, dateOnly, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(expectedDate, repository.AddedEntry?.Date);
     }
@@ -104,7 +104,7 @@ public class WaistEntriesFeatureTests {
 
         Result<IReadOnlyList<WaistEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -118,7 +118,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistSummariesQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -132,7 +132,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -148,7 +148,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistSummariesQuery(user.Id.Value, from, to, 1),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
     }
@@ -169,7 +169,7 @@ public class WaistEntriesFeatureTests {
                 7),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         WaistEntrySummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
@@ -188,7 +188,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -202,7 +202,7 @@ public class WaistEntriesFeatureTests {
             new DeleteWaistEntryCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -217,7 +217,7 @@ public class WaistEntriesFeatureTests {
             new DeleteWaistEntryCommand(UserId: null, WaistEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -233,7 +233,7 @@ public class WaistEntriesFeatureTests {
             new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -248,7 +248,7 @@ public class WaistEntriesFeatureTests {
             new DeleteWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WaistEntry.NotFound", result.Error.Code);
     }
 
@@ -263,7 +263,7 @@ public class WaistEntriesFeatureTests {
             new DeleteWaistEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(await repository.GetByIdAsync(entry.Id, user.Id));
     }
 
@@ -279,7 +279,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistEntriesQuery(user.Id.Value, from, to, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateFrom);
         Assert.Equal(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateTo);
     }
@@ -303,7 +303,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Collection(
             result.Value,
             entry => {
@@ -326,7 +326,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistEntriesQuery(UserId: null, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -340,7 +340,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WaistEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -355,7 +355,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(UserId: null, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -371,7 +371,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -386,7 +386,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(user.Id.Value, WaistEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WaistEntry.NotFound", result.Error.Code);
     }
 
@@ -408,7 +408,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WaistEntry.AlreadyExists", result.Error.Code);
     }
 
@@ -426,7 +426,7 @@ public class WaistEntriesFeatureTests {
             new UpdateWaistEntryCommand(user.Id.Value, entry.Id.Value, dateOnly, 81),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(expectedDate, entry.Date);
     }
@@ -443,7 +443,7 @@ public class WaistEntriesFeatureTests {
             new GetWaistEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -458,7 +458,7 @@ public class WaistEntriesFeatureTests {
             new CreateWaistEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(repository.AddedEntry);
     }
@@ -471,7 +471,7 @@ public class WaistEntriesFeatureTests {
 
         Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -485,7 +485,7 @@ public class WaistEntriesFeatureTests {
 
         Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -500,7 +500,7 @@ public class WaistEntriesFeatureTests {
 
         Result<WaistEntryModel?> result = await handler.Handle(new GetLatestWaistEntryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
         Assert.Equal(81, result.Value.Circumference);

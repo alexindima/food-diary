@@ -84,7 +84,7 @@ public class CommonAbstractionsTests {
     public void ResultFailure_WithGenericType_ThrowsOnValueAccess() {
         var result = Result.Failure<string>(Errors.Validation.Required("name"));
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Throws<InvalidOperationException>(() => _ = result.Value);
     }
 
@@ -92,7 +92,7 @@ public class CommonAbstractionsTests {
     public void ResultGeneric_ImplicitValueConversion_ReturnsSuccessfulResult() {
         Result<string> result = "value";
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("value", result.Value);
     }
 
@@ -351,7 +351,7 @@ public class CommonAbstractionsTests {
 
         Result<string> result = await behavior.Handle(command, _ => Task.FromResult(Result.Success("ok")), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -363,7 +363,7 @@ public class CommonAbstractionsTests {
 
         Result result = await behavior.Handle(command, _ => Task.FromResult(Result.Success()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Required", result.Error.Code);
     }
 

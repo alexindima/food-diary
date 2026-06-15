@@ -46,7 +46,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("text/csv", result.Value.ContentType);
         Assert.Contains("food-diary-", result.Value.FileName, StringComparison.Ordinal);
         Assert.EndsWith(".csv", result.Value.FileName, StringComparison.Ordinal);
@@ -64,7 +64,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("application/pdf", result.Value.ContentType);
         Assert.EndsWith(".pdf", result.Value.FileName, StringComparison.Ordinal);
         (string? locale, int? timeZoneOffsetMinutes, string? reportOrigin) = getPdfCall();
@@ -83,7 +83,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(getPdfCall().ReportOrigin);
     }
 
@@ -99,7 +99,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Pdf),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         (DateTime? dateFrom, DateTime? dateTo) = getLastPeriod();
         Assert.Equal(localDayStartUtc, dateFrom);
         Assert.Equal(localDayEndUtc, dateTo);
@@ -119,7 +119,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("inside period", content, StringComparison.Ordinal);
         Assert.DoesNotContain("outside before", content, StringComparison.Ordinal);
@@ -138,7 +138,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc, ExportFormat.Csv, TimeZoneOffsetMinutes: 240),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
@@ -157,7 +157,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, localDayStartUtc, localDayEndUtc),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Contains("food-diary-2026-05-04-to-2026-05-04.csv", result.Value.FileName, StringComparison.Ordinal);
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("2026-05-04,Breakfast", content, StringComparison.Ordinal);
@@ -172,7 +172,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
         Assert.Contains("Date,MealType,Calories", content, StringComparison.Ordinal);
     }
@@ -185,7 +185,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(UserId: null, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -197,7 +197,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate.AddDays(1), TestDate),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -210,7 +210,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(367)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -227,7 +227,7 @@ public class ExportFeatureTests {
             new ExportDiaryQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -245,7 +245,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("text/csv", result.Value.ContentType);
         Assert.EndsWith(".csv", result.Value.FileName, StringComparison.Ordinal);
         string content = System.Text.Encoding.UTF8.GetString(result.Value.Content);
@@ -271,7 +271,7 @@ public class ExportFeatureTests {
                 TimeZoneOffsetMinutes: 240),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Contains("cycle-tracking-2026-05-04-to-2026-05-05.csv", result.Value.FileName, StringComparison.Ordinal);
     }
 
@@ -284,7 +284,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Cycle.NotFound", result.Error.Code);
     }
 
@@ -296,7 +296,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -312,7 +312,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -325,7 +325,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(userId.Value, TestDate.AddDays(1), TestDate),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -338,7 +338,7 @@ public class ExportFeatureTests {
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(367)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 

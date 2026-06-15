@@ -30,7 +30,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(favoriteRepository.AddedFavorite);
         Assert.Equal(recipe.Id.Value, result.Value.RecipeId);
         Assert.Equal("Tomato Soup", result.Value.RecipeName);
@@ -49,7 +49,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(user.Id.Value, Guid.NewGuid(), "Missing"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Recipe.NotFound", result.Error.Code);
     }
 
@@ -68,7 +68,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Again"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("FavoriteRecipe.AlreadyExists", result.Error.Code);
     }
 
@@ -83,7 +83,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid(), "Invalid"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -101,7 +101,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -117,7 +117,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new AddFavoriteRecipeCommand(Guid.NewGuid(), recipe.Id.Value, "Dinner"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -133,7 +133,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Single(result.Value);
         Assert.Equal("Chicken Soup", result.Value[0].RecipeName);
     }
@@ -146,7 +146,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -160,7 +160,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -172,7 +172,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -187,7 +187,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(result.Value);
     }
 
@@ -203,7 +203,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -217,7 +217,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new IsRecipeFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -231,7 +231,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new IsRecipeFavoriteQuery(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -248,7 +248,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.DeleteCalled);
     }
 
@@ -262,7 +262,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new RemoveFavoriteRecipeCommand(user.Id.Value, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("FavoriteRecipe.NotFound", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -278,7 +278,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new RemoveFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -297,7 +297,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }
@@ -315,7 +315,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
             new RemoveFavoriteRecipeCommand(userId, favorite.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
         Assert.False(repository.DeleteCalled);
     }

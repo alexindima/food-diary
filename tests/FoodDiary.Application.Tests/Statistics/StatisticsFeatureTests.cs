@@ -31,7 +31,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -42,7 +42,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -56,7 +56,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(0, bucket.TotalCalories);
         Assert.Equal(0, bucket.TotalProteins);
@@ -75,7 +75,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -91,7 +91,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(1000, bucket.TotalCalories);
         Assert.Equal(100, bucket.TotalProteins);
@@ -118,7 +118,7 @@ public class StatisticsFeatureTests {
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AggregatedStatisticsModel bucket = Assert.Single(result.Value);
         Assert.Equal(localDayStartUtc, bucket.DateFrom);
         Assert.Equal(localDayEndUtc, bucket.DateTo);

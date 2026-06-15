@@ -56,7 +56,7 @@ public class WeightEntriesFeatureTests {
             new CreateWeightEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -73,7 +73,7 @@ public class WeightEntriesFeatureTests {
             new CreateWeightEntryCommand(userId.Value, localDate, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(DateTimeKind.Utc, repository.LastGetByDateDate.Kind);
     }
@@ -90,7 +90,7 @@ public class WeightEntriesFeatureTests {
             new CreateWeightEntryCommand(user.Id.Value, dateOnly, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(expectedDate, repository.AddedEntry?.Date);
     }
@@ -104,7 +104,7 @@ public class WeightEntriesFeatureTests {
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -118,7 +118,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightSummariesQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -132,7 +132,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -148,7 +148,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightSummariesQuery(user.Id.Value, from, to, 1),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateFrom);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), repository.LastPeriodDateTo);
     }
@@ -169,7 +169,7 @@ public class WeightEntriesFeatureTests {
                 7),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         WeightEntrySummaryModel summary = Assert.Single(result.Value);
         Assert.Equal(new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), summary.StartDate);
         Assert.Equal(new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), summary.EndDate);
@@ -188,7 +188,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -202,7 +202,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightEntriesQuery(Guid.Empty, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -218,7 +218,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightEntriesQuery(user.Id.Value, from, to, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateFrom);
         Assert.Equal(new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Utc), repository.LastEntriesDateTo);
     }
@@ -242,7 +242,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Collection(
             result.Value,
             entry => {
@@ -265,7 +265,7 @@ public class WeightEntriesFeatureTests {
             new DeleteWeightEntryCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WeightEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -280,7 +280,7 @@ public class WeightEntriesFeatureTests {
             new DeleteWeightEntryCommand(UserId: null, WeightEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -296,7 +296,7 @@ public class WeightEntriesFeatureTests {
             new DeleteWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -311,7 +311,7 @@ public class WeightEntriesFeatureTests {
             new DeleteWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WeightEntry.NotFound", result.Error.Code);
     }
 
@@ -326,7 +326,7 @@ public class WeightEntriesFeatureTests {
             new DeleteWeightEntryCommand(user.Id.Value, entry.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(await repository.GetByIdAsync(entry.Id, user.Id));
     }
 
@@ -344,7 +344,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(user.Id.Value, entry.Id.Value, dateOnly, 81),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedDate, repository.LastGetByDateDate);
         Assert.Equal(expectedDate, entry.Date);
     }
@@ -359,7 +359,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(UserId: null, WeightEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -375,7 +375,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -390,7 +390,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WeightEntry.NotFound", result.Error.Code);
     }
 
@@ -412,7 +412,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("WeightEntry.AlreadyExists", result.Error.Code);
     }
 
@@ -426,7 +426,7 @@ public class WeightEntriesFeatureTests {
             new UpdateWeightEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("WeightEntryId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -443,7 +443,7 @@ public class WeightEntriesFeatureTests {
             new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -458,7 +458,7 @@ public class WeightEntriesFeatureTests {
             new CreateWeightEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(repository.AddedEntry);
     }
@@ -471,7 +471,7 @@ public class WeightEntriesFeatureTests {
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -485,7 +485,7 @@ public class WeightEntriesFeatureTests {
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -500,7 +500,7 @@ public class WeightEntriesFeatureTests {
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value);
         Assert.Equal(latest.Id.Value, result.Value.Id);
         Assert.Equal(81, result.Value.Weight);

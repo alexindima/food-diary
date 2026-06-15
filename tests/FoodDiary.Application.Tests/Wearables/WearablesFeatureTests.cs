@@ -29,7 +29,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", state),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("Fitbit", result.Value.Provider);
         Assert.Equal("ext-user-123", result.Value.ExternalUserId);
         Assert.True(result.Value.IsActive);
@@ -46,7 +46,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(Guid.NewGuid(), "InvalidProvider", "code", "state"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -60,7 +60,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(Guid.Empty, "Fitbit", "code", "state"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -75,7 +75,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(Guid.NewGuid(), "Fitbit", "code", "state"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.ProviderNotConfigured", result.Error.Code);
     }
 
@@ -91,7 +91,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(userId.Value, "Fitbit", "bad-code", state),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AuthFailed", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -113,7 +113,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
     }
 
     [Fact]
@@ -135,7 +135,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(userId.Value, "Fitbit", "code", state),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(result.Value.IsActive);
         Assert.Equal("new-ext-user", result.Value.ExternalUserId);
         Assert.True(repo.UpdateCalled);
@@ -155,7 +155,7 @@ public class WearablesFeatureTests {
             new ConnectWearableCommand(userId.Value, "Fitbit", "auth-code", "tampered-state"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("InvalidState", result.Error.Code, StringComparison.Ordinal);
         Assert.Equal(0, client.ExchangeCodeCallCount);
     }
@@ -173,7 +173,7 @@ public class WearablesFeatureTests {
             new DisconnectWearableCommand(userId.Value, "Fitbit"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(connection.IsActive);
     }
 
@@ -185,7 +185,7 @@ public class WearablesFeatureTests {
             new DisconnectWearableCommand(Guid.NewGuid(), "Fitbit"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("NotConnected", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -197,7 +197,7 @@ public class WearablesFeatureTests {
             new DisconnectWearableCommand(Guid.NewGuid(), "Unknown"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -208,7 +208,7 @@ public class WearablesFeatureTests {
             new DisconnectWearableCommand(Guid.Empty, "Fitbit"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -222,7 +222,7 @@ public class WearablesFeatureTests {
             new GetWearableAuthUrlQuery(userId.Value, "Fitbit", "state-123"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("https://auth.example.com?state=Fitbit:state-123", result.Value);
     }
 
@@ -232,7 +232,7 @@ public class WearablesFeatureTests {
 
         Result<string> result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Fitbit", "state"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("ProviderNotConfigured", result.Error.Code, StringComparison.Ordinal);
     }
 
@@ -244,7 +244,7 @@ public class WearablesFeatureTests {
 
         Result<string> result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.Empty, "Fitbit", "state"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -256,7 +256,7 @@ public class WearablesFeatureTests {
 
         Result<string> result = await handler.Handle(new GetWearableAuthUrlQuery(Guid.NewGuid(), "Unknown", "state"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.InvalidProvider", result.Error.Code);
     }
 
@@ -268,7 +268,7 @@ public class WearablesFeatureTests {
             new GetWearableDailySummaryQuery(Guid.Empty, DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -283,7 +283,7 @@ public class WearablesFeatureTests {
 
         Result<WearableDailySummaryModel> result = await handler.Handle(new GetWearableDailySummaryQuery(userId.Value, date), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(date.Date, result.Value.Date);
         Assert.Equal(1000, result.Value.Steps);
         Assert.Equal(75, result.Value.CaloriesBurned);
@@ -295,7 +295,7 @@ public class WearablesFeatureTests {
 
         Result<IReadOnlyList<WearableConnectionModel>> result = await handler.Handle(new GetWearableConnectionsQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -315,7 +315,7 @@ public class WearablesFeatureTests {
 
         Result<IReadOnlyList<WearableConnectionModel>> result = await handler.Handle(new GetWearableConnectionsQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         WearableConnectionModel model = Assert.Single(result.Value);
         Assert.Equal("Fitbit", model.Provider);
         Assert.Equal("external", model.ExternalUserId);
@@ -343,7 +343,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(5000, result.Value.Steps);
         Assert.Equal(250, result.Value.CaloriesBurned);
         Assert.Equal(2, syncRepository.AddedCount);
@@ -361,7 +361,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(Guid.Empty, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -376,7 +376,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(Guid.NewGuid(), "Unknown", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.InvalidProvider", result.Error.Code);
     }
 
@@ -391,7 +391,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(Guid.NewGuid(), "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.NotConnected", result.Error.Code);
     }
 
@@ -412,7 +412,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.NotConnected", result.Error.Code);
     }
 
@@ -432,7 +432,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Wearable.ProviderNotConfigured", result.Error.Code);
     }
 
@@ -453,7 +453,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("new-access", connection.AccessToken);
         Assert.Equal("new-refresh", connection.RefreshToken);
         Assert.Equal(2, connectionRepository.UpdateCallCount);
@@ -482,7 +482,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", date),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(72, result.Value.HeartRate);
         Assert.Equal(20, result.Value.ActiveMinutes);
         Assert.Equal(420, result.Value.SleepMinutes);
@@ -506,7 +506,7 @@ public class WearablesFeatureTests {
             new SyncWearableDataCommand(userId.Value, "Fitbit", DateTime.UtcNow.Date),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Contains("AuthFailed", result.Error.Code, StringComparison.Ordinal);
         Assert.False(connection.IsActive);
         Assert.True(connectionRepository.UpdateCalled);

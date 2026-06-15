@@ -20,7 +20,7 @@ public class ImagesFeatureTests {
         var command = new GetImageUploadUrlCommand(Guid.Empty, "file.jpg", "image/jpeg", 100);
         Result<GetImageUploadUrlResult> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
     }
 
@@ -41,7 +41,7 @@ public class ImagesFeatureTests {
             new GetImageUploadUrlCommand(Guid.NewGuid(), fileName, contentType, fileSizeBytes),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
         Assert.Contains(expectedMessage, result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -57,7 +57,7 @@ public class ImagesFeatureTests {
             new GetImageUploadUrlCommand(Guid.NewGuid(), "photo.jpg", "image/jpeg", 1024),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("https://upload.example", result.Value.UploadUrl);
         Assert.Equal("https://cdn.example/file.jpg", result.Value.FileUrl);
         Assert.NotEqual(Guid.Empty, result.Value.AssetId);
@@ -73,7 +73,7 @@ public class ImagesFeatureTests {
         var assetId = Guid.NewGuid();
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
     }
 
@@ -88,7 +88,7 @@ public class ImagesFeatureTests {
         var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService());
         Result result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -102,7 +102,7 @@ public class ImagesFeatureTests {
         var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService("storage_error"));
         Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.StorageError", result.Error.Code);
     }
 
@@ -121,7 +121,7 @@ public class ImagesFeatureTests {
         var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService(cleanupErrorCode));
         Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal(expectedErrorCode, result.Error.Code);
     }
 
@@ -133,7 +133,7 @@ public class ImagesFeatureTests {
 
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
         Assert.Contains("AssetId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -146,7 +146,7 @@ public class ImagesFeatureTests {
 
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -294,7 +294,7 @@ public class ImagesFeatureTests {
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.NotFound", result.Error.Code);
         Assert.Contains(assetId.Value.ToString(), result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -309,7 +309,7 @@ public class ImagesFeatureTests {
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(asset.Url, result.Value!.Url);
     }
 
@@ -323,7 +323,7 @@ public class ImagesFeatureTests {
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -339,7 +339,7 @@ public class ImagesFeatureTests {
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.InvalidData", result.Error.Code);
         Assert.Contains("upload has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }

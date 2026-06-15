@@ -109,7 +109,7 @@ public class UsersFeatureTests {
             new ChangePasswordCommand(Guid.Empty, "old", "new"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -124,7 +124,7 @@ public class UsersFeatureTests {
             new ChangePasswordCommand(user.Id.Value, "wrong-password", "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.InvalidPassword", result.Error.Code);
         Assert.Equal("old-hash", user.Password);
     }
@@ -141,7 +141,7 @@ public class UsersFeatureTests {
             new ChangePasswordCommand(user.Id.Value, "old-password", "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("new-password", user.Password);
         Assert.Same(user, repository.UpdatedUser);
     }
@@ -156,7 +156,7 @@ public class UsersFeatureTests {
 
         Result result = await handler.Handle(new DeleteUserCommand(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -171,7 +171,7 @@ public class UsersFeatureTests {
 
         Result result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(deletedAtUtc, user.DeletedAt);
         Assert.False(user.IsActive);
     }
@@ -187,7 +187,7 @@ public class UsersFeatureTests {
 
         Result result = await handler.Handle(new DeleteUserCommand(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -203,7 +203,7 @@ public class UsersFeatureTests {
             new ChangePasswordCommand(user.Id.Value, "hash", "new"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -218,7 +218,7 @@ public class UsersFeatureTests {
             new ChangePasswordCommand(user.Id.Value, "old", "new"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.PasswordNotSet", result.Error.Code);
     }
 
@@ -233,7 +233,7 @@ public class UsersFeatureTests {
             new SetPasswordCommand(user.Id.Value, "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.HasPassword);
         Assert.Equal("new-password", user.Password);
     }
@@ -249,7 +249,7 @@ public class UsersFeatureTests {
             new SetPasswordCommand(Guid.Empty, "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -265,7 +265,7 @@ public class UsersFeatureTests {
             new SetPasswordCommand(user.Id.Value, "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -280,7 +280,7 @@ public class UsersFeatureTests {
             new SetPasswordCommand(user.Id.Value, "new-password"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.PasswordAlreadySet", result.Error.Code);
     }
 
@@ -290,7 +290,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(UserId: null, "dark", UiStyle: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -302,7 +302,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", UiStyle: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -313,7 +313,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "invalid", UiStyle: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("theme", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -325,7 +325,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, Theme: null, "invalid"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("style", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -337,7 +337,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new UpdateUserAppearanceCommand(user.Id.Value, "dark", "modern"), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("dark", result.Value.Theme);
         Assert.Equal("modern", result.Value.UiStyle);
     }
@@ -348,7 +348,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(UserId: null, 75), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -360,7 +360,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(user.Id.Value, 75), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -371,7 +371,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new UpdateDesiredWeightCommand(user.Id.Value, 72.5), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(72.5, result.Value.DesiredWeight);
         Assert.Equal(72.5, user.DesiredWeight);
     }
@@ -382,7 +382,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new UpdateDesiredWaistCommand(Guid.Empty, 80), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -394,7 +394,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new UpdateDesiredWaistCommand(user.Id.Value, 80), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -405,7 +405,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new UpdateDesiredWaistCommand(user.Id.Value, 78.5), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(78.5, result.Value.DesiredWaist);
         Assert.Equal(78.5, user.DesiredWaist);
     }
@@ -418,7 +418,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new GetUserByIdQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -428,7 +428,7 @@ public class UsersFeatureTests {
 
         Result<UserModel> result = await handler.Handle(new GetUserByIdQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -449,7 +449,7 @@ public class UsersFeatureTests {
                 DesiredWaist: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -472,7 +472,7 @@ public class UsersFeatureTests {
                 DesiredWaist: 78),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2000, result.Value.DailyCalorieTarget);
         Assert.Equal(120, result.Value.ProteinTarget);
         Assert.Equal(72, result.Value.DesiredWeight);
@@ -497,7 +497,7 @@ public class UsersFeatureTests {
                 DesiredWaist: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -520,7 +520,7 @@ public class UsersFeatureTests {
                 MondayCalories: double.NaN),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -543,7 +543,7 @@ public class UsersFeatureTests {
                 DesiredWaist: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -571,7 +571,7 @@ public class UsersFeatureTests {
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(user.Email, result.Value.User.Email);
         Assert.Equal(user.PushNotificationsEnabled, result.Value.NotificationPreferences.PushNotificationsEnabled);
         Assert.Single(result.Value.WebPushSubscriptions);
@@ -593,7 +593,7 @@ public class UsersFeatureTests {
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -608,7 +608,7 @@ public class UsersFeatureTests {
 
         Result<ProfileOverviewModel> result = await handler.Handle(new GetProfileOverviewQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -634,7 +634,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -646,7 +646,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -658,7 +658,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWeightModel> result = await handler.Handle(new GetDesiredWeightQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(74.5, result.Value.DesiredWeight);
     }
 
@@ -676,7 +676,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -688,7 +688,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -700,7 +700,7 @@ public class UsersFeatureTests {
 
         Result<UserDesiredWaistModel> result = await handler.Handle(new GetDesiredWaistQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(79.5, result.Value.DesiredWaist);
     }
 
@@ -710,7 +710,7 @@ public class UsersFeatureTests {
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -722,7 +722,7 @@ public class UsersFeatureTests {
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -742,7 +742,7 @@ public class UsersFeatureTests {
 
         Result<GoalsModel> result = await handler.Handle(new GetUserGoalsQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2100, result.Value.DailyCalorieTarget);
         Assert.Equal(73, result.Value.DesiredWeight);
         Assert.Equal(78, result.Value.DesiredWaist);

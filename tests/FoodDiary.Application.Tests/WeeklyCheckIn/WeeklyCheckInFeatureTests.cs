@@ -24,7 +24,7 @@ public class WeeklyCheckInFeatureTests {
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(UserId: null), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -34,7 +34,7 @@ public class WeeklyCheckInFeatureTests {
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
     }
 
     [Fact]
@@ -48,7 +48,7 @@ public class WeeklyCheckInFeatureTests {
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(result.Value.ThisWeek);
         Assert.NotNull(result.Value.LastWeek);
         Assert.NotNull(result.Value.Trends);
@@ -66,7 +66,7 @@ public class WeeklyCheckInFeatureTests {
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(0, result.Value.ThisWeek.TotalCalories);
         Assert.Equal(0, result.Value.ThisWeek.MealsLogged);
     }

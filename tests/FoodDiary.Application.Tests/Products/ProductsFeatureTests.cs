@@ -84,7 +84,7 @@ public class ProductsFeatureTests {
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(query, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -126,7 +126,7 @@ public class ProductsFeatureTests {
             new GetProductsQuery(user.Id.Value, Page: 0, Limit: 0, Search: "ignored", IncludePublic: true, ProductTypes: ["fruit", "Fruit", "invalid"]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         ProductModel item = Assert.Single(result.Value.Data);
@@ -162,7 +162,7 @@ public class ProductsFeatureTests {
 
         Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -193,7 +193,7 @@ public class ProductsFeatureTests {
 
         Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
     }
@@ -228,7 +228,7 @@ public class ProductsFeatureTests {
                 Visibility: "Private"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -244,7 +244,7 @@ public class ProductsFeatureTests {
             CreateProductCommand(user.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -259,7 +259,7 @@ public class ProductsFeatureTests {
             CreateProductCommand(user.Id.Value, baseUnit: "Cup"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -274,7 +274,7 @@ public class ProductsFeatureTests {
             CreateProductCommand(user.Id.Value, visibility: "Shared"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -289,7 +289,7 @@ public class ProductsFeatureTests {
             CreateProductCommand(user.Id.Value, productType: "999"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -305,7 +305,7 @@ public class ProductsFeatureTests {
             new DeleteProductCommand(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -323,7 +323,7 @@ public class ProductsFeatureTests {
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -340,7 +340,7 @@ public class ProductsFeatureTests {
             new DeleteProductCommand(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
@@ -369,7 +369,7 @@ public class ProductsFeatureTests {
 
         Result result = await handler.Handle(new DeleteProductCommand(userId.Value, product.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.GetByIdForUpdateCalled);
         Assert.True(repository.DeleteCalled);
         Assert.Equal([assetId], cleanup.RequestedAssetIds);
@@ -386,7 +386,7 @@ public class ProductsFeatureTests {
             new DeleteProductCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -399,7 +399,7 @@ public class ProductsFeatureTests {
             new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -414,7 +414,7 @@ public class ProductsFeatureTests {
             new GetProductByIdQuery(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -430,7 +430,7 @@ public class ProductsFeatureTests {
             new GetProductByIdQuery(user.Id.Value, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -442,7 +442,7 @@ public class ProductsFeatureTests {
             new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -455,7 +455,7 @@ public class ProductsFeatureTests {
             new DuplicateProductCommand(UserId: null, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -467,7 +467,7 @@ public class ProductsFeatureTests {
             new DuplicateProductCommand(Guid.NewGuid(), ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotFound", result.Error.Code);
     }
 
@@ -527,7 +527,7 @@ public class ProductsFeatureTests {
 
         Result<ProductModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.GetByIdForUpdateCalled);
         Assert.True(repository.UpdateCalled);
         Assert.Equal(newAssetId, product.ImageAssetId);
@@ -573,7 +573,7 @@ public class ProductsFeatureTests {
             CreateFullProductUpdateCommand(user.Id.Value, product.Id.Value, newAssetId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.UpdateCalled);
         Assert.Equal("Updated apple", result.Value.Name);
         Assert.Equal("222", result.Value.Barcode);
@@ -646,7 +646,7 @@ public class ProductsFeatureTests {
                 Visibility: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ImageAssetId", result.Error.Message, StringComparison.Ordinal);
     }
@@ -691,7 +691,7 @@ public class ProductsFeatureTests {
                 Visibility: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ProductId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -751,7 +751,7 @@ public class ProductsFeatureTests {
                 Visibility: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.False(repository.UpdateCalled);
     }
@@ -768,7 +768,7 @@ public class ProductsFeatureTests {
             CreateUpdateProductCommand(userId: null, ProductId.New().Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -785,7 +785,7 @@ public class ProductsFeatureTests {
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, baseUnit: "Cup"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("BaseUnit", result.Error.Message, StringComparison.Ordinal);
     }
@@ -803,7 +803,7 @@ public class ProductsFeatureTests {
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, visibility: "Hidden"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Visibility", result.Error.Message, StringComparison.Ordinal);
     }
@@ -822,7 +822,7 @@ public class ProductsFeatureTests {
             CreateUpdateProductCommand(user.Id.Value, productId.Value, name: "Updated"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Product.NotAccessible", result.Error.Code);
     }
 
@@ -841,7 +841,7 @@ public class ProductsFeatureTests {
             CreateUpdateProductCommand(user.Id.Value, ProductId.New().Value, imageAssetId: Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
     }
 
@@ -855,7 +855,7 @@ public class ProductsFeatureTests {
             new GetProductsQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
@@ -889,7 +889,7 @@ public class ProductsFeatureTests {
                 "Private"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedProduct);
         Assert.Equal("Apple", repository.LastAddedProduct.Name);
         Assert.Equal("Farm", repository.LastAddedProduct.Brand);
@@ -930,7 +930,7 @@ public class ProductsFeatureTests {
                 Visibility: "Private"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal([assetId], access.RequestedAssetIds);
         Assert.Equal("https://cdn.test/assets/product.webp", repository.LastAddedProduct!.ImageUrl);
         Assert.Equal(assetId, repository.LastAddedProduct.ImageAssetId);
@@ -968,7 +968,7 @@ public class ProductsFeatureTests {
                 Visibility: "Private"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Image.Forbidden", result.Error.Code);
         Assert.Null(repository.LastAddedProduct);
     }
@@ -996,7 +996,7 @@ public class ProductsFeatureTests {
 
         Result<ProductModel> result = await handler.Handle(new GetProductByIdQuery(user.Id.Value, product.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(product.Id.Value, result.Value.Id);
         Assert.Equal(3, result.Value.UsageCount);
         Assert.True(result.Value.IsOwnedByCurrentUser);
@@ -1032,7 +1032,7 @@ public class ProductsFeatureTests {
 
         Result<ProductModel> result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.NotNull(repository.LastAddedProduct);
         Assert.NotEqual(original.Id, repository.LastAddedProduct.Id);
         Assert.Equal(original.Name, repository.LastAddedProduct.Name);
@@ -1096,7 +1096,7 @@ public class ProductsFeatureTests {
                 Visibility: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(repository.GetByIdForUpdateCalled);
         Assert.False(repository.UpdateCalled);
         Assert.Empty(cleanup.RequestedAssetIds);
@@ -1150,7 +1150,7 @@ public class ProductsFeatureTests {
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.AllProducts.Data.Count);
         Assert.Single(result.Value.RecentItems);
         Assert.Single(result.Value.FavoriteItems);
@@ -1189,7 +1189,7 @@ public class ProductsFeatureTests {
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentProductsCallCount);
     }
@@ -1205,7 +1205,7 @@ public class ProductsFeatureTests {
             new GetProductsOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1235,7 +1235,7 @@ public class ProductsFeatureTests {
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
     }
@@ -1286,7 +1286,7 @@ public class ProductsFeatureTests {
                 ProductTypes: ["dairy", "Dairy", "not-a-type"]),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         ProductModel item = Assert.Single(result.Value.AllProducts.Data);
         Assert.Equal(dairy.Id.Value, item.Id);
         Assert.Equal(ProductType.Dairy.ToString(), item.ProductType);
@@ -1298,7 +1298,7 @@ public class ProductsFeatureTests {
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
@@ -1310,7 +1310,7 @@ public class ProductsFeatureTests {
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(result.Value);
         Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
     }
@@ -1359,7 +1359,7 @@ public class ProductsFeatureTests {
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal([publicProduct.Id.Value, owned.Id.Value], [.. result.Value.Select(x => x.Id)]);
         Assert.False(result.Value[0].IsOwnedByCurrentUser);

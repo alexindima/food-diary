@@ -18,7 +18,6 @@ public sealed class FastingNotificationHostedServiceTests {
             NullLogger<FastingNotificationHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
-        await Task.Delay(100);
         await service.StopAsync(CancellationToken.None);
 
         Assert.Equal(0, scheduler.CallCount);
@@ -92,8 +91,10 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                completion.Task,
+                TimeSpan.FromSeconds(3),
+                "Fasting notification scheduler was not called before the timeout.").ConfigureAwait(false);
         }
     }
 
@@ -111,8 +112,10 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                completion.Task,
+                TimeSpan.FromSeconds(3),
+                "Canceling fasting notification scheduler was not called before the timeout.").ConfigureAwait(false);
         }
     }
 
@@ -129,8 +132,10 @@ public sealed class FastingNotificationHostedServiceTests {
         }
 
         public async Task WaitAsync() {
-            Task finished = await Task.WhenAny(completion.Task, Task.Delay(TimeSpan.FromSeconds(3))).ConfigureAwait(false);
-            Assert.Same(completion.Task, finished);
+            await AsyncTestAwaiter.WaitAsync(
+                completion.Task,
+                TimeSpan.FromSeconds(3),
+                "Throwing fasting notification scheduler was not called before the timeout.").ConfigureAwait(false);
         }
     }
 }

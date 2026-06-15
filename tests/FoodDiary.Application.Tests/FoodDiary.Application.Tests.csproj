@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Using Include="FoodDiary.Application.Tests" />
     <Using Include="NSubstitute" />
     <Using Include="Xunit" />
   </ItemGroup>

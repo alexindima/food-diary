@@ -33,7 +33,7 @@ public sealed class UserLoginActivityFeatureTests {
             new GetAdminUserLoginEventsQuery(Page: 0, Limit: 500, UserId: null, Search: "chrome"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, getLastPaged().Page);
         Assert.Equal(20, getLastPaged().Limit);
         Assert.Equal("chrome", getLastPaged().Search);
@@ -65,7 +65,7 @@ public sealed class UserLoginActivityFeatureTests {
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("2001:0db8:85a3:0000:0000", Assert.Single(result.Value.Data).MaskedIpAddress);
     }
 
@@ -92,7 +92,7 @@ public sealed class UserLoginActivityFeatureTests {
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Null(Assert.Single(result.Value.Data).MaskedIpAddress);
     }
 
@@ -109,7 +109,7 @@ public sealed class UserLoginActivityFeatureTests {
 
         Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>> result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(fromUtc, getLastSummary().FromUtc);
         Assert.Equal(toUtc, getLastSummary().ToUtc);
         AdminUserLoginDeviceSummaryModel item = Assert.Single(result.Value);

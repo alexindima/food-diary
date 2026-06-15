@@ -83,7 +83,7 @@ public class AdminFeatureTests {
                 ToUtc: new DateTime(2026, 4, 30, 23, 59, 0, DateTimeKind.Utc)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(payment, Assert.Single(result.Value.Data));
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(20, result.Value.Limit);
@@ -107,7 +107,7 @@ public class AdminFeatureTests {
             new GetAdminBillingPaymentsQuery(1, 20, provider, Status: null, Kind: null, Search: null, FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(expectedProvider, repository.LastPaymentsFilter?.Provider);
     }
 
@@ -140,7 +140,7 @@ public class AdminFeatureTests {
             new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", Search: null, FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(subscription, Assert.Single(result.Value.Data));
         Assert.Equal("YooKassa", repository.LastSubscriptionsFilter?.Provider);
         Assert.Equal("active", repository.LastSubscriptionsFilter?.Status);
@@ -168,7 +168,7 @@ public class AdminFeatureTests {
             new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", FromUtc: null, ToUtc: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(webhookEvent, Assert.Single(result.Value.Data));
         Assert.Equal("Paddle", repository.LastWebhookEventsFilter?.Provider);
         Assert.Equal("processed", repository.LastWebhookEventsFilter?.Status);
@@ -209,7 +209,7 @@ public class AdminFeatureTests {
 
         Result<AdminUserModel> result = await handler.Handle(command, CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("roles", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -233,7 +233,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("UserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -255,7 +255,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -276,7 +276,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("language", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -298,7 +298,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Unknown role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -325,7 +325,7 @@ public class AdminFeatureTests {
 
         string[] afterRoles = [.. user.UserRoles.Select(r => r.Role.Name).OrderBy(x => x, StringComparer.Ordinal)];
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(beforeRoles, afterRoles);
     }
 
@@ -348,7 +348,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Empty(user.UserRoles);
     }
 
@@ -371,7 +371,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal([RoleNames.Admin], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
@@ -396,7 +396,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
@@ -421,7 +421,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner and Admin", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal([RoleNames.Admin, RoleNames.Owner], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
@@ -446,7 +446,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(
             [RoleNames.Admin, RoleNames.Owner, RoleNames.Support],
             [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
@@ -471,7 +471,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("Owner user", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.True(user.IsActive);
@@ -497,7 +497,7 @@ public class AdminFeatureTests {
                 ActorUserId: user.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("own Admin role", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.Equal([RoleNames.Admin, RoleNames.Premium], [.. user.GetRoleNames().OrderBy(name => name, StringComparer.Ordinal)]);
@@ -523,7 +523,7 @@ public class AdminFeatureTests {
                 ActorUserId: user.Id.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("own account", result.Error.Message, StringComparison.OrdinalIgnoreCase);
         Assert.True(user.IsActive);
@@ -549,7 +549,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
     }
 
@@ -578,7 +578,7 @@ public class AdminFeatureTests {
                 ActorUserId: actorUserId.Value),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Collection(
             userRepository.RoleAuditEvents.OrderBy(auditEvent => auditEvent.RoleName, StringComparer.Ordinal),
             auditEvent => {
@@ -620,7 +620,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: 456),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(modifiedBefore, user.ModifiedOnUtc);
     }
 
@@ -644,7 +644,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("restore flow", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -667,7 +667,7 @@ public class AdminFeatureTests {
                 AiOutputTokenLimit: null),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.True(user.IsActive);
     }
 
@@ -689,7 +689,7 @@ public class AdminFeatureTests {
                 ActorUserId: Guid.NewGuid()),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.False(user.IsActive);
     }
 
@@ -709,7 +709,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
     }
 
@@ -728,7 +728,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("ActorUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -748,7 +748,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("TargetUserId", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -770,7 +770,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Authentication.ImpersonationForbidden", result.Error.Code);
         Assert.Equal(0, sessionRepository.AddCallCount);
     }
@@ -789,7 +789,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -809,7 +809,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -829,7 +829,7 @@ public class AdminFeatureTests {
                 "Test"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("impersonation-token", result.Value.AccessToken);
         Assert.Equal(target.Id.Value, result.Value.TargetUserId);
         Assert.Equal(actor.Id.Value, result.Value.ActorUserId);
@@ -870,7 +870,7 @@ public class AdminFeatureTests {
                 IsActive: true),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Contains("supported codes", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
@@ -889,7 +889,7 @@ public class AdminFeatureTests {
                 IsActive: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("verify_email", result.Value.Key);
         Assert.Equal("en", result.Value.Locale);
         Assert.Equal("Subject", result.Value.Subject);
@@ -915,7 +915,7 @@ public class AdminFeatureTests {
                 TextBody: "{{clientName}} on {{brand}}: {{link}}"),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("admin@example.com", transport.ToEmail);
         Assert.Equal("Hello Alex Johnson", transport.Subject);
         Assert.Equal("<a href=\"https://fooddiary.club/dietologist/accept?invitationId=demo&token=demo\">FoodDiary</a>", transport.Body);
@@ -933,7 +933,7 @@ public class AdminFeatureTests {
             new UpsertAdminAiPromptCommand(" Meal_Summary ", " EN ", " Prompt text ", IsActive: true),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal("meal_summary", result.Value.Key);
         Assert.Equal("en", result.Value.Locale);
         Assert.Equal("Prompt text", result.Value.PromptText);
@@ -951,7 +951,7 @@ public class AdminFeatureTests {
             new UpsertAdminAiPromptCommand("MEAL_SUMMARY", "EN", "New prompt", IsActive: false),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(template.Id.Value, result.Value.Id);
         Assert.Equal("New prompt", result.Value.PromptText);
         Assert.False(result.Value.IsActive);
@@ -966,7 +966,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminAiPromptModel>> result = await handler.Handle(new GetAdminAiPromptsQuery(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AdminAiPromptModel model = Assert.Single(result.Value);
         Assert.Equal(template.Id.Value, model.Id);
         Assert.Equal("meal_summary", model.Key);
@@ -1012,7 +1012,7 @@ public class AdminFeatureTests {
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 4, 1), new DateOnly(2026, 3, 1)),
             CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
         Assert.Equal(default, repository.LastFromUtc);
         Assert.Equal(default, repository.LastToUtc);
@@ -1026,7 +1026,7 @@ public class AdminFeatureTests {
 
         Result<AdminAiUsageSummaryModel> result = await handler.Handle(new GetAdminAiUsageSummaryQuery(From: null, To: null), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(new DateTime(2026, 2, 25, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
         Assert.Equal(new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastToUtc);
     }
@@ -1050,7 +1050,7 @@ public class AdminFeatureTests {
             new GetAdminAiUsageSummaryQuery(new DateOnly(2026, 3, 1), new DateOnly(2026, 3, 31)),
             CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(100, result.Value.TotalTokens);
         AdminAiUsageDailyModel daily = Assert.Single(result.Value.ByDay);
         Assert.Equal(new DateOnly(2026, 3, 26), daily.Date);
@@ -1069,7 +1069,7 @@ public class AdminFeatureTests {
 
         Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(Guid.Empty), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -1080,7 +1080,7 @@ public class AdminFeatureTests {
 
         Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(Guid.NewGuid()), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -1091,7 +1091,7 @@ public class AdminFeatureTests {
 
         Result<AdminUserModel> result = await handler.Handle(new GetAdminUserQuery(user.Id.Value), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(user.Id.Value, result.Value.Id);
         Assert.Equal("admin@example.com", result.Value.Email);
         Assert.Contains(RoleNames.Admin, result.Value.Roles);
@@ -1113,7 +1113,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminMailInboxMessageSummaryModel>> result = await handler.Handle(new GetAdminMailInboxMessagesQuery(25), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(message, Assert.Single(result.Value));
         Assert.Equal(25, reader.LastLimit);
     }
@@ -1125,7 +1125,7 @@ public class AdminFeatureTests {
 
         Result<AdminMailInboxMessageDetailsModel> result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(messageId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
     }
 
@@ -1149,7 +1149,7 @@ public class AdminFeatureTests {
 
         Result<AdminMailInboxMessageDetailsModel> result = await handler.Handle(new GetAdminMailInboxMessageDetailsQuery(message.Id), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(message, result.Value);
         Assert.Equal(message.Id, reader.LastMessageId);
     }
@@ -1164,7 +1164,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new MarkAdminMailInboxMessageReadCommand(messageId), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(messageId, reader.LastReadMessageId);
     }
 
@@ -1175,7 +1175,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new MarkAdminMailInboxMessageReadCommand(messageId), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("MailInbox.MessageNotFound", result.Error.Code);
     }
 
@@ -1188,7 +1188,7 @@ public class AdminFeatureTests {
 
         Result<AdminDashboardSummaryModel> result = await handler.Handle(new GetAdminDashboardSummaryQuery(2), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(12, result.Value.TotalUsers);
         Assert.Equal(10, result.Value.ActiveUsers);
         Assert.Equal(3, result.Value.PremiumUsers);
@@ -1211,7 +1211,7 @@ public class AdminFeatureTests {
 
         Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("Dismissed", 0, 0), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(1, result.Value.Limit);
         Assert.Equal(ReportStatus.Dismissed, repository.LastStatus);
@@ -1228,7 +1228,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new ReviewContentReportCommand(reportId, "handled"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
     }
 
@@ -1244,7 +1244,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new ReviewContentReportCommand(report.Id.Value, "  verified  "), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(ReportStatus.Reviewed, report.Status);
         Assert.Equal("verified", report.AdminNote);
         Assert.Equal(1, repository.UpdateCallCount);
@@ -1257,7 +1257,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new DismissContentReportCommand(reportId, "duplicate"), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("ContentReport.NotFound", result.Error.Code);
     }
 
@@ -1273,7 +1273,7 @@ public class AdminFeatureTests {
 
         Result result = await handler.Handle(new DismissContentReportCommand(report.Id.Value, "  duplicate  "), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(ReportStatus.Dismissed, report.Status);
         Assert.Equal("duplicate", report.AdminNote);
         Assert.Equal(1, repository.UpdateCallCount);
@@ -1292,7 +1292,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminEmailTemplateModel>> result = await handler.Handle(new GetAdminEmailTemplatesQuery(), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         AdminEmailTemplateModel model = Assert.Single(result.Value);
         Assert.Equal(template.Id, model.Id);
         Assert.Equal("verify_email", model.Key);
@@ -1319,7 +1319,7 @@ public class AdminFeatureTests {
 
         Result<PagedResponse<AdminImpersonationSessionReadModel>> result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(session, Assert.Single(result.Value.Data));
         Assert.Equal(1, result.Value.Page);
         Assert.Equal(20, result.Value.Limit);
@@ -1335,7 +1335,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
@@ -1347,7 +1347,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
 
-        Assert.True(result.IsFailure);
+        ResultAssert.Failure(result);
         Assert.Equal("User.NotFound", result.Error.Code);
     }
 
@@ -1370,7 +1370,7 @@ public class AdminFeatureTests {
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
 
-        Assert.True(result.IsSuccess);
+        ResultAssert.Success(result);
         Assert.Equal(auditEvent, Assert.Single(result.Value));
         Assert.Equal(50, repository.LastLimit);
     }
