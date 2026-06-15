@@ -258,7 +258,8 @@
     }
 
     &__user-menu {
-        padding: var(--fd-space-xxs);
+        gap: var(--fd-space-sidebar-user-menu-gap);
+        padding: var(--fd-space-sidebar-user-menu-padding);
         border-radius: var(--fd-radius-panel);
         background: linear-gradient(
             180deg,
@@ -354,8 +355,8 @@
     right: 0;
     bottom: 0;
     display: none;
-    gap: var(--fd-space-xs);
-    padding: var(--fd-space-xs) var(--fd-space-sm) calc(var(--fd-space-xs) + env(safe-area-inset-bottom));
+    gap: var(--fd-space-sidebar-mobile-nav-gap);
+    padding: var(--fd-space-sidebar-mobile-nav-padding);
     background: var(--fd-bg-surface);
     border-top: var(--fd-border-default);
     box-shadow: var(--fd-shadow-xl);
@@ -382,7 +383,7 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: var(--fd-space-xs);
+        gap: var(--fd-space-sidebar-mobile-nav-gap);
     }
 
     &__progress-title,
@@ -424,7 +425,7 @@
         justify-content: center;
         gap: var(--fd-space-xxs);
         padding: var(--fd-space-xxs);
-        border-radius: var(--fd-radius-lg);
+        border-radius: var(--fd-radius-button);
         text-decoration: none;
         transition:
             background 0.2s ease,
@@ -495,14 +496,14 @@
     }
 
     &__sheet {
-        --sidebar-mobile-sheet-gap: var(--fd-space-xxs);
+        --sidebar-mobile-sheet-gap: var(--fd-space-sidebar-mobile-sheet-gap);
         position: absolute;
         left: var(--fd-space-sm);
         right: var(--fd-space-sm);
         bottom: calc(100% + var(--fd-space-xs));
         background: var(--fd-bg-surface);
         border-radius: var(--fd-radius-dialog);
-        padding: var(--fd-space-xs);
+        padding: var(--fd-space-sidebar-mobile-sheet-padding);
         box-shadow: var(--fd-shadow-xl);
         border: var(--fd-border-default);
         display: grid;

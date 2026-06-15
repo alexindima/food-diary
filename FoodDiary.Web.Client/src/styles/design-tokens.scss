@@ -739,6 +739,9 @@ $fd-theme-design-tokens: (
             card-profile-gap: 18px,
             card-profile-padding: 20px 22px 24px,
             card-profile-padding-mobile: 16px,
+            dashboard-grid-gap: clamp(16px, 3vw, 24px),
+            dashboard-column-gap: clamp(16px, 3vw, 24px),
+            dashboard-aside-gap: clamp(16px, 3vw, 24px),
             actions-gap: fd-token(spacing, sm),
             page-section-gap: clamp(24px, 4vw, 40px),
             page-body-bottom-padding: clamp(12px, 2vw, 20px),
@@ -752,6 +755,23 @@ $fd-theme-design-tokens: (
             menu-item-padding: calc(fd-token(spacing, xs) + fd-token(spacing, micro)) fd-token(spacing, sm),
             menu-item-min-height: 38px,
             menu-divider-margin: fd-token(spacing, xs) 0,
+            sidebar-shell-gap: fd-token(spacing, md),
+            sidebar-brand-gap: fd-token(spacing, xs),
+            sidebar-section-padding-top: fd-token(spacing, sm),
+            sidebar-section-header-gap: fd-token(spacing, xs),
+            sidebar-section-header-padding: fd-token(spacing, xs) fd-token(spacing, xxs),
+            sidebar-nav-gap: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)),
+            sidebar-nav-margin-top: fd-token(spacing, xs),
+            sidebar-link-gap: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
+            sidebar-link-padding: calc(fd-token(spacing, xs) + fd-token(spacing, micro)) fd-token(spacing, sm),
+            sidebar-link-secondary-padding: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
+            sidebar-user-menu-gap: fd-token(spacing, xs),
+            sidebar-user-menu-padding: fd-token(spacing, xs),
+            sidebar-mobile-nav-gap: fd-token(spacing, xs),
+            sidebar-mobile-nav-padding: fd-token(spacing, xs) fd-token(spacing, sm)
+                calc(fd-token(spacing, xs) + env(safe-area-inset-bottom)),
+            sidebar-mobile-sheet-gap: fd-token(spacing, xs),
+            sidebar-mobile-sheet-padding: fd-token(spacing, xs),
             surface-padding: 14px 16px,
             surface-emphasis-padding: 16px 18px,
             stat-tile-padding: 16px,
@@ -875,11 +895,14 @@ $fd-theme-design-tokens: (
             card-profile-gap: 14px,
             card-profile-padding: 16px 18px 20px,
             card-profile-padding-mobile: 14px,
-            actions-gap: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
-            page-section-gap: clamp(16px, 3vw, 28px),
+            dashboard-grid-gap: clamp(14px, 2vw, 18px),
+            dashboard-column-gap: clamp(12px, 1.8vw, 16px),
+            dashboard-aside-gap: clamp(12px, 1.8vw, 16px),
+            actions-gap: fd-token(spacing, xs),
+            page-section-gap: clamp(16px, 2.5vw, 24px),
             page-body-bottom-padding: clamp(8px, 1.5vw, 16px),
             page-header-gap: clamp(8px, 1.6vw, 12px),
-            page-header-actions-gap: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
+            page-header-actions-gap: fd-token(spacing, xs),
             page-header-mobile-column-gap: fd-token(spacing, xs),
             page-header-mobile-row-gap: 3px,
             menu-gap: fd-token(spacing, micro),
@@ -888,6 +911,23 @@ $fd-theme-design-tokens: (
             menu-item-padding: fd-token(spacing, xs) calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
             menu-item-min-height: 34px,
             menu-divider-margin: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)) 0,
+            sidebar-shell-gap: fd-token(spacing, sm),
+            sidebar-brand-gap: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)),
+            sidebar-section-padding-top: calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
+            sidebar-section-header-gap: fd-token(spacing, xs),
+            sidebar-section-header-padding: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)) fd-token(spacing, xxs),
+            sidebar-nav-gap: fd-token(spacing, micro),
+            sidebar-nav-margin-top: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)),
+            sidebar-link-gap: fd-token(spacing, xs),
+            sidebar-link-padding: fd-token(spacing, xs) calc(fd-token(spacing, xs) + fd-token(spacing, micro)),
+            sidebar-link-secondary-padding: fd-token(spacing, xs),
+            sidebar-user-menu-gap: fd-token(spacing, xxs),
+            sidebar-user-menu-padding: fd-token(spacing, xxs),
+            sidebar-mobile-nav-gap: calc(fd-token(spacing, xxs) + fd-token(spacing, micro)),
+            sidebar-mobile-nav-padding: fd-token(spacing, xxs) fd-token(spacing, xs)
+                calc(fd-token(spacing, xxs) + env(safe-area-inset-bottom)),
+            sidebar-mobile-sheet-gap: fd-token(spacing, xxs),
+            sidebar-mobile-sheet-padding: fd-token(spacing, xxs),
             surface-padding: 12px 14px,
             surface-emphasis-padding: 14px 16px,
             stat-tile-padding: 14px,
@@ -2018,6 +2058,9 @@ $fd-theme-design-tokens: (
         --fd-space-card-profile-gap: #{fd-ui-style-spacing-token($style, card-profile-gap)};
         --fd-space-card-profile-padding: #{fd-ui-style-spacing-token($style, card-profile-padding)};
         --fd-space-card-profile-padding-mobile: #{fd-ui-style-spacing-token($style, card-profile-padding-mobile)};
+        --fd-space-dashboard-grid-gap: #{fd-ui-style-spacing-token($style, dashboard-grid-gap)};
+        --fd-space-dashboard-column-gap: #{fd-ui-style-spacing-token($style, dashboard-column-gap)};
+        --fd-space-dashboard-aside-gap: #{fd-ui-style-spacing-token($style, dashboard-aside-gap)};
         --fd-space-actions-gap: #{fd-ui-style-spacing-token($style, actions-gap)};
         --fd-space-page-section-gap: #{fd-ui-style-spacing-token($style, page-section-gap)};
         --fd-space-page-body-bottom-padding: #{fd-ui-style-spacing-token($style, page-body-bottom-padding)};
@@ -2031,6 +2074,22 @@ $fd-theme-design-tokens: (
         --fd-space-menu-item-padding: #{fd-ui-style-spacing-token($style, menu-item-padding)};
         --fd-space-menu-item-min-height: #{fd-ui-style-spacing-token($style, menu-item-min-height)};
         --fd-space-menu-divider-margin: #{fd-ui-style-spacing-token($style, menu-divider-margin)};
+        --fd-space-sidebar-shell-gap: #{fd-ui-style-spacing-token($style, sidebar-shell-gap)};
+        --fd-space-sidebar-brand-gap: #{fd-ui-style-spacing-token($style, sidebar-brand-gap)};
+        --fd-space-sidebar-section-padding-top: #{fd-ui-style-spacing-token($style, sidebar-section-padding-top)};
+        --fd-space-sidebar-section-header-gap: #{fd-ui-style-spacing-token($style, sidebar-section-header-gap)};
+        --fd-space-sidebar-section-header-padding: #{fd-ui-style-spacing-token($style, sidebar-section-header-padding)};
+        --fd-space-sidebar-nav-gap: #{fd-ui-style-spacing-token($style, sidebar-nav-gap)};
+        --fd-space-sidebar-nav-margin-top: #{fd-ui-style-spacing-token($style, sidebar-nav-margin-top)};
+        --fd-space-sidebar-link-gap: #{fd-ui-style-spacing-token($style, sidebar-link-gap)};
+        --fd-space-sidebar-link-padding: #{fd-ui-style-spacing-token($style, sidebar-link-padding)};
+        --fd-space-sidebar-link-secondary-padding: #{fd-ui-style-spacing-token($style, sidebar-link-secondary-padding)};
+        --fd-space-sidebar-user-menu-gap: #{fd-ui-style-spacing-token($style, sidebar-user-menu-gap)};
+        --fd-space-sidebar-user-menu-padding: #{fd-ui-style-spacing-token($style, sidebar-user-menu-padding)};
+        --fd-space-sidebar-mobile-nav-gap: #{fd-ui-style-spacing-token($style, sidebar-mobile-nav-gap)};
+        --fd-space-sidebar-mobile-nav-padding: #{fd-ui-style-spacing-token($style, sidebar-mobile-nav-padding)};
+        --fd-space-sidebar-mobile-sheet-gap: #{fd-ui-style-spacing-token($style, sidebar-mobile-sheet-gap)};
+        --fd-space-sidebar-mobile-sheet-padding: #{fd-ui-style-spacing-token($style, sidebar-mobile-sheet-padding)};
         --fd-space-surface-padding: #{fd-ui-style-spacing-token($style, surface-padding)};
         --fd-space-surface-emphasis-padding: #{fd-ui-style-spacing-token($style, surface-emphasis-padding)};
         --fd-space-stat-tile-padding: #{fd-ui-style-spacing-token($style, stat-tile-padding)};
@@ -2133,6 +2192,6 @@ $fd-theme-design-tokens: (
         --fd-layout-page-section-spacing: var(--fd-space-page-section-gap);
         --fd-page-body-gap: var(--fd-space-page-section-gap);
         --fd-page-header-gap: var(--fd-space-page-header-gap);
-        --fd-page-actions-gap: var(--fd-space-page-header-actions-gap);
+        --fd-page-actions-gap: var(--fd-space-actions-gap);
     }
 }

@@ -5,11 +5,11 @@
     display: grid;
     align-items: center;
     grid-template-columns: 24px minmax(0, 1fr) auto;
-    gap: var(--fd-space-xs);
+    gap: var(--fd-space-sidebar-link-gap);
     background: transparent;
     text-align: left;
     cursor: pointer;
-    padding: var(--fd-space-xs) var(--fd-space-sm);
+    padding: var(--fd-space-sidebar-link-padding);
     border-radius: var(--fd-radius-menu-item);
     color: var(--fd-ui-sidebar-link-text);
     text-decoration: none;
@@ -58,7 +58,7 @@
 }
 
 .fd-ui-sidebar__link--secondary {
-    padding: var(--fd-space-xs);
+    padding: var(--fd-space-sidebar-link-secondary-padding);
 }
 
 .fd-ui-sidebar__link--secondary fd-ui-icon {

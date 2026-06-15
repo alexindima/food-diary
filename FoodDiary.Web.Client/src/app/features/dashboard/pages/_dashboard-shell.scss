@@ -29,6 +29,7 @@
 
     &__grid {
         grid-template-columns: minmax(0, 7fr) minmax(280px, 3fr);
+        gap: var(--fd-space-dashboard-grid-gap);
     }
 
     &__grid--single {

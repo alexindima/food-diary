@@ -26,6 +26,7 @@ $color-text-secondary: var(--fd-color-text-muted);
         align-content: start;
         min-width: 0;
         grid-column: 1;
+        gap: var(--fd-space-dashboard-column-gap);
     }
 
     &__column > :empty {
@@ -70,6 +71,7 @@ $color-text-secondary: var(--fd-color-text-muted);
     &__column--aside {
         grid-column: 2;
         grid-auto-rows: auto;
+        gap: var(--fd-space-dashboard-aside-gap);
     }
 
     &__row--pair {

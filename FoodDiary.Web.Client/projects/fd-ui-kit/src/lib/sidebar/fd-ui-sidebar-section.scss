@@ -1,5 +1,5 @@
 .fd-ui-sidebar__section {
-    padding-top: var(--fd-space-xs);
+    padding-top: var(--fd-space-sidebar-section-padding-top);
     border-top: var(--fd-border-default);
 }
 
@@ -10,7 +10,8 @@
 
 .fd-ui-sidebar__section-header {
     width: 100%;
-    padding: var(--fd-space-xs) var(--fd-space-xxs);
+    gap: var(--fd-space-sidebar-section-header-gap);
+    padding: var(--fd-space-sidebar-section-header-padding);
     background: transparent;
     border: none;
     color: var(--fd-ui-sidebar-section-title);
@@ -37,5 +38,6 @@ button.fd-ui-sidebar__section-header {
 }
 
 .fd-ui-sidebar__nav {
-    margin-top: var(--fd-space-xxs);
+    gap: var(--fd-space-sidebar-nav-gap);
+    margin-top: var(--fd-space-sidebar-nav-margin-top);
 }

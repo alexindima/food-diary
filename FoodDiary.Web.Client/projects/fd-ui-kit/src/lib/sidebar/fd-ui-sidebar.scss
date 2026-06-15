@@ -28,10 +28,12 @@
     border-right: var(--fd-ui-sidebar-border);
     box-shadow: var(--fd-ui-sidebar-shadow);
     color: var(--fd-ui-sidebar-text);
+    gap: var(--fd-space-sidebar-shell-gap);
 }
 
 .fd-ui-sidebar__brand {
     order: 0;
+    gap: var(--fd-space-sidebar-brand-gap);
     padding: var(--fd-space-xs) var(--fd-space-sm);
     border-radius: var(--fd-radius-card);
     background: var(--fd-ui-sidebar-brand-background);

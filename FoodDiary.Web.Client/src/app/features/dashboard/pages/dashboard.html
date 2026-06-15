@@ -1,4 +1,4 @@
-<div #dashboardRoot class="dashboard fd-stack fd-gap-xl" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
+<div #dashboardRoot class="dashboard fd-stack" fdPageContainer [class.dashboard--editing]="layout.isEditingLayout()">
     <fd-page-header [title]="dashboardTitle()" [subtitle]="'DASHBOARD.SUBTITLE' | translate" [compactActions]="true">
         <div
             class="dashboard__date-group fd-inline-center"
@@ -72,7 +72,7 @@
                 }
 
                 <section
-                    class="dashboard__grid fd-grid fd-gap-lg fd-align-start"
+                    class="dashboard__grid fd-grid fd-align-start"
                     [class.dashboard__grid--editing]="layout.isEditingLayout()"
                     [class.dashboard__grid--single]="!hasRenderedAsideBlocks() && !layout.isEditingLayout()"
                 >
@@ -81,7 +81,7 @@
                         <fd-dashboard-edit-hint [actionLabel]="editSaveActionLabel()" (save)="layout.save()" />
                     }
 
-                    <div class="dashboard__column fd-grid fd-gap-lg">
+                    <div class="dashboard__column fd-grid">
                         <fd-dashboard-fasting-block
                             [shouldRender]="shouldRenderFastingWidget()"
                             [state]="blockStates.fasting"
@@ -115,7 +115,7 @@
                         />
                     </div>
 
-                    <div class="dashboard__column dashboard__column--aside fd-grid fd-gap-lg">
+                    <div class="dashboard__column dashboard__column--aside fd-grid">
                         <fd-dashboard-hydration-block
                             [shouldRender]="layout.shouldRenderBlock('hydration')"
                             [state]="blockStates.hydration"
