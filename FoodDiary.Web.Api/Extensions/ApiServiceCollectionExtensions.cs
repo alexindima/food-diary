@@ -92,6 +92,10 @@ public static class ApiServiceCollectionExtensions {
                     "ForwardedHeaders:KnownNetworks must contain valid CIDR entries.")
                 .ValidateOnStart();
             services
+                .AddOptions<ApiHttpsRedirectionOptions>()
+                .BindConfiguration(ApiHttpsRedirectionOptions.SectionName)
+                .ValidateOnStart();
+            services
                 .AddOptions<ApiRateLimitingOptions>()
                 .BindConfiguration(ApiRateLimitingOptions.SectionName)
                 .Validate(ApiRateLimitingOptions.HasValidAuth,

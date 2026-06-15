@@ -2,6 +2,7 @@ using FoodDiary.Web.Api.Extensions;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -27,6 +28,7 @@ public sealed class ApiHostOptionsConfigurationTests {
                 ["ForwardedHeaders:ForwardLimit"] = "2",
                 ["ForwardedHeaders:KnownProxies:0"] = "10.0.0.10",
                 ["ForwardedHeaders:KnownNetworks:0"] = "10.0.0.0/24",
+                ["HttpsRedirection:Enabled"] = "true",
                 ["RateLimiting:Auth:PermitLimit"] = "7",
                 ["RateLimiting:Auth:WindowSeconds"] = "90",
                 ["RateLimiting:Ai:PermitLimit"] = "11",
@@ -45,6 +47,7 @@ public sealed class ApiHostOptionsConfigurationTests {
 
         ApiCorsOptions cors = provider.GetRequiredService<IOptions<ApiCorsOptions>>().Value;
         ApiForwardedHeadersOptions forwardedHeaders = provider.GetRequiredService<IOptions<ApiForwardedHeadersOptions>>().Value;
+        ApiHttpsRedirectionOptions httpsRedirection = provider.GetRequiredService<IOptions<ApiHttpsRedirectionOptions>>().Value;
         ApiRateLimitingOptions rateLimiting = provider.GetRequiredService<IOptions<ApiRateLimitingOptions>>().Value;
         ApiOutputCacheOptions outputCache = provider.GetRequiredService<IOptions<ApiOutputCacheOptions>>().Value;
         UserLoginEventCleanupOptions userLoginEventCleanup = provider.GetRequiredService<IOptions<UserLoginEventCleanupOptions>>().Value;
@@ -54,6 +57,7 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(2, forwardedHeaders.ForwardLimit);
         Assert.Equal(["10.0.0.10"], forwardedHeaders.KnownProxies);
         Assert.Equal(["10.0.0.0/24"], forwardedHeaders.KnownNetworks);
+        Assert.True(httpsRedirection.Enabled);
         Assert.Equal(7, rateLimiting.Auth.PermitLimit);
         Assert.Equal(90, rateLimiting.Auth.WindowSeconds);
         Assert.Equal(11, rateLimiting.Ai.PermitLimit);
@@ -63,6 +67,8 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Equal(250, userLoginEventCleanup.BatchSize);
         Assert.Equal(12, userLoginEventCleanup.PollIntervalHours);
         Assert.Equal(2, forwardedHeadersOptions.ForwardLimit);
+        Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedHost));
+        Assert.True(forwardedHeadersOptions.ForwardedHeaders.HasFlag(ForwardedHeaders.XForwardedProto));
         Assert.Contains(forwardedHeadersOptions.KnownProxies, ip => string.Equals(ip.ToString(), "10.0.0.10", StringComparison.Ordinal));
         Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
     }

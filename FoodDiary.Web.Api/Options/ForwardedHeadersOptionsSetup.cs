@@ -10,7 +10,9 @@ public sealed class ForwardedHeadersOptionsSetup(IOptions<ApiForwardedHeadersOpt
     public void Configure(ForwardedHeadersOptions options) {
         ApiForwardedHeadersOptions settings = apiForwardedHeadersOptions.Value;
 
-        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+        options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
+                                   ForwardedHeaders.XForwardedHost |
+                                   ForwardedHeaders.XForwardedProto;
         options.ForwardLimit = settings.ForwardLimit;
         options.KnownProxies.Clear();
         options.KnownIPNetworks.Clear();

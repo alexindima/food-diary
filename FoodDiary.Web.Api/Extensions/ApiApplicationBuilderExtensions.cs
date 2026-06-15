@@ -1,8 +1,10 @@
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Web.Api.Build;
+using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using Microsoft.Extensions.Options;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Trace;
 
@@ -23,6 +25,9 @@ public static class ApiApplicationBuilderExtensions {
             app.UseSwaggerUI();
         } else {
             app.UseHsts();
+        }
+
+        if (app.Services.GetRequiredService<IOptions<ApiHttpsRedirectionOptions>>().Value.Enabled) {
             app.UseHttpsRedirection();
         }
 
