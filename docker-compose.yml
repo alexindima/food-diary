@@ -198,6 +198,9 @@ services:
       ConnectionStrings__DefaultConnection: Host=mailrelay-postgres;Port=5432;Database=${MAIL_RELAY_POSTGRES_DB:-fooddiary_mailrelay};Username=${MAIL_RELAY_POSTGRES_USER:-postgres};Password=${MAIL_RELAY_POSTGRES_PASSWORD:-change-me-local-password}
       ASPNETCORE_ENVIRONMENT: ${ASPNETCORE_ENVIRONMENT:-Production}
       MailRelay__ApiKey: ${MailRelay__ApiKey:-}
+      MailRelay__RequireMailgunWebhookSignature: ${MailRelay__RequireMailgunWebhookSignature:-false}
+      MailRelay__MailgunWebhookSigningKey: ${MailRelay__MailgunWebhookSigningKey:-}
+      MailRelay__RequireAwsSesSnsSignature: ${MailRelay__RequireAwsSesSnsSignature:-true}
       MailRelayBroker__HostName: rabbitmq
     env_file:
       - .env
