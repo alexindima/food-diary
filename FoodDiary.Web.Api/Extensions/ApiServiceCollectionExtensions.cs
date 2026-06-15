@@ -16,6 +16,7 @@ using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
 using OpenTelemetry;
 using FoodDiary.Web.Api.Swagger;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.Extensions.Options;
@@ -35,6 +36,7 @@ public static class ApiServiceCollectionExtensions {
             services.AddApiOptions();
             services.AddApiAuthentication();
             services.AddApiHostServices();
+            services.AddApiDataProtection(configuration);
             services.AddApiSwagger();
             services.AddConfiguredOpenTelemetry();
             services.AddApiHealthChecks();
@@ -75,6 +77,12 @@ public static class ApiServiceCollectionExtensions {
             return services;
         }
         private IServiceCollection AddHostBoundaryOptions() {
+            services
+                .AddOptions<ApiDataProtectionOptions>()
+                .BindConfiguration(ApiDataProtectionOptions.SectionName)
+                .Validate(ApiDataProtectionOptions.HasValidApplicationName,
+                    "DataProtection:ApplicationName must not be empty.")
+                .ValidateOnStart();
             services
                 .AddOptions<ApiCorsOptions>()
                 .BindConfiguration(ApiCorsOptions.SectionName)
@@ -233,6 +241,21 @@ public static class ApiServiceCollectionExtensions {
             services.AddHostedService<FastingNotificationHostedService>();
             services.AddHostedService<InitialAdminHostedService>();
             services.AddHostedService<UserLoginEventCleanupHostedService>();
+
+            return services;
+        }
+        private IServiceCollection AddApiDataProtection(IConfiguration configuration) {
+            ApiDataProtectionOptions options = configuration
+                .GetSection(ApiDataProtectionOptions.SectionName)
+                .Get<ApiDataProtectionOptions>() ?? new ApiDataProtectionOptions();
+
+            IDataProtectionBuilder builder = services
+                .AddDataProtection()
+                .SetApplicationName(options.ApplicationName);
+
+            if (!string.IsNullOrWhiteSpace(options.KeyRingPath)) {
+                builder.PersistKeysToFileSystem(new DirectoryInfo(options.KeyRingPath));
+            }
 
             return services;
         }

@@ -73,6 +73,46 @@ public sealed class ApiHostOptionsConfigurationTests {
         Assert.Contains(forwardedHeadersOptions.KnownIPNetworks, network => string.Equals(network.BaseAddress.ToString(), "10.0.0.0", StringComparison.Ordinal) && network.PrefixLength == 24);
     }
 
+    [Fact]
+    public void AddApiServices_BindsDataProtectionOptionsFromConfiguration() {
+        var services = new ServiceCollection();
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+                ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+                ["Jwt:Issuer"] = "FoodDiaryApi",
+                ["Jwt:Audience"] = "FoodDiaryClient",
+                ["Jwt:ExpirationMinutes"] = "60",
+                ["Jwt:RefreshTokenExpirationDays"] = "7",
+                ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+                ["TelegramBot:ApiSecret"] = "",
+                ["Cors:Origins:0"] = "http://localhost:4200",
+                ["DataProtection:ApplicationName"] = "FoodDiary.Tests",
+                ["DataProtection:KeyRingPath"] = "/tmp/fooddiary-tests/data-protection-keys",
+            })
+            .Build();
+
+        services.AddLogging();
+        services.AddSingleton<IConfiguration>(configuration);
+        services.AddApiServices(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        ApiDataProtectionOptions options = provider.GetRequiredService<IOptions<ApiDataProtectionOptions>>().Value;
+
+        Assert.Equal("FoodDiary.Tests", options.ApplicationName);
+        Assert.Equal("/tmp/fooddiary-tests/data-protection-keys", options.KeyRingPath);
+    }
+
+    [Fact]
+    public void ApiDataProtectionOptions_HasValidApplicationName_ReturnsExpectedResult() {
+        Assert.True(ApiDataProtectionOptions.HasValidApplicationName(new ApiDataProtectionOptions {
+            ApplicationName = "FoodDiary.Web.Api",
+        }));
+        Assert.False(ApiDataProtectionOptions.HasValidApplicationName(new ApiDataProtectionOptions {
+            ApplicationName = " ",
+        }));
+    }
+
     [Theory]
     [InlineData(5, true)]
     [InlineData(0, false)]

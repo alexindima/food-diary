@@ -163,8 +163,11 @@ services:
       MailRelayClient__ApiKey: ${MailRelayClient__ApiKey:-}
       MailInboxClient__BaseUrl: http://mail-inbox:5098
       MailInboxClient__ApiKey: ${MailInboxClient__ApiKey:-}
+      DataProtection__KeyRingPath: /var/lib/fooddiary/data-protection-keys
     env_file:
       - .env
+    volumes:
+      - api-data-protection-keys:/var/lib/fooddiary/data-protection-keys
     healthcheck:
       test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:5000/health/ready >/dev/null || exit 1"]
       interval: 180s
@@ -314,3 +317,4 @@ volumes:
   postgres-data:
   mailrelay-postgres-data:
   mailinbox-postgres-data:
+  api-data-protection-keys:
