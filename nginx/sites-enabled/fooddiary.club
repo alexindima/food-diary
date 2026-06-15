@@ -38,7 +38,14 @@ server {
     listen 80;
     server_name xn--b1adbcbrouc8l.xn--p1ai www.xn--b1adbcbrouc8l.xn--p1ai;
 
-    return 410;
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 410;
+    }
 
     error_log /var/log/nginx/fooddiary.disabled-idn.error.log;
     access_log /var/log/nginx/fooddiary.disabled-idn.access.log;
@@ -242,7 +249,14 @@ server {
     listen 80;
     server_name admin.fooddiary.club;
 
-    return 301 https://$host$request_uri;
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/admin.fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
 
     error_log /var/log/nginx/fooddiary.admin.error.log;
     access_log /var/log/nginx/fooddiary.admin.access.log;

@@ -1,15 +1,23 @@
 server {
     listen 80;
     server_name grafana.fooddiary.club;
-    return 301 https://$host$request_uri;
+
+    location ^~ /.well-known/acme-challenge/ {
+        root /var/www/fooddiary.club;
+        default_type text/plain;
+    }
+
+    location / {
+        return 301 https://$host$request_uri;
+    }
 }
 
 server {
     listen 443 ssl;
     server_name grafana.fooddiary.club;
 
-    ssl_certificate /etc/letsencrypt/live/fooddiary.club/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/fooddiary.club/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/grafana.fooddiary.club/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/grafana.fooddiary.club/privkey.pem;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
     ssl_prefer_server_ciphers on;
