@@ -201,12 +201,18 @@ public sealed class WebPushNotificationSender(
         string relativePath = NotificationTargetUrlResolver.Resolve(notification.Type, notification.ReferenceId) ?? options.DefaultUrl;
 
         if (Uri.TryCreate(options.DefaultUrl, UriKind.Absolute, out Uri? absoluteBase)
+            && IsAbsoluteHttpUrl(absoluteBase)
             && Uri.TryCreate(absoluteBase, relativePath, out Uri? targetUrl)) {
             return targetUrl.ToString();
         }
 
         return relativePath;
     }
+
+    private static bool IsAbsoluteHttpUrl(Uri uri) =>
+        uri.IsAbsoluteUri &&
+        (string.Equals(uri.Scheme, Uri.UriSchemeHttp, StringComparison.OrdinalIgnoreCase) ||
+         string.Equals(uri.Scheme, Uri.UriSchemeHttps, StringComparison.OrdinalIgnoreCase));
 
     private static bool IsExpiredSubscription(WebPushException ex) {
         return ex.StatusCode == System.Net.HttpStatusCode.Gone
