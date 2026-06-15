@@ -14,10 +14,9 @@ public sealed class UpdateUserCommandHandlerTests {
     [Fact]
     public async Task Handle_WithDashboardLayout_SerializesInApplicationLayer() {
         var user = User.Create("user@example.com", "hash");
-        var userRepository = new SingleUserRepository(user);
         var handler = new UpdateUserCommandHandler(
-            userRepository,
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var layout = new DashboardLayoutModel(["summary", "goals"], ["water", "weight"]);
@@ -60,9 +59,9 @@ public sealed class UpdateUserCommandHandlerTests {
         var oldAssetId = ImageAssetId.New();
         user.UpdateProfileMedia(new FoodDiary.Domain.ValueObjects.UserProfileMediaUpdate(ProfileImageAssetId: oldAssetId));
 
-        var cleanup = new StubImageAssetCleanupService("storage_error");
+        IImageAssetCleanupService cleanup = CreateImageAssetCleanupService("storage_error", out List<ImageAssetId> requestedAssetIds);
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
+            CreateUserRepository(user),
             cleanup,
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -94,15 +93,15 @@ public sealed class UpdateUserCommandHandlerTests {
 
         Assert.True(result.IsSuccess);
         Assert.Equal(newAssetId, user.ProfileImageAssetId);
-        Assert.Equal([oldAssetId], cleanup.RequestedAssetIds);
+        Assert.Equal([oldAssetId], requestedAssetIds);
     }
 
     [Fact]
     public async Task Handle_WithEmptyProfileImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(
@@ -139,8 +138,8 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WithMissingUserId_ReturnsInvalidToken() {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(CreateCommand(userId: null), CancellationToken.None);
@@ -154,8 +153,8 @@ public sealed class UpdateUserCommandHandlerTests {
         var user = User.Create("deleted-user@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
@@ -179,8 +178,8 @@ public sealed class UpdateUserCommandHandlerTests {
         string expectedField) {
         var user = User.Create("preferences-user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(
@@ -202,8 +201,8 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WithTheme_UpdatesUserTheme() {
         var user = User.Create("user@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         var command = new UpdateUserCommand(
@@ -244,8 +243,8 @@ public sealed class UpdateUserCommandHandlerTests {
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.NotFound(Guid.NewGuid()));
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             imageAccess);
 
         var assetId = Guid.NewGuid();
@@ -262,8 +261,8 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WithIsActiveFalse_DeactivatesUser() {
         var user = User.Create("active@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(
@@ -279,8 +278,8 @@ public sealed class UpdateUserCommandHandlerTests {
     public async Task Handle_WithIsActiveTrue_KeepsUserActive() {
         var user = User.Create("active-again@example.com", "hash");
         var handler = new UpdateUserCommandHandler(
-            new SingleUserRepository(user),
-            new StubImageAssetCleanupService(),
+            CreateUserRepository(user),
+            CreateImageAssetCleanupService(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
         Result<UserModel> result = await handler.Handle(
@@ -324,33 +323,44 @@ public sealed class UpdateUserCommandHandlerTests {
             DashboardLayout: null,
             IsActive: isActive);
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+    private static IUserRepository CreateUserRepository(User user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        repository
+            .UpdateAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubImageAssetCleanupService(string? errorCode = null) : IImageAssetCleanupService {
-        public List<ImageAssetId> RequestedAssetIds { get; } = [];
+    private static IImageAssetCleanupService CreateImageAssetCleanupService(string? errorCode = null) =>
+        CreateImageAssetCleanupService(errorCode, out _);
 
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
-            RequestedAssetIds.Add(assetId);
-            return Task.FromResult(errorCode is null
+    private static IImageAssetCleanupService CreateImageAssetCleanupService(
+        string? errorCode,
+        out List<ImageAssetId> requestedAssetIds) {
+        requestedAssetIds = [];
+        List<ImageAssetId> capturedRequestedAssetIds = requestedAssetIds;
+
+        IImageAssetCleanupService service = Substitute.For<IImageAssetCleanupService>();
+        service
+            .DeleteIfUnusedAsync(Arg.Do<ImageAssetId>(capturedRequestedAssetIds.Add), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(errorCode is null
                 ? new DeleteImageAssetResult(Deleted: true)
-                : new DeleteImageAssetResult(Deleted: false, errorCode));
-        }
-
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
+                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+        service
+            .CleanupOrphansAsync(Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(0));
+        return service;
     }
 }

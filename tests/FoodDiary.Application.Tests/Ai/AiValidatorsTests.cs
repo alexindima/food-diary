@@ -50,10 +50,10 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WithEmptyImageAssetId_ReturnsValidationFailure() {
         var user = User.Create("ai-handler@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(),
-            new StubUserRepository(user),
-            new StubOpenAiFoodService(),
-            new StubImageStorageService());
+            CreateImageAssetRepository(),
+            CreateUserRepository(user),
+            CreateOpenAiFoodService(),
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.Empty, Description: null),
@@ -67,10 +67,10 @@ public class AiValidatorsTests {
     [Fact]
     public async Task AnalyzeFoodImageHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(),
-            new StubUserRepository(User.Create("ai-empty-image-user@example.com", "hash")),
-            new StubOpenAiFoodService(),
-            new StubImageStorageService());
+            CreateImageAssetRepository(),
+            CreateUserRepository(User.Create("ai-empty-image-user@example.com", "hash")),
+            CreateOpenAiFoodService(),
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(Guid.Empty, Guid.NewGuid(), Description: null),
@@ -85,10 +85,10 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenImageAssetMissing_ReturnsImageNotFound() {
         var user = User.Create("ai-missing-image@example.com", "hash");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(),
-            new StubUserRepository(user),
-            new StubOpenAiFoodService(),
-            new StubImageStorageService());
+            CreateImageAssetRepository(),
+            CreateUserRepository(user),
+            CreateOpenAiFoodService(),
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, Guid.NewGuid(), Description: null),
@@ -104,10 +104,10 @@ public class AiValidatorsTests {
         var requester = User.Create("ai-image-requester@example.com", "hash");
         var asset = ImageAsset.Create(owner.Id, "images/meal.jpg", "https://cdn.example.com/meal.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(asset),
-            new StubUserRepository(requester),
-            new StubOpenAiFoodService(),
-            new StubImageStorageService());
+            CreateImageAssetRepository(asset),
+            CreateUserRepository(requester),
+            CreateOpenAiFoodService(),
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(requester.Id.Value, asset.Id.Value, Description: null),
@@ -122,10 +122,10 @@ public class AiValidatorsTests {
         var user = User.Create("ai-invalid-image@example.com", "hash");
         var asset = ImageAsset.Create(user.Id, "images/invalid.jpg", "https://cdn.example.com/invalid.jpg");
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(asset),
-            new StubUserRepository(user),
-            new StubOpenAiFoodService(),
-            new StubImageStorageService(isValid: false, message: "upload incomplete"));
+            CreateImageAssetRepository(asset),
+            CreateUserRepository(user),
+            CreateOpenAiFoodService(),
+            CreateImageStorageService(isValid: false, message: "upload incomplete"));
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, Description: null),
@@ -140,12 +140,12 @@ public class AiValidatorsTests {
     public async Task AnalyzeFoodImageHandler_WhenUserMissing_ReturnsInvalidToken() {
         var userId = UserId.New();
         var asset = ImageAsset.Create(userId, "images/orphan.jpg", "https://cdn.example.com/orphan.jpg");
-        var openAiFoodService = new StubOpenAiFoodService();
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(asset),
-            new StubUserRepository(user: null),
+            CreateImageAssetRepository(asset),
+            CreateUserRepository(user: null),
             openAiFoodService,
-            new StubImageStorageService());
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(userId.Value, asset.Id.Value, "notes"),
@@ -153,7 +153,7 @@ public class AiValidatorsTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.False(openAiFoodService.WasAnalyzeFoodImageCalled);
+        Assert.False(openAiCalls.WasAnalyzeFoodImageCalled);
     }
 
     [Fact]
@@ -161,22 +161,22 @@ public class AiValidatorsTests {
         var user = User.Create("ai-valid-image@example.com", "hash");
         user.SetLanguage("ru");
         var asset = ImageAsset.Create(user.Id, "images/valid.jpg", "https://cdn.example.com/valid.jpg");
-        var openAiFoodService = new StubOpenAiFoodService();
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
         var handler = new AnalyzeFoodImageCommandHandler(
-            new StubImageAssetRepository(asset),
-            new StubUserRepository(user),
+            CreateImageAssetRepository(asset),
+            CreateUserRepository(user),
             openAiFoodService,
-            new StubImageStorageService());
+            CreateImageStorageService());
 
         Result<FoodVisionModel> result = await handler.Handle(
             new AnalyzeFoodImageCommand(user.Id.Value, asset.Id.Value, "dinner"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(openAiFoodService.WasAnalyzeFoodImageCalled);
-        Assert.Equal(asset.Url, openAiFoodService.LastImageUrl);
-        Assert.Equal("ru", openAiFoodService.LastLanguage);
-        Assert.Equal("dinner", openAiFoodService.LastDescription);
+        Assert.True(openAiCalls.WasAnalyzeFoodImageCalled);
+        Assert.Equal(asset.Url, openAiCalls.LastImageUrl);
+        Assert.Equal("ru", openAiCalls.LastLanguage);
+        Assert.Equal("dinner", openAiCalls.LastDescription);
     }
 
     [Fact]
@@ -236,8 +236,8 @@ public class AiValidatorsTests {
     [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new GetUserAiUsageSummaryQueryHandler(
-            new StubUserRepository(User.Create("ai-empty-user@example.com", "hash")),
-            new RecordingAiUsageRepository(),
+            CreateUserRepository(User.Create("ai-empty-user@example.com", "hash")),
+            CreateAiUsageRepository(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
@@ -250,8 +250,8 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyUserId_ReturnsValidationFailure() {
         var handler = new CalculateFoodNutritionCommandHandler(
-            new StubOpenAiFoodService(),
-            new StubUserRepository(User.Create("ai-empty-nutrition@example.com", "hash")));
+            CreateOpenAiFoodService(),
+            CreateUserRepository(User.Create("ai-empty-nutrition@example.com", "hash")));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -267,8 +267,8 @@ public class AiValidatorsTests {
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithEmptyItems_ReturnsEmptyItems() {
         var handler = new CalculateFoodNutritionCommandHandler(
-            new StubOpenAiFoodService(),
-            new StubUserRepository(User.Create("ai-empty-items@example.com", "hash")));
+            CreateOpenAiFoodService(),
+            CreateUserRepository(User.Create("ai-empty-items@example.com", "hash")));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(Guid.NewGuid(), []),
@@ -282,8 +282,8 @@ public class AiValidatorsTests {
     public async Task CalculateFoodNutritionHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai-nutrition@example.com", "hash");
         user.Deactivate();
-        var openAiFoodService = new StubOpenAiFoodService();
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserRepository(user));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -293,14 +293,14 @@ public class AiValidatorsTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.False(openAiFoodService.WasCalculateNutritionCalled);
+        Assert.False(openAiCalls.WasCalculateNutritionCalled);
     }
 
     [Fact]
     public async Task CalculateFoodNutritionHandler_WithActiveUser_CalculatesNutrition() {
         var user = User.Create("active-ai-nutrition@example.com", "hash");
-        var openAiFoodService = new StubOpenAiFoodService();
-        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, new StubUserRepository(user));
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new CalculateFoodNutritionCommandHandler(openAiFoodService, CreateUserRepository(user));
 
         Result<FoodNutritionModel> result = await handler.Handle(
             new CalculateFoodNutritionCommand(
@@ -309,14 +309,14 @@ public class AiValidatorsTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(openAiFoodService.WasCalculateNutritionCalled);
+        Assert.True(openAiCalls.WasCalculateNutritionCalled);
     }
 
     [Fact]
     public async Task ParseFoodTextHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ParseFoodTextCommandHandler(
-            new StubOpenAiFoodService(),
-            new StubUserRepository(User.Create("ai-empty-text-user@example.com", "hash")));
+            CreateOpenAiFoodService(),
+            CreateUserRepository(User.Create("ai-empty-text-user@example.com", "hash")));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.Empty, "apple"), CancellationToken.None);
 
@@ -326,44 +326,44 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task ParseFoodTextHandler_WhenUserMissing_ReturnsInvalidToken() {
-        var openAiFoodService = new StubOpenAiFoodService();
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(user: null));
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateUserRepository(user: null));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(Guid.NewGuid(), "apple"), CancellationToken.None);
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.False(openAiFoodService.WasParseFoodTextCalled);
+        Assert.False(openAiCalls.WasParseFoodTextCalled);
     }
 
     [Fact]
     public async Task ParseFoodTextHandler_WithActiveUser_ParsesText() {
         var user = User.Create("active-ai-text@example.com", "hash");
         user.SetLanguage("ru");
-        var openAiFoodService = new StubOpenAiFoodService();
-        var handler = new ParseFoodTextCommandHandler(openAiFoodService, new StubUserRepository(user));
+        IOpenAiFoodService openAiFoodService = CreateOpenAiFoodService(out OpenAiFoodServiceCalls openAiCalls);
+        var handler = new ParseFoodTextCommandHandler(openAiFoodService, CreateUserRepository(user));
 
         Result<FoodVisionModel> result = await handler.Handle(new ParseFoodTextCommand(user.Id.Value, "apple 100g"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(openAiFoodService.WasParseFoodTextCalled);
-        Assert.Equal("apple 100g", openAiFoodService.LastText);
-        Assert.Equal("ru", openAiFoodService.LastLanguage);
+        Assert.True(openAiCalls.WasParseFoodTextCalled);
+        Assert.Equal("apple 100g", openAiCalls.LastText);
+        Assert.Equal("ru", openAiCalls.LastLanguage);
     }
 
     [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_UsesDateTimeProviderForMonthBounds() {
         var user = User.Create("ai-usage@example.com", "hash");
-        var userRepository = new StubUserRepository(user);
-        var aiUsageRepository = new RecordingAiUsageRepository();
+        IUserRepository userRepository = CreateUserRepository(user);
+        IAiUsageRepository aiUsageRepository = CreateAiUsageRepository(out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod);
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc));
         var handler = new GetUserAiUsageSummaryQueryHandler(userRepository, aiUsageRepository, dateTimeProvider);
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastFromUtc);
-        Assert.Equal(new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), aiUsageRepository.LastToUtc);
+        Assert.Equal(new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc), getLastPeriod().FromUtc);
+        Assert.Equal(new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), getLastPeriod().ToUtc);
         Assert.Equal(new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc), result.Value.ResetAtUtc);
     }
 
@@ -372,8 +372,8 @@ public class AiValidatorsTests {
         var user = User.Create("inactive-ai@example.com", "hash");
         user.Deactivate();
         var handler = new GetUserAiUsageSummaryQueryHandler(
-            new StubUserRepository(user),
-            new RecordingAiUsageRepository(),
+            CreateUserRepository(user),
+            CreateAiUsageRepository(),
             new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
@@ -382,138 +382,133 @@ public class AiValidatorsTests {
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        return repository;
+    }
+
+    private static IImageAssetRepository CreateImageAssetRepository(ImageAsset? asset = null) {
+        IImageAssetRepository repository = Substitute.For<IImageAssetRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                ImageAssetId id = call.Arg<ImageAssetId>();
+                return Task.FromResult(asset is not null && asset.Id == id ? asset : null);
+            });
+        return repository;
+    }
+
+    private static IOpenAiFoodService CreateOpenAiFoodService() =>
+        CreateOpenAiFoodService(out _);
+
+    private static IOpenAiFoodService CreateOpenAiFoodService(out OpenAiFoodServiceCalls calls) {
+        calls = new OpenAiFoodServiceCalls();
+        OpenAiFoodServiceCalls capturedCalls = calls;
+
+        IOpenAiFoodService service = Substitute.For<IOpenAiFoodService>();
+        service
+            .AnalyzeFoodImageAsync(
+                Arg.Any<string>(),
+                Arg.Any<string?>(),
+                Arg.Any<UserId>(),
+                Arg.Any<string?>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                capturedCalls.WasAnalyzeFoodImageCalled = true;
+                capturedCalls.LastImageUrl = call.ArgAt<string>(0);
+                capturedCalls.LastLanguage = call.ArgAt<string?>(1);
+                capturedCalls.LastDescription = call.ArgAt<string?>(3);
+                return Task.FromResult(Result.Success(new FoodVisionModel(
+                    [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                    Notes: null)));
+            });
+        service
+            .ParseFoodTextAsync(
+                Arg.Any<string>(),
+                Arg.Any<string?>(),
+                Arg.Any<UserId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                capturedCalls.WasParseFoodTextCalled = true;
+                capturedCalls.LastText = call.ArgAt<string>(0);
+                capturedCalls.LastLanguage = call.ArgAt<string?>(1);
+                return Task.FromResult(Result.Success(new FoodVisionModel(
+                    [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
+                    Notes: null)));
+            });
+        service
+            .CalculateNutritionAsync(
+                Arg.Any<IReadOnlyList<FoodVisionItemModel>>(),
+                Arg.Any<UserId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(_ => {
+                capturedCalls.WasCalculateNutritionCalled = true;
+                return Task.FromResult(Result.Success(new FoodNutritionModel(
+                    52,
+                    0,
+                    0,
+                    14,
+                    2,
+                    0,
+                    [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)])));
+            });
+
+        return service;
+    }
+
+    private static IImageStorageService CreateImageStorageService(bool isValid = true, string? message = null) {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        service
+            .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new ImageObjectValidationResult(isValid, Message: message)));
+        return service;
+    }
+
+    private static IAiUsageRepository CreateAiUsageRepository() =>
+        CreateAiUsageRepository(out _);
+
+    private static IAiUsageRepository CreateAiUsageRepository(
+        out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod) {
+        DateTime lastFromUtc = default;
+        DateTime lastToUtc = default;
+        IAiUsageRepository repository = Substitute.For<IAiUsageRepository>();
+        repository
+            .GetUserTotalsAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                lastFromUtc = call.ArgAt<DateTime>(1);
+                lastToUtc = call.ArgAt<DateTime>(2);
+                return Task.FromResult(new AiUsageTotals(12, 34));
+            });
+
+        getLastPeriod = () => (lastFromUtc, lastToUtc);
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubImageAssetRepository(ImageAsset? asset = null) : IImageAssetRepository {
-        public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult(asset is not null && asset.Id == id ? asset : null);
-
-        public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<IReadOnlyList<ImageAsset>> GetUnusedOlderThanAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubOpenAiFoodService : IOpenAiFoodService {
-        public bool WasAnalyzeFoodImageCalled { get; private set; }
-        public bool WasParseFoodTextCalled { get; private set; }
-        public bool WasCalculateNutritionCalled { get; private set; }
-        public string? LastImageUrl { get; private set; }
-        public string? LastText { get; private set; }
-        public string? LastLanguage { get; private set; }
-        public string? LastDescription { get; private set; }
-
-        public Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
-            string imageUrl,
-            string? userLanguage,
-            UserId userId,
-            string? description,
-            CancellationToken cancellationToken) {
-            WasAnalyzeFoodImageCalled = true;
-            LastImageUrl = imageUrl;
-            LastLanguage = userLanguage;
-            LastDescription = description;
-            return Task.FromResult(Result.Success(new FoodVisionModel(
-                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                Notes: null)));
-        }
-
-        public Task<Result<FoodVisionModel>> ParseFoodTextAsync(
-            string text,
-            string? userLanguage,
-            UserId userId,
-            CancellationToken cancellationToken) {
-            WasParseFoodTextCalled = true;
-            LastText = text;
-            LastLanguage = userLanguage;
-            return Task.FromResult(Result.Success(new FoodVisionModel(
-                [new FoodVisionItemModel("apple", "apple", 120, "g", 0.95m)],
-                Notes: null)));
-        }
-
-        public Task<Result<FoodNutritionModel>> CalculateNutritionAsync(
-            IReadOnlyList<FoodVisionItemModel> items,
-            UserId userId,
-            CancellationToken cancellationToken) {
-            WasCalculateNutritionCalled = true;
-            return Task.FromResult(Result.Success(new FoodNutritionModel(
-                52,
-                0,
-                0,
-                14,
-                2,
-                0,
-                [new FoodNutritionItemModel("apple", 120, "g", 52, 0, 0, 14, 2, 0)])));
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubImageStorageService(bool isValid = true, string? message = null) : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(isValid, Message: message));
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingAiUsageRepository : IAiUsageRepository {
-        public DateTime LastFromUtc { get; private set; }
-        public DateTime LastToUtc { get; private set; }
-
-        public Task AddAsync(FoodDiary.Domain.Entities.Ai.AiUsage usage, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<FoodDiary.Application.Abstractions.Admin.Models.AiUsageSummary> GetSummaryAsync(
-            DateTime fromUtc,
-            DateTime toUtc,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<AiUsageTotals> GetUserTotalsAsync(
-            UserId userId,
-            DateTime fromUtc,
-            DateTime toUtc,
-            CancellationToken cancellationToken = default) {
-            LastFromUtc = fromUtc;
-            LastToUtc = toUtc;
-            return Task.FromResult(new AiUsageTotals(12, 34));
-        }
+    private sealed class OpenAiFoodServiceCalls {
+        public bool WasAnalyzeFoodImageCalled { get; set; }
+        public bool WasParseFoodTextCalled { get; set; }
+        public bool WasCalculateNutritionCalled { get; set; }
+        public string? LastImageUrl { get; set; }
+        public string? LastText { get; set; }
+        public string? LastLanguage { get; set; }
+        public string? LastDescription { get; set; }
     }
 
     [ExcludeFromCodeCoverage]

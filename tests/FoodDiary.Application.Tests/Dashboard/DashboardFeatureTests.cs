@@ -170,8 +170,10 @@ public class DashboardFeatureTests {
     public async Task GetDashboardSnapshotQueryHandler_ForwardsRequestToBuilder() {
         var userId = UserId.New();
         var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
-        var builder = new RecordingDashboardSnapshotBuilder();
-        var handler = new GetDashboardSnapshotQueryHandler(builder);
+        IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(
+            out Func<DashboardSnapshotRequest?> getLastRequest,
+            out Func<CancellationToken> getLastCancellationToken);
+        GetDashboardSnapshotQueryHandler handler = new(builder);
         using var cts = new CancellationTokenSource();
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
@@ -179,22 +181,22 @@ public class DashboardFeatureTests {
             cts.Token);
 
         Assert.True(result.IsSuccess);
-        Assert.NotNull(builder.LastRequest);
-        Assert.Equal(userId.Value, builder.LastRequest.UserId);
-        Assert.Equal(date, builder.LastRequest.Date);
-        Assert.Equal("ru", builder.LastRequest.Locale);
-        Assert.Equal(14, builder.LastRequest.TrendDays);
-        Assert.Equal(2, builder.LastRequest.Page);
-        Assert.Equal(25, builder.LastRequest.PageSize);
-        Assert.Equal(cts.Token, builder.LastCancellationToken);
+        DashboardSnapshotRequest request = Assert.IsType<DashboardSnapshotRequest>(getLastRequest());
+        Assert.Equal(userId.Value, request.UserId);
+        Assert.Equal(date, request.Date);
+        Assert.Equal("ru", request.Locale);
+        Assert.Equal(14, request.TrendDays);
+        Assert.Equal(2, request.Page);
+        Assert.Equal(25, request.PageSize);
+        Assert.Equal(cts.Token, getLastCancellationToken());
     }
 
     [Theory]
     [InlineData(null)]
     [InlineData("00000000-0000-0000-0000-000000000000")]
     public async Task GetDashboardSnapshotQueryHandler_WithMissingUserId_ReturnsInvalidToken(string? userIdText) {
-        var builder = new RecordingDashboardSnapshotBuilder();
-        var handler = new GetDashboardSnapshotQueryHandler(builder);
+        IDashboardSnapshotBuilder builder = CreateDashboardSnapshotBuilder(out Func<DashboardSnapshotRequest?> getLastRequest, out _);
+        GetDashboardSnapshotQueryHandler handler = new(builder);
         Guid? userId = userIdText is null ? (Guid?)null : Guid.Parse(userIdText);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
@@ -203,15 +205,15 @@ public class DashboardFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.Null(builder.LastRequest);
+        Assert.Null(getLastRequest());
     }
 
     [Fact]
     public async Task SendDashboardTestEmail_WhenEmailSenderFails_ReturnsValidationFailure() {
         var user = User.Create("dashboard-email@example.com", "hash");
         var handler = new SendDashboardTestEmailCommandHandler(
-            new SingleUserRepository(user),
-            new RecordingEmailSender(throwOnSend: true),
+            CreateUserRepository(user),
+            CreateThrowingEmailSender(),
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
         Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
@@ -225,24 +227,25 @@ public class DashboardFeatureTests {
     public async Task SendDashboardTestEmail_WithAccessibleUser_SendsToUserEmailAndLanguage() {
         var user = User.Create("dashboard-email-ok@example.com", "hash");
         user.SetLanguage("ru");
-        var emailSender = new RecordingEmailSender();
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
         var handler = new SendDashboardTestEmailCommandHandler(
-            new SingleUserRepository(user),
+            CreateUserRepository(user),
             emailSender,
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
         Result result = await handler.Handle(new SendDashboardTestEmailCommand(user.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal("dashboard-email-ok@example.com", emailSender.TestEmailMessage?.ToEmail);
-        Assert.Equal("ru", emailSender.TestEmailMessage?.Language);
+        TestEmailMessage message = Assert.IsType<TestEmailMessage>(getLastMessage());
+        Assert.Equal("dashboard-email-ok@example.com", message.ToEmail);
+        Assert.Equal("ru", message.Language);
     }
 
     [Fact]
     public async Task SendDashboardTestEmail_WhenUserMissing_ReturnsInvalidToken() {
-        var emailSender = new RecordingEmailSender();
+        IEmailSender emailSender = CreateEmailSender(out Func<TestEmailMessage?> getLastMessage);
         var handler = new SendDashboardTestEmailCommandHandler(
-            new SingleUserRepository(user: null),
+            CreateUserRepository(user: null),
             emailSender,
             NullLogger<SendDashboardTestEmailCommandHandler>.Instance);
 
@@ -250,55 +253,57 @@ public class DashboardFeatureTests {
 
         Assert.True(result.IsFailure);
         Assert.Equal("Authentication.InvalidToken", result.Error.Code);
-        Assert.Null(emailSender.TestEmailMessage);
+        Assert.Null(getLastMessage());
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingDashboardSnapshotBuilder : IDashboardSnapshotBuilder {
-        public DashboardSnapshotRequest? LastRequest { get; private set; }
-        public CancellationToken LastCancellationToken { get; private set; }
-
-        public Task<Result<DashboardSnapshotModel>> BuildAsync(
-            DashboardSnapshotRequest request,
-            CancellationToken cancellationToken = default) {
-            LastRequest = request;
-            LastCancellationToken = cancellationToken;
-            return Task.FromResult(Result.Success<DashboardSnapshotModel>(null!));
-        }
+    private static IDashboardSnapshotBuilder CreateDashboardSnapshotBuilder(
+        out Func<DashboardSnapshotRequest?> getLastRequest,
+        out Func<CancellationToken> getLastCancellationToken) {
+        IDashboardSnapshotBuilder builder = Substitute.For<IDashboardSnapshotBuilder>();
+        DashboardSnapshotRequest? lastRequest = null;
+        CancellationToken lastCancellationToken = default;
+        builder
+            .BuildAsync(
+                Arg.Do<DashboardSnapshotRequest>(request => lastRequest = request),
+                Arg.Do<CancellationToken>(cancellationToken => lastCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(Result.Success<DashboardSnapshotModel>(null!)));
+        getLastRequest = () => lastRequest;
+        getLastCancellationToken = () => lastCancellationToken;
+        return builder;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingEmailSender(bool throwOnSend = false) : IEmailSender {
-        public TestEmailMessage? TestEmailMessage { get; private set; }
-
-        public Task SendEmailVerificationAsync(EmailVerificationMessage message, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task SendPasswordResetAsync(PasswordResetMessage message, CancellationToken cancellationToken) =>
-            throw new NotSupportedException();
-
-        public Task SendTestEmailAsync(TestEmailMessage message, CancellationToken cancellationToken) {
-            if (throwOnSend) {
-                throw new InvalidOperationException("send failed");
-            }
-
-            TestEmailMessage = message;
-            return Task.CompletedTask;
-        }
+    private static IEmailSender CreateEmailSender(out Func<TestEmailMessage?> getLastMessage) {
+        IEmailSender emailSender = Substitute.For<IEmailSender>();
+        TestEmailMessage? lastMessage = null;
+        emailSender
+            .SendTestEmailAsync(Arg.Do<TestEmailMessage>(message => lastMessage = message), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getLastMessage = () => lastMessage;
+        return emailSender;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User? user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IEmailSender CreateThrowingEmailSender() {
+        IEmailSender emailSender = Substitute.For<IEmailSender>();
+        emailSender
+            .SendTestEmailAsync(Arg.Any<TestEmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(new InvalidOperationException("send failed")));
+        return emailSender;
+    }
+
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        return repository;
     }
 }

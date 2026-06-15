@@ -89,7 +89,7 @@ public class HydrationFeatureTests {
     public async Task GetHydrationDailyTotalQueryHandler_WithUnspecifiedDate_PreservesCalendarDayAsUtc() {
         var user = User.Create("user@example.com", "hash");
         var repository = new RecordingHydrationEntryRepository();
-        var userRepository = new StubUserRepository(user);
+        IUserRepository userRepository = CreateUserRepository(user);
         var handler = new GetHydrationDailyTotalQueryHandler(repository, userRepository);
         var queryDate = new DateTime(2026, 3, 26, 0, 0, 0, DateTimeKind.Unspecified);
 
@@ -106,7 +106,7 @@ public class HydrationFeatureTests {
     public async Task GetHydrationDailyTotalQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetHydrationDailyTotalQueryHandler(
             new RecordingHydrationEntryRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            CreateUserRepository(User.Create("user@example.com", "hash")));
 
         Result<HydrationDailyModel> result = await handler.Handle(
             new GetHydrationDailyTotalQuery(Guid.Empty, DateTime.UtcNow),
@@ -122,7 +122,7 @@ public class HydrationFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetHydrationDailyTotalQueryHandler(
             new RecordingHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationDailyModel> result = await handler.Handle(
             new GetHydrationDailyTotalQuery(user.Id.Value, DateTime.UtcNow),
@@ -136,7 +136,7 @@ public class HydrationFeatureTests {
     public async Task CreateHydrationEntryCommandHandler_WithUnspecifiedTimestamp_PreservesInstantAsUtc() {
         var user = User.Create("hydration-create@example.com", "hash");
         var repository = new InMemoryHydrationEntryRepository();
-        var handler = new CreateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var handler = new CreateHydrationEntryCommandHandler(repository, CreateUserRepository(user));
         var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
 
         Result<HydrationEntryModel> result = await handler.Handle(
@@ -153,7 +153,7 @@ public class HydrationFeatureTests {
     public async Task CreateHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new CreateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("hydration-create-empty@example.com", "hash")));
+            CreateUserRepository(User.Create("hydration-create-empty@example.com", "hash")));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(Guid.Empty, DateTime.UtcNow, 250),
@@ -169,7 +169,7 @@ public class HydrationFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new CreateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 250),
@@ -184,7 +184,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-create-invalid@example.com", "hash");
         var handler = new CreateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new CreateHydrationEntryCommand(user.Id.Value, DateTime.UtcNow, 0),
@@ -199,7 +199,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-update@example.com", "hash");
         var entry = HydrationEntry.Create(user.Id, new DateTime(2026, 3, 25, 12, 0, 0, DateTimeKind.Utc), 250);
         var repository = new InMemoryHydrationEntryRepository(entry);
-        var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var handler = new UpdateHydrationEntryCommandHandler(repository, CreateUserRepository(user));
         var timestamp = new DateTime(2026, 3, 26, 14, 30, 0, DateTimeKind.Unspecified);
 
         Result<HydrationEntryModel> result = await handler.Handle(
@@ -216,7 +216,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-update-amount@example.com", "hash");
         var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow.AddHours(-1), 250);
         var repository = new InMemoryHydrationEntryRepository(entry);
-        var handler = new UpdateHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var handler = new UpdateHydrationEntryCommandHandler(repository, CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 750),
@@ -230,7 +230,7 @@ public class HydrationFeatureTests {
     public async Task UpdateHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("hydration-update-empty@example.com", "hash")));
+            CreateUserRepository(User.Create("hydration-update-empty@example.com", "hash")));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow, 250),
@@ -247,7 +247,7 @@ public class HydrationFeatureTests {
         var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(entry),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
@@ -262,7 +262,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-update-missing@example.com", "hash");
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
         var entryId = Guid.NewGuid();
 
         Result<HydrationEntryModel> result = await handler.Handle(
@@ -279,7 +279,7 @@ public class HydrationFeatureTests {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(entry),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 500),
@@ -295,7 +295,7 @@ public class HydrationFeatureTests {
         var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(entry),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(user.Id.Value, entry.Id.Value, DateTime.UtcNow, 0),
@@ -309,7 +309,7 @@ public class HydrationFeatureTests {
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            CreateUserRepository(User.Create("user@example.com", "hash")));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(Guid.NewGuid(), Guid.Empty),
@@ -324,7 +324,7 @@ public class HydrationFeatureTests {
     public async Task DeleteHydrationEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("hydration-delete-empty@example.com", "hash")));
+            CreateUserRepository(User.Create("hydration-delete-empty@example.com", "hash")));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(Guid.Empty, Guid.NewGuid()),
@@ -341,7 +341,7 @@ public class HydrationFeatureTests {
         var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(entry),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
@@ -356,7 +356,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-delete-missing@example.com", "hash");
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, Guid.NewGuid()),
@@ -372,7 +372,7 @@ public class HydrationFeatureTests {
         var entry = HydrationEntry.Create(UserId.New(), DateTime.UtcNow, 250);
         var handler = new DeleteHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(entry),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
@@ -387,7 +387,7 @@ public class HydrationFeatureTests {
         var user = User.Create("hydration-delete-success@example.com", "hash");
         var entry = HydrationEntry.Create(user.Id, DateTime.UtcNow, 250);
         var repository = new InMemoryHydrationEntryRepository(entry);
-        var handler = new DeleteHydrationEntryCommandHandler(repository, new StubUserRepository(user));
+        var handler = new DeleteHydrationEntryCommandHandler(repository, CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new DeleteHydrationEntryCommand(user.Id.Value, entry.Id.Value),
@@ -401,7 +401,7 @@ public class HydrationFeatureTests {
     public async Task UpdateHydrationEntryCommandHandler_WithEmptyHydrationEntryId_ReturnsValidationFailure() {
         var handler = new UpdateHydrationEntryCommandHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            CreateUserRepository(User.Create("user@example.com", "hash")));
 
         Result<HydrationEntryModel> result = await handler.Handle(
             new UpdateHydrationEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 250),
@@ -416,7 +416,7 @@ public class HydrationFeatureTests {
     public async Task GetHydrationEntriesQueryHandler_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new GetHydrationEntriesQueryHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(User.Create("hydration-entries@example.com", "hash")));
+            CreateUserRepository(User.Create("hydration-entries@example.com", "hash")));
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(Guid.Empty, DateTime.UtcNow), CancellationToken.None);
 
@@ -430,7 +430,7 @@ public class HydrationFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetHydrationEntriesQueryHandler(
             new InMemoryHydrationEntryRepository(),
-            new StubUserRepository(user));
+            CreateUserRepository(user));
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, DateTime.UtcNow), CancellationToken.None);
 
@@ -450,7 +450,7 @@ public class HydrationFeatureTests {
             UserId.New(),
             new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
             250));
-        var handler = new GetHydrationEntriesQueryHandler(repository, new StubUserRepository(user));
+        var handler = new GetHydrationEntriesQueryHandler(repository, CreateUserRepository(user));
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
 
         Result<IReadOnlyList<HydrationEntryModel>> result = await handler.Handle(new GetHydrationEntriesQuery(user.Id.Value, dateOnly), CancellationToken.None);
@@ -492,19 +492,21 @@ public class HydrationFeatureTests {
             throw new NotSupportedException();
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]

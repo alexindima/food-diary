@@ -18,7 +18,7 @@ public class RecipeLikesFeatureTests {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Pasta", 1);
         var repo = new InMemoryRecipeLikeRepository();
-        var recipeRepo = new StubRecipeRepository(recipe);
+        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
@@ -35,7 +35,7 @@ public class RecipeLikesFeatureTests {
         var recipe = Recipe.Create(userId, "Pasta", 1);
         var repo = new InMemoryRecipeLikeRepository();
         repo.Seed(RecipeLike.Create(userId, recipe.Id));
-        var recipeRepo = new StubRecipeRepository(recipe);
+        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
@@ -49,7 +49,7 @@ public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WhenRecipeNotFound_ReturnsFailure() {
         var repo = new InMemoryRecipeLikeRepository();
-        var recipeRepo = new StubRecipeRepository(recipe: null);
+        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe: null);
 
         var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
@@ -62,7 +62,7 @@ public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WithNullUserId_ReturnsFailure() {
         var handler = new ToggleRecipeLikeCommandHandler(
-            new InMemoryRecipeLikeRepository(), new StubRecipeRepository(recipe: null));
+            new InMemoryRecipeLikeRepository(), CreateRecipeRepository(recipe: null));
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -132,19 +132,17 @@ public class RecipeLikesFeatureTests {
             Task.FromResult(_likes.Count(l => l.RecipeId == recipeId));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeRepository(Recipe? recipe) : IRecipeRepository {
-        public Task<Recipe?> GetByIdAsync(RecipeId id, UserId userId, bool includePublic = true,
-            bool includeSteps = false, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult(recipe);
-
-        public Task<Recipe> AddAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateNutritionAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(recipe));
+        return repository;
     }
 }

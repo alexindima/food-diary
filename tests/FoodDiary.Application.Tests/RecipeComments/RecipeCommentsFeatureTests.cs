@@ -23,12 +23,12 @@ public class RecipeCommentsFeatureTests {
         var ownerId = UserId.New();
         var recipe = Recipe.Create(ownerId, "Pasta", 1);
         var commentRepo = new InMemoryRecipeCommentRepository();
-        var notifRepo = new RecordingNotificationRepository();
+        INotificationRepository notificationRepository = CreateNotificationRepository(out List<Notification> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             commentRepo,
-            new StubRecipeRepository(recipe),
-            notifRepo);
+            CreateRecipeRepository(recipe),
+            notificationRepository);
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
@@ -36,33 +36,33 @@ public class RecipeCommentsFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("Delicious!", result.Value.Text);
         Assert.True(result.Value.IsOwnedByCurrentUser);
-        Assert.Single(notifRepo.Added); // notification for recipe owner
+        Assert.Single(addedNotifications); // notification for recipe owner
     }
 
     [Fact]
     public async Task CreateRecipeComment_OnOwnRecipe_DoesNotCreateNotification() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Pasta", 1);
-        var notifRepo = new RecordingNotificationRepository();
+        INotificationRepository notificationRepository = CreateNotificationRepository(out List<Notification> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
-            new StubRecipeRepository(recipe),
-            notifRepo);
+            CreateRecipeRepository(recipe),
+            notificationRepository);
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Empty(notifRepo.Added);
+        Assert.Empty(addedNotifications);
     }
 
     [Fact]
     public async Task CreateRecipeComment_WhenRecipeNotFound_ReturnsFailure() {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
-            new StubRecipeRepository(recipe: null),
-            new RecordingNotificationRepository());
+            CreateRecipeRepository(recipe: null),
+            CreateNotificationRepository());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
@@ -75,8 +75,8 @@ public class RecipeCommentsFeatureTests {
     public async Task CreateRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
-            new StubRecipeRepository(Recipe.Create(UserId.New(), "Pasta", 1)),
-            new RecordingNotificationRepository());
+            CreateRecipeRepository(Recipe.Create(UserId.New(), "Pasta", 1)),
+            CreateNotificationRepository());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
@@ -151,7 +151,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(recipe: null));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeRepository(recipe: null));
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(userId.Value, recipeId.Value, comment.Id.Value),
             CancellationToken.None);
@@ -162,7 +162,7 @@ public class RecipeCommentsFeatureTests {
     [Fact]
     public async Task DeleteRecipeComment_CommentNotFound_ReturnsFailure() {
         var handler = new DeleteRecipeCommentCommandHandler(
-            new InMemoryRecipeCommentRepository(), new StubRecipeRepository(recipe: null));
+            new InMemoryRecipeCommentRepository(), CreateRecipeRepository(recipe: null));
 
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), Guid.NewGuid()),
@@ -180,7 +180,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(ownedRecipe));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeRepository(ownedRecipe));
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, ownedRecipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
@@ -194,7 +194,7 @@ public class RecipeCommentsFeatureTests {
     public async Task DeleteRecipeComment_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new DeleteRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
-            new StubRecipeRepository(recipe: null));
+            CreateRecipeRepository(recipe: null));
 
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), Guid.NewGuid()),
@@ -211,7 +211,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(recipe: null));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeRepository(recipe: null));
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(Guid.NewGuid(), recipeId.Value, comment.Id.Value),
             CancellationToken.None);
@@ -228,7 +228,7 @@ public class RecipeCommentsFeatureTests {
         var repo = new InMemoryRecipeCommentRepository();
         repo.Seed(comment);
 
-        var handler = new DeleteRecipeCommentCommandHandler(repo, new StubRecipeRepository(recipe));
+        var handler = new DeleteRecipeCommentCommandHandler(repo, CreateRecipeRepository(recipe));
         Result result = await handler.Handle(
             new DeleteRecipeCommentCommand(ownerId.Value, recipe.Id.Value, comment.Id.Value),
             CancellationToken.None);
@@ -301,47 +301,42 @@ public class RecipeCommentsFeatureTests {
         }
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingNotificationRepository : INotificationRepository {
-        public List<Notification> Added { get; } = [];
+    private static INotificationRepository CreateNotificationRepository() =>
+        CreateNotificationRepository(out _);
 
-        public Task<Notification> AddAsync(Notification notification, CancellationToken ct = default) {
-            Added.Add(notification);
-            return Task.FromResult(notification);
-        }
+    private static INotificationRepository CreateNotificationRepository(out List<Notification> addedNotifications) {
+        addedNotifications = [];
+        List<Notification> capturedNotifications = addedNotifications;
 
-        public Task<bool> ExistsAsync(UserId userId, string type, string referenceId, CancellationToken ct = default) =>
-            Task.FromResult(Added.Any(n => n.UserId == userId && string.Equals(n.Type, type, StringComparison.Ordinal) && string.Equals(n.ReferenceId, referenceId, StringComparison.Ordinal)));
-
-        public Task<IReadOnlyList<Notification>> GetByUserAsync(UserId userId, int limit = 50, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<Notification?> GetByIdAsync(NotificationId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Notification notification, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> GetUnreadCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> GetUnreadCountAsync(UserId userId, string type, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task MarkAllReadAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> DeleteExpiredBatchAsync(
-            IReadOnlyCollection<string> transientTypes,
-            DateTime transientReadOlderThanUtc,
-            DateTime transientUnreadOlderThanUtc,
-            DateTime standardReadOlderThanUtc,
-            DateTime standardUnreadOlderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        INotificationRepository repository = Substitute.For<INotificationRepository>();
+        repository
+            .AddAsync(Arg.Do<Notification>(capturedNotifications.Add), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.Arg<Notification>()));
+        repository
+            .ExistsAsync(Arg.Any<UserId>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                string type = call.ArgAt<string>(1);
+                string referenceId = call.ArgAt<string>(2);
+                return Task.FromResult(capturedNotifications.Any(notification =>
+                    notification.UserId == userId &&
+                    string.Equals(notification.Type, type, StringComparison.Ordinal) &&
+                    string.Equals(notification.ReferenceId, referenceId, StringComparison.Ordinal)));
+            });
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeRepository(Recipe? recipe) : IRecipeRepository {
-        public Task<Recipe?> GetByIdAsync(RecipeId id, UserId userId, bool includePublic = true,
-            bool includeSteps = false, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            Task.FromResult(recipe);
-
-        public Task<Recipe> AddAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateNutritionAsync(Recipe r, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(recipe));
+        return repository;
     }
 }

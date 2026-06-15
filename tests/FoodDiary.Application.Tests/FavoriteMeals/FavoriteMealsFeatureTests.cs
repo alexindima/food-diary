@@ -21,7 +21,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task AddFavoriteMeal_WithNullUserId_ReturnsFailure() {
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(), CreateMealRepository(meal: null), CreateUserRepository(user: null));
 
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(UserId: null, Guid.NewGuid(), Name: null), CancellationToken.None);
@@ -32,7 +32,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task AddFavoriteMeal_WhenUserNotFound_ReturnsFailure() {
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(), CreateMealRepository(meal: null), CreateUserRepository(user: null));
 
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null), CancellationToken.None);
@@ -44,7 +44,7 @@ public class FavoriteMealsFeatureTests {
     public async Task AddFavoriteMeal_WhenMealNotFound_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         var handler = new AddFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubMealRepository(meal: null), new StubUserRepository(user));
+            CreateFavoriteMealRepository(), CreateMealRepository(meal: null), CreateUserRepository(user));
 
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, Guid.NewGuid(), Name: null), CancellationToken.None);
@@ -58,10 +58,10 @@ public class FavoriteMealsFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var meal = Meal.Create(user.Id, DateTime.UtcNow, MealType.Lunch);
         var existing = FavoriteMeal.Create(user.Id, meal.Id);
-        var favRepo = new StubFavoriteMealRepository(existingByMealId: existing);
+        IFavoriteMealRepository favRepo = CreateFavoriteMealRepository(existingByMealId: existing);
 
         var handler = new AddFavoriteMealCommandHandler(
-            favRepo, new StubMealRepository(meal), new StubUserRepository(user));
+            favRepo, CreateMealRepository(meal), CreateUserRepository(user));
 
         Result<FavoriteMealModel> result = await handler.Handle(
             new AddFavoriteMealCommand(user.Id.Value, meal.Id.Value, Name: null), CancellationToken.None);
@@ -73,7 +73,7 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task RemoveFavoriteMeal_WithNullUserId_ReturnsFailure() {
         var handler = new RemoveFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(), CreateUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -85,7 +85,7 @@ public class FavoriteMealsFeatureTests {
     public async Task RemoveFavoriteMeal_WhenNotFound_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         var handler = new RemoveFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(), new StubUserRepository(user));
+            CreateFavoriteMealRepository(), CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
@@ -97,8 +97,8 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task RemoveFavoriteMeal_WhenUserNotFound_ReturnsFailure() {
         var handler = new RemoveFavoriteMealCommandHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -110,15 +110,15 @@ public class FavoriteMealsFeatureTests {
     public async Task RemoveFavoriteMeal_WhenExists_Succeeds() {
         var user = User.Create("user@example.com", "hash");
         var favorite = FavoriteMeal.Create(user.Id, MealId.New());
-        var favRepo = new StubFavoriteMealRepository(existingById: favorite);
+        IFavoriteMealRepository favRepo = CreateFavoriteMealRepository(existingById: favorite);
 
-        var handler = new RemoveFavoriteMealCommandHandler(favRepo, new StubUserRepository(user));
+        var handler = new RemoveFavoriteMealCommandHandler(favRepo, CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteMealCommand(user.Id.Value, favorite.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(favRepo.DeleteCalled);
+        await favRepo.Received(1).DeleteAsync(favorite, Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -127,8 +127,8 @@ public class FavoriteMealsFeatureTests {
         var meal = Meal.Create(user.Id, DateTime.UtcNow, MealType.Dinner);
         var favorite = FavoriteMeal.Create(user.Id, meal.Id);
         var handler = new IsMealFavoriteQueryHandler(
-            new StubFavoriteMealRepository(existingByMealId: favorite),
-            new StubUserRepository(user));
+            CreateFavoriteMealRepository(existingByMealId: favorite),
+            CreateUserRepository(user));
 
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, meal.Id.Value), CancellationToken.None);
@@ -141,8 +141,8 @@ public class FavoriteMealsFeatureTests {
     public async Task IsMealFavorite_WhenFavoriteIsMissing_ReturnsFalse() {
         var user = User.Create("user@example.com", "hash");
         var handler = new IsMealFavoriteQueryHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user));
 
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
@@ -154,8 +154,8 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task IsMealFavorite_WhenUserNotFound_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -166,8 +166,8 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task IsMealFavorite_WithNullUserId_ReturnsFailure() {
         var handler = new IsMealFavoriteQueryHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsMealFavoriteQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -197,8 +197,8 @@ public class FavoriteMealsFeatureTests {
         var favorite = FavoriteMeal.Create(user.Id, meal.Id, "  Work lunch  ");
         SetFavoriteMealNavigation(favorite, meal);
         var handler = new GetFavoriteMealsQueryHandler(
-            new StubFavoriteMealRepository(favorites: [favorite]),
-            new StubUserRepository(user));
+            CreateFavoriteMealRepository(favorites: [favorite]),
+            CreateUserRepository(user));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(user.Id.Value), CancellationToken.None);
 
@@ -219,8 +219,8 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task GetFavoriteMeals_WhenUserIsMissing_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -230,84 +230,60 @@ public class FavoriteMealsFeatureTests {
     [Fact]
     public async Task GetFavoriteMeals_WithNullUserId_ReturnsFailure() {
         var handler = new GetFavoriteMealsQueryHandler(
-            new StubFavoriteMealRepository(),
-            new StubUserRepository(user: null));
+            CreateFavoriteMealRepository(),
+            CreateUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteMealModel>> result = await handler.Handle(new GetFavoriteMealsQuery(UserId: null), CancellationToken.None);
 
         Assert.True(result.IsFailure);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubFavoriteMealRepository(
+    private static IFavoriteMealRepository CreateFavoriteMealRepository(
         FavoriteMeal? existingByMealId = null,
         FavoriteMeal? existingById = null,
-        IReadOnlyList<FavoriteMeal>? favorites = null) : IFavoriteMealRepository {
-        private readonly FavoriteMeal? _existingByMealId = existingByMealId;
-        private readonly FavoriteMeal? _existingById = existingById;
-        private readonly IReadOnlyList<FavoriteMeal> _favorites = favorites ?? [];
+        IReadOnlyList<FavoriteMeal>? favorites = null) {
+        IFavoriteMealRepository repository = Substitute.For<IFavoriteMealRepository>();
+        repository
+            .GetByMealIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(existingByMealId));
+        repository
+            .GetByIdAsync(Arg.Any<FavoriteMealId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(existingById));
+        repository
+            .GetByMealIdsAsync(Arg.Any<UserId>(), Arg.Any<IReadOnlyCollection<MealId>>(), Arg.Any<CancellationToken>())
+            .Returns(_ => {
+                IReadOnlyDictionary<MealId, FavoriteMeal> result = existingByMealId is null
+                    ? []
+                    : new Dictionary<MealId, FavoriteMeal> { [existingByMealId.MealId] = existingByMealId };
 
-        public bool DeleteCalled { get; private set; }
-
-        public Task<FavoriteMeal?> GetByMealIdAsync(MealId mealId, UserId userId, CancellationToken ct = default) =>
-            Task.FromResult(_existingByMealId);
-
-        public Task<FavoriteMeal?> GetByIdAsync(FavoriteMealId id, UserId userId, bool asTracking = false, CancellationToken ct = default) =>
-            Task.FromResult(_existingById);
-
-        public Task<IReadOnlyDictionary<MealId, FavoriteMeal>> GetByMealIdsAsync(
-            UserId userId,
-            IReadOnlyCollection<MealId> mealIds,
-            CancellationToken ct = default) {
-            IReadOnlyDictionary<MealId, FavoriteMeal> result = _existingByMealId is null
-                ? []
-                : new Dictionary<MealId, FavoriteMeal> { [_existingByMealId.MealId] = _existingByMealId };
-
-            return Task.FromResult(result);
-        }
-
-        public Task<FavoriteMeal> AddAsync(FavoriteMeal favorite, CancellationToken ct = default) =>
-            Task.FromResult(favorite);
-
-        public Task DeleteAsync(FavoriteMeal favorite, CancellationToken ct = default) {
-            DeleteCalled = true;
-            return Task.CompletedTask;
-        }
-
-        public Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(UserId userId, CancellationToken ct = default) =>
-            Task.FromResult(_favorites);
+                return Task.FromResult(result);
+            });
+        repository
+            .AddAsync(Arg.Any<FavoriteMeal>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.Arg<FavoriteMeal>()));
+        repository
+            .DeleteAsync(Arg.Any<FavoriteMeal>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        repository
+            .GetAllAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(favorites ?? []));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubMealRepository(Meal? meal) : IMealRepository {
-        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken ct = default) =>
-            Task.FromResult(meal);
-
-        public Task<Meal> AddAsync(Meal m, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Meal m, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Meal m, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IMealRepository CreateMealRepository(Meal? meal) {
+        IMealRepository repository = Substitute.For<IMealRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<MealId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(meal));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user) : IUserRepository {
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
-            Task.FromResult(user);
-
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(user));
+        return repository;
     }
 
     private static void SetFavoriteMealNavigation(FavoriteMeal favorite, Meal meal) {

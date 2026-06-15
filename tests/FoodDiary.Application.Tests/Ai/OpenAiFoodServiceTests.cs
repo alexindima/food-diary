@@ -18,9 +18,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -40,9 +40,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            new StubUserRepository(user),
+            CreateUserRepository(user),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -61,9 +61,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            new StubUserRepository(returnNull: true),
+            CreateUserRepository(returnNull: true),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -82,9 +82,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -106,9 +106,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -126,9 +126,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             new RecordingOpenAiFoodClient(),
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -150,9 +150,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -173,9 +173,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            new StubUserRepository(returnNull: true),
+            CreateUserRepository(returnNull: true),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -195,9 +195,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 1_000_000)),
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -220,9 +220,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -249,9 +249,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -271,9 +271,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -289,9 +289,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -309,9 +309,9 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            new StubUserRepository(),
+            CreateUserRepository(),
             new StubDateTimeProvider(),
-            new StubAiPromptProvider());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -403,22 +403,14 @@ public sealed class OpenAiFoodServiceTests {
             Task.FromResult(totals);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user = null, bool returnNull = false) : IUserRepository {
-        private readonly User user = user ?? User.Create("ai-tests@example.com", "hash");
+    private static IUserRepository CreateUserRepository(User? user = null, bool returnNull = false) {
+        User resolvedUser = user ?? User.Create("ai-tests@example.com", "hash");
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(returnNull ? null : resolvedUser));
 
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
-            Task.FromResult<User?>(returnNull ? null : user);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]
@@ -426,9 +418,12 @@ public sealed class OpenAiFoodServiceTests {
         public override DateTimeOffset GetUtcNow() => new(new(2026, 3, 28, 12, 0, 0, DateTimeKind.Utc));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubAiPromptProvider : IAiPromptProvider {
-        public Task<string> GetPromptAsync(string key, CancellationToken cancellationToken = default) =>
-            Task.FromResult(key);
+    private static IAiPromptProvider CreateAiPromptProvider() {
+        IAiPromptProvider provider = Substitute.For<IAiPromptProvider>();
+        provider
+            .GetPromptAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.ArgAt<string>(0)));
+
+        return provider;
     }
 }

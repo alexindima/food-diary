@@ -14,7 +14,7 @@ public class ImagesFeatureTests {
     [Fact]
     public async Task GetImageUploadUrlCommandHandler_WithEmptyUserId_ReturnsFailure() {
         var handler = new GetImageUploadUrlCommandHandler(
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             new FakeImageAssetRepository());
 
         var command = new GetImageUploadUrlCommand(Guid.Empty, "file.jpg", "image/jpeg", 100);
@@ -34,7 +34,7 @@ public class ImagesFeatureTests {
         long fileSizeBytes,
         string expectedMessage) {
         var handler = new GetImageUploadUrlCommandHandler(
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             new FakeImageAssetRepository());
 
         Result<GetImageUploadUrlResult> result = await handler.Handle(
@@ -50,7 +50,7 @@ public class ImagesFeatureTests {
     public async Task GetImageUploadUrlCommandHandler_WithValidRequest_PersistsAssetAndReturnsPresignedUrl() {
         var repository = new FakeImageAssetRepository();
         var handler = new GetImageUploadUrlCommandHandler(
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             repository);
 
         Result<GetImageUploadUrlResult> result = await handler.Handle(
@@ -68,7 +68,7 @@ public class ImagesFeatureTests {
     public async Task DeleteImageAssetCommandHandler_WhenAssetMissing_ReturnsNotFound() {
         var handler = new DeleteImageAssetCommandHandler(
             new FakeImageAssetRepository(),
-            new FakeCleanupService());
+            CreateCleanupService());
 
         var assetId = Guid.NewGuid();
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), assetId), CancellationToken.None);
@@ -85,7 +85,7 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
 
-        var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService());
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService());
         Result result = await handler.Handle(new DeleteImageAssetCommand(anotherUser.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -99,7 +99,7 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
 
-        var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService("storage_error"));
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService("storage_error"));
         Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -118,7 +118,7 @@ public class ImagesFeatureTests {
         var asset = ImageAsset.Create(owner, "images/a.jpg", "https://cdn/a.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
 
-        var handler = new DeleteImageAssetCommandHandler(repo, new FakeCleanupService(cleanupErrorCode));
+        var handler = new DeleteImageAssetCommandHandler(repo, CreateCleanupService(cleanupErrorCode));
         Result result = await handler.Handle(new DeleteImageAssetCommand(owner.Value, asset.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsFailure);
@@ -129,7 +129,7 @@ public class ImagesFeatureTests {
     public async Task DeleteImageAssetCommandHandler_WithEmptyAssetId_ReturnsInvalidDataFailure() {
         var handler = new DeleteImageAssetCommandHandler(
             new FakeImageAssetRepository(),
-            new FakeCleanupService());
+            CreateCleanupService());
 
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
@@ -142,7 +142,7 @@ public class ImagesFeatureTests {
     public async Task DeleteImageAssetCommandHandler_WithEmptyUserId_ReturnsInvalidDataFailure() {
         var handler = new DeleteImageAssetCommandHandler(
             new FakeImageAssetRepository(),
-            new FakeCleanupService());
+            CreateCleanupService());
 
         Result result = await handler.Handle(new DeleteImageAssetCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
@@ -155,7 +155,7 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
@@ -173,7 +173,7 @@ public class ImagesFeatureTests {
         repository.InUseIds.Add(inUse.Id);
         var service = new ImageAssetCleanupService(
             repository,
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         int removed = await service.CleanupOrphansAsync(
@@ -191,7 +191,7 @@ public class ImagesFeatureTests {
         var repository = new FakeImageAssetRepository();
         var service = new ImageAssetCleanupService(
             repository,
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
@@ -211,7 +211,7 @@ public class ImagesFeatureTests {
 
         var service = new ImageAssetCleanupService(
             repo,
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -224,7 +224,7 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_DeleteIfUnused_WithEmptyAssetId_ReturnsInvalid() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
@@ -237,7 +237,7 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_DeleteIfUnused_WhenAssetMissing_ReturnsNotFound() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
-            new FakeImageStorageService(),
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
@@ -254,7 +254,7 @@ public class ImagesFeatureTests {
 
         var service = new ImageAssetCleanupService(
             repo,
-            new ThrowingImageStorageService(),
+            CreateThrowingImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -274,7 +274,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(removable, CancellationToken.None);
         var service = new ImageAssetCleanupService(
             repo,
-            new SelectivelyThrowingImageStorageService("images/fail.jpg"),
+            CreateSelectivelyThrowingImageStorageService("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance);
 
         int removed = await service.CleanupOrphansAsync(
@@ -289,7 +289,7 @@ public class ImagesFeatureTests {
 
     [Fact]
     public async Task ImageAssetAccessService_WhenAssetMissing_ReturnsNotFound() {
-        var service = new ImageAssetAccessService(new FakeImageAssetRepository(), new FakeImageStorageService());
+        var service = new ImageAssetAccessService(new FakeImageAssetRepository(), CreateImageStorageService());
         var assetId = ImageAssetId.New();
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(assetId, UserId.New(), CancellationToken.None);
@@ -305,7 +305,7 @@ public class ImagesFeatureTests {
         var owner = UserId.New();
         var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
-        var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
+        var service = new ImageAssetAccessService(repo, CreateImageStorageService());
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
@@ -319,7 +319,7 @@ public class ImagesFeatureTests {
         var owner = UserId.New();
         var asset = ImageAsset.Create(owner, "images/owned.jpg", "https://cdn.example/owned.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
-        var service = new ImageAssetAccessService(repo, new FakeImageStorageService());
+        var service = new ImageAssetAccessService(repo, CreateImageStorageService());
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, UserId.New(), CancellationToken.None);
 
@@ -335,7 +335,7 @@ public class ImagesFeatureTests {
         await repo.AddAsync(asset, CancellationToken.None);
         var service = new ImageAssetAccessService(
             repo,
-            new FakeImageStorageService(new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.")));
+            CreateImageStorageService(new ImageObjectValidationResult(IsValid: false, "not_found", "Image upload has not completed.")));
 
         Result<ImageAsset?> result = await service.ResolveOptionalAsync(asset.Id, owner, CancellationToken.None);
 
@@ -344,77 +344,68 @@ public class ImagesFeatureTests {
         Assert.Contains("upload has not completed", result.Error.Message, StringComparison.OrdinalIgnoreCase);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class FakeCleanupService(string? errorCode = null) : IImageAssetCleanupService {
-        public Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(errorCode is null
+    private static IImageAssetCleanupService CreateCleanupService(string? errorCode = null) {
+        IImageAssetCleanupService service = Substitute.For<IImageAssetCleanupService>();
+        service
+            .DeleteIfUnusedAsync(Arg.Any<ImageAssetId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(errorCode is null
                 ? new DeleteImageAssetResult(Deleted: true)
-                : new DeleteImageAssetResult(Deleted: false, errorCode));
-
-        public Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
+                : new DeleteImageAssetResult(Deleted: false, errorCode)));
+        service
+            .CleanupOrphansAsync(Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(0));
+        return service;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class FakeImageStorageService(
-        ImageObjectValidationResult? validationResult = null) : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) {
-            return Task.FromResult(new PresignedUpload(
+    private static IImageStorageService CreateImageStorageService(ImageObjectValidationResult? validationResult = null) {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        service
+            .CreatePresignedUploadAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<string>(),
+                Arg.Any<string>(),
+                Arg.Any<long>(),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new PresignedUpload(
                 "https://upload.example",
                 "https://cdn.example/file.jpg",
                 "images/file.jpg",
-                DateTime.UtcNow.AddMinutes(10)));
-        }
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) => Task.CompletedTask;
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true));
+                DateTime.UtcNow.AddMinutes(10))));
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        service
+            .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(validationResult ?? new ImageObjectValidationResult(IsValid: true)));
+        return service;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class ThrowingImageStorageService : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) => throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
-            throw new InvalidOperationException("Simulated storage failure.");
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromException<ImageObjectValidationResult>(new InvalidOperationException("Simulated storage failure."));
+    private static IImageStorageService CreateThrowingImageStorageService() {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        var exception = new InvalidOperationException("Simulated storage failure.");
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(exception));
+        service
+            .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException<ImageObjectValidationResult>(exception));
+        return service;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SelectivelyThrowingImageStorageService(string failingObjectKey) : IImageStorageService {
-        public Task<PresignedUpload> CreatePresignedUploadAsync(
-            UserId userId,
-            string fileName,
-            string contentType,
-            long fileSizeBytes,
-            CancellationToken cancellationToken) => throw new NotSupportedException();
-
-        public Task DeleteAsync(string objectKey, CancellationToken cancellationToken) =>
-            string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
-                ? throw new InvalidOperationException("Simulated storage failure.")
-                : Task.CompletedTask;
-
-        public Task<ImageObjectValidationResult> ValidateUploadedObjectAsync(
-            string objectKey,
-            CancellationToken cancellationToken) =>
-            Task.FromResult(new ImageObjectValidationResult(IsValid: true));
+    private static IImageStorageService CreateSelectivelyThrowingImageStorageService(string failingObjectKey) {
+        IImageStorageService service = Substitute.For<IImageStorageService>();
+        service
+            .DeleteAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string objectKey = call.Arg<string>();
+                return string.Equals(objectKey, failingObjectKey, StringComparison.Ordinal)
+                    ? Task.FromException(new InvalidOperationException("Simulated storage failure."))
+                    : Task.CompletedTask;
+            });
+        service
+            .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(new ImageObjectValidationResult(IsValid: true)));
+        return service;
     }
 
     [ExcludeFromCodeCoverage]

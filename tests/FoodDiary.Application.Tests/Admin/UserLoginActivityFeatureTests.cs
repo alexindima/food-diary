@@ -5,7 +5,6 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Tests.Admin;
 
@@ -13,33 +12,31 @@ namespace FoodDiary.Application.Tests.Admin;
 public sealed class UserLoginActivityFeatureTests {
     [Fact]
     public async Task GetAdminUserLoginEvents_MasksIpAddressAndNormalizesPaging() {
-        var repository = new RecordingUserLoginEventRepository {
-            PagedItems = [
-                new UserLoginEventReadModel(
-                    Guid.NewGuid(),
-                    Guid.NewGuid(),
-                    "user@example.com",
-                    "password",
-                    "203.0.113.42",
-                    "Mozilla/5.0 Chrome/125.0.0.0",
-                    "Chrome",
-                    "125.0.0.0",
-                    "Windows",
-                    "Desktop",
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
-            ],
-            TotalItems = 42,
-        };
-        var handler = new GetAdminUserLoginEventsQueryHandler(repository);
+        IReadOnlyList<UserLoginEventReadModel> items = [
+            new UserLoginEventReadModel(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                "user@example.com",
+                "password",
+                "203.0.113.42",
+                "Mozilla/5.0 Chrome/125.0.0.0",
+                "Chrome",
+                "125.0.0.0",
+                "Windows",
+                "Desktop",
+                new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
+        ];
+        IUserLoginEventRepository repository = CreatePagedRepository(items, 42, out Func<(int Page, int Limit, string? Search)> getLastPaged);
+        GetAdminUserLoginEventsQueryHandler handler = new(repository);
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 0, Limit: 500, UserId: null, Search: "chrome"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(1, repository.LastPage);
-        Assert.Equal(20, repository.LastLimit);
-        Assert.Equal("chrome", repository.LastSearch);
+        Assert.Equal(1, getLastPaged().Page);
+        Assert.Equal(20, getLastPaged().Limit);
+        Assert.Equal("chrome", getLastPaged().Search);
         Assert.Equal(3, result.Value.TotalPages);
         Assert.Equal(42, result.Value.TotalItems);
         Assert.Equal("203.0.113.0", Assert.Single(result.Value.Data).MaskedIpAddress);
@@ -47,24 +44,22 @@ public sealed class UserLoginActivityFeatureTests {
 
     [Fact]
     public async Task GetAdminUserLoginEvents_MasksIpv6Address() {
-        var repository = new RecordingUserLoginEventRepository {
-            PagedItems = [
-                new UserLoginEventReadModel(
-                    Guid.NewGuid(),
-                    Guid.NewGuid(),
-                    "user@example.com",
-                    "password",
-                    "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
-                    UserAgent: null,
-                    BrowserName: null,
-                    BrowserVersion: null,
-                    OperatingSystem: null,
-                    DeviceType: null,
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
-            ],
-            TotalItems = 1,
-        };
-        var handler = new GetAdminUserLoginEventsQueryHandler(repository);
+        IReadOnlyList<UserLoginEventReadModel> items = [
+            new UserLoginEventReadModel(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                "user@example.com",
+                "password",
+                "2001:0db8:85a3:0000:0000:8a2e:0370:7334",
+                UserAgent: null,
+                BrowserName: null,
+                BrowserVersion: null,
+                OperatingSystem: null,
+                DeviceType: null,
+                new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
+        ];
+        IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
+        GetAdminUserLoginEventsQueryHandler handler = new(repository);
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
@@ -76,24 +71,22 @@ public sealed class UserLoginActivityFeatureTests {
 
     [Fact]
     public async Task GetAdminUserLoginEvents_WithBlankIpAddress_ReturnsNullMaskedIpAddress() {
-        var repository = new RecordingUserLoginEventRepository {
-            PagedItems = [
-                new UserLoginEventReadModel(
-                    Guid.NewGuid(),
-                    Guid.NewGuid(),
-                    "user@example.com",
-                    "password",
-                    "   ",
-                    UserAgent: null,
-                    BrowserName: null,
-                    BrowserVersion: null,
-                    OperatingSystem: null,
-                    DeviceType: null,
-                    new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
-            ],
-            TotalItems = 1,
-        };
-        var handler = new GetAdminUserLoginEventsQueryHandler(repository);
+        IReadOnlyList<UserLoginEventReadModel> items = [
+            new UserLoginEventReadModel(
+                Guid.NewGuid(),
+                Guid.NewGuid(),
+                "user@example.com",
+                "password",
+                "   ",
+                UserAgent: null,
+                BrowserName: null,
+                BrowserVersion: null,
+                OperatingSystem: null,
+                DeviceType: null,
+                new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc)),
+        ];
+        IUserLoginEventRepository repository = CreatePagedRepository(items, 1, out _);
+        GetAdminUserLoginEventsQueryHandler handler = new(repository);
 
         Result<PagedResponse<AdminUserLoginEventModel>> result = await handler.Handle(
             new GetAdminUserLoginEventsQuery(Page: 1, Limit: 20, UserId: null, Search: null),
@@ -108,63 +101,53 @@ public sealed class UserLoginActivityFeatureTests {
         var fromUtc = new DateTime(2030, 3, 1, 0, 0, 0, DateTimeKind.Utc);
         var toUtc = new DateTime(2030, 3, 31, 23, 59, 59, DateTimeKind.Utc);
         var lastSeenAtUtc = new DateTime(2030, 3, 28, 12, 0, 0, DateTimeKind.Utc);
-        var repository = new RecordingUserLoginEventRepository {
-            SummaryItems = [
-                new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc),
-            ],
-        };
-        var handler = new GetAdminUserLoginSummaryQueryHandler(repository);
+        IReadOnlyList<UserLoginDeviceSummaryModel> summaryItems = [
+            new UserLoginDeviceSummaryModel("device:Desktop", 7, lastSeenAtUtc),
+        ];
+        IUserLoginEventRepository repository = CreateSummaryRepository(summaryItems, out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary);
+        GetAdminUserLoginSummaryQueryHandler handler = new(repository);
 
         Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>> result = await handler.Handle(new GetAdminUserLoginSummaryQuery(fromUtc, toUtc), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(fromUtc, repository.LastSummaryFromUtc);
-        Assert.Equal(toUtc, repository.LastSummaryToUtc);
+        Assert.Equal(fromUtc, getLastSummary().FromUtc);
+        Assert.Equal(toUtc, getLastSummary().ToUtc);
         AdminUserLoginDeviceSummaryModel item = Assert.Single(result.Value);
         Assert.Equal("device:Desktop", item.Key);
         Assert.Equal(7, item.Count);
         Assert.Equal(lastSeenAtUtc, item.LastSeenAtUtc);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingUserLoginEventRepository : IUserLoginEventRepository {
-        public IReadOnlyList<UserLoginEventReadModel> PagedItems { get; init; } = [];
-        public int TotalItems { get; init; }
-        public IReadOnlyList<UserLoginDeviceSummaryModel> SummaryItems { get; init; } = [];
-        public int LastPage { get; private set; }
-        public int LastLimit { get; private set; }
-        public string? LastSearch { get; private set; }
-        public DateTime? LastSummaryFromUtc { get; private set; }
-        public DateTime? LastSummaryToUtc { get; private set; }
+    private static IUserLoginEventRepository CreatePagedRepository(
+        IReadOnlyList<UserLoginEventReadModel> items,
+        int totalItems,
+        out Func<(int Page, int Limit, string? Search)> getLastPaged) {
+        IUserLoginEventRepository repository = Substitute.For<IUserLoginEventRepository>();
+        (int Page, int Limit, string? Search) lastPaged = (0, 0, null);
+        repository
+            .GetPagedAsync(
+                Arg.Do<int>(page => lastPaged.Page = page),
+                Arg.Do<int>(limit => lastPaged.Limit = limit),
+                Arg.Any<Guid?>(),
+                Arg.Do<string?>(search => lastPaged.Search = search),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult((items, totalItems)));
+        getLastPaged = () => lastPaged;
+        return repository;
+    }
 
-        public Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(
-            int page,
-            int limit,
-            Guid? userId,
-            string? search,
-            CancellationToken cancellationToken = default) {
-            LastPage = page;
-            LastLimit = limit;
-            LastSearch = search;
-            return Task.FromResult((PagedItems, TotalItems));
-        }
-
-        public Task<IReadOnlyList<UserLoginDeviceSummaryModel>> GetDeviceSummaryAsync(
-            DateTime? fromUtc,
-            DateTime? toUtc,
-            CancellationToken cancellationToken = default) {
-            LastSummaryFromUtc = fromUtc;
-            LastSummaryToUtc = toUtc;
-            return Task.FromResult(SummaryItems);
-        }
-
-        public Task<int> DeleteOlderThanAsync(
-            DateTime olderThanUtc,
-            int batchSize,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+    private static IUserLoginEventRepository CreateSummaryRepository(
+        IReadOnlyList<UserLoginDeviceSummaryModel> items,
+        out Func<(DateTime? FromUtc, DateTime? ToUtc)> getLastSummary) {
+        IUserLoginEventRepository repository = Substitute.For<IUserLoginEventRepository>();
+        (DateTime? FromUtc, DateTime? ToUtc) lastSummary = (null, null);
+        repository
+            .GetDeviceSummaryAsync(
+                Arg.Do<DateTime?>(fromUtc => lastSummary.FromUtc = fromUtc),
+                Arg.Do<DateTime?>(toUtc => lastSummary.ToUtc = toUtc),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(items));
+        getLastSummary = () => lastSummary;
+        return repository;
     }
 }

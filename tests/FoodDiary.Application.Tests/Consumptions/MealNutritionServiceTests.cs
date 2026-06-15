@@ -140,21 +140,23 @@ public class MealNutritionServiceTests {
         IReadOnlyDictionary<ProductId, Product>? products = null,
         IReadOnlyDictionary<RecipeId, Recipe>? recipes = null) {
         return new MealNutritionService(
-            new StubProductLookup(products ?? new Dictionary<ProductId, Product>()),
-            new StubRecipeLookup(recipes ?? new Dictionary<RecipeId, Recipe>()));
+            CreateProductLookup(products ?? new Dictionary<ProductId, Product>()),
+            CreateRecipeLookup(recipes ?? new Dictionary<RecipeId, Recipe>()));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubProductLookup(IReadOnlyDictionary<ProductId, Product> products) : IProductLookupService {
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
-            IEnumerable<ProductId> ids, UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(products);
+    private static IProductLookupService CreateProductLookup(IReadOnlyDictionary<ProductId, Product> products) {
+        IProductLookupService lookup = Substitute.For<IProductLookupService>();
+        lookup
+            .GetAccessibleByIdsAsync(Arg.Any<IEnumerable<ProductId>>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(products));
+        return lookup;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeLookup(IReadOnlyDictionary<RecipeId, Recipe> recipes) : IRecipeLookupService {
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetAccessibleByIdsAsync(
-            IEnumerable<RecipeId> ids, UserId userId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(recipes);
+    private static IRecipeLookupService CreateRecipeLookup(IReadOnlyDictionary<RecipeId, Recipe> recipes) {
+        IRecipeLookupService lookup = Substitute.For<IRecipeLookupService>();
+        lookup
+            .GetAccessibleByIdsAsync(Arg.Any<IEnumerable<RecipeId>>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(recipes));
+        return lookup;
     }
 }

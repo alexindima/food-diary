@@ -31,10 +31,10 @@ public class ExportFeatureTests {
     }
 
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
-        CreateHandler(new StubMealRepository(meals));
+        CreateHandler(CreateMealRepository(meals));
 
-    private static ExportDiaryQueryHandler CreateHandler(StubMealRepository repository) =>
-        new(repository, new SingleUserRepository(), new StubPdfGenerator());
+    private static ExportDiaryQueryHandler CreateHandler(IMealRepository repository) =>
+        new(repository, CreateUserRepository(), CreatePdfGenerator(out _));
 
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
@@ -57,8 +57,8 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithPdfFormat_ReturnsPdfFileResult() {
         var userId = UserId.New();
         Meal[] meals = [CreateMeal(userId)];
-        var pdfGenerator = new StubPdfGenerator();
-        var handler = new ExportDiaryQueryHandler(new StubMealRepository(meals), new SingleUserRepository(), pdfGenerator);
+        IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
+        var handler = new ExportDiaryQueryHandler(CreateMealRepository(meals), CreateUserRepository(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
@@ -67,29 +67,30 @@ public class ExportFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal("application/pdf", result.Value.ContentType);
         Assert.EndsWith(".pdf", result.Value.FileName, StringComparison.Ordinal);
-        Assert.Equal("ru", pdfGenerator.LastLocale);
-        Assert.Equal(240, pdfGenerator.LastTimeZoneOffsetMinutes);
-        Assert.Equal("https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„", pdfGenerator.LastReportOrigin);
+        (string? locale, int? timeZoneOffsetMinutes, string? reportOrigin) = getPdfCall();
+        Assert.Equal("ru", locale);
+        Assert.Equal(240, timeZoneOffsetMinutes);
+        Assert.Equal("https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„", reportOrigin);
     }
 
     [Fact]
     public async Task ExportDiary_WithUnsafeReportOrigin_DropsOriginBeforePdfGeneration() {
         var userId = UserId.New();
-        var pdfGenerator = new StubPdfGenerator();
-        var handler = new ExportDiaryQueryHandler(new StubMealRepository([]), new SingleUserRepository(), pdfGenerator);
+        IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
+        var handler = new ExportDiaryQueryHandler(CreateMealRepository([]), CreateUserRepository(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Null(pdfGenerator.LastReportOrigin);
+        Assert.Null(getPdfCall().ReportOrigin);
     }
 
     [Fact]
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
-        var repository = new StubMealRepository([]);
+        IMealRepository repository = CreateMealRepository([], out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod);
         ExportDiaryQueryHandler handler = CreateHandler(repository);
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
@@ -99,8 +100,9 @@ public class ExportFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.Equal(localDayStartUtc, repository.LastDateFrom);
-        Assert.Equal(localDayEndUtc, repository.LastDateTo);
+        (DateTime? dateFrom, DateTime? dateTo) = getLastPeriod();
+        Assert.Equal(localDayStartUtc, dateFrom);
+        Assert.Equal(localDayEndUtc, dateTo);
     }
 
     [Fact]
@@ -217,9 +219,9 @@ public class ExportFeatureTests {
         var user = User.Create("export-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new ExportDiaryQueryHandler(
-            new StubMealRepository([]),
-            new SingleUserRepository(user),
-            new StubPdfGenerator());
+            CreateMealRepository([]),
+            CreateUserRepository(user),
+            CreatePdfGenerator(out _));
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
@@ -237,7 +239,7 @@ public class ExportFeatureTests {
         profile.UpsertSymptomEntry(TestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
         profile.UpsertFertilitySignal(TestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
         profile.UpsertFactor(CycleFactorType.HormonalContraception, TestDate.AddDays(-1), endDate: null, notes: "pill");
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -259,7 +261,7 @@ public class ExportFeatureTests {
     public async Task ExportCycle_WithValidTimeZoneOffset_UsesOffsetForFileName() {
         var userId = UserId.New();
         var profile = CycleProfile.Create(userId, TestDate);
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(
@@ -276,7 +278,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithNoCurrentProfile_ReturnsNotFound() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -288,7 +290,7 @@ public class ExportFeatureTests {
 
     [Fact]
     public async Task ExportCycle_WithNullUserId_ReturnsFailure() {
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
@@ -303,8 +305,8 @@ public class ExportFeatureTests {
         var user = User.Create("cycle-export-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new ExportCycleQueryHandler(
-            new StubCycleRepository(profile: null),
-            new SingleUserRepository(user));
+            CreateCycleRepository(profile: null),
+            CreateUserRepository(user));
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
@@ -317,7 +319,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithDateFromAfterDateTo_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate.AddDays(1), TestDate),
@@ -330,7 +332,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithRangeOverOneYear_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(new StubCycleRepository(profile: null), new SingleUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(367)),
@@ -464,90 +466,77 @@ public class ExportFeatureTests {
         Assert.Equal(0xBF, csv[2]);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubMealRepository(IReadOnlyList<Meal> meals) : IMealRepository {
-        public DateTime? LastDateFrom { get; private set; }
-        public DateTime? LastDateTo { get; private set; }
+    private static IMealRepository CreateMealRepository(IReadOnlyList<Meal> meals) =>
+        CreateMealRepository(meals, out _);
 
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) {
-            LastDateFrom = dateFrom;
-            LastDateTo = dateTo;
-            return Task.FromResult(meals);
-        }
+    private static IMealRepository CreateMealRepository(
+        IReadOnlyList<Meal> meals,
+        out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod) {
+        DateTime? lastDateFrom = null;
+        DateTime? lastDateTo = null;
+        getLastPeriod = () => (lastDateFrom, lastDateTo);
 
-        public Task<Meal> AddAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+        IMealRepository repository = Substitute.For<IMealRepository>();
+        repository
+            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                lastDateFrom = call.ArgAt<DateTime>(1);
+                lastDateTo = call.ArgAt<DateTime>(2);
+                return Task.FromResult(meals);
+            });
+
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User? user = null) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
-            Task.FromResult<User?>(user is null || user.Id == id ? user ?? User.Create("export-user@example.com", "hash") : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user = null) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.ArgAt<UserId>(0);
+                return Task.FromResult<User?>(user is null || user.Id == id ? user ?? User.Create("export-user@example.com", "hash") : null);
+            });
+
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubCycleRepository(CycleProfile? profile) : ICycleRepository {
-        public Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static ICycleRepository CreateCycleRepository(CycleProfile? profile) {
+        ICycleRepository repository = Substitute.For<ICycleRepository>();
+        repository
+            .GetCurrentAsync(Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                return Task.FromResult(profile is null || profile.UserId != userId ? null : profile);
+            });
 
-        public Task UpdateAsync(CycleProfile profile, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<CycleProfile?> GetByIdAsync(
-            CycleProfileId id,
-            UserId userId,
-            bool includeDetails = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<CycleProfile?> GetCurrentAsync(
-            UserId userId,
-            bool includeDetails = false,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(profile is null || profile.UserId != userId ? null : profile);
-
-        public Task<IReadOnlyList<CycleProfile>> GetByUserAsync(
-            UserId userId,
-            bool includeDetails = false,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubPdfGenerator : IDiaryPdfGenerator {
-        public string? LastLocale { get; private set; }
-        public int? LastTimeZoneOffsetMinutes { get; private set; }
-        public string? LastReportOrigin { get; private set; }
+    private static IDiaryPdfGenerator CreatePdfGenerator(
+        out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getLastCall) {
+        string? lastLocale = null;
+        int? lastTimeZoneOffsetMinutes = null;
+        string? lastReportOrigin = null;
+        getLastCall = () => (lastLocale, lastTimeZoneOffsetMinutes, lastReportOrigin);
 
-        public Task<byte[]> GenerateAsync(
-            IReadOnlyList<Meal> meals,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string? locale,
-            int? timeZoneOffsetMinutes,
-            string? reportOrigin,
-            CancellationToken cancellationToken) {
-            LastLocale = locale;
-            LastTimeZoneOffsetMinutes = timeZoneOffsetMinutes;
-            LastReportOrigin = reportOrigin;
-            return Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
-        }
+        IDiaryPdfGenerator generator = Substitute.For<IDiaryPdfGenerator>();
+        generator
+            .GenerateAsync(
+                Arg.Any<IReadOnlyList<Meal>>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<DateTime>(),
+                Arg.Any<string?>(),
+                Arg.Any<int?>(),
+                Arg.Any<string?>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                lastLocale = call.ArgAt<string?>(3);
+                lastTimeZoneOffsetMinutes = call.ArgAt<int?>(4);
+                lastReportOrigin = call.ArgAt<string?>(5);
+                return Task.FromResult<byte[]>([0x25, 0x50, 0x44, 0x46]); // %PDF magic bytes
+            });
+
+        return generator;
     }
 
     private static void SetMealDate(Meal meal, DateTime date) {

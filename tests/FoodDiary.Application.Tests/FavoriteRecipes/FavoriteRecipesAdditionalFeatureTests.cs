@@ -23,8 +23,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var favoriteRepository = new InMemoryFavoriteRecipeRepository(recipe);
         var handler = new AddFavoriteRecipeCommandHandler(
             favoriteRepository,
-            new SingleRecipeRepository(recipe),
-            new SingleUserRepository(user));
+            CreateRecipeRepository(recipe),
+            CreateUserRepository(user));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
@@ -42,8 +42,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("missing-favorite-recipe@example.com", "hash");
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleRecipeRepository(recipe: null),
-            new SingleUserRepository(user));
+            CreateRecipeRepository(recipe: null),
+            CreateUserRepository(user));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(user.Id.Value, Guid.NewGuid(), "Missing"),
@@ -61,8 +61,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         SetRecipeNavigation(existing, recipe);
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe, [existing]),
-            new SingleRecipeRepository(recipe),
-            new SingleUserRepository(user));
+            CreateRecipeRepository(recipe),
+            CreateUserRepository(user));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Again"),
@@ -76,8 +76,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task AddFavoriteRecipe_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleRecipeRepository(recipe: null),
-            new SingleUserRepository(User.Create("invalid-add-favorite-recipe@example.com", "hash")));
+            CreateRecipeRepository(recipe: null),
+            CreateUserRepository(User.Create("invalid-add-favorite-recipe@example.com", "hash")));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid(), "Invalid"),
@@ -94,8 +94,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         Recipe recipe = CreateRecipe(user.Id, "Deleted User Soup");
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe),
-            new SingleRecipeRepository(recipe),
-            new SingleUserRepository(user));
+            CreateRecipeRepository(recipe),
+            CreateUserRepository(user));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(user.Id.Value, recipe.Id.Value, "Dinner"),
@@ -110,8 +110,8 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         Recipe recipe = CreateRecipe(UserId.New(), "Missing User Soup");
         var handler = new AddFavoriteRecipeCommandHandler(
             new InMemoryFavoriteRecipeRepository(recipe),
-            new SingleRecipeRepository(recipe),
-            new SingleUserRepository(user: null));
+            CreateRecipeRepository(recipe),
+            CreateUserRepository(user: null));
 
         Result<FavoriteRecipeModel> result = await handler.Handle(
             new AddFavoriteRecipeCommand(Guid.NewGuid(), recipe.Id.Value, "Dinner"),
@@ -129,7 +129,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         SetRecipeNavigation(favorite, recipe);
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(recipe, [favorite]),
-            new SingleUserRepository(user));
+            CreateUserRepository(user));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
 
@@ -142,7 +142,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task GetFavoriteRecipes_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(User.Create("invalid-get-favorite-recipes@example.com", "hash")));
+            CreateUserRepository(User.Create("invalid-get-favorite-recipes@example.com", "hash")));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.Empty), CancellationToken.None);
 
@@ -156,7 +156,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(user));
+            CreateUserRepository(user));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(user.Id.Value), CancellationToken.None);
 
@@ -168,7 +168,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task GetFavoriteRecipes_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new GetFavoriteRecipesQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(user: null));
+            CreateUserRepository(user: null));
 
         Result<IReadOnlyList<FavoriteRecipeModel>> result = await handler.Handle(new GetFavoriteRecipesQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -181,7 +181,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var user = User.Create("is-favorite-recipe@example.com", "hash");
         var handler = new IsRecipeFavoriteQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(user));
+            CreateUserRepository(user));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
@@ -197,7 +197,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new IsRecipeFavoriteQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(user));
+            CreateUserRepository(user));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(user.Id.Value, Guid.NewGuid()),
@@ -211,7 +211,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task IsRecipeFavorite_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new IsRecipeFavoriteQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(user: null));
+            CreateUserRepository(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
@@ -225,7 +225,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task IsRecipeFavorite_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new IsRecipeFavoriteQueryHandler(
             new InMemoryFavoriteRecipeRepository(),
-            new SingleUserRepository(User.Create("invalid-is-favorite-recipe@example.com", "hash")));
+            CreateUserRepository(User.Create("invalid-is-favorite-recipe@example.com", "hash")));
 
         Result<bool> result = await handler.Handle(
             new IsRecipeFavoriteQuery(Guid.Empty, Guid.NewGuid()),
@@ -242,7 +242,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
         SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
@@ -256,7 +256,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
     public async Task RemoveFavoriteRecipe_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-remove-favorite-recipe@example.com", "hash");
         var repository = new InMemoryFavoriteRecipeRepository();
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(user.Id.Value, Guid.NewGuid()),
@@ -272,7 +272,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var repository = new InMemoryFavoriteRecipeRepository();
         var handler = new RemoveFavoriteRecipeCommandHandler(
             repository,
-            new SingleUserRepository(User.Create("invalid-remove-favorite-recipe@example.com", "hash")));
+            CreateUserRepository(User.Create("invalid-remove-favorite-recipe@example.com", "hash")));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(Guid.Empty, Guid.NewGuid()),
@@ -291,7 +291,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var favorite = FavoriteRecipe.Create(user.Id, recipe.Id, "Dessert");
         SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateUserRepository(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(user.Id.Value, favorite.Id.Value),
@@ -309,7 +309,7 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
         var favorite = FavoriteRecipe.Create(new UserId(userId), recipe.Id, "Dessert");
         SetRecipeNavigation(favorite, recipe);
         var repository = new InMemoryFavoriteRecipeRepository(recipe, [favorite]);
-        var handler = new RemoveFavoriteRecipeCommandHandler(repository, new SingleUserRepository(user: null));
+        var handler = new RemoveFavoriteRecipeCommandHandler(repository, CreateUserRepository(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteRecipeCommand(userId, favorite.Id.Value),
@@ -374,32 +374,38 @@ public sealed class FavoriteRecipesAdditionalFeatureTests {
                 _favorites.Where(f => f.UserId == userId && recipeIds.Contains(f.RecipeId)).ToDictionary(f => f.RecipeId));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleRecipeRepository(Recipe? recipe) : IRecipeRepository {
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<Recipe?> GetByIdAsync(RecipeId id, UserId userId, bool includePublic = true, bool includeSteps = false, bool asTracking = false, CancellationToken cancellationToken = default) => Task.FromResult(recipe is not null && recipe.Id == id ? recipe : null);
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<RecipeId> ids, UserId userId, bool includePublic = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.Arg<RecipeId>();
+                return Task.FromResult(recipe is not null && recipe.Id == id ? recipe : null);
+            });
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User? user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        return repository;
     }
 
     private static void SetRecipeNavigation(FavoriteRecipe favorite, Recipe recipe) {

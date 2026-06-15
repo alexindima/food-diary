@@ -17,33 +17,33 @@ public class LessonsFeatureTests {
     public async Task MarkLessonRead_WhenLessonExists_Succeeds() {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
-        var repo = new StubLessonRepository(lesson, hasProgress: false);
+        INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: false, out Func<bool> wasProgressAdded);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(repo.ProgressAdded);
+        Assert.True(wasProgressAdded());
     }
 
     [Fact]
     public async Task MarkLessonRead_WhenAlreadyRead_ReturnsSuccessWithoutDuplicate() {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
-        var repo = new StubLessonRepository(lesson, hasProgress: true);
+        INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: true, out Func<bool> wasProgressAdded);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.False(repo.ProgressAdded);
+        Assert.False(wasProgressAdded());
     }
 
     [Fact]
     public async Task MarkLessonRead_WhenLessonNotFound_ReturnsFailure() {
-        var repo = new StubLessonRepository(lesson: null, hasProgress: false);
+        INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
         var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
@@ -56,7 +56,7 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkLessonReadCommandHandler(
-            new StubLessonRepository(lesson: null, hasProgress: false), new FixedDateTimeProvider());
+            CreateLessonRepository(lesson: null, hasProgress: false), new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -71,9 +71,10 @@ public class LessonsFeatureTests {
         NutritionLesson secondLesson = CreateLesson("First", "ru", LessonCategory.Macronutrients, sortOrder: 1);
         NutritionLesson otherCategoryLesson = CreateLesson("Hydration", "ru", LessonCategory.Hydration, sortOrder: 0);
         var progress = UserLessonProgress.Create(userId, secondLesson.Id, DateTime.UtcNow);
-        var repository = new StubLessonRepository(
+        INutritionLessonRepository repository = CreateLessonRepository(
             [firstLesson, secondLesson, otherCategoryLesson],
-            [progress]);
+            [progress],
+            out List<(string Locale, LessonCategory? Category)> localeRequests);
         var handler = new GetLessonsQueryHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
@@ -92,14 +93,17 @@ public class LessonsFeatureTests {
                 Assert.Equal("Second", item.Title);
                 Assert.False(item.IsRead);
             });
-        Assert.Equal(("ru", LessonCategory.Macronutrients), repository.LocaleRequests.Single());
+        Assert.Equal(("ru", LessonCategory.Macronutrients), localeRequests.Single());
     }
 
     [Fact]
     public async Task GetLessons_WhenLocalizedLessonsAreMissing_FallsBackToEnglish() {
         var userId = UserId.New();
         NutritionLesson englishLesson = CreateLesson("English", "en", LessonCategory.NutritionBasics);
-        var repository = new StubLessonRepository([englishLesson], []);
+        INutritionLessonRepository repository = CreateLessonRepository(
+            [englishLesson],
+            [],
+            out List<(string Locale, LessonCategory? Category)> localeRequests);
         var handler = new GetLessonsQueryHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
@@ -108,12 +112,15 @@ public class LessonsFeatureTests {
         Assert.True(result.IsSuccess);
         LessonSummaryModel lesson = Assert.Single(result.Value);
         Assert.Equal(englishLesson.Id.Value, lesson.Id);
-        Assert.Equal([("fr", null), ("en", null)], repository.LocaleRequests);
+        Assert.Equal([("fr", null), ("en", null)], localeRequests);
     }
 
     [Fact]
     public async Task GetLessons_WithUnknownCategory_IgnoresCategoryFilter() {
-        var repository = new StubLessonRepository([], []);
+        INutritionLessonRepository repository = CreateLessonRepository(
+            [],
+            [],
+            out List<(string Locale, LessonCategory? Category)> localeRequests);
         var handler = new GetLessonsQueryHandler(repository);
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
@@ -121,12 +128,12 @@ public class LessonsFeatureTests {
 
         Assert.True(result.IsSuccess);
         Assert.Empty(result.Value);
-        Assert.Equal(("en", null), repository.LocaleRequests.Single());
+        Assert.Equal(("en", null), localeRequests.Single());
     }
 
     [Fact]
     public async Task GetLessons_WithNullUserId_ReturnsFailure() {
-        var handler = new GetLessonsQueryHandler(new StubLessonRepository([], []));
+        var handler = new GetLessonsQueryHandler(CreateLessonRepository([], []));
 
         Result<IReadOnlyList<LessonSummaryModel>> result = await handler.Handle(
             new GetLessonsQuery(UserId: null, "en", Category: null), CancellationToken.None);
@@ -139,7 +146,7 @@ public class LessonsFeatureTests {
         var userId = UserId.New();
         NutritionLesson lesson = CreateLesson("Protein basics", "en", LessonCategory.Macronutrients);
         var progress = UserLessonProgress.Create(userId, lesson.Id, DateTime.UtcNow);
-        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([lesson], [progress]));
+        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([lesson], [progress]));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(userId.Value, lesson.Id.Value), CancellationToken.None);
@@ -152,7 +159,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task GetLessonById_WhenLessonIsMissing_ReturnsNotFound() {
-        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
+        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([], []));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -163,7 +170,7 @@ public class LessonsFeatureTests {
 
     [Fact]
     public async Task GetLessonById_WithNullUserId_ReturnsFailure() {
-        var handler = new GetLessonByIdQueryHandler(new StubLessonRepository([], []));
+        var handler = new GetLessonByIdQueryHandler(CreateLessonRepository([], []));
 
         Result<LessonDetailModel> result = await handler.Handle(
             new GetLessonByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -211,63 +218,93 @@ public class LessonsFeatureTests {
         int sortOrder = 0) =>
         NutritionLesson.Create(title, "Content", $"{title} summary", locale, category, LessonDifficulty.Beginner, 5, sortOrder);
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubLessonRepository(
+    private static INutritionLessonRepository CreateLessonRepository(
+        NutritionLesson? lesson,
+        bool hasProgress) =>
+        CreateLessonRepository(lesson, hasProgress, out _);
+
+    private static INutritionLessonRepository CreateLessonRepository(
+        NutritionLesson? lesson,
+        bool hasProgress,
+        out Func<bool> wasProgressAdded) =>
+        CreateLessonRepository(lesson is null ? [] : [lesson], [], hasProgress, out wasProgressAdded, out _);
+
+    private static INutritionLessonRepository CreateLessonRepository(
         IReadOnlyCollection<NutritionLesson> lessons,
-        IReadOnlyCollection<UserLessonProgress> progress) : INutritionLessonRepository {
-        private readonly List<NutritionLesson> _lessons = [.. lessons];
-        private readonly List<UserLessonProgress> _progress = [.. progress];
-        private readonly bool _hasProgress;
+        IReadOnlyCollection<UserLessonProgress> progress) =>
+        CreateLessonRepository(lessons, progress, hasProgress: false, out _, out _);
 
-        public StubLessonRepository(NutritionLesson? lesson, bool hasProgress)
-            : this(lesson is null ? [] : [lesson], []) {
-            _hasProgress = hasProgress;
-        }
+    private static INutritionLessonRepository CreateLessonRepository(
+        IReadOnlyCollection<NutritionLesson> lessons,
+        IReadOnlyCollection<UserLessonProgress> progress,
+        out List<(string Locale, LessonCategory? Category)> localeRequests) =>
+        CreateLessonRepository(lessons, progress, hasProgress: false, out _, out localeRequests);
 
-        public bool ProgressAdded { get; private set; }
-        public List<(string Locale, LessonCategory? Category)> LocaleRequests { get; } = [];
+    private static INutritionLessonRepository CreateLessonRepository(
+        IReadOnlyCollection<NutritionLesson> lessons,
+        IReadOnlyCollection<UserLessonProgress> progress,
+        bool hasProgress,
+        out Func<bool> wasProgressAdded,
+        out List<(string Locale, LessonCategory? Category)> localeRequests) {
+        List<NutritionLesson> storedLessons = [.. lessons];
+        List<UserLessonProgress> storedProgress = [.. progress];
+        bool progressAdded = false;
+        List<(string Locale, LessonCategory? Category)> capturedLocaleRequests = [];
 
-        public Task<NutritionLesson?> GetByIdAsync(NutritionLessonId id, CancellationToken ct = default) =>
-            Task.FromResult(_lessons.FirstOrDefault(lesson => lesson.Id == id));
+        INutritionLessonRepository repository = Substitute.For<INutritionLessonRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<NutritionLessonId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                NutritionLessonId id = call.Arg<NutritionLessonId>();
+                return Task.FromResult(storedLessons.FirstOrDefault(lesson => lesson.Id == id));
+            });
+        repository
+            .GetUserProgressForLessonAsync(
+                Arg.Any<UserId>(),
+                Arg.Any<NutritionLessonId>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                NutritionLessonId lessonId = call.ArgAt<NutritionLessonId>(1);
+                UserLessonProgress? foundProgress = hasProgress
+                    ? UserLessonProgress.Create(userId, lessonId, DateTime.UtcNow)
+                    : storedProgress.FirstOrDefault(progress => progress.UserId == userId && progress.LessonId == lessonId);
 
-        public Task<UserLessonProgress?> GetUserProgressForLessonAsync(UserId userId, NutritionLessonId lessonId, CancellationToken ct = default) =>
-            Task.FromResult(_hasProgress
-                ? UserLessonProgress.Create(userId, lessonId, DateTime.UtcNow)
-                : _progress.FirstOrDefault(progress => progress.UserId == userId && progress.LessonId == lessonId));
+                return Task.FromResult(foundProgress);
+            });
+        repository
+            .AddProgressAsync(Arg.Do<UserLessonProgress>(item => {
+                progressAdded = true;
+                storedProgress.Add(item);
+            }), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.Arg<UserLessonProgress>()));
+        repository
+            .GetByLocaleAsync(Arg.Any<string>(), Arg.Any<LessonCategory?>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string locale = call.ArgAt<string>(0);
+                LessonCategory? category = call.ArgAt<LessonCategory?>(1);
+                capturedLocaleRequests.Add((locale, category));
+                IReadOnlyList<NutritionLesson> matchingLessons = storedLessons
+                    .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
+                    .Where(lesson => !category.HasValue || lesson.Category == category.Value)
+                    .ToList();
 
-        public Task<UserLessonProgress> AddProgressAsync(UserLessonProgress progress, CancellationToken ct = default) {
-            ProgressAdded = true;
-            _progress.Add(progress);
-            return Task.FromResult(progress);
-        }
+                return Task.FromResult(matchingLessons);
+            });
+        repository
+            .GetUserProgressAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                IReadOnlyList<UserLessonProgress> matchingProgress = storedProgress
+                    .Where(item => item.UserId == userId)
+                    .ToList();
 
-        public Task<IReadOnlyList<NutritionLesson>> GetByLocaleAsync(
-            string locale,
-            LessonCategory? category = null,
-            CancellationToken ct = default) {
-            LocaleRequests.Add((locale, category));
-            var matchingLessons = _lessons
-                .Where(lesson => string.Equals(lesson.Locale, locale, StringComparison.OrdinalIgnoreCase))
-                .Where(lesson => !category.HasValue || lesson.Category == category.Value)
-                .ToList();
+                return Task.FromResult(matchingProgress);
+            });
 
-            return Task.FromResult<IReadOnlyList<NutritionLesson>>(matchingLessons);
-        }
-
-        public Task<IReadOnlyList<UserLessonProgress>> GetUserProgressAsync(UserId userId, CancellationToken ct = default) {
-            var matchingProgress = _progress
-                .Where(item => item.UserId == userId)
-                .ToList();
-
-            return Task.FromResult<IReadOnlyList<UserLessonProgress>>(matchingProgress);
-        }
-
-        public Task<IReadOnlyList<NutritionLesson>> GetAllAsync(CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<NutritionLesson?> GetByIdTrackingAsync(NutritionLessonId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task AddAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task AddRangeAsync(IReadOnlyCollection<NutritionLesson> lessons, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(NutritionLesson lesson, CancellationToken ct = default) => throw new NotSupportedException();
+        wasProgressAdded = () => progressAdded;
+        localeRequests = capturedLocaleRequests;
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]

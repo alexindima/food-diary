@@ -17,7 +17,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         UpdateRecipeCommand command = CreateCommand(
             userId.Value,
@@ -40,7 +40,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         UpdateRecipeCommand command = CreateCommand(
             userId.Value,
@@ -92,7 +92,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearDescription = true,
@@ -109,7 +109,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]) with {
             ClearComment = true,
@@ -134,7 +134,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, []));
 
@@ -145,7 +145,7 @@ public class UpdateRecipeCommandValidatorTests {
 
     [Fact]
     public async Task ValidateAsync_WithInvalidUserId_DoesNotQueryRecipeRepository() {
-        var validator = new UpdateRecipeCommandValidator(new ThrowingRecipeRepository());
+        var validator = new UpdateRecipeCommandValidator(CreateThrowingRecipeRepository());
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(Guid.Empty, RecipeId.New(), [CreateStep(order: 1, "Step 1")]));
 
@@ -159,7 +159,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
-        var validator = new UpdateRecipeCommandValidator(new StubRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
 
@@ -174,7 +174,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Cached used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
-        var validator = new UpdateRecipeCommandValidator(new ThrowingRecipeRepository());
+        var validator = new UpdateRecipeCommandValidator(CreateThrowingRecipeRepository());
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]);
         var context = new ValidationContext<UpdateRecipeCommand>(command);
         context.RootContextData["__recipe"] = recipe;
@@ -212,99 +212,37 @@ public class UpdateRecipeCommandValidatorTests {
             .SetValue(recipe, nestedRecipeUsages);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) : IRecipeRepository {
-        private readonly RecipeId _recipeId = recipeId;
-        private readonly UserId _userId = userId;
-        private readonly Recipe _recipe = recipe;
+    private static IRecipeRepository CreateRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.ArgAt<RecipeId>(0);
+                UserId requestedUserId = call.ArgAt<UserId>(1);
+                return Task.FromResult(id == recipeId && requestedUserId == userId ? recipe : null);
+            });
 
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Recipe?> GetByIdAsync(
-            RecipeId id,
-            UserId userId,
-            bool includePublic = true,
-            bool includeSteps = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) {
-            if (id == _recipeId && userId == _userId) {
-                return Task.FromResult<Recipe?>(_recipe);
-            }
-
-            return Task.FromResult<Recipe?>(null);
-        }
-
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class ThrowingRecipeRepository : IRecipeRepository {
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IRecipeRepository CreateThrowingRecipeRepository() {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns<Task<Recipe?>>(_ => throw new InvalidOperationException("Repository should not be queried."));
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Recipe?> GetByIdAsync(
-            RecipeId id,
-            UserId userId,
-            bool includePublic = true,
-            bool includeSteps = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) => throw new InvalidOperationException("Repository should not be queried.");
-
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        return repository;
     }
 }

@@ -97,7 +97,7 @@ public class DailyAdvicesFeatureTests {
 
     [Fact]
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
-        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(User.Create("advice@example.com", "hash")));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(User.Create("advice@example.com", "hash")));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -109,7 +109,7 @@ public class DailyAdvicesFeatureTests {
     public async Task GetDailyAdvice_WhenUserDeleted_ReturnsAccountDeleted() {
         var user = User.Create("deleted-advice@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -120,21 +120,24 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WithUnsupportedLocale_FallsBackToEnglishAdvice() {
         var user = User.Create("fallback-advice@example.com", "hash");
-        var repository = new RecordingDailyAdviceRepository();
-        repository.Seed("en", DailyAdvice.Create("Hydrate", "en", weight: 1));
-        var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
+        IDailyAdviceRepository repository = CreateDailyAdviceRepository(
+            new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
+                ["en"] = [DailyAdvice.Create("Hydrate", "en", weight: 1)],
+            },
+            out List<string> requestedLocales);
+        var handler = new GetDailyAdviceQueryHandler(repository, CreateUserRepository(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
 
         Assert.True(result.IsSuccess);
         Assert.Equal("en", result.Value.Locale);
-        Assert.Equal(["en"], repository.RequestedLocales);
+        Assert.Equal(["en"], requestedLocales);
     }
 
     [Fact]
     public async Task GetDailyAdvice_WhenNoAdviceExists_ReturnsNotFound() {
         var user = User.Create("missing-advice@example.com", "hash");
-        var handler = new GetDailyAdviceQueryHandler(new RecordingDailyAdviceRepository(), new SingleUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
 
@@ -145,9 +148,11 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WhenLoadedAdviceDoesNotMatchLocale_ReturnsNotFound() {
         var user = User.Create("locale-mismatch-advice@example.com", "hash");
-        var repository = new RecordingDailyAdviceRepository();
-        repository.Seed("en", DailyAdvice.Create("Russian advice", "ru", weight: 1));
-        var handler = new GetDailyAdviceQueryHandler(repository, new SingleUserRepository(user));
+        IDailyAdviceRepository repository = CreateDailyAdviceRepository(
+            new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
+                ["en"] = [DailyAdvice.Create("Russian advice", "ru", weight: 1)],
+            });
+        var handler = new GetDailyAdviceQueryHandler(repository, CreateUserRepository(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -185,38 +190,44 @@ public class DailyAdvicesFeatureTests {
         return selectorType!;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class RecordingDailyAdviceRepository : IDailyAdviceRepository {
-        private readonly Dictionary<string, IReadOnlyList<DailyAdvice>> _advices = new(StringComparer.OrdinalIgnoreCase);
+    private static IDailyAdviceRepository CreateDailyAdviceRepository() =>
+        CreateDailyAdviceRepository(new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase), out _);
 
-        public IReadOnlyList<string> RequestedLocales => _requestedLocales;
+    private static IDailyAdviceRepository CreateDailyAdviceRepository(
+        IReadOnlyDictionary<string, IReadOnlyList<DailyAdvice>> advices) =>
+        CreateDailyAdviceRepository(advices, out _);
 
-        private readonly List<string> _requestedLocales = [];
+    private static IDailyAdviceRepository CreateDailyAdviceRepository(
+        IReadOnlyDictionary<string, IReadOnlyList<DailyAdvice>> advices,
+        out List<string> requestedLocales) {
+        List<string> capturedRequestedLocales = [];
+        IDailyAdviceRepository repository = Substitute.For<IDailyAdviceRepository>();
+        repository
+            .GetByLocaleAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string locale = call.Arg<string>();
+                capturedRequestedLocales.Add(locale);
+                return Task.FromResult(advices.GetValueOrDefault(locale, []));
+            });
 
-        public void Seed(string locale, params DailyAdvice[] advices) {
-            _advices[locale] = advices;
-        }
-
-        public Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
-            string locale,
-            CancellationToken cancellationToken = default) {
-            _requestedLocales.Add(locale);
-            return Task.FromResult(_advices.GetValueOrDefault(locale, []));
-        }
+        requestedLocales = capturedRequestedLocales;
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult<User?>(user.Id == id ? user : null);
+            });
+        return repository;
     }
 }

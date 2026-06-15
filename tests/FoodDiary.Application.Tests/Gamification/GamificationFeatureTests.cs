@@ -16,7 +16,7 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WithNullUserId_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(
-            new StubMealRepository(), new InMemoryUserRepository(), new StubDateTimeProvider());
+            CreateMealRepository(), CreateUserRepository(user: null), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(UserId: null), CancellationToken.None);
@@ -27,7 +27,7 @@ public class GamificationFeatureTests {
     [Fact]
     public async Task GetGamification_WhenUserNotFound_ReturnsFailure() {
         var handler = new GetGamificationQueryHandler(
-            new StubMealRepository(), new InMemoryUserRepository(), new StubDateTimeProvider());
+            CreateMealRepository(), CreateUserRepository(user: null), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(Guid.NewGuid()), CancellationToken.None);
@@ -41,14 +41,9 @@ public class GamificationFeatureTests {
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        var userRepo = new InMemoryUserRepository();
-        userRepo.Seed(user);
+        IMealRepository mealRepo = CreateMealRepository([Today, Today.AddDays(-1), Today.AddDays(-2)], totalMealCount: 15);
 
-        var mealRepo = new StubMealRepository();
-        mealRepo.SetDistinctDates([Today, Today.AddDays(-1), Today.AddDays(-2)]);
-        mealRepo.SetTotalMealCount(15);
-
-        var handler = new GetGamificationQueryHandler(mealRepo, userRepo, new StubDateTimeProvider());
+        var handler = new GetGamificationQueryHandler(mealRepo, CreateUserRepository(user), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -64,11 +59,8 @@ public class GamificationFeatureTests {
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        var userRepo = new InMemoryUserRepository();
-        userRepo.Seed(user);
-
         var handler = new GetGamificationQueryHandler(
-            new StubMealRepository(), userRepo, new StubDateTimeProvider());
+            CreateMealRepository(), CreateUserRepository(user), new StubDateTimeProvider());
 
         Result<GamificationModel> result = await handler.Handle(
             new GetGamificationQuery(userId.Value), CancellationToken.None);
@@ -78,54 +70,31 @@ public class GamificationFeatureTests {
         Assert.Equal(0, result.Value.TotalMealsLogged);
     }
 
-    // â”€â”€ Test Doubles â”€â”€
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubMealRepository : IMealRepository {
-        private List<DateTime> _distinctDates = [];
-        private int _totalMealCount;
-
-        public void SetDistinctDates(List<DateTime> dates) => _distinctDates = dates;
-        public void SetTotalMealCount(int count) => _totalMealCount = count;
-
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<DateTime>>(_distinctDates);
-
-        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) =>
-            Task.FromResult(_totalMealCount);
-
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<Meal>>([]);
-
-        public Task<Meal> AddAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IMealRepository CreateMealRepository(
+        IReadOnlyList<DateTime>? distinctDates = null,
+        int totalMealCount = 0) {
+        IMealRepository repository = Substitute.For<IMealRepository>();
+        repository
+            .GetDistinctMealDatesAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(distinctDates ?? []));
+        repository
+            .GetTotalMealCountAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(totalMealCount));
+        repository
+            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository {
-        private readonly List<User> _users = [];
-
-        public void Seed(User user) => _users.Add(user);
-
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
-            Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
-
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]

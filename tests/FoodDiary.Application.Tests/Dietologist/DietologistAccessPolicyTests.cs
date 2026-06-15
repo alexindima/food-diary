@@ -2,7 +2,6 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -13,7 +12,7 @@ namespace FoodDiary.Application.Tests.Dietologist;
 public class DietologistAccessPolicyTests {
     [Fact]
     public async Task EnsureCanAccessClientAsync_WithNoActiveInvitation_ReturnsFailure() {
-        var repo = new StubInvitationRepository(invitation: null);
+        IDietologistInvitationRepository repo = CreateInvitationRepository(invitation: null);
 
         Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, UserId.New(), UserId.New(), CancellationToken.None);
@@ -32,7 +31,7 @@ public class DietologistAccessPolicyTests {
                 ShareWeight: true, ShareWaist: false, ShareGoals: true, ShareHydration: false));
         invitation.Accept(dietologistId);
 
-        var repo = new StubInvitationRepository(invitation);
+        IDietologistInvitationRepository repo = CreateInvitationRepository(invitation);
 
         Result<DietologistPermissionsModel> result = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
             repo, dietologistId, clientId, CancellationToken.None);
@@ -124,43 +123,11 @@ public class DietologistAccessPolicyTests {
         Assert.NotNull(DietologistAccessPolicy.EnsurePermission(perms, "Unknown"));
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {
-        public Task<DietologistInvitation?> GetActiveByClientAndDietologistAsync(
-            UserId clientUserId, UserId dietologistUserId, CancellationToken cancellationToken = default) =>
-            Task.FromResult(invitation);
-
-        public Task<DietologistInvitation?> GetByIdAsync(
-            DietologistInvitationId id,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<DietologistInvitation?> GetByClientAndStatusAsync(
-            UserId clientUserId, DietologistInvitationStatus status, bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<DietologistInvitation?> GetActiveByClientAsync(
-            UserId clientUserId, bool asTracking = false, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<DietologistInvitation?> GetPendingByClientAndEmailAsync(
-            UserId clientUserId, string email, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(
-            UserId dietologistUserId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<bool> HasActiveRelationshipAsync(
-            UserId clientUserId, UserId dietologistUserId, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task<DietologistInvitation> AddAsync(DietologistInvitation invitation, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
-        public Task UpdateAsync(DietologistInvitation invitation, CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
+    private static IDietologistInvitationRepository CreateInvitationRepository(DietologistInvitation? invitation) {
+        IDietologistInvitationRepository repository = Substitute.For<IDietologistInvitationRepository>();
+        repository
+            .GetActiveByClientAndDietologistAsync(Arg.Any<UserId>(), Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(invitation));
+        return repository;
     }
 }

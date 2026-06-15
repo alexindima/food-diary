@@ -14,7 +14,7 @@ public class OpenFoodFactsFeatureTests {
     [Fact]
     public async Task SearchByBarcode_WhenProductFound_ReturnsProduct() {
         OpenFoodFactsProductModel product = CreateProduct();
-        var service = new StubOpenFoodFactsService(product);
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(product);
         var handler = new SearchByBarcodeQueryHandler(service);
 
         Result<OpenFoodFactsProductModel?> result = await handler.Handle(
@@ -31,7 +31,7 @@ public class OpenFoodFactsFeatureTests {
 
     [Fact]
     public async Task SearchByBarcode_WhenProductNotFound_ReturnsNull() {
-        var service = new StubOpenFoodFactsService(barcodeResult: null);
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(barcodeResult: null);
         var handler = new SearchByBarcodeQueryHandler(service);
 
         Result<OpenFoodFactsProductModel?> result = await handler.Handle(
@@ -48,8 +48,9 @@ public class OpenFoodFactsFeatureTests {
             CreateProduct("111"),
             CreateProduct("222"),
         };
-        var service = new StubOpenFoodFactsService(barcodeResult: null, products);
-        var cache = new StubOpenFoodFactsProductCacheRepository();
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(barcodeResult: null, products);
+        IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
+            out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
         var handler = new SearchOpenFoodFactsQueryHandler(service, cache);
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
@@ -60,13 +61,13 @@ public class OpenFoodFactsFeatureTests {
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("111", result.Value[0].Barcode);
         Assert.Equal("222", result.Value[1].Barcode);
-        Assert.Equal(2, cache.UpsertedProducts.Count);
+        Assert.Equal(2, getUpsertedProducts().Count);
     }
 
     [Fact]
     public async Task SearchProducts_WhenNoResults_ReturnsEmptyList() {
-        var service = new StubOpenFoodFactsService(barcodeResult: null, []);
-        var handler = new SearchOpenFoodFactsQueryHandler(service, new StubOpenFoodFactsProductCacheRepository());
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(barcodeResult: null, []);
+        var handler = new SearchOpenFoodFactsQueryHandler(service, CreateOpenFoodFactsProductCacheRepository());
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("nonexistent", 10),
@@ -82,10 +83,13 @@ public class OpenFoodFactsFeatureTests {
             CreateProduct("cached-1"),
             CreateProduct("cached-2"),
         };
-        var service = new StubOpenFoodFactsService(barcodeResult: null, [CreateProduct("external")]);
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(
+            barcodeResult: null,
+            [CreateProduct("external")],
+            out Func<int> getSearchCallCount);
         var handler = new SearchOpenFoodFactsQueryHandler(
             service,
-            new StubOpenFoodFactsProductCacheRepository(cachedProducts));
+            CreateOpenFoodFactsProductCacheRepository(cachedProducts));
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 2),
@@ -94,42 +98,65 @@ public class OpenFoodFactsFeatureTests {
         Assert.True(result.IsSuccess);
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("cached-1", result.Value[0].Barcode);
-        Assert.Equal(0, service.SearchCallCount);
+        Assert.Equal(0, getSearchCallCount());
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubOpenFoodFactsService(
+    private static IOpenFoodFactsService CreateOpenFoodFactsService(
         OpenFoodFactsProductModel? barcodeResult,
-        IReadOnlyList<OpenFoodFactsProductModel>? searchResults = null) : IOpenFoodFactsService {
-        public Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(
-            string barcode, CancellationToken cancellationToken = default) =>
-            Task.FromResult(barcodeResult);
+        IReadOnlyList<OpenFoodFactsProductModel>? searchResults = null) =>
+        CreateOpenFoodFactsService(barcodeResult, searchResults, out _);
 
-        public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
-            string query, int limit = 10, CancellationToken cancellationToken = default) {
-            SearchCallCount++;
-            return Task.FromResult(searchResults ?? (IReadOnlyList<OpenFoodFactsProductModel>)[]);
-        }
+    private static IOpenFoodFactsService CreateOpenFoodFactsService(
+        OpenFoodFactsProductModel? barcodeResult,
+        IReadOnlyList<OpenFoodFactsProductModel>? searchResults,
+        out Func<int> getSearchCallCount) {
+        int searchCallCount = 0;
+        IOpenFoodFactsService service = Substitute.For<IOpenFoodFactsService>();
+        service
+            .GetByBarcodeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(barcodeResult));
+        service
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                searchCallCount++;
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<OpenFoodFactsProductModel> result = (searchResults ?? [])
+                    .Take(limit)
+                    .ToList();
+                return Task.FromResult(result);
+            });
 
-        public int SearchCallCount { get; private set; }
+        getSearchCallCount = () => searchCallCount;
+        return service;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubOpenFoodFactsProductCacheRepository(
-        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) : IOpenFoodFactsProductCacheRepository {
-        public IReadOnlyList<OpenFoodFactsProductModel> UpsertedProducts { get; private set; } = [];
+    private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
+        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) =>
+        CreateOpenFoodFactsProductCacheRepository(cachedProducts, out _);
 
-        public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
-            string query,
-            int limit = 10,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((cachedProducts ?? []).Take(limit).ToList() as IReadOnlyList<OpenFoodFactsProductModel>);
+    private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
+        out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts) =>
+        CreateOpenFoodFactsProductCacheRepository(cachedProducts: null, out getUpsertedProducts);
 
-        public Task UpsertAsync(
-            IReadOnlyCollection<OpenFoodFactsProductModel> products,
-            CancellationToken cancellationToken = default) {
-            UpsertedProducts = products.ToList();
-            return Task.CompletedTask;
-        }
+    private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
+        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts,
+        out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts) {
+        IReadOnlyList<OpenFoodFactsProductModel> upsertedProducts = [];
+        IOpenFoodFactsProductCacheRepository repository = Substitute.For<IOpenFoodFactsProductCacheRepository>();
+        repository
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<OpenFoodFactsProductModel> result = (cachedProducts ?? [])
+                    .Take(limit)
+                    .ToList();
+                return Task.FromResult(result);
+            });
+        repository
+            .UpsertAsync(Arg.Do<IReadOnlyCollection<OpenFoodFactsProductModel>>(products => upsertedProducts = products.ToList()), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+
+        getUpsertedProducts = () => upsertedProducts;
+        return repository;
     }
 }

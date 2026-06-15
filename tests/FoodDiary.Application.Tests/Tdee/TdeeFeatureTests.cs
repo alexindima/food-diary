@@ -41,7 +41,7 @@ public class TdeeFeatureTests {
         var userId = UserId.New();
         var user = User.Create("disappearing-tdee-user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: new DisappearingUserRepository(user));
+        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: CreateDisappearingUserRepository(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -56,10 +56,7 @@ public class TdeeFeatureTests {
         var user = User.Create("user@test.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        var userRepo = new InMemoryUserRepository();
-        userRepo.Seed(user);
-
-        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: userRepo);
+        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: CreateUserRepository(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -71,92 +68,53 @@ public class TdeeFeatureTests {
     private static GetTdeeInsightQueryHandler CreateHandler(
         IUserRepository? userRepo = null) =>
         new(
-            userRepo ?? new InMemoryUserRepository(),
-            new StubWeightEntryRepository(),
-            new StubMealRepository(),
-            new StubExerciseEntryRepository(),
+            userRepo ?? CreateUserRepository(user: null),
+            CreateWeightEntryRepository(),
+            CreateMealRepository(),
+            CreateExerciseEntryRepository(),
             new StubDateTimeProvider());
 
-    [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository {
-        private readonly List<User> _users = [];
-
-        public void Seed(User user) => _users.Add(user);
-
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
-            Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
-
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == id ? user : null);
+            });
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class DisappearingUserRepository(User user) : IUserRepository {
-        private int _getByIdCalls;
-
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) {
-            _getByIdCalls++;
-            return Task.FromResult<User?>(_getByIdCalls == 1 && user.Id == id ? user : null);
-        }
-
-        public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User userToAdd, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User userToUpdate, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUserRepository CreateDisappearingUserRepository(User user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user), Task.FromResult<User?>(null));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubWeightEntryRepository : IWeightEntryRepository {
-        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<WeightEntry>>([]);
-
-        public Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(WeightEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(WeightEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<WeightEntry?> GetByIdAsync(WeightEntryId id, UserId userId, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<WeightEntry?> GetByDateAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<WeightEntry>> GetEntriesAsync(UserId userId, DateTime? dateFrom, DateTime? dateTo, int? limit, bool descending, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IWeightEntryRepository CreateWeightEntryRepository() {
+        IWeightEntryRepository repository = Substitute.For<IWeightEntryRepository>();
+        repository
+            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([]));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubMealRepository : IMealRepository {
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<Meal>>([]);
-
-        public Task<Meal> AddAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Meal meal, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<Meal?> GetByIdAsync(MealId id, UserId userId, bool includeItems = false, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(UserId userId, int page, int limit, DateTime? dateFrom, DateTime? dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> GetTotalMealCountAsync(UserId userId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IMealRepository CreateMealRepository() {
+        IMealRepository repository = Substitute.For<IMealRepository>();
+        repository
+            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubExerciseEntryRepository : IExerciseEntryRepository {
-        public Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken ct = default) =>
-            Task.FromResult<IReadOnlyList<ExerciseEntry>>([]);
-
-        public Task<ExerciseEntry> AddAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(ExerciseEntry entry, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<ExerciseEntry?> GetByIdAsync(ExerciseEntryId id, UserId userId, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<double> GetTotalCaloriesBurnedAsync(UserId userId, DateTime date, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IExerciseEntryRepository CreateExerciseEntryRepository() {
+        IExerciseEntryRepository repository = Substitute.For<IExerciseEntryRepository>();
+        repository
+            .GetByDateRangeAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<ExerciseEntry>>([]));
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]

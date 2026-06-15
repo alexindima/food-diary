@@ -20,7 +20,7 @@ public sealed class ProductSearchSuggestionTests {
 
     [Fact]
     public async Task SearchProductSuggestionsQueryHandler_CallsAllProvidersAndCombinesResults() {
-        var firstProvider = new StubProductSearchSuggestionProvider([
+        IProductSearchSuggestionProvider firstProvider = CreateProductSearchSuggestionProvider([
             new ProductSearchSuggestionModel(
                 "openFoodFacts",
                 "Fanta",
@@ -34,8 +34,8 @@ public sealed class ProductSearchSuggestionTests {
                 0,
                 12,
                 0),
-        ]);
-        var secondProvider = new StubProductSearchSuggestionProvider([
+        ], out Func<(string Search, int Limit)?> getFirstLastCall);
+        IProductSearchSuggestionProvider secondProvider = CreateProductSearchSuggestionProvider([
             new ProductSearchSuggestionModel(
                 "usda",
                 "FANTA, SODA, ORANGE",
@@ -49,7 +49,7 @@ public sealed class ProductSearchSuggestionTests {
                 FatsPer100G: null,
                 CarbsPer100G: null,
                 FiberPer100G: null),
-        ]);
+        ], out Func<(string Search, int Limit)?> getSecondLastCall);
         var handler = new SearchProductSuggestionsQueryHandler([firstProvider, secondProvider]);
 
         Result<IReadOnlyList<ProductSearchSuggestionModel>> result = await handler.Handle(new SearchProductSuggestionsQuery("fanta", 5), CancellationToken.None);
@@ -58,8 +58,8 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal(2, result.Value.Count);
         Assert.Equal("openFoodFacts", result.Value[0].Source);
         Assert.Equal("usda", result.Value[1].Source);
-        Assert.Equal(("fanta", 5), firstProvider.LastCall);
-        Assert.Equal(("fanta", 5), secondProvider.LastCall);
+        Assert.Equal(("fanta", 5), getFirstLastCall());
+        Assert.Equal(("fanta", 5), getSecondLastCall());
     }
 
     [Fact]
@@ -68,8 +68,12 @@ public sealed class ProductSearchSuggestionTests {
             CreateOpenFoodFactsProduct("cached-1"),
             CreateOpenFoodFactsProduct("cached-2"),
         };
-        var service = new StubOpenFoodFactsService([CreateOpenFoodFactsProduct("external")]);
-        var cache = new StubOpenFoodFactsProductCacheRepository(cachedProducts);
+        IOpenFoodFactsService service = CreateOpenFoodFactsService(
+            [CreateOpenFoodFactsProduct("external")],
+            out Func<int> getSearchCallCount);
+        IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
+            cachedProducts,
+            out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
         var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 2, CancellationToken.None);
@@ -77,17 +81,19 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal(2, result.Count);
         Assert.All(result, suggestion => Assert.Equal("openFoodFacts", suggestion.Source));
         Assert.Equal("cached-1", result[0].Barcode);
-        Assert.Equal(0, service.SearchCallCount);
-        Assert.Empty(cache.UpsertedProducts);
+        Assert.Equal(0, getSearchCallCount());
+        Assert.Empty(getUpsertedProducts());
     }
 
     [Fact]
     public async Task OpenFoodFactsProvider_WhenCacheSparse_UpsertsExternalAndDeduplicatesByBarcode() {
-        var service = new StubOpenFoodFactsService([
+        IOpenFoodFactsService service = CreateOpenFoodFactsService([
             CreateOpenFoodFactsProduct("external-1"),
             CreateOpenFoodFactsProduct("cached-1"),
-        ]);
-        var cache = new StubOpenFoodFactsProductCacheRepository([CreateOpenFoodFactsProduct("cached-1")]);
+        ], out Func<int> getSearchCallCount);
+        IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
+            [CreateOpenFoodFactsProduct("cached-1")],
+            out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
         var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
@@ -95,23 +101,23 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal(2, result.Count);
         Assert.Equal("external-1", result[0].Barcode);
         Assert.Equal("cached-1", result[1].Barcode);
-        Assert.Equal(2, cache.UpsertedProducts.Count);
-        Assert.Equal(1, service.SearchCallCount);
+        Assert.Equal(2, getUpsertedProducts().Count);
+        Assert.Equal(1, getSearchCallCount());
     }
 
     [Fact]
     public async Task UsdaProvider_WhenLocalResultsSparse_AddsBrandedResultsWithoutDuplicates() {
-        var repository = new StubUsdaFoodRepository([
+        IUsdaFoodRepository repository = CreateUsdaFoodRepository([
             new UsdaFood {
                 FdcId = 100,
                 Description = "FANTA, SODA, ORANGE",
                 FoodCategory = "Soda",
             },
         ]);
-        var searchService = new StubUsdaFoodSearchService([
+        IUsdaFoodSearchService searchService = CreateUsdaFoodSearchService([
             new UsdaFoodModel(100, "Duplicate Fanta", "Soda"),
             new UsdaFoodModel(200, "FANTA ZERO, SODA, ORANGE", "Soda"),
-        ]);
+        ], out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
         var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
@@ -120,25 +126,27 @@ public sealed class ProductSearchSuggestionTests {
         Assert.All(result, suggestion => Assert.Equal("usda", suggestion.Source));
         Assert.Equal(100, result[0].UsdaFdcId);
         Assert.Equal(200, result[1].UsdaFdcId);
-        Assert.Equal(("fanta", 4), searchService.LastBrandedSearchCall);
+        Assert.Equal(("fanta", 4), getLastBrandedSearchCall());
     }
 
     [Fact]
     public async Task UsdaProvider_WhenLocalResultsReachLimit_DoesNotCallBrandedSearch() {
-        var repository = new StubUsdaFoodRepository([
+        IUsdaFoodRepository repository = CreateUsdaFoodRepository([
             new UsdaFood {
                 FdcId = 100,
                 Description = "FANTA, SODA, ORANGE",
                 FoodCategory = "Soda",
             },
         ]);
-        var searchService = new StubUsdaFoodSearchService([]);
+        IUsdaFoodSearchService searchService = CreateUsdaFoodSearchService(
+            [],
+            out Func<(string Search, int Limit)?> getLastBrandedSearchCall);
         var provider = new UsdaProductSearchSuggestionProvider(repository, searchService);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 1, CancellationToken.None);
 
         Assert.Single(result);
-        Assert.Null(searchService.LastBrandedSearchCall);
+        Assert.Null(getLastBrandedSearchCall());
     }
 
     [Fact]
@@ -204,103 +212,111 @@ public sealed class ProductSearchSuggestionTests {
     private static OpenFoodFactsProductModel CreateOpenFoodFactsProduct(string barcode) =>
         new(barcode, "Fanta", "Coca-Cola", "Beverages", "https://example.com/fanta.jpg", 48, 0, 0, 12, 0);
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubProductSearchSuggestionProvider(IReadOnlyList<ProductSearchSuggestionModel> suggestions)
-        : IProductSearchSuggestionProvider {
-        public string Source => "stub";
-        public (string Search, int Limit)? LastCall { get; private set; }
+    private static IProductSearchSuggestionProvider CreateProductSearchSuggestionProvider(
+        IReadOnlyList<ProductSearchSuggestionModel> suggestions,
+        out Func<(string Search, int Limit)?> getLastCall) {
+        (string Search, int Limit)? lastCall = null;
+        IProductSearchSuggestionProvider provider = Substitute.For<IProductSearchSuggestionProvider>();
+        provider.Source.Returns("stub");
+        provider
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                lastCall = (call.ArgAt<string>(0), call.ArgAt<int>(1));
+                return Task.FromResult(suggestions);
+            });
 
-        public Task<IReadOnlyList<ProductSearchSuggestionModel>> SearchAsync(
-            string search,
-            int limit,
-            CancellationToken cancellationToken) {
-            LastCall = (search, limit);
-            return Task.FromResult(suggestions);
-        }
+        getLastCall = () => lastCall;
+        return provider;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubOpenFoodFactsService(IReadOnlyList<OpenFoodFactsProductModel> searchResults) : IOpenFoodFactsService {
-        public int SearchCallCount { get; private set; }
+    private static IOpenFoodFactsService CreateOpenFoodFactsService(
+        IReadOnlyList<OpenFoodFactsProductModel> searchResults,
+        out Func<int> getSearchCallCount) {
+        int searchCallCount = 0;
+        IOpenFoodFactsService service = Substitute.For<IOpenFoodFactsService>();
+        service
+            .GetByBarcodeAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<OpenFoodFactsProductModel?>(null));
+        service
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                searchCallCount++;
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<OpenFoodFactsProductModel> result = searchResults.Take(limit).ToList();
+                return Task.FromResult(result);
+            });
 
-        public Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(
-            string barcode,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<OpenFoodFactsProductModel?>(null);
-
-        public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
-            string query,
-            int limit = 10,
-            CancellationToken cancellationToken = default) {
-            SearchCallCount++;
-            return Task.FromResult(searchResults.Take(limit).ToList() as IReadOnlyList<OpenFoodFactsProductModel>);
-        }
+        getSearchCallCount = () => searchCallCount;
+        return service;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubOpenFoodFactsProductCacheRepository(
-        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) : IOpenFoodFactsProductCacheRepository {
-        public IReadOnlyList<OpenFoodFactsProductModel> UpsertedProducts { get; private set; } = [];
+    private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
+        IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts,
+        out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts) {
+        IReadOnlyList<OpenFoodFactsProductModel> upsertedProducts = [];
+        IOpenFoodFactsProductCacheRepository repository = Substitute.For<IOpenFoodFactsProductCacheRepository>();
+        repository
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<OpenFoodFactsProductModel> result = (cachedProducts ?? []).Take(limit).ToList();
+                return Task.FromResult(result);
+            });
+        repository
+            .UpsertAsync(Arg.Do<IReadOnlyCollection<OpenFoodFactsProductModel>>(products => upsertedProducts = products.ToList()), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
 
-        public Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
-            string query,
-            int limit = 10,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((cachedProducts ?? []).Take(limit).ToList() as IReadOnlyList<OpenFoodFactsProductModel>);
-
-        public Task UpsertAsync(
-            IReadOnlyCollection<OpenFoodFactsProductModel> products,
-            CancellationToken cancellationToken = default) {
-            UpsertedProducts = products.ToList();
-            return Task.CompletedTask;
-        }
+        getUpsertedProducts = () => upsertedProducts;
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUsdaFoodRepository(IReadOnlyList<UsdaFood> foods) : IUsdaFoodRepository {
-        public Task<IReadOnlyList<UsdaFood>> SearchAsync(
-            string query,
-            int limit = 20,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(foods.Take(limit).ToList() as IReadOnlyList<UsdaFood>);
-
-        public Task<UsdaFood?> GetByFdcIdAsync(int fdcId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<UsdaFood?>(null);
-
-        public Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(int fdcId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<UsdaFoodNutrient>>([]);
-
-        public Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(int fdcId, CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<UsdaFoodPortion>>([]);
-
-        public Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>> GetNutrientsByFdcIdsAsync(
-            IEnumerable<int> fdcIds,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>>(
-                new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>());
-
-        public Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(
-            string ageGroup = "adult",
-            string gender = "all",
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<int, DailyReferenceValue>>(new Dictionary<int, DailyReferenceValue>());
+    private static IUsdaFoodRepository CreateUsdaFoodRepository(IReadOnlyList<UsdaFood> foods) {
+        IUsdaFoodRepository repository = Substitute.For<IUsdaFoodRepository>();
+        repository
+            .SearchAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                int limit = call.ArgAt<int>(1);
+                IReadOnlyList<UsdaFood> result = foods.Take(limit).ToList();
+                return Task.FromResult(result);
+            });
+        repository
+            .GetByFdcIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<UsdaFood?>(null));
+        repository
+            .GetNutrientsAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<UsdaFoodNutrient>>([]));
+        repository
+            .GetPortionsAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<UsdaFoodPortion>>([]));
+        repository
+            .GetNutrientsByFdcIdsAsync(Arg.Any<IEnumerable<int>>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>>(
+                new Dictionary<int, IReadOnlyList<UsdaFoodNutrient>>()));
+        repository
+            .GetDailyReferenceValuesAsync(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyDictionary<int, DailyReferenceValue>>(new Dictionary<int, DailyReferenceValue>()));
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUsdaFoodSearchService(IReadOnlyList<UsdaFoodModel> brandedFoods) : IUsdaFoodSearchService {
-        public (string Search, int Limit)? LastBrandedSearchCall { get; private set; }
+    private static IUsdaFoodSearchService CreateUsdaFoodSearchService(
+        IReadOnlyList<UsdaFoodModel> brandedFoods,
+        out Func<(string Search, int Limit)?> getLastBrandedSearchCall) {
+        (string Search, int Limit)? lastBrandedSearchCall = null;
+        IUsdaFoodSearchService service = Substitute.For<IUsdaFoodSearchService>();
+        service
+            .SearchBrandedAsync(Arg.Any<string>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string query = call.ArgAt<string>(0);
+                int limit = call.ArgAt<int>(1);
+                lastBrandedSearchCall = (query, limit);
+                IReadOnlyList<UsdaFoodModel> result = brandedFoods.Take(limit).ToList();
+                return Task.FromResult(result);
+            });
+        service
+            .GetFoodDetailAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<UsdaFoodDetailModel?>(null));
 
-        public Task<IReadOnlyList<UsdaFoodModel>> SearchBrandedAsync(
-            string query,
-            int limit = 20,
-            CancellationToken cancellationToken = default) {
-            LastBrandedSearchCall = (query, limit);
-            return Task.FromResult(brandedFoods.Take(limit).ToList() as IReadOnlyList<UsdaFoodModel>);
-        }
-
-        public Task<UsdaFoodDetailModel?> GetFoodDetailAsync(
-            int fdcId,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<UsdaFoodDetailModel?>(null);
+        getLastBrandedSearchCall = () => lastBrandedSearchCall;
+        return service;
     }
 }

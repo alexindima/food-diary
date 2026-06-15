@@ -25,11 +25,11 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
 
-        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -75,11 +75,11 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2, imageUrl: "https://img", imageAssetId: imageAssetId);
         recipe.AddStep(1, "Initial step");
 
-        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -124,11 +124,11 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
 
-        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -185,9 +185,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("manual-missing@example.com", "hash")),
+            CreateUserRepository(User.Create("manual-missing@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -217,9 +217,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("manual-negative@example.com", "hash")),
+            CreateUserRepository(User.Create("manual-negative@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -248,9 +248,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("missing-user@example.com", "hash")),
+            CreateUserRepository(User.Create("missing-user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -268,9 +268,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("missing-recipe@example.com", "hash")),
+            CreateUserRepository(User.Create("missing-recipe@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -288,9 +288,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("bad-visibility@example.com", "hash")),
+            CreateUserRepository(User.Create("bad-visibility@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -309,9 +309,9 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("blank-visibility@example.com", "hash")),
+            CreateUserRepository(User.Create("blank-visibility@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -331,9 +331,9 @@ public class UpdateRecipeCommandHandlerTests {
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("image-fail@example.com", "hash")),
+            CreateUserRepository(User.Create("image-fail@example.com", "hash")),
             imageAccess,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -353,11 +353,11 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
 
-        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -403,9 +403,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("empty-step-image@example.com", "hash")),
+            CreateUserRepository(User.Create("empty-step-image@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -437,9 +437,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("step-image-fail@example.com", "hash")),
+            CreateUserRepository(User.Create("step-image-fail@example.com", "hash")),
             new FailingNonNullImageAssetAccessService(Errors.Image.Forbidden()),
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -470,11 +470,11 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
 
-        var repository = new StubRecipeRepository(recipeId, userId, recipe);
+        IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -525,9 +525,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
 
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(RecipeId.New(), userId, recipe),
+            CreateRecipeRepository(RecipeId.New(), userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -574,9 +574,9 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -622,9 +622,9 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("empty-product@example.com", "hash")),
+            CreateUserRepository(User.Create("empty-product@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -658,9 +658,9 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("nested-update@example.com", "hash")),
+            CreateUserRepository(User.Create("nested-update@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -686,9 +686,9 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -737,7 +737,7 @@ public class UpdateRecipeCommandHandlerTests {
         var handler = new UpdateRecipeCommandHandler(
             repository,
             new NoopImageAssetCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -789,9 +789,9 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step", imageUrl: "https://old-step", imageAssetId: oldStepAssetId);
         var cleanup = new RecordingImageAssetCleanupService();
         var handler = new UpdateRecipeCommandHandler(
-            new StubRecipeRepository(recipeId, userId, recipe),
+            CreateRecipeRepository(recipeId, userId, recipe),
             cleanup,
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateUserRepository(User.Create("user@example.com", "hash")),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance,
             new AllowAllProductLookupService(),
             new AllowAllRecipeLookupService());
@@ -903,57 +903,29 @@ public class UpdateRecipeCommandHandlerTests {
             .SetValue(recipe, recipeId);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) : IRecipeRepository {
-        private readonly RecipeId _recipeId = recipeId;
-        private readonly UserId _userId = userId;
-        private readonly Recipe _recipe = recipe;
+    private static IRecipeRepository CreateRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.ArgAt<RecipeId>(0);
+                UserId requestedUserId = call.ArgAt<UserId>(1);
+                return Task.FromResult(id == recipeId && requestedUserId == userId ? recipe : null);
+            });
+        repository
+            .UpdateAsync(Arg.Any<Recipe>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        repository
+            .UpdateNutritionAsync(Arg.Any<Recipe>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
 
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            string? search,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Recipe?> GetByIdAsync(
-            RecipeId id,
-            UserId userId,
-            bool includePublic = true,
-            bool includeSteps = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) {
-            if (id == _recipeId && userId == _userId) {
-                return Task.FromResult<Recipe?>(_recipe);
-            }
-
-            return Task.FromResult<Recipe?>(null);
-        }
-
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        return repository;
     }
 
     [ExcludeFromCodeCoverage]
@@ -1085,18 +1057,15 @@ public class UpdateRecipeCommandHandlerTests {
         return recipe;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static IUserRepository CreateUserRepository(User user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user));
+        repository
+            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user));
+
+        return repository;
     }
 }

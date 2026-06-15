@@ -17,8 +17,8 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var usdaFood = new UsdaFood { FdcId = 171077, Description = "Chicken, breast" };
-        var productRepo = new StubProductRepository(product);
-        var usdaRepo = new StubUsdaFoodRepository(usdaFood);
+        IProductRepository productRepo = CreateProductRepository(product);
+        IUsdaFoodRepository usdaRepo = CreateUsdaFoodRepository(usdaFood);
 
         var handler = new LinkProductToUsdaFoodCommandHandler(productRepo, usdaRepo);
         Result result = await handler.Handle(
@@ -26,14 +26,18 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(productRepo.GetByIdForUpdateCalled);
-        Assert.True(productRepo.UpdateCalled);
+        await productRepo.Received(1).GetByIdForUpdateAsync(
+            product.Id,
+            userId,
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>());
+        await productRepo.Received(1).UpdateAsync(product, Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task LinkProductToUsdaFood_WhenProductNotFound_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(product: null), new StubUsdaFoodRepository(food: null));
+            CreateProductRepository(product: null), CreateUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid(), 171077),
@@ -48,7 +52,7 @@ public class UsdaFeatureTests {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(product), new StubUsdaFoodRepository(food: null));
+            CreateProductRepository(product), CreateUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(userId.Value, product.Id.Value, 999999),
@@ -62,7 +66,7 @@ public class UsdaFeatureTests {
     public async Task UnlinkProductFromUsdaFood_WithValidData_Succeeds() {
         var userId = UserId.New();
         var product = Product.Create(userId, "Chicken", MeasurementUnit.G, 100, defaultPortionAmount: null, 165, 31, 3.6, 0, 0, 0);
-        var productRepo = new StubProductRepository(product);
+        IProductRepository productRepo = CreateProductRepository(product);
 
         var handler = new UnlinkProductFromUsdaFoodCommandHandler(productRepo);
         Result result = await handler.Handle(
@@ -70,13 +74,17 @@ public class UsdaFeatureTests {
             CancellationToken.None);
 
         Assert.True(result.IsSuccess);
-        Assert.True(productRepo.GetByIdForUpdateCalled);
-        Assert.True(productRepo.UpdateCalled);
+        await productRepo.Received(1).GetByIdForUpdateAsync(
+            product.Id,
+            userId,
+            Arg.Any<bool>(),
+            Arg.Any<CancellationToken>());
+        await productRepo.Received(1).UpdateAsync(product, Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WhenProductNotFound_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(product: null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductRepository(product: null));
 
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(Guid.NewGuid(), Guid.NewGuid()),
@@ -88,7 +96,7 @@ public class UsdaFeatureTests {
     [Fact]
     public async Task LinkProductToUsdaFood_WithNullUserId_ReturnsFailure() {
         var handler = new LinkProductToUsdaFoodCommandHandler(
-            new StubProductRepository(product: null), new StubUsdaFoodRepository(food: null));
+            CreateProductRepository(product: null), CreateUsdaFoodRepository(food: null));
 
         Result result = await handler.Handle(
             new LinkProductToUsdaFoodCommand(UserId: null, Guid.NewGuid(), 1), CancellationToken.None);
@@ -98,7 +106,7 @@ public class UsdaFeatureTests {
 
     [Fact]
     public async Task UnlinkProductFromUsdaFood_WithNullUserId_ReturnsFailure() {
-        var handler = new UnlinkProductFromUsdaFoodCommandHandler(new StubProductRepository(product: null));
+        var handler = new UnlinkProductFromUsdaFoodCommandHandler(CreateProductRepository(product: null));
 
         Result result = await handler.Handle(
             new UnlinkProductFromUsdaFoodCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -106,40 +114,25 @@ public class UsdaFeatureTests {
         Assert.True(result.IsFailure);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubProductRepository(Product? product) : IProductRepository {
-        public bool UpdateCalled { get; private set; }
-        public bool GetByIdForUpdateCalled { get; private set; }
-
-        public Task<Product?> GetByIdAsync(ProductId id, UserId userId, bool includePublic = true, CancellationToken ct = default) =>
-            Task.FromResult(product);
-
-        public Task<Product?> GetByIdForUpdateAsync(ProductId id, UserId userId, bool includePublic = true, CancellationToken ct = default) {
-            GetByIdForUpdateCalled = true;
-            return GetByIdAsync(id, userId, includePublic, ct);
-        }
-
-        public Task UpdateAsync(Product p, CancellationToken ct = default) {
-            UpdateCalled = true;
-            return Task.CompletedTask;
-        }
-
-        public Task<Product> AddAsync(Product p, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Product p, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, string? search, IReadOnlyCollection<ProductType>? productTypes = null, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(IEnumerable<ProductId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<ProductId> ids, UserId userId, bool includePublic = true, CancellationToken ct = default) => throw new NotSupportedException();
+    private static IProductRepository CreateProductRepository(Product? product) {
+        IProductRepository repository = Substitute.For<IProductRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(product));
+        repository
+            .GetByIdForUpdateAsync(Arg.Any<ProductId>(), Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(product));
+        repository
+            .UpdateAsync(Arg.Any<Product>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return repository;
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUsdaFoodRepository(UsdaFood? food) : IUsdaFoodRepository {
-        public Task<UsdaFood?> GetByFdcIdAsync(int fdcId, CancellationToken ct = default) =>
-            Task.FromResult(food);
-
-        public Task<IReadOnlyList<UsdaFood>> SearchAsync(string query, int limit = 20, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<UsdaFoodNutrient>> GetNutrientsAsync(int fdcId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<UsdaFoodPortion>> GetPortionsAsync(int fdcId, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>>> GetNutrientsByFdcIdsAsync(IEnumerable<int> fdcIds, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<int, DailyReferenceValue>> GetDailyReferenceValuesAsync(string ageGroup = "adult", string gender = "all", CancellationToken ct = default) => throw new NotSupportedException();
+    private static IUsdaFoodRepository CreateUsdaFoodRepository(UsdaFood? food) {
+        IUsdaFoodRepository repository = Substitute.For<IUsdaFoodRepository>();
+        repository
+            .GetByFdcIdAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(food));
+        return repository;
     }
 }

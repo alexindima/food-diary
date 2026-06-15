@@ -12,8 +12,8 @@ namespace FoodDiary.Application.Tests.ContentReports;
 public class ContentReportsFeatureTests {
     [Fact]
     public async Task CreateContentReport_WithValidData_Succeeds() {
-        var repo = new InMemoryContentReportRepository();
-        var handler = new CreateContentReportCommandHandler(repo);
+        IContentReportRepository repository = CreateContentReportRepository();
+        var handler = new CreateContentReportCommandHandler(repository);
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(Guid.NewGuid(), "Recipe", Guid.NewGuid(), "Spam content"),
@@ -29,10 +29,9 @@ public class ContentReportsFeatureTests {
     public async Task CreateContentReport_WhenAlreadyReported_ReturnsFailure() {
         var userId = Guid.NewGuid();
         var targetId = Guid.NewGuid();
-        var repo = new InMemoryContentReportRepository();
-        repo.SeedReported(new UserId(userId), ReportTargetType.Recipe, targetId);
+        IContentReportRepository repository = CreateContentReportRepository((new UserId(userId), ReportTargetType.Recipe, targetId));
 
-        var handler = new CreateContentReportCommandHandler(repo);
+        var handler = new CreateContentReportCommandHandler(repository);
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(userId, "Recipe", targetId, "Spam"),
             CancellationToken.None);
@@ -43,7 +42,7 @@ public class ContentReportsFeatureTests {
 
     [Fact]
     public async Task CreateContentReport_WithNullUserId_ReturnsFailure() {
-        var handler = new CreateContentReportCommandHandler(new InMemoryContentReportRepository());
+        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository());
 
         Result<ContentReportModel> result = await handler.Handle(
             new CreateContentReportCommand(UserId: null, "Recipe", Guid.NewGuid(), "Spam"),
@@ -52,25 +51,22 @@ public class ContentReportsFeatureTests {
         Assert.True(result.IsFailure);
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class InMemoryContentReportRepository : IContentReportRepository {
-        private readonly List<ContentReport> _reports = [];
-        private readonly HashSet<(UserId, ReportTargetType, Guid)> _reported = [];
+    private static IContentReportRepository CreateContentReportRepository(
+        params (UserId UserId, ReportTargetType TargetType, Guid TargetId)[] reported) {
+        HashSet<(UserId UserId, ReportTargetType TargetType, Guid TargetId)> reportedSet = [.. reported];
+        IContentReportRepository repository = Substitute.For<IContentReportRepository>();
+        repository
+            .AddAsync(Arg.Any<ContentReport>(), Arg.Any<CancellationToken>())
+            .Returns(call => Task.FromResult(call.ArgAt<ContentReport>(0)));
+        repository
+            .HasUserReportedAsync(Arg.Any<UserId>(), Arg.Any<ReportTargetType>(), Arg.Any<Guid>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.ArgAt<UserId>(0);
+                ReportTargetType targetType = call.ArgAt<ReportTargetType>(1);
+                Guid targetId = call.ArgAt<Guid>(2);
+                return Task.FromResult(reportedSet.Contains((userId, targetType, targetId)));
+            });
 
-        public void SeedReported(UserId userId, ReportTargetType type, Guid targetId) =>
-            _reported.Add((userId, type, targetId));
-
-        public Task<ContentReport> AddAsync(ContentReport report, CancellationToken ct = default) {
-            _reports.Add(report);
-            return Task.FromResult(report);
-        }
-
-        public Task<bool> HasUserReportedAsync(UserId userId, ReportTargetType targetType, Guid targetId, CancellationToken ct = default) =>
-            Task.FromResult(_reported.Contains((userId, targetType, targetId)));
-
-        public Task<ContentReport?> GetByIdAsync(ContentReportId id, bool asTracking = false, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task UpdateAsync(ContentReport report, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<ContentReport> Items, int Total)> GetPagedAsync(ReportStatus? status, int page, int limit, CancellationToken ct = default) => throw new NotSupportedException();
-        public Task<int> CountByStatusAsync(ReportStatus status, CancellationToken ct = default) => throw new NotSupportedException();
+        return repository;
     }
 }
