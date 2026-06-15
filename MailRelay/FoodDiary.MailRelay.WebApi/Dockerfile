@@ -30,7 +30,7 @@ RUN apk add --no-cache icu-libs krb5-libs
 COPY --from=build /app/publish .
 
 EXPOSE 5088
-ENV ASPNETCORE_URLS=http://+:5088
+ENV ASPNETCORE_HTTP_PORTS=5088
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 
 ENTRYPOINT ["dotnet", "FoodDiary.MailRelay.WebApi.dll"]

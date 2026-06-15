@@ -29,7 +29,7 @@ COPY --from=build /app/publish .
 
 EXPOSE 5098
 EXPOSE 2525
-ENV ASPNETCORE_URLS=http://+:5098
+ENV ASPNETCORE_HTTP_PORTS=5098
 ENV DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
 HEALTHCHECK --interval=10s --timeout=5s --retries=6 --start-period=10s CMD wget -qO- http://127.0.0.1:5098/health/ready >/dev/null || exit 1
 
