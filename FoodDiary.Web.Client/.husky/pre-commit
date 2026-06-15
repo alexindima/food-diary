@@ -97,7 +97,10 @@ if [ "$HAS_CS" -gt 0 ]; then
 
   echo "=== Running dotnet format check ==="
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
-  dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES" 2>&1 | grep "error" && { echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."; exit 1; } || true
+  if ! dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"; then
+    echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."
+    exit 1
+  fi
 else
   echo "=== Skipping dotnet format (no .cs files changed) ==="
 fi

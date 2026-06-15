@@ -225,9 +225,9 @@ public sealed class SmtpRelayDeliveryTransportTests {
             await using (stream.ConfigureAwait(false)) {
                 using var reader = new StreamReader(stream, Encoding.ASCII, detectEncodingFromByteOrderMarks: false, leaveOpen: true);
                 var writer = new StreamWriter(stream, Encoding.ASCII, leaveOpen: true) {
-                NewLine = "\r\n",
-                AutoFlush = true,
-            };
+                    NewLine = "\r\n",
+                    AutoFlush = true,
+                };
                 await using (writer.ConfigureAwait(false)) {
 
                     await writer.WriteLineAsync("220 localhost ESMTP").ConfigureAwait(false);
