@@ -113,7 +113,7 @@
         "eslint-plugin-unicorn": "^65.0.0",
         "husky": "^9.1.7",
         "jsdom": "^29.1.1",
-        "ng-morph": "^5.0.0",
+        "ng-morph": "^5.0.1",
         "ng-packagr": "^22.0.0",
         "postcss-scss": "^4.0.9",
         "prettier": "^3.8.3",
