@@ -1,5 +1,8 @@
+using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -18,6 +21,17 @@ public sealed class FoodDiaryDbContextTests {
         Assert.NotNull(context.MealPlans);
         Assert.NotNull(context.MealPlanDays);
         Assert.NotNull(context.MealPlanMeals);
+    }
+
+    [Fact]
+    public void MealAiItemResolution_UsesExplicitSentinelForDatabaseDefault() {
+        using FoodDiaryDbContext context = CreateContext();
+
+        IEntityType entityType = context.Model.FindEntityType(typeof(MealAiItem))!;
+        IProperty property = entityType.FindProperty(nameof(MealAiItem.Resolution))!;
+
+        Assert.Equal(MealAiItemResolution.Accepted, property.GetDefaultValue());
+        Assert.Equal((MealAiItemResolution)0, property.Sentinel);
     }
 
     private static FoodDiaryDbContext CreateContext() {
