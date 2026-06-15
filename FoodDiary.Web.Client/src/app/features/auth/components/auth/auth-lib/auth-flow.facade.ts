@@ -1,9 +1,9 @@
 import { inject, Service } from '@angular/core';
-import { catchError, map, type Observable, of } from 'rxjs';
+import { catchError, concatMap, from, map, type Observable, of } from 'rxjs';
 
 import { AuthService } from '../../../../../services/auth.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
-import { LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
+import { type AuthResponse, LoginRequest, PasswordResetRequest, RegisterRequest, RestoreAccountRequest } from '../../../models/auth.data';
 import type { GoogleLoginRequest } from '../../../models/google-auth.data';
 
 export type AuthLoginResult = 'success' | 'invalidCredentials' | 'accountDeleted' | 'unknown';
@@ -16,6 +16,7 @@ export class AuthFlowFacade {
 
     public login(formValue: Partial<LoginRequest>): Observable<AuthLoginResult> {
         return this.authService.login(new LoginRequest(formValue)).pipe(
+            concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => 'success' as const),
             catchError((error: unknown) => of(this.mapLoginError(this.getApiErrorCode(error)))),
         );
@@ -23,6 +24,7 @@ export class AuthFlowFacade {
 
     public restoreAccount(formValue: Partial<RestoreAccountRequest>, rememberMe: boolean): Observable<boolean> {
         return this.authService.restoreAccount(new RestoreAccountRequest(formValue), rememberMe).pipe(
+            concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => true),
             catchError(() => of(false)),
         );
@@ -44,6 +46,7 @@ export class AuthFlowFacade {
 
     public loginWithGoogle(request: GoogleLoginRequest): Observable<boolean> {
         return this.authService.loginWithGoogle(request).pipe(
+            concatMap(response => this.prepareAuthenticatedLocalization(response)),
             map(() => true),
             catchError(() => of(false)),
         );
@@ -83,5 +86,14 @@ export class AuthFlowFacade {
 
     private isRecord(value: unknown): value is Record<string, unknown> {
         return typeof value === 'object' && value !== null && !Array.isArray(value);
+    }
+
+    private prepareAuthenticatedLocalization(response: AuthResponse): Observable<void> {
+        return from(this.prepareAuthenticatedLocalizationAsync(response));
+    }
+
+    private async prepareAuthenticatedLocalizationAsync(response: AuthResponse): Promise<void> {
+        await this.localizationService.applyLanguagePreferenceAsync(response.user.language);
+        await this.localizationService.loadApplicationTranslationsAsync();
     }
 }
