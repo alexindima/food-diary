@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { EditableAiItem } from '../ai-photo-result-lib/ai-photo-result.types';
 import { AiPhotoEditListComponent } from './ai-photo-edit-list';
 
@@ -21,7 +21,8 @@ const editableItem: EditableAiItem = {
 
 async function setupAiPhotoEditListAsync(): Promise<ComponentFixture<AiPhotoEditListComponent>> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoEditListComponent, TranslateModule.forRoot()],
+        imports: [AiPhotoEditListComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoEditListComponent);

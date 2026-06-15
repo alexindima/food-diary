@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
@@ -14,7 +14,7 @@ import { EmailVerificationRealtimeService } from '../../lib/email-verification-r
 
 @Component({
     selector: 'fd-email-verification-pending',
-    imports: [TranslateModule, FdUiCardComponent, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiCardComponent, FdUiButtonComponent],
     templateUrl: './email-verification-pending.html',
     styleUrls: ['./email-verification-pending.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

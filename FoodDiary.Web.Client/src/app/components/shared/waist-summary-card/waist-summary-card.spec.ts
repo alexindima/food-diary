@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { WaistSummaryCardComponent } from './waist-summary-card';
 
 const LATEST_WAIST = 90.5;
@@ -19,7 +20,8 @@ let fixture: ComponentFixture<WaistSummaryCardComponent>;
 describe('WaistSummaryCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [WaistSummaryCardComponent, TranslateModule.forRoot()],
+            imports: [WaistSummaryCardComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(WaistSummaryCardComponent);

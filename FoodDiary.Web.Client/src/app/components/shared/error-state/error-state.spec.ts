@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { ErrorStateComponent } from './error-state';
 
 describe('ErrorStateComponent', () => {
@@ -26,7 +26,8 @@ describe('ErrorStateComponent', () => {
 
 function createComponent(inputs: { showRetry?: boolean } = {}): ComponentFixture<ErrorStateComponent> {
     TestBed.configureTestingModule({
-        imports: [ErrorStateComponent, TranslateModule.forRoot()],
+        imports: [ErrorStateComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(ErrorStateComponent);

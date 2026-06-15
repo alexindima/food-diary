@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { WeightHistoryFormCardComponent } from './weight-history-form-card';
 
 describe('WeightHistoryFormCardComponent', () => {
@@ -31,7 +31,8 @@ function setupComponent(isEditing: boolean): {
     fixture: ComponentFixture<WeightHistoryFormCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [WeightHistoryFormCardComponent, TranslateModule.forRoot()],
+        imports: [WeightHistoryFormCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeightHistoryFormCardComponent);

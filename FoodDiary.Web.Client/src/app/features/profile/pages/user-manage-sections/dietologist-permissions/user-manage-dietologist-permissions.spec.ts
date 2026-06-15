@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import { DIETOLOGIST_PERMISSION_OPTIONS } from '../../user-manage/user-manage-lib/user-manage.config';
 import { UserManageDietologistPermissionsComponent } from './user-manage-dietologist-permissions';
@@ -30,7 +30,8 @@ describe('UserManageDietologistPermissionsComponent', () => {
 
 async function createComponentAsync(): Promise<ComponentFixture<UserManageDietologistPermissionsComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageDietologistPermissionsComponent, TranslateModule.forRoot()],
+        imports: [UserManageDietologistPermissionsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageDietologistPermissionsComponent);

@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { FastingStats } from '../../../models/fasting.data';
 import { FastingStatsCardComponent } from './fasting-stats-card';
 
@@ -15,7 +15,8 @@ const CHECK_IN_RATE = 75;
 describe('FastingStatsCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FastingStatsCardComponent, TranslateModule.forRoot()],
+            imports: [FastingStatsCardComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

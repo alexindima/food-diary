@@ -2,9 +2,9 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { ShoppingListSummary } from '../../models/shopping-list.data';
 import { ShoppingListManageControlsComponent } from './shopping-list-manage-controls';
 
@@ -18,8 +18,8 @@ async function setupManageControlsAsync(lists: ShoppingListSummary[] = LISTS): P
     fixture: ComponentFixture<ShoppingListManageControlsComponent>;
 }> {
     await TestBed.configureTestingModule({
-        imports: [ShoppingListManageControlsComponent, TranslateModule.forRoot()],
-        providers: [provideRouter([])],
+        imports: [ShoppingListManageControlsComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
     }).compileComponents();
 
     const listSelectModel = signal({ id: 'list-1' });

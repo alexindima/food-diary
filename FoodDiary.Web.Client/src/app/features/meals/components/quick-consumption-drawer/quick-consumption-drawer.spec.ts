@@ -1,10 +1,10 @@
 import { computed, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
@@ -183,8 +183,9 @@ async function setupComponentAsync(items: QuickMealItem[]): Promise<{
 
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [QuickConsumptionDrawerComponent, TranslateModule.forRoot()],
+            imports: [QuickConsumptionDrawerComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: QuickMealService, useValue: quickService },
                 { provide: MealManageFacade, useValue: mealManageFacade },
                 {

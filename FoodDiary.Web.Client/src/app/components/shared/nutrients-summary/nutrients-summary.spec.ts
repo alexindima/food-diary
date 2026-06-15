@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NutrientsSummaryComponent } from './nutrients-summary';
 
 const CALORIES = 320;
@@ -14,7 +14,8 @@ const CUSTOM_GAP = 4;
 
 async function setupNutrientsSummaryAsync(): Promise<ComponentFixture<NutrientsSummaryComponent>> {
     await TestBed.configureTestingModule({
-        imports: [NutrientsSummaryComponent, TranslateModule.forRoot()],
+        imports: [NutrientsSummaryComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(NutrientsSummaryComponent);

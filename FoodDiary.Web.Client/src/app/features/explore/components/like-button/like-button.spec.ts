@@ -1,9 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeLikeStatus } from '../../models/like.data';
 import { LikeButtonComponent } from './like-button';
@@ -19,8 +19,8 @@ beforeEach(() => {
     likeService = createExploreInteractionsFacadeMock();
 
     TestBed.configureTestingModule({
-        imports: [LikeButtonComponent, TranslateModule.forRoot()],
-        providers: [{ provide: ExploreInteractionsFacade, useValue: likeService }],
+        imports: [LikeButtonComponent],
+        providers: [provideTranslateTesting(), { provide: ExploreInteractionsFacade, useValue: likeService }],
     });
 
     fixture = TestBed.createComponent(LikeButtonComponent);

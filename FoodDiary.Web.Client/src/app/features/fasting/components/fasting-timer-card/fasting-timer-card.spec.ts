@@ -1,11 +1,12 @@
 import { Component, computed, type Signal, signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingSession } from '../../models/fasting.data';
@@ -298,8 +299,9 @@ class FastingTimerCardHostComponent {
 
 async function createHostFixtureAsync(): Promise<ComponentFixture<FastingTimerCardHostComponent>> {
     await TestBed.configureTestingModule({
-        imports: [FastingTimerCardHostComponent, TranslateModule.forRoot()],
+        imports: [FastingTimerCardHostComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FastingFacade, useValue: createFastingFacadeStub() },
             {
                 provide: FdUiDialogService,
@@ -314,8 +316,9 @@ async function createHostFixtureAsync(): Promise<ComponentFixture<FastingTimerCa
 
 async function createHostFixtureWithoutFacadeAsync(): Promise<ComponentFixture<FastingTimerCardHostComponent>> {
     await TestBed.configureTestingModule({
-        imports: [FastingTimerCardHostComponent, TranslateModule.forRoot()],
+        imports: [FastingTimerCardHostComponent],
         providers: [
+            provideTranslateTesting(),
             {
                 provide: FdUiDialogService,
                 useValue: createDialogServiceStub(),

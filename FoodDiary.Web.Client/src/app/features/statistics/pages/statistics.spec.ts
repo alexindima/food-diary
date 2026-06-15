@@ -2,9 +2,9 @@ import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form } from '@angular/forms/signals';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import type { SummaryMetrics } from '../../../components/shared/statistics-summary/statistics-summary';
 import type { ExportFormat } from '../../../shared/models/export.models';
 import { StatisticsFacade } from '../lib/statistics.facade';
@@ -104,8 +104,8 @@ async function setupStatisticsAsync(): Promise<{
     });
 
     await TestBed.configureTestingModule({
-        imports: [StatisticsComponent, TranslateModule.forRoot()],
-        providers: [provideRouter([])],
+        imports: [StatisticsComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
     }).compileComponents();
 
     facadeRef.current = TestBed.runInInjectionContext(() => createStatisticsFacadeMock());

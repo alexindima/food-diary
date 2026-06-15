@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import type { FavoriteProduct } from '../../../../models/product.data';
 import { ProductListFavoritesComponent } from './product-list-favorites';
 
@@ -89,7 +89,8 @@ async function setupComponentAsync(
     const favorites = options.favorites ?? [];
 
     await TestBed.configureTestingModule({
-        imports: [ProductListFavoritesComponent, TranslateModule.forRoot()],
+        imports: [ProductListFavoritesComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListFavoritesComponent);

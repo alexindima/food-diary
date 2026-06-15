@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WeightEntry } from '../../models/weight-entry.data';
 import { WeightHistoryEntriesCardComponent } from './weight-history-entries-card';
 
@@ -47,7 +47,8 @@ function setupComponent(entries: WeightEntry[]): {
     fixture: ComponentFixture<WeightHistoryEntriesCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [WeightHistoryEntriesCardComponent, TranslateModule.forRoot()],
+        imports: [WeightHistoryEntriesCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeightHistoryEntriesCardComponent);

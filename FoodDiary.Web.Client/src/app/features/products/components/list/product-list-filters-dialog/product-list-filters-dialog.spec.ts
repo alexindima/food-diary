@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ProductType } from '../../../models/product.data';
 import { ProductListFiltersDialogComponent } from './product-list-filters-dialog';
 import type { ProductListFiltersDialogData } from './product-list-filters-dialog.types';
@@ -21,8 +21,9 @@ describe('ProductListFiltersDialogComponent', () => {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [ProductListFiltersDialogComponent, TranslateModule.forRoot()],
+            imports: [ProductListFiltersDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRefSpy as Partial<FdUiDialogRef<ProductListFiltersDialogComponent>> },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
             ],

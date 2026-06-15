@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroSliderView } from '../../goals-page-lib/goals-page.models';
 import { GoalsWaterCardComponent } from './goals-water-card';
 
@@ -11,7 +11,8 @@ const WATER_VALUE = 2200;
 describe('GoalsWaterCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GoalsWaterCardComponent, TranslateModule.forRoot()],
+            imports: [GoalsWaterCardComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

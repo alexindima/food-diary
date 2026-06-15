@@ -1,10 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { ChangePasswordDialogComponent, type ChangePasswordDialogData } from './change-password-dialog';
 
@@ -19,8 +20,9 @@ function configureComponent(dialogData: ChangePasswordDialogData | null = null):
     dialogRefSpy = { close: vi.fn() };
 
     TestBed.configureTestingModule({
-        imports: [ChangePasswordDialogComponent, TranslateModule.forRoot()],
+        imports: [ChangePasswordDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: UserFacade, useValue: userServiceSpy },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
             { provide: FD_UI_DIALOG_DATA, useValue: dialogData },

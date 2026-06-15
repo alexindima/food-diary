@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
@@ -8,7 +8,7 @@ import { LANDING_STEPS } from './landing-steps.config';
 
 @Component({
     selector: 'fd-landing-steps',
-    imports: [TranslateModule, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './landing-steps.html',
     styleUrls: ['./landing-steps.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

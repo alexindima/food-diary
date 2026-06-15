@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createMealManageFormValue } from '../meal-manage-lib/meal-manage-form.mapper';
 import { type MealGeneralFieldErrors, MealGeneralInfoComponent } from './meal-general-info';
 
@@ -22,7 +22,8 @@ type MealGeneralInfoSetup = {
 
 async function setupComponentAsync(): Promise<MealGeneralInfoSetup> {
     await TestBed.configureTestingModule({
-        imports: [MealGeneralInfoComponent, TranslateModule.forRoot()],
+        imports: [MealGeneralInfoComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealGeneralInfoComponent);

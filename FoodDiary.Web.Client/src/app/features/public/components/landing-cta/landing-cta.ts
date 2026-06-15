@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
@@ -7,7 +7,7 @@ import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.se
 
 @Component({
     selector: 'fd-landing-cta',
-    imports: [TranslateModule, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiButtonComponent],
     templateUrl: './landing-cta.html',
     styleUrls: ['./landing-cta.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

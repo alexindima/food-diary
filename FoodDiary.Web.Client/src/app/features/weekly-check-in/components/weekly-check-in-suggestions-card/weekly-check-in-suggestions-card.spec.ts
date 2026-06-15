@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WeeklyCheckInSuggestionViewModel } from '../../lib/weekly-check-in.types';
 import { WeeklyCheckInSuggestionsCardComponent } from './weekly-check-in-suggestions-card';
 
@@ -21,7 +21,8 @@ describe('WeeklyCheckInSuggestionsCardComponent', () => {
 
 function setupComponent(suggestions: WeeklyCheckInSuggestionViewModel[]): ComponentFixture<WeeklyCheckInSuggestionsCardComponent> {
     TestBed.configureTestingModule({
-        imports: [WeeklyCheckInSuggestionsCardComponent, TranslateModule.forRoot()],
+        imports: [WeeklyCheckInSuggestionsCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeeklyCheckInSuggestionsCardComponent);

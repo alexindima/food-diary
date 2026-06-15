@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import type { FavoriteRecipe } from '../../../../models/recipe.data';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites';
 
@@ -30,7 +30,8 @@ function setupComponent(overrides: { favoriteTotalCount?: number } = {}): {
     fixture: ComponentFixture<RecipeListFavoritesComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeListFavoritesComponent, TranslateModule.forRoot()],
+        imports: [RecipeListFavoritesComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeListFavoritesComponent);

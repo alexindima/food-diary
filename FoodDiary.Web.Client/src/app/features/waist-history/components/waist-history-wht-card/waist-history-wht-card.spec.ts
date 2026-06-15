@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WhtViewModel } from '../../lib/waist-history.types';
 import { WaistHistoryWhtCardComponent } from './waist-history-wht-card';
 
@@ -26,7 +26,8 @@ describe('WaistHistoryWhtCardComponent', () => {
 
 function setupComponent(viewModel: WhtViewModel | null): ComponentFixture<WaistHistoryWhtCardComponent> {
     TestBed.configureTestingModule({
-        imports: [WaistHistoryWhtCardComponent, TranslateModule.forRoot()],
+        imports: [WaistHistoryWhtCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WaistHistoryWhtCardComponent);

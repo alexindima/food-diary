@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { buildWeightEntryViewModels } from '../../lib/weight-history-chart.mapper';
 import type { WeightEntry } from '../../models/weight-entry.data';
 
@@ -19,7 +20,7 @@ export class WeightHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WeightEntry[]>();
-    protected readonly items = computed(() => buildWeightEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
+    protected readonly items = computed(() => buildWeightEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)));
 
     public readonly editEntry = output<WeightEntry>();
     public readonly removeEntry = output<WeightEntry>();

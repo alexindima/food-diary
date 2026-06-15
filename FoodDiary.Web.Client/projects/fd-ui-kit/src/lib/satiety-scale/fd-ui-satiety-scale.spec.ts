@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { DEFAULT_SATIETY_LEVELS, FdUiSatietyScaleComponent } from './fd-ui-satiety-scale';
 
 const LEVEL_COUNT = 5;
@@ -29,7 +29,8 @@ const container = (): HTMLElement => {
 describe('FdUiSatietyScaleComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FdUiSatietyScaleComponent, TranslateModule.forRoot()],
+            imports: [FdUiSatietyScaleComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiSatietyScaleComponent);

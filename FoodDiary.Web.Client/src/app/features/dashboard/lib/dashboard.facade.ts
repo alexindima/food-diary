@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import type { PartialObserver } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { runTrackedRequest } from '../../../shared/lib/run-tracked-request';
 import type { CycleResponse } from '../../cycle-tracking/models/cycle.data';
 import type { FastingSession } from '../../fasting/models/fasting.data';
@@ -170,9 +171,6 @@ export class DashboardFacade {
     }
 
     private getCurrentLocale(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang() ?? 'en';
-        const lang = currentLang.length > 0 ? currentLang : fallbackLang.length > 0 ? fallbackLang : 'en';
-        return lang.split(/[_-]/)[0];
+        return resolveTranslateLanguage(this.translateService).split(/[_-]/)[0];
     }
 }

@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { TdeeInsight } from '../../models/tdee-insight.data';
 import { TdeeInsightDialogComponent } from './tdee-insight-dialog';
 
@@ -50,8 +50,9 @@ async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
 
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [TdeeInsightDialogComponent, TranslateModule.forRoot()],
+            imports: [TdeeInsightDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: insight === null ? null : { insight } },
             ],

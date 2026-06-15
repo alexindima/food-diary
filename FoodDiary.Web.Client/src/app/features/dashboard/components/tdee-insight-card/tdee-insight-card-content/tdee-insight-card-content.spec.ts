@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { TdeeInsight } from '../../../models/tdee-insight.data';
 import { TdeeInsightCardContentComponent } from './tdee-insight-card-content';
 
@@ -40,7 +40,8 @@ async function setupComponentAsync(insight: TdeeInsight | null): Promise<{
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [TdeeInsightCardContentComponent, TranslateModule.forRoot()],
+            imports: [TdeeInsightCardContentComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

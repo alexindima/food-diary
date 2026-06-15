@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WeekSummary } from '../../models/weekly-check-in.data';
 import { WeeklyCheckInStatsCardComponent } from './weekly-check-in-stats-card';
 
@@ -28,7 +28,8 @@ describe('WeeklyCheckInStatsCardComponent', () => {
 
 function setupComponent(week: WeekSummary | undefined): ComponentFixture<WeeklyCheckInStatsCardComponent> {
     TestBed.configureTestingModule({
-        imports: [WeeklyCheckInStatsCardComponent, TranslateModule.forRoot()],
+        imports: [WeeklyCheckInStatsCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeeklyCheckInStatsCardComponent);

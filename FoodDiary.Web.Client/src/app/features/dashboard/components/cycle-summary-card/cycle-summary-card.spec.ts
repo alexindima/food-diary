@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import {
     CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
     CYCLE_TRACKING_MODE_TRYING_TO_CONCEIVE,
@@ -101,7 +101,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [CycleSummaryCardComponent, TranslateModule.forRoot()],
+            imports: [CycleSummaryCardComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

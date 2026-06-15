@@ -1,5 +1,6 @@
 import type { TranslateService } from '@ngx-translate/core';
 
+import { resolveTranslateLanguage } from '../../../../../shared/i18n/translate-language.utils';
 import { getNumberProperty } from '../../../../../shared/lib/unknown-value.utils';
 import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
 import type { NutritionTotals } from './meal-manage.types';
@@ -63,13 +64,7 @@ export function formatMealAiName(name?: string | null): string {
 }
 
 export function getMealManageLanguage(translateService: TranslateService): string {
-    const currentLang = translateService.getCurrentLang();
-    if (currentLang.length > 0) {
-        return currentLang;
-    }
-
-    const fallbackLang = translateService.getFallbackLang() ?? '';
-    return fallbackLang.length > 0 ? fallbackLang : 'en';
+    return resolveTranslateLanguage(translateService);
 }
 
 export function getEmptyNutritionTotals(): NutritionTotals {

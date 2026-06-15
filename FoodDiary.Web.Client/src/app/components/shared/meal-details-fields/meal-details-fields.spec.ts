@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { DEFAULT_SATIETY_LEVEL } from '../../../shared/lib/satiety-level.utils';
 import { MealDetailsFieldsComponent } from './meal-details-fields';
 
@@ -10,7 +10,8 @@ const MAX_SATIETY_LEVEL = 5;
 
 async function setupMealDetailsFieldsAsync(): Promise<ComponentFixture<MealDetailsFieldsComponent>> {
     await TestBed.configureTestingModule({
-        imports: [MealDetailsFieldsComponent, TranslateModule.forRoot()],
+        imports: [MealDetailsFieldsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealDetailsFieldsComponent);

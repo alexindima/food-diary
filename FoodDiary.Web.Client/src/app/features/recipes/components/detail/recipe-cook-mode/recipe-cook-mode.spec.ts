@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeCookModeComponent } from './recipe-cook-mode';
 
@@ -50,7 +50,8 @@ function setupComponent(recipe: Recipe): {
     fixture: ComponentFixture<RecipeCookModeComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeCookModeComponent, TranslateModule.forRoot()],
+        imports: [RecipeCookModeComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeCookModeComponent);

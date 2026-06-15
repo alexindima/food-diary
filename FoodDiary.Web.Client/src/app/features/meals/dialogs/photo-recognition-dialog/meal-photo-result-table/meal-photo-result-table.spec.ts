@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { RecognizedItemView } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 import { MealPhotoResultTableComponent } from './meal-photo-result-table';
 
@@ -35,7 +35,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealPhotoResultTableComponent, TranslateModule.forRoot()],
+            imports: [MealPhotoResultTableComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

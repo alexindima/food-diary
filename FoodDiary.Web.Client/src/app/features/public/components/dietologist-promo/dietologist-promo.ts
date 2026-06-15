@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
@@ -8,7 +8,7 @@ import { DIETOLOGIST_PROMO_PERMISSIONS, DIETOLOGIST_PROMO_WORKFLOW_STEPS } from 
 
 @Component({
     selector: 'fd-dietologist-promo',
-    imports: [TranslateModule, FdUiButtonComponent, FdUiIconComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiIconComponent],
     templateUrl: './dietologist-promo.html',
     styleUrl: './dietologist-promo.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../shared/lib/image-upload.facade';
 import { ImageUploadFieldComponent } from './image-upload-field';
@@ -37,8 +38,9 @@ async function setupImageUploadFieldAsync(): Promise<ImageUploadFieldTestContext
     const logger = { warn: vi.fn() };
 
     await TestBed.configureTestingModule({
-        imports: [ImageUploadFieldComponent, TranslateModule.forRoot()],
+        imports: [ImageUploadFieldComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: ImageUploadFacade, useValue: imageUploadService },
             { provide: FrontendLoggerService, useValue: logger },
         ],

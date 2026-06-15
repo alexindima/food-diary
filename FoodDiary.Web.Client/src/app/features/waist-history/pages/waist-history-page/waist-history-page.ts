@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
@@ -17,7 +17,7 @@ import type { WaistEntry } from '../../models/waist-entry.data';
 @Component({
     selector: 'fd-waist-history-page',
     imports: [
-        TranslateModule,
+        TranslatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

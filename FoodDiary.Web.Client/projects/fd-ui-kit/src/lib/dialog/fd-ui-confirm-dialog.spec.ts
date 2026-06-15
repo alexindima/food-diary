@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { FdUiConfirmDialogComponent, type FdUiConfirmDialogData } from './fd-ui-confirm-dialog';
 
 describe('FdUiConfirmDialogComponent', () => {
@@ -15,8 +15,9 @@ describe('FdUiConfirmDialogComponent', () => {
         dialogRefSpy = { close: vi.fn() };
 
         TestBed.configureTestingModule({
-            imports: [FdUiConfirmDialogComponent, TranslateModule.forRoot()],
+            imports: [FdUiConfirmDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FD_UI_DIALOG_DATA, useValue: data },
                 { provide: FdUiDialogRef, useValue: dialogRefSpy },
             ],
@@ -88,7 +89,7 @@ describe('FdUiConfirmDialogComponent', () => {
         createComponent({ title: 'Confirm', message: 'Sure?' });
         const nativeEl = fixture.nativeElement as HTMLElement;
         const buttons = nativeEl.querySelectorAll('fd-ui-button');
-        // With TranslateModule.forRoot() and no translations loaded, keys are returned as-is
+        // With provideTranslateTesting() and no translations loaded, keys are returned as-is
         expect(buttons.length).toBe(2);
         expect(buttons[0].textContent.trim()).toBeTruthy();
         expect(buttons[1].textContent.trim()).toBeTruthy();

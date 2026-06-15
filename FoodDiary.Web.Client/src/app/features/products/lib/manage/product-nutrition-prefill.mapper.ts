@@ -57,12 +57,12 @@ export function buildUsdaFoodDetailPrefillPatch(detail: UsdaFoodDetail): Partial
         usdaFdcId: detail.fdcId,
         baseUnit: MeasurementUnit.G,
         baseAmount: DEFAULT_NUTRITION_BASE_AMOUNT,
-        ...(calories === null ? {} : { caloriesPerBase: Math.round(calories) }),
-        ...(proteins === null ? {} : { proteinsPerBase: roundProductNutrientValue(proteins) }),
-        ...(fats === null ? {} : { fatsPerBase: roundProductNutrientValue(fats) }),
-        ...(carbs === null ? {} : { carbsPerBase: roundProductNutrientValue(carbs) }),
-        ...(fiber === null ? {} : { fiberPerBase: roundProductNutrientValue(fiber) }),
-        ...(alcohol === null ? {} : { alcoholPerBase: roundProductNutrientValue(alcohol) }),
+        ...(!(calories === null) && { caloriesPerBase: Math.round(calories) }),
+        ...(!(proteins === null) && { proteinsPerBase: roundProductNutrientValue(proteins) }),
+        ...(!(fats === null) && { fatsPerBase: roundProductNutrientValue(fats) }),
+        ...(!(carbs === null) && { carbsPerBase: roundProductNutrientValue(carbs) }),
+        ...(!(fiber === null) && { fiberPerBase: roundProductNutrientValue(fiber) }),
+        ...(!(alcohol === null) && { alcoholPerBase: roundProductNutrientValue(alcohol) }),
     };
 }
 

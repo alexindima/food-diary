@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MealSatietyCardComponent } from './meal-satiety-card';
 
 const PRE_MEAL_SATIETY_LEVEL = 2;
@@ -27,7 +27,8 @@ type MealSatietyCardSetup = {
 
 async function setupComponentAsync(): Promise<MealSatietyCardSetup> {
     await TestBed.configureTestingModule({
-        imports: [MealSatietyCardComponent, TranslateModule.forRoot()],
+        imports: [MealSatietyCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealSatietyCardComponent);

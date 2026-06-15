@@ -1,11 +1,11 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { ErrorStateComponent } from '../../../../../../components/shared/error-state/error-state';
 import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import { AuthService } from '../../../../../../services/auth.service';
@@ -128,8 +128,9 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealListContentComponent, TranslateModule.forRoot()],
+            imports: [MealListContentComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: AuthService, useValue: { isAuthenticated: signal(true) } },
                 { provide: FdUiDialogService, useValue: { open: vi.fn() } },
             ],

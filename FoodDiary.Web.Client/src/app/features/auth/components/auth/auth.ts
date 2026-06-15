@@ -13,7 +13,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { firstValueFrom } from 'rxjs';
@@ -40,7 +40,7 @@ import { AuthRegisterFormComponent } from './auth-register-form/auth-register-fo
     styleUrls: ['./auth.scss'],
     providers: [AuthFormManager, AuthGoogleManager],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FdUiTabsComponent, AuthLoginFormComponent, AuthPasswordResetFormComponent, AuthRegisterFormComponent],
+    imports: [TranslatePipe, FdUiTabsComponent, AuthLoginFormComponent, AuthPasswordResetFormComponent, AuthRegisterFormComponent],
 })
 export class AuthComponent {
     public readonly useRouting = input(true);

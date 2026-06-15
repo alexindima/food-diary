@@ -1,10 +1,10 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../../services/navigation.service';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
 import { ProductService } from '../../../api/product.service';
@@ -388,8 +388,9 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     };
 
     await TestBed.configureTestingModule({
-        imports: [ProductManageFormComponent, TranslateModule.forRoot()],
+        imports: [ProductManageFormComponent],
         providers: [
+            provideTranslateTesting(),
             {
                 provide: ProductService,
                 useValue: {

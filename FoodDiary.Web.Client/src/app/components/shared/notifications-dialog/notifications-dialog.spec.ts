@@ -1,11 +1,11 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { type NotificationItem, NotificationService } from '../../../shared/notifications/notification.service';
 import { NotificationsDialogComponent } from './notifications-dialog';
 
@@ -38,8 +38,9 @@ function setupNotificationsDialog(notifications: NotificationItem[]): Notificati
     };
 
     TestBed.configureTestingModule({
-        imports: [NotificationsDialogComponent, TranslateModule.forRoot()],
+        imports: [NotificationsDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: NotificationService, useValue: notificationService },
             { provide: Router, useValue: router },

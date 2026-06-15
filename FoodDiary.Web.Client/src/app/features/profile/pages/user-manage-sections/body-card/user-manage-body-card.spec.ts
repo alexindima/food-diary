@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createUserManageFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
 import { UserManageBodyCardComponent } from './user-manage-body-card';
 
@@ -18,7 +18,8 @@ describe('UserManageBodyCardComponent', () => {
 
 async function createComponentAsync(): Promise<ComponentFixture<UserManageBodyCardComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageBodyCardComponent, TranslateModule.forRoot()],
+        imports: [UserManageBodyCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageBodyCardComponent);

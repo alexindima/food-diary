@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductDetailMacroBlock } from '../product-detail-lib/product-detail-nutrition.mapper';
@@ -37,7 +37,8 @@ describe('ProductDetailSummaryComponent', () => {
 
 function setupComponent(product: Product): { fixture: ComponentFixture<ProductDetailSummaryComponent> } {
     TestBed.configureTestingModule({
-        imports: [ProductDetailSummaryComponent, TranslateModule.forRoot()],
+        imports: [ProductDetailSummaryComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(ProductDetailSummaryComponent);

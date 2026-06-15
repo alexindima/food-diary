@@ -2,9 +2,9 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { HeaderActionsOverflowComponent } from './header-actions-overflow';
 
 @Component({
@@ -36,8 +36,8 @@ describe('HeaderActionsOverflowComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TestHostComponent, TranslateModule.forRoot()],
-            providers: [provideRouter([])],
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting(), provideRouter([])],
         }).compileComponents();
 
         overlayRoot = TestBed.inject(OverlayContainer).getContainerElement();

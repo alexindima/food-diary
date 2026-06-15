@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroSliderView } from '../../goals-page-lib/goals-page.models';
 import { GoalsMacrosCardComponent } from './goals-macros-card';
 
@@ -12,7 +12,8 @@ const FATS_VALUE = 70;
 describe('GoalsMacrosCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GoalsMacrosCardComponent, TranslateModule.forRoot()],
+            imports: [GoalsMacrosCardComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

@@ -1,10 +1,10 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
 import { Gender } from '../../../../../shared/models/user.data';
@@ -28,8 +28,9 @@ describe('UserManageAccountCardComponent', () => {
 
 async function createComponentAsync(): Promise<ComponentFixture<UserManageAccountCardComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageAccountCardComponent, TranslateModule.forRoot()],
+        imports: [UserManageAccountCardComponent],
         providers: [
+            provideTranslateTesting(),
             {
                 provide: ImageUploadFacade,
                 useValue: { uploadImage: vi.fn().mockReturnValue(of(null)), deleteAsset: vi.fn().mockReturnValue(of(void 0)) },

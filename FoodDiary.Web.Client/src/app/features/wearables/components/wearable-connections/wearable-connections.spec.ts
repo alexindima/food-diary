@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { WearableService } from '../../api/wearable.service';
 import type { WearableConnection } from '../../models/wearable.data';
 import { WearableConnectionsComponent } from './wearable-connections';
@@ -55,8 +55,8 @@ function setupComponent(): {
     };
 
     TestBed.configureTestingModule({
-        imports: [WearableConnectionsComponent, TranslateModule.forRoot()],
-        providers: [{ provide: WearableService, useValue: service }],
+        imports: [WearableConnectionsComponent],
+        providers: [provideTranslateTesting(), { provide: WearableService, useValue: service }],
     });
 
     const fixture = TestBed.createComponent(WearableConnectionsComponent);

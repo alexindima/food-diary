@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 
@@ -72,9 +73,6 @@ export class LessonFacade {
     }
 
     private getCurrentLocale(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang();
-        const lang = currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
-        return lang.split(/[_-]/)[0];
+        return resolveTranslateLanguage(this.translateService).split(/[_-]/)[0];
     }
 }

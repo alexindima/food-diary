@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { WeightSummaryCardComponent } from './weight-summary-card';
 
 const LATEST_WEIGHT = 80.5;
@@ -17,7 +18,8 @@ let fixture: ComponentFixture<WeightSummaryCardComponent>;
 describe('WeightSummaryCardComponent', () => {
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [WeightSummaryCardComponent, TranslateModule.forRoot()],
+            imports: [WeightSummaryCardComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(WeightSummaryCardComponent);

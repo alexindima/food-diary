@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { DietologistFacade } from '../../lib/dietologist.facade';
@@ -75,8 +76,9 @@ describe('DietologistInvitationPageComponent error state', () => {
 
 function createComponent(): void {
     TestBed.configureTestingModule({
-        imports: [DietologistInvitationPageComponent, TranslateModule.forRoot()],
+        imports: [DietologistInvitationPageComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: DietologistFacade, useValue: dietologistService },
             { provide: NavigationService, useValue: navigationService },
             { provide: AuthService, useValue: authService },

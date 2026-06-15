@@ -1,10 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MealListFiltersDialogComponent } from './meal-list-filters-dialog';
 
 const dateRange: FdUiDateRangeValue = {
@@ -58,8 +58,9 @@ async function setupComponentAsync(initialDateRange: FdUiDateRangeValue | null):
 
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealListFiltersDialogComponent, TranslateModule.forRoot()],
+            imports: [MealListFiltersDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: { dateRange: initialDateRange } },
             ],

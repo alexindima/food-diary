@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { type RecipeStepListItem, RecipeStepsListComponent } from './recipe-steps-list';
@@ -61,7 +61,8 @@ function setupComponent(expandedSteps: ReadonlySet<number>): {
     fixture: ComponentFixture<RecipeStepsListComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeStepsListComponent, TranslateModule.forRoot()],
+        imports: [RecipeStepsListComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeStepsListComponent);

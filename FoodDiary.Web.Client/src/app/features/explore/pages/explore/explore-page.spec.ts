@@ -1,10 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
@@ -34,8 +34,9 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        imports: [ExplorePageComponent, TranslateModule.forRoot()],
+        imports: [ExplorePageComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: ExploreInteractionsFacade, useValue: exploreService },
             { provide: EXPLORE_SEARCH_DEBOUNCE_MS, useValue: 0 },
             { provide: FdUiDialogService, useValue: dialogService },

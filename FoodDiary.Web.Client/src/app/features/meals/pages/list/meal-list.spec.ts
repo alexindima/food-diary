@@ -2,12 +2,12 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../services/navigation.service';
 import { AiFoodService } from '../../../../shared/api/ai-food.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -166,8 +166,9 @@ describe('MealListComponent', () => {
         });
 
         await TestBed.configureTestingModule({
-            imports: [MealListComponent, TranslateModule.forRoot()],
+            imports: [MealListComponent],
             providers: [
+                provideTranslateTesting(),
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 { provide: MealService, useValue: mockMealService },

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state';
@@ -32,7 +32,7 @@ import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-
     selector: 'fd-goals-page',
     providers: [GoalsFacade],
     imports: [
-        TranslateModule,
+        TranslatePipe,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,

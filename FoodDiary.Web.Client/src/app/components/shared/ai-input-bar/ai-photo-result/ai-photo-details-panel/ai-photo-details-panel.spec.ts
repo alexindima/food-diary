@@ -1,12 +1,13 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { AiPhotoDetailsPanelComponent } from './ai-photo-details-panel';
 
 async function setupAiPhotoDetailsPanelAsync(): Promise<ComponentFixture<AiPhotoDetailsPanelComponent>> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoDetailsPanelComponent, TranslateModule.forRoot()],
+        imports: [AiPhotoDetailsPanelComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoDetailsPanelComponent);

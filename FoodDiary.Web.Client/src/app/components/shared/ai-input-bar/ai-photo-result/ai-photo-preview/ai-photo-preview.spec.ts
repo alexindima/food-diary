@@ -1,12 +1,13 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { AiPhotoPreviewComponent } from './ai-photo-preview';
 
 async function setupAiPhotoPreviewAsync(): Promise<ComponentFixture<AiPhotoPreviewComponent>> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoPreviewComponent, TranslateModule.forRoot()],
+        imports: [AiPhotoPreviewComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoPreviewComponent);

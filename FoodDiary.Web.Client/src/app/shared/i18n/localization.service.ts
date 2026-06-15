@@ -8,6 +8,7 @@ import { filter, firstValueFrom } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { BrowserStorageService } from '../platform/browser-storage.service';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
+import { resolveTranslateLanguage } from './translate-language.utils';
 
 @Service()
 export class LocalizationService {
@@ -56,9 +57,7 @@ export class LocalizationService {
             return;
         }
 
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang();
-        const current = currentLang.length > 0 ? currentLang : fallbackLang;
+        const current = resolveTranslateLanguage(this.translateService);
         if (current === normalized) {
             this.persistLanguage(normalized);
             this.setDocumentLang(normalized);
@@ -69,10 +68,7 @@ export class LocalizationService {
     }
 
     public getCurrentLanguage(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang();
-        const current = currentLang.length > 0 ? currentLang : fallbackLang;
-        return this.normalizeLanguage(current);
+        return this.normalizeLanguage(resolveTranslateLanguage(this.translateService));
     }
 
     public async loadApplicationTranslationsAsync(): Promise<void> {

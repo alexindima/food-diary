@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import {
@@ -26,7 +26,7 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-password-reset',
-    imports: [CommonModule, FormField, TranslateModule, FdUiCardComponent, FdUiInputComponent, FdUiButtonComponent, FdUiFormErrorComponent],
+    imports: [CommonModule, FormField, TranslatePipe, FdUiCardComponent, FdUiInputComponent, FdUiButtonComponent, FdUiFormErrorComponent],
     templateUrl: './password-reset.html',
     styleUrl: './password-reset.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

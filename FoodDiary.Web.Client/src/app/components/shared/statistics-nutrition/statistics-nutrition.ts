@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
     FdUiBarChartComponent,
     type FdUiBarChartItem,
@@ -22,7 +22,7 @@ export type NutritionTrendGroup = FdUiLineChartSeries & {
     selector: 'fd-statistics-nutrition',
     imports: [
         CommonModule,
-        TranslateModule,
+        TranslatePipe,
         FdUiSectionStateComponent,
         FdUiCardComponent,
         FdUiTabsComponent,

@@ -1,15 +1,16 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
 import { FastingCheckInSummaryComponent } from './fasting-check-in-summary';
 
 describe('FastingCheckInSummaryComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FastingCheckInSummaryComponent, TranslateModule.forRoot()],
+            imports: [FastingCheckInSummaryComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

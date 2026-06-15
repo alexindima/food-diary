@@ -1,12 +1,12 @@
 import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { FEATURE_CATEGORIES } from './features.config';
 
 @Component({
     selector: 'fd-features',
-    imports: [TranslateModule, FdUiIconComponent],
+    imports: [TranslatePipe, FdUiIconComponent],
     templateUrl: './features.html',
     styleUrl: './features.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

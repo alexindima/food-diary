@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -18,7 +18,7 @@ export type UnsavedChangesDialogData = {
 
 @Component({
     selector: 'fd-unsaved-changes-dialog',
-    imports: [TranslateModule, FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiDialogShellComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './unsaved-changes-dialog.html',
     styleUrl: './unsaved-changes-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

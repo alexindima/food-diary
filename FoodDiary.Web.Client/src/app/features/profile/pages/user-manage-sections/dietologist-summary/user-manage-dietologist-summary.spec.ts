@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { email, form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../../shared/models/dietologist.data';
 import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
@@ -89,8 +89,8 @@ async function createComponentAsync(
     relationship: DietologistRelationship | null,
 ): Promise<ComponentFixture<UserManageDietologistSummaryComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageDietologistSummaryComponent, TranslateModule.forRoot()],
-        providers: [{ provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } }],
+        imports: [UserManageDietologistSummaryComponent],
+        providers: [provideTranslateTesting(), { provide: LocalizationService, useValue: { getCurrentLanguage: (): string => 'en' } }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageDietologistSummaryComponent);

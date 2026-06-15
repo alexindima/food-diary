@@ -1,11 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FavoriteProductService } from '../../../api/favorite-product.service';
 import { ProductService } from '../../../api/product.service';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../models/product.data';
@@ -78,8 +78,9 @@ const mockFavoriteProductService = {
 async function createComponentAsync(product: Product = mockProduct): Promise<ProductDetailComponent> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [ProductDetailComponent, TranslateModule.forRoot()],
+            imports: [ProductDetailComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FD_UI_DIALOG_DATA, useValue: product },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },

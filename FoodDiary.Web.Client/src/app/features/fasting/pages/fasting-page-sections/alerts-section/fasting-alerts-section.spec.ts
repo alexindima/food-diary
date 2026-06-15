@@ -1,16 +1,17 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { FastingMessageViewModel } from '../../fasting-page-lib/fasting-page.types';
 import { FastingAlertsSectionComponent } from './fasting-alerts-section';
 
 describe('FastingAlertsSectionComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FastingAlertsSectionComponent, TranslateModule.forRoot()],
+            imports: [FastingAlertsSectionComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

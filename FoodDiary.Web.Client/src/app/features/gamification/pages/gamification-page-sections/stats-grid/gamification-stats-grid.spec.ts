@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { GamificationStatsGridComponent } from './gamification-stats-grid';
 
 const STAT_TILE_COUNT = 4;
@@ -14,7 +14,8 @@ const WEEKLY_ADHERENCE = 86;
 describe('GamificationStatsGridComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GamificationStatsGridComponent, TranslateModule.forRoot()],
+            imports: [GamificationStatsGridComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

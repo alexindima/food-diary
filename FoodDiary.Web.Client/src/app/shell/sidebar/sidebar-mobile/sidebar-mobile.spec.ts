@@ -1,9 +1,9 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { MOBILE_REPORT_ITEMS } from '../sidebar-lib/sidebar-navigation.config';
 import { SidebarMobileComponent } from './sidebar-mobile';
 
@@ -80,8 +80,8 @@ function createComponent(
     unreadNotificationCount = 0,
 ): ComponentFixture<SidebarMobileComponent> {
     TestBed.configureTestingModule({
-        imports: [SidebarMobileComponent, TranslateModule.forRoot()],
-        providers: [provideRouter([])],
+        imports: [SidebarMobileComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
     });
 
     const fixture = TestBed.createComponent(SidebarMobileComponent);

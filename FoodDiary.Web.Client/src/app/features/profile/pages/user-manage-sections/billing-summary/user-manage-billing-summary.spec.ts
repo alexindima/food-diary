@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { BillingOverview } from '../../../../premium/models/billing.models';
 import type { BillingViewModel } from '../../user-manage/user-manage-lib/user-manage.types';
@@ -69,8 +70,8 @@ async function createComponentAsync(
     const localizationService = { getCurrentLanguage: vi.fn(() => 'en') };
 
     await TestBed.configureTestingModule({
-        imports: [UserManageBillingSummaryComponent, TranslateModule.forRoot()],
-        providers: [{ provide: LocalizationService, useValue: localizationService }],
+        imports: [UserManageBillingSummaryComponent],
+        providers: [provideTranslateTesting(), { provide: LocalizationService, useValue: localizationService }],
     }).compileComponents();
 
     const translateService = TestBed.inject(TranslateService);

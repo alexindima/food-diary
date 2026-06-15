@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeDetailSummaryComponent } from './recipe-detail-summary';
 
@@ -31,7 +31,8 @@ describe('RecipeDetailSummaryComponent', () => {
 
 function setupComponent(): { fixture: ComponentFixture<RecipeDetailSummaryComponent>; component: RecipeDetailSummaryComponent } {
     TestBed.configureTestingModule({
-        imports: [RecipeDetailSummaryComponent, TranslateModule.forRoot()],
+        imports: [RecipeDetailSummaryComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeDetailSummaryComponent);

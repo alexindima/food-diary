@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FASTING_REMINDER_PRESETS } from '../../../../../shared/lib/fasting-reminder-presets';
 import { UserManageNotificationsCardComponent } from './user-manage-notifications-card';
 
@@ -107,7 +107,8 @@ type NotificationsCardInputs = {
 
 async function createComponentAsync(overrides: Partial<NotificationsCardInputs> = {}): Promise<void> {
     await TestBed.configureTestingModule({
-        imports: [UserManageNotificationsCardComponent, TranslateModule.forRoot()],
+        imports: [UserManageNotificationsCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(UserManageNotificationsCardComponent);

@@ -1,10 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from './dietologist-clients-lib/dietologist-clients.test-data';
 import { DietologistClientsPageComponent } from './dietologist-clients-page';
@@ -51,8 +51,9 @@ describe('DietologistClientsPageComponent', () => {
 
 function createComponent(): void {
     TestBed.configureTestingModule({
-        imports: [DietologistClientsPageComponent, TranslateModule.forRoot()],
+        imports: [DietologistClientsPageComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: DietologistFacade, useValue: dietologistService },
             { provide: Router, useValue: router },
         ],

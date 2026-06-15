@@ -22,6 +22,7 @@ import { PageBodyComponent } from '../../../components/shared/page-body/page-bod
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../services/unsaved-changes.service';
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
@@ -433,7 +434,7 @@ export class DashboardComponent {
     }
 
     private formatSelectedDate(): string {
-        return formatDate(this.selectedDate(), 'd MMMM y', this.translateService.getCurrentLang());
+        return formatDate(this.selectedDate(), 'd MMMM y', resolveTranslateLanguage(this.translateService));
     }
 
     private buildDashboardBlockState(

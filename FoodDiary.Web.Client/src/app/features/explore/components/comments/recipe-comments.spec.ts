@@ -1,10 +1,10 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { PageOf } from '../../../../shared/models/page-of.data';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
@@ -27,8 +27,9 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        imports: [RecipeCommentsComponent, TranslateModule.forRoot()],
+        imports: [RecipeCommentsComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: ExploreInteractionsFacade, useValue: commentService },
             { provide: FdUiDialogService, useValue: dialogService },
         ],

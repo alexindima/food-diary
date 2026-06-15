@@ -1,11 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FavoriteMealService } from '../../api/favorite-meal.service';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealDetailFacade } from './meal-detail.facade';
@@ -71,8 +71,9 @@ beforeEach(() => {
     };
 
     TestBed.configureTestingModule({
-        imports: [TranslateModule.forRoot()],
+        imports: [],
         providers: [
+            provideTranslateTesting(),
             MealDetailFacade,
             DatePipe,
             { provide: FdUiDialogRef, useValue: dialogRef },

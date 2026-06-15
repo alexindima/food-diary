@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -17,7 +17,7 @@ type InvitationPageState = 'loading' | 'ready' | 'accepted' | 'declined' | 'expi
 
 @Component({
     selector: 'fd-dietologist-invitation-page',
-    imports: [TranslateModule, FdUiButtonComponent, FdUiCardComponent, FdUiFormErrorComponent],
+    imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FdUiFormErrorComponent],
     templateUrl: './dietologist-invitation-page.html',
     styleUrl: './dietologist-invitation-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

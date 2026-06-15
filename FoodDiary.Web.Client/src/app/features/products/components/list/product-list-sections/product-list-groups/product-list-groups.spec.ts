@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../models/product.data';
 import type { ProductCardViewModel } from '../../product-list.types';
 import { ProductListGroupsComponent } from './product-list-groups';
@@ -49,7 +49,8 @@ async function setupComponentAsync(
     options: ProductListGroupsSetupOptions = {},
 ): Promise<{ component: ProductListGroupsComponent; fixture: ComponentFixture<ProductListGroupsComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [ProductListGroupsComponent, TranslateModule.forRoot()],
+        imports: [ProductListGroupsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListGroupsComponent);

@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, type MockInstance, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { PageHeaderComponent } from './page-header';
 
 describe('PageHeaderComponent', () => {
@@ -12,7 +12,8 @@ describe('PageHeaderComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [PageHeaderComponent, TranslateModule.forRoot()],
+            imports: [PageHeaderComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(PageHeaderComponent);

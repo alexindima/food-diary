@@ -1,14 +1,15 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { CyclePredictionBlockComponent } from './cycle-prediction-block';
 
 let fixture: ComponentFixture<CyclePredictionBlockComponent>;
 
 beforeEach(() => {
     TestBed.configureTestingModule({
-        imports: [CyclePredictionBlockComponent, TranslateModule.forRoot()],
+        imports: [CyclePredictionBlockComponent],
+        providers: [provideTranslateTesting()],
     });
 
     fixture = TestBed.createComponent(CyclePredictionBlockComponent);

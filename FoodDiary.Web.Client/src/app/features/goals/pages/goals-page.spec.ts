@@ -2,9 +2,9 @@ import { computed, type Signal, signal, type Type, type WritableSignal } from '@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { GoalsFacade, type MacroPreset } from '../lib/goals.facade';
 import type { DayCalorieKey } from '../models/goals.data';
 import { GoalsPageComponent } from './goals-page';
@@ -36,7 +36,8 @@ describe('GoalsPageComponent', () => {
         facade = createFacadeMock();
 
         await TestBed.configureTestingModule({
-            imports: [GoalsPageComponent, TranslateModule.forRoot()],
+            imports: [GoalsPageComponent],
+            providers: [provideTranslateTesting()],
         })
             .overrideComponent(GoalsPageComponent, {
                 set: {

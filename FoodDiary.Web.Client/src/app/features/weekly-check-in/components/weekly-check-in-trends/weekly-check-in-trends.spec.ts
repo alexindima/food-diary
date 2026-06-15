@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WeeklyCheckInTrendCardViewModel } from '../../lib/weekly-check-in.types';
 import { WeeklyCheckInTrendsComponent } from './weekly-check-in-trends';
 
@@ -35,7 +35,8 @@ describe('WeeklyCheckInTrendsComponent', () => {
 
 function setupComponent(trends: WeeklyCheckInTrendCardViewModel[]): ComponentFixture<WeeklyCheckInTrendsComponent> {
     TestBed.configureTestingModule({
-        imports: [WeeklyCheckInTrendsComponent, TranslateModule.forRoot()],
+        imports: [WeeklyCheckInTrendsComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeeklyCheckInTrendsComponent);

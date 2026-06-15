@@ -191,9 +191,8 @@ export class AdminUserDetailsDialogComponent {
             return initials.toUpperCase();
         }
 
-        const emailInitial = user.email.trim()[0];
-        const value = emailInitial.length > 0 ? emailInitial : '?';
-        return value.toUpperCase();
+        const emailInitial = user.email.trim().at(0) ?? '?';
+        return emailInitial.toUpperCase();
     }
 
     private text(value: string | null | undefined): string {

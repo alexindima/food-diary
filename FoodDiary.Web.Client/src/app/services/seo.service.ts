@@ -4,6 +4,7 @@ import { Meta, Title } from '@angular/platform-browser';
 import { TranslateService } from '@ngx-translate/core';
 
 import { environment } from '../../environments/environment';
+import { resolveTranslateLanguage } from '../shared/i18n/translate-language.utils';
 
 const DEFAULT_TITLE = 'Food Diary';
 const DEFAULT_SITE_URLS = {
@@ -12,6 +13,23 @@ const DEFAULT_SITE_URLS = {
 } as const;
 const STRUCTURED_DATA_SELECTOR = 'script[data-seo-structured-data="app"]';
 const ROOT_PATHS = new Set(['', '/']);
+
+type SoftwareApplicationStructuredData = {
+    '@type': 'SoftwareApplication';
+    name: string;
+    applicationCategory: string;
+    operatingSystem: string;
+    url: string;
+    description: string;
+    inLanguage: string;
+    featureList?: string[];
+    offers: {
+        '@type': 'Offer';
+        price: string;
+        priceCurrency: string;
+        availability: string;
+    };
+};
 
 export type SeoData = {
     titleKey?: string | null;
@@ -103,7 +121,7 @@ export class SeoService {
     }
 
     private getOpenGraphLocale(): string {
-        const currentLang = this.translate.getCurrentLang().toLowerCase();
+        const currentLang = resolveTranslateLanguage(this.translate).toLowerCase();
         return currentLang === 'ru' ? 'ru_RU' : 'en_US';
     }
 
@@ -147,7 +165,7 @@ export class SeoService {
         }
 
         const currentSiteUrl = this.getCurrentSiteUrl();
-        const inLanguage = this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en';
+        const inLanguage = resolveTranslateLanguage(this.translate) === 'ru' ? 'ru' : 'en';
         const normalizedPath = this.normalizePath(this.document.location.pathname);
         const isLandingPage = ROOT_PATHS.has(normalizedPath);
         const featureList = isLandingPage
@@ -156,6 +174,26 @@ export class SeoService {
         const faqEntity = isLandingPage
             ? this.getLandingFaqEntity(currentUrl)
             : this.getStructuredFaqEntity(data.structuredDataBaseKey, data.structuredDataFaqKeys, currentUrl);
+        const softwareApplication: SoftwareApplicationStructuredData = {
+            '@type': 'SoftwareApplication',
+            name: DEFAULT_TITLE,
+            applicationCategory: 'HealthApplication',
+            operatingSystem: 'Web',
+            url: currentUrl,
+            description,
+            inLanguage,
+            offers: {
+                '@type': 'Offer',
+                price: '0',
+                priceCurrency: 'USD',
+                availability: 'https://schema.org/InStock',
+            },
+        };
+
+        if (featureList !== undefined) {
+            softwareApplication.featureList = featureList;
+        }
+
         const structuredData = {
             '@context': 'https://schema.org',
             '@graph': [
@@ -165,22 +203,7 @@ export class SeoService {
                     url: currentSiteUrl,
                     inLanguage,
                 },
-                {
-                    '@type': 'SoftwareApplication',
-                    name: DEFAULT_TITLE,
-                    applicationCategory: 'HealthApplication',
-                    operatingSystem: 'Web',
-                    url: currentUrl,
-                    description,
-                    inLanguage,
-                    ...(featureList !== undefined ? { featureList } : {}),
-                    offers: {
-                        '@type': 'Offer',
-                        price: '0',
-                        priceCurrency: 'USD',
-                        availability: 'https://schema.org/InStock',
-                    },
-                },
+                softwareApplication,
                 {
                     '@type': 'WebPage',
                     name: pageTitle,
@@ -217,7 +240,7 @@ export class SeoService {
         return {
             '@type': 'FAQPage',
             url: currentUrl,
-            inLanguage: this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en',
+            inLanguage: resolveTranslateLanguage(this.translate) === 'ru' ? 'ru' : 'en',
             mainEntity: faqItems.map(item => ({
                 '@type': 'Question',
                 name: this.translate.instant(`LANDING_FAQ.ITEMS.${item}.QUESTION`),
@@ -249,7 +272,7 @@ export class SeoService {
         return {
             '@type': 'FAQPage',
             url: currentUrl,
-            inLanguage: this.translate.getCurrentLang() === 'ru' ? 'ru' : 'en',
+            inLanguage: resolveTranslateLanguage(this.translate) === 'ru' ? 'ru' : 'en',
             mainEntity: faqKeys.map(item => ({
                 '@type': 'Question',
                 name: this.translate.instant(`${baseKey}.FAQ.ITEMS.${item}.QUESTION`),

@@ -1,11 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
@@ -95,8 +95,9 @@ async function setupComponentAsync(values: Partial<{ product: Product; recipe: R
     };
 
     await TestBed.configureTestingModule({
-        imports: [MealManualItemDialogComponent, TranslateModule.forRoot()],
+        imports: [MealManualItemDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FD_UI_DIALOG_DATA, useValue: { item } satisfies MealManualItemDialogData },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: FdUiDialogService, useValue: fdDialogService },

@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ProductDetailActionsComponent } from './product-detail-actions';
 
 describe('ProductDetailActionsComponent', () => {
@@ -52,7 +52,8 @@ function setupComponent(
     warningMessage: string | null = null,
 ): { fixture: ComponentFixture<ProductDetailActionsComponent>; component: ProductDetailActionsComponent } {
     TestBed.configureTestingModule({
-        imports: [ProductDetailActionsComponent, TranslateModule.forRoot()],
+        imports: [ProductDetailActionsComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(ProductDetailActionsComponent);

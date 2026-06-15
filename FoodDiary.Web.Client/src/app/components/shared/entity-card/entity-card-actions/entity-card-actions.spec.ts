@@ -1,14 +1,15 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EntityCardActionsComponent } from './entity-card-actions';
 
 const CALORIES = 100;
 
 async function setupEntityCardActionsAsync(): Promise<ComponentFixture<EntityCardActionsComponent>> {
     await TestBed.configureTestingModule({
-        imports: [EntityCardActionsComponent, TranslateModule.forRoot()],
+        imports: [EntityCardActionsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EntityCardActionsComponent);

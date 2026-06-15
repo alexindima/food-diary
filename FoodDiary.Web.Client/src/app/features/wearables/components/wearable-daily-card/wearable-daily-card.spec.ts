@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WearableDailySummary } from '../../models/wearable.data';
 import { WearableDailyCardComponent } from './wearable-daily-card';
 
@@ -41,7 +41,8 @@ function setupComponent(summary: WearableDailySummary | null): {
     fixture: ComponentFixture<WearableDailyCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [WearableDailyCardComponent, TranslateModule.forRoot()],
+        imports: [WearableDailyCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WearableDailyCardComponent);

@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { BodyTarget } from '../../goals-page-lib/goals-page.models';
 import { GoalsBodyTargetsComponent } from './goals-body-targets';
 
@@ -12,7 +12,8 @@ const TARGET_WAIST = 80;
 describe('GoalsBodyTargetsComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GoalsBodyTargetsComponent, TranslateModule.forRoot()],
+            imports: [GoalsBodyTargetsComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

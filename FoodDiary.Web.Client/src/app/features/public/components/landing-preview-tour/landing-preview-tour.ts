@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, effect, type ElementRef, inject, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
 import { DashboardSummaryCardComponent } from '../../../../components/shared/dashboard-summary-card/dashboard-summary-card';
 import { MealsPreviewComponent } from '../../../../components/shared/meals-preview/meals-preview';
@@ -19,7 +19,7 @@ import { buildLandingPreviewContent, type LandingPreviewContent } from './landin
 @Component({
     selector: 'fd-landing-preview-tour',
     imports: [
-        TranslateModule,
+        TranslatePipe,
         DashboardSummaryCardComponent,
         MealsPreviewComponent,
         ProductCardComponent,

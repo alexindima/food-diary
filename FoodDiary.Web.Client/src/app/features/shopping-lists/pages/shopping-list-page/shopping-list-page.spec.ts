@@ -1,11 +1,11 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { MeasurementUnit } from '../../../products/models/product.data';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
@@ -106,8 +106,9 @@ async function setupShoppingListPageAsync(): Promise<ShoppingListPageTestContext
     });
 
     await TestBed.configureTestingModule({
-        imports: [ShoppingListPageComponent, TranslateModule.forRoot()],
+        imports: [ShoppingListPageComponent],
         providers: [
+            provideTranslateTesting(),
             provideRouter([]),
             { provide: FdUiDialogService, useValue: dialogService },
             { provide: ViewportService, useValue: { isMobile } },

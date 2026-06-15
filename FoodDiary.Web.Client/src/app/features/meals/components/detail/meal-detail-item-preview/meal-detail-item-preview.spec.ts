@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MEAL_DETAIL_ITEM_PREVIEW_MAX_ITEMS } from '../meal-detail-lib/meal-detail.config';
 import type { MealDetailItemPreview } from '../meal-detail-lib/meal-detail.types';
 import { MealDetailItemPreviewComponent } from './meal-detail-item-preview';
@@ -68,7 +68,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealDetailItemPreviewComponent, TranslateModule.forRoot()],
+            imports: [MealDetailItemPreviewComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

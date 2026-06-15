@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { BmiViewModel } from '../../lib/weight-history.types';
 import { WeightHistoryBmiCardComponent } from './weight-history-bmi-card';
 
@@ -26,7 +26,8 @@ describe('WeightHistoryBmiCardComponent', () => {
 
 function setupComponent(viewModel: BmiViewModel | null): ComponentFixture<WeightHistoryBmiCardComponent> {
     TestBed.configureTestingModule({
-        imports: [WeightHistoryBmiCardComponent, TranslateModule.forRoot()],
+        imports: [WeightHistoryBmiCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WeightHistoryBmiCardComponent);

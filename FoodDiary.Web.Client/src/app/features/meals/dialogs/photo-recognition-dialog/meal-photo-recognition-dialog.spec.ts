@@ -1,11 +1,11 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AiFoodFacade } from '../../../../shared/lib/ai-food.facade';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import type { MealAiSessionManageDto } from '../../models/meal.data';
@@ -225,8 +225,9 @@ async function setupComponentAsync(
 ): Promise<{ component: MealPhotoRecognitionDialogComponent; fixture: ComponentFixture<MealPhotoRecognitionDialogComponent> }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealPhotoRecognitionDialogComponent, TranslateModule.forRoot()],
+            imports: [MealPhotoRecognitionDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: AiFoodFacade, useValue: aiFoodService },
                 { provide: FdUiDialogRef, useValue: dialogRef },
                 { provide: FD_UI_DIALOG_DATA, useValue: data },

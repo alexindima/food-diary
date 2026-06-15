@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { GamificationFacade } from '../../lib/gamification.facade';
 import type { Badge } from '../../models/gamification.data';
 import { GamificationPageComponent } from './gamification-page';
@@ -21,7 +21,8 @@ describe('GamificationPageComponent', () => {
     beforeEach(() => {
         facade = createFacadeMock();
         TestBed.configureTestingModule({
-            imports: [GamificationPageComponent, TranslateModule.forRoot()],
+            imports: [GamificationPageComponent],
+            providers: [provideTranslateTesting()],
         }).overrideComponent(GamificationPageComponent, {
             set: {
                 providers: [{ provide: GamificationFacade, useValue: facade }],

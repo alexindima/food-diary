@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NutritionEditorComponent, type NutritionFormModel } from './nutrition-editor';
 
 type NutritionEditorTestContext = {
@@ -13,7 +13,8 @@ type NutritionEditorTestContext = {
 
 async function setupNutritionEditorAsync(): Promise<NutritionEditorTestContext> {
     await TestBed.configureTestingModule({
-        imports: [NutritionEditorComponent, TranslateModule.forRoot()],
+        imports: [NutritionEditorComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(NutritionEditorComponent);

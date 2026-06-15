@@ -4,6 +4,7 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { buildWaistEntryViewModels } from '../../lib/waist-history-chart.mapper';
 import type { WaistEntry } from '../../models/waist-entry.data';
 
@@ -19,7 +20,7 @@ export class WaistHistoryEntriesCardComponent {
 
     public readonly isLoading = input.required<boolean>();
     public readonly entries = input.required<WaistEntry[]>();
-    protected readonly items = computed(() => buildWaistEntryViewModels(this.entries(), this.translateService.getCurrentLang()));
+    protected readonly items = computed(() => buildWaistEntryViewModels(this.entries(), resolveTranslateLanguage(this.translateService)));
 
     public readonly editEntry = output<WaistEntry>();
     public readonly removeEntry = output<WaistEntry>();

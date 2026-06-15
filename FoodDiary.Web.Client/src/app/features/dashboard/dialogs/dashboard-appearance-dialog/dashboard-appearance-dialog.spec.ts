@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import { ThemeService } from '../../../../shared/theme/theme.service';
 import { DashboardAppearanceDialogComponent } from './dashboard-appearance-dialog';
@@ -36,8 +36,9 @@ describe('DashboardAppearanceDialogComponent', () => {
         };
 
         await TestBed.configureTestingModule({
-            imports: [DashboardAppearanceDialogComponent, TranslateModule.forRoot()],
+            imports: [DashboardAppearanceDialogComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: ThemeService, useValue: themeService },
                 { provide: UserFacade, useValue: userService },
                 {

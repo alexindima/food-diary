@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { UserManagePrivacyCardComponent } from './user-manage-privacy-card';
 
 describe('UserManagePrivacyCardComponent', () => {
@@ -39,7 +39,8 @@ describe('UserManagePrivacyCardComponent', () => {
 
 async function createComponentAsync(overrides: Partial<PrivacyCardInputs> = {}): Promise<ComponentFixture<UserManagePrivacyCardComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManagePrivacyCardComponent, TranslateModule.forRoot()],
+        imports: [UserManagePrivacyCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManagePrivacyCardComponent);

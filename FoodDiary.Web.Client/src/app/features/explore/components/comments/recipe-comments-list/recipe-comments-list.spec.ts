@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { RecipeComment } from '../../../models/comment.data';
 import type { RecipeCommentViewModel } from '../recipe-comments-lib/recipe-comments.types';
 import { RecipeCommentsListComponent } from './recipe-comments-list';
@@ -10,7 +10,8 @@ import { RecipeCommentsListComponent } from './recipe-comments-list';
 describe('RecipeCommentsListComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [RecipeCommentsListComponent, TranslateModule.forRoot()],
+            imports: [RecipeCommentsListComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

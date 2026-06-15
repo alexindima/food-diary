@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiIconComponent } from 'fd-ui-kit';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -15,7 +15,7 @@ import { NotificationsDialogListComponent } from './notifications-dialog-list/no
 @Component({
     selector: 'fd-notifications-dialog',
     imports: [
-        TranslateModule,
+        TranslatePipe,
         FdUiButtonComponent,
         FdUiIconComponent,
         FdUiDialogFooterDirective,

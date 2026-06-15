@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ProductAiRecognitionActionComponent } from './product-ai-recognition-action';
 
 describe('ProductAiRecognitionActionComponent', () => {
@@ -38,7 +38,8 @@ function setupComponent(hasAnalyzed: boolean): {
     component: ProductAiRecognitionActionComponent;
 } {
     TestBed.configureTestingModule({
-        imports: [ProductAiRecognitionActionComponent, TranslateModule.forRoot()],
+        imports: [ProductAiRecognitionActionComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(ProductAiRecognitionActionComponent);

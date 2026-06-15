@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FoodNutritionResponse, FoodVisionItem } from '../../../../shared/models/ai.data';
 import { AiPhotoResultComponent } from './ai-photo-result';
 import type { AiPhotoEditApplied } from './ai-photo-result-lib/ai-photo-result.types';
@@ -51,7 +52,8 @@ type AiPhotoResultTestContext = {
 
 async function setupAiPhotoResultAsync(): Promise<AiPhotoResultTestContext> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoResultComponent, TranslateModule.forRoot()],
+        imports: [AiPhotoResultComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoResultComponent);

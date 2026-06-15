@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import {
     FdUiIconComponent,
     FdUiLineChartComponent,
@@ -42,7 +42,7 @@ export type SummarySparklinePoint = {
     selector: 'fd-statistics-summary',
     imports: [
         CommonModule,
-        TranslateModule,
+        TranslatePipe,
         FdUiSectionStateComponent,
         FdUiCardComponent,
         FdUiCardActionsDirective,

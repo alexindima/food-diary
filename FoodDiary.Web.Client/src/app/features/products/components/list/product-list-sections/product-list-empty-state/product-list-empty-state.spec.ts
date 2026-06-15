@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { type ProductListEmptyState, ProductListEmptyStateComponent } from './product-list-empty-state';
 
 describe('ProductListEmptyStateComponent', () => {
@@ -29,7 +29,8 @@ async function setupComponentAsync(
     state: ProductListEmptyState,
 ): Promise<{ component: ProductListEmptyStateComponent; fixture: ComponentFixture<ProductListEmptyStateComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [ProductListEmptyStateComponent, TranslateModule.forRoot()],
+        imports: [ProductListEmptyStateComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListEmptyStateComponent);

@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { Meal } from '../../../models/meal.data';
 import { MealDetailItemPreviewComponent } from '../meal-detail-item-preview/meal-detail-item-preview';
 import { MEAL_DETAIL_DEFAULT_QUALITY_GRADE } from '../meal-detail-lib/meal-detail.config';
@@ -90,7 +90,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealDetailSummaryComponent, TranslateModule.forRoot()],
+            imports: [MealDetailSummaryComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

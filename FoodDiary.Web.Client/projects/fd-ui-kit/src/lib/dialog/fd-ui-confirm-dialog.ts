@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import { FdUiDialogComponent } from './fd-ui-dialog';
@@ -17,7 +17,7 @@ export type FdUiConfirmDialogData = {
 
 @Component({
     selector: 'fd-ui-confirm-dialog',
-    imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
     templateUrl: './fd-ui-confirm-dialog.html',
     styleUrls: ['./fd-ui-confirm-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

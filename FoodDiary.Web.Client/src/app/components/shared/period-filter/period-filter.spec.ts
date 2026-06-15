@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import type { FdUiTab } from 'fd-ui-kit/tabs/fd-ui-tabs';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { PeriodFilterComponent } from './period-filter';
 
 const NON_STRING_RANGE_VALUE = 42;
@@ -43,8 +43,8 @@ describe('PeriodFilterComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TestHostComponent, TranslateModule.forRoot()],
-            providers: [],
+            imports: [TestHostComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         hostFixture = TestBed.createComponent(TestHostComponent);

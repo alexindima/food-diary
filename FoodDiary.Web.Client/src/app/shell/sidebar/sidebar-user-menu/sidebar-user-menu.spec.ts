@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import type { User } from '../../../shared/models/user.data';
 import { SidebarUserMenuComponent } from './sidebar-user-menu';
 
@@ -110,8 +110,8 @@ type CreateOptions = {
 
 function createComponent(options: CreateOptions): ComponentFixture<SidebarUserMenuComponent> {
     TestBed.configureTestingModule({
-        imports: [SidebarUserMenuComponent, TranslateModule.forRoot()],
-        providers: [provideRouter([{ path: 'profile', component: DummyRouteComponent }])],
+        imports: [SidebarUserMenuComponent],
+        providers: [provideTranslateTesting(), provideRouter([{ path: 'profile', component: DummyRouteComponent }])],
     });
 
     const fixture = TestBed.createComponent(SidebarUserMenuComponent);

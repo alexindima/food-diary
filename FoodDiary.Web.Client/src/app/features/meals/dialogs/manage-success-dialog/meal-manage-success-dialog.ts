@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -17,7 +17,7 @@ export type ConsumptionManageRedirectAction = 'Home' | 'ConsumptionList';
     templateUrl: './meal-manage-success-dialog.html',
     styleUrls: ['./meal-manage-success-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent],
 })
 export class MealManageSuccessDialogComponent {
     protected readonly data = inject<ConsumptionManageSuccessDialogData>(FD_UI_DIALOG_DATA);

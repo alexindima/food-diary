@@ -520,7 +520,7 @@ export class GoalsFacade {
             desiredWeight: this.normalizeDesiredBodyTarget(bodyTargets.weight),
             desiredWaist: this.normalizeDesiredBodyTarget(bodyTargets.waist),
             calorieCyclingEnabled: this.calorieCyclingEnabled(),
-            ...(this.calorieCyclingEnabled() ? this.dayCalories() : {}),
+            ...(this.calorieCyclingEnabled() && this.dayCalories()),
         };
     }
 

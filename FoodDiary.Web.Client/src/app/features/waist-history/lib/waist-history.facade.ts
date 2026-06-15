@@ -5,6 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { finalize } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
 import { WaistEntriesService } from '../api/waist-entries.service';
@@ -82,7 +83,9 @@ export class WaistHistoryFacade {
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 
-    public readonly chartPoints = computed(() => buildWaistHistoryChartPoints(this.summaryPoints(), this.translate.getCurrentLang()));
+    public readonly chartPoints = computed(() =>
+        buildWaistHistoryChartPoints(this.summaryPoints(), resolveTranslateLanguage(this.translate)),
+    );
 
     public readonly latestWaist = computed<number | null>(() => {
         const entries = this.entriesDescending();

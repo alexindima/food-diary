@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { UpdateSuccessDialogComponent } from './update-success-dialog';
 
 describe('UpdateSuccessDialogComponent', () => {
@@ -10,8 +10,8 @@ describe('UpdateSuccessDialogComponent', () => {
         const dialogRef = { close: vi.fn() };
 
         await TestBed.configureTestingModule({
-            imports: [UpdateSuccessDialogComponent, TranslateModule.forRoot()],
-            providers: [{ provide: FdUiDialogRef, useValue: dialogRef }],
+            imports: [UpdateSuccessDialogComponent],
+            providers: [provideTranslateTesting(), { provide: FdUiDialogRef, useValue: dialogRef }],
         }).compileComponents();
 
         const fixture = TestBed.createComponent(UpdateSuccessDialogComponent);

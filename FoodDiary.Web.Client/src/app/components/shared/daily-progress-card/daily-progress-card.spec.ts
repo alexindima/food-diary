@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { DailyProgressCardComponent } from './daily-progress-card';
 
 const TEST_DATE = '2026-03-28';
@@ -41,7 +41,8 @@ describe('DailyProgressCardComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DailyProgressCardComponent, TranslateModule.forRoot()],
+            imports: [DailyProgressCardComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DailyProgressCardComponent);

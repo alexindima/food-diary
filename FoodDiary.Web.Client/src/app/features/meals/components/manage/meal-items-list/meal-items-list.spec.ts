@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../../recipes/models/recipe.data';
 import { RecipeServingWeightService } from '../../../lib/recipe-serving/recipe-serving-weight.service';
@@ -146,8 +147,8 @@ async function setupComponentAsync(
     };
 
     await TestBed.configureTestingModule({
-        imports: [MealItemsListComponent, TranslateModule.forRoot()],
-        providers: [{ provide: RecipeServingWeightService, useValue: recipeWeight }],
+        imports: [MealItemsListComponent],
+        providers: [provideTranslateTesting(), { provide: RecipeServingWeightService, useValue: recipeWeight }],
     }).compileComponents();
 
     TestBed.inject(TranslateService).use('en');

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { email, form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { DietologistPermissions } from '../../../../../shared/models/dietologist.data';
 import type { DietologistPermissionChange } from '../../user-manage/user-manage-lib/user-manage.types';
 import { createDietologistFormModel } from '../../user-manage/user-manage-lib/user-manage-form.mapper';
@@ -31,7 +31,8 @@ describe('UserManageDietologistCardComponent', () => {
 
 async function createComponentAsync(): Promise<ComponentFixture<UserManageDietologistCardComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageDietologistCardComponent, TranslateModule.forRoot()],
+        imports: [UserManageDietologistCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageDietologistCardComponent);

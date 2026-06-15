@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { CyclingDayControl } from '../../goals-page-lib/goals-page.models';
 import { GoalsCyclingCardComponent } from './goals-cycling-card';
 
@@ -13,7 +13,8 @@ const MAX_CALORIES = 4000;
 describe('GoalsCyclingCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GoalsCyclingCardComponent, TranslateModule.forRoot()],
+            imports: [GoalsCyclingCardComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

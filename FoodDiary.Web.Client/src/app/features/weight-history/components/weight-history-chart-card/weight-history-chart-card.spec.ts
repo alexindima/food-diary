@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WeightHistoryChartPoint } from '../../lib/weight-history-chart.mapper';
 import { WeightHistoryChartCardComponent } from './weight-history-chart-card';
 
@@ -27,7 +27,8 @@ async function setupComponentAsync(
     isLoading = false,
 ): Promise<{ component: WeightHistoryChartCardComponent; fixture: ComponentFixture<WeightHistoryChartCardComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [WeightHistoryChartCardComponent, TranslateModule.forRoot()],
+        imports: [WeightHistoryChartCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(WeightHistoryChartCardComponent);

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { WeightTrendCardComponent, type WeightTrendPoint } from './weight-trend-card';
 
 const CURRENT_WEIGHT = 80;
@@ -52,7 +52,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [WeightTrendCardComponent, TranslateModule.forRoot()],
+            imports: [WeightTrendCardComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

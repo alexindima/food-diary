@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../models/product.data';
 import { ProductListDialogContentComponent } from './product-list-dialog-content';
 
@@ -51,7 +51,8 @@ function setupComponent(
     isLoading = false,
 ): { fixture: ComponentFixture<ProductListDialogContentComponent>; component: ProductListDialogContentComponent } {
     TestBed.configureTestingModule({
-        imports: [ProductListDialogContentComponent, TranslateModule.forRoot()],
+        imports: [ProductListDialogContentComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(ProductListDialogContentComponent);

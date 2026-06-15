@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -23,7 +23,7 @@ const MIN_FOOD_WINDOW_DAYS = 14;
 @Component({
     selector: 'fd-tdee-insight-dialog',
     imports: [
-        TranslateModule,
+        TranslatePipe,
         FdUiDialogComponent,
         TdeeInsightDialogFooterComponent,
         TdeeInsightDialogHintComponent,

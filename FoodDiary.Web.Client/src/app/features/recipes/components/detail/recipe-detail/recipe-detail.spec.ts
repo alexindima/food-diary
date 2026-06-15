@@ -1,13 +1,13 @@
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { RecipeService } from '../../../api/recipe.service';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeDetailComponent } from './recipe-detail';
@@ -110,8 +110,9 @@ beforeEach(async () => {
     vi.clearAllMocks();
 
     await TestBed.configureTestingModule({
-        imports: [RecipeDetailComponent, TranslateModule.forRoot()],
+        imports: [RecipeDetailComponent],
         providers: [
+            provideTranslateTesting(),
             provideHttpClient(),
             provideHttpClientTesting(),
             { provide: FD_UI_DIALOG_DATA, useValue: mockRecipe },

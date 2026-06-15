@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { UserManageBillingCardComponent } from './user-manage-billing-card';
 
 describe('UserManageBillingCardComponent', () => {
@@ -27,7 +27,8 @@ describe('UserManageBillingCardComponent', () => {
 
 async function createComponentAsync(): Promise<ComponentFixture<UserManageBillingCardComponent>> {
     await TestBed.configureTestingModule({
-        imports: [UserManageBillingCardComponent, TranslateModule.forRoot()],
+        imports: [UserManageBillingCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(UserManageBillingCardComponent);

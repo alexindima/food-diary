@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { StatisticsBodyComponent } from './statistics-body';
 
 type StatisticsBodyTestContext = {
@@ -13,7 +13,8 @@ async function setupStatisticsBodyAsync(
     overrides: Partial<{ isLoading: boolean; hasLoadError: boolean; hasBodyData: boolean }> = {},
 ): Promise<StatisticsBodyTestContext> {
     await TestBed.configureTestingModule({
-        imports: [StatisticsBodyComponent, TranslateModule.forRoot()],
+        imports: [StatisticsBodyComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(StatisticsBodyComponent);

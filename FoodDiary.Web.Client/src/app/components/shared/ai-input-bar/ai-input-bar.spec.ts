@@ -1,11 +1,11 @@
 import { HttpStatusCode } from '@angular/common/http';
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { AuthService } from '../../../services/auth.service';
 import { FrontendLoggerService } from '../../../services/frontend-logger.service';
 import { NavigationService } from '../../../services/navigation.service';
@@ -87,8 +87,9 @@ async function setupAiInputBarAsync(
     const dialogService = { open: vi.fn((): { afterClosed: () => Observable<boolean> } => ({ afterClosed: () => of(true) })) };
 
     await TestBed.configureTestingModule({
-        imports: [AiInputBarComponent, TranslateModule.forRoot()],
+        imports: [AiInputBarComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: AiFoodFacade, useValue: aiFoodService },
             {
                 provide: UserFacade,

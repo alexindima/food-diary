@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { Badge } from '../../../models/gamification.data';
 import { GamificationBadgesCardComponent } from './gamification-badges-card';
 
@@ -14,7 +14,8 @@ const BADGES: Badge[] = [
 describe('GamificationBadgesCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GamificationBadgesCardComponent, TranslateModule.forRoot()],
+            imports: [GamificationBadgesCardComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../models/recipe.data';
 import { RecipeSelectDialogContentComponent } from './recipe-select-dialog-content';
 
@@ -39,7 +39,8 @@ function setupComponent(
     isLoading = false,
 ): { component: RecipeSelectDialogContentComponent; fixture: ComponentFixture<RecipeSelectDialogContentComponent> } {
     TestBed.configureTestingModule({
-        imports: [RecipeSelectDialogContentComponent, TranslateModule.forRoot()],
+        imports: [RecipeSelectDialogContentComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeSelectDialogContentComponent);

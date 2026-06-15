@@ -11,7 +11,7 @@ import {
     viewChildren,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 
 export type FdUiTab = {
     value: string;
@@ -23,7 +23,6 @@ export type FdUiTabsAppearance = 'default' | 'wrap-compact';
 
 @Component({
     selector: 'fd-ui-tabs',
-    imports: [TranslateModule],
     templateUrl: './fd-ui-tabs.html',
     styleUrls: ['./fd-ui-tabs.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

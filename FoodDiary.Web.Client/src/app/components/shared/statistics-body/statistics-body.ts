@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiLineChartComponent, FdUiSectionStateComponent } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
@@ -12,7 +12,7 @@ export type StatisticsBodyChartPoint = {
 
 @Component({
     selector: 'fd-statistics-body',
-    imports: [CommonModule, TranslateModule, FdUiCardComponent, FdUiTabsComponent, FdUiSectionStateComponent, FdUiLineChartComponent],
+    imports: [CommonModule, TranslatePipe, FdUiCardComponent, FdUiTabsComponent, FdUiSectionStateComponent, FdUiLineChartComponent],
     templateUrl: './statistics-body.html',
     styleUrls: ['./statistics-body.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

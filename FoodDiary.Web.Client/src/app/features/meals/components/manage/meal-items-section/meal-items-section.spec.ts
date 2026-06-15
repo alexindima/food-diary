@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ConsumptionSourceType } from '../../../models/meal.data';
 import type { MealItemsListItemState } from '../meal-items-list/meal-items-list';
 import { MealItemsSectionComponent } from './meal-items-section';
@@ -60,7 +60,8 @@ type MealItemsSectionSetup = {
 
 async function setupComponentAsync(): Promise<MealItemsSectionSetup> {
     await TestBed.configureTestingModule({
-        imports: [MealItemsSectionComponent, TranslateModule.forRoot()],
+        imports: [MealItemsSectionComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealItemsSectionComponent);

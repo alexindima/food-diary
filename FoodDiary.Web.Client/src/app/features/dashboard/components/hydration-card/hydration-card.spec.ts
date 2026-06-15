@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { HydrationCardComponent } from './hydration-card';
 import { HYDRATION_CARD_ADD_STEP_ML } from './hydration-card.config';
 
@@ -55,7 +55,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [HydrationCardComponent, TranslateModule.forRoot()],
+            imports: [HydrationCardComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

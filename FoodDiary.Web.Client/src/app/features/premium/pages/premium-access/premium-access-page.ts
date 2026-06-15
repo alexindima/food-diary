@@ -10,6 +10,7 @@ import { environment } from '../../../../../environments/environment';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { AuthService } from '../../../../services/auth.service';
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
@@ -303,12 +304,6 @@ export class PremiumAccessPageComponent {
     }
 
     private resolveCheckoutLocale(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        if (currentLang.length > 0) {
-            return currentLang;
-        }
-
-        const fallbackLang = this.translateService.getFallbackLang() ?? '';
-        return fallbackLang.length > 0 ? fallbackLang : 'en';
+        return resolveTranslateLanguage(this.translateService);
     }
 }

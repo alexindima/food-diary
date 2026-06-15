@@ -1,10 +1,11 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../../shared/i18n/localization.service';
 import type { User } from '../../../../../shared/models/user.data';
@@ -229,8 +230,9 @@ function setup(options: TestSetupOptions = {}): {
     const notificationService = createNotificationServiceMock(options.scheduleTestNotificationFails === true);
 
     TestBed.configureTestingModule({
-        imports: [TranslateModule.forRoot()],
+        imports: [],
         providers: [
+            provideTranslateTesting(),
             UserManageNotificationsFacade,
             { provide: ProfileManageFacade, useValue: facade },
             { provide: PushNotificationService, useValue: pushNotifications },

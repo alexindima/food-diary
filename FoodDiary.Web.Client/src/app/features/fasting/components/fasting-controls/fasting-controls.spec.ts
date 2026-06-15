@@ -1,10 +1,10 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { FastingFacade } from '../../lib/fasting.facade';
 import type { FastingProtocol, FastingSession } from '../../models/fasting.data';
@@ -34,8 +34,9 @@ beforeEach(async () => {
     };
 
     await TestBed.configureTestingModule({
-        imports: [FastingControlsComponent, TranslateModule.forRoot()],
+        imports: [FastingControlsComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FastingFacade, useValue: facade },
             { provide: FdUiDialogService, useValue: dialogService },
             {

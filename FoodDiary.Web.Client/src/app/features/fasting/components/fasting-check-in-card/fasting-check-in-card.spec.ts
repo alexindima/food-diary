@@ -2,9 +2,9 @@ import { signal, type WritableSignal } from '@angular/core';
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
 import { FastingCheckInCardComponent } from './fasting-check-in-card';
@@ -19,8 +19,9 @@ const UPDATED_MOOD_LEVEL = 2;
 describe('FastingCheckInCardComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FastingCheckInCardComponent, TranslateModule.forRoot()],
+            imports: [FastingCheckInCardComponent],
             providers: [
+                provideTranslateTesting(),
                 {
                     provide: LocalizationService,
                     useValue: {

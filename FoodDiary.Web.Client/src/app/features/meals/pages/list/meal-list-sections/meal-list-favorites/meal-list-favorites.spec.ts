@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
 import type { FavoriteMeal } from '../../../../models/meal.data';
 import type { FavoriteMealView } from '../../meal-list-lib/meal-list.types';
@@ -92,7 +92,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealListFavoritesComponent, TranslateModule.forRoot()],
+            imports: [MealListFavoritesComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

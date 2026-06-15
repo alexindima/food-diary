@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, InjectionToken, input, signal } from '@angular/core';
 import type { ValidationError } from '@angular/forms/signals';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { merge, type Observable } from 'rxjs';
 
 export type FdValidationErrorConfig = {
@@ -129,7 +129,6 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 
 @Component({
     selector: 'fd-ui-form-error',
-    imports: [TranslateModule],
     templateUrl: './fd-ui-form-error.html',
     styleUrls: ['./fd-ui-form-error.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

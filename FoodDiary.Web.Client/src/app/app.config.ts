@@ -2,7 +2,6 @@ import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@a
 import {
     type ApplicationConfig,
     ErrorHandler,
-    importProvidersFrom,
     inject,
     isDevMode,
     provideAppInitializer,
@@ -12,7 +11,7 @@ import {
 import { provideClientHydration, withEventReplay, withNoIncrementalHydration } from '@angular/platform-browser';
 import { provideRouter, withComponentInputBinding, withInMemoryScrolling, withPreloading } from '@angular/router';
 import { provideServiceWorker } from '@angular/service-worker';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
+import { provideTranslateService, TranslateLoader } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import { environment } from '../environments/environment';
@@ -103,9 +102,10 @@ export const appConfig: ApplicationConfig = {
             withPreloading(IdleSelectivePreloadingStrategy),
         ),
         provideHttpClient(withInterceptorsFromDi()),
-        importProvidersFrom(TranslateModule.forRoot()),
         FoodDiaryTranslationLoader,
-        { provide: TranslateLoader, useExisting: FoodDiaryTranslationLoader },
+        provideTranslateService({
+            loader: { provide: TranslateLoader, useExisting: FoodDiaryTranslationLoader },
+        }),
         ...(isBrowserEnvironment
             ? [
                   provideServiceWorker('ngsw-worker.js', {
@@ -114,7 +114,6 @@ export const appConfig: ApplicationConfig = {
                   }),
               ]
             : []),
-        TranslateService,
         FrontendObservabilityService,
         LocalizationService,
         ThemeService,

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, output } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiAccentSurfaceComponent } from '../accent-surface/fd-ui-accent-surface';
 
@@ -94,7 +94,7 @@ export const DEFAULT_SATIETY_LEVELS: FdUiSatietyScaleLevel[] = [
 
 @Component({
     selector: 'fd-ui-satiety-scale',
-    imports: [TranslateModule, FdUiAccentSurfaceComponent],
+    imports: [TranslatePipe, FdUiAccentSurfaceComponent],
     templateUrl: './fd-ui-satiety-scale.html',
     styleUrls: ['./fd-ui-satiety-scale.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroSliderView } from '../../goals-page-lib/goals-page.models';
 import { GoalsMacroSliderComponent } from './goals-macro-slider';
 
@@ -13,7 +13,8 @@ const MACRO_RATIO = 0.55;
 describe('GoalsMacroSliderComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [GoalsMacroSliderComponent, TranslateModule.forRoot()],
+            imports: [GoalsMacroSliderComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

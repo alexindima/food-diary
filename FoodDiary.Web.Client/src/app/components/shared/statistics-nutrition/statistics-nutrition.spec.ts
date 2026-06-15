@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { StatisticsNutritionComponent } from './statistics-nutrition';
 
 type StatisticsNutritionTestContext = {
@@ -11,7 +11,8 @@ type StatisticsNutritionTestContext = {
 
 async function setupStatisticsNutritionAsync(): Promise<StatisticsNutritionTestContext> {
     await TestBed.configureTestingModule({
-        imports: [StatisticsNutritionComponent, TranslateModule.forRoot()],
+        imports: [StatisticsNutritionComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(StatisticsNutritionComponent);

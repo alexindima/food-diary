@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { IngredientPreviewItem } from '../recipe-detail-lib/recipe-detail.types';
 import { RecipeDetailIngredientPreviewComponent } from './recipe-detail-ingredient-preview';
 
@@ -31,7 +31,8 @@ async function setupComponentAsync(
     ingredients: readonly IngredientPreviewItem[],
 ): Promise<ComponentFixture<RecipeDetailIngredientPreviewComponent>> {
     await TestBed.configureTestingModule({
-        imports: [RecipeDetailIngredientPreviewComponent, TranslateModule.forRoot()],
+        imports: [RecipeDetailIngredientPreviewComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(RecipeDetailIngredientPreviewComponent);

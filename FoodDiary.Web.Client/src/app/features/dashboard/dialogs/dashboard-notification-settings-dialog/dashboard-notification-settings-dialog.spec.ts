@@ -1,11 +1,11 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { NotificationService } from '../../../../shared/notifications/notification.service';
@@ -55,8 +55,9 @@ async function setupNotificationSettingsAsync(): Promise<NotificationSettingsCon
     };
 
     await TestBed.configureTestingModule({
-        imports: [DashboardNotificationSettingsDialogComponent, TranslateModule.forRoot()],
+        imports: [DashboardNotificationSettingsDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: NotificationService, useValue: notificationService },
             { provide: PushNotificationService, useValue: pushNotifications },
             { provide: NavigationService, useValue: navigationService },

@@ -1,15 +1,16 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import type { MealPlanDayViewModel } from '../../../../lib/meal-plan-view.mapper';
 import { MealPlanDetailDaysComponent } from './meal-plan-detail-days';
 
 describe('MealPlanDetailDaysComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MealPlanDetailDaysComponent, TranslateModule.forRoot()],
+            imports: [MealPlanDetailDaysComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

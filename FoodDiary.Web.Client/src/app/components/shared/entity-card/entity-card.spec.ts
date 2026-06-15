@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { EntityCardComponent } from './entity-card';
 import type { EntityCardNutrition } from './entity-card-lib/entity-card.types';
 
@@ -22,7 +23,8 @@ type EntityCardTestContext = {
 
 async function setupEntityCardAsync(): Promise<EntityCardTestContext> {
     await TestBed.configureTestingModule({
-        imports: [EntityCardComponent, TranslateModule.forRoot()],
+        imports: [EntityCardComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EntityCardComponent);

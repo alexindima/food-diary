@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, min } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { NutritionMode, RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
 import { RecipeNutritionEditorComponent } from './recipe-nutrition-editor';
@@ -75,7 +75,8 @@ describe('RecipeNutritionEditorComponent', () => {
 
 async function setupComponentAsync(nutritionMode: NutritionMode = 'auto'): Promise<RecipeNutritionEditorSetup> {
     await TestBed.configureTestingModule({
-        imports: [RecipeNutritionEditorComponent, TranslateModule.forRoot()],
+        imports: [RecipeNutritionEditorComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(RecipeNutritionEditorComponent);

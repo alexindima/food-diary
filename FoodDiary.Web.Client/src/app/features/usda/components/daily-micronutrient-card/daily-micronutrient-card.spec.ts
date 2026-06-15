@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { USDA_NUTRIENT_IDS } from '../../lib/usda-nutrient.constants';
 import type { DailyMicronutrient } from '../../models/usda.data';
 import { DailyMicronutrientCardComponent } from './daily-micronutrient-card';
@@ -38,7 +38,8 @@ function setupComponent(nutrients: DailyMicronutrient[]): {
     fixture: ComponentFixture<DailyMicronutrientCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [DailyMicronutrientCardComponent, TranslateModule.forRoot()],
+        imports: [DailyMicronutrientCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(DailyMicronutrientCardComponent);

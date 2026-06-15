@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
 import { FrontendLoggerService } from '../../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../../shared/lib/image-upload.facade';
@@ -72,8 +72,9 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealPhotoUploadPanelComponent, TranslateModule.forRoot()],
+            imports: [MealPhotoUploadPanelComponent],
             providers: [
+                provideTranslateTesting(),
                 {
                     provide: ImageUploadFacade,
                     useValue: {

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createEmptyLoginFieldErrors, createLoginFormModel } from '../auth-lib/auth-form.factory';
 import { AuthLoginFormComponent } from './auth-login-form';
 
@@ -14,7 +14,8 @@ type AuthLoginFormTestContext = {
 
 function createComponent(): AuthLoginFormTestContext {
     TestBed.configureTestingModule({
-        imports: [AuthLoginFormComponent, TranslateModule.forRoot()],
+        imports: [AuthLoginFormComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(AuthLoginFormComponent);

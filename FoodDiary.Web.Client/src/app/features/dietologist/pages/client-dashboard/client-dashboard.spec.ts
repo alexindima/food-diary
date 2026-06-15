@@ -1,11 +1,11 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { createClient } from '../clients/dietologist-clients-lib/dietologist-clients.test-data';
 import { ClientDashboardComponent } from './client-dashboard';
@@ -206,8 +206,9 @@ function registerActionTests(): void {
 
 function createComponent(clientId: string): void {
     TestBed.configureTestingModule({
-        imports: [ClientDashboardComponent, TranslateModule.forRoot()],
+        imports: [ClientDashboardComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: DietologistFacade, useValue: dietologistService },
             { provide: Router, useValue: router },
             { provide: FdUiToastService, useValue: toastService },

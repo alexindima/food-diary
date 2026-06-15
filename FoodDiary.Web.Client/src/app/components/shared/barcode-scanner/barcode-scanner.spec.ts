@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { BarcodeScannerComponent } from './barcode-scanner';
 
 type BarcodeScannerTestContext = {
@@ -14,8 +14,8 @@ type BarcodeScannerTestContext = {
 async function setupBarcodeScannerAsync(): Promise<BarcodeScannerTestContext> {
     const dialogRef = { close: vi.fn() };
     await TestBed.configureTestingModule({
-        imports: [BarcodeScannerComponent, TranslateModule.forRoot()],
-        providers: [{ provide: FdUiDialogRef, useValue: dialogRef }],
+        imports: [BarcodeScannerComponent],
+        providers: [provideTranslateTesting(), { provide: FdUiDialogRef, useValue: dialogRef }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(BarcodeScannerComponent);

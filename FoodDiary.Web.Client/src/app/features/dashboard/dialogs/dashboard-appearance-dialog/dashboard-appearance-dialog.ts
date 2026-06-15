@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { finalize } from 'rxjs';
@@ -26,7 +26,7 @@ export type DashboardAppearanceDialogData = {
     templateUrl: './dashboard-appearance-dialog.html',
     styleUrl: './dashboard-appearance-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FdUiDialogComponent],
+    imports: [TranslatePipe, FdUiDialogComponent],
 })
 export class DashboardAppearanceDialogComponent {
     private readonly themeService = inject(ThemeService);

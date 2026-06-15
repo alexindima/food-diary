@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import type { FieldTree, ValidationError } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import {
     FD_VALIDATION_ERRORS,
     FdUiFormErrorComponent,
@@ -64,7 +64,8 @@ function requireElement(fixture: ComponentFixture<TestHostComponent>, selector: 
 
 async function createComponentAsync(configure?: (component: TestHostComponent) => void): Promise<ComponentFixture<TestHostComponent>> {
     await TestBed.configureTestingModule({
-        imports: [TranslateModule.forRoot(), TestHostComponent],
+        imports: [TestHostComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(TestHostComponent);
@@ -185,8 +186,8 @@ function registerControlErrorTests(): void {
             };
             await TestBed.resetTestingModule()
                 .configureTestingModule({
-                    imports: [TranslateModule.forRoot(), TestHostComponent],
-                    providers: [{ provide: FD_VALIDATION_ERRORS, useValue: validationErrors }],
+                    imports: [TestHostComponent],
+                    providers: [provideTranslateTesting(), { provide: FD_VALIDATION_ERRORS, useValue: validationErrors }],
                 })
                 .compileComponents();
             const fixture = TestBed.createComponent(TestHostComponent);
@@ -209,7 +210,8 @@ function registerSignalFormErrorTests(): void {
     describe('signal form error resolver', () => {
         it('maps Signal Forms minLength errors to the legacy minlength resolver key and params', async () => {
             await TestBed.configureTestingModule({
-                imports: [TranslateModule.forRoot()],
+                imports: [],
+                providers: [provideTranslateTesting()],
             }).compileComponents();
             const translate = TestBed.inject(TranslateService);
             const validationErrors: FdValidationErrors = {
@@ -226,7 +228,8 @@ function registerSignalFormErrorTests(): void {
 
         it('respects showOnDirty when resolving Signal Forms errors', async () => {
             await TestBed.configureTestingModule({
-                imports: [TranslateModule.forRoot()],
+                imports: [],
+                providers: [provideTranslateTesting()],
             }).compileComponents();
             const translate = TestBed.inject(TranslateService);
             const validationErrors: FdValidationErrors = {
@@ -241,7 +244,8 @@ function registerSignalFormErrorTests(): void {
 
         it('returns unknown for unmapped Signal Forms errors', async () => {
             await TestBed.configureTestingModule({
-                imports: [TranslateModule.forRoot()],
+                imports: [],
+                providers: [provideTranslateTesting()],
             }).compileComponents();
             const translate = TestBed.inject(TranslateService);
             const error: ValidationError = { kind: 'custom' };

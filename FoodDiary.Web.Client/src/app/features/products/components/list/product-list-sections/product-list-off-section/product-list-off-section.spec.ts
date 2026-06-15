@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import type { OpenFoodFactsProduct } from '../../../../models/open-food-facts.data';
 import { ProductListOffSectionComponent } from './product-list-off-section';
 
@@ -44,7 +44,8 @@ async function setupComponentAsync(
     options: ProductListOffSectionSetupOptions = {},
 ): Promise<{ component: ProductListOffSectionComponent; fixture: ComponentFixture<ProductListOffSectionComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [ProductListOffSectionComponent, TranslateModule.forRoot()],
+        imports: [ProductListOffSectionComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListOffSectionComponent);

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { RecipeVisibility } from '../../../models/recipe.data';
 import type { RecipeFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeFormValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -48,7 +48,8 @@ function setupComponent(): {
     recipeForm: ReturnType<typeof form<RecipeFormValues>>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeBasicInfoComponent, TranslateModule.forRoot()],
+        imports: [RecipeBasicInfoComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeBasicInfoComponent);

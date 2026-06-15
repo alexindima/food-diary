@@ -3,13 +3,15 @@ import { DestroyRef, inject, Pipe, type PipeTransform } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 
+import { resolveTranslateLanguage } from './translate-language.utils';
+
 @Pipe({
     name: 'localizedDate',
 })
 export class LocalizedDatePipe implements PipeTransform {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
-    private locale = this.translateService.getCurrentLang();
+    private locale = resolveTranslateLanguage(this.translateService);
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(e => (this.locale = e.lang));

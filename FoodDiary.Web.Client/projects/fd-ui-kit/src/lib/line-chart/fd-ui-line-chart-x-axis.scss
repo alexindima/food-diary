@@ -76,9 +76,8 @@
 }
 
 @container (max-width: 380px) {
-    .fd-ui-line-chart__x-axis span:where(
-        :nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)
-    ) {
+    .fd-ui-line-chart__x-axis
+        span:where(:nth-child(even):not(.fd-ui-line-chart__x-axis-label--start):not(.fd-ui-line-chart__x-axis-label--end)) {
         display: none;
     }
 }

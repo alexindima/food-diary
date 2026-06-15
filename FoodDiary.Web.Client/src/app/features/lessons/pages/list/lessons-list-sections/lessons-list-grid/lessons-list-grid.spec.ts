@@ -1,15 +1,16 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import type { LessonListItemViewModel } from '../../../../lib/lesson-view.mapper';
 import { LessonsListGridComponent } from './lessons-list-grid';
 
 describe('LessonsListGridComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [LessonsListGridComponent, TranslateModule.forRoot()],
+            imports: [LessonsListGridComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

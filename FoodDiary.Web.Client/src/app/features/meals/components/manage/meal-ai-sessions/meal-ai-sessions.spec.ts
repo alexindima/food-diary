@@ -1,7 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { ConsumptionAiItemManageDto, ConsumptionAiSessionManageDto } from '../../../models/meal.data';
 import { MealAiSessionsComponent } from './meal-ai-sessions';
 
@@ -75,7 +76,8 @@ async function setupComponentAsync(
     aiSessions: ConsumptionAiSessionManageDto[],
 ): Promise<{ component: MealAiSessionsComponent; fixture: ComponentFixture<MealAiSessionsComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [MealAiSessionsComponent, TranslateModule.forRoot()],
+        imports: [MealAiSessionsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     TestBed.inject(TranslateService).use('en');

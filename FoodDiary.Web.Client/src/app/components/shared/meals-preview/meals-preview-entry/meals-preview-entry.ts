@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
 
 import { AiInputBarComponent } from '../../ai-input-bar/ai-input-bar';
@@ -9,7 +9,7 @@ import type { MealPreviewEntry } from '../meals-preview-lib/meals-preview.types'
 
 @Component({
     selector: 'fd-meals-preview-entry',
-    imports: [TranslateModule, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, MealCardComponent, AiInputBarComponent],
+    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, MealCardComponent, AiInputBarComponent],
     templateUrl: './meals-preview-entry.html',
     styleUrl: '../meals-preview.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,

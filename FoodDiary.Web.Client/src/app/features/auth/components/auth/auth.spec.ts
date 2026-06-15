@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AUTH_LOGIN_AUTOFILL_CHECK_DELAYS_MS, AUTH_PASSWORD_RESET_COOLDOWN_SECONDS } from '../../../../config/runtime-ui.tokens';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -52,8 +53,9 @@ function createComponent(mode = 'login'): AuthComponentTestContext {
     };
 
     TestBed.configureTestingModule({
-        imports: [AuthComponent, TranslateModule.forRoot()],
+        imports: [AuthComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: AuthService, useValue: authServiceSpy },
             { provide: AuthFlowFacade, useValue: authFlowFacadeSpy },
             { provide: NavigationService, useValue: navigationServiceSpy },

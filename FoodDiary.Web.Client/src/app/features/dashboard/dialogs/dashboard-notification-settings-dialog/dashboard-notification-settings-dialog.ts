@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
@@ -21,7 +21,7 @@ import { PushNotificationService } from '../../../../shared/notifications/push-n
     templateUrl: './dashboard-notification-settings-dialog.html',
     styleUrl: './dashboard-notification-settings-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TranslateModule, FdUiDialogComponent, FdUiSwitchComponent, FdUiButtonComponent, FdUiDialogFooterDirective, FdUiHintDirective],
+    imports: [TranslatePipe, FdUiDialogComponent, FdUiSwitchComponent, FdUiButtonComponent, FdUiDialogFooterDirective, FdUiHintDirective],
 })
 export class DashboardNotificationSettingsDialogComponent {
     private readonly destroyRef = inject(DestroyRef);

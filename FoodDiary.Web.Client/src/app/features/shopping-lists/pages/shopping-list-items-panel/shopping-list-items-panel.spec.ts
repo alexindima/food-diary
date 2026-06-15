@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { type FieldTree, form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import type { ShoppingListItem } from '../../models/shopping-list.data';
 import { ShoppingListItemsPanelComponent } from './shopping-list-items-panel';
@@ -44,7 +44,8 @@ async function setupItemsPanelAsync(items: ShoppingListItem[] = [CHECKED_ITEM]):
     fixture: ComponentFixture<ShoppingListItemsPanelComponent>;
 }> {
     await TestBed.configureTestingModule({
-        imports: [ShoppingListItemsPanelComponent, TranslateModule.forRoot()],
+        imports: [ShoppingListItemsPanelComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ShoppingListItemsPanelComponent);

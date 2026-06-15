@@ -1,9 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { User } from '../../../../shared/models/user.data';
@@ -46,8 +47,9 @@ function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PAR
     navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
 
     TestBed.configureTestingModule({
-        imports: [PasswordResetComponent, TranslateModule.forRoot()],
+        imports: [PasswordResetComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: AuthService, useValue: authServiceSpy },
             { provide: NavigationService, useValue: navigationServiceSpy },
             {

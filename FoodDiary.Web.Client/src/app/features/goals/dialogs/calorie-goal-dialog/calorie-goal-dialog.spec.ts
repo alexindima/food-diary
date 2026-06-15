@@ -1,10 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { CalorieGoalFacade } from '../../lib/calorie-goal.facade';
 import type { GoalsResponse } from '../../models/goals.data';
 import { CalorieGoalDialogComponent, type CalorieGoalDialogData } from './calorie-goal-dialog';
@@ -25,8 +25,9 @@ function createComponent(data: CalorieGoalDialogData | null = DEFAULT_DIALOG_DAT
     dialogRefSpy = { close: vi.fn() };
 
     TestBed.configureTestingModule({
-        imports: [CalorieGoalDialogComponent, TranslateModule.forRoot()],
+        imports: [CalorieGoalDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: CalorieGoalFacade, useValue: calorieGoalFacadeSpy },
             { provide: FdUiDialogRef, useValue: dialogRefSpy },
             { provide: FD_UI_DIALOG_DATA, useValue: data },

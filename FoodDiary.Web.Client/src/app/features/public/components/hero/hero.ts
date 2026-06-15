@@ -1,16 +1,17 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import type { PublicAuthMode } from '../../lib/public-auth-dialog.service';
 import { PublicAuthNavigationService } from '../../lib/public-auth-navigation.service';
 
 @Component({
     selector: 'fd-hero',
-    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslateModule],
+    imports: [FdUiButtonComponent, FdUiSegmentedToggleComponent, TranslatePipe],
     templateUrl: './hero.html',
     styleUrl: './hero.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -53,8 +54,6 @@ export class HeroComponent {
     }
 
     private getCurrentLanguage(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        const fallbackLang = this.translateService.getFallbackLang();
-        return currentLang.length > 0 ? currentLang : fallbackLang !== null && fallbackLang.length > 0 ? fallbackLang : 'en';
+        return resolveTranslateLanguage(this.translateService);
     }
 }

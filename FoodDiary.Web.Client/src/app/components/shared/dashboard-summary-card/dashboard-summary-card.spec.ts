@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { DashboardSummaryCardComponent } from './dashboard-summary-card';
 import type { NutrientBar } from './dashboard-summary-card.types';
 
@@ -36,7 +36,8 @@ describe('DashboardSummaryCardComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [DashboardSummaryCardComponent, TranslateModule.forRoot()],
+            imports: [DashboardSummaryCardComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(DashboardSummaryCardComponent);

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 // eslint-disable-next-line no-restricted-imports -- shared card spec needs the concrete feature favorite service token
 import { FavoriteProductService } from '../../../features/products/api/favorite-product.service';
 import { AuthService } from '../../../services/auth.service';
@@ -31,8 +31,9 @@ type ProductCardTestContext = {
 
 async function setupProductCardAsync(): Promise<ProductCardTestContext> {
     await TestBed.configureTestingModule({
-        imports: [ProductCardComponent, TranslateModule.forRoot()],
+        imports: [ProductCardComponent],
         providers: [
+            provideTranslateTesting(),
             {
                 provide: FavoriteProductService,
                 useValue: {

@@ -1,11 +1,11 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductVisibility } from '../../../../products/models/product.data';
 import { ConsumptionSourceType, type Meal } from '../../../models/meal.data';
 import { MealDetailComponent } from './meal-detail';
@@ -79,8 +79,9 @@ const mockFdDialogService = {
 async function createComponentAsync(meal: Meal = mockMeal): Promise<MealDetailComponent> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealDetailComponent, TranslateModule.forRoot()],
+            imports: [MealDetailComponent],
             providers: [
+                provideTranslateTesting(),
                 { provide: FD_UI_DIALOG_DATA, useValue: meal },
                 { provide: FdUiDialogRef, useValue: mockDialogRef },
                 { provide: FdUiDialogService, useValue: mockFdDialogService },

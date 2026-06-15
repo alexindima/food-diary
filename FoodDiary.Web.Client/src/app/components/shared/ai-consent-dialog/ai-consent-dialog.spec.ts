@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { AiConsentDialogComponent } from './ai-consent-dialog';
 
 type AiConsentDialogTestContext = {
@@ -14,8 +14,8 @@ type AiConsentDialogTestContext = {
 async function setupAiConsentDialogAsync(): Promise<AiConsentDialogTestContext> {
     const dialogRef = { close: vi.fn() };
     await TestBed.configureTestingModule({
-        imports: [AiConsentDialogComponent, TranslateModule.forRoot()],
-        providers: [{ provide: FdUiDialogRef, useValue: dialogRef }],
+        imports: [AiConsentDialogComponent],
+        providers: [provideTranslateTesting(), { provide: FdUiDialogRef, useValue: dialogRef }],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiConsentDialogComponent);

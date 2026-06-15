@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MealPhotoResultActionsComponent } from './meal-photo-result-actions';
 
 describe('MealPhotoResultActionsComponent', () => {
@@ -68,7 +68,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealPhotoResultActionsComponent, TranslateModule.forRoot()],
+            imports: [MealPhotoResultActionsComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { WaistEntry } from '../../models/waist-entry.data';
 import { WaistHistoryEntriesCardComponent } from './waist-history-entries-card';
 
@@ -47,7 +47,8 @@ function setupComponent(entries: WaistEntry[]): {
     fixture: ComponentFixture<WaistHistoryEntriesCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [WaistHistoryEntriesCardComponent, TranslateModule.forRoot()],
+        imports: [WaistHistoryEntriesCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(WaistHistoryEntriesCardComponent);

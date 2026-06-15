@@ -1,14 +1,15 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { NotificationItem } from '../../../../shared/notifications/notification.service';
 import type { NotificationViewModel } from '../notifications-dialog-lib/notifications-dialog.types';
 import { NotificationsDialogItemComponent } from './notifications-dialog-item';
 
 async function setupNotificationsDialogItemAsync(): Promise<ComponentFixture<NotificationsDialogItemComponent>> {
     await TestBed.configureTestingModule({
-        imports: [NotificationsDialogItemComponent, TranslateModule.forRoot()],
+        imports: [NotificationsDialogItemComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(NotificationsDialogItemComponent);

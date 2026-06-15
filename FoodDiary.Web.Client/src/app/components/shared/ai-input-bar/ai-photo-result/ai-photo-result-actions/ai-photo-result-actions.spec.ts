@@ -1,12 +1,13 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { AiPhotoResultActionsComponent } from './ai-photo-result-actions';
 
 async function setupAiPhotoResultActionsAsync(isEditing: boolean): Promise<ComponentFixture<AiPhotoResultActionsComponent>> {
     await TestBed.configureTestingModule({
-        imports: [AiPhotoResultActionsComponent, TranslateModule.forRoot()],
+        imports: [AiPhotoResultActionsComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(AiPhotoResultActionsComponent);

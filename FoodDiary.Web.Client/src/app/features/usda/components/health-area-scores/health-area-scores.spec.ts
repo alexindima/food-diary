@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { HealthAreaScores } from '../../models/usda.data';
 import { HealthAreaScoresComponent } from './health-area-scores';
 
@@ -40,7 +40,8 @@ function setupComponent(scores: HealthAreaScores | null): {
     fixture: ComponentFixture<HealthAreaScoresComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [HealthAreaScoresComponent, TranslateModule.forRoot()],
+        imports: [HealthAreaScoresComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(HealthAreaScoresComponent);

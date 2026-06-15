@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroSummaryItem } from '../meal-photo-recognition-dialog-lib/meal-photo-recognition-dialog.types';
 import { MealPhotoNutritionSummaryComponent } from './meal-photo-nutrition-summary';
 
@@ -50,7 +50,8 @@ async function setupComponentAsync(
 }> {
     await TestBed.resetTestingModule()
         .configureTestingModule({
-            imports: [MealPhotoNutritionSummaryComponent, TranslateModule.forRoot()],
+            imports: [MealPhotoNutritionSummaryComponent],
+            providers: [provideTranslateTesting()],
         })
         .compileComponents();
 

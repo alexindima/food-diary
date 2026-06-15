@@ -8,6 +8,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { filter, finalize, switchMap } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { RecipeComment } from '../../models/comment.data';
 import { COMMENT_MAX_LENGTH, COMMENTS_PAGE_SIZE } from './recipe-comments-lib/recipe-comments.constants';
@@ -47,7 +48,7 @@ export class RecipeCommentsComponent {
     protected readonly submitLabelKey = computed(() => (this.editingCommentId() !== null ? 'COMMON.SAVE' : 'COMMENTS.POST'));
     protected readonly commentItems = computed<RecipeCommentViewModel[]>(() => {
         this.languageVersion();
-        return buildRecipeCommentViewModels(this.comments(), this.translateService.getCurrentLang());
+        return buildRecipeCommentViewModels(this.comments(), resolveTranslateLanguage(this.translateService));
     });
 
     public constructor() {

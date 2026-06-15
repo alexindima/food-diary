@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form, required } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { createMealManageFormValue } from '../meal-manage-lib/meal-manage-form.mapper';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar';
@@ -48,7 +48,8 @@ async function setupComponentAsync(
     options: MealNutritionSidebarSetupOptions = {},
 ): Promise<{ component: MealNutritionSidebarComponent; fixture: ComponentFixture<MealNutritionSidebarComponent> }> {
     await TestBed.configureTestingModule({
-        imports: [MealNutritionSidebarComponent, TranslateModule.forRoot()],
+        imports: [MealNutritionSidebarComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealNutritionSidebarComponent);

@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createEmptyRegisterFieldErrors, createRegisterFormModel } from '../auth-lib/auth-form.factory';
 import { AuthRegisterFormComponent } from './auth-register-form';
 
@@ -14,7 +14,8 @@ type AuthRegisterFormTestContext = {
 
 function createComponent(): AuthRegisterFormTestContext {
     TestBed.configureTestingModule({
-        imports: [AuthRegisterFormComponent, TranslateModule.forRoot()],
+        imports: [AuthRegisterFormComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(AuthRegisterFormComponent);

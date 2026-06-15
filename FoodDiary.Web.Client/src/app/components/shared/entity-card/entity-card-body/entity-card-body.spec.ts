@@ -1,12 +1,13 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EntityCardBodyComponent } from './entity-card-body';
 
 async function setupEntityCardBodyAsync(): Promise<ComponentFixture<EntityCardBodyComponent>> {
     await TestBed.configureTestingModule({
-        imports: [EntityCardBodyComponent, TranslateModule.forRoot()],
+        imports: [EntityCardBodyComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EntityCardBodyComponent);

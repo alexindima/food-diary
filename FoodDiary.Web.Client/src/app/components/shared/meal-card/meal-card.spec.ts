@@ -1,11 +1,12 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiImagePreviewDialogData } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 import { type Observable, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 // eslint-disable-next-line no-restricted-imports -- shared card spec needs the concrete feature favorite service token
 import { FavoriteMealService } from '../../../features/meals/api/favorite-meal.service';
 import { AuthService } from '../../../services/auth.service';
@@ -39,8 +40,9 @@ type MealCardTestContext = {
 
 async function setupMealCardAsync(): Promise<MealCardTestContext> {
     await TestBed.configureTestingModule({
-        imports: [MealCardComponent, TranslateModule.forRoot()],
+        imports: [MealCardComponent],
         providers: [
+            provideTranslateTesting(),
             {
                 provide: FavoriteMealService,
                 useValue: {

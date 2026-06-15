@@ -6,17 +6,35 @@ export function parseRouteSeoData(value: unknown): SeoData | null {
         return null;
     }
 
-    return {
-        ...(typeof value['titleKey'] === 'string' ? { titleKey: value['titleKey'] } : {}),
-        ...(typeof value['descriptionKey'] === 'string' ? { descriptionKey: value['descriptionKey'] } : {}),
-        ...(typeof value['path'] === 'string' ? { path: value['path'] } : {}),
-        ...(typeof value['noIndex'] === 'boolean' ? { noIndex: value['noIndex'] } : {}),
-        ...(typeof value['structuredDataBaseKey'] === 'string' ? { structuredDataBaseKey: value['structuredDataBaseKey'] } : {}),
-        ...(Array.isArray(value['structuredDataFeatureKeys'])
-            ? { structuredDataFeatureKeys: value['structuredDataFeatureKeys'].filter(item => typeof item === 'string') }
-            : {}),
-        ...(Array.isArray(value['structuredDataFaqKeys'])
-            ? { structuredDataFaqKeys: value['structuredDataFaqKeys'].filter(item => typeof item === 'string') }
-            : {}),
-    };
+    const seoData: SeoData = {};
+
+    if (typeof value['titleKey'] === 'string') {
+        seoData.titleKey = value['titleKey'];
+    }
+
+    if (typeof value['descriptionKey'] === 'string') {
+        seoData.descriptionKey = value['descriptionKey'];
+    }
+
+    if (typeof value['path'] === 'string') {
+        seoData.path = value['path'];
+    }
+
+    if (typeof value['noIndex'] === 'boolean') {
+        seoData.noIndex = value['noIndex'];
+    }
+
+    if (typeof value['structuredDataBaseKey'] === 'string') {
+        seoData.structuredDataBaseKey = value['structuredDataBaseKey'];
+    }
+
+    if (Array.isArray(value['structuredDataFeatureKeys'])) {
+        seoData.structuredDataFeatureKeys = value['structuredDataFeatureKeys'].filter(item => typeof item === 'string');
+    }
+
+    if (Array.isArray(value['structuredDataFaqKeys'])) {
+        seoData.structuredDataFaqKeys = value['structuredDataFaqKeys'].filter(item => typeof item === 'string');
+    }
+
+    return seoData;
 }

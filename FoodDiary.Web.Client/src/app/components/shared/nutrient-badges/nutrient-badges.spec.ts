@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { NutrientBadgesComponent } from './nutrient-badges';
 
 const PROTEIN_VALUE = 25;
@@ -16,7 +16,8 @@ describe('NutrientBadgesComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [NutrientBadgesComponent, TranslateModule.forRoot()],
+            imports: [NutrientBadgesComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(NutrientBadgesComponent);

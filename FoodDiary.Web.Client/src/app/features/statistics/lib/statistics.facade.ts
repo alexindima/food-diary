@@ -6,6 +6,7 @@ import { finalize, forkJoin } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { UserService } from '../../../shared/api/user.service';
+import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { CENTIMETERS_PER_METER } from '../../../shared/lib/body-measurement.constants';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
@@ -209,7 +210,7 @@ export class StatisticsFacade {
                 buildStatisticsExportRequest({
                     range: this.currentRange(),
                     format,
-                    currentLang: this.translateService.getCurrentLang(),
+                    currentLang: resolveTranslateLanguage(this.translateService),
                     fallbackLang: this.translateService.getFallbackLang(),
                     timeZoneOffsetMinutes: -new Date().getTimezoneOffset(),
                 }),
@@ -367,13 +368,7 @@ export class StatisticsFacade {
     }
 
     private resolveCurrentLocale(): string {
-        const currentLang = this.translateService.getCurrentLang();
-        if (currentLang.length > 0) {
-            return resolveAppLocale(currentLang);
-        }
-
-        const fallbackLang = this.translateService.getFallbackLang();
-        return resolveAppLocale(fallbackLang);
+        return resolveAppLocale(resolveTranslateLanguage(this.translateService));
     }
 
     private translateKey(key: string): string {
@@ -386,7 +381,7 @@ export class StatisticsFacade {
             return value;
         }
 
-        return `${value[0].toLocaleUpperCase(this.currentLocale())}${value.slice(1)}`;
+        return `${value.at(0)?.toLocaleUpperCase(this.currentLocale()) ?? ''}${value.slice(1)}`;
     }
 
     private formatSummaryLabel(dateString: string): string {

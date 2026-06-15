@@ -1,8 +1,8 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createClient } from '../dietologist-clients-lib/dietologist-clients.test-data';
 import type { ClientCardViewModel } from '../dietologist-clients-lib/dietologist-clients.types';
 import { DietologistClientsListComponent } from './dietologist-clients-list';
@@ -34,7 +34,8 @@ describe('DietologistClientsListComponent', () => {
 
 function createComponent(input: { loading: boolean; items: ClientCardViewModel[] }): ComponentFixture<DietologistClientsListComponent> {
     TestBed.configureTestingModule({
-        imports: [DietologistClientsListComponent, TranslateModule.forRoot()],
+        imports: [DietologistClientsListComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(DietologistClientsListComponent);

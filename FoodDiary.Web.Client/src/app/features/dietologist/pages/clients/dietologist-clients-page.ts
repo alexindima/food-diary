@@ -3,6 +3,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import type { ClientSummary } from '../../../../shared/models/dietologist.data';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import { buildClientCardViewModels } from './dietologist-clients-lib/dietologist-clients.mapper';
@@ -27,7 +28,7 @@ export class DietologistClientsPageComponent {
     protected readonly loading = signal(true);
     protected readonly clientItems = computed<ClientCardViewModel[]>(() => {
         this.languageVersion();
-        return buildClientCardViewModels(this.clients(), this.translateService.getCurrentLang());
+        return buildClientCardViewModels(this.clients(), resolveTranslateLanguage(this.translateService));
     });
 
     public constructor() {

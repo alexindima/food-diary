@@ -1,14 +1,15 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { LessonsListFiltersComponent } from './lessons-list-filters';
 
 describe('LessonsListFiltersComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [LessonsListFiltersComponent, TranslateModule.forRoot()],
+            imports: [LessonsListFiltersComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

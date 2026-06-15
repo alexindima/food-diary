@@ -1,8 +1,8 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../src/testing/translate-testing.module';
 import { type FdUiTab, FdUiTabsComponent } from './fd-ui-tabs';
 
 const TAB_COUNT = 3;
@@ -22,7 +22,8 @@ describe('FdUiTabsComponent', () => {
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [FdUiTabsComponent, TranslateModule.forRoot()],
+            imports: [FdUiTabsComponent],
+            providers: [provideTranslateTesting()],
         }).compileComponents();
 
         fixture = TestBed.createComponent(FdUiTabsComponent);

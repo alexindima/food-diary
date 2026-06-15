@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../../products/models/product.data';
 import type { StepFormValues } from '../recipe-manage-lib/recipe-manage.types';
 import { createRecipeStepValue } from '../recipe-manage-lib/recipe-manage-form.mapper';
@@ -86,7 +86,8 @@ function setupComponent(step = createRecipeStepValue()): {
     fixture: ComponentFixture<RecipeStepCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeStepCardComponent, TranslateModule.forRoot()],
+        imports: [RecipeStepCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeStepCardComponent);

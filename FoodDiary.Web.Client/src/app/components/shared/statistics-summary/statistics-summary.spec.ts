@@ -1,14 +1,14 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import { StatisticsSummaryComponent, type StatisticsSummaryExportFormat } from './statistics-summary';
 
 async function setupStatisticsSummaryAsync(): Promise<ComponentFixture<StatisticsSummaryComponent>> {
     await TestBed.configureTestingModule({
-        imports: [StatisticsSummaryComponent, TranslateModule.forRoot()],
-        providers: [provideRouter([])],
+        imports: [StatisticsSummaryComponent],
+        providers: [provideTranslateTesting(), provideRouter([])],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(StatisticsSummaryComponent);

@@ -1,9 +1,9 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FrontendLoggerService } from '../../../../services/frontend-logger.service';
 import { ImageUploadFacade } from '../../../../shared/lib/image-upload.facade';
 import { PhotoUploadDialogComponent } from './photo-upload-dialog';
@@ -16,8 +16,9 @@ type PhotoUploadDialogTestContext = {
 async function setupPhotoUploadDialogAsync(): Promise<PhotoUploadDialogTestContext> {
     const dialogRef = { close: vi.fn() };
     await TestBed.configureTestingModule({
-        imports: [PhotoUploadDialogComponent, TranslateModule.forRoot()],
+        imports: [PhotoUploadDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FdUiDialogRef, useValue: dialogRef },
             {
                 provide: ImageUploadFacade,

@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, computed, inject, input, output, si
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent, FdUiHintDirective } from 'fd-ui-kit';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { recalculateEditedAiNutrition } from '../../../../shared/lib/ai-nutrition-edit.utils';
 import {
     buildAiEditableItems,
@@ -160,7 +161,7 @@ export class AiPhotoResultComponent {
     }
 
     private resolveMacroLabel(value: number, unitKey: string): string {
-        const locale = this.translateService.getCurrentLang();
+        const locale = resolveTranslateLanguage(this.translateService);
         const hasFraction = Math.abs(value % 1) > NUTRITION_FRACTION_THRESHOLD;
         const formatter = new Intl.NumberFormat(locale, {
             maximumFractionDigits: hasFraction ? 1 : 0,

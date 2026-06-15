@@ -1,9 +1,9 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { UsdaFoodSearchFacade } from '../../lib/usda-food-search.facade';
 import type { UsdaFood } from '../../models/usda.data';
 import { UsdaFoodSearchDialogComponent } from './usda-food-search-dialog';
@@ -84,8 +84,9 @@ function setupComponent(): {
     fixture: ComponentFixture<UsdaFoodSearchDialogComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [UsdaFoodSearchDialogComponent, TranslateModule.forRoot()],
+        imports: [UsdaFoodSearchDialogComponent],
         providers: [
+            provideTranslateTesting(),
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: UsdaFoodSearchFacade, useValue: facade },
         ],

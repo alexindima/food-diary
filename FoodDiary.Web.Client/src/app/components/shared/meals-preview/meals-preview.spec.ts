@@ -1,13 +1,14 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import type { AiInputBarResult } from '../ai-input-bar/ai-input-bar.types';
 import { MealsPreviewComponent } from './meals-preview';
 
 async function setupMealsPreviewAsync(): Promise<ComponentFixture<MealsPreviewComponent>> {
     await TestBed.configureTestingModule({
-        imports: [MealsPreviewComponent, TranslateModule.forRoot()],
+        imports: [MealsPreviewComponent],
+        providers: [provideTranslateTesting()],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(MealsPreviewComponent);

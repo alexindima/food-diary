@@ -1,15 +1,16 @@
 import type { ComponentFixture } from '@angular/core/testing';
 import { TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import type { FastingHistorySessionViewModel } from '../../pages/fasting-page-lib/fasting-page.types';
 import { FastingHistoryCheckInListComponent } from './fasting-history-check-in-list';
 
 describe('FastingHistoryCheckInListComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FastingHistoryCheckInListComponent, TranslateModule.forRoot()],
+            imports: [FastingHistoryCheckInListComponent],
+            providers: [provideTranslateTesting()],
         });
     });
 

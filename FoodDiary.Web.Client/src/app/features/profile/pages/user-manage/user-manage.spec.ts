@@ -1,12 +1,13 @@
 import { signal, type WritableSignal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
-import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -359,8 +360,8 @@ async function createComponentAsync(
     };
 
     await TestBed.configureTestingModule({
-        imports: [UserManageComponent, TranslateModule.forRoot()],
-        providers: createTestingProviders(queryParams),
+        imports: [UserManageComponent],
+        providers: [...createTestingProviders(queryParams), provideTranslateTesting()],
     })
         .overrideComponent(UserManageComponent, {
             remove: { providers: [ProfileManageFacade] },

@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { type Recipe, RecipeVisibility } from '../../../../models/recipe.data';
 import { RecipeListResultsComponent } from './recipe-list-results';
 
@@ -31,7 +31,8 @@ function setupComponent(options: { allCount: number; emptyState?: 'empty' | 'no-
     fixture: ComponentFixture<RecipeListResultsComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [RecipeListResultsComponent, TranslateModule.forRoot()],
+        imports: [RecipeListResultsComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(RecipeListResultsComponent);

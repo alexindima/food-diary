@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { catchError, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
 
+import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import type { ClientSummary, DietologistClientGoals, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
 import type { DashboardSnapshot } from '../../../dashboard/models/dashboard.data';
@@ -297,7 +298,7 @@ export class ClientDashboardComponent {
         goals: DietologistClientGoals | null;
         recommendations: DietologistRecommendation[];
     }> {
-        const language = this.translateService.getCurrentLang();
+        const language = resolveTranslateLanguage(this.translateService);
         this.sectionLoadError.set(null);
 
         return forkJoin({
@@ -327,7 +328,7 @@ export class ClientDashboardComponent {
 
         this.detailsLoading.set(true);
         this.sectionLoadError.set(null);
-        this.loadDashboardSnapshot(client, this.translateService.getCurrentLang())
+        this.loadDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
             .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {

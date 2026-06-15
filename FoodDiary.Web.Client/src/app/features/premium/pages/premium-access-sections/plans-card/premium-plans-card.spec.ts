@@ -1,7 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { TranslateModule } from '@ngx-translate/core';
 import { describe, expect, it } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import type { PremiumPlanCardViewModel } from '../../premium-access/premium-access-lib/premium-access.types';
 import { PremiumPlansCardComponent } from './premium-plans-card';
 
@@ -29,7 +29,8 @@ function setupComponent(cards: PremiumPlanCardViewModel[]): {
     fixture: ComponentFixture<PremiumPlansCardComponent>;
 } {
     TestBed.configureTestingModule({
-        imports: [PremiumPlansCardComponent, TranslateModule.forRoot()],
+        imports: [PremiumPlansCardComponent],
+        providers: [provideTranslateTesting()],
     });
 
     const fixture = TestBed.createComponent(PremiumPlansCardComponent);

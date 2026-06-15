@@ -117,7 +117,7 @@ export class UserManageComponent {
     protected readonly isDeleting = this.facade.isDeleting;
     protected readonly isSavingProfile = this.facade.isSavingProfile;
     protected readonly isRevokingAiConsent = this.facade.isRevokingAiConsent;
-    protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().some(isBusy => isBusy));
+    protected readonly isSurfaceBusy = computed(() => this.surfaceBusySignals().includes(true));
     protected readonly hasAiConsent = computed(() => {
         const acceptedAt = this.facade.user()?.aiConsentAcceptedAt;
         return acceptedAt !== null && acceptedAt !== undefined && acceptedAt.length > 0;
