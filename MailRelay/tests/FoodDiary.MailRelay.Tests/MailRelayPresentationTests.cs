@@ -197,7 +197,7 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = false,
             }),
-            new HttpClient());
+            new HttpClient(new RecordingHttpMessageHandler()));
 
         Assert.True(authorizer.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com"),
@@ -210,7 +210,7 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
             }),
-            new HttpClient());
+            new HttpClient(new RecordingHttpMessageHandler()));
         ProviderWebhookAuthorizer validKey = CreateProviderWebhookAuthorizer("mailgun-secret");
 
         Assert.False(missingKey.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
@@ -258,7 +258,7 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireAwsSesSnsSignature = false,
             }),
-            new HttpClient());
+            new HttpClient(new RecordingHttpMessageHandler()));
 
         Assert.True(await authorizer.IsAwsSesSnsAuthorizedAsync(new AwsSesSnsWebhookHttpRequest(
             Type: "",
@@ -450,7 +450,7 @@ public sealed class MailRelayPresentationTests {
                     RequireMailgunWebhookSignature = true,
                     MailgunWebhookSigningKey = "mailgun-secret",
                 }),
-                new HttpClient()));
+                new HttpClient(new RecordingHttpMessageHandler())));
 
         IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com"),
@@ -473,7 +473,7 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = false,
                 }),
-                new HttpClient()));
+                new HttpClient(new RecordingHttpMessageHandler())));
 
         IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com", Id: "provider-id", Severity: "permanent"),
@@ -517,7 +517,7 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
-                new HttpClient()));
+                new HttpClient(new RecordingHttpMessageHandler())));
 
         const string message = """
                                {
@@ -550,7 +550,7 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
-                new HttpClient()));
+                new HttpClient(new RecordingHttpMessageHandler())));
 
         IActionResult result = await controller.IngestAwsSesSns(new AwsSesSnsWebhookHttpRequest(
             Type: "SubscriptionConfirmation",
@@ -798,7 +798,7 @@ public sealed class MailRelayPresentationTests {
                 RequireMailgunWebhookSignature = true,
                 MailgunWebhookSigningKey = mailgunSigningKey,
             }),
-            new HttpClient());
+            new HttpClient(new RecordingHttpMessageHandler()));
 
     private static string CreateMailgunSignature(string signingKey, string timestamp, string token) {
         byte[] keyBytes = Encoding.UTF8.GetBytes(signingKey);

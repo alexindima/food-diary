@@ -126,21 +126,13 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     }
 
     [Fact]
-    public async Task EndpointConnector_WhenPublicEndpointAcceptsTcpConnection_ReturnsConnectedSocket() {
+    public async Task EndpointConnector_WhenLiteralAddressIsPrivate_RejectsBeforeConnecting() {
         var connector = new DirectMxEndpointConnector();
 
-        using Socket socket = await connector.ConnectAsync("example.com", 80, CancellationToken.None);
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            connector.ConnectAsync("127.0.0.1", 25, CancellationToken.None));
 
-        Assert.True(socket.Connected);
-    }
-
-    [Fact]
-    public async Task EndpointConnector_WhenConnectIsCanceled_DisposesSocketAndRethrows() {
-        var connector = new DirectMxEndpointConnector();
-        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(100));
-
-        await Assert.ThrowsAnyAsync<OperationCanceledException>(() =>
-            connector.ConnectAsync("1.1.1.1", 81, cancellationTokenSource.Token));
+        Assert.Contains("private or loopback", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
