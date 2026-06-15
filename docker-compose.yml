@@ -60,7 +60,7 @@ services:
     build:
       context: .
       dockerfile: MailRelay/FoodDiary.MailRelay.Initializer/Dockerfile
-    command: ["dotnet", "FoodDiary.MailRelay.Initializer.dll", "update"]
+    command: ["update"]
     env_file:
       - .env
     environment:
@@ -96,7 +96,7 @@ services:
     build:
       context: .
       dockerfile: MailInbox/FoodDiary.MailInbox.Initializer/Dockerfile
-    command: ["dotnet", "FoodDiary.MailInbox.Initializer.dll", "update"]
+    command: ["update"]
     env_file:
       - .env
     environment:
