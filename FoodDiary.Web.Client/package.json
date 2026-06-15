@@ -70,7 +70,7 @@
         "@angular/service-worker": "^22.0.1",
         "@angular/ssr": "^22.0.1",
         "@microsoft/signalr": "^10.0.0",
-        "@ngx-translate/core": "^17.0.0",
+        "@ngx-translate/core": "^18.0.0",
         "@ngx-translate/http-loader": "^17.0.0",
         "express": "^5.2.1",
         "rxjs": "^7.8.2",
