@@ -160,6 +160,35 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     [Fact]
+    public async Task RabbitMqConsumer_WhenRabbitMqIsUnavailable_RetriesUntilStopped() {
+        var store = new RecordingQueueStore();
+        MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(options),
+            CreateBroker(options),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+
+        await InvokeExecuteAsync(service, cancellationTokenSource.Token);
+
+        Assert.False(store.QueueClaimed);
+    }
+
+    [Fact]
+    public async Task RabbitMqBootstrap_WhenRabbitMqIsUnavailable_RetriesUntilStopped() {
+        MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            CreateBroker(options),
+            Options.Create(options),
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+
+        await service.StartAsync(cancellationTokenSource.Token);
+    }
+
+    [Fact]
     public async Task RabbitMqConsumer_WhenStoppingDuringDelivery_NacksMessageForRetry() {
         var store = new RecordingQueueStore {
             ThrowCancellationOnMessageClaim = true,
@@ -211,13 +240,14 @@ public sealed class MailRelayHostedServiceTests {
     private static RabbitMqMailRelayBroker CreateBroker(MailRelayBrokerOptions options) =>
         new(Options.Create(options), NullLogger<RabbitMqMailRelayBroker>.Instance);
 
-    private static MailRelayBrokerOptions CreateRabbitOptions(int port = 5672) =>
+    private static MailRelayBrokerOptions CreateRabbitOptions(int port = 5672, int connectionRetryDelaySeconds = 5) =>
         new() {
             Backend = MailRelayBrokerOptions.RabbitMqBackend,
             HostName = "127.0.0.1",
             Port = port,
             UserName = "guest",
             Password = "guest",
+            ConnectionRetryDelaySeconds = connectionRetryDelaySeconds,
         };
 
     private static MailRelayMessageProcessor CreateProcessor(IMailRelayQueueStore store) =>

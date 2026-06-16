@@ -12,6 +12,7 @@ public sealed class MailRelayBrokerOptions {
     public string Password { get; init; } = "guest";
     public string VirtualHost { get; init; } = "/";
     public string QueueName { get; init; } = "fooddiary.mailrelay.outbound";
+    public int ConnectionRetryDelaySeconds { get; init; } = 5;
     public ushort PrefetchCount { get; init; } = 10;
     public bool EnablePollingFallback { get; init; } = true;
     public string OutboundExchangeName { get; init; } = "fooddiary.mailrelay";
@@ -29,7 +30,10 @@ public sealed class MailRelayBrokerOptions {
     }
 
     public static bool HasValidConfiguration(MailRelayBrokerOptions options) {
-        if (options.Port <= 0 || options.PrefetchCount == 0 || options.RetryDelayMilliseconds <= 0) {
+        if (options.Port <= 0 ||
+            options.ConnectionRetryDelaySeconds <= 0 ||
+            options.PrefetchCount == 0 ||
+            options.RetryDelayMilliseconds <= 0) {
             return false;
         }
 

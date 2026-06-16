@@ -144,6 +144,9 @@ public sealed class MailRelayInfrastructureOptionsTests {
             NullLogger<RabbitMqMailRelayBroker>.Instance);
         var service = new RabbitMqMailRelayBootstrapHostedService(
             broker,
+            Options.Create(new MailRelayBrokerOptions {
+                Backend = MailRelayBrokerOptions.PostgresPollingBackend,
+            }),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);

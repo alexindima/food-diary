@@ -19,12 +19,37 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
             return;
         }
 
-        IConnection connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
-        await using (connection.ConfigureAwait(false)) {
-            IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
-            await using (channel.ConfigureAwait(false)) {
-                await RunConsumerAsync(channel, stoppingToken).ConfigureAwait(false);
+        while (!stoppingToken.IsCancellationRequested) {
+            try {
+                IConnection connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
+                await using (connection.ConfigureAwait(false)) {
+                    IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
+                    await using (channel.ConfigureAwait(false)) {
+                        await RunConsumerAsync(channel, stoppingToken).ConfigureAwait(false);
+                    }
+                }
+            } catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested) {
+                return;
+            } catch (Exception exception) {
+                logger.LogWarning(
+                    exception,
+                    "RabbitMQ relay consumer connection failed. Retrying in {RetryDelaySeconds} seconds.",
+                    _brokerOptions.ConnectionRetryDelaySeconds);
+
+                if (!await DelayBeforeRetryAsync(stoppingToken).ConfigureAwait(false)) {
+                    return;
+                }
             }
+        }
+    }
+
+    private async Task<bool> DelayBeforeRetryAsync(CancellationToken cancellationToken) {
+        try {
+            await Task.Delay(TimeSpan.FromSeconds(_brokerOptions.ConnectionRetryDelaySeconds), cancellationToken)
+                .ConfigureAwait(false);
+            return true;
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            return false;
         }
     }
 
