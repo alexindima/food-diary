@@ -1,10 +1,16 @@
+using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Recipes;
 using System.Diagnostics;
 using System.Globalization;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -89,5 +95,46 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.True(
             stopwatch.Elapsed <= FirstPageLatencyBudget,
             string.Create(CultureInfo.InvariantCulture, $"Expected RecipeRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+    }
+
+    [RequiresDockerFact]
+    public async Task FavoriteRecipeRepository_WithRecipeStepsAndIngredients_DoesNotUseSingleQueryMultipleCollectionInclude() {
+        string connectionString = await databaseFixture.CreateIsolatedDatabaseAsync();
+        DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
+            .UseNpgsql(connectionString)
+            .ConfigureWarnings(warnings => warnings.Throw(RelationalEventId.MultipleCollectionIncludeWarning))
+            .Options;
+
+        await using var context = new FoodDiaryDbContext(options);
+        await context.Database.MigrateAsync();
+
+        var user = User.Create($"favorite-recipes-{Guid.NewGuid():N}@example.com", "hash");
+        var product = Product.Create(
+            user.Id,
+            "Rice",
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 130,
+            proteinsPerBase: 2.7,
+            fatsPerBase: 0.3,
+            carbsPerBase: 28,
+            fiberPerBase: 0.4,
+            alcoholPerBase: 0);
+        var recipe = Recipe.Create(user.Id, "Rice bowl", servings: 2);
+        recipe.AddStep(1, "Cook rice").AddProductIngredient(product.Id, 100);
+        context.Users.Add(user);
+        context.Products.Add(product);
+        context.Recipes.Add(recipe);
+        await context.SaveChangesAsync();
+
+        var repository = new FavoriteRecipeRepository(context);
+        FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(user.Id, recipe.Id, "Dinner"));
+
+        FavoriteRecipe? byId = await repository.GetByIdAsync(favorite.Id, user.Id);
+        IReadOnlyList<FavoriteRecipe> all = await repository.GetAllAsync(user.Id);
+
+        Assert.NotNull(byId);
+        Assert.Equal(favorite.Id, Assert.Single(all).Id);
     }
 }

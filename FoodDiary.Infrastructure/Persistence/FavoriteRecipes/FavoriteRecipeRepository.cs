@@ -23,6 +23,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
         bool asTracking = false,
         CancellationToken cancellationToken = default) {
         IQueryable<FavoriteRecipe> query = context.FavoriteRecipes
+            .AsSplitQuery()
             .Include(f => f.Recipe)
             .ThenInclude(r => r.Steps)
             .ThenInclude(s => s.Ingredients)
@@ -53,6 +54,7 @@ public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRec
         CancellationToken cancellationToken = default) {
         return await context.FavoriteRecipes
             .AsNoTracking()
+            .AsSplitQuery()
             .Include(f => f.Recipe)
             .ThenInclude(r => r.Steps)
             .ThenInclude(s => s.Ingredients)
