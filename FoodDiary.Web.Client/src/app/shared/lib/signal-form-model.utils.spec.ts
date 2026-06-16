@@ -36,4 +36,28 @@ describe('patchSignalFormModel', () => {
 
         expect(model()).toBe(initial);
     });
+
+    it('does not depend on Object.hasOwn browser support', () => {
+        const initial: TestFormModel = { count: 1, name: 'Apple' };
+        const model = signal(initial);
+        const originalHasOwn = Object.hasOwn;
+        let patchedModel: TestFormModel | undefined;
+
+        try {
+            Object.defineProperty(Object, 'hasOwn', {
+                configurable: true,
+                value: undefined,
+            });
+
+            patchSignalFormModel(model, { name: 'Pear' });
+            patchedModel = model();
+        } finally {
+            Object.defineProperty(Object, 'hasOwn', {
+                configurable: true,
+                value: originalHasOwn,
+            });
+        }
+
+        expect(patchedModel).toEqual({ count: 1, name: 'Pear' });
+    });
 });

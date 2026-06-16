@@ -10,7 +10,7 @@ export function patchSignalFormModel<T extends object>(model: WritableSignal<T>,
         let hasChanges = false;
 
         for (const key in patch) {
-            if (!Object.hasOwn(patch, key)) {
+            if (!Object.prototype.hasOwnProperty.call(patch, key)) {
                 continue;
             }
 
