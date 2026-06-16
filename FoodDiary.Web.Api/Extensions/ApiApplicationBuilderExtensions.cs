@@ -14,11 +14,11 @@ public static class ApiApplicationBuilderExtensions {
     public static WebApplication UseApiPipeline(this WebApplication app) {
         app.Services.GetService<TracerProvider>();
         app.Services.GetService<MeterProvider>();
+        app.UseMiddleware<RequestObservabilityMiddleware>();
         app.UseExceptionHandler();
         app.UseForwardedHeaders();
         app.UseMiddleware<SecurityHeadersMiddleware>();
         app.UseHttpLogging();
-        app.UseMiddleware<RequestObservabilityMiddleware>();
 
         if (app.Environment.IsDevelopment()) {
             app.UseSwagger();

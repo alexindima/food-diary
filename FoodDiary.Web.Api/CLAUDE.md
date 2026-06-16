@@ -28,7 +28,7 @@ Layered composition:
 
 ## Middleware Pipeline (`Extensions/ApiApplicationBuilderExtensions.cs`)
 
-Order: ExceptionHandler -> ForwardedHeaders -> SecurityHeaders -> HttpLogging -> RequestObservability -> (Dev: Swagger; Prod: HSTS+HTTPS) -> CORS -> Authentication -> RateLimiter -> Authorization -> OutputCache -> MapControllers + MapHub
+Order: RequestObservability -> ExceptionHandler -> ForwardedHeaders -> SecurityHeaders -> HttpLogging -> (Dev: Swagger; Prod: HSTS+HTTPS) -> CORS -> Authentication -> RateLimiter -> Authorization -> OutputCache -> MapControllers + MapHub
 
 ## Cross-Cutting Concerns
 
