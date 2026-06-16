@@ -16,6 +16,7 @@ const NON_STRING_RANGE_VALUE = 42;
             [tabs]="tabs"
             [selectedValue]="selectedValue()"
             [rangeField]="rangeForm.range"
+            [displayRange]="displayRange()"
             (rangeChange)="onRangeChange($event)"
         />
     `,
@@ -29,6 +30,7 @@ class TestHostComponent {
 
     public readonly selectedValue = signal('week');
     public readonly rangeModel = signal<{ range: { start: Date | null; end: Date | null } | null }>({ range: null });
+    public readonly displayRange = signal<{ start: Date; end: Date } | null>(null);
     public readonly rangeForm = form(this.rangeModel);
     public lastEmittedValue: string | null = null;
 
@@ -82,10 +84,29 @@ describe('PeriodFilterComponent', () => {
     });
 
     it('should sync display range when not custom', () => {
+        const start = new Date('2026-06-01T00:00:00Z');
+        const end = new Date('2026-06-16T00:00:00Z');
+
         host.selectedValue.set('week');
+        host.displayRange.set({ start, end });
         hostFixture.detectChanges();
 
-        expect(host.rangeModel().range).toBeNull();
+        expect(host.rangeModel().range).toEqual({ start, end });
+    });
+
+    it('should not rewrite equivalent display range values', () => {
+        const start = new Date('2026-06-01T00:00:00Z');
+        const end = new Date('2026-06-16T00:00:00Z');
+
+        host.selectedValue.set('week');
+        host.displayRange.set({ start, end });
+        hostFixture.detectChanges();
+        const syncedRange = host.rangeModel().range;
+
+        host.displayRange.set({ start: new Date(start), end: new Date(end) });
+        hostFixture.detectChanges();
+
+        expect(host.rangeModel().range).toBe(syncedRange);
     });
 
     it('should keep range field available when custom is selected', () => {

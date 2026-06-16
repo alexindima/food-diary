@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, effect, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, input, output, untracked } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { FdUiDateRangeInputComponent } from 'fd-ui-kit/date-range-input/fd-ui-date-range-input';
 import { type FdUiTab, FdUiTabsComponent } from 'fd-ui-kit/tabs/fd-ui-tabs';
@@ -35,6 +35,11 @@ export class PeriodFilterComponent {
             }
 
             if (range !== null) {
+                const currentRange = untracked(() => field().value());
+                if (areDateRangesEqual(currentRange, range)) {
+                    return;
+                }
+
                 field().value.set({ start: range.start, end: range.end });
             }
         });
@@ -45,4 +50,12 @@ export class PeriodFilterComponent {
             this.rangeChange.emit(value);
         }
     }
+}
+
+function areDateRangesEqual(currentRange: DateRangeValue, nextRange: { start: Date; end: Date }): boolean {
+    return currentRange !== null && areDatesEqual(currentRange.start, nextRange.start) && areDatesEqual(currentRange.end, nextRange.end);
+}
+
+function areDatesEqual(currentDate: Date | null, nextDate: Date): boolean {
+    return currentDate !== null && currentDate.getTime() === nextDate.getTime();
 }
