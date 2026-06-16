@@ -23,6 +23,8 @@ const DEFAULT_FIBER_TARGET = 30;
 const CSS_VARIABLE_FUNCTION_PREFIX = 'var(';
 
 const CSS_COLOR_VALUES: Partial<Record<string, string>> = {
+    '--fd-color-primary-500': '#3b82f6',
+    '--fd-color-primary-600': '#2563eb',
     '--fd-color-sky-500': '#0ea5e9',
     '--fd-color-blue-500': '#3b82f6',
     '--fd-color-emerald-500': '#10b981',
@@ -34,9 +36,9 @@ const CSS_COLOR_VALUES: Partial<Record<string, string>> = {
 };
 
 const COLOR_STOPS = [
-    { percent: 0, color: 'var(--fd-color-sky-500)' },
-    { percent: 50, color: 'var(--fd-color-blue-500)' },
-    { percent: 70, color: 'var(--fd-color-blue-500)' },
+    { percent: 0, color: 'var(--fd-color-primary-500)' },
+    { percent: 50, color: 'var(--fd-color-primary-500)' },
+    { percent: 70, color: 'var(--fd-color-primary-600)' },
     { percent: 80, color: 'var(--fd-color-emerald-500)' },
     { percent: 90, color: 'var(--fd-color-green-500)' },
     { percent: 100, color: 'var(--fd-color-emerald-700)' },
@@ -117,6 +119,11 @@ export function getDashboardColorForPercent(percent: number, colorCache = new Ma
 }
 
 export function mixDashboardColorWithWhite(color: string, ratio: number, colorCache = new Map<string, [number, number, number]>()): string {
+    const cssVariable = parseCssVariableSyntax(color.trim());
+    if (cssVariable !== null) {
+        return `color-mix(in srgb, ${color} ${Math.round((1 - ratio) * PERCENT_MAX)}%, var(--fd-color-white))`;
+    }
+
     const [red, green, blue] = parseColor(color, colorCache);
     const mix = (channel: number): number => Math.round(channel + (WHITE_CHANNEL - channel) * ratio);
     return `#${toHex(mix(red))}${toHex(mix(green))}${toHex(mix(blue))}`;

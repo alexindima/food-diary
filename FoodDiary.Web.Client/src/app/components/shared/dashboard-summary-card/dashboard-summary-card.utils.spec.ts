@@ -60,9 +60,11 @@ describe('dashboard summary card utils', () => {
     });
 
     it('resolves color stops, css variables, and white mixes', () => {
-        expect(getDashboardColorForPercent(0)).toBe('var(--fd-color-sky-500)');
+        expect(getDashboardColorForPercent(0)).toBe('var(--fd-color-primary-500)');
         expect(getDashboardColorForPercent(OVER_PERCENT)).toBe('var(--fd-color-danger)');
-        expect(mixDashboardColorWithWhite('var(--fd-color-sky-500)', 0)).toBe('#0ea5e9');
+        expect(mixDashboardColorWithWhite('var(--fd-color-primary-500)', 0)).toBe(
+            'color-mix(in srgb, var(--fd-color-primary-500) 100%, var(--fd-color-white))',
+        );
     });
 
     it('builds default nutrient bars and resolves nutrient colors', () => {
