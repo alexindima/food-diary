@@ -5,7 +5,6 @@ import {
     Component,
     computed,
     DestroyRef,
-    effect,
     type ElementRef,
     inject,
     signal,
@@ -107,7 +106,6 @@ export class DashboardComponent {
     private readonly languageVersion = signal(0);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
-    private hasAttemptedWelcomeTour = false;
     private resizeObserver: ResizeObserver | null = null;
 
     protected readonly selectedDate = this.facade.selectedDate;
@@ -237,18 +235,6 @@ export class DashboardComponent {
         });
         afterNextRender(() => {
             this.observeDashboardWidth();
-        });
-        effect(() => {
-            const canStartWelcomeTour = !this.isLoading() && this.isTodaySelected() && !this.layout.isEditingLayout();
-            if (this.hasAttemptedWelcomeTour || !canStartWelcomeTour) {
-                return;
-            }
-
-            this.languageVersion();
-            this.hasAttemptedWelcomeTour = true;
-            queueMicrotask(() => {
-                this.startDashboardWelcomeTour(false);
-            });
         });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),
