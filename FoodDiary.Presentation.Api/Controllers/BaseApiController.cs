@@ -153,7 +153,11 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
         }
 
         if (error is not null) {
-            observation.Activity?.SetStatus(ActivityStatusCode.Error, error.Message);
+            LogLevel failureLogLevel = ResolveFailureLogLevel(error);
+            if (failureLogLevel >= LogLevel.Warning) {
+                observation.Activity?.SetStatus(ActivityStatusCode.Error, error.Message);
+            }
+
             observation.Activity?.SetTag("error.type", error.Code);
             observation.Activity?.SetTag("error.message", error.Message);
             PresentationApiTelemetry.OperationFailureCounter.Add(
@@ -162,7 +166,8 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
                 new KeyValuePair<string, object?>("fooddiary.presentation.controller", observation.ControllerName),
                 new KeyValuePair<string, object?>("fooddiary.presentation.operation", observation.OperationName),
                 new KeyValuePair<string, object?>("error.code", error.Code));
-            logger.LogWarning(
+            logger.Log(
+                failureLogLevel,
                 "Presentation operation {OperationName} in {Feature}/{Controller} failed with {ErrorCode} in {ElapsedMs} ms",
                 observation.OperationName,
                 observation.Feature,
@@ -170,6 +175,13 @@ public abstract class BaseApiController(ISender mediator) : ControllerBase {
                 error.Code,
                 observation.Stopwatch.Elapsed.TotalMilliseconds);
         }
+    }
+
+    private static LogLevel ResolveFailureLogLevel(Error error) {
+        ErrorKind? kind = error.Kind ?? ErrorKindResolver.Resolve(error.Code);
+        return kind is ErrorKind.Validation or ErrorKind.Unauthorized or ErrorKind.Forbidden
+            ? LogLevel.Information
+            : LogLevel.Warning;
     }
 
     private string ResolveFeatureName() {

@@ -169,9 +169,10 @@ public sealed class BaseApiControllerTests {
             request,
             Result.Failure(Errors.Validation.Invalid("Name", "Name is required.")));
         TestController controller = CreateController(mediator);
+        var logger = new RecordingLogger();
         using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
 
-        IActionResult result = await controller.HandleObservedNoContentPublic(request, NullLogger.Instance, "test.failure");
+        IActionResult result = await controller.HandleObservedNoContentPublic(request, logger, "test.failure");
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
         ApiErrorHttpResponse response = Assert.IsType<ApiErrorHttpResponse>(objectResult.Value);
@@ -179,8 +180,28 @@ public sealed class BaseApiControllerTests {
         Assert.Equal("Validation.Invalid", response.Error);
         Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.failure", StringComparison.Ordinal));
         Assert.Equal("failure", activity.GetTagItem("fooddiary.presentation.outcome"));
-        Assert.Equal(ActivityStatusCode.Error, activity.Status);
+        Assert.Equal(ActivityStatusCode.Unset, activity.Status);
         Assert.Equal("Validation.Invalid", activity.GetTagItem("error.type"));
+        Assert.Equal(LogLevel.Information, logger.LastLogLevel);
+    }
+
+    [Fact]
+    public async Task HandleObservedOk_WithExternalFailure_LogsWarningAndMarksActivityError() {
+        var request = new TestOkRequest();
+        ISender mediator = CreateSender(
+            request,
+            Result.Failure<string>(Errors.Billing.ProviderOperationFailed("Stripe", "timeout")));
+        TestController controller = CreateController(mediator);
+        var logger = new RecordingLogger();
+        using var listener = new TestActivityListener(PresentationApiTelemetry.TelemetryName);
+
+        IActionResult result = await controller.HandleObservedOkPublic(request, static value => value, logger, "test.external-failure");
+
+        ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
+        Assert.Equal(StatusCodes.Status502BadGateway, objectResult.StatusCode);
+        Activity activity = Assert.Single(listener.CompletedActivitiesSnapshot, static item => string.Equals(item.OperationName, "test.external-failure", StringComparison.Ordinal));
+        Assert.Equal(ActivityStatusCode.Error, activity.Status);
+        Assert.Equal(LogLevel.Warning, logger.LastLogLevel);
     }
 
     [Fact]
@@ -297,6 +318,34 @@ public sealed class BaseApiControllerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record TestFileRequest : IRequest<Result<FileExportResult>>;
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger : ILogger {
+        public LogLevel LastLogLevel { get; private set; } = LogLevel.None;
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull =>
+            NullScope.Instance;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            LastLogLevel = logLevel;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class NullScope : IDisposable {
+        public static readonly NullScope Instance = new();
+
+        public void Dispose() {
+        }
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class TestActivityListener : IDisposable {
