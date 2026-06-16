@@ -356,6 +356,32 @@
                     }
                 }
             }
+        },
+        "fd-tour": {
+            "projectType": "library",
+            "root": "projects/fd-tour",
+            "sourceRoot": "projects/fd-tour/src",
+            "prefix": "fd",
+            "architect": {
+                "build": {
+                    "builder": "@angular/build:ng-packagr",
+                    "configurations": {
+                        "production": {
+                            "tsConfig": "projects/fd-tour/tsconfig.lib.prod.json"
+                        },
+                        "development": {
+                            "tsConfig": "projects/fd-tour/tsconfig.lib.json"
+                        }
+                    },
+                    "defaultConfiguration": "production"
+                },
+                "test": {
+                    "builder": "@angular/build:unit-test",
+                    "options": {
+                        "tsConfig": "projects/fd-tour/tsconfig.spec.json"
+                    }
+                }
+            }
         }
     },
     "schematics": {

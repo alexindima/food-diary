@@ -1,5 +1,11 @@
 @if (shouldRender()) {
-    <div fdDashboardBlockHost class="dashboard__block dashboard__block--locked" [state]="state()" (blockActivated)="blockToggle.emit()">
+    <div
+        fdDashboardBlockHost
+        class="dashboard__block dashboard__block--locked"
+        data-tour-id="dashboard-summary"
+        [state]="state()"
+        (blockActivated)="blockToggle.emit()"
+    >
         @if (isEditingLayout()) {
             <div class="dashboard__block-label dashboard__block-label--locked fd-ui-pill fd-ui-pill--compact fd-ui-overline">
                 {{ 'DASHBOARD.SETTINGS.LOCKED' | translate }}

@@ -5,6 +5,7 @@ import {
     Component,
     computed,
     DestroyRef,
+    effect,
     type ElementRef,
     inject,
     signal,
@@ -12,6 +13,7 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDatePickerButtonComponent } from 'fd-ui-kit/date-picker-button/fd-ui-date-picker-button';
@@ -49,6 +51,7 @@ import {
     buildDashboardMealsPreviewState,
     isDashboardAsideBlock,
 } from './dashboard-lib/dashboard-view-state.mapper';
+import { buildDashboardWelcomeTour } from './dashboard-lib/dashboard-welcome-tour';
 import { DashboardAdviceBlockComponent } from './dashboard-sections/dashboard-advice-block/dashboard-advice-block';
 import { DashboardCycleBlockComponent } from './dashboard-sections/dashboard-cycle-block/dashboard-cycle-block';
 import { DashboardEditHintComponent } from './dashboard-sections/dashboard-edit-hint/dashboard-edit-hint';
@@ -98,11 +101,13 @@ export class DashboardComponent {
     private readonly themeService = inject(ThemeService);
     private readonly viewportService = inject(ViewportService);
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
+    private readonly tourService = inject(FdTourService);
     private readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
 
     private readonly dashboardRoot = viewChild.required<ElementRef<HTMLElement>>('dashboardRoot');
+    private hasAttemptedWelcomeTour = false;
     private resizeObserver: ResizeObserver | null = null;
 
     protected readonly selectedDate = this.facade.selectedDate;
@@ -233,6 +238,18 @@ export class DashboardComponent {
         afterNextRender(() => {
             this.observeDashboardWidth();
         });
+        effect(() => {
+            const canStartWelcomeTour = !this.isLoading() && this.isTodaySelected() && !this.layout.isEditingLayout();
+            if (this.hasAttemptedWelcomeTour || !canStartWelcomeTour) {
+                return;
+            }
+
+            this.languageVersion();
+            this.hasAttemptedWelcomeTour = true;
+            queueMicrotask(() => {
+                this.startDashboardWelcomeTour(false);
+            });
+        });
         const handler: UnsavedChangesHandler = {
             hasChanges: () => this.layout.hasLayoutChanges(),
             save: () => {
@@ -299,6 +316,14 @@ export class DashboardComponent {
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe();
+    }
+
+    protected startDashboardWelcomeTour(force = true): void {
+        if (this.layout.isEditingLayout()) {
+            return;
+        }
+
+        this.tourService.start(buildDashboardWelcomeTour(this.translateService), { force });
     }
 
     protected async addConsumptionAsync(mealType?: string | null): Promise<void> {

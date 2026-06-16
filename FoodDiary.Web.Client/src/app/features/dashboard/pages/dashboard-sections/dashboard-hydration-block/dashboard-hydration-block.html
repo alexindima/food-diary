@@ -1,5 +1,11 @@
 @if (shouldRender()) {
-    <div fdDashboardBlockHost class="dashboard__block" [state]="state()" (blockActivated)="blockToggle.emit()">
+    <div
+        fdDashboardBlockHost
+        class="dashboard__block"
+        data-tour-id="dashboard-hydration"
+        [state]="state()"
+        (blockActivated)="blockToggle.emit()"
+    >
         @defer (on viewport) {
             <fd-dashboard-card-shell fdDashboardBlockContent [state]="state()">
                 <fd-hydration-card

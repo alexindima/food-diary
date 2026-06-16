@@ -1,4 +1,8 @@
-<section class="dashboard__quick-add fd-stack fd-gap-card-profile" [attr.aria-label]="'DASHBOARD.QUICK_ADD_ARIA' | translate">
+<section
+    class="dashboard__quick-add fd-stack fd-gap-card-profile"
+    data-tour-id="dashboard-quick-add"
+    [attr.aria-label]="'DASHBOARD.QUICK_ADD_ARIA' | translate"
+>
     @defer (on idle) {
         <fd-ai-input-action-bar
             mode="create"

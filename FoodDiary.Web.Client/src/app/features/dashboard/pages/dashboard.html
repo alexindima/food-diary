@@ -2,6 +2,7 @@
     <fd-page-header [title]="dashboardTitle()" [subtitle]="'DASHBOARD.SUBTITLE' | translate" [compactActions]="true">
         <div
             class="dashboard__date-group fd-inline-center"
+            data-tour-id="dashboard-date-picker"
             data-fd-overflow-icon="calendar_today"
             [attr.data-fd-overflow-label]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
         >
@@ -17,6 +18,7 @@
 
         <fd-ui-button
             class="dashboard__appearance-action"
+            data-tour-id="dashboard-appearance"
             appearance="toolbar"
             variant="secondary"
             fill="outline"
@@ -29,6 +31,7 @@
 
         <fd-ui-button
             class="dashboard__push-action"
+            data-tour-id="dashboard-notifications"
             appearance="toolbar"
             variant="secondary"
             fill="outline"
@@ -40,7 +43,21 @@
         />
 
         <fd-ui-button
+            class="dashboard__tour-action"
+            data-tour-id="dashboard-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [disabled]="layout.isEditingLayout()"
+            [ariaLabel]="'DASHBOARD.ACTIONS.START_TOUR' | translate"
+            [fdUiHint]="'DASHBOARD.ACTIONS.START_TOUR' | translate"
+            (click)="startDashboardWelcomeTour()"
+        />
+
+        <fd-ui-button
             class="dashboard__settings-action"
+            data-tour-id="dashboard-layout-settings"
             appearance="toolbar"
             variant="secondary"
             fill="outline"

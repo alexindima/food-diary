@@ -1,0 +1,60 @@
+@if (tour.snapshot(); as snapshot) {
+    <div class="fd-tour" role="presentation">
+        <button class="fd-tour__backdrop" type="button" [attr.aria-label]="labels().close" (click)="close()"></button>
+
+        @if (highlightRect(); as rect) {
+            <div
+                class="fd-tour__highlight"
+                aria-hidden="true"
+                [style.top.px]="rect.top"
+                [style.left.px]="rect.left"
+                [style.width.px]="rect.width"
+                [style.height.px]="rect.height"
+            ></div>
+        }
+
+        <section
+            #popover
+            class="fd-tour__popover"
+            role="dialog"
+            aria-modal="true"
+            aria-live="polite"
+            [class.fd-tour__popover--visible]="popoverVisible()"
+            [attr.aria-label]="snapshot.step.title"
+            [style.top.px]="popoverLayout().top"
+            [style.left.px]="popoverLayout().left"
+            [style.width.px]="popoverLayout().width"
+        >
+            <div class="fd-tour__header">
+                <span class="fd-tour__progress">{{ progressLabel() }}</span>
+                <button class="fd-tour__close" type="button" [attr.aria-label]="labels().close" (click)="close()">&times;</button>
+            </div>
+
+            <h2 class="fd-tour__title">{{ snapshot.step.title }}</h2>
+
+            @if (snapshot.step.description) {
+                <p class="fd-tour__description">{{ snapshot.step.description }}</p>
+            }
+
+            <div class="fd-tour__actions">
+                <button class="fd-tour__button fd-tour__button--ghost" type="button" (click)="skip()">
+                    {{ labels().skip }}
+                </button>
+
+                <div class="fd-tour__nav">
+                    <button
+                        class="fd-tour__button fd-tour__button--secondary"
+                        type="button"
+                        [disabled]="snapshot.isFirstStep"
+                        (click)="previous()"
+                    >
+                        {{ labels().previous }}
+                    </button>
+                    <button class="fd-tour__button fd-tour__button--primary" type="button" (click)="next()">
+                        {{ snapshot.isLastStep ? labels().finish : labels().next }}
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+}

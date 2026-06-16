@@ -163,6 +163,7 @@ export default {
                 'src/styles/mixins.scss',
                 'src/styles/utilities.scss',
                 'src/styles/variables.scss',
+                'projects/fd-tour/src/lib/**/*.scss',
                 'projects/fd-ui-kit/src/lib/**/*.scss',
             ],
             rules: {

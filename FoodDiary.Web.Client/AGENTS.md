@@ -9,6 +9,7 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 
 - App sources: `src/`
 - Shared library: `projects/fd-ui-kit/`
+- Guided tour engine: `projects/fd-tour/`
 - Admin app: `projects/fooddiary-admin/`
 
 ## Commands
@@ -33,6 +34,8 @@ For UI kit specific work, also apply: `projects/fd-ui-kit/AGENTS.md`.
 - Storybook: `npm run storybook`
 - Storybook build: `npm run build:storybook`
 - UI kit build: `npx ng build fd-ui-kit`
+- Tour library build: `npm run build:tour`
+- Tour library tests: `npm run test:ci:tour`
 
 ## TypeScript + Angular
 

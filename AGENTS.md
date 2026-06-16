@@ -9,6 +9,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Frontend app: `FoodDiary.Web.Client/AGENTS.md`
 - Frontend admin app: `FoodDiary.Web.Client/projects/fooddiary-admin/AGENTS.md`
 - UI kit: `FoodDiary.Web.Client/projects/fd-ui-kit/AGENTS.md`
+- Tour engine: `FoodDiary.Web.Client/projects/fd-tour/AGENTS.md`
 - Presentation adapter: `FoodDiary.Presentation.Api/AGENTS.md`
 - API host/presentation: `FoodDiary.Web.Api/AGENTS.md`
 - Application layer: `FoodDiary.Application/AGENTS.md`

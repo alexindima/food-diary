@@ -7,6 +7,7 @@
         "strict": true,
         "noImplicitOverride": true,
         "paths": {
+            "fd-tour": ["./projects/fd-tour/src/public-api", "./dist/fd-tour"],
             "fd-ui-kit": ["./projects/fd-ui-kit/src/public-api", "./dist/fd-ui-kit"],
             "fd-ui-kit/*": ["./projects/fd-ui-kit/src/lib/*"]
         },
@@ -60,6 +61,12 @@
         },
         {
             "path": "./projects/fooddiary-admin/tsconfig.spec.json"
+        },
+        {
+            "path": "./projects/fd-tour/tsconfig.lib.json"
+        },
+        {
+            "path": "./projects/fd-tour/tsconfig.spec.json"
         }
     ]
 }

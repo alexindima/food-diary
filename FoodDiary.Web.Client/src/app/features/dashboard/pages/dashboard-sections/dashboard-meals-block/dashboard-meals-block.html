@@ -1,5 +1,11 @@
 @if (shouldRender()) {
-    <div fdDashboardBlockHost class="dashboard__block dashboard__block--meals" [state]="state()" (blockActivated)="blockToggle.emit()">
+    <div
+        fdDashboardBlockHost
+        class="dashboard__block dashboard__block--meals"
+        data-tour-id="dashboard-meals"
+        [state]="state()"
+        (blockActivated)="blockToggle.emit()"
+    >
         <fd-meals-preview
             fdDashboardBlockContent
             titleKey="DASHBOARD.MEALS_TITLE"

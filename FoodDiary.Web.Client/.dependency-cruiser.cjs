@@ -31,7 +31,7 @@ module.exports = {
             name: 'not-to-dev-dep-from-production',
             severity: 'error',
             from: {
-                path: '^(src/app|projects/fooddiary-admin/src/app|projects/fd-ui-kit/src/lib)',
+                path: '^(src/app|projects/fooddiary-admin/src/app|projects/fd-ui-kit/src/lib|projects/fd-tour/src/lib)',
                 pathNot: '[.](?:spec|test|stories)[.](?:js|mjs|cjs|jsx|ts|mts|cts|tsx)$',
             },
             to: {

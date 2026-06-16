@@ -1383,7 +1383,31 @@
             "STATISTICS_TITLE": "Statistics",
             "STATISTICS_DESCRIPTION": "See detailed trends.",
             "STATISTICS_BUTTON": "Open statistics",
-            "OPEN_SETTINGS": "Customize dashboard"
+            "OPEN_SETTINGS": "Customize dashboard",
+            "START_TOUR": "Show dashboard tour"
+        },
+        "TOUR": {
+            "LABELS": {
+                "PREVIOUS": "Back",
+                "NEXT": "Next",
+                "FINISH": "Done",
+                "SKIP": "Skip",
+                "CLOSE": "Close"
+            },
+            "QUICK_ADD_TITLE": "Add meals faster",
+            "QUICK_ADD_TEXT": "Describe what you ate, take a photo, use voice input, or add a meal manually.",
+            "SUMMARY_TITLE": "Track today at a glance",
+            "SUMMARY_TEXT": "The summary shows calories, weekly progress, and macro targets in one place.",
+            "MEALS_TITLE": "Review today's meals",
+            "MEALS_TEXT": "Open, edit, or add breakfast, lunch, dinner, and other meals from this list.",
+            "HYDRATION_TITLE": "Log water quickly",
+            "HYDRATION_TEXT": "Use the hydration card to add water and compare intake with your daily goal.",
+            "APPEARANCE_TITLE": "Change the interface theme",
+            "APPEARANCE_TEXT": "This button opens appearance settings where you can choose the dashboard theme and interface style.",
+            "SETTINGS_TITLE": "Customize the dashboard",
+            "SETTINGS_TEXT": "Use this control to choose which dashboard cards stay visible.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This button restarts the dashboard tour whenever you need a quick reminder."
         },
         "APPEARANCE": {
             "TITLE": "Adjust your dashboard look",
