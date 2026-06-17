@@ -100,6 +100,39 @@ Current diagnostic value:
 - fallback activation becomes measurable when the primary vision model degrades
 - provider-side failure modes become separable from parsing failures
 
+## Added External Provider Signals
+
+The backend also exposes catalog-provider metrics at the integrations boundary.
+
+Metrics:
+
+- `fooddiary.external_provider.requests`
+- `fooddiary.external_provider.duration`
+
+Current tagged dimensions:
+
+- provider:
+  - `open_food_facts`
+- operation:
+  - `barcode_lookup`
+  - `search`
+- request outcome:
+  - `success`
+  - `not_found`
+  - `empty`
+  - `stale_cache`
+  - `timeout`
+  - `canceled`
+  - `transport_error`
+  - `http_error`
+  - `json_error`
+
+Current diagnostic value:
+
+- Open Food Facts degradation is visible without mixing expected third-party timeouts into backend problem logs
+- fresh in-memory cache hits do not count as external provider requests
+- stale-cache fallback is visible as graceful degradation, not a backend incident
+
 ## Added Output Cache Signals
 
 The HTTP host now also emits output-cache observations for cache-enabled presentation routes.
@@ -237,6 +270,8 @@ At minimum, the backend dashboard should expose these panels:
 - database command failures by `fooddiary.db.operation`, `fooddiary.db.source`, and `error.type`
 - email dispatch outcome by `fooddiary.email.template`, `fooddiary.email.locale`, and `fooddiary.email.outcome`
 - storage presign/delete outcomes by `fooddiary.storage.operation` and `fooddiary.storage.outcome`
+- external provider outcomes by `fooddiary.external_provider`, `fooddiary.external_provider.operation`, and `fooddiary.external_provider.outcome`
+- external provider latency p95 by `fooddiary.external_provider` and `fooddiary.external_provider.operation`
 
 ## First Alert Suggestions
 
@@ -248,6 +283,8 @@ Use these as the first production alert baseline and tune them with real traffic
   trigger when auth `client_error` volume increases sharply versus the previous 30-minute baseline after a deploy.
 - AI provider degradation:
   trigger when `fooddiary.ai.requests` has repeated non-success outcomes for 10 minutes, especially `transport_error`, `timeout`, or `http_5xx`.
+- External provider degradation:
+  trigger when `fooddiary.external_provider.requests` has repeated `timeout`, `transport_error`, `http_error`, or `json_error` outcomes for 10 minutes, or when non-success outcomes exceed roughly 30-50% of requests for `open_food_facts`.
 - AI quota exhaustion:
   trigger when `fooddiary.ai.quota_rejections` becomes non-zero in production for 10 minutes or exceeds the normal daily baseline.
 - AI fallback spike:

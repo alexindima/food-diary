@@ -1,3 +1,5 @@
+using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Net;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Integrations.Options;
@@ -8,6 +10,8 @@ namespace FoodDiary.Infrastructure.Tests.Services;
 
 [ExcludeFromCodeCoverage]
 public sealed class OpenFoodFactsServiceTests {
+    private const string IntegrationsMeterName = "FoodDiary.Integrations";
+
     [Fact]
     public async Task GetByBarcodeAsync_WhenProductFound_ReturnsMappedProduct() {
         const string json = """
@@ -42,6 +46,41 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Equal(3.2, result.FatsPer100G);
         Assert.Equal(4.7, result.CarbsPer100G);
         Assert.Equal(0, result.FiberPer100G);
+    }
+
+    [Fact]
+    public async Task GetByBarcodeAsync_WhenProductFound_RecordsExternalProviderTelemetry() {
+        string? provider = null;
+        string? operation = null;
+        string? outcome = null;
+        double? durationMs = null;
+        using MeterListener listener = CreateExternalProviderListener(
+            onRequest: (_, tags) => {
+                provider = GetTagValue(tags, "fooddiary.external_provider");
+                operation = GetTagValue(tags, "fooddiary.external_provider.operation");
+                outcome = GetTagValue(tags, "fooddiary.external_provider.outcome");
+            },
+            onDuration: (value, tags) => {
+                durationMs = value;
+                provider ??= GetTagValue(tags, "fooddiary.external_provider");
+            });
+        const string json = """
+            {
+              "status": 1,
+              "product": {
+                "product_name": "Milk",
+                "nutriments": {}
+              }
+            }
+            """;
+        OpenFoodFactsService service = CreateService(new SuccessHttpMessageHandler(json));
+
+        await service.GetByBarcodeAsync("4600000000001");
+
+        Assert.Equal("open_food_facts", provider);
+        Assert.Equal("barcode_lookup", operation);
+        Assert.Equal("success", outcome);
+        Assert.True(durationMs >= 0);
     }
 
     [Fact]
@@ -228,11 +267,43 @@ public sealed class OpenFoodFactsServiceTests {
         OpenFoodFactsService failing = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
 
         IReadOnlyList<OpenFoodFactsProductModel> cached = await warmup.SearchAsync(query);
+        MakeOpenFoodFactsSearchCacheStale(query, limit: 10, TimeSpan.FromMinutes(30));
         IReadOnlyList<OpenFoodFactsProductModel> result = await failing.SearchAsync(query);
 
         Assert.Single(cached);
         OpenFoodFactsProductModel product = Assert.Single(result);
         Assert.Equal("Cached milk", product.Name);
+    }
+
+    [Fact]
+    public async Task SearchAsync_WhenTransportFailsWithStaleCache_RecordsStaleCacheTelemetry() {
+        string? outcome = null;
+        string? errorType = null;
+        using MeterListener listener = CreateExternalProviderListener(
+            onRequest: (_, tags) => {
+                if (string.Equals(GetTagValue(tags, "fooddiary.external_provider.operation"), "search", StringComparison.Ordinal)) {
+                    outcome = GetTagValue(tags, "fooddiary.external_provider.outcome");
+                    errorType = GetTagValue(tags, "error.type");
+                }
+            },
+            onDuration: null);
+        string query = $"stale-telemetry-{Guid.NewGuid():N}";
+        const string json = """
+            {
+              "products": [
+                { "code": "111", "product_name": "Cached milk", "nutriments": {} }
+              ]
+            }
+            """;
+        OpenFoodFactsService warmup = CreateService(new SuccessHttpMessageHandler(json));
+        OpenFoodFactsService failing = CreateService(new ThrowingHttpMessageHandler(new HttpRequestException("network error")));
+
+        await warmup.SearchAsync(query);
+        MakeOpenFoodFactsSearchCacheStale(query, limit: 10, TimeSpan.FromMinutes(30));
+        await failing.SearchAsync(query);
+
+        Assert.Equal("stale_cache", outcome);
+        Assert.Equal(nameof(HttpRequestException), errorType);
     }
 
     [Fact]
@@ -288,6 +359,56 @@ public sealed class OpenFoodFactsServiceTests {
             httpClient,
             Microsoft.Extensions.Options.Options.Create(new OpenFoodFactsApiOptions()),
             NullLogger<OpenFoodFactsService>.Instance);
+    }
+
+    private static void MakeOpenFoodFactsSearchCacheStale(string query, int limit, TimeSpan age) {
+        System.Reflection.FieldInfo field = typeof(OpenFoodFactsService).GetField(
+            "SearchCache",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        object cache = field.GetValue(null)!;
+        string cacheKey = string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{Math.Clamp(limit, 1, 50)}");
+        object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
+        Type cachedType = cached.GetType();
+        object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
+        object stale = Activator.CreateInstance(cachedType, DateTimeOffset.UtcNow - age, products)!;
+        cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
+    }
+
+    private static MeterListener CreateExternalProviderListener(
+        Action<long, ReadOnlySpan<KeyValuePair<string, object?>>>? onRequest,
+        Action<double, ReadOnlySpan<KeyValuePair<string, object?>>>? onDuration) {
+        var listener = new MeterListener();
+        listener.InstrumentPublished = (instrument, meterListener) => {
+            if (!string.Equals(instrument.Meter.Name, IntegrationsMeterName, StringComparison.Ordinal)) {
+                return;
+            }
+
+            if (instrument.Name is "fooddiary.external_provider.requests" or "fooddiary.external_provider.duration") {
+                meterListener.EnableMeasurementEvents(instrument);
+            }
+        };
+        listener.SetMeasurementEventCallback<long>((instrument, value, tags, _) => {
+            if (string.Equals(instrument.Name, "fooddiary.external_provider.requests", StringComparison.Ordinal)) {
+                onRequest?.Invoke(value, tags);
+            }
+        });
+        listener.SetMeasurementEventCallback<double>((instrument, value, tags, _) => {
+            if (string.Equals(instrument.Name, "fooddiary.external_provider.duration", StringComparison.Ordinal)) {
+                onDuration?.Invoke(value, tags);
+            }
+        });
+        listener.Start();
+        return listener;
+    }
+
+    private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
+        foreach (KeyValuePair<string, object?> tag in tags) {
+            if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {
+                return tag.Value?.ToString();
+            }
+        }
+
+        return null;
     }
 
     [ExcludeFromCodeCoverage]

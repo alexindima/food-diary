@@ -55,6 +55,11 @@ def query_loki_range(loki_url: str, query: str, hours: int, limit: int) -> list[
     return data.get("data", {}).get("result", [])
 
 
+def query_prometheus(prometheus_url: str, query: str) -> list[dict[str, Any]]:
+    data = get_json(prometheus_url, "/api/v1/query", {"query": query})
+    return data.get("data", {}).get("result", [])
+
+
 def render_loki_vector(title: str, loki_url: str, query: str) -> None:
     print_section(title)
     results = query_loki(loki_url, query)
@@ -70,6 +75,28 @@ def render_loki_vector(title: str, loki_url: str, query: str) -> None:
 
     for value, labels in sorted(rows, reverse=True):
         print(f"{value:>8}  {labels}")
+
+
+def render_prometheus_vector(title: str, prometheus_url: str, query: str) -> None:
+    print_section(title)
+    try:
+        results = query_prometheus(prometheus_url, query)
+    except Exception as exc:  # noqa: BLE001 - diagnostic script should keep going.
+        print(f"Prometheus query unavailable: {exc}")
+        return
+
+    if not results:
+        print("No data.")
+        return
+
+    rows = []
+    for item in results:
+        value = float(item.get("value", [0, "0"])[1])
+        labels = ", ".join(f"{key}={value}" for key, value in sorted(item.get("metric", {}).items()))
+        rows.append((value, labels or "{}"))
+
+    for value, labels in sorted(rows, reverse=True):
+        print(f"{value:>8.2f}  {labels}")
 
 
 def render_recent_logs(title: str, loki_url: str, query: str, hours: int, limit: int) -> None:
@@ -173,6 +200,13 @@ def main() -> int:
         "Auth client outcomes",
         args.loki_url,
         f'sum by (container) (count_over_time({{compose_project="fooddiary"}} |= "Outcome=client_error" [{args.hours}h]))',
+    )
+    render_prometheus_vector(
+        "External provider outcomes",
+        args.prometheus_url,
+        "sum by (fooddiary_external_provider, fooddiary_external_provider_operation, "
+        "fooddiary_external_provider_outcome) "
+        f"(increase(fooddiary_external_provider_requests_total[{args.hours}h]))",
     )
     render_recent_logs(
         "Certbot service logs",

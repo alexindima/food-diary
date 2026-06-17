@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Globalization;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
@@ -14,6 +15,9 @@ internal sealed class OpenFoodFactsService(
     HttpClient httpClient,
     IOptions<OpenFoodFactsApiOptions> options,
     ILogger<OpenFoodFactsService> logger) : IOpenFoodFactsService {
+    private const string ProviderName = "open_food_facts";
+    private const string BarcodeLookupOperation = "barcode_lookup";
+    private const string SearchOperation = "search";
     private static readonly TimeSpan SearchCacheTtl = TimeSpan.FromMinutes(10);
     private static readonly TimeSpan StaleSearchCacheTtl = TimeSpan.FromHours(6);
     private static readonly ConcurrentDictionary<string, CachedSearchResult> SearchCache = new(StringComparer.Ordinal);
@@ -21,6 +25,9 @@ internal sealed class OpenFoodFactsService(
     public async Task<OpenFoodFactsProductModel?> GetByBarcodeAsync(
         string barcode,
         CancellationToken cancellationToken = default) {
+        var stopwatch = Stopwatch.StartNew();
+        string outcome = "success";
+        string? errorType = null;
         try {
             string baseUrl = options.Value.BaseUrl.TrimEnd('/');
             string encodedBarcode = Uri.EscapeDataString(barcode.Trim());
@@ -33,12 +40,14 @@ internal sealed class OpenFoodFactsService(
 
             OffApiResponse? result = await response.Content.ReadFromJsonAsync<OffApiResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (result?.Status != 1 || result.Product is null) {
+                outcome = "not_found";
                 return null;
             }
 
             OffProduct p = result.Product;
             string? name = p.ProductName;
             if (string.IsNullOrWhiteSpace(name)) {
+                outcome = "empty";
                 return null;
             }
 
@@ -54,8 +63,18 @@ internal sealed class OpenFoodFactsService(
                 p.Nutriments?.Carbohydrates100G,
                 p.Nutriments?.Fiber100G);
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
+            outcome = ResolveFailureOutcome(ex, cancellationToken);
+            errorType = ex.GetType().Name;
             logger.LogWarning(ex, "Open Food Facts lookup failed for barcode '{Barcode}'", barcode);
             return null;
+        } finally {
+            stopwatch.Stop();
+            IntegrationsTelemetry.RecordExternalProviderRequest(
+                ProviderName,
+                BarcodeLookupOperation,
+                outcome,
+                stopwatch.Elapsed.TotalMilliseconds,
+                errorType);
         }
     }
 
@@ -69,6 +88,9 @@ internal sealed class OpenFoodFactsService(
             return freshProducts;
         }
 
+        var stopwatch = Stopwatch.StartNew();
+        string outcome = "success";
+        string? errorType = null;
         try {
             string baseUrl = options.Value.BaseUrl.TrimEnd('/');
             string encodedQuery = Uri.EscapeDataString(query);
@@ -81,35 +103,63 @@ internal sealed class OpenFoodFactsService(
 
             OffSearchResponse? result = await response.Content.ReadFromJsonAsync<OffSearchResponse>(cancellationToken: cancellationToken).ConfigureAwait(false);
             if (result?.Products is null) {
+                outcome = "empty";
                 return [];
             }
 
-            var products = result.Products
-                .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) && !string.IsNullOrWhiteSpace(p.Code))
-                .Select(p => new OpenFoodFactsProductModel(
-                    p.Code!,
-                    p.ProductName!,
-                    NullIfEmpty(p.Brands),
-                    NullIfEmpty(p.Categories),
-                    NullIfEmpty(p.ImageUrl),
-                    p.Nutriments?.EnergyKcal100G,
-                    p.Nutriments?.Proteins100G,
-                    p.Nutriments?.Fat100G,
-                    p.Nutriments?.Carbohydrates100G,
-                    p.Nutriments?.Fiber100G))
-                .ToList();
+            List<OpenFoodFactsProductModel> products = MapSearchProducts(result.Products);
+            if (products.Count == 0) {
+                outcome = "empty";
+            }
+
             SearchCache[cacheKey] = new CachedSearchResult(DateTimeOffset.UtcNow, products);
             return products;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
+            outcome = ResolveFailureOutcome(ex, cancellationToken);
+            errorType = ex.GetType().Name;
             if (TryGetCachedSearch(cacheKey, StaleSearchCacheTtl, out IReadOnlyList<OpenFoodFactsProductModel>? staleProducts)) {
+                outcome = "stale_cache";
                 logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}', returning cached result", query);
                 return staleProducts;
             }
 
             logger.LogWarning(ex, "Open Food Facts text search failed for query '{Query}'", query);
             return [];
+        } finally {
+            stopwatch.Stop();
+            IntegrationsTelemetry.RecordExternalProviderRequest(
+                ProviderName,
+                SearchOperation,
+                outcome,
+                stopwatch.Elapsed.TotalMilliseconds,
+                errorType);
         }
     }
+
+    private static string ResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) =>
+        exception switch {
+            TaskCanceledException => cancellationToken.IsCancellationRequested ? "canceled" : "timeout",
+            System.Text.Json.JsonException => "json_error",
+            HttpRequestException httpException when httpException.StatusCode is not null => "http_error",
+            HttpRequestException => "transport_error",
+            _ => "failure",
+        };
+
+    private static List<OpenFoodFactsProductModel> MapSearchProducts(List<OffSearchProduct> products) => [
+        .. products
+            .Where(p => !string.IsNullOrWhiteSpace(p.ProductName) && !string.IsNullOrWhiteSpace(p.Code))
+            .Select(p => new OpenFoodFactsProductModel(
+                p.Code!,
+                p.ProductName!,
+                NullIfEmpty(p.Brands),
+                NullIfEmpty(p.Categories),
+                NullIfEmpty(p.ImageUrl),
+                p.Nutriments?.EnergyKcal100G,
+                p.Nutriments?.Proteins100G,
+                p.Nutriments?.Fat100G,
+                p.Nutriments?.Carbohydrates100G,
+                p.Nutriments?.Fiber100G)),
+    ];
 
     private static string? NullIfEmpty(string? value) =>
         string.IsNullOrWhiteSpace(value) ? null : value.Trim();

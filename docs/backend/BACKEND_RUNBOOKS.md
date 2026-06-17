@@ -546,6 +546,33 @@ Validation after recovery:
 - Grafana Explore shows fresh entries for `{job="docker"}` or a specific `container=...`
 - `journalctl -u promtail` shows added Docker targets and no ongoing fatal push failures
 
+## OpenTelemetry App Metrics Missing
+
+Symptoms:
+
+- Prometheus target `otel-collector` is healthy
+- `curl http://127.0.0.1:8889/metrics` has collector/runtime metrics but no `fooddiary_*` application metrics
+- Grafana log panels work, but metric panels for backend flows, AI, storage, email, or external providers show no data
+
+Diagnosis:
+
+- Confirm the API container has an OTLP endpoint:
+  - `docker inspect fooddiary-api-1 --format '{{range .Config.Env}}{{println .}}{{end}}' | grep OpenTelemetry__Otlp__Endpoint`
+- In Docker bridge networking, do not point the container at `http://localhost:4317`; that is the API container itself.
+- The production compose file maps `host.docker.internal` through `host-gateway`, so the expected host collector endpoint is:
+  - `OpenTelemetry__Otlp__Endpoint=http://host.docker.internal:4317`
+- Confirm the collector listens on the host:
+  - `sed -n '1,160p' /opt/otel-collector/config.yaml`
+  - `systemctl status otel-collector --no-pager`
+
+Recovery:
+
+1. Update `/opt/fooddiary/.env` to use `OpenTelemetry__Otlp__Endpoint=http://host.docker.internal:4317`.
+2. Recreate the API container with the normal deploy flow or `docker compose --profile backend up -d api`.
+3. Generate representative backend traffic.
+4. Confirm Prometheus exposes application metrics:
+   - `curl -s http://127.0.0.1:8889/metrics | grep -E 'fooddiary_(api|external_provider|ai|storage)' | head`
+
 ## Cleanup Job Incident
 
 Symptoms:
