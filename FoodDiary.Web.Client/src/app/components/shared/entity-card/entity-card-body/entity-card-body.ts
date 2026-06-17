@@ -1,7 +1,4 @@
-import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { NutrientBadgesComponent } from '../../nutrient-badges/nutrient-badges';
@@ -9,28 +6,20 @@ import type { EntityCardNormalizedQuality, EntityCardNutrition, EntityCardOwners
 
 @Component({
     selector: 'fd-entity-card-body',
-    imports: [TranslatePipe, FdUiHintDirective, FdUiButtonComponent, FdUiIconComponent, NutrientBadgesComponent],
+    imports: [FdUiIconComponent, NutrientBadgesComponent],
     templateUrl: './entity-card-body.html',
     styleUrl: '../entity-card.scss',
+    host: {
+        class: 'entity-card-body-host',
+    },
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntityCardBodyComponent {
-    public readonly showFavorite = input.required<boolean>();
-    public readonly isFavorite = input.required<boolean>();
-    public readonly favoriteLoading = input.required<boolean>();
-    public readonly favoriteIcon = input.required<string>();
-    public readonly favoriteAriaLabel = input<string | null>(null);
     public readonly ownershipIcon = input<EntityCardOwnershipIcon>(null);
     public readonly title = input.required<string>();
     public readonly titleMuted = input<string | null>(null);
     public readonly description = input<string | null>(null);
     public readonly nutrition = input.required<EntityCardNutrition>();
+    public readonly calories = input.required<number>();
     public readonly quality = input<EntityCardNormalizedQuality | null>(null);
-
-    public readonly favoriteToggle = output();
-
-    protected toggleFavorite(event: Event): void {
-        event.stopPropagation();
-        this.favoriteToggle.emit();
-    }
 }

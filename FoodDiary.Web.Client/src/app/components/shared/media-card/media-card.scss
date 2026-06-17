@@ -52,12 +52,16 @@
 }
 
 .fd-media-card--raised {
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    gap: var(--fd-space-lg);
-    padding: 0 var(--fd-space-lg) 0 0;
+    grid-template-areas:
+        'media content action'
+        'media nutrients nutrients';
+    grid-template-columns: clamp(112px, 14cqi, 136px) minmax(0, 1fr) minmax(clamp(64px, 6cqi, 88px), auto);
+    grid-template-rows: minmax(72px, 1fr) var(--fd-size-control-touch);
+    gap: 0;
+    padding: 0;
     border: var(--fd-border-default);
     border-radius: var(--fd-radius-card);
-    background: var(--fd-bg-media-card-raised);
+    background: var(--fd-bg-surface-solid);
     box-shadow: var(--fd-shadow-lg);
 
     &:hover {
@@ -65,15 +69,31 @@
     }
 
     .media-card__media {
-        inline-size: clamp(96px, 14vw, 128px);
-        min-inline-size: clamp(96px, 14vw, 128px);
-        block-size: clamp(96px, 14vw, 128px);
+        grid-area: media;
+        inline-size: 100%;
+        min-inline-size: 100%;
+        block-size: 100%;
+        align-self: stretch;
         border-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
     }
 
     .media-card__content {
-        padding: var(--fd-space-card-profile-gap) 0;
+        grid-area: content;
+        display: contents;
+        padding: 0;
     }
+
+    .media-card__actions {
+        display: contents;
+    }
+}
+
+.fd-media-card--raised:has(.media-card__actions:empty) {
+    grid-template-areas:
+        'media content'
+        'media nutrients';
+    grid-template-columns: clamp(112px, 14cqi, 136px) minmax(0, 1fr);
+    padding: 0;
 }
 
 .fd-media-card--plain {
@@ -102,13 +122,13 @@
 
 .fd-media-card--density-default {
     .media-card__media {
-        inline-size: clamp(96px, 14vw, 128px);
-        min-inline-size: clamp(96px, 14vw, 128px);
-        block-size: clamp(96px, 14vw, 128px);
+        inline-size: 100%;
+        min-inline-size: 100%;
+        block-size: 100%;
     }
 
     &.fd-media-card--raised .media-card__content {
-        padding: var(--fd-space-card-profile-gap) 0;
+        padding: 0;
     }
 
     &.fd-media-card--plain .media-card__content {
@@ -118,7 +138,7 @@
 
 .fd-media-card--density-compact {
     &.fd-media-card--raised {
-        padding-right: var(--fd-space-md);
+        padding: 0;
     }
 
     &.fd-media-card--plain {
@@ -126,35 +146,58 @@
     }
 }
 
-@container (max-width: 620px) {
+@container (max-width: 760px) {
     .fd-media-card--raised {
-        gap: var(--fd-space-sm);
-        padding: 0 var(--fd-space-md) 0 0;
-        border: var(--media-card-compact-border, none);
-        border-radius: var(--media-card-compact-border-radius, 0);
-        background: var(--media-card-compact-background, transparent);
-        box-shadow: var(--media-card-compact-shadow, var(--fd-shadow-none));
+        grid-template-areas:
+            'media content action'
+            'nutrients nutrients nutrients';
+        grid-template-columns: auto minmax(0, 1fr) minmax(clamp(var(--fd-size-control-chip), 10cqi, 72px), auto);
+        grid-template-rows: auto var(--fd-size-control-touch);
+        column-gap: var(--fd-space-sm);
+        row-gap: 0;
+        padding: 0;
+        border: var(--fd-border-default);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-surface-solid);
+        box-shadow: var(--fd-shadow-sm);
 
         &:hover {
-            box-shadow: var(--media-card-compact-hover-shadow, var(--fd-shadow-none));
+            box-shadow: var(--fd-shadow-lg);
         }
 
         .media-card__media {
-            inline-size: var(--fd-size-control-xl);
-            min-inline-size: var(--fd-size-control-xl);
-            block-size: var(--fd-size-control-xl);
-            border-radius: var(--media-card-compact-media-radius, 0);
+            grid-area: media;
+            inline-size: clamp(68px, 20cqi, 80px);
+            min-inline-size: clamp(68px, 20cqi, 80px);
+            block-size: clamp(68px, 20cqi, 80px);
+            align-self: start;
+            border-radius: var(--fd-radius-card) 0 0 0;
         }
 
         .media-card__content {
-            padding: var(--fd-space-sm) 0;
+            grid-area: content;
+            align-self: start;
+            min-width: 0;
+            display: contents;
+            padding: 0;
+        }
+
+        .media-card__actions {
+            display: contents;
         }
     }
 
+    .fd-media-card--raised:has(.media-card__actions:empty) {
+        grid-template-areas:
+            'media content'
+            'nutrients nutrients';
+        grid-template-columns: auto minmax(0, 1fr);
+        padding: 0;
+    }
+
     .fd-media-card--density-compact {
-        &.fd-media-card--raised,
-        &.fd-media-card--plain {
-            padding-right: var(--fd-space-md);
+        &.fd-media-card--raised {
+            padding: 0;
         }
     }
 }

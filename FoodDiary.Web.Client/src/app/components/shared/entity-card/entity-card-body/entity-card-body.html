@@ -1,23 +1,6 @@
 <div class="entity-card__content fd-grid fd-gap-entity-card-content fd-min-w-0">
     <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
         <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
-            @if (showFavorite()) {
-                <fd-ui-button
-                    class="entity-card__favorite-button fd-favorite-button fd-inline-center"
-                    appearance="plain-icon"
-                    variant="secondary"
-                    fill="text"
-                    iconSize="sm"
-                    [icon]="favoriteIcon()"
-                    [class.entity-card__favorite-button--active]="isFavorite()"
-                    [class.fd-favorite-button--active]="isFavorite()"
-                    [fdUiHint]="favoriteAriaLabel()"
-                    [fdUiHintDisabled]="!favoriteAriaLabel()"
-                    [ariaLabel]="favoriteAriaLabel() ?? undefined"
-                    [disabled]="favoriteLoading()"
-                    (click)="toggleFavorite($event)"
-                />
-            }
             @if (ownershipIcon(); as icon) {
                 <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
             }
@@ -46,26 +29,11 @@
                     [carbs]="nutrition().carbs"
                     [fiber]="nutrition().fiber"
                     [alcohol]="nutrition().alcohol"
+                    [calories]="calories()"
+                    [quality]="quality()"
+                    [edgeToEdge]="true"
                 />
             </div>
         </div>
-
-        @if (quality(); as cardQuality) {
-            <div
-                class="entity-card__quality fd-gap-entity-card-header fd-min-w-0"
-                [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
-            >
-                <span class="entity-card__quality-label fd-ui-stat-label fd-nowrap">{{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}</span>
-                <div class="entity-card__quality-bar" aria-hidden="true">
-                    <span
-                        [class]="`entity-card__quality-fill entity-card__quality-fill--${cardQuality.grade}`"
-                        [style.width.%]="cardQuality.score"
-                    ></span>
-                </div>
-                <span class="entity-card__quality-value fd-ui-stat-value" [fdUiHint]="cardQuality.hintKey | translate">
-                    {{ cardQuality.score }}
-                </span>
-            </div>
-        }
     </div>
 </div>

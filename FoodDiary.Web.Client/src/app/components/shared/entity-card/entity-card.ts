@@ -1,6 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, input, output, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import { MediaCardComponent } from '../media-card/media-card';
@@ -20,7 +22,14 @@ import { EntityCardThumbComponent } from './entity-card-thumb/entity-card-thumb'
 
 @Component({
     selector: 'fd-entity-card',
-    imports: [MediaCardComponent, EntityCardThumbComponent, EntityCardBodyComponent, EntityCardActionsComponent],
+    imports: [
+        FdUiHintDirective,
+        FdUiIconComponent,
+        MediaCardComponent,
+        EntityCardThumbComponent,
+        EntityCardBodyComponent,
+        EntityCardActionsComponent,
+    ],
     templateUrl: './entity-card.html',
     styleUrl: './entity-card.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -116,7 +125,8 @@ export class EntityCardComponent {
         this.preview.emit();
     }
 
-    protected toggleFavorite(): void {
+    protected toggleFavorite(event?: Event): void {
+        event?.stopPropagation();
         this.favoriteToggle.emit();
     }
 

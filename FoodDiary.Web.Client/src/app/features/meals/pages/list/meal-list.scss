@@ -104,12 +104,6 @@
 
     @media #{variables.$media-tablet} {
         --fd-layout-page-vertical-padding: 0;
-        --media-card-compact-border: var(--fd-border-default);
-        --media-card-compact-border-radius: var(--fd-radius-card);
-        --media-card-compact-background: var(--fd-bg-media-card-raised);
-        --media-card-compact-shadow: var(--fd-shadow-sm);
-        --media-card-compact-hover-shadow: var(--fd-shadow-lg);
-        --media-card-compact-media-radius: var(--fd-radius-card) 0 0 var(--fd-radius-card);
 
         &__mobile-toolbar {
             display: flex;

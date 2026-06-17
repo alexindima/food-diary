@@ -1,4 +1,9 @@
-<div class="nutrient-badges fd-row fd-wrap">
+<div
+    class="nutrient-badges fd-row fd-wrap"
+    [class.nutrient-badges--edge-to-edge]="edgeToEdge()"
+    [class.nutrient-badges--with-calories]="calories() !== null"
+    [class.nutrient-badges--with-quality]="quality() !== null"
+>
     <span class="nutrient-badges__chip nutrient-badges__chip--protein fd-inline-center fd-gap-pill">
         <fd-ui-icon class="nutrient-badges__chip-icon" name="fitness_center" />
         <span class="nutrient-badges__chip-value fd-ui-body-sm">
@@ -29,4 +34,39 @@
             {{ alcohol() | number: '1.0-0' }}<span class="nutrient-badges__unit">{{ 'GENERAL.UNITS.G' | translate }}</span>
         </span>
     </span>
+    @if (quality(); as cardQuality) {
+        <span
+            class="nutrient-badges__chip nutrient-badges__chip--quality entity-card__quality fd-inline-center fd-gap-pill"
+            [class.nutrient-badges__chip--quality-green]="cardQuality.grade === 'green'"
+            [class.nutrient-badges__chip--quality-yellow]="cardQuality.grade === 'yellow'"
+            [class.nutrient-badges__chip--quality-red]="cardQuality.grade === 'red'"
+            [attr.aria-label]="'PRODUCT_CARD.QUALITY_SCORE' | translate"
+        >
+            <fd-ui-icon class="nutrient-badges__chip-icon nutrient-badges__quality-icon" name="verified" />
+            <span class="nutrient-badges__quality-label entity-card__quality-label fd-ui-stat-label fd-nowrap">
+                {{ 'PRODUCT_CARD.QUALITY_SCORE' | translate }}
+            </span>
+            <span class="nutrient-badges__quality-bar entity-card__quality-bar" aria-hidden="true">
+                <span
+                    [class]="`nutrient-badges__quality-fill entity-card__quality-fill entity-card__quality-fill--${cardQuality.grade}`"
+                    [style.width.%]="cardQuality.score"
+                ></span>
+            </span>
+            <span
+                class="nutrient-badges__quality-value entity-card__quality-value fd-ui-stat-value"
+                [fdUiHint]="cardQuality.hintKey | translate"
+            >
+                {{ cardQuality.score }}
+            </span>
+        </span>
+    }
+    @if (calories() !== null) {
+        <span class="nutrient-badges__chip nutrient-badges__chip--calories fd-inline-center fd-gap-pill">
+            <fd-ui-icon class="nutrient-badges__chip-icon" name="local_fire_department" />
+            <span class="nutrient-badges__chip-value fd-ui-body-sm">
+                <span class="entity-card__calories-value">{{ calories() | number: '1.0-0' }}</span
+                ><span class="nutrient-badges__unit nutrient-badges__unit--calories">{{ 'GENERAL.UNITS.KCAL' | translate }}</span>
+            </span>
+        </span>
+    }
 </div>

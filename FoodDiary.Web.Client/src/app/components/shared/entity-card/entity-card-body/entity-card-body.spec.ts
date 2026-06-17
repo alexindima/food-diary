@@ -1,8 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EntityCardBodyComponent } from './entity-card-body';
+
+const CALORIES = 100;
 
 async function setupEntityCardBodyAsync(): Promise<ComponentFixture<EntityCardBodyComponent>> {
     await TestBed.configureTestingModule({
@@ -11,28 +13,18 @@ async function setupEntityCardBodyAsync(): Promise<ComponentFixture<EntityCardBo
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EntityCardBodyComponent);
-    fixture.componentRef.setInput('showFavorite', true);
-    fixture.componentRef.setInput('isFavorite', false);
-    fixture.componentRef.setInput('favoriteLoading', false);
-    fixture.componentRef.setInput('favoriteIcon', 'star_border');
     fixture.componentRef.setInput('title', 'Title');
-    fixture.componentRef.setInput('nutrition', { proteins: 1, fats: 2, carbs: 3 });
+    fixture.componentRef.setInput('nutrition', { proteins: 1, fats: 2, carbs: 3, fiber: 4, alcohol: 0 });
+    fixture.componentRef.setInput('calories', CALORIES);
     return fixture;
 }
 
 describe('EntityCardBodyComponent', () => {
-    it('stops propagation and emits favorite toggle', async () => {
+    it('should create', async () => {
         const fixture = await setupEntityCardBodyAsync();
         const component = fixture.componentInstance;
-        const stopPropagationSpy = vi.fn();
-        const event = { stopPropagation: stopPropagationSpy } as unknown as Event;
-        const favoriteSpy = vi.fn();
-        component['favoriteToggle'].subscribe(favoriteSpy);
         fixture.detectChanges();
 
-        component['toggleFavorite'](event);
-
-        expect(stopPropagationSpy).toHaveBeenCalledOnce();
-        expect(favoriteSpy).toHaveBeenCalledOnce();
+        expect(component).toBeTruthy();
     });
 });

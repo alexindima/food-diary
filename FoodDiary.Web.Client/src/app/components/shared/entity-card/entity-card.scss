@@ -64,13 +64,45 @@
     display: block;
 }
 
+.entity-card__media-shell {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.entity-card__media-shell fd-entity-card-thumb {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
 .entity-card__content {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto auto;
 }
 
+:host(.entity-card-body-host),
+:host(.entity-card-actions-host),
+.entity-card__content {
+    display: contents;
+}
+
 .entity-card__summary-row {
-    grid-template-columns: minmax(0, 1fr) auto;
+    grid-area: nutrients;
+    align-self: stretch;
+    display: flex;
+    align-items: stretch;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    padding: 0;
+}
+
+.entity-card__title-block {
+    grid-area: content;
+    align-self: start;
+    padding: var(--fd-space-card-profile-gap) var(--fd-space-lg) 0;
+    align-items: flex-start;
 }
 
 .entity-card__name-row {
@@ -78,38 +110,66 @@
 }
 
 .entity-card__favorite-button {
-    --fd-button-host-width: var(--fd-size-control-xs);
-    --fd-button-host-min-width: var(--fd-size-control-xs);
-    --fd-button-width: var(--fd-size-control-xs);
-    --fd-button-min-width: var(--fd-size-control-xs);
-    --fd-button-height: var(--fd-size-control-xs);
-    --fd-button-height-explicit: var(--fd-size-control-xs);
-    --fd-button-padding-x: 0;
-    --fd-button-icon-size: var(--fd-text-section-title-size);
-    --fd-button-border-radius: var(--fd-radius-pill);
-    --fd-button-transform-hover: scale(1.05);
-    --fd-button-transform-active: scale(1);
-    --fd-button-disabled-opacity: 0.7;
-    --fd-button-secondary-text-background-default: transparent;
-    --fd-button-secondary-text-background-hover: transparent;
-    --fd-button-secondary-text-background-active: transparent;
-    --fd-button-secondary-text-background-disabled: transparent;
-    --fd-button-secondary-text-border-default: transparent;
-    --fd-button-secondary-text-border-hover: transparent;
-    --fd-button-secondary-text-border-active: transparent;
-    --fd-button-secondary-text-border-disabled: transparent;
-    --fd-button-secondary-text-text-default: var(--fd-color-favorite-muted);
-    --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
-    --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
-    --fd-button-secondary-text-text-disabled: var(--fd-color-favorite-muted);
-    flex-shrink: 0;
+    --entity-card-favorite-size: var(--fd-size-control-xs);
+    appearance: none;
+    position: absolute;
+    top: var(--fd-space-xs);
+    right: var(--fd-space-sm);
+    z-index: 1;
+    width: var(--entity-card-favorite-size);
+    min-width: var(--entity-card-favorite-size);
+    height: var(--entity-card-favorite-size);
+    padding: 0;
+    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-border-divider-soft) 82%, transparent);
+    border-radius: var(--fd-radius-pill);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, transparent);
+    color: var(--fd-color-favorite-muted);
+    cursor: pointer;
+    box-shadow: var(--fd-shadow-none);
+    backdrop-filter: blur(4px);
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease,
+        transform 0.15s ease;
+
+    &:hover {
+        border-color: color-mix(in srgb, var(--fd-color-border-divider-strong) 82%, transparent);
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
+        color: var(--fd-color-amber-500);
+        transform: scale(1.05);
+    }
+
+    &:active {
+        border-color: var(--fd-color-border-divider-strong);
+        background: var(--fd-bg-surface-raised);
+        color: var(--fd-color-amber-500);
+        transform: scale(1);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--fd-shadow-button-focus-ring);
+    }
+
+    &:disabled {
+        background: color-mix(in srgb, var(--fd-bg-surface-raised) 72%, transparent);
+        color: var(--fd-color-favorite-muted);
+        cursor: not-allowed;
+        opacity: 0.7;
+        transform: none;
+    }
 
     &--active {
-        --fd-button-secondary-text-text-default: var(--fd-color-amber-500);
-        --fd-button-secondary-text-text-hover: var(--fd-color-amber-500);
-        --fd-button-secondary-text-text-active: var(--fd-color-amber-500);
-        --fd-button-secondary-text-text-disabled: var(--fd-color-amber-500);
+        color: var(--fd-color-amber-500);
     }
+}
+
+.entity-card__favorite-button-icon {
+    font-size: var(--fd-size-icon-xs);
+    width: var(--fd-size-icon-xs);
+    height: var(--fd-size-icon-xs);
+    line-height: 1;
 }
 
 .entity-card__visibility-icon {
@@ -136,108 +196,77 @@
     color: var(--fd-color-text-muted-subtle);
 }
 
-.entity-card__quality {
-    display: inline-grid;
-    grid-template-columns: auto 120px auto;
-    align-items: center;
-    width: fit-content;
-    max-width: 100%;
-    align-self: center;
-    justify-self: end;
-}
-
-.entity-card__quality-label {
-    color: var(--fd-color-text-muted-emphasis);
-}
-
-.entity-card__quality-bar {
-    position: relative;
-    height: 6px;
-    border-radius: var(--fd-radius-pill);
-    overflow: hidden;
-    background: var(--fd-bg-muted-tint-strong);
-}
-
-.entity-card__quality-fill {
-    display: block;
-    height: 100%;
-    border-radius: inherit;
-    transition: width 0.2s ease;
-
-    &--green {
-        background: var(--fd-bg-quality-good-light);
-    }
-
-    &--yellow {
-        background: var(--fd-bg-quality-warning-light);
-    }
-
-    &--red {
-        background: var(--fd-bg-quality-danger-light);
-    }
-}
-
-.entity-card__quality-value {
-    color: var(--fd-color-text);
-    line-height: 1;
-    min-width: 2ch;
-    text-align: right;
-}
-
 .entity-card__nutrients {
     width: 100%;
     flex: 1 1 auto;
+    display: flex;
+    align-items: stretch;
 }
 
 .entity-card__nutrients-container {
     width: 100%;
     min-width: 0;
+    display: flex;
+    align-items: stretch;
 }
 
 .entity-card__action-group {
     --entity-card-action-divider-space: calc(var(--fd-space-xs) + var(--fd-space-micro));
     --entity-card-action-divider-offset: calc(0px - var(--entity-card-action-divider-space));
     --entity-card-action-divider-offset-compact: calc(0px - var(--fd-space-xs));
-    position: relative;
-    width: fit-content;
-    min-width: clamp(52px, 7vw, 80px);
-    padding: var(--fd-space-xxs) 0;
+    display: contents;
 
     &::before {
-        content: '';
-        position: absolute;
-        left: var(--entity-card-action-divider-offset);
-        top: 50%;
-        width: 2px;
-        height: calc(100% - 2px);
-        transform: translateY(-50%);
-        border-radius: var(--fd-radius-pill);
-        background: var(--fd-bg-action-divider-vertical);
-        pointer-events: none;
+        display: none;
     }
 }
 
-.entity-card__calories-inline {
-    color: var(--fd-color-text);
-    flex-shrink: 0;
+.entity-card__action-button {
+    appearance: none;
+    display: inline-flex;
+    grid-area: action;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    justify-self: stretch;
+    width: 100%;
+    min-width: clamp(64px, 6cqi, 88px);
+    height: 100%;
+    padding: 0;
+    margin-top: 0;
+    border: solid color-mix(in srgb, var(--fd-color-primary-600) 24%, var(--fd-color-border-divider-soft));
+    border-width: 0 0 0 var(--fd-border-width);
+    border-radius: 0 var(--fd-radius-card) 0 0;
+    background: color-mix(in srgb, var(--fd-color-primary-600) 16%, var(--fd-bg-surface-raised));
+    color: var(--fd-color-primary-600);
+    cursor: pointer;
+    box-shadow: var(--fd-shadow-none);
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+    &:hover {
+        background: color-mix(in srgb, var(--fd-color-primary-600) 24%, var(--fd-bg-surface-raised));
+        border-color: color-mix(in srgb, var(--fd-color-primary-600) 36%, var(--fd-color-border-divider-soft));
+        color: var(--fd-color-primary-700);
+    }
+
+    &:focus-visible {
+        outline: none;
+        box-shadow: var(--fd-shadow-button-focus-ring);
+    }
 }
 
-.entity-card__calories-value {
+.entity-card__action-button-label {
     line-height: 1;
 }
 
-.entity-card__calories-unit {
-    color: var(--fd-color-text-muted);
-    letter-spacing: var(--fd-letter-spacing-wide);
-}
-
-.entity-card__action-button {
-    width: var(--fd-size-control-touch);
-    height: var(--fd-size-control-md);
-    background: transparent;
-    color: inherit;
-    box-shadow: var(--fd-shadow-none);
-    border: none;
+.entity-card__action-button-icon {
+    font-size: var(--fd-size-button-icon-md);
+    width: var(--fd-size-button-icon-md);
+    height: var(--fd-size-button-icon-md);
+    line-height: 1;
 }
 
 @container (max-width: 760px) {
@@ -245,22 +274,14 @@
         background: var(--fd-bg-brand-surface-soft);
     }
 
-    .entity-card__content {
-        align-items: center;
-        justify-items: stretch;
-    }
-
     .entity-card__title-block {
-        align-items: flex-start;
+        padding: var(--fd-space-xs) 0 0;
     }
 
     .entity-card__favorite-button {
-        --fd-button-host-width: var(--fd-size-control-micro);
-        --fd-button-host-min-width: var(--fd-size-control-micro);
-        --fd-button-width: var(--fd-size-control-micro);
-        --fd-button-min-width: var(--fd-size-control-micro);
-        --fd-button-height: var(--fd-size-control-micro);
-        --fd-button-height-explicit: var(--fd-size-control-micro);
+        --entity-card-favorite-size: var(--fd-size-control-micro);
+        top: var(--fd-space-xxs);
+        right: var(--fd-space-xs);
     }
 
     .entity-card__name {
@@ -283,8 +304,10 @@
         font-size: var(--fd-text-helper-size);
     }
 
-    .entity-card__summary-row {
-        display: block;
+    .entity-card__nutrients,
+    .entity-card__nutrients-container {
+        width: 100%;
+        max-width: 100%;
     }
 
     .entity-card__nutrients-container {
@@ -304,42 +327,9 @@
         }
     }
 
-    .entity-card__quality {
-        display: none;
-    }
-
-    .entity-card__action-group {
-        align-self: center;
-        flex-direction: column;
-        gap: var(--fd-space-entity-card-header-gap);
-        min-width: clamp(52px, 7vw, 80px);
-        padding: var(--fd-space-micro) 0;
-
-        &::before {
-            left: var(--entity-card-action-divider-offset-compact);
-            width: 2px;
-            height: calc(100% - 1px);
-            display: block;
-        }
-    }
-
-    .entity-card__calories-inline {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .entity-card__calories-value {
-        font-size: var(--fd-text-metric-unit-size);
-    }
-
-    .entity-card__calories-unit {
-        letter-spacing: normal;
-    }
-
     .entity-card__action-button {
-        width: var(--fd-size-control-chip);
-        min-width: var(--fd-size-control-chip);
-        height: var(--fd-size-control-chip);
-        flex: 0 0 var(--fd-size-control-chip);
+        justify-self: end;
+        width: clamp(var(--fd-size-control-chip), 10cqi, 72px);
+        min-width: clamp(var(--fd-size-control-chip), 10cqi, 72px);
     }
 }

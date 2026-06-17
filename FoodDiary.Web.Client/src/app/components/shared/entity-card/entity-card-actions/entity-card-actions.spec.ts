@@ -4,8 +4,6 @@ import { describe, expect, it, vi } from 'vitest';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { EntityCardActionsComponent } from './entity-card-actions';
 
-const CALORIES = 100;
-
 async function setupEntityCardActionsAsync(): Promise<ComponentFixture<EntityCardActionsComponent>> {
     await TestBed.configureTestingModule({
         imports: [EntityCardActionsComponent],
@@ -13,8 +11,6 @@ async function setupEntityCardActionsAsync(): Promise<ComponentFixture<EntityCar
     }).compileComponents();
 
     const fixture = TestBed.createComponent(EntityCardActionsComponent);
-    fixture.componentRef.setInput('calories', CALORIES);
-    fixture.componentRef.setInput('showAction', true);
     fixture.componentRef.setInput('actionIcon', 'add');
     return fixture;
 }

@@ -7,39 +7,51 @@
     (keydown.space)="openCard(); $event.preventDefault()"
 >
     @let previewInteraction = previewInteractionState();
-    <fd-entity-card-thumb
-        fdMediaCardMedia
-        [imageUrl]="imageUrl()"
-        [imageAlt]="imageAlt()"
-        [imageIcon]="imageIcon()"
-        [collage]="collageState()"
-        [hasPreviewImage]="hasPreviewImage()"
-        [previewInteraction]="previewInteraction"
-        (preview)="previewCardImage()"
-    />
+    <div fdMediaCardMedia class="entity-card__media-shell">
+        <fd-entity-card-thumb
+            [imageUrl]="imageUrl()"
+            [imageAlt]="imageAlt()"
+            [imageIcon]="imageIcon()"
+            [collage]="collageState()"
+            [hasPreviewImage]="hasPreviewImage()"
+            [previewInteraction]="previewInteraction"
+            (preview)="previewCardImage()"
+        />
+
+        @if (showFavorite()) {
+            <button
+                type="button"
+                class="entity-card__favorite-button fd-favorite-button fd-inline-center"
+                [class.entity-card__favorite-button--active]="isFavorite()"
+                [class.fd-favorite-button--active]="isFavorite()"
+                [fdUiHint]="favoriteAriaLabel()"
+                [fdUiHintDisabled]="!favoriteAriaLabel()"
+                [attr.aria-label]="favoriteAriaLabel() ?? undefined"
+                [disabled]="favoriteLoading()"
+                (click)="toggleFavorite($event)"
+            >
+                <fd-ui-icon class="entity-card__favorite-button-icon" [name]="favoriteIcon()" />
+            </button>
+        }
+    </div>
 
     <fd-entity-card-body
         fdMediaCardContent
-        [showFavorite]="showFavorite()"
-        [isFavorite]="isFavorite()"
-        [favoriteLoading]="favoriteLoading()"
-        [favoriteIcon]="favoriteIcon()"
-        [favoriteAriaLabel]="favoriteAriaLabel()"
         [ownershipIcon]="ownershipIcon()"
         [title]="title()"
         [titleMuted]="titleMuted()"
         [description]="description()"
         [nutrition]="nutrition()"
+        [calories]="calories()"
         [quality]="normalizedQuality()"
-        (favoriteToggle)="toggleFavorite()"
     />
 
-    <fd-entity-card-actions
-        fdMediaCardActions
-        [calories]="calories()"
-        [showAction]="showAction()"
-        [actionIcon]="actionIcon()"
-        [actionAriaLabel]="actionAriaLabel()"
-        (action)="emitCardAction()"
-    />
+    @if (showAction()) {
+        <fd-entity-card-actions
+            fdMediaCardActions
+            [actionIcon]="actionIcon()"
+            [actionAriaLabel]="actionAriaLabel()"
+            (action)="emitCardAction()"
+        />
+    }
 </fd-media-card>
