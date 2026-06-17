@@ -1,0 +1,21 @@
+# Food Diary
+
+> Food Diary is a meal tracking and nutrition planning app for logging food, monitoring calories and macros, planning meals, tracking body progress, and collaborating with a dietologist.
+
+Use the linked public pages for a concise overview of the product, supported nutrition workflows, and user-facing policies.
+
+## Public pages
+
+- [Food Diary homepage](https://fooddiary.club/): Product overview and primary entry point.
+- [Food diary](https://fooddiary.club/food-diary): Food logging, meal history, and diary workflows.
+- [Calorie counter](https://fooddiary.club/calorie-counter): Calorie tracking features.
+- [Meal planner](https://fooddiary.club/meal-planner): Meal planning and nutrition planning workflows.
+- [Macro tracker](https://fooddiary.club/macro-tracker): Protein, fat, and carbohydrate tracking.
+- [Nutrition tracker](https://fooddiary.club/nutrition-tracker): Nutrition analysis and tracking overview.
+- [Dietologist collaboration](https://fooddiary.club/dietologist-collaboration): Collaboration features for working with a dietologist.
+- [Privacy policy](https://fooddiary.club/privacy-policy): User data and privacy information.
+
+## Discovery
+
+- [Sitemap](https://fooddiary.club/sitemap.xml): Full list of indexable public pages.
+- [Robots policy](https://fooddiary.club/robots.txt): Crawler access rules for the public site.
