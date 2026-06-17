@@ -1,9 +1,6 @@
 <div class="entity-card__content fd-grid fd-gap-entity-card-content fd-min-w-0">
     <div class="entity-card__title-block fd-stack fd-gap-entity-card-title fd-min-w-0">
         <div class="entity-card__name-row fd-row fd-gap-entity-card-header fd-min-w-0">
-            @if (ownershipIcon(); as icon) {
-                <fd-ui-icon class="entity-card__visibility-icon" [name]="icon" />
-            }
             <div class="entity-card__name fd-ui-card-title fd-truncate">{{ title() }}</div>
             @if (titleMuted(); as mutedTitle) {
                 <div class="entity-card__title-muted fd-ui-meta-text fd-nowrap">{{ mutedTitle }}</div>
@@ -31,7 +28,6 @@
                     [alcohol]="nutrition().alcohol"
                     [calories]="calories()"
                     [quality]="quality()"
-                    [edgeToEdge]="true"
                 />
             </div>
         </div>

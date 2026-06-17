@@ -109,6 +109,30 @@
     overflow: hidden;
 }
 
+.entity-card__ownership-badge {
+    --entity-card-ownership-size: var(--fd-size-control-xs);
+    position: absolute;
+    top: var(--fd-space-xs);
+    left: var(--fd-space-sm);
+    z-index: 1;
+    width: var(--entity-card-ownership-size);
+    min-width: var(--entity-card-ownership-size);
+    height: var(--entity-card-ownership-size);
+    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 72%, transparent);
+    border-radius: var(--fd-radius-pill);
+    background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, transparent);
+    color: var(--fd-color-text-muted);
+    box-shadow: var(--fd-shadow-none);
+    backdrop-filter: blur(4px);
+}
+
+.entity-card__ownership-badge-icon {
+    font-size: var(--fd-size-icon-xs);
+    width: var(--fd-size-icon-xs);
+    height: var(--fd-size-icon-xs);
+    line-height: 1;
+}
+
 .entity-card__favorite-button {
     --entity-card-favorite-size: var(--fd-size-control-xs);
     appearance: none;
@@ -120,7 +144,7 @@
     min-width: var(--entity-card-favorite-size);
     height: var(--entity-card-favorite-size);
     padding: 0;
-    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-border-divider-soft) 82%, transparent);
+    border: var(--fd-border-width) solid color-mix(in srgb, var(--fd-color-slate-400) 72%, transparent);
     border-radius: var(--fd-radius-pill);
     background: color-mix(in srgb, var(--fd-bg-surface-raised) 88%, transparent);
     color: var(--fd-color-favorite-muted);
@@ -134,14 +158,14 @@
         transform 0.15s ease;
 
     &:hover {
-        border-color: color-mix(in srgb, var(--fd-color-border-divider-strong) 82%, transparent);
+        border-color: color-mix(in srgb, var(--fd-color-slate-500) 72%, transparent);
         background: color-mix(in srgb, var(--fd-bg-surface-raised) 96%, transparent);
         color: var(--fd-color-amber-500);
         transform: scale(1.05);
     }
 
     &:active {
-        border-color: var(--fd-color-border-divider-strong);
+        border-color: color-mix(in srgb, var(--fd-color-slate-500) 86%, transparent);
         background: var(--fd-bg-surface-raised);
         color: var(--fd-color-amber-500);
         transform: scale(1);
@@ -170,15 +194,6 @@
     width: var(--fd-size-icon-xs);
     height: var(--fd-size-icon-xs);
     line-height: 1;
-}
-
-.entity-card__visibility-icon {
-    font-size: var(--fd-text-body-size);
-    width: var(--fd-text-body-size);
-    height: var(--fd-text-body-size);
-    line-height: 1;
-    color: var(--fd-color-text-muted);
-    flex-shrink: 0;
 }
 
 .entity-card__name {
@@ -284,6 +299,12 @@
         right: var(--fd-space-xs);
     }
 
+    .entity-card__ownership-badge {
+        --entity-card-ownership-size: var(--fd-size-control-micro);
+        top: var(--fd-space-xxs);
+        left: var(--fd-space-xs);
+    }
+
     .entity-card__name {
         line-height: 1.15;
         white-space: normal;
@@ -291,12 +312,6 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
-    }
-
-    .entity-card__visibility-icon {
-        font-size: var(--fd-text-helper-size);
-        width: var(--fd-text-helper-size);
-        height: var(--fd-text-helper-size);
     }
 
     .entity-card__title-muted,

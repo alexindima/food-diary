@@ -18,6 +18,12 @@
             (preview)="previewCardImage()"
         />
 
+        @if (ownershipIcon(); as icon) {
+            <span class="entity-card__ownership-badge fd-inline-center" aria-hidden="true">
+                <fd-ui-icon class="entity-card__ownership-badge-icon" [name]="icon" />
+            </span>
+        }
+
         @if (showFavorite()) {
             <button
                 type="button"
@@ -37,7 +43,6 @@
 
     <fd-entity-card-body
         fdMediaCardContent
-        [ownershipIcon]="ownershipIcon()"
         [title]="title()"
         [titleMuted]="titleMuted()"
         [description]="description()"

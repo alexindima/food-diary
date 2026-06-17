@@ -27,5 +27,4 @@ export class NutrientBadgesComponent {
     public readonly alcohol = input.required<number>();
     public readonly calories = input<number | null>(null);
     public readonly quality = input<NutrientBadgesQuality | null>(null);
-    public readonly edgeToEdge = input(false);
 }

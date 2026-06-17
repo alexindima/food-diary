@@ -41,6 +41,13 @@ describe('NutrientBadgesComponent', () => {
         expect(chips.length).toBe(EXPECTED_CHIP_COUNT);
     });
 
+    it('should render edge-to-edge layout by default', () => {
+        fixture.detectChanges();
+        const el = fixture.nativeElement as HTMLElement;
+        const badges = el.querySelector('.nutrient-badges');
+        expect(badges?.classList.contains('nutrient-badges--edge-to-edge')).toBe(true);
+    });
+
     it('should render protein value', () => {
         fixture.detectChanges();
         const el = fixture.nativeElement as HTMLElement;

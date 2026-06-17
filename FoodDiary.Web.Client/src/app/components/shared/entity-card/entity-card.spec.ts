@@ -101,6 +101,30 @@ describe('EntityCardComponent computed view model', () => {
     });
 });
 
+describe('EntityCardComponent badges', () => {
+    it('renders ownership icon as media overlay', async () => {
+        const { fixture } = await setupEntityCardAsync();
+        fixture.componentRef.setInput('ownershipIcon', 'groups');
+        fixture.detectChanges();
+
+        const el = fixture.nativeElement as HTMLElement;
+        const mediaShell = el.querySelector('.entity-card__media-shell');
+        const badge = mediaShell?.querySelector('.entity-card__ownership-badge');
+
+        expect(badge).not.toBeNull();
+        expect(badge?.querySelector('.entity-card__ownership-badge-icon')).not.toBeNull();
+        expect(el.querySelector('.entity-card__name-row .entity-card__ownership-badge')).toBeNull();
+    });
+
+    it('does not render ownership overlay without ownership icon', async () => {
+        const { fixture } = await setupEntityCardAsync();
+        fixture.detectChanges();
+
+        const el = fixture.nativeElement as HTMLElement;
+        expect(el.querySelector('.entity-card__ownership-badge')).toBeNull();
+    });
+});
+
 describe('EntityCardComponent events', () => {
     it('forwards user actions through outputs', async () => {
         const { component, fixture } = await setupEntityCardAsync();
