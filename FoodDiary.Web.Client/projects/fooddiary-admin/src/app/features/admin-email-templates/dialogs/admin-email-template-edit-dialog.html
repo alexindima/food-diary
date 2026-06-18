@@ -4,7 +4,7 @@
     bodyScrollInset="edge"
     [title]="isNew ? 'Create email template' : 'Edit email template'"
 >
-    <form class="email-template-edit-dialog fd-grid fd-gap-md" (ngSubmit)="onSave()">
+    <form class="email-template-edit-dialog fd-grid fd-gap-md" [formRoot]="form">
         <section class="template-meta fd-grid fd-gap-md fd-align-center" aria-label="Template metadata">
             <fd-ui-input label="Key" [formField]="form.key" />
             <fd-ui-input label="Locale" [formField]="form.locale" />
@@ -85,10 +85,10 @@
                 }
             </aside>
         </div>
-    </form>
 
-    <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
-        <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
-        <fd-ui-button type="button" [disabled]="form().invalid() || isSaving()" (click)="onSave()">Save</fd-ui-button>
-    </div>
+        <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
+            <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
+            <fd-ui-button type="submit" [disabled]="form().invalid() || isSaving()">Save</fd-ui-button>
+        </div>
+    </form>
 </fd-ui-dialog>

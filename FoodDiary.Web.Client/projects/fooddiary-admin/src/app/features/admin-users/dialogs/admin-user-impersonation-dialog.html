@@ -1,5 +1,5 @@
 <fd-ui-dialog title="Start impersonation" size="sm">
-    <form class="admin-user-impersonation-dialog fd-grid fd-gap-md" (submit)="submit(); $event.preventDefault()">
+    <form class="admin-user-impersonation-dialog fd-grid fd-gap-md" [formRoot]="form">
         <p>Target user: {{ targetEmail }}</p>
 
         <fd-ui-textarea
@@ -13,10 +13,10 @@
         @if (submitError()) {
             <p class="admin-user-impersonation-dialog__error">{{ submitError() }}</p>
         }
-    </form>
 
-    <div fdUiDialogFooter>
-        <fd-ui-button type="button" variant="secondary" [disabled]="isSubmitting()" (click)="close()">Cancel</fd-ui-button>
-        <fd-ui-button type="button" [disabled]="isSubmitting()" (click)="submit()"> {{ submitLabel() }} </fd-ui-button>
-    </div>
+        <div fdUiDialogFooter>
+            <fd-ui-button type="button" variant="secondary" [disabled]="isSubmitting()" (click)="close()">Cancel</fd-ui-button>
+            <fd-ui-button type="submit" [disabled]="isSubmitting()"> {{ submitLabel() }} </fd-ui-button>
+        </div>
+    </form>
 </fd-ui-dialog>

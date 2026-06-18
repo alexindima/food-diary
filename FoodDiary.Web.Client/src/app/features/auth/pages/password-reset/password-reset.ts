@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -26,7 +26,16 @@ type FieldErrors = Record<ErrorField, string | null>;
 
 @Component({
     selector: 'fd-password-reset',
-    imports: [CommonModule, FormField, TranslatePipe, FdUiCardComponent, FdUiInputComponent, FdUiButtonComponent, FdUiFormErrorComponent],
+    imports: [
+        CommonModule,
+        FormField,
+        FormRoot,
+        TranslatePipe,
+        FdUiCardComponent,
+        FdUiInputComponent,
+        FdUiButtonComponent,
+        FdUiFormErrorComponent,
+    ],
     templateUrl: './password-reset.html',
     styleUrl: './password-reset.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -57,12 +66,24 @@ export class PasswordResetComponent {
         password: '',
         confirmPassword: '',
     });
-    protected readonly form = form(this.formModel, path => {
-        required(path.password);
-        minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
-        required(path.confirmPassword);
-        validate(path.confirmPassword, ({ value }) => (value() === this.formModel().password ? undefined : { kind: 'matchField' }));
-    });
+    private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
+        this.onSubmit();
+        await Promise.resolve();
+    };
+    protected readonly form = form(
+        this.formModel,
+        path => {
+            required(path.password);
+            minLength(path.password, AUTH_PASSWORD_MIN_LENGTH);
+            required(path.confirmPassword);
+            validate(path.confirmPassword, ({ value }) => (value() === this.formModel().password ? undefined : { kind: 'matchField' }));
+        },
+        {
+            submission: {
+                action: this.submitPasswordResetFormAsync,
+            },
+        },
+    );
 
     public constructor() {
         this.resolveToken();

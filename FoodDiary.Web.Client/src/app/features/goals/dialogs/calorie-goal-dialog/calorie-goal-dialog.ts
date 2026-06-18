@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField, min } from '@angular/forms/signals';
+import { form, FormField, FormRoot, min } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -16,7 +16,7 @@ export type CalorieGoalDialogData = {
 
 @Component({
     selector: 'fd-calorie-goal-dialog',
-    imports: [FormField, TranslatePipe, FdUiDialogComponent, FdUiInputComponent, FdUiButtonComponent, FdUiDialogFooterDirective],
+    imports: [FormField, FormRoot, TranslatePipe, FdUiDialogComponent, FdUiInputComponent, FdUiButtonComponent, FdUiDialogFooterDirective],
     templateUrl: './calorie-goal-dialog.html',
     styleUrls: ['./calorie-goal-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -29,12 +29,23 @@ export class CalorieGoalDialogComponent {
     protected readonly formModel = signal({
         dailyCalorieTarget: this.data.dailyCalorieTarget ?? null,
     });
-    protected readonly form = form(this.formModel, path => {
-        min(path.dailyCalorieTarget, 0);
-    });
+    private readonly submitCalorieGoalFormAsync = async (): Promise<void> => {
+        this.save();
+        await Promise.resolve();
+    };
+    protected readonly form = form(
+        this.formModel,
+        path => {
+            min(path.dailyCalorieTarget, 0);
+        },
+        {
+            submission: {
+                action: this.submitCalorieGoalFormAsync,
+            },
+        },
+    );
 
-    protected save(event?: Event): void {
-        event?.preventDefault();
+    protected save(): void {
         this.form().markAsTouched();
         if (this.form().invalid()) {
             return;

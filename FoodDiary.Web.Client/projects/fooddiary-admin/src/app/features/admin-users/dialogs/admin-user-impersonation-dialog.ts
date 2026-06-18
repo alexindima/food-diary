@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, maxLength, minLength, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, minLength, required } from '@angular/forms/signals';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
@@ -20,7 +20,7 @@ const REASON_MIN_LENGTH = 10;
 
 @Component({
     selector: 'fd-admin-user-impersonation-dialog',
-    imports: [FormField, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiTextareaComponent],
+    imports: [FormField, FormRoot, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiTextareaComponent],
     templateUrl: './admin-user-impersonation-dialog.html',
     styleUrl: './admin-user-impersonation-dialog.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -38,11 +38,23 @@ export class AdminUserImpersonationDialogComponent {
     protected readonly formModel = signal<AdminUserImpersonationFormModel>({
         reason: '',
     });
-    protected readonly form = form(this.formModel, path => {
-        required(path.reason);
-        minLength(path.reason, REASON_MIN_LENGTH);
-        maxLength(path.reason, ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH);
-    });
+    private readonly submitImpersonationFormAsync = async (): Promise<void> => {
+        this.submit();
+        await Promise.resolve();
+    };
+    protected readonly form = form(
+        this.formModel,
+        path => {
+            required(path.reason);
+            minLength(path.reason, REASON_MIN_LENGTH);
+            maxLength(path.reason, ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH);
+        },
+        {
+            submission: {
+                action: this.submitImpersonationFormAsync,
+            },
+        },
+    );
 
     protected readonly reasonError = computed((): string | null => {
         const state = this.form.reason();

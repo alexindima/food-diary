@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
-import { disabled, email, form, FormField, required } from '@angular/forms/signals';
+import { disabled, email, form, FormField, FormRoot, required } from '@angular/forms/signals';
 import { DomSanitizer, type SafeHtml } from '@angular/platform-browser';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -30,6 +30,7 @@ type TestEmailFormModel = {
     selector: 'fd-admin-email-template-edit-dialog',
     imports: [
         FormField,
+        FormRoot,
         FdUiInputComponent,
         FdUiTextareaComponent,
         FdUiCheckboxComponent,
@@ -68,15 +69,27 @@ export class AdminEmailTemplateEditDialogComponent {
         textBody: this.data.textBody,
         isActive: this.data.isActive,
     });
-    protected readonly form = form(this.formModel, path => {
-        required(path.key);
-        required(path.locale);
-        required(path.subject);
-        required(path.htmlBody);
-        required(path.textBody);
-        disabled(path.key, { when: () => !this.isNew });
-        disabled(path.locale, { when: () => !this.isNew });
-    });
+    private readonly submitTemplateFormAsync = async (): Promise<void> => {
+        this.onSave();
+        await Promise.resolve();
+    };
+    protected readonly form = form(
+        this.formModel,
+        path => {
+            required(path.key);
+            required(path.locale);
+            required(path.subject);
+            required(path.htmlBody);
+            required(path.textBody);
+            disabled(path.key, { when: () => !this.isNew });
+            disabled(path.locale, { when: () => !this.isNew });
+        },
+        {
+            submission: {
+                action: this.submitTemplateFormAsync,
+            },
+        },
+    );
     protected readonly previewHtml = computed<SafeHtml>(() => {
         const { htmlBody, subject } = this.formModel();
         const html = this.applyTokens(
@@ -98,6 +111,7 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     protected onSave(): void {
+        this.form().markAsTouched();
         if (this.form().invalid() || this.isSaving()) {
             return;
         }

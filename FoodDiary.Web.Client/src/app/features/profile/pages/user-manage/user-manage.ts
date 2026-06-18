@@ -1,7 +1,7 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { disabled, email, form, required } from '@angular/forms/signals';
+import { disabled, email, form, FormRoot, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
@@ -57,6 +57,7 @@ import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status
     selector: 'fd-user-manage',
     imports: [
         TranslatePipe,
+        FormRoot,
         FdUiFormErrorComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -97,7 +98,15 @@ export class UserManageComponent {
     protected themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
-    protected readonly userForm = form(this.userFormModel);
+    private readonly submitUserFormAsync = async (): Promise<void> => {
+        this.onSubmit();
+        await Promise.resolve();
+    };
+    protected readonly userForm = form(this.userFormModel, {
+        submission: {
+            action: this.submitUserFormAsync,
+        },
+    });
     protected readonly dietologistFormModel = signal<DietologistFormValues>(createDietologistFormModel());
     protected readonly dietologistForm = form(this.dietologistFormModel, path => {
         required(path.email);
@@ -249,7 +258,6 @@ export class UserManageComponent {
     }
 
     protected onSubmit(): void {
-        this.userForm().markAsTouched();
         this.facade.saveProfileNow(this.buildUserUpdateDto());
     }
 

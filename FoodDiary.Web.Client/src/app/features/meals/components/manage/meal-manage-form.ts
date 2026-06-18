@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, required } from '@angular/forms/signals';
+import { form, FormRoot, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -67,6 +67,7 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
+        FormRoot,
         MealGeneralInfoComponent,
         MealSatietyCardComponent,
         MealItemsSectionComponent,
@@ -116,10 +117,24 @@ export class MealManageFormComponent {
         }, this.createEmptyGeneralFieldErrors());
     });
     protected readonly consumptionFormModel = signal<ConsumptionFormValues>(createMealManageFormValue());
-    protected readonly consumptionSignalForm = form(this.consumptionFormModel, path => {
-        required(path.date);
-        required(path.time);
-    });
+    private readonly submitConsumptionFormAsync = async (): Promise<void> => {
+        await this.onSubmitAsync();
+    };
+    protected readonly consumptionSignalForm = form(
+        this.consumptionFormModel,
+        path => {
+            required(path.date);
+            required(path.time);
+        },
+        {
+            submission: {
+                action: this.submitConsumptionFormAsync,
+                onInvalid: () => {
+                    this.handleInvalidSubmit();
+                },
+            },
+        },
+    );
     protected readonly manageHeaderState = computed(() => ({
         titleKey: this.consumption() !== null ? 'CONSUMPTION_MANAGE.EDIT_TITLE' : 'CONSUMPTION_MANAGE.ADD_TITLE',
     }));
@@ -383,7 +398,7 @@ export class MealManageFormComponent {
 
     // --- Submit ---
 
-    protected onSubmit(): void {
+    protected async onSubmitAsync(): Promise<void> {
         this.consumptionSignalForm().markAsTouched();
         this.itemsTouchedState.markTouched();
 
@@ -398,11 +413,16 @@ export class MealManageFormComponent {
 
         const consumptionData = this.buildConsumptionManageDto();
         const consumption = this.consumption();
-        void (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData)).catch(
-            (error: unknown) => {
-                this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
-            },
-        );
+        try {
+            await (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData));
+        } catch (error: unknown) {
+            this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
+        }
+    }
+
+    private handleInvalidSubmit(): void {
+        this.itemsTouchedState.markTouched();
+        this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     private buildConsumptionManageDto(): ConsumptionManageDto {

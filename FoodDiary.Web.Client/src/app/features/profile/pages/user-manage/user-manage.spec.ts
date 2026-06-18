@@ -216,6 +216,21 @@ describe('UserManageComponent notification relationship refresh', () => {
 });
 
 describe('UserManageComponent profile autosave feedback', () => {
+    it('should prevent native profile form submit when saving now', async () => {
+        await createComponentAsync(null);
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(facade.saveProfileNow).toHaveBeenCalledTimes(1);
+    });
+
     it('queues profile autosave when editable user fields change', async () => {
         await createComponentAsync(null);
 

@@ -71,6 +71,22 @@ describe('AdminUserImpersonationDialogComponent', () => {
         expect(dialogRef.close).toHaveBeenCalledWith(response);
     });
 
+    it('should prevent native form submit when starting impersonation', async () => {
+        component['form'].reason().value.set(' Support case investigation ');
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(usersService.startImpersonation).toHaveBeenCalledWith('u1', 'Support case investigation');
+    });
+
     it('should show submit error on failure', () => {
         usersService.startImpersonation.mockReturnValueOnce(throwError(() => new Error('failed')));
         component['form'].reason().value.set('Support case investigation');

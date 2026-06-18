@@ -105,6 +105,21 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
         expect(dialogRef.close).toHaveBeenCalledWith(true);
     });
 
+    it('should prevent native form submit when saving', async () => {
+        const { fixture, service } = await setupEmailTemplateDialogAsync();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(service.upsert).toHaveBeenCalledOnce();
+    });
+
     it('should stop saving on error without closing true', async () => {
         const { component, service } = await setupEmailTemplateDialogAsync();
         service.upsert.mockReturnValueOnce(throwError(() => new Error('save failed')));

@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, min, required } from '@angular/forms/signals';
+import { form, FormRoot, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -45,6 +45,7 @@ import {
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
+        FormRoot,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -82,20 +83,35 @@ export class RecipeManageComponent {
     protected readonly isImportPanelVisible = computed(() => this.recipe() === null);
 
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
-    protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
-        required(path.name);
-        min(path.prepTime, 0);
-        min(path.cookTime, 1);
-        required(path.servings);
-        min(path.servings, 1);
-        required(path.visibility);
-        min(path.manualCalories, 0);
-        min(path.manualProteins, 0);
-        min(path.manualFats, 0);
-        min(path.manualCarbs, 0);
-        min(path.manualFiber, 0);
-        min(path.manualAlcohol, 0);
-    });
+    private readonly submitRecipeFormAsync = async (): Promise<void> => {
+        this.onSubmit();
+        await Promise.resolve();
+    };
+    protected readonly recipeSignalForm = form(
+        this.recipeFormModel,
+        path => {
+            required(path.name);
+            min(path.prepTime, 0);
+            min(path.cookTime, 1);
+            required(path.servings);
+            min(path.servings, 1);
+            required(path.visibility);
+            min(path.manualCalories, 0);
+            min(path.manualProteins, 0);
+            min(path.manualFats, 0);
+            min(path.manualCarbs, 0);
+            min(path.manualFiber, 0);
+            min(path.manualAlcohol, 0);
+        },
+        {
+            submission: {
+                action: this.submitRecipeFormAsync,
+                onInvalid: () => {
+                    this.handleInvalidSubmit();
+                },
+            },
+        },
+    );
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
@@ -285,6 +301,11 @@ export class RecipeManageComponent {
         } else {
             this.recipeManageFacade.addRecipe(recipeData);
         }
+    }
+
+    private handleInvalidSubmit(): void {
+        this.stepsTouchedState.markTouched();
+        this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     protected async onCancelAsync(): Promise<void> {

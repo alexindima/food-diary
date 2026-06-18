@@ -83,6 +83,25 @@ describe('CalorieGoalDialogComponent', () => {
         expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
     });
 
+    it('should prevent native form submit when saving', async () => {
+        createComponent();
+        const updatedGoals: GoalsResponse = { dailyCalorieTarget: UPDATED_CALORIE_TARGET, calorieCyclingEnabled: false };
+        calorieGoalFacadeSpy.updateGoals.mockReturnValue(of(updatedGoals));
+        component['form'].dailyCalorieTarget().value.set(UPDATED_CALORIE_TARGET);
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
+    });
+
     it('should close dialog with false on update error', () => {
         createComponent();
         calorieGoalFacadeSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, minLength, required, validate } from '@angular/forms/signals';
+import { form, FormField, FormRoot, minLength, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogComponent } from 'fd-ui-kit/dialog/fd-ui-dialog';
@@ -27,7 +27,7 @@ type FieldErrors = Record<ErrorField, string | null>;
     templateUrl: './change-password-dialog.html',
     styleUrls: ['./change-password-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent, FdUiButtonComponent],
+    imports: [FormField, FormRoot, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent, FdUiButtonComponent],
 })
 export class ChangePasswordDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<ChangePasswordDialogComponent, boolean>);
@@ -43,16 +43,28 @@ export class ChangePasswordDialogComponent {
         newPassword: '',
         confirmPassword: '',
     });
-    protected readonly form = form(this.formModel, path => {
-        if (this.hasPassword) {
-            required(path.currentPassword);
-        }
+    private readonly submitChangePasswordFormAsync = async (): Promise<void> => {
+        this.onSubmit();
+        await Promise.resolve();
+    };
+    protected readonly form = form(
+        this.formModel,
+        path => {
+            if (this.hasPassword) {
+                required(path.currentPassword);
+            }
 
-        required(path.newPassword);
-        minLength(path.newPassword, AUTH_PASSWORD_MIN_LENGTH);
-        required(path.confirmPassword);
-        validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
-    });
+            required(path.newPassword);
+            minLength(path.newPassword, AUTH_PASSWORD_MIN_LENGTH);
+            required(path.confirmPassword);
+            validate(path.confirmPassword, ({ value }) => (value() === this.formModel().newPassword ? undefined : { kind: 'matchField' }));
+        },
+        {
+            submission: {
+                action: this.submitChangePasswordFormAsync,
+            },
+        },
+    );
 
     protected readonly passwordError = signal<string | null>(null);
     protected readonly isSubmitting = signal<boolean>(false);

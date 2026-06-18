@@ -98,6 +98,23 @@ describe('RecipeManageComponent form population', () => {
 });
 
 describe('RecipeManageComponent submission', () => {
+    it('should prevent native form submit when saving', async () => {
+        const { component, facade, fixture } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(facade.addRecipe).toHaveBeenCalledOnce();
+    });
+
     it('should submit a create DTO when the form is valid and no recipe is provided', async () => {
         const { component, facade } = await setupComponentAsync();
         patchValidManualRecipe(component);

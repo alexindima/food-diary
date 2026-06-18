@@ -76,6 +76,38 @@ describe('MealManageFormComponent input behavior', () => {
     });
 });
 
+describe('MealManageFormComponent native submit behavior', () => {
+    it('should prevent native form submit when saving', async () => {
+        const { component, fixture, mealManageFacade } = await setupComponentAsync();
+        mealManageFacade.submitConsumptionAsync.mockResolvedValue(createConsumption({ totalCalories: TOTAL_CALORIES }));
+        component['patchConsumptionFormModel']({
+            date: '2026-04-05',
+            time: '10:30',
+            mealType: 'BREAKFAST',
+            items: [
+                createConsumptionItemValue(
+                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    null,
+                    PRODUCT_AMOUNT,
+                    ConsumptionSourceType.Product,
+                ),
+            ],
+        });
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledOnce();
+    });
+});
+
 describe('MealManageFormComponent submit behavior', () => {
     it('should submit create DTO and reset add form after successful create', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
@@ -97,7 +129,7 @@ describe('MealManageFormComponent submit behavior', () => {
             ],
         });
 
-        component['onSubmit']();
+        await component['onSubmitAsync']();
         await Promise.resolve();
 
         expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledWith(
@@ -118,7 +150,7 @@ describe('MealManageFormComponent submit behavior', () => {
         const { component, mealManageFacade } = await setupComponentAsync();
         component['patchConsumptionFormModel']({ date: '' });
 
-        component['onSubmit']();
+        await component['onSubmitAsync']();
         await Promise.resolve();
 
         expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
@@ -145,7 +177,7 @@ describe('MealManageFormComponent submit behavior', () => {
             ],
         });
 
-        component['onSubmit']();
+        await component['onSubmitAsync']();
         await Promise.resolve();
         await Promise.resolve();
 

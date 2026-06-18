@@ -125,6 +125,24 @@ describe('PasswordResetComponent form validation', () => {
 });
 
 describe('PasswordResetComponent submit', () => {
+    it('should prevent native form submit when confirming reset', async () => {
+        const { authServiceSpy, component, fixture } = createComponent();
+        authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
+        setValidPassword(component);
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(authServiceSpy.confirmPasswordReset).toHaveBeenCalledTimes(1);
+    });
+
     it('should call confirmPasswordReset on submit', () => {
         const { authServiceSpy, component } = createComponent();
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));

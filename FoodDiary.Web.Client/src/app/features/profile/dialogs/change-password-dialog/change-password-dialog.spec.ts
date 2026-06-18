@@ -81,6 +81,26 @@ describe('ChangePasswordDialogComponent validation', () => {
 });
 
 describe('ChangePasswordDialogComponent submit', () => {
+    it('should prevent native form submit when changing password', async () => {
+        userServiceSpy.changePassword.mockReturnValue(of(true));
+
+        component['form'].currentPassword().value.set('oldPass');
+        component['form'].newPassword().value.set('newPass123');
+        component['form'].confirmPassword().value.set('newPass123');
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(userServiceSpy.changePassword).toHaveBeenCalledTimes(1);
+    });
+
     it('should call changePassword on submit', () => {
         userServiceSpy.changePassword.mockReturnValue(of(true));
 

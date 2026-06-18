@@ -1,5 +1,5 @@
 <fd-ui-dialog class="calorie-goal-dialog" size="md" [title]="'USER_MANAGE.DAILY_CALORIES' | translate">
-    <form (submit)="save($event)">
+    <form [formRoot]="form">
         <fd-ui-input
             type="number"
             [formField]="form.dailyCalorieTarget"
