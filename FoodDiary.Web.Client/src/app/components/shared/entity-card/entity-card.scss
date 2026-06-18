@@ -211,6 +211,16 @@
     color: var(--fd-color-text-muted-subtle);
 }
 
+.entity-card__comment {
+    color: var(--fd-color-text-muted);
+    line-height: var(--fd-text-caption-line-height);
+    max-width: min(72ch, 100%);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 .entity-card__nutrients {
     width: 100%;
     flex: 1 1 auto;
@@ -315,8 +325,13 @@
     }
 
     .entity-card__title-muted,
-    .entity-card__description {
+    .entity-card__description,
+    .entity-card__comment {
         font-size: var(--fd-text-helper-size);
+    }
+
+    .entity-card__comment {
+        -webkit-line-clamp: 1;
     }
 
     .entity-card__nutrients,
@@ -346,5 +361,11 @@
         justify-self: end;
         width: clamp(var(--fd-size-control-chip), 10cqi, 72px);
         min-width: clamp(var(--fd-size-control-chip), 10cqi, 72px);
+    }
+}
+
+@container (max-width: 420px) {
+    .entity-card__comment {
+        display: none;
     }
 }

@@ -56,6 +56,7 @@ export class EntityCardComponent {
     public readonly title = input.required<string>();
     public readonly titleMuted = input<string | null>(null);
     public readonly description = input<string | null>(null);
+    public readonly comment = input<string | null | undefined>(null);
 
     public readonly nutrition = input.required<EntityCardNutrition>();
     public readonly quality = input<EntityCardQuality | null>(null);
@@ -74,6 +75,10 @@ export class EntityCardComponent {
     protected readonly normalizedImageUrl = computed(() => {
         const imageUrl = this.imageUrl()?.trim() ?? '';
         return imageUrl.length > 0 ? imageUrl : null;
+    });
+    protected readonly normalizedComment = computed(() => {
+        const comment = this.comment()?.trim() ?? '';
+        return comment.length > 0 ? comment : null;
     });
     protected readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {
         const quality = this.quality();

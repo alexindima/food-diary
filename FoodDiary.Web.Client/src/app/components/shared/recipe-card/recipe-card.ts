@@ -15,6 +15,7 @@ export type RecipeCardStep = {
 export type RecipeCardItem = {
     id?: string;
     name: string;
+    comment?: string | null;
     imageUrl?: string | null;
     isOwnedByCurrentUser: boolean;
     prepTime?: number | null;

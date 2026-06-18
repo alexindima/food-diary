@@ -15,6 +15,7 @@ const INGREDIENT_COUNT = 5;
 const MOCK_RECIPE: RecipeCardItem = {
     id: 'recipe-1',
     name: 'Test Recipe',
+    comment: 'Family weekend option',
     isOwnedByCurrentUser: true,
     prepTime: 15,
     cookTime: 30,
@@ -102,6 +103,15 @@ describe('RecipeCardComponent content', () => {
         expect(labelEl?.textContent.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
         expect(valueEl?.textContent.trim()).toBe('64');
         expect(fillEl?.style.width).toBe('64%');
+    });
+
+    it('should display recipe comment', async () => {
+        const { el, fixture } = await setupRecipeCardAsync();
+        fixture.detectChanges();
+
+        const commentEl = el.querySelector('.entity-card__comment');
+        expect(commentEl).not.toBeNull();
+        expect(commentEl?.textContent.trim()).toBe('Family weekend option');
     });
 });
 

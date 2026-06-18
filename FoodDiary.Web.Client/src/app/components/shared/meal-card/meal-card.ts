@@ -15,6 +15,7 @@ export type MealCardItem = {
     id: string;
     date: string | Date;
     mealType?: string | null;
+    comment?: string | null;
     imageUrl?: string | null;
     totalCalories: number;
     totalProteins: number;

@@ -12,6 +12,7 @@ import { ProductCardComponent, type ProductCardItem } from './product-card';
 const MOCK_PRODUCT: ProductCardItem = {
     id: 'product-1',
     name: 'Test Product',
+    comment: 'Best with grilled chicken',
     isOwnedByCurrentUser: true,
     proteinsPerBase: 20,
     fatsPerBase: 10,
@@ -97,6 +98,15 @@ describe('ProductCardComponent content', () => {
         expect(labelEl?.textContent.trim()).toBe('PRODUCT_CARD.QUALITY_SCORE');
         expect(valueEl?.textContent.trim()).toBe('72');
         expect(fillEl?.style.width).toBe('72%');
+    });
+
+    it('should display product comment', async () => {
+        const { el, fixture } = await setupProductCardAsync();
+        fixture.detectChanges();
+
+        const commentEl = el.querySelector('.entity-card__comment');
+        expect(commentEl).not.toBeNull();
+        expect(commentEl?.textContent.trim()).toBe('Best with grilled chicken');
     });
 });
 

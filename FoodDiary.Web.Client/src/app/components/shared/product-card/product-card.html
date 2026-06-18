@@ -10,6 +10,7 @@
     [ownershipIcon]="ownershipIcon()"
     [title]="product().name"
     [description]="product().brand || product().barcode || ('PRODUCT_CARD.NO_BARCODE' | translate)"
+    [comment]="product().comment"
     [nutrition]="nutrition()"
     [quality]="quality()"
     [calories]="product().caloriesPerBase"

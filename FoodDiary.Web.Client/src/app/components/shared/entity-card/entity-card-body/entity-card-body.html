@@ -10,6 +10,9 @@
         @if (description(); as bodyDescription) {
             <div class="entity-card__description fd-ui-caption fd-truncate">{{ bodyDescription }}</div>
         }
+        @if (comment(); as bodyComment) {
+            <div class="entity-card__comment fd-ui-caption">{{ bodyComment }}</div>
+        }
     </div>
 
     <div class="entity-card__summary-row fd-grid fd-gap-entity-card-header fd-align-center fd-min-w-0">

@@ -13,6 +13,7 @@ export type ProductCardItem = {
     name: string;
     brand?: string | null;
     barcode?: string | null;
+    comment?: string | null;
     isOwnedByCurrentUser: boolean;
     proteinsPerBase: number;
     fatsPerBase: number;

@@ -18,6 +18,7 @@ const MOCK_MEAL: MealCardItem = {
     id: 'meal-1',
     date: '2026-03-28T12:30:00',
     mealType: 'LUNCH',
+    comment: 'Late lunch after training',
     totalCalories: 650,
     totalProteins: 30,
     totalFats: 20,
@@ -98,6 +99,15 @@ describe('MealCardComponent content', () => {
 
         expect(component['mealTitle']()).toBe('Dinner');
         expect(instantSpy).toHaveBeenCalledWith('MEAL_CARD.MEAL_TYPES.DINNER');
+    });
+
+    it('should display meal comment', async () => {
+        const { el, fixture } = await setupMealCardAsync();
+        fixture.detectChanges();
+
+        const commentEl = el.querySelector('.entity-card__comment');
+        expect(commentEl).not.toBeNull();
+        expect(commentEl?.textContent.trim()).toBe('Late lunch after training');
     });
 });
 

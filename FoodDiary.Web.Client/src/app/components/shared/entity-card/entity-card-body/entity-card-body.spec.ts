@@ -27,4 +27,16 @@ describe('EntityCardBodyComponent', () => {
 
         expect(component).toBeTruthy();
     });
+
+    it('should render comment when provided', async () => {
+        const fixture = await setupEntityCardBodyAsync();
+        fixture.componentRef.setInput('comment', 'Useful card comment');
+        fixture.detectChanges();
+
+        const el = fixture.nativeElement as HTMLElement;
+        const commentEl = el.querySelector('.entity-card__comment');
+
+        expect(commentEl).not.toBeNull();
+        expect(commentEl?.textContent.trim()).toBe('Useful card comment');
+    });
 });

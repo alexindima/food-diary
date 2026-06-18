@@ -112,6 +112,19 @@ describe('EntityCardComponent computed view model', () => {
             hintKey: 'QUALITY.GREEN',
         });
     });
+
+    it('normalizes comment before rendering', async () => {
+        const { component, fixture } = await setupEntityCardAsync();
+        fixture.componentRef.setInput('comment', '  Useful comment  ');
+        fixture.detectChanges();
+
+        expect(component['normalizedComment']()).toBe('Useful comment');
+
+        fixture.componentRef.setInput('comment', '   ');
+        fixture.detectChanges();
+
+        expect(component['normalizedComment']()).toBeNull();
+    });
 });
 
 describe('EntityCardComponent badges', () => {
