@@ -27,14 +27,27 @@ describe('MealListFiltersDialogComponent', () => {
         expect(component['formModel']().dateRange).toBeNull();
     });
 
-    it('should close with selected filters and prevent form submit default', async () => {
+    it('should close with selected filters', async () => {
         const { component, dialogRef } = await setupComponentAsync(null);
-        const preventDefault = vi.fn();
         component['form'].dateRange().value.set(dateRange);
 
-        component['onApply']({ preventDefault } as unknown as Event);
+        component['onApply']();
 
-        expect(preventDefault).toHaveBeenCalled();
+        expect(dialogRef.close).toHaveBeenCalledWith({ dateRange });
+    });
+
+    it('should cancel native submit and delegate to FormRoot submission', async () => {
+        const { component, dialogRef, fixture } = await setupComponentAsync(null);
+        const formElement = (fixture.nativeElement as HTMLElement).querySelector('form');
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        component['form'].dateRange().value.set(dateRange);
+
+        const wasNotCancelled = formElement?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(formElement).not.toBeNull();
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
         expect(dialogRef.close).toHaveBeenCalledWith({ dateRange });
     });
 

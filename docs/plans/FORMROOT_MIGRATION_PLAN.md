@@ -82,7 +82,7 @@ These were found outside the initial list and should be classified in the next p
 - `src/app/features/waist-history/components/waist-history-form-card` - migrated as a child DOM root using the facade-owned configured `FieldTree`.
 - `src/app/features/explore/dialogs/report-dialog` - Signal Forms dialog without native `<form>` submit today; no immediate native submit risk.
 - `src/app/features/explore/components/comments/recipe-comments` - Signal Forms comment flow without native `<form>` submit today; no immediate native submit risk.
-- `src/app/features/meals/pages/list/meal-list-filters-dialog` - filter/apply form; likely exclusion unless native navigation is possible.
+- `src/app/features/meals/pages/list/meal-list-filters-dialog` - migrated for consistency, even though it was already preventing native submit.
 - `projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog` - Signal Forms without native `<form>` submit today; no immediate native submit risk.
 - `projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog` - Signal Forms dialog without native `<form>` submit today; no immediate native submit risk.
 - Auth child forms under `src/app/features/auth/components/auth/*-form` - migrated using `AuthFormManager`-owned submission callbacks and child DOM `FormRoot` bindings.
@@ -141,6 +141,7 @@ Completed in the first migration pass:
 - Dietologist client dashboard date/recommendation forms, cycle tracking facade forms, and shopping list quick-add form were migrated in the second pass.
 - Weight and waist history entry cards were migrated in the third pass with facade-owned submission actions and child-card native submit regression tests.
 - Auth login, register, and password reset child forms were migrated in the fourth pass with manager-owned submission callbacks and native submit regression tests.
+- Meal list filters dialog was migrated in the final pass so all app/admin `<form>` submit handlers now use `FormRoot`.
 
 Verification run:
 

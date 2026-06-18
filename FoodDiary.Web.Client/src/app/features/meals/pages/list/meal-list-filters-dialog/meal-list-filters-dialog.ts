@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiDateRangeInputComponent, type FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -21,7 +21,15 @@ export type MealListFiltersDialogResult = {
     templateUrl: './meal-list-filters-dialog.html',
     styleUrls: ['./meal-list-filters-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField, TranslatePipe, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiButtonComponent, FdUiDateRangeInputComponent],
+    imports: [
+        FormField,
+        FormRoot,
+        TranslatePipe,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiButtonComponent,
+        FdUiDateRangeInputComponent,
+    ],
 })
 export class MealListFiltersDialogComponent {
     private readonly dialogRef = inject(FdUiDialogRef<MealListFiltersDialogComponent, MealListFiltersDialogResult | null>);
@@ -30,14 +38,21 @@ export class MealListFiltersDialogComponent {
     protected readonly formModel = signal({
         dateRange: this.data.dateRange ?? null,
     });
-    protected readonly form = form(this.formModel);
+    private readonly submitFiltersFormAsync = async (): Promise<void> => {
+        this.onApply();
+        await Promise.resolve();
+    };
+    protected readonly form = form(this.formModel, {
+        submission: {
+            action: this.submitFiltersFormAsync,
+        },
+    });
 
     protected onReset(): void {
         this.form.dateRange().value.set(null);
     }
 
-    protected onApply(event?: Event): void {
-        event?.preventDefault();
+    protected onApply(): void {
         this.dialogRef.close({
             dateRange: this.formModel().dateRange,
         });
