@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, type ElementRef, input, output, viewChild } from '@angular/core';
-import type { FieldTree } from '@angular/forms/signals';
+import { ChangeDetectionStrategy, Component, type ElementRef, input, viewChild } from '@angular/core';
+import { type FieldTree, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
@@ -10,7 +10,14 @@ import { AuthRegisterFieldsComponent } from '../auth-register-fields/auth-regist
 
 @Component({
     selector: 'fd-auth-register-form',
-    imports: [TranslatePipe, FdUiButtonComponent, FdUiFormErrorComponent, AuthRegisterFieldsComponent, AuthGoogleSectionComponent],
+    imports: [
+        FormRoot,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiFormErrorComponent,
+        AuthRegisterFieldsComponent,
+        AuthGoogleSectionComponent,
+    ],
     templateUrl: './auth-register-form.html',
     styleUrl: '../auth.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -21,8 +28,6 @@ export class AuthRegisterFormComponent {
     public readonly globalError = input.required<string | null>();
     public readonly isSubmitting = input.required<boolean>();
     public readonly googleReady = input.required<boolean>();
-
-    public readonly registerSubmit = output();
 
     public readonly googleButton = viewChild<ElementRef<HTMLElement>>('googleRegisterButton');
 }

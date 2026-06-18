@@ -85,7 +85,7 @@ These were found outside the initial list and should be classified in the next p
 - `src/app/features/meals/pages/list/meal-list-filters-dialog` - filter/apply form; likely exclusion unless native navigation is possible.
 - `projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog` - Signal Forms without native `<form>` submit today; no immediate native submit risk.
 - `projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog` - Signal Forms dialog without native `<form>` submit today; no immediate native submit risk.
-- Auth child forms under `src/app/features/auth/components/auth/*-form` remain pending; root ownership lives in `AuthFormManager`, while submit orchestration lives in `AuthComponent`.
+- Auth child forms under `src/app/features/auth/components/auth/*-form` - migrated using `AuthFormManager`-owned submission callbacks and child DOM `FormRoot` bindings.
 
 ### Priority 3: Child Form Components
 
@@ -98,6 +98,7 @@ These components often receive a `FieldTree` from a parent and emit `formSubmit`
 Do not blindly add `FormRoot` here. Decide whether the parent should own the root submission, or whether the child should receive a configured root `FieldTree` and use `FormRoot`.
 
 Weight and waist history now use the second pattern: their facades configure `submission.action`, and the child form cards own only the DOM `FormRoot`.
+Auth child forms use a similar split: `AuthFormManager` owns the configured roots, `AuthComponent` provides submission callbacks, and child form components own only the DOM `FormRoot`.
 
 ### Likely Exclusions
 
@@ -139,6 +140,7 @@ Completed in the first migration pass:
 - Password reset, change password, calorie goal, user profile manage, admin impersonation, and admin email template edit forms now use `FormRoot` with native submit regression tests.
 - Dietologist client dashboard date/recommendation forms, cycle tracking facade forms, and shopping list quick-add form were migrated in the second pass.
 - Weight and waist history entry cards were migrated in the third pass with facade-owned submission actions and child-card native submit regression tests.
+- Auth login, register, and password reset child forms were migrated in the fourth pass with manager-owned submission callbacks and native submit regression tests.
 
 Verification run:
 

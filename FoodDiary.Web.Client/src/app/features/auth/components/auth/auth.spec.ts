@@ -1,4 +1,5 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
@@ -112,6 +113,17 @@ describe('AuthComponent tabs', () => {
 });
 
 describe('AuthComponent login', () => {
+    it('should submit login through the configured signal form action', async () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.login.mockReturnValue(of('invalidCredentials'));
+        component['loginModel'].set({ email: 'user@example.com', password: 'password123', rememberMe: false });
+
+        await submit(component['loginForm']);
+
+        expect(authFlowFacadeSpy.login).toHaveBeenCalledOnce();
+        expect(component['globalError']()).toBe('FORM_ERRORS.INVALID_CREDENTIALS');
+    });
+
     it('should show invalid credentials error and hide restore action', () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('invalidCredentials'));
@@ -150,6 +162,22 @@ describe('AuthComponent login', () => {
 });
 
 describe('AuthComponent register', () => {
+    it('should submit registration through the configured signal form action', async () => {
+        const { authFlowFacadeSpy, component } = createComponent('register');
+        authFlowFacadeSpy.register.mockReturnValue(of('emailExists'));
+        component['registerModel'].set({
+            email: 'taken@example.com',
+            password: 'password123',
+            confirmPassword: 'password123',
+            agreeTerms: true,
+        });
+
+        await submit(component['registerForm']);
+
+        expect(authFlowFacadeSpy.register).toHaveBeenCalledOnce();
+        expect(component['registerForm'].email().getError('userExists')).toBeDefined();
+    });
+
     it('should not show register field errors while typing before blur or submit', () => {
         const { component, formManager } = createComponent('register');
 
@@ -216,6 +244,18 @@ describe('AuthComponent register', () => {
 });
 
 describe('AuthComponent password reset', () => {
+    it('should request password reset through the configured signal form action', async () => {
+        const { authFlowFacadeSpy, component } = createComponent();
+        authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
+        component['onPasswordResetOpen']();
+        component['passwordResetModel'].set({ email: 'user@example.com' });
+
+        await submit(component['passwordResetForm']);
+
+        expect(authFlowFacadeSpy.requestPasswordReset).toHaveBeenCalledOnce();
+        expect(component['passwordResetSent']()).toBe(true);
+    });
+
     it('should copy login email when opening password reset form', () => {
         const { component } = createComponent();
         component['loginModel'].update(value => ({ ...value, email: 'user@example.com' }));

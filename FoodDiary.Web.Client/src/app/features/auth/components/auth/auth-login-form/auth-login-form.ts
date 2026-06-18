@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, type ElementRef, input, output, viewChild } from '@angular/core';
-import { type FieldTree, FormField } from '@angular/forms/signals';
+import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -13,6 +13,7 @@ import type { LoginFieldErrors, LoginFormValues } from '../auth-lib/auth.types';
     selector: 'fd-auth-login-form',
     imports: [
         FormField,
+        FormRoot,
         TranslatePipe,
         FdUiInputComponent,
         FdUiButtonComponent,
@@ -35,7 +36,6 @@ export class AuthLoginFormComponent {
     public readonly loginSubmitLabelKey = input.required<string>();
     public readonly isSubmitDisabled = input.required<boolean>();
 
-    public readonly loginSubmit = output();
     public readonly loginNativeInput = output();
     public readonly passwordResetOpen = output();
     public readonly restoreSubmit = output();

@@ -97,6 +97,11 @@ export class AuthComponent {
     private adminReturnUrl: string | null = null;
 
     public constructor() {
+        this.formManager.configureSubmissionActions({
+            login: this.submitLoginFormAsync,
+            passwordReset: this.submitPasswordResetFormAsync,
+            register: this.submitRegisterFormAsync,
+        });
         this.subscribeFormChanges();
         this.registerRenderingEffects();
         afterNextRender(() => {
@@ -106,6 +111,21 @@ export class AuthComponent {
             this.onGoogleCredential(credential);
         });
     }
+
+    private readonly submitLoginFormAsync = async (): Promise<void> => {
+        this.onLoginSubmit();
+        await Promise.resolve();
+    };
+
+    private readonly submitRegisterFormAsync = async (): Promise<void> => {
+        this.onRegisterSubmit();
+        await Promise.resolve();
+    };
+
+    private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
+        this.onPasswordResetSubmit();
+        await Promise.resolve();
+    };
 
     private subscribeFormChanges(): void {
         effect(() => {

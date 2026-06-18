@@ -19,7 +19,6 @@
                     [isPasswordResetting]="isPasswordResetting()"
                     [passwordResetSent]="passwordResetSent()"
                     [passwordResetCooldownSeconds]="passwordResetCooldownSeconds()"
-                    (passwordResetSubmit)="onPasswordResetSubmit()"
                     (passwordResetClose)="onPasswordResetClose()"
                 />
             } @else {
@@ -33,7 +32,6 @@
                     [googleReady]="googleReady()"
                     [loginSubmitLabelKey]="loginSubmitLabelKey()"
                     [isSubmitDisabled]="isLoginSubmitDisabled()"
-                    (loginSubmit)="onLoginSubmit()"
                     (loginNativeInput)="onLoginNativeInput()"
                     (passwordResetOpen)="onPasswordResetOpen()"
                     (restoreSubmit)="onRestoreSubmit()"
@@ -46,7 +44,6 @@
                 [globalError]="globalError()"
                 [isSubmitting]="isSubmitting()"
                 [googleReady]="googleReady()"
-                (registerSubmit)="onRegisterSubmit()"
             />
         }
     </div>

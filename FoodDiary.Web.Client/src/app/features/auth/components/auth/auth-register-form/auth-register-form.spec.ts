@@ -42,15 +42,38 @@ describe('AuthRegisterFormComponent', () => {
         expect(root.querySelector('fd-auth-register-fields')).not.toBeNull();
     });
 
-    it('should emit register submit', () => {
-        const { component, fixture } = createComponent();
-        const submitSpy = vi.fn();
-        component['registerSubmit'].subscribe(submitSpy);
+    it('should cancel native submit and delegate to FormRoot submission', async () => {
+        const submitRegisterFormAsync = vi.fn(async (): Promise<void> => {
+            await Promise.resolve();
+        });
+        const { fixture } = createComponentWithSubmitAction(submitRegisterFormAsync);
 
         const root = fixture.nativeElement as HTMLElement;
         const formElement = root.querySelector('form') as HTMLFormElement;
-        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = formElement.dispatchEvent(submitEvent);
+        await fixture.whenStable();
 
-        expect(submitSpy).toHaveBeenCalledTimes(1);
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(submitRegisterFormAsync).toHaveBeenCalledOnce();
     });
 });
+
+function createComponentWithSubmitAction(submitRegisterFormAsync: () => Promise<void>): AuthRegisterFormTestContext {
+    const context = createComponent();
+    const model = signal(createRegisterFormModel());
+    context.fixture.componentRef.setInput(
+        'form',
+        TestBed.runInInjectionContext(() =>
+            form(model, () => {}, {
+                submission: {
+                    action: submitRegisterFormAsync,
+                },
+            }),
+        ),
+    );
+    context.fixture.detectChanges();
+
+    return context;
+}

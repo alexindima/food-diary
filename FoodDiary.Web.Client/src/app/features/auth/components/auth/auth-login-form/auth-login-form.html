@@ -1,8 +1,8 @@
 <form
     #loginFormElement
     class="auth__form fd-stack fd-gap-md"
+    [formRoot]="form()"
     [attr.aria-busy]="isSubmitting() || isRestoring()"
-    (submit)="loginSubmit.emit(); $event.preventDefault()"
     (input)="loginNativeInput.emit()"
 >
     @let loginErrors = errors();

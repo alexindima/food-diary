@@ -45,13 +45,28 @@ describe('AuthLoginFormComponent', () => {
         expect(component['googleButton']()?.nativeElement.classList.contains('auth__google-button')).toBe(true);
     });
 
-    it('should emit submit, native input, reset open, and restore actions', () => {
+    it('should cancel native submit and delegate to FormRoot submission', async () => {
+        const submitLoginFormAsync = vi.fn(async (): Promise<void> => {
+            await Promise.resolve();
+        });
+        const { fixture } = createComponentWithSubmitAction(submitLoginFormAsync);
+        const formElement = (fixture.nativeElement as HTMLElement).querySelector('form');
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+
+        const wasNotCancelled = formElement?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(formElement).not.toBeNull();
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(submitLoginFormAsync).toHaveBeenCalledOnce();
+    });
+
+    it('should emit native input, reset open, and restore actions', () => {
         const { component, fixture } = createComponent();
-        const submitSpy = vi.fn();
         const inputSpy = vi.fn();
         const resetOpenSpy = vi.fn();
         const restoreSpy = vi.fn();
-        component['loginSubmit'].subscribe(submitSpy);
         component['loginNativeInput'].subscribe(inputSpy);
         component['passwordResetOpen'].subscribe(resetOpenSpy);
         component['restoreSubmit'].subscribe(restoreSpy);
@@ -60,7 +75,6 @@ describe('AuthLoginFormComponent', () => {
 
         const root = fixture.nativeElement as HTMLElement;
         const formElement = root.querySelector('form') as HTMLFormElement;
-        formElement.dispatchEvent(new Event('submit', { bubbles: true, cancelable: true }));
         formElement.dispatchEvent(new Event('input', { bubbles: true }));
 
         const buttons = Array.from(root.querySelectorAll('button'));
@@ -69,9 +83,27 @@ describe('AuthLoginFormComponent', () => {
         expect(lastButton).toBeDefined();
         lastButton?.click();
 
-        expect(submitSpy).toHaveBeenCalledTimes(1);
         expect(inputSpy).toHaveBeenCalledTimes(1);
         expect(resetOpenSpy).toHaveBeenCalledTimes(1);
         expect(restoreSpy).toHaveBeenCalledTimes(1);
     });
 });
+
+function createComponentWithSubmitAction(submitLoginFormAsync: () => Promise<void>): AuthLoginFormTestContext {
+    const context = createComponent();
+    const model = signal(createLoginFormModel());
+    context.fixture.componentRef.setInput(
+        'form',
+        TestBed.runInInjectionContext(() =>
+            form(model, () => {}, {
+                submission: {
+                    action: submitLoginFormAsync,
+                    ignoreValidators: 'all',
+                },
+            }),
+        ),
+    );
+    context.fixture.detectChanges();
+
+    return context;
+}
