@@ -73,9 +73,21 @@ export class ShoppingListPageComponent {
         note: null,
     });
     protected readonly listSelectForm = form(this.listSelectModel);
-    protected readonly itemForm = form(this.itemFormModel, path => {
-        required(path.name);
-    });
+    private readonly submitItemFormAsync = async (): Promise<void> => {
+        this.addItem();
+        await Promise.resolve();
+    };
+    protected readonly itemForm = form(
+        this.itemFormModel,
+        path => {
+            required(path.name);
+        },
+        {
+            submission: {
+                action: this.submitItemFormAsync,
+            },
+        },
+    );
 
     private readonly isMobileManageOpen = signal(false);
 

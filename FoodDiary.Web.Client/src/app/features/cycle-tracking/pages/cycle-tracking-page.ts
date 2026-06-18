@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { type FieldTree, FormField } from '@angular/forms/signals';
+import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -64,6 +64,7 @@ import {
         PageBodyComponent,
         FdPageContainerDirective,
         FormField,
+        FormRoot,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,

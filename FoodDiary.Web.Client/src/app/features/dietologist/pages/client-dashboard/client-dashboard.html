@@ -26,7 +26,7 @@
 
         @if (hasPeriodFilterPermission()) {
             <fd-ui-card>
-                <form class="client-dashboard__date-filter" (ngSubmit)="applyDateFilter()">
+                <form class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
                     <div class="client-dashboard__date-field">
                         <fd-ui-date-input
                             [label]="'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.FROM_LABEL' | translate"
@@ -95,7 +95,7 @@
             <fd-ui-card>
                 <div class="client-dashboard__section client-dashboard__recommendations">
                     <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE' | translate }}</h2>
-                    <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" (ngSubmit)="submitRecommendation()">
+                    <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">
                         <fd-ui-textarea
                             [label]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_LABEL' | translate"
                             [placeholder]="'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TEXT_PLACEHOLDER' | translate"

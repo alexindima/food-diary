@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormField, maxLength, required } from '@angular/forms/signals';
+import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -76,6 +76,7 @@ type RecommendationFormModel = {
     imports: [
         DatePipe,
         FormField,
+        FormRoot,
         TranslatePipe,
         FdUiButtonComponent,
         FdUiCardComponent,
@@ -116,15 +117,39 @@ export class ClientDashboardComponent {
         dateFrom: this.selectedDateFrom(),
         dateTo: this.selectedDateTo(),
     });
-    protected readonly dateFilterForm = form(this.dateFilterModel, path => {
-        required(path.dateFrom);
-        required(path.dateTo);
-    });
+    private readonly submitDateFilterFormAsync = async (): Promise<void> => {
+        this.applyDateFilter();
+        await Promise.resolve();
+    };
+    protected readonly dateFilterForm = form(
+        this.dateFilterModel,
+        path => {
+            required(path.dateFrom);
+            required(path.dateTo);
+        },
+        {
+            submission: {
+                action: this.submitDateFilterFormAsync,
+            },
+        },
+    );
     protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '' });
-    protected readonly recommendationForm = form(this.recommendationModel, path => {
-        required(path.text);
-        maxLength(path.text, RECOMMENDATION_MAX_LENGTH);
-    });
+    private readonly submitRecommendationFormAsync = async (): Promise<void> => {
+        this.submitRecommendation();
+        await Promise.resolve();
+    };
+    protected readonly recommendationForm = form(
+        this.recommendationModel,
+        path => {
+            required(path.text);
+            maxLength(path.text, RECOMMENDATION_MAX_LENGTH);
+        },
+        {
+            submission: {
+                action: this.submitRecommendationFormAsync,
+            },
+        },
+    );
     protected readonly clientTitle = computed(() => {
         const client = this.client();
         if (client === null) {

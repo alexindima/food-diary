@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { submit } from '@angular/forms/signals';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -115,6 +116,18 @@ describe('CycleTrackingFacade current cycle', () => {
         expect(facade.cycle()?.id).toBe('cycle-2');
     });
 
+    it('submits the start cycle form through Signal Forms submission', async () => {
+        facade.startCycleModel.update(value => ({
+            ...value,
+            trackingStartDate: '2026-04-03',
+        }));
+
+        const success = await submit(facade.startCycleForm);
+
+        expect(success).toBe(true);
+        expect(cyclesService.create).toHaveBeenCalledOnce();
+    });
+
     it('marks start cycle form as touched when invalid', () => {
         facade.startCycleModel.update(value => ({ ...value, trackingStartDate: null }));
 
@@ -156,6 +169,16 @@ describe('CycleTrackingFacade day saving', () => {
         expect(facade.bleedingEntries()).toHaveLength(1);
         expect(facade.bleedingEntries()[0].id).toBe('bleeding-1');
         expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
+    });
+
+    it('submits the day form through Signal Forms submission', async () => {
+        facade.initialize();
+        setValidDayForm();
+
+        const success = await submit(facade.dayForm);
+
+        expect(success).toBe(true);
+        expect(cyclesService.upsertDay).toHaveBeenCalledOnce();
     });
 
     it('does not save a day when current cycle is missing', () => {
@@ -310,6 +333,19 @@ describe('CycleTrackingFacade factors', () => {
         });
         expect(facade.factors()).toHaveLength(1);
         expect(facade.factors()[0].id).toBe('factor-1');
+    });
+
+    it('submits the factor form through Signal Forms submission', async () => {
+        facade.initialize();
+        facade.factorModel.update(value => ({
+            ...value,
+            startDate: '2026-04-01',
+        }));
+
+        const success = await submit(facade.factorForm);
+
+        expect(success).toBe(true);
+        expect(cyclesService.upsertFactor).toHaveBeenCalledOnce();
     });
 
     it('does not save a factor when current cycle is missing', () => {

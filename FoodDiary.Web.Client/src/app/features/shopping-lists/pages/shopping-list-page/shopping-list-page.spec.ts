@@ -209,6 +209,31 @@ describe('ShoppingListPageComponent form and item actions', () => {
     });
 });
 
+describe('ShoppingListPageComponent native submit behavior', () => {
+    it('prevents native quick add form submit when adding an item', async () => {
+        const { component, facade, fixture } = await setupShoppingListPageAsync();
+        component['itemFormModel'].update(value => ({ ...value, name: 'Bread' }));
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('.shopping-list__add-form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(facade.addItem).toHaveBeenCalledWith({
+            name: 'Bread',
+            amount: null,
+            unit: null,
+            category: null,
+            note: null,
+        });
+    });
+});
+
 describe('ShoppingListPageComponent list management', () => {
     it('computes delete and clear availability from list state', async () => {
         const { component, facade } = await setupShoppingListPageAsync();

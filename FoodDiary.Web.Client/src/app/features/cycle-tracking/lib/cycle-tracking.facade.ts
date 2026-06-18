@@ -116,16 +116,28 @@ export class CycleTrackingFacade {
         showFertilityEstimates: false,
         discreetNotifications: true,
     });
-    public readonly startCycleForm = form(this.startCycleModel, path => {
-        required(path.trackingStartDate);
-        required(path.mode);
-        min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
-        max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
-        min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
-        max(path.averagePeriodLength, MAX_AVERAGE_PERIOD_LENGTH);
-        min(path.lutealLength, MIN_LUTEAL_LENGTH);
-        max(path.lutealLength, MAX_LUTEAL_LENGTH);
-    });
+    private readonly submitStartCycleFormAsync = async (): Promise<void> => {
+        this.startCycle();
+        await Promise.resolve();
+    };
+    public readonly startCycleForm = form(
+        this.startCycleModel,
+        path => {
+            required(path.trackingStartDate);
+            required(path.mode);
+            min(path.averageCycleLength, MIN_AVERAGE_CYCLE_LENGTH);
+            max(path.averageCycleLength, MAX_AVERAGE_CYCLE_LENGTH);
+            min(path.averagePeriodLength, MIN_AVERAGE_PERIOD_LENGTH);
+            max(path.averagePeriodLength, MAX_AVERAGE_PERIOD_LENGTH);
+            min(path.lutealLength, MIN_LUTEAL_LENGTH);
+            max(path.lutealLength, MAX_LUTEAL_LENGTH);
+        },
+        {
+            submission: {
+                action: this.submitStartCycleFormAsync,
+            },
+        },
+    );
 
     public readonly dayModel = signal<CycleDayFormModel>({
         date: formatDateInputValue(new Date()),
@@ -145,9 +157,21 @@ export class CycleTrackingFacade {
         hadSex: false,
         notes: null,
     });
-    public readonly dayForm = form(this.dayModel, path => {
-        required(path.date);
-    });
+    private readonly submitDayFormAsync = async (): Promise<void> => {
+        this.saveDay();
+        await Promise.resolve();
+    };
+    public readonly dayForm = form(
+        this.dayModel,
+        path => {
+            required(path.date);
+        },
+        {
+            submission: {
+                action: this.submitDayFormAsync,
+            },
+        },
+    );
 
     public readonly factorModel = signal<CycleFactorFormModel>({
         type: CYCLE_FACTOR_TYPE_HORMONAL_CONTRACEPTION,
@@ -155,10 +179,22 @@ export class CycleTrackingFacade {
         endDate: null,
         notes: null,
     });
-    public readonly factorForm = form(this.factorModel, path => {
-        required(path.type);
-        required(path.startDate);
-    });
+    private readonly submitFactorFormAsync = async (): Promise<void> => {
+        this.saveFactor();
+        await Promise.resolve();
+    };
+    public readonly factorForm = form(
+        this.factorModel,
+        path => {
+            required(path.type);
+            required(path.startDate);
+        },
+        {
+            submission: {
+                action: this.submitFactorFormAsync,
+            },
+        },
+    );
 
     public readonly predictions = computed<CyclePredictions | null>(() => this.cycle()?.predictions ?? null);
     public readonly bleedingEntries = computed<BleedingEntry[]>(() => [...(this.cycle()?.bleedingEntries ?? [])]);

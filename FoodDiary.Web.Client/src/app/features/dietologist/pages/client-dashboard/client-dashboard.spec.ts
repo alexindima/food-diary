@@ -148,6 +148,24 @@ function registerLoadingTests(): void {
 }
 
 function registerActionTests(): void {
+    it('prevents native date filter submit when applying period', async () => {
+        createComponent('client-1');
+
+        component['dateFilterModel'].set({ dateFrom: '2026-05-16', dateTo: '2026-05-22' });
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('.client-dashboard__date-filter');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(dietologistService.getClientDashboard).toHaveBeenCalledTimes(2);
+    });
+
     it('reloads dashboard for selected period', () => {
         createComponent('client-1');
 
@@ -192,6 +210,24 @@ function registerActionTests(): void {
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
         expect(component['recommendations']()[0]?.id).toBe('rec-1');
         expect(toastService.success).toHaveBeenCalled();
+    });
+
+    it('prevents native recommendation submit when sending recommendation', async () => {
+        createComponent('client-1');
+
+        component['recommendationModel'].set({ text: 'Add protein' });
+        fixture.detectChanges();
+
+        const form = (fixture.nativeElement as HTMLElement).querySelector('.client-dashboard__recommendation-form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
     });
 
     it('disconnects selected client', () => {
