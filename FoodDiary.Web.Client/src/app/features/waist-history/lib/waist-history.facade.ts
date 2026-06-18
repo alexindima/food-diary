@@ -70,16 +70,28 @@ export class WaistHistoryFacade {
         date: formatWaistHistoryDateInput(new Date()),
         circumference: '',
     });
-    public readonly form = form(this.formModel, path => {
-        required(path.date);
-        required(path.circumference);
-        validate(path.circumference, ({ value }) => {
-            const parsed = parseDecimalInput(value());
-            return parsed === null || parsed < MIN_WAIST_CM || parsed > MAX_WAIST_CM
-                ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
-                : undefined;
-        });
-    });
+    private readonly submitWaistEntryFormAsync = async (): Promise<void> => {
+        this.submit();
+        await Promise.resolve();
+    };
+    public readonly form = form(
+        this.formModel,
+        path => {
+            required(path.date);
+            required(path.circumference);
+            validate(path.circumference, ({ value }) => {
+                const parsed = parseDecimalInput(value());
+                return parsed === null || parsed < MIN_WAIST_CM || parsed > MAX_WAIST_CM
+                    ? { kind: 'waistRange', message: 'Waist circumference is out of range' }
+                    : undefined;
+            });
+        },
+        {
+            submission: {
+                action: this.submitWaistEntryFormAsync,
+            },
+        },
+    );
 
     public readonly entriesDescending = computed(() => [...this.entries()].sort((a, b) => compareDatesDesc(a.date, b.date)));
 

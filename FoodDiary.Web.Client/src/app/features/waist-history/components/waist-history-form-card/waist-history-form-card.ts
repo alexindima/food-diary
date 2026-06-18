@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
-import { type FieldTree, FormField } from '@angular/forms/signals';
+import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -8,7 +8,7 @@ import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 
 @Component({
     selector: 'fd-waist-history-form-card',
-    imports: [FormField, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiInputComponent, TranslatePipe],
+    imports: [FormField, FormRoot, FdUiButtonComponent, FdUiCardComponent, FdUiDateInputComponent, FdUiInputComponent, TranslatePipe],
     templateUrl: './waist-history-form-card.html',
     styleUrl: '../../pages/waist-history-page/waist-history-page.scss',
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -18,6 +18,5 @@ export class WaistHistoryFormCardComponent {
     public readonly isSaving = input.required<boolean>();
     public readonly isEditing = input.required<boolean>();
 
-    public readonly formSubmit = output();
     public readonly editCancel = output();
 }

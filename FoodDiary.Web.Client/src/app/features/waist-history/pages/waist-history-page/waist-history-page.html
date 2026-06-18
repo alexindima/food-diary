@@ -28,13 +28,7 @@
         }
 
         <div class="waist-history-page__content waist-history-page__content--form">
-            <fd-waist-history-form-card
-                [form]="form"
-                [isSaving]="isSaving()"
-                [isEditing]="isEditing()"
-                (formSubmit)="submit()"
-                (editCancel)="cancelEdit()"
-            />
+            <fd-waist-history-form-card [form]="form" [isSaving]="isSaving()" [isEditing]="isEditing()" (editCancel)="cancelEdit()" />
 
             <fd-waist-history-goal-card
                 [circumferenceField]="desiredWaistForm.circumference"

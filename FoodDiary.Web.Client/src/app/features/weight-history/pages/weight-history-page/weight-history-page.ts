@@ -64,10 +64,6 @@ export class WeightHistoryPageComponent {
         void this.navigationService.navigateToHomeAsync();
     }
 
-    protected submit(): void {
-        this.facade.submit();
-    }
-
     protected startEdit(entry: WeightEntry): void {
         this.facade.startEdit(entry);
     }

@@ -24,9 +24,29 @@ describe('WeightHistoryFormCardComponent', () => {
         expect(getText(fixture)).toContain('WEIGHT_HISTORY.CANCEL_EDIT');
         expect(cancelHandler).toHaveBeenCalledOnce();
     });
+
+    it('cancels native submit and delegates to FormRoot submission', async () => {
+        const submitWeightFormAsync = vi.fn(async (): Promise<void> => {
+            await Promise.resolve();
+        });
+        const { fixture } = setupComponent(false, submitWeightFormAsync);
+        const formElement = (fixture.nativeElement as HTMLElement).querySelector('form');
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+
+        const wasNotCancelled = formElement?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(formElement).not.toBeNull();
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(submitWeightFormAsync).toHaveBeenCalledOnce();
+    });
 });
 
-function setupComponent(isEditing: boolean): {
+function setupComponent(
+    isEditing: boolean,
+    submitWeightFormAsync?: () => Promise<void>,
+): {
     component: WeightHistoryFormCardComponent;
     fixture: ComponentFixture<WeightHistoryFormCardComponent>;
 } {
@@ -39,7 +59,17 @@ function setupComponent(isEditing: boolean): {
     const model = signal({ date: '2026-05-15', weight: '71.5' });
     fixture.componentRef.setInput(
         'form',
-        TestBed.runInInjectionContext(() => form(model)),
+        TestBed.runInInjectionContext(() => {
+            if (submitWeightFormAsync === undefined) {
+                return form(model);
+            }
+
+            return form(model, () => {}, {
+                submission: {
+                    action: submitWeightFormAsync,
+                },
+            });
+        }),
     );
     fixture.componentRef.setInput('isSaving', false);
     fixture.componentRef.setInput('isEditing', isEditing);

@@ -73,16 +73,28 @@ export class WeightHistoryFacade {
         date: formatWeightHistoryDateInput(new Date()),
         weight: '',
     });
-    public readonly form = form(this.formModel, path => {
-        required(path.date);
-        required(path.weight);
-        validate(path.weight, ({ value }) => {
-            const parsed = parseDecimalInput(value());
-            return parsed === null || parsed < MIN_WEIGHT_KG || parsed > MAX_WEIGHT_KG
-                ? { kind: 'weightRange', message: 'Weight is out of range' }
-                : undefined;
-        });
-    });
+    private readonly submitWeightEntryFormAsync = async (): Promise<void> => {
+        this.submit();
+        await Promise.resolve();
+    };
+    public readonly form = form(
+        this.formModel,
+        path => {
+            required(path.date);
+            required(path.weight);
+            validate(path.weight, ({ value }) => {
+                const parsed = parseDecimalInput(value());
+                return parsed === null || parsed < MIN_WEIGHT_KG || parsed > MAX_WEIGHT_KG
+                    ? { kind: 'weightRange', message: 'Weight is out of range' }
+                    : undefined;
+            });
+        },
+        {
+            submission: {
+                action: this.submitWeightEntryFormAsync,
+            },
+        },
+    );
 
     public readonly desiredWeightModel = signal<DesiredWeightFormModel>({ weight: '' });
     public readonly desiredWeightForm = form(this.desiredWeightModel);

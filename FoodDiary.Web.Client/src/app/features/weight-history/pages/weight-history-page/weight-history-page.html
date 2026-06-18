@@ -28,13 +28,7 @@
         }
 
         <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
-            <fd-weight-history-form-card
-                [form]="form"
-                [isSaving]="isSaving()"
-                [isEditing]="isEditing()"
-                (formSubmit)="submit()"
-                (editCancel)="cancelEdit()"
-            />
+            <fd-weight-history-form-card [form]="form" [isSaving]="isSaving()" [isEditing]="isEditing()" (editCancel)="cancelEdit()" />
 
             <fd-weight-history-goal-card
                 [weightField]="desiredWeightForm.weight"

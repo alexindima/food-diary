@@ -1,5 +1,5 @@
 <fd-ui-card class="weight-history-page__card weight-history-page__card--form" [title]="'WEIGHT_HISTORY.ADD_ENTRY_TITLE' | translate">
-    <form class="weight-history-page__form fd-stack fd-gap-card-header" (ngSubmit)="formSubmit.emit()">
+    <form class="weight-history-page__form fd-stack fd-gap-card-header" [formRoot]="form()">
         <div class="weight-history-page__form-row fd-grid fd-gap-card-header">
             <fd-ui-date-input
                 class="weight-history-page__form-control"

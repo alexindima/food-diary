@@ -1,5 +1,5 @@
 <fd-ui-card class="waist-history-page__card waist-history-page__card--form" [title]="'WAIST_HISTORY.ADD_ENTRY_TITLE' | translate">
-    <form class="waist-history-page__form" (ngSubmit)="formSubmit.emit()">
+    <form class="waist-history-page__form" [formRoot]="form()">
         <div class="waist-history-page__form-row">
             <fd-ui-date-input
                 class="waist-history-page__form-control"

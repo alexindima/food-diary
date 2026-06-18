@@ -56,10 +56,6 @@ export class WaistHistoryPageComponent {
         this.facade.initialize();
     }
 
-    protected submit(): void {
-        this.facade.submit();
-    }
-
     protected startEdit(entry: WaistEntry): void {
         this.facade.startEdit(entry);
     }

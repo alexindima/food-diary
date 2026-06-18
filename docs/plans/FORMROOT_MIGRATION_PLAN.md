@@ -78,11 +78,13 @@ These were found outside the initial list and should be classified in the next p
 - `src/app/features/dietologist/pages/client-dashboard` - migrated date filter and recommendation root forms.
 - `src/app/features/cycle-tracking/pages/cycle-tracking-page` - migrated facade-owned start/day/factor root forms.
 - `src/app/features/shopping-lists/pages/shopping-list-items-panel` - migrated as a child DOM root using the parent-owned configured `FieldTree`.
-- `src/app/features/explore/dialogs/report-dialog` - Signal Forms dialog; inspect template path before migration.
-- `src/app/features/explore/components/comments/recipe-comments` - Signal Forms comment flow; inspect template path before migration.
+- `src/app/features/weight-history/components/weight-history-form-card` - migrated as a child DOM root using the facade-owned configured `FieldTree`.
+- `src/app/features/waist-history/components/waist-history-form-card` - migrated as a child DOM root using the facade-owned configured `FieldTree`.
+- `src/app/features/explore/dialogs/report-dialog` - Signal Forms dialog without native `<form>` submit today; no immediate native submit risk.
+- `src/app/features/explore/components/comments/recipe-comments` - Signal Forms comment flow without native `<form>` submit today; no immediate native submit risk.
 - `src/app/features/meals/pages/list/meal-list-filters-dialog` - filter/apply form; likely exclusion unless native navigation is possible.
 - `projects/fooddiary-admin/src/app/features/admin-lessons/dialogs/admin-lesson-edit-dialog` - Signal Forms without native `<form>` submit today; no immediate native submit risk.
-- `projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog` - Signal Forms dialog; inspect template path before migration.
+- `projects/fooddiary-admin/src/app/features/admin-users/dialogs/admin-user-edit-dialog` - Signal Forms dialog without native `<form>` submit today; no immediate native submit risk.
 - Auth child forms under `src/app/features/auth/components/auth/*-form` remain pending; root ownership lives in `AuthFormManager`, while submit orchestration lives in `AuthComponent`.
 
 ### Priority 3: Child Form Components
@@ -94,6 +96,8 @@ These components often receive a `FieldTree` from a parent and emit `formSubmit`
 - Auth child forms under `src/app/features/auth/components/auth/*-form`
 
 Do not blindly add `FormRoot` here. Decide whether the parent should own the root submission, or whether the child should receive a configured root `FieldTree` and use `FormRoot`.
+
+Weight and waist history now use the second pattern: their facades configure `submission.action`, and the child form cards own only the DOM `FormRoot`.
 
 ### Likely Exclusions
 
@@ -134,6 +138,7 @@ Completed in the first migration pass:
 - Recipe manage form now uses `FormRoot`, `submission.action`, `submission.onInvalid`, and a native submit regression test.
 - Password reset, change password, calorie goal, user profile manage, admin impersonation, and admin email template edit forms now use `FormRoot` with native submit regression tests.
 - Dietologist client dashboard date/recommendation forms, cycle tracking facade forms, and shopping list quick-add form were migrated in the second pass.
+- Weight and waist history entry cards were migrated in the third pass with facade-owned submission actions and child-card native submit regression tests.
 
 Verification run:
 
