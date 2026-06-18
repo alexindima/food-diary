@@ -1,5 +1,12 @@
 <div class="entity-card__action-group fd-stack fd-center fd-gap-entity-card-content">
-    <button type="button" class="entity-card__action-button" [attr.aria-label]="actionAriaLabel() ?? ''" (click)="emitCardAction($event)">
+    <button
+        type="button"
+        class="entity-card__action-button"
+        [attr.aria-label]="actionAriaLabel() ?? undefined"
+        (click)="emitCardAction($event)"
+        (keydown.enter)="stopCardKeyboardEvent($event)"
+        (keydown.space)="stopCardKeyboardEvent($event)"
+    >
         <fd-ui-icon class="entity-card__action-button-icon" [name]="actionIcon()" />
     </button>
 </div>

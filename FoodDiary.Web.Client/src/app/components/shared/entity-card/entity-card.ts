@@ -49,7 +49,7 @@ export class EntityCardComponent {
     public readonly showFavorite = input(false);
     public readonly isFavorite = input(false);
     public readonly favoriteLoading = input(false);
-    public readonly favoriteAriaLabel = input<string | null>(null);
+    public readonly favoriteAriaLabel = input.required<string>();
 
     public readonly ownershipIcon = input<EntityCardOwnershipIcon>(null);
 
@@ -71,6 +71,10 @@ export class EntityCardComponent {
     public readonly action = output();
 
     protected readonly favoriteIcon = computed(() => (this.isFavorite() ? 'star' : 'star_border'));
+    protected readonly normalizedImageUrl = computed(() => {
+        const imageUrl = this.imageUrl()?.trim() ?? '';
+        return imageUrl.length > 0 ? imageUrl : null;
+    });
     protected readonly normalizedQuality = computed<EntityCardNormalizedQuality | null>(() => {
         const quality = this.quality();
         if (quality === null) {
@@ -95,8 +99,7 @@ export class EntityCardComponent {
         };
     });
     protected readonly hasPreviewImage = computed(() => {
-        const imageUrl = this.imageUrl()?.trim() ?? '';
-        return this.previewable() && (imageUrl.length > 0 || this.collageState().hasImages);
+        return this.previewable() && (this.normalizedImageUrl() !== null || this.collageState().hasImages);
     });
     protected readonly previewInteractionState = computed<EntityCardPreviewInteractionState>(() => {
         this.languageVersion();
@@ -121,6 +124,15 @@ export class EntityCardComponent {
         this.open.emit();
     }
 
+    protected openCardFromKeyboard(event: Event): void {
+        if (event.target !== event.currentTarget) {
+            return;
+        }
+
+        event.preventDefault();
+        this.openCard();
+    }
+
     protected previewCardImage(): void {
         this.preview.emit();
     }
@@ -128,6 +140,10 @@ export class EntityCardComponent {
     protected toggleFavorite(event?: Event): void {
         event?.stopPropagation();
         this.favoriteToggle.emit();
+    }
+
+    protected stopCardKeyboardEvent(event: Event): void {
+        event.stopPropagation();
     }
 
     protected emitCardAction(): void {

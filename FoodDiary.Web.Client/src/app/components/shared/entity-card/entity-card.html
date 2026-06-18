@@ -3,13 +3,13 @@
     role="button"
     tabindex="0"
     (click)="openCard()"
-    (keydown.enter)="openCard()"
-    (keydown.space)="openCard(); $event.preventDefault()"
+    (keydown.enter)="openCardFromKeyboard($event)"
+    (keydown.space)="openCardFromKeyboard($event)"
 >
     @let previewInteraction = previewInteractionState();
     <div fdMediaCardMedia class="entity-card__media-shell">
         <fd-entity-card-thumb
-            [imageUrl]="imageUrl()"
+            [imageUrl]="normalizedImageUrl()"
             [imageAlt]="imageAlt()"
             [imageIcon]="imageIcon()"
             [collage]="collageState()"
@@ -31,10 +31,11 @@
                 [class.entity-card__favorite-button--active]="isFavorite()"
                 [class.fd-favorite-button--active]="isFavorite()"
                 [fdUiHint]="favoriteAriaLabel()"
-                [fdUiHintDisabled]="!favoriteAriaLabel()"
-                [attr.aria-label]="favoriteAriaLabel() ?? undefined"
+                [attr.aria-label]="favoriteAriaLabel()"
                 [disabled]="favoriteLoading()"
                 (click)="toggleFavorite($event)"
+                (keydown.enter)="stopCardKeyboardEvent($event)"
+                (keydown.space)="stopCardKeyboardEvent($event)"
             >
                 <fd-ui-icon class="entity-card__favorite-button-icon" [name]="favoriteIcon()" />
             </button>

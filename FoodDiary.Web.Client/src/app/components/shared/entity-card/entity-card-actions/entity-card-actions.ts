@@ -21,4 +21,8 @@ export class EntityCardActionsComponent {
         event.stopPropagation();
         this.action.emit();
     }
+
+    protected stopCardKeyboardEvent(event: Event): void {
+        event.stopPropagation();
+    }
 }

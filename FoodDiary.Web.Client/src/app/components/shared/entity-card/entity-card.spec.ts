@@ -34,6 +34,7 @@ async function setupEntityCardAsync(): Promise<EntityCardTestContext> {
     fixture.componentRef.setInput('title', 'Test title');
     fixture.componentRef.setInput('nutrition', NUTRITION);
     fixture.componentRef.setInput('calories', CALORIES);
+    fixture.componentRef.setInput('favoriteAriaLabel', 'Toggle favorite');
 
     return { component, fixture, translateService };
 }
@@ -67,6 +68,18 @@ describe('EntityCardComponent preview state', () => {
             tabIndex: '0',
             ariaLabel: 'Open preview',
         });
+    });
+
+    it('treats whitespace image URL as missing image', async () => {
+        const { component, fixture } = await setupEntityCardAsync();
+        fixture.componentRef.setInput('previewable', true);
+        fixture.componentRef.setInput('imageUrl', '   ');
+        fixture.detectChanges();
+
+        const el = fixture.nativeElement as HTMLElement;
+        expect(component['normalizedImageUrl']()).toBeNull();
+        expect(component['hasPreviewImage']()).toBe(false);
+        expect(el.querySelector('.entity-card__thumb img')).toBeNull();
     });
 });
 
@@ -123,6 +136,17 @@ describe('EntityCardComponent badges', () => {
         const el = fixture.nativeElement as HTMLElement;
         expect(el.querySelector('.entity-card__ownership-badge')).toBeNull();
     });
+
+    it('renders favorite button with accessible label', async () => {
+        const { fixture } = await setupEntityCardAsync();
+        fixture.componentRef.setInput('showFavorite', true);
+        fixture.componentRef.setInput('favoriteAriaLabel', 'Remove from favorites');
+        fixture.detectChanges();
+
+        const el = fixture.nativeElement as HTMLElement;
+        const favoriteButton = el.querySelector('.entity-card__favorite-button');
+        expect(favoriteButton?.getAttribute('aria-label')).toBe('Remove from favorites');
+    });
 });
 
 describe('EntityCardComponent events', () => {
@@ -147,5 +171,44 @@ describe('EntityCardComponent events', () => {
         expect(previewSpy).toHaveBeenCalledOnce();
         expect(favoriteSpy).toHaveBeenCalledOnce();
         expect(actionSpy).toHaveBeenCalledOnce();
+    });
+
+    it('opens from keyboard only when the card itself handles the event', async () => {
+        const { component, fixture } = await setupEntityCardAsync();
+        const openSpy = vi.fn();
+        const preventDefaultSpy = vi.fn();
+        const el = fixture.nativeElement as HTMLElement;
+        const cardElement = el.querySelector('fd-media-card') as HTMLElement;
+        const childElement = document.createElement('button');
+        component['open'].subscribe(openSpy);
+        fixture.detectChanges();
+
+        component['openCardFromKeyboard']({
+            currentTarget: cardElement,
+            target: childElement,
+            preventDefault: preventDefaultSpy,
+        } as unknown as KeyboardEvent);
+
+        expect(openSpy).not.toHaveBeenCalled();
+        expect(preventDefaultSpy).not.toHaveBeenCalled();
+
+        component['openCardFromKeyboard']({
+            currentTarget: cardElement,
+            target: cardElement,
+            preventDefault: preventDefaultSpy,
+        } as unknown as KeyboardEvent);
+
+        expect(openSpy).toHaveBeenCalledOnce();
+        expect(preventDefaultSpy).toHaveBeenCalledOnce();
+    });
+
+    it('stops favorite keyboard events from reaching the card', async () => {
+        const { component, fixture } = await setupEntityCardAsync();
+        const stopPropagationSpy = vi.fn();
+        fixture.detectChanges();
+
+        component['stopCardKeyboardEvent']({ stopPropagation: stopPropagationSpy } as unknown as KeyboardEvent);
+
+        expect(stopPropagationSpy).toHaveBeenCalledOnce();
     });
 });
