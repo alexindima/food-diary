@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -27,6 +27,7 @@ import { ProductListPaginationComponent } from '../product-list-sections/product
     providers: [ProductListFacade],
     imports: [
         FormField,
+        FormRoot,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { FormField } from '@angular/forms/signals';
+import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -30,6 +30,7 @@ import type { Product } from '../../models/product.data';
     providers: [ProductListFacade],
     imports: [
         FormField,
+        FormRoot,
         TranslatePipe,
         FdUiHintDirective,
         FdUiInputComponent,

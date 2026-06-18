@@ -9,6 +9,7 @@ Angular Signal Forms provide `FormRoot` and `submit()` for this exact lifecycle.
 ## Goals
 
 - Move Signal Forms-backed submit forms to `FormRoot`.
+- Enforce native `<form>` usage through `FormRoot` with ESLint.
 - Keep business submit logic in existing components/facades where possible.
 - Add regression tests that native `submit` is cancelled and the intended save/apply handler runs.
 - Avoid changing non-submit forms, pure filter/search forms, or Reactive Forms unless they have the same native submit risk.
@@ -142,6 +143,7 @@ Completed in the first migration pass:
 - Weight and waist history entry cards were migrated in the third pass with facade-owned submission actions and child-card native submit regression tests.
 - Auth login, register, and password reset child forms were migrated in the fourth pass with manager-owned submission callbacks and native submit regression tests.
 - Meal list filters dialog was migrated in the final pass so all app/admin `<form>` submit handlers now use `FormRoot`.
+- ESLint now enforces `local/form-requires-form-root` for Angular templates, and remaining product/recipe search forms were updated to use `FormRoot`.
 
 Verification run:
 

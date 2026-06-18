@@ -9,7 +9,7 @@
     }
 
     <div class="product-select__controls fd-grid fd-gap-sm fd-align-center">
-        <form class="product-select__search-form">
+        <form class="product-select__search-form" [formRoot]="searchForm">
             <fd-ui-input
                 class="product-select__search-input"
                 appearance="search"

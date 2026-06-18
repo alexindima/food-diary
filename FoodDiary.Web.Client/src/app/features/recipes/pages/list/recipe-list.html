@@ -70,7 +70,7 @@
     <fd-page-body>
         @if (!isMobileView()) {
             <div class="recipe-list__desktop-search">
-                <form class="recipe-list__search-form recipe-list__search-form--desktop">
+                <form class="recipe-list__search-form recipe-list__search-form--desktop" [formRoot]="searchForm">
                     <fd-ui-input
                         class="recipe-list__search-input"
                         prefixIcon="search"
@@ -85,7 +85,7 @@
             </div>
         } @else {
             <div class="recipe-list__mobile-search" [class.recipe-list__mobile-search--open]="isMobileSearchVisible()">
-                <form class="recipe-list__search-form recipe-list__search-form--mobile">
+                <form class="recipe-list__search-form recipe-list__search-form--mobile" [formRoot]="searchForm">
                     <fd-ui-input
                         class="recipe-list__search-input"
                         prefixIcon="search"

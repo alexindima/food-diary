@@ -70,7 +70,7 @@
     <fd-page-body>
         @if (!isMobileView()) {
             <div class="product-list__desktop-search">
-                <form class="product-list__search-form product-list__search-form--desktop">
+                <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
                     <fd-ui-input
                         class="product-list__search-input"
                         size="md"
@@ -86,7 +86,7 @@
             </div>
         } @else {
             <div class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible()">
-                <form class="product-list__search-form product-list__search-form--mobile">
+                <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
                     <fd-ui-input
                         class="product-list__search-input"
                         size="md"

@@ -749,12 +749,40 @@ const fdPageContainerStructureRule = {
     create: createFdPageContainerStructureRule,
 };
 
+const createFormRequiresFormRootRule = context => ({
+    Element(node) {
+        if (node.name !== 'form' || hasTemplateAttribute(node, 'formRoot')) {
+            return;
+        }
+
+        context.report({
+            node,
+            messageId: 'missingFormRoot',
+        });
+    },
+});
+
+const formRequiresFormRootRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Require Angular templates to bind native forms through Signal Forms FormRoot.',
+        },
+        messages: {
+            missingFormRoot: 'Native `<form>` elements must use `FormRoot`, for example `<form [formRoot]="form">`.',
+        },
+        schema: [],
+    },
+    create: createFormRequiresFormRootRule,
+};
+
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
         'no-component-file-suffix': noComponentFileSuffixRule,
         'action-oriented-event-handlers': actionOrientedTemplateEventHandlersRule,
         'fd-page-container-structure': fdPageContainerStructureRule,
+        'form-requires-form-root': formRequiresFormRootRule,
         'no-label-wrapped-control': {
             meta: {
                 type: 'problem',
@@ -2459,6 +2487,7 @@ export default [
             'local/no-component-file-suffix': 'error',
             'local/no-mojibake': 'error',
             'local/no-label-wrapped-control': 'error',
+            'local/form-requires-form-root': 'error',
         },
     },
     ...storybook.configs['flat/recommended'],

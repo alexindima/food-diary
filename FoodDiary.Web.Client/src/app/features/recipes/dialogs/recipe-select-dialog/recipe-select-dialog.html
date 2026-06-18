@@ -8,7 +8,7 @@
     }
 
     <div class="recipe-select__controls fd-grid fd-gap-sm fd-align-center">
-        <form class="recipe-select__search-form">
+        <form class="recipe-select__search-form" [formRoot]="searchForm">
             <fd-ui-input
                 class="recipe-select__search-input"
                 appearance="search"

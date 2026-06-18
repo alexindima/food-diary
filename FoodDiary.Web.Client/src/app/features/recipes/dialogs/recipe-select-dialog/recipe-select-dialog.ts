@@ -11,7 +11,7 @@ import {
     viewChild,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form, FormField } from '@angular/forms/signals';
+import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -40,6 +40,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         FormField,
+        FormRoot,
         TranslatePipe,
         FdUiHintDirective,
         FdUiButtonComponent,
