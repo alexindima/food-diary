@@ -1,6 +1,8 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -63,12 +65,14 @@ const request: CreateProductRequest = {
 let facade: ProductManageFacade;
 let productService: { create: ReturnType<typeof vi.fn>; update: ReturnType<typeof vi.fn>; deleteById: ReturnType<typeof vi.fn> };
 let dialogService: { open: ReturnType<typeof vi.fn> };
+let toastService: { success: ReturnType<typeof vi.fn> };
 let navigationService: {
     navigateToHomeAsync: ReturnType<typeof vi.fn>;
     navigateToProductListAsync: ReturnType<typeof vi.fn>;
     navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
 };
 let authService: { isPremium: ReturnType<typeof vi.fn> };
+let translateService: { instant: ReturnType<typeof vi.fn> };
 
 beforeEach(() => {
     productService = {
@@ -79,6 +83,9 @@ beforeEach(() => {
     dialogService = {
         open: vi.fn(),
     };
+    toastService = {
+        success: vi.fn(),
+    };
     navigationService = {
         navigateToHomeAsync: vi.fn(),
         navigateToProductListAsync: vi.fn(),
@@ -86,6 +93,9 @@ beforeEach(() => {
     };
     authService = {
         isPremium: vi.fn(),
+    };
+    translateService = {
+        instant: vi.fn((key: string) => key),
     };
 
     navigationService.navigateToHomeAsync.mockResolvedValue(true);
@@ -102,8 +112,10 @@ beforeEach(() => {
             ProductManageFacade,
             { provide: ProductService, useValue: productService },
             { provide: FdUiDialogService, useValue: dialogService },
+            { provide: FdUiToastService, useValue: toastService },
             { provide: NavigationService, useValue: navigationService },
             { provide: AuthService, useValue: authService },
+            { provide: TranslateService, useValue: translateService },
         ],
     });
 
@@ -151,6 +163,43 @@ describe('ProductManageFacade submit', () => {
         expect(afterSave).toHaveBeenCalledWith(product);
         expect(result.product).toEqual(product);
         expect(result.error?.status).toBe(HttpStatusCode.ServiceUnavailable);
+    });
+
+    it('should toast and navigate to product list after create in page mode', async () => {
+        const result = await facade.submitProductAsync(null, request, false);
+
+        expect(result.product).toEqual(product);
+        expect(toastService.success).toHaveBeenCalledWith('PRODUCT_DETAIL.CREATE_SUCCESS');
+        expect(navigationService.navigateToProductListAsync).toHaveBeenCalledOnce();
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+
+    it('should toast and navigate to product list after update in page mode', async () => {
+        const result = await facade.submitProductAsync(product, request, false);
+
+        expect(result.product).toEqual(product);
+        expect(toastService.success).toHaveBeenCalledWith('PRODUCT_DETAIL.EDIT_SUCCESS');
+        expect(navigationService.navigateToProductListAsync).toHaveBeenCalledOnce();
+        expect(dialogService.open).not.toHaveBeenCalled();
+    });
+
+    it('should not toast or navigate after create in dialog mode', async () => {
+        const result = await facade.submitProductAsync(null, request, true);
+
+        expect(result.product).toEqual(product);
+        expect(toastService.success).not.toHaveBeenCalled();
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
+    });
+
+    it('should not toast or navigate when after save hook fails in page mode', async () => {
+        const afterSave = vi.fn().mockRejectedValue(new HttpErrorResponse({ status: HttpStatusCode.ServiceUnavailable }));
+
+        const result = await facade.submitProductAsync(null, request, false, afterSave);
+
+        expect(result.product).toEqual(product);
+        expect(result.error?.status).toBe(HttpStatusCode.ServiceUnavailable);
+        expect(toastService.success).not.toHaveBeenCalled();
+        expect(navigationService.navigateToProductListAsync).not.toHaveBeenCalled();
     });
 });
 

@@ -1,7 +1,7 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, min, required } from '@angular/forms/signals';
+import { form, FormRoot, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -63,6 +63,7 @@ import { ProductNutritionEditorComponent } from '../product-nutrition-editor/pro
         FdUiHintDirective,
         FdUiButtonComponent,
         FdUiFormErrorComponent,
+        FormRoot,
         FdPageContainerDirective,
         PageBodyComponent,
         PageHeaderComponent,
@@ -92,22 +93,33 @@ export class ProductManageFormComponent {
     protected readonly isSubmitting = signal(false);
 
     protected readonly productFormModel = signal<ProductFormValues>(createProductForm());
-    protected readonly productForm = form(this.productFormModel, path => {
-        required(path.name);
-        required(path.baseAmount);
-        min(path.baseAmount, PRODUCT_MIN_AMOUNT);
-        required(path.defaultPortionAmount);
-        min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
-        required(path.baseUnit);
-        required(path.caloriesPerBase);
-        min(path.caloriesPerBase, 0);
-        min(path.proteinsPerBase, 0);
-        min(path.fatsPerBase, 0);
-        min(path.carbsPerBase, 0);
-        min(path.fiberPerBase, 0);
-        min(path.alcoholPerBase, 0);
-        required(path.visibility);
-    });
+    private readonly submitProductFormAsync = async (): Promise<void> => {
+        await this.onSubmitAsync();
+    };
+    protected readonly productForm = form(
+        this.productFormModel,
+        path => {
+            required(path.name);
+            required(path.baseAmount);
+            min(path.baseAmount, PRODUCT_MIN_AMOUNT);
+            required(path.defaultPortionAmount);
+            min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
+            required(path.baseUnit);
+            required(path.caloriesPerBase);
+            min(path.caloriesPerBase, 0);
+            min(path.proteinsPerBase, 0);
+            min(path.fatsPerBase, 0);
+            min(path.carbsPerBase, 0);
+            min(path.fiberPerBase, 0);
+            min(path.alcoholPerBase, 0);
+            required(path.visibility);
+        },
+        {
+            submission: {
+                action: this.submitProductFormAsync,
+            },
+        },
+    );
     protected nutritionMode: NutritionMode = 'base';
     private previousBaseUnit = this.productFormModel().baseUnit;
 
@@ -341,7 +353,7 @@ export class ProductManageFormComponent {
             const result = await this.productManageFacade.submitProductAsync(
                 product,
                 productData,
-                this.shouldSkipSubmitConfirmDialog(),
+                this.shouldSkipPostSaveRedirect(),
                 async savedProduct => this.syncUsdaLinkAsync(savedProduct, nextUsdaFdcId, previousUsdaFdcId),
             );
             this.handleSubmitResult(result);
@@ -502,7 +514,7 @@ export class ProductManageFormComponent {
         return this.productManageFacade.ensurePremiumAccess();
     }
 
-    private shouldSkipSubmitConfirmDialog(): boolean {
+    private shouldSkipPostSaveRedirect(): boolean {
         return this.mode() === 'dialog';
     }
 

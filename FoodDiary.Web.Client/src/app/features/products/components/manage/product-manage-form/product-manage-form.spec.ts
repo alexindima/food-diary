@@ -98,6 +98,7 @@ type ProductExternalFoodFacadeMock = {
 
 type ProductManageFormSetup = {
     fixture: ComponentFixture<ProductManageFormComponent>;
+    el: HTMLElement;
     component: ProductManageFormComponent;
     dialogService: {
         open: ReturnType<typeof vi.fn>;
@@ -251,6 +252,24 @@ describe('ProductManageFormComponent USDA behavior', () => {
 });
 
 describe('ProductManageFormComponent submit and cancel behavior', () => {
+    it('should prevent native form submit when saving', async () => {
+        const { component, el, fixture, productManageFacade } = await setupComponentAsync();
+        productManageFacade.submitProductAsync.mockResolvedValue({ product: PRODUCT, error: null });
+        fillValidProductForm(component);
+        fixture.detectChanges();
+
+        const form = el.querySelector('form');
+        expect(form).not.toBeNull();
+
+        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+        const wasNotCancelled = form?.dispatchEvent(submitEvent);
+        await fixture.whenStable();
+
+        expect(wasNotCancelled).toBe(false);
+        expect(submitEvent.defaultPrevented).toBe(true);
+        expect(productManageFacade.submitProductAsync).toHaveBeenCalledOnce();
+    });
+
     it('should ignore duplicate submit while a save is already in progress', async () => {
         const { component, productManageFacade } = await setupComponentAsync();
         let resolveSubmit!: (value: { product: Product | null; error: null }) => void;
@@ -305,7 +324,7 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
         expect(component['globalError']()).toBe('PRODUCT_MANAGE.USDA_SYNC_ERROR');
     });
 
-    it('should skip submit confirmation in dialog mode', async () => {
+    it('should skip post-save redirect in dialog mode', async () => {
         const { component, fixture, productManageFacade } = await setupComponentAsync();
         fixture.componentRef.setInput('mode', 'dialog');
         fixture.detectChanges();
@@ -416,6 +435,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const fixture = TestBed.createComponent(ProductManageFormComponent);
     return {
         fixture,
+        el: fixture.nativeElement as HTMLElement,
         component: fixture.componentInstance,
         dialogService,
         productManageFacade,

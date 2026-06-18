@@ -1,6 +1,8 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { inject, Service } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
 import {
@@ -12,10 +14,8 @@ import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { getNumberProperty, getRecordProperty } from '../../../shared/lib/unknown-value.utils';
 import { ProductService } from '../api/product.service';
-import { ProductSaveSuccessDialogComponent } from '../dialogs/product-save-success-dialog/product-save-success-dialog';
-import type { ProductSaveSuccessDialogData } from '../dialogs/product-save-success-dialog/product-save-success-dialog.types';
 import type { CreateProductRequest, Product, UpdateProductRequest } from '../models/product.data';
-import type { ProductDeleteResult, RedirectAction } from './product-manage.types';
+import type { ProductDeleteResult } from './product-manage.types';
 
 @Service()
 export class ProductManageFacade {
@@ -23,6 +23,8 @@ export class ProductManageFacade {
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly authService = inject(AuthService);
+    private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
 
     public async confirmDiscardChangesAsync(data: ConfirmDeleteDialogData): Promise<boolean> {
         const confirmed = await firstValueFrom(
@@ -74,14 +76,14 @@ export class ProductManageFacade {
     public async submitProductAsync(
         product: Product | null,
         productData: CreateProductRequest,
-        skipConfirmDialog: boolean,
+        skipPostSaveRedirect: boolean,
         afterSave?: (product: Product) => Promise<void>,
     ): Promise<{ product: Product | null; error: HttpErrorResponse | null }> {
         try {
-            const savedProduct =
-                product !== null
-                    ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
-                    : await firstValueFrom(this.productService.create(productData));
+            const isEdit = product !== null;
+            const savedProduct = isEdit
+                ? await firstValueFrom(this.productService.update(product.id, this.buildUpdateProductRequest(productData)))
+                : await firstValueFrom(this.productService.create(productData));
 
             let afterSaveError: HttpErrorResponse | null = null;
             try {
@@ -90,8 +92,11 @@ export class ProductManageFacade {
                 afterSaveError = this.toHttpErrorResponse(error);
             }
 
-            if (!skipConfirmDialog) {
-                await this.showConfirmDialogAsync(product !== null);
+            if (!skipPostSaveRedirect && afterSaveError === null) {
+                this.toastService.success(
+                    this.translateService.instant(isEdit ? 'PRODUCT_DETAIL.EDIT_SUCCESS' : 'PRODUCT_DETAIL.CREATE_SUCCESS'),
+                );
+                await this.navigationService.navigateToProductListAsync();
             }
 
             return { product: savedProduct, error: afterSaveError };
@@ -122,26 +127,5 @@ export class ProductManageFacade {
             clearImageUrl: productData.imageUrl === null,
             clearImageAssetId: productData.imageAssetId === null,
         };
-    }
-
-    private async showConfirmDialogAsync(isEdit: boolean): Promise<void> {
-        const data: ProductSaveSuccessDialogData = {
-            isEdit,
-        };
-
-        const redirectAction = await firstValueFrom(
-            this.fdDialogService
-                .open<ProductSaveSuccessDialogComponent, ProductSaveSuccessDialogData, RedirectAction>(ProductSaveSuccessDialogComponent, {
-                    preset: 'confirm',
-                    data,
-                })
-                .afterClosed(),
-        );
-
-        if (redirectAction === 'Home') {
-            await this.navigationService.navigateToHomeAsync();
-        } else if (redirectAction === 'ProductList') {
-            await this.navigationService.navigateToProductListAsync();
-        }
     }
 }

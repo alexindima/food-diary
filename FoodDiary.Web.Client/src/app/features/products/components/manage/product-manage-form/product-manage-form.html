@@ -9,11 +9,7 @@
     />
 
     <fd-page-body>
-        <form
-            class="product-manage__form fd-stack fd-gap-lg"
-            [attr.aria-busy]="isSubmitting() || isDeleting()"
-            (ngSubmit)="onSubmitAsync()"
-        >
+        <form class="product-manage__form fd-stack fd-gap-lg" [formRoot]="productForm" [attr.aria-busy]="isSubmitting() || isDeleting()">
             <div class="product-manage__grid fd-grid fd-gap-xl">
                 <div class="product-manage__column product-manage__column--primary fd-stack fd-gap-xl">
                     <fd-product-basic-info
