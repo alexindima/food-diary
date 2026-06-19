@@ -1,25 +1,39 @@
 STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR)
 STAGED_FRONTEND_FORMATTABLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
+STAGED_FRONTEND_LINT_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.(ts|html)$' || true)
+STAGED_FRONTEND_STYLE_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/.*\.(css|scss)$' || true)
+STAGED_FRONTEND_SPEC_FILES=$(echo "$STAGED_FILES" | grep -E '^FoodDiary\.Web\.Client/(src|projects)/.*\.spec\.ts$' || true)
 
 HAS_TS=$(echo "$STAGED_FILES" | grep -c '\.ts$' || true)
 HAS_HTML=$(echo "$STAGED_FILES" | grep -c '\.html$' || true)
 HAS_SCSS=$(echo "$STAGED_FILES" | grep -c '\.scss$' || true)
 HAS_FRONTEND=$(echo "$STAGED_FILES" | grep -c '^FoodDiary\.Web\.Client/' || true)
 HAS_FRONTEND_SHARED=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(package(-lock)?\.json|angular\.json|tsconfig.*\.json|src/(styles|test-setup)\.ts|src/styles/|src/styles\.scss)' || true)
-HAS_FRONTEND_APP=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(src/app|assets/|src/environments|src/main|src/server|src/app\.|src/index\.html|src/manifest\.webmanifest|ngsw-config\.json)' || true)
-HAS_FRONTEND_UI_KIT=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fd-ui-kit/' || true)
-HAS_FRONTEND_ADMIN=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/projects/fooddiary-admin/' || true)
 HAS_FRONTEND_DEPS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(src/app/|projects/(fooddiary-admin/src/app|fd-ui-kit/src/lib)/|package(-lock)?\.json|\.dependency-cruiser(-known-violations\.json|\.cjs))' || true)
 HAS_I18N=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(assets/i18n/.*\.json|scripts/check-i18n\.mjs|package\.json|src/.*\.html)$' || true)
 HAS_STORYBOOK=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Web\.Client/(\.storybook/.*|projects/fd-ui-kit/src/.*\.stories\.(ts|mdx)|package\.json|angular\.json)$' || true)
 HAS_CS=$(echo "$STAGED_FILES" | grep -c '\.cs$' || true)
-HAS_API_CONTRACT=$(echo "$STAGED_FILES" | grep -Ec '^(FoodDiary\.Web\.Api/|FoodDiary\.Presentation\.Api/|FoodDiary\.Contracts/|tests/FoodDiary\.Web\.Api\.IntegrationTests/|tests/FoodDiary\.Web\.Api\.IntegrationTests/Snapshots/)' || true)
 HAS_INFRA_MIGRATIONS=$(echo "$STAGED_FILES" | grep -Ec '^FoodDiary\.Infrastructure/Migrations/.*\.cs$' || true)
+
+run_frontend_specs() {
+  PROJECT=$1
+  PREFIX_PATTERN=$2
+  SPECS=$(echo "$STAGED_FRONTEND_SPEC_FILES" | grep -E "$PREFIX_PATTERN" || true)
+
+  if [ -z "$SPECS" ]; then
+    return 0
+  fi
+
+  echo "=== Running focused $PROJECT frontend specs ==="
+  INCLUDE_ARGS=$(printf '%s\n' "$SPECS" | sed 's#^FoodDiary\.Web\.Client/##' | sed 's#^#--include #' | tr '\n' ' ')
+  # shellcheck disable=SC2086
+  npx ng test "$PROJECT" --watch=false $INCLUDE_ARGS || exit 1
+}
 
 cd FoodDiary.Web.Client
 
 if [ "$HAS_TS" -gt 0 ] || [ "$HAS_HTML" -gt 0 ]; then
-  echo "=== Running Prettier ==="
+  echo "=== Running Prettier on staged frontend files ==="
   if [ -n "$STAGED_FRONTEND_FORMATTABLE_FILES" ]; then
     printf '%s\n' "$STAGED_FRONTEND_FORMATTABLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx prettier --check || exit 1
   else
@@ -29,16 +43,20 @@ else
   echo "=== Skipping Prettier (no formattable files changed) ==="
 fi
 
-if [ "$HAS_TS" -gt 0 ]; then
-  echo "=== Running ESLint ==="
-  npm run lint || exit 1
+if [ -n "$STAGED_FRONTEND_LINT_FILES" ]; then
+  echo "=== Running ESLint on staged frontend files ==="
+  printf '%s\n' "$STAGED_FRONTEND_LINT_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx eslint || exit 1
 else
-  echo "=== Skipping ESLint (no .ts files changed) ==="
+  echo "=== Skipping ESLint (no staged frontend .ts/.html files changed) ==="
 fi
 
 if [ "$HAS_SCSS" -gt 0 ]; then
-  echo "=== Running Stylelint ==="
-  npm run stylelint || exit 1
+  echo "=== Running Stylelint on staged styles ==="
+  if [ -n "$STAGED_FRONTEND_STYLE_FILES" ]; then
+    printf '%s\n' "$STAGED_FRONTEND_STYLE_FILES" | sed 's#^FoodDiary\.Web\.Client/##' | xargs -n 50 npx stylelint || exit 1
+  else
+    echo "=== Skipping Stylelint (no frontend .css/.scss files changed) ==="
+  fi
 else
   echo "=== Skipping Stylelint (no .scss files changed) ==="
 fi
@@ -58,24 +76,17 @@ else
 fi
 
 if [ "$HAS_FRONTEND" -gt 0 ]; then
-  echo "=== Running frontend tests ==="
-  if [ "$HAS_FRONTEND_SHARED" -gt 0 ] || [ "$HAS_FRONTEND_UI_KIT" -gt 0 ]; then
-    echo "=== Running all frontend tests (shared or UI kit changes) ==="
+  if [ "$HAS_FRONTEND_SHARED" -gt 0 ]; then
+    echo "=== Running all frontend tests (shared frontend config changed) ==="
     npm run test:ci || exit 1
   else
-    if [ "$HAS_FRONTEND_APP" -gt 0 ]; then
-      echo "=== Running app frontend tests ==="
-      npm run test:ci:app || exit 1
-    fi
+    run_frontend_specs "food-diary-web-client" '^FoodDiary\.Web\.Client/src/'
+    run_frontend_specs "fooddiary-admin" '^FoodDiary\.Web\.Client/projects/fooddiary-admin/'
+    run_frontend_specs "fd-ui-kit" '^FoodDiary\.Web\.Client/projects/fd-ui-kit/'
+    run_frontend_specs "fd-tour" '^FoodDiary\.Web\.Client/projects/fd-tour/'
 
-    if [ "$HAS_FRONTEND_ADMIN" -gt 0 ]; then
-      echo "=== Running admin frontend tests ==="
-      npm run test:ci:admin || exit 1
-    fi
-
-    if [ "$HAS_FRONTEND_APP" -eq 0 ] && [ "$HAS_FRONTEND_ADMIN" -eq 0 ]; then
-      echo "=== Running all frontend tests (unclassified frontend changes) ==="
-      npm run test:ci || exit 1
+    if [ -z "$STAGED_FRONTEND_SPEC_FILES" ]; then
+      echo "=== Skipping frontend tests (no staged spec files; full suite runs in CI) ==="
     fi
   fi
 else
@@ -95,12 +106,14 @@ if [ "$HAS_CS" -gt 0 ]; then
   echo "=== Running backend solution build ==="
   dotnet build FoodDiary.slnx --no-restore || exit 1
 
-  echo "=== Running dotnet format check ==="
+  echo "=== Running dotnet format check on staged C# files ==="
   STAGED_CS_FILES=$(echo "$STAGED_FILES" | grep '\.cs$' | tr '\n' ',' | sed 's/,$//')
   if ! dotnet format FoodDiary.slnx --verify-no-changes --include "$STAGED_CS_FILES"; then
     echo "Run 'dotnet format FoodDiary.slnx' to fix formatting."
     exit 1
   fi
+
+  echo "=== Skipping backend tests in pre-commit (full suite runs in CI) ==="
 else
   echo "=== Skipping dotnet format (no .cs files changed) ==="
 fi
@@ -112,23 +125,4 @@ else
   echo "=== Skipping infrastructure migration build guard (no migration files changed) ==="
 fi
 
-if [ "$HAS_CS" -gt 0 ]; then
-  echo "=== Running backend tests ==="
-  dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
-  dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
-  dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
-else
-  echo "=== Skipping backend tests (no .cs files changed) ==="
-fi
-
-if [ "$HAS_API_CONTRACT" -gt 0 ]; then
-  echo "=== Running API contract integration tests ==="
-  dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
-else
-  echo "=== Skipping API contract integration tests (no API contract files changed) ==="
-fi
+echo "=== Skipping API contract integration tests in pre-commit (full suite runs in CI) ==="
