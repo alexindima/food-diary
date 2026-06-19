@@ -15,6 +15,7 @@ export type RecipeIngredientMappingLabels = {
 
 type RecipeIngredientGroupInput = {
     food?: Product | null;
+    productId?: string | null;
     amount?: number | null;
     nestedRecipe?: Recipe | null;
     nestedRecipeId?: string | null;
@@ -61,6 +62,7 @@ export function createRecipeIngredientValue(input: RecipeIngredientGroupInput = 
 
     return {
         food,
+        productId: input.productId ?? food?.id ?? null,
         amount: input.amount ?? null,
         foodName: resolveIngredientFoodName(food, nestedRecipe, nestedRecipeName),
         nestedRecipe,
@@ -154,13 +156,31 @@ function mapRecipeStepToDto(step: RecipeFormValues['steps'][number]): RecipeDto[
         imageAssetId: step.imageUrl?.assetId ?? null,
         description: step.description,
         ingredients: step.ingredients
-            .filter(ingredient => ingredient.food !== null || ingredient.nestedRecipeId !== null)
+            .filter(ingredient => hasProductId(ingredient) || hasNestedRecipeId(ingredient))
             .map(ingredient => ({
-                productId: ingredient.food?.id,
-                nestedRecipeId: ingredient.nestedRecipeId ?? undefined,
+                productId: resolveProductId(ingredient),
+                nestedRecipeId: resolveNestedRecipeId(ingredient),
                 amount: ingredient.amount ?? 0,
             })),
     };
+}
+
+function hasProductId(ingredient: IngredientFormValues): boolean {
+    return resolveProductId(ingredient) !== undefined;
+}
+
+function hasNestedRecipeId(ingredient: IngredientFormValues): boolean {
+    return resolveNestedRecipeId(ingredient) !== undefined;
+}
+
+function resolveProductId(ingredient: IngredientFormValues): string | undefined {
+    const productId = ingredient.productId ?? ingredient.food?.id ?? null;
+    return productId !== null && productId.length > 0 ? productId : undefined;
+}
+
+function resolveNestedRecipeId(ingredient: IngredientFormValues): string | undefined {
+    const nestedRecipeId = ingredient.nestedRecipeId ?? null;
+    return nestedRecipeId !== null && nestedRecipeId.length > 0 ? nestedRecipeId : undefined;
 }
 
 function buildManualRecipeTotals(
@@ -199,6 +219,7 @@ function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIn
     if (ingredient.nestedRecipeId !== null && ingredient.nestedRecipeId !== undefined && ingredient.nestedRecipeId.length > 0) {
         return {
             food: null,
+            productId: null,
             amount: ingredient.amount,
             foodName: ingredient.nestedRecipeName ?? labels.selectIngredient,
             nestedRecipe: buildNestedRecipe(ingredient),
@@ -214,6 +235,7 @@ function mapIngredientToFormValue(ingredient: RecipeIngredient, labels: RecipeIn
 
     return {
         food: product,
+        productId: product.id,
         amount: ingredient.amount,
         foodName: product.name,
         nestedRecipe: null,

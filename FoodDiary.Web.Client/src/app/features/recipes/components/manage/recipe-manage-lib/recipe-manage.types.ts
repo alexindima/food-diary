@@ -31,6 +31,7 @@ export type StepFormValues = {
 
 export type IngredientFormValues = {
     food: Product | null;
+    productId: string | null;
     amount: number | null;
     foodName: string | null;
     nestedRecipe: Recipe | null;

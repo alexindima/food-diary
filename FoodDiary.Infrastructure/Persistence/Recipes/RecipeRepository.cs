@@ -26,8 +26,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
 
-        IQueryable<Recipe> query = context.Recipes
-            .AsNoTracking()
+        IQueryable<Recipe> query = IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
             .Where(includePublic
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
@@ -55,6 +54,15 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
 
         return (items.ConvertAll(i => (i.Recipe, i.UsageCount)), totalItems);
     }
+
+    private static IQueryable<Recipe> IncludeStepsAndIngredients(IQueryable<Recipe> query) =>
+        query.AsSplitQuery()
+            .Include(r => r.Steps)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.Product)
+            .Include(r => r.Steps)
+            .ThenInclude(s => s.Ingredients)
+            .ThenInclude(i => i.NestedRecipe);
 
     public async Task<Recipe?> GetByIdAsync(
         RecipeId id,
@@ -158,8 +166,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
             return new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
         }
 
-        var items = await context.Recipes
-            .AsNoTracking()
+        var items = await IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
             .Where(r => recipeIds.Contains(r.Id) && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
@@ -183,8 +190,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
 
-        IQueryable<Recipe> query = context.Recipes
-            .AsNoTracking()
+        IQueryable<Recipe> query = IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
             .Where(r => r.Visibility == Visibility.Public);
 
         if (!string.IsNullOrWhiteSpace(search)) {

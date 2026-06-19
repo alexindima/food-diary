@@ -181,6 +181,7 @@ describe('RecipeManageFacade selection', () => {
         });
 
         expect(ingredientGroup.value.foodName).toBe('Apple');
+        expect(ingredientGroup.value.productId).toBe('product-1');
         expect(ingredientGroup.value.amount).toBe(PRODUCT_DEFAULT_PORTION_AMOUNT);
         expect(ingredientGroup.value.nestedRecipeId).toBeNull();
     });
@@ -261,6 +262,7 @@ function createIngredientSelectionTarget(): TestIngredientSelectionTarget {
         value: {
             amount: null,
             food: null,
+            productId: null,
             foodName: null,
             nestedRecipe: null,
             nestedRecipeId: null,
@@ -276,15 +278,23 @@ function createStepsNutritionState(steps: ReadonlyArray<readonly TestIngredientN
         title: null,
         imageUrl: null,
         description: 'Step',
-        ingredients: ingredients.map(input => ({
-            amount: input.amount,
-            food: input.food,
-            foodName: input.food?.name ?? input.nestedRecipe?.name ?? null,
-            nestedRecipe: input.nestedRecipe,
-            nestedRecipeId: input.nestedRecipe?.id ?? null,
-            nestedRecipeName: input.nestedRecipe?.name ?? null,
-        })),
+        ingredients: ingredients.map(createIngredientNutritionState),
     }));
+}
+
+function createIngredientNutritionState(input: TestIngredientNutritionInput): IngredientFormValues {
+    const food = input.food;
+    const nestedRecipe = input.nestedRecipe;
+
+    return {
+        amount: input.amount,
+        food,
+        productId: food?.id ?? null,
+        foodName: food?.name ?? nestedRecipe?.name ?? null,
+        nestedRecipe,
+        nestedRecipeId: nestedRecipe?.id ?? null,
+        nestedRecipeName: nestedRecipe?.name ?? null,
+    };
 }
 
 function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {

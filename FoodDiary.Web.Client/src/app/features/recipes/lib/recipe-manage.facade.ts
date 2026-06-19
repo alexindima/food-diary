@@ -57,6 +57,7 @@ export class RecipeManageFacade {
             const defaultAmount = food.defaultPortionAmount;
             foodGroup.patchValue({
                 food,
+                productId: food.id,
                 foodName: food.name,
                 nestedRecipe: null,
                 nestedRecipeId: null,
@@ -69,6 +70,7 @@ export class RecipeManageFacade {
         const recipe = selection.recipe;
         foodGroup.patchValue({
             food: null,
+            productId: null,
             foodName: recipe.name,
             nestedRecipe: recipe,
             nestedRecipeId: recipe.id,

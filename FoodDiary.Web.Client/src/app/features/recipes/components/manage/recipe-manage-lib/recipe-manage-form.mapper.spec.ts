@@ -100,6 +100,7 @@ describe('recipe manage form creation', () => {
         });
 
         expect(ingredient.foodName).toBe('Product');
+        expect(ingredient.productId).toBe('product-1');
         expect(ingredient.amount).toBeNull();
     });
 });
@@ -167,6 +168,27 @@ describe('recipe manage DTO mapping', () => {
 
         expect(dto.prepTime).toBeNull();
         expect(dto.cookTime).toBeNull();
+    });
+
+    it('should preserve selected product id when product object is not available', () => {
+        const formValue = createManualRecipeFormValue();
+        formValue.steps[0].ingredients[0] = {
+            food: null,
+            productId: 'product-1',
+            amount: PRODUCT_AMOUNT,
+            foodName: 'Product',
+            nestedRecipe: null,
+            nestedRecipeId: null,
+            nestedRecipeName: null,
+        };
+
+        const dto = buildRecipeDto(formValue, 'recipe', 1, scaleValue);
+
+        expect(dto.steps[0]?.ingredients[0]).toEqual({
+            productId: 'product-1',
+            nestedRecipeId: undefined,
+            amount: PRODUCT_AMOUNT,
+        });
     });
 });
 
@@ -287,6 +309,7 @@ function createManualRecipeFormValue(): RecipeFormValues {
                 ingredients: [
                     {
                         food: null,
+                        productId: null,
                         amount: DEFAULT_SERVINGS,
                         foodName: 'Nested recipe',
                         nestedRecipe: null,

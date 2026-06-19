@@ -127,6 +127,17 @@ describe('RecipeManageComponent submission', () => {
                 name: 'Manual recipe',
                 calculateNutritionAutomatically: false,
                 manualCalories: MANUAL_CALORIES,
+                steps: [
+                    expect.objectContaining({
+                        description: 'Cook',
+                        ingredients: [
+                            expect.objectContaining({
+                                productId: 'product-1',
+                                amount: PRODUCT_DEFAULT_AMOUNT,
+                            }),
+                        ],
+                    }),
+                ],
             }),
         );
         expect(facade.updateRecipe).not.toHaveBeenCalled();
@@ -280,6 +291,7 @@ describe('RecipeManageComponent steps and ingredients', () => {
         facade.applyItemSelection.mockImplementation((foodGroup: { patchValue: (value: Partial<IngredientFormValues>) => void }) => {
             foodGroup.patchValue({
                 food: selectedProduct,
+                productId: selectedProduct.id,
                 foodName: selectedProduct.name,
                 amount: selectedProduct.defaultPortionAmount,
             });
@@ -291,6 +303,7 @@ describe('RecipeManageComponent steps and ingredients', () => {
         expect(facade.applyItemSelection).toHaveBeenCalledTimes(1);
         expect(facade.calculateAutoSummary).toHaveBeenCalled();
         expect(component['steps'][0]?.ingredients[0]?.foodName).toBe(selectedProduct.name);
+        expect(component['steps'][0]?.ingredients[0]?.productId).toBe(selectedProduct.id);
     });
 });
 

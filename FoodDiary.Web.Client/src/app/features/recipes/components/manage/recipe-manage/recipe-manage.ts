@@ -45,7 +45,6 @@ import {
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
-        FormRoot,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -83,35 +82,20 @@ export class RecipeManageComponent {
     protected readonly isImportPanelVisible = computed(() => this.recipe() === null);
 
     protected readonly recipeFormModel = signal<RecipeFormValues>(createRecipeFormValue());
-    private readonly submitRecipeFormAsync = async (): Promise<void> => {
-        this.onSubmit();
-        await Promise.resolve();
-    };
-    protected readonly recipeSignalForm = form(
-        this.recipeFormModel,
-        path => {
-            required(path.name);
-            min(path.prepTime, 0);
-            min(path.cookTime, 1);
-            required(path.servings);
-            min(path.servings, 1);
-            required(path.visibility);
-            min(path.manualCalories, 0);
-            min(path.manualProteins, 0);
-            min(path.manualFats, 0);
-            min(path.manualCarbs, 0);
-            min(path.manualFiber, 0);
-            min(path.manualAlcohol, 0);
-        },
-        {
-            submission: {
-                action: this.submitRecipeFormAsync,
-                onInvalid: () => {
-                    this.handleInvalidSubmit();
-                },
-            },
-        },
-    );
+    protected readonly recipeSignalForm = form(this.recipeFormModel, path => {
+        required(path.name);
+        min(path.prepTime, 0);
+        min(path.cookTime, 1);
+        required(path.servings);
+        min(path.servings, 1);
+        required(path.visibility);
+        min(path.manualCalories, 0);
+        min(path.manualProteins, 0);
+        min(path.manualFats, 0);
+        min(path.manualCarbs, 0);
+        min(path.manualFiber, 0);
+        min(path.manualAlcohol, 0);
+    });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;
 
@@ -278,6 +262,11 @@ export class RecipeManageComponent {
 
     // -- Form submission --
 
+    protected onFormSubmit(event: SubmitEvent): void {
+        event.preventDefault();
+        this.onSubmit();
+    }
+
     protected onSubmit(): void {
         this.recipeSignalForm().markAsTouched();
         this.stepsTouchedState.markTouched();
@@ -301,11 +290,6 @@ export class RecipeManageComponent {
         } else {
             this.recipeManageFacade.addRecipe(recipeData);
         }
-    }
-
-    private handleInvalidSubmit(): void {
-        this.stepsTouchedState.markTouched();
-        this.recipeManageFacade.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     protected async onCancelAsync(): Promise<void> {

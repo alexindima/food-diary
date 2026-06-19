@@ -62,6 +62,7 @@ describe('RecipeStepCardComponent', () => {
                             qualityScore: 50,
                             qualityGrade: 'yellow',
                         },
+                        productId: 'product-1',
                         foodName: 'Rice',
                         amount: 100,
                         nestedRecipe: null,

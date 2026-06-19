@@ -9,7 +9,12 @@
     />
 
     <fd-page-body>
-        <form class="recipe-manage__form fd-stack fd-gap-lg" [formRoot]="recipeSignalForm" [attr.aria-busy]="isSubmitting()">
+        <form
+            class="recipe-manage__form fd-stack fd-gap-lg"
+            [formRoot]="recipeSignalForm"
+            [attr.aria-busy]="isSubmitting()"
+            (submit)="onFormSubmit($event)"
+        >
             @if (globalError()) {
                 <div class="recipe-manage__error fd-ui-notice-surface fd-ui-notice-surface--danger fd-ui-body-sm" role="alert">
                     {{ globalError() }}
