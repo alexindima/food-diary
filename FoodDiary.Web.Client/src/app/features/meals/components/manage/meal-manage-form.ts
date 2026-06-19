@@ -421,7 +421,12 @@ export class MealManageFormComponent {
             return;
         }
 
-        if (this.consumptionSignalForm().invalid() || !this.hasSelectedItems()) {
+        if (!this.hasSelectedItems()) {
+            this.setGlobalError('FORM_ERRORS.NON_EMPTY_ARRAY');
+            return;
+        }
+
+        if (this.consumptionSignalForm().invalid()) {
             this.setGlobalError('FORM_ERRORS.UNKNOWN');
             return;
         }

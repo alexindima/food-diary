@@ -148,7 +148,17 @@ describe('MealManageFormComponent submit behavior', () => {
 
     it('should show global error and skip submit when form is invalid', async () => {
         const { component, mealManageFacade } = await setupComponentAsync();
-        component['patchConsumptionFormModel']({ date: '' });
+        component['patchConsumptionFormModel']({
+            date: '',
+            items: [
+                createConsumptionItemValue(
+                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    null,
+                    PRODUCT_AMOUNT,
+                    ConsumptionSourceType.Product,
+                ),
+            ],
+        });
 
         await component['onSubmitAsync']();
         await Promise.resolve();
@@ -182,6 +192,24 @@ describe('MealManageFormComponent submit behavior', () => {
         await Promise.resolve();
 
         expect(component['globalError']()).toBe(serverMessage);
+    });
+});
+
+describe('MealManageFormComponent item validation', () => {
+    it('should show a specific error and skip submit when no items are added', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        component['patchConsumptionFormModel']({
+            date: '2026-04-05',
+            time: '10:30',
+            mealType: 'BREAKFAST',
+            items: [],
+        });
+
+        await component['onSubmitAsync']();
+        await Promise.resolve();
+
+        expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
+        expect(component['globalError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
     });
 });
 

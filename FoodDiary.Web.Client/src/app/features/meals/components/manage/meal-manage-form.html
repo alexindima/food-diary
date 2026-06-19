@@ -19,13 +19,6 @@
                         [generalErrors]="generalErrors"
                     />
 
-                    <fd-meal-satiety-card
-                        [preMealSatietyLevel]="preMealSatietyLevel()"
-                        [postMealSatietyLevel]="postMealSatietyLevel()"
-                        (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
-                        (postMealSatietyLevelChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
-                    />
-
                     <fd-meal-items-section
                         [items]="itemListItems()"
                         [itemsError]="itemsError()"
@@ -40,6 +33,13 @@
                         (openItemSelect)="onItemSourceClick($event)"
                         (editSession)="onEditAiSession($event)"
                         (deleteSession)="onDeleteAiSession($event)"
+                    />
+
+                    <fd-meal-satiety-card
+                        [preMealSatietyLevel]="preMealSatietyLevel()"
+                        [postMealSatietyLevel]="postMealSatietyLevel()"
+                        (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
+                        (postMealSatietyLevelChange)="onSatietyLevelChange('postMealSatietyLevel', $event)"
                     />
                 </div>
 
