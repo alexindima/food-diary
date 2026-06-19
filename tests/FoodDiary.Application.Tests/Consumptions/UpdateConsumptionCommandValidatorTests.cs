@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Common;
 
@@ -51,6 +52,22 @@ public class UpdateConsumptionCommandValidatorTests {
             manualFiber: null);
         TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.ManualFiber);
+    }
+
+    [Fact]
+    public async Task Validate_WhenManualNutritionExceedsMaximum_HasError() {
+        UpdateConsumptionCommand command = CreateCommand(
+            isAutoCalculated: false,
+            manualCalories: ManualNutritionLimits.MaxCalories + 1,
+            manualProteins: 10,
+            manualFats: ManualNutritionLimits.MaxNutrient + 1,
+            manualCarbs: 20,
+            manualFiber: 3);
+
+        TestValidationResult<UpdateConsumptionCommand> result = await _validator.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.ManualCalories);
+        result.ShouldHaveValidationErrorFor(c => c.ManualFats);
     }
 
     private static UpdateConsumptionCommand CreateCommand(

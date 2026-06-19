@@ -13,7 +13,10 @@
             [macroState]="macroBarState()"
             [readonly]="isNutritionReadonly()"
             [caloriesError]="caloriesError()"
+            [fieldErrors]="nutritionFieldErrors()"
             [macrosError]="macrosError()"
+            [maxCalories]="maxCalories"
+            [maxNutrient]="maxNutrient"
             [showManualHint]="showManualNutritionHint()"
             [warning]="nutritionWarning()"
         >

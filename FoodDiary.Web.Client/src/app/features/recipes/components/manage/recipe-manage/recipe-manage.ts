@@ -1,7 +1,7 @@
 import { moveItemInArray } from '@angular/cdk/drag-drop';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, min, required } from '@angular/forms/signals';
+import { form, FormRoot, max, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -11,6 +11,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
+import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
@@ -91,11 +92,17 @@ export class RecipeManageComponent {
         min(path.servings, 1);
         required(path.visibility);
         min(path.manualCalories, 0);
+        max(path.manualCalories, MANUAL_NUTRITION_MAX_CALORIES);
         min(path.manualProteins, 0);
+        max(path.manualProteins, MANUAL_NUTRITION_MAX_NUTRIENT);
         min(path.manualFats, 0);
+        max(path.manualFats, MANUAL_NUTRITION_MAX_NUTRIENT);
         min(path.manualCarbs, 0);
+        max(path.manualCarbs, MANUAL_NUTRITION_MAX_NUTRIENT);
         min(path.manualFiber, 0);
+        max(path.manualFiber, MANUAL_NUTRITION_MAX_NUTRIENT);
         min(path.manualAlcohol, 0);
+        max(path.manualAlcohol, MANUAL_NUTRITION_MAX_NUTRIENT);
     });
     protected readonly manageHeaderState = computed<RecipeManageHeaderState>(() => {
         const isEdit = this.recipe() !== null;

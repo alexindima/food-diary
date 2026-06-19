@@ -1,5 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
@@ -112,6 +113,20 @@ public class ConsumptionsAdditionalValidatorTests {
     [Fact]
     public void ManualNutrition_WithNegativeAlcohol_ReturnsFailure() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, -0.1);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public void ManualNutrition_WithValueAboveMaximum_ReturnsFailure() {
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(
+            ManualNutritionLimits.MaxCalories + 1,
+            ManualNutritionLimits.MaxNutrient + 1,
+            10,
+            50,
+            5,
+            0);
 
         ResultAssert.Failure(result);
         Assert.Equal("Validation.Invalid", result.Error.Code);

@@ -1,10 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -368,6 +369,20 @@ public class UpdateRecipeCommandHandler(
         if (calories < 0 || proteins < 0 || fats < 0 || carbs < 0 || fiber < 0 || alcohol < 0) {
             return Result.Failure<(double, double, double, double, double, double)>(
                 Errors.Validation.Invalid("ManualNutrition", "Manual nutrition values must be greater than or equal to 0."));
+        }
+
+        if (calories > ManualNutritionLimits.MaxCalories) {
+            return Result.Failure<(double, double, double, double, double, double)>(
+                Errors.Validation.Invalid(nameof(calories), ManualNutritionLimits.MaxCaloriesErrorMessage));
+        }
+
+        if (proteins > ManualNutritionLimits.MaxNutrient ||
+            fats > ManualNutritionLimits.MaxNutrient ||
+            carbs > ManualNutritionLimits.MaxNutrient ||
+            fiber > ManualNutritionLimits.MaxNutrient ||
+            alcohol > ManualNutritionLimits.MaxNutrient) {
+            return Result.Failure<(double, double, double, double, double, double)>(
+                Errors.Validation.Invalid("ManualNutrition", ManualNutritionLimits.MaxNutrientErrorMessage));
         }
 
         return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));

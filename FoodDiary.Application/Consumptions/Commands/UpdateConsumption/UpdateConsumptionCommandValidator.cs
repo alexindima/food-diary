@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Consumptions.Common.Validators;
 using FoodDiary.Domain.Enums;
 
@@ -77,24 +78,43 @@ public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsump
         When(c => !c.IsNutritionAutoCalculated, () => {
             RuleFor(c => c.ManualCalories)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualCalories is required.")
-                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.");
+                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxCalories)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxCaloriesErrorMessage);
             RuleFor(c => c.ManualProteins)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualProteins is required.")
-                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.");
+                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxNutrientErrorMessage);
             RuleFor(c => c.ManualFats)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualFats is required.")
-                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.");
+                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxNutrientErrorMessage);
             RuleFor(c => c.ManualCarbs)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualCarbs is required.")
-                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.");
+                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxNutrientErrorMessage);
             RuleFor(c => c.ManualFiber)
                 .NotNull().WithErrorCode("Validation.Required").WithMessage("ManualFiber is required.")
-                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.");
+                .GreaterThanOrEqualTo(0).WithErrorCode("Validation.Invalid").WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxNutrientErrorMessage);
             RuleFor(c => c.ManualAlcohol)
                 .GreaterThanOrEqualTo(0)
                 .When(c => c.ManualAlcohol.HasValue)
                 .WithErrorCode("Validation.Invalid")
-                .WithMessage("Values must be greater than or equal to 0.");
+                .WithMessage("Values must be greater than or equal to 0.")
+                .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
+                .When(c => c.ManualAlcohol.HasValue)
+                .WithErrorCode("Validation.Invalid")
+                .WithMessage(ManualNutritionLimits.MaxNutrientErrorMessage);
         });
     }
 }

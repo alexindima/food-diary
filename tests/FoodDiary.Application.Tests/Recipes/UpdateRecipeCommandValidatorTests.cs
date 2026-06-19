@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Domain.Entities.Meals;
@@ -53,6 +54,29 @@ public class UpdateRecipeCommandValidatorTests {
         ValidationResult result = await validator.ValidateAsync(command);
 
         Assert.True(result.IsValid);
+    }
+
+    [Fact]
+    public async Task ValidateAsync_WithManualNutritionAboveMaximum_ReturnsValidationError() {
+        var userId = UserId.New();
+        var recipeId = RecipeId.New();
+        var recipe = Recipe.Create(userId, "Soup", servings: 2);
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step")]) with {
+            CalculateNutritionAutomatically = false,
+            ManualCalories = ManualNutritionLimits.MaxCalories + 1,
+            ManualProteins = 10,
+            ManualFats = ManualNutritionLimits.MaxNutrient + 1,
+            ManualCarbs = 20,
+            ManualFiber = 3,
+            ManualAlcohol = 0,
+        };
+
+        ValidationResult result = await validator.ValidateAsync(command);
+
+        Assert.False(result.IsValid);
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualCalories), StringComparison.Ordinal));
+        Assert.Contains(result.Errors, e => string.Equals(e.PropertyName, nameof(UpdateRecipeCommand.ManualFats), StringComparison.Ordinal));
     }
 
     private static UpdateRecipeCommand CreateCommand(

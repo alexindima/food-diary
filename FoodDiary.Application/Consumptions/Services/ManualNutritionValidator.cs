@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Consumptions.Common;
 
 namespace FoodDiary.Application.Consumptions.Services;
@@ -43,6 +44,18 @@ public static class ManualNutritionValidator {
                 Errors.Validation.Invalid("ManualNutrition", "Values must be greater than or equal to 0."));
         }
 
+        if (calories > ManualNutritionLimits.MaxCalories) {
+            return Result.Failure<ManualNutritionInput>(
+                Errors.Validation.Invalid(CaloriesField, ManualNutritionLimits.MaxCaloriesErrorMessage));
+        }
+
+        foreach ((double? value, string field) in GetNutrientValues(proteins, fats, carbs, fiber, alcohol)) {
+            if (value > ManualNutritionLimits.MaxNutrient) {
+                return Result.Failure<ManualNutritionInput>(
+                    Errors.Validation.Invalid(field, ManualNutritionLimits.MaxNutrientErrorMessage));
+            }
+        }
+
         return Result.Success(new ManualNutritionInput(
             calories.Value,
             proteins.Value,
@@ -50,5 +63,18 @@ public static class ManualNutritionValidator {
             carbs.Value,
             fiber.Value,
             alcohol ?? 0));
+    }
+
+    private static IEnumerable<(double? Value, string Field)> GetNutrientValues(
+        double? proteins,
+        double? fats,
+        double? carbs,
+        double? fiber,
+        double? alcohol) {
+        yield return (proteins, ProteinsField);
+        yield return (fats, FatsField);
+        yield return (carbs, CarbsField);
+        yield return (fiber, FiberField);
+        yield return (alcohol, AlcoholField);
     }
 }

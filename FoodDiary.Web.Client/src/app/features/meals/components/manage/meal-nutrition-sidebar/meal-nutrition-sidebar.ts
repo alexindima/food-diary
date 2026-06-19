@@ -5,14 +5,21 @@ import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
-import { FdUiFormErrorComponent } from 'fd-ui-kit/form-error/fd-ui-form-error';
+import {
+    FD_VALIDATION_ERRORS,
+    FdUiFormErrorComponent,
+    type FdValidationErrors,
+    resolveSignalFormFieldError,
+} from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 
 import {
     NutritionEditorComponent,
+    type NutritionEditorFieldErrors,
     type NutritionEditorSignalForm,
     type NutritionEditorWarning,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
+import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import type { CalorieMismatchWarning, ConsumptionFormValues, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { buildMealNutritionModeOptions } from '../meal-manage-lib/meal-manage-options.mapper';
 
@@ -34,6 +41,7 @@ import { buildMealNutritionModeOptions } from '../meal-manage-lib/meal-manage-op
 export class MealNutritionSidebarComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly consumptionForm = input.required<FieldTree<ConsumptionFormValues>>();
     public readonly macroBarState = input.required<MacroBarState>();
@@ -46,6 +54,8 @@ export class MealNutritionSidebarComponent {
 
     public readonly nutritionModeChange = output<string>();
     public readonly cancelRequested = output();
+    protected readonly maxCalories = MANUAL_NUTRITION_MAX_CALORIES;
+    protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
     private readonly activeLang = signal(this.translateService.getCurrentLang());
     protected readonly nutritionForm = computed<NutritionEditorSignalForm>(() => {
         const form = this.consumptionForm();
@@ -66,6 +76,21 @@ export class MealNutritionSidebarComponent {
         const warning = this.nutritionWarning();
         return warning === null ? null : { kind: 'caloriesMismatch', ...warning };
     });
+    protected readonly nutritionFieldErrors = computed<NutritionEditorFieldErrors>(() => {
+        if (this.nutritionMode() === 'auto') {
+            return {};
+        }
+
+        const form = this.consumptionForm();
+        return {
+            calories: this.getFieldError(form.manualCalories),
+            proteins: this.getFieldError(form.manualProteins),
+            fats: this.getFieldError(form.manualFats),
+            carbs: this.getFieldError(form.manualCarbs),
+            fiber: this.getFieldError(form.manualFiber),
+            alcohol: this.getFieldError(form.manualAlcohol),
+        };
+    });
     protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     protected readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());
 
@@ -81,5 +106,13 @@ export class MealNutritionSidebarComponent {
 
     protected onCancel(): void {
         this.cancelRequested.emit();
+    }
+
+    private getFieldError(field: NutritionEditorSignalForm[keyof NutritionEditorSignalForm]): string | null {
+        if (field().errors()[0]?.kind === 'required') {
+            return null;
+        }
+
+        return resolveSignalFormFieldError(field, this.validationErrors, this.translateService);
     }
 }

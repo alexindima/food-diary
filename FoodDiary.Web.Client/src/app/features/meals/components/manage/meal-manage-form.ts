@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, required } from '@angular/forms/signals';
+import { form, FormRoot, max, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -15,7 +15,11 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { NavigationService } from '../../../../services/navigation.service';
 import { createCollectionTouchedState } from '../../../../shared/lib/collection-touched-state.utils';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
-import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../shared/lib/nutrition.constants';
+import {
+    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+    MANUAL_NUTRITION_MAX_CALORIES,
+    MANUAL_NUTRITION_MAX_NUTRIENT,
+} from '../../../../shared/lib/nutrition.constants';
 import { calculateMacroBarState, checkCaloriesError, checkMacrosError } from '../../../../shared/lib/nutrition-form.utils';
 import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared/lib/satiety-level.utils';
 import { patchSignalFormModel } from '../../../../shared/lib/signal-form-model.utils';
@@ -125,6 +129,12 @@ export class MealManageFormComponent {
         path => {
             required(path.date);
             required(path.time);
+            max(path.manualCalories, MANUAL_NUTRITION_MAX_CALORIES);
+            max(path.manualProteins, MANUAL_NUTRITION_MAX_NUTRIENT);
+            max(path.manualFats, MANUAL_NUTRITION_MAX_NUTRIENT);
+            max(path.manualCarbs, MANUAL_NUTRITION_MAX_NUTRIENT);
+            max(path.manualFiber, MANUAL_NUTRITION_MAX_NUTRIENT);
+            max(path.manualAlcohol, MANUAL_NUTRITION_MAX_NUTRIENT);
         },
         {
             submission: {

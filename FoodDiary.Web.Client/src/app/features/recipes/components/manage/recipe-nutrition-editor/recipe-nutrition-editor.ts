@@ -4,16 +4,22 @@ import type { FieldTree } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
+import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { EMPTY, type Observable } from 'rxjs';
 
 import {
     NutritionEditorComponent,
+    type NutritionEditorFieldErrors,
     type NutritionEditorSignalForm,
     type NutritionEditorWarning,
     type NutritionMacroState,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
-import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../../shared/lib/nutrition.constants';
+import {
+    DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+    MANUAL_NUTRITION_MAX_CALORIES,
+    MANUAL_NUTRITION_MAX_NUTRIENT,
+} from '../../../../../shared/lib/nutrition.constants';
 import {
     calculateCalorieMismatchWarning,
     calculateMacroBarState,
@@ -32,10 +38,13 @@ import type { NutritionMode, NutritionScaleMode, RecipeFormValues } from '../rec
 export class RecipeNutritionEditorComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
 
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
     public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionScaleMode = input.required<NutritionScaleMode>();
+    protected readonly maxCalories = MANUAL_NUTRITION_MAX_CALORIES;
+    protected readonly maxNutrient = MANUAL_NUTRITION_MAX_NUTRIENT;
     protected readonly nutritionWarning = signal<NutritionEditorWarning | null>(null);
     protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
     protected readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
@@ -60,6 +69,21 @@ export class RecipeNutritionEditorComponent {
             alcohol: form.manualAlcohol,
         };
     });
+    protected readonly nutritionFieldErrors = computed<NutritionEditorFieldErrors>(() => {
+        if (this.nutritionMode() === 'auto') {
+            return {};
+        }
+
+        const form = this.form();
+        return {
+            calories: this.getFieldError(form.manualCalories),
+            proteins: this.getFieldError(form.manualProteins),
+            fats: this.getFieldError(form.manualFats),
+            carbs: this.getFieldError(form.manualCarbs),
+            fiber: this.getFieldError(form.manualFiber),
+            alcohol: this.getFieldError(form.manualAlcohol),
+        };
+    });
 
     public readonly nutritionModeChange = output<string>();
     public readonly nutritionScaleModeChange = output<string>();
@@ -81,6 +105,11 @@ export class RecipeNutritionEditorComponent {
 
     protected caloriesError(): string | null {
         if (this.nutritionMode() === 'auto') {
+            return null;
+        }
+
+        const fieldError = this.nutritionFieldErrors().calories;
+        if (fieldError !== null && fieldError !== undefined) {
             return null;
         }
 
@@ -180,5 +209,13 @@ export class RecipeNutritionEditorComponent {
             touched: state.touched(),
             dirty: state.dirty(),
         };
+    }
+
+    private getFieldError(field: NutritionEditorSignalForm[keyof NutritionEditorSignalForm]): string | null {
+        if (field().errors()[0]?.kind === 'required') {
+            return null;
+        }
+
+        return resolveSignalFormFieldError(field, this.validationErrors, this.translateService);
     }
 }

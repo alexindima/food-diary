@@ -1,6 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FoodDiary.Domain.Entities.Recipes;
@@ -121,26 +122,32 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
 
         RuleFor(x => x.ManualCalories)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxCalories)
             .When(x => !x.CalculateNutritionAutomatically);
 
         RuleFor(x => x.ManualProteins)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically);
 
         RuleFor(x => x.ManualFats)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically);
 
         RuleFor(x => x.ManualCarbs)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically);
 
         RuleFor(x => x.ManualFiber)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically);
 
         RuleFor(x => x.ManualAlcohol)
             .GreaterThanOrEqualTo(0)
+            .LessThanOrEqualTo(ManualNutritionLimits.MaxNutrient)
             .When(x => !x.CalculateNutritionAutomatically && x.ManualAlcohol.HasValue);
     }
 
