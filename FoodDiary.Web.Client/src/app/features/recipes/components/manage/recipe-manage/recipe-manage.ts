@@ -276,6 +276,10 @@ export class RecipeManageComponent {
     }
 
     protected onSubmit(): void {
+        if (this.isSubmitting()) {
+            return;
+        }
+
         this.recipeSignalForm().markAsTouched();
         this.stepsTouchedState.markTouched();
 

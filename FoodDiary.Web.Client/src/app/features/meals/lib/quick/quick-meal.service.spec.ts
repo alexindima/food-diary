@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { of, throwError } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
@@ -219,5 +219,22 @@ describe('QuickMealService saving', () => {
         expect(toastService.error).toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_ERROR');
         expect(toastService.success).not.toHaveBeenCalledWith('QUICK_CONSUMPTION.SAVE_SUCCESS');
         expect(service.items()).toHaveLength(1);
+    });
+
+    it('ignores duplicate save while a meal is being created', () => {
+        const pendingCreate$ = new Subject<Meal>();
+        mealService.create.mockReturnValue(pendingCreate$);
+        service.addProduct(product);
+
+        service.saveDraft();
+        service.saveDraft();
+
+        expect(mealService.create).toHaveBeenCalledOnce();
+        expect(service.isSaving()).toBe(true);
+
+        pendingCreate$.next(createdMeal);
+        pendingCreate$.complete();
+
+        expect(service.isSaving()).toBe(false);
     });
 });

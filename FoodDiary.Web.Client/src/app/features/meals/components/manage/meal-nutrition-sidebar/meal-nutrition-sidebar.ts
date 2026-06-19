@@ -50,6 +50,7 @@ export class MealNutritionSidebarComponent {
     public readonly caloriesError = input.required<string | null>();
     public readonly macrosError = input.required<string | null>();
     public readonly isEditMode = input.required<boolean>();
+    public readonly isSubmitting = input(false);
     public readonly globalError = input.required<string | null>();
 
     public readonly nutritionModeChange = output<string>();

@@ -188,6 +188,19 @@ describe('RecipeManageComponent submission', () => {
     });
 });
 
+describe('RecipeManageComponent duplicate submit guard', () => {
+    it('should ignore repeated submit while recipe is submitting', async () => {
+        const { component, facade } = await setupComponentAsync();
+        patchValidManualRecipe(component);
+        facade.isSubmitting.set(true);
+
+        component['onSubmit']();
+
+        expect(facade.addRecipe).not.toHaveBeenCalled();
+        expect(facade.updateRecipe).not.toHaveBeenCalled();
+    });
+});
+
 describe('RecipeManageComponent import draft shell', () => {
     it('applies pasted recipe text to draft fields', async () => {
         const { component } = await setupComponentAsync();

@@ -45,6 +45,7 @@
                 fill="outline"
                 variant="primary"
                 icon="arrow_back"
+                [disabled]="isSubmitting()"
                 (click)="onCancel()"
             >
                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
@@ -56,6 +57,8 @@
                     appearance="brand-action"
                     icon="save"
                     [fullWidth]="true"
+                    [disabled]="isSubmitting()"
+                    [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
                 </fd-ui-button>
@@ -66,6 +69,8 @@
                     appearance="brand-action"
                     icon="add"
                     [fullWidth]="true"
+                    [disabled]="isSubmitting()"
+                    [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}
                 </fd-ui-button>

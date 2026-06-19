@@ -185,6 +185,42 @@ describe('MealManageFormComponent submit behavior', () => {
     });
 });
 
+describe('MealManageFormComponent duplicate submit guard', () => {
+    it('should ignore repeated submit while create is in progress', async () => {
+        const { component, mealManageFacade } = await setupComponentAsync();
+        let resolveSubmit: ((value: Consumption) => void) | undefined;
+        mealManageFacade.submitConsumptionAsync.mockReturnValue(
+            new Promise<Consumption>(resolve => {
+                resolveSubmit = resolve;
+            }),
+        );
+        component['patchConsumptionFormModel']({
+            date: '2026-04-05',
+            time: '10:30',
+            mealType: 'BREAKFAST',
+            items: [
+                createConsumptionItemValue(
+                    { ...createEmptyProductSnapshot(), id: 'product-1', name: 'Apple' },
+                    null,
+                    PRODUCT_AMOUNT,
+                    ConsumptionSourceType.Product,
+                ),
+            ],
+        });
+
+        const firstSubmit = component['onSubmitAsync']();
+        await component['onSubmitAsync']();
+
+        expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledOnce();
+        expect(component['isSubmitting']()).toBe(true);
+
+        resolveSubmit?.(createConsumption({ totalCalories: TOTAL_CALORIES }));
+        await firstSubmit;
+
+        expect(component['isSubmitting']()).toBe(false);
+    });
+});
+
 describe('MealManageFormComponent item and AI behavior', () => {
     it('should open manual item dialog for a reusable empty item', async () => {
         const { component } = await setupComponentAsync();

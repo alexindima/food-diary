@@ -85,6 +85,7 @@ async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {
     fixture.componentRef.setInput('caloriesError', null);
     fixture.componentRef.setInput('macrosError', null);
     fixture.componentRef.setInput('isEditMode', false);
+    fixture.componentRef.setInput('isSubmitting', false);
     fixture.componentRef.setInput('globalError', null);
     fixture.detectChanges();
 

@@ -221,6 +221,10 @@ export class RecipeManageFacade {
     }
 
     public addRecipe(recipeData: RecipeDto): void {
+        if (this.isSubmitting()) {
+            return;
+        }
+
         this.isSubmitting.set(true);
         this.recipeService
             .create(recipeData)
@@ -238,6 +242,10 @@ export class RecipeManageFacade {
     }
 
     public updateRecipe(id: string, recipeData: RecipeDto): void {
+        if (this.isSubmitting()) {
+            return;
+        }
+
         this.isSubmitting.set(true);
         this.recipeService
             .update(id, recipeData)

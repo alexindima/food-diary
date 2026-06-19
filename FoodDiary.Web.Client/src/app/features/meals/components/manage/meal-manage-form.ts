@@ -100,6 +100,7 @@ export class MealManageFormComponent {
         carbs: 0,
     });
     protected readonly globalError = signal<string | null>(null);
+    protected readonly isSubmitting = signal(false);
     protected readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),
@@ -409,6 +410,10 @@ export class MealManageFormComponent {
     // --- Submit ---
 
     protected async onSubmitAsync(): Promise<void> {
+        if (this.isSubmitting()) {
+            return;
+        }
+
         this.consumptionSignalForm().markAsTouched();
         this.itemsTouchedState.markTouched();
 
@@ -423,10 +428,13 @@ export class MealManageFormComponent {
 
         const consumptionData = this.buildConsumptionManageDto();
         const consumption = this.consumption();
+        this.isSubmitting.set(true);
         try {
             await (consumption !== null ? this.updateConsumptionAsync(consumptionData) : this.addConsumptionAsync(consumptionData));
         } catch (error: unknown) {
             this.handleSubmitError(error instanceof HttpErrorResponse ? error : new HttpErrorResponse({ error }));
+        } finally {
+            this.isSubmitting.set(false);
         }
     }
 

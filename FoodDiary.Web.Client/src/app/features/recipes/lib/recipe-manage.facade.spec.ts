@@ -132,6 +132,22 @@ describe('RecipeManageFacade submit', () => {
 
         expect(facade.globalError()).toBe('Backend failed');
     });
+
+    it('ignores create submit while another recipe submit is in progress', () => {
+        facade.isSubmitting.set(true);
+
+        facade.addRecipe({
+            name: 'Recipe',
+            steps: [],
+            servings: 1,
+            cookTime: 1,
+            prepTime: 0,
+            visibility: RecipeVisibility.Public,
+            calculateNutritionAutomatically: true,
+        });
+
+        expect(recipeService.create).not.toHaveBeenCalled();
+    });
 });
 
 describe('RecipeManageFacade selection', () => {
