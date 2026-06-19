@@ -9,6 +9,7 @@ const CLAMPED_INPUT_SIZE = 5;
 type NutrientInputTestContext = {
     component: FdUiNutrientInputComponent;
     fixture: ComponentFixture<FdUiNutrientInputComponent>;
+    host: () => HTMLElement;
     input: () => HTMLInputElement;
 };
 
@@ -32,7 +33,7 @@ async function setupNutrientInputAsync(): Promise<NutrientInputTestContext> {
 
     fixture.detectChanges();
 
-    return { component, fixture, input };
+    return { component, fixture, host, input };
 }
 
 describe('FdUiNutrientInputComponent', () => {
@@ -40,6 +41,54 @@ describe('FdUiNutrientInputComponent', () => {
         const { component } = await setupNutrientInputAsync();
 
         expect(component).toBeTruthy();
+    });
+
+    it('should render unit label in the label line instead of value line', async () => {
+        const { fixture } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('label', 'Proteins');
+        fixture.componentRef.setInput('unitLabel', 'g');
+        fixture.detectChanges();
+
+        const host = fixture.nativeElement as HTMLElement;
+
+        expect(host.querySelector('.fd-ui-nutrient-input__label-text')?.textContent.trim()).toBe('Proteins, g');
+        expect(host.querySelector('.fd-ui-nutrient-input__unit')).toBeNull();
+    });
+
+    it('should focus input when the card is pressed', async () => {
+        const { host, input } = await setupNutrientInputAsync();
+
+        host()
+            .querySelector<HTMLElement>('.fd-ui-nutrient-input')
+            ?.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+
+        expect(document.activeElement).toBe(input());
+    });
+
+    it('should not focus input from card press when disabled', async () => {
+        const { fixture, host, input } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('disabled', true);
+        fixture.detectChanges();
+        input().blur();
+
+        host()
+            .querySelector<HTMLElement>('.fd-ui-nutrient-input')
+            ?.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+
+        expect(document.activeElement).not.toBe(input());
+    });
+
+    it('should not focus input from card press when readonly', async () => {
+        const { fixture, host, input } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('readonly', true);
+        fixture.detectChanges();
+        input().blur();
+
+        host()
+            .querySelector<HTMLElement>('.fd-ui-nutrient-input')
+            ?.dispatchEvent(new Event('pointerdown', { bubbles: true }));
+
+        expect(document.activeElement).not.toBe(input());
     });
 });
 
@@ -157,5 +206,29 @@ describe('FdUiNutrientInputComponent dynamic width', () => {
         fixture.detectChanges();
         expect(component['inputWidth']).toBe('1ch');
         expect(component['inputSize']).toBe(1);
+    });
+
+    it('should apply compact value density for long values', async () => {
+        const { component, fixture, host } = await setupNutrientInputAsync();
+        component.value.set('123456');
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-nutrient-input')?.classList).toContain('fd-ui-nutrient-input--value-compact');
+    });
+
+    it('should apply dense value density for longer values', async () => {
+        const { component, fixture, host } = await setupNutrientInputAsync();
+        component.value.set('1234567');
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-nutrient-input')?.classList).toContain('fd-ui-nutrient-input--value-dense');
+    });
+
+    it('should apply extra dense value density for clamped values', async () => {
+        const { component, fixture, host } = await setupNutrientInputAsync();
+        component.value.set('12345678');
+        fixture.detectChanges();
+
+        expect(host().querySelector('.fd-ui-nutrient-input')?.classList).toContain('fd-ui-nutrient-input--value-x-dense');
     });
 });

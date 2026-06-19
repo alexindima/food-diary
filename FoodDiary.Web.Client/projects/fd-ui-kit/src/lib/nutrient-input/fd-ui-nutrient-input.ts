@@ -1,9 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model } from '@angular/core';
+import type { ElementRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, viewChild } from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
 
 const DEFAULT_MAX_INPUT_CHARS = 8;
+const COMPACT_VALUE_LENGTH = 6;
+const DENSE_VALUE_LENGTH = 7;
+const EXTRA_DENSE_VALUE_LENGTH = 8;
 
 @Component({
     selector: 'fd-ui-nutrient-input',
@@ -14,6 +18,7 @@ const DEFAULT_MAX_INPUT_CHARS = 8;
 })
 export class FdUiNutrientInputComponent implements FormValueControl<string | number | null> {
     private readonly cdr = inject(ChangeDetectorRef);
+    private readonly control = viewChild<ElementRef<HTMLInputElement>>('control');
 
     public readonly label = input('');
     public readonly icon = input<string>();
@@ -23,6 +28,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     public readonly step = input<string | number>();
     public readonly min = input<string | number>();
     public readonly max = input<string | number>();
+    public readonly maximum = input<string | number>();
     public readonly required = input(false);
     public readonly readonly = input(false);
     public readonly controlReadonly = input(false);
@@ -41,6 +47,7 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected displayValue = '';
     protected inputSize = 1;
     protected inputWidth = '1ch';
+    protected valueDensityClass = 'fd-ui-nutrient-input--value-normal';
     protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
 
     public constructor() {
@@ -52,11 +59,20 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected get hostClass(): string {
         const error = this.error();
         const hasError = error !== null && error !== undefined && error.length > 0;
-        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
+        return `fd-ui-nutrient-input fd-ui-nutrient-input--${this.size()} fd-ui-nutrient-input--${this.variant()} fd-ui-nutrient-input--value-${this.valueAlign()} ${this.valueDensityClass}${this.disabled() ? ' fd-ui-nutrient-input--disabled' : ''}${this.isReadonly() ? ' fd-ui-nutrient-input--readonly' : ''}${hasError ? ' fd-ui-nutrient-input--error' : ''}`;
     }
 
     protected isReadonly(): boolean {
         return this.readonly() || this.controlReadonly();
+    }
+
+    protected focusControl(event: Event): void {
+        if (this.disabled() || this.isReadonly() || event.target instanceof HTMLInputElement) {
+            return;
+        }
+
+        event.preventDefault();
+        this.control()?.nativeElement.focus();
     }
 
     protected onInput(event: Event): void {
@@ -105,6 +121,23 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
         const clamped = Math.min(this.maxInputChars, length);
         this.inputSize = clamped;
         this.inputWidth = `${clamped}ch`;
+        this.valueDensityClass = this.resolveValueDensityClass(length);
+    }
+
+    private resolveValueDensityClass(length: number): string {
+        if (length >= EXTRA_DENSE_VALUE_LENGTH) {
+            return 'fd-ui-nutrient-input--value-x-dense';
+        }
+
+        if (length >= DENSE_VALUE_LENGTH) {
+            return 'fd-ui-nutrient-input--value-dense';
+        }
+
+        if (length >= COMPACT_VALUE_LENGTH) {
+            return 'fd-ui-nutrient-input--value-compact';
+        }
+
+        return 'fd-ui-nutrient-input--value-normal';
     }
 
     private setValue(value: string | number | null): void {

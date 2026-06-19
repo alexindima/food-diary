@@ -188,5 +188,69 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
                 ErrorCode = "Validation.Invalid",
             });
         }
+
+        EnsureDefaultPortionAmountWithinLimit(command, product, context);
+        EnsureNutritionWithinLimit(command, product, context);
+    }
+
+    private static void EnsureDefaultPortionAmountWithinLimit(
+        UpdateProductCommand command,
+        Product product,
+        ValidationContext<UpdateProductCommand> context) {
+        if (!command.DefaultPortionAmount.HasValue) {
+            return;
+        }
+
+        MeasurementUnit unit = product.BaseUnit;
+        if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
+            if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out unit)) {
+                return;
+            }
+        }
+
+        double maxAmount = Product.GetMaxDefaultPortionAmount(unit);
+        if (command.DefaultPortionAmount.Value > maxAmount) {
+            context.AddFailure(new ValidationFailure(nameof(command.DefaultPortionAmount),
+                "DefaultPortionAmount exceeds the maximum for the selected unit") {
+                ErrorCode = "Validation.Invalid",
+            });
+        }
+    }
+
+    private static void EnsureNutritionWithinLimit(
+        UpdateProductCommand command,
+        Product product,
+        ValidationContext<UpdateProductCommand> context) {
+        MeasurementUnit unit = product.BaseUnit;
+        if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
+            if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out unit)) {
+                return;
+            }
+        }
+
+        double maxCalories = Product.GetMaxCaloriesPerBase(unit);
+        EnsureNutritionValueWithinLimit(context, nameof(command.CaloriesPerBase), command.CaloriesPerBase ?? product.CaloriesPerBase, maxCalories);
+
+        double maxNutrient = Product.GetMaxNutrientPerBase(unit);
+        EnsureNutritionValueWithinLimit(context, nameof(command.ProteinsPerBase), command.ProteinsPerBase ?? product.ProteinsPerBase, maxNutrient);
+        EnsureNutritionValueWithinLimit(context, nameof(command.FatsPerBase), command.FatsPerBase ?? product.FatsPerBase, maxNutrient);
+        EnsureNutritionValueWithinLimit(context, nameof(command.CarbsPerBase), command.CarbsPerBase ?? product.CarbsPerBase, maxNutrient);
+        EnsureNutritionValueWithinLimit(context, nameof(command.FiberPerBase), command.FiberPerBase ?? product.FiberPerBase, maxNutrient);
+        EnsureNutritionValueWithinLimit(context, nameof(command.AlcoholPerBase), command.AlcoholPerBase ?? product.AlcoholPerBase, maxNutrient);
+    }
+
+    private static void EnsureNutritionValueWithinLimit(
+        ValidationContext<UpdateProductCommand> context,
+        string propertyName,
+        double value,
+        double maxValue) {
+        if (value <= maxValue) {
+            return;
+        }
+
+        context.AddFailure(new ValidationFailure(propertyName,
+            $"{propertyName} exceeds the maximum for the selected unit") {
+            ErrorCode = "Validation.Invalid",
+        });
     }
 }

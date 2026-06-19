@@ -10,8 +10,8 @@ import { EMPTY, type Observable } from 'rxjs';
 import {
     NutritionEditorComponent,
     type NutritionEditorSignalForm,
+    type NutritionEditorWarning,
     type NutritionMacroState,
-    type NutritionMismatchWarning,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { DEFAULT_CALORIE_MISMATCH_THRESHOLD } from '../../../../../shared/lib/nutrition.constants';
 import {
@@ -36,7 +36,7 @@ export class RecipeNutritionEditorComponent {
     public readonly form = input.required<FieldTree<RecipeFormValues>>();
     public readonly nutritionMode = input.required<NutritionMode>();
     public readonly nutritionScaleMode = input.required<NutritionScaleMode>();
-    protected readonly nutritionWarning = signal<NutritionMismatchWarning | null>(null);
+    protected readonly nutritionWarning = signal<NutritionEditorWarning | null>(null);
     protected readonly nutritionModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
     protected readonly nutritionScaleModeOptions = signal<FdUiSegmentedToggleOption[]>([]);
     protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
@@ -147,16 +147,15 @@ export class RecipeNutritionEditorComponent {
         const fats = this.getNumberValue(form.manualFats().value());
         const carbs = this.getNumberValue(form.manualCarbs().value());
         const alcohol = this.getNumberValue(form.manualAlcohol().value());
-        this.nutritionWarning.set(
-            calculateCalorieMismatchWarning({
-                calories,
-                proteins,
-                fats,
-                carbs,
-                alcohol,
-                threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
-            }),
-        );
+        const warning = calculateCalorieMismatchWarning({
+            calories,
+            proteins,
+            fats,
+            carbs,
+            alcohol,
+            threshold: DEFAULT_CALORIE_MISMATCH_THRESHOLD,
+        });
+        this.nutritionWarning.set(warning === null ? null : { kind: 'caloriesMismatch', ...warning });
     }
 
     private getNumberValue(value: number | string | null): number {

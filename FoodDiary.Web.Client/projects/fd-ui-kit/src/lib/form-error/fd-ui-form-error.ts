@@ -30,10 +30,18 @@ export const FD_VALIDATION_ERRORS = new InjectionToken<FdValidationErrors>('FD_V
             key: 'FORM_ERRORS.PASSWORD.MIN_LENGTH',
             params: { requiredLength: getNumberProperty(error, 'requiredLength') },
         }),
+        maxLength: (error?: unknown): FdValidationErrorConfig => ({
+            key: 'FORM_ERRORS.MAX_LENGTH',
+            params: { requiredLength: getNumberProperty(error, 'requiredLength') },
+        }),
         nonEmptyArray: (): string => 'FORM_ERRORS.NON_EMPTY_ARRAY',
         min: (error?: unknown): FdValidationErrorConfig => ({
             key: 'FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO',
             params: { min: getNumberProperty(error, 'min') },
+        }),
+        max: (error?: unknown): FdValidationErrorConfig => ({
+            key: 'FORM_ERRORS.INVALID_MAX_AMOUNT',
+            params: { max: getNumberProperty(error, 'max') },
         }),
         userExists: (): string => 'FORM_ERRORS.USER_EXISTS',
         matchField: (): string => 'FORM_ERRORS.PASSWORD.MATCH',

@@ -1,5 +1,6 @@
 import { HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FdTourService } from 'fd-tour';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
@@ -9,6 +10,15 @@ import { NavigationService } from '../../../../../services/navigation.service';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
 import { ProductService } from '../../../api/product.service';
 import { ProductExternalFoodFacade } from '../../../lib/manage/product-external-food.facade';
+import {
+    PRODUCT_MAX_PIECE_AMOUNT,
+    PRODUCT_MAX_PIECE_CALORIES_PER_BASE,
+    PRODUCT_MAX_PIECE_NUTRIENT_PER_BASE,
+    PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT,
+    PRODUCT_MAX_WEIGHT_OR_VOLUME_CALORIES_PER_BASE,
+    PRODUCT_MAX_WEIGHT_OR_VOLUME_NUTRIENT_PER_BASE,
+    PRODUCT_NAME_MAX_LENGTH,
+} from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import { MeasurementUnit, type Product, type ProductSearchSuggestion, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
@@ -107,6 +117,9 @@ type ProductManageFormSetup = {
     navigationService: {
         navigateToProductListAsync: ReturnType<typeof vi.fn>;
     };
+    tourService: {
+        start: ReturnType<typeof vi.fn>;
+    };
     externalFoodFacade: ProductExternalFoodFacadeMock;
 };
 
@@ -131,6 +144,23 @@ describe('ProductManageFormComponent header state', () => {
             submitIcon: 'save',
             submitLabelKey: 'PRODUCT_MANAGE.SAVE_BUTTON',
         });
+    });
+
+    it('should start product form tour from the header action', async () => {
+        const { component, el, fixture, tourService } = await setupComponentAsync();
+
+        fixture.detectChanges();
+        const tourButton = el.querySelector('[data-tour-id="product-manage-tour-help"]');
+
+        component['startProductManageTour']();
+
+        expect(tourButton).not.toBeNull();
+        expect(tourService.start).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: 'product-manage',
+            }),
+            { force: true },
+        );
     });
 });
 
@@ -336,6 +366,90 @@ describe('ProductManageFormComponent submit and cancel behavior', () => {
     });
 });
 
+describe('ProductManageFormComponent validation limits', () => {
+    it('should not submit product values that exceed product limits', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, {
+            name: 'x'.repeat(PRODUCT_NAME_MAX_LENGTH + 1),
+            defaultPortionAmount: PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT + 1,
+        });
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('should apply stricter piece amount limit when product unit is pieces', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, {
+            baseUnit: MeasurementUnit.PCS,
+            baseAmount: 1,
+            defaultPortionAmount: PRODUCT_MAX_PIECE_AMOUNT + 1,
+        });
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('should not submit nutrition values that exceed gram base limits', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, {
+            caloriesPerBase: PRODUCT_MAX_WEIGHT_OR_VOLUME_CALORIES_PER_BASE + 1,
+            proteinsPerBase: PRODUCT_MAX_WEIGHT_OR_VOLUME_NUTRIENT_PER_BASE + 1,
+        });
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('should apply wider nutrition limits when product unit is pieces', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, {
+            baseUnit: MeasurementUnit.PCS,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: PRODUCT_MAX_PIECE_CALORIES_PER_BASE + 1,
+            proteinsPerBase: PRODUCT_MAX_PIECE_NUTRIENT_PER_BASE + 1,
+        });
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+
+    it('should allow editing but not submit portion nutrition values above the current portion range', async () => {
+        const { component, productManageFacade } = await setupComponentAsync();
+        fillValidProductForm(component);
+        patchProductForm(component, {
+            defaultPortionAmount: 250,
+            caloriesPerBase: PRODUCT_MAX_WEIGHT_OR_VOLUME_CALORIES_PER_BASE,
+            proteinsPerBase: PRODUCT_MAX_WEIGHT_OR_VOLUME_NUTRIENT_PER_BASE,
+        });
+        component['onNutritionModeChange']('portion');
+        patchProductForm(component, {
+            caloriesPerBase: 2501,
+            proteinsPerBase: 251,
+        });
+
+        expect(component['productForm']().invalid()).toBe(false);
+
+        const result = await component['onSubmitAsync']();
+
+        expect(result).toBeNull();
+        expect(productManageFacade.submitProductAsync).not.toHaveBeenCalled();
+    });
+});
+
 describe('ProductManageFormComponent cancel delete and nutrition behavior', () => {
     it('should emit cancel without navigation or discard confirmation in dialog mode', async () => {
         const { component, fixture, productManageFacade, navigationService } = await setupComponentAsync();
@@ -405,6 +519,9 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
     const dialogService = {
         open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
     };
+    const tourService = {
+        start: vi.fn(),
+    };
 
     await TestBed.configureTestingModule({
         imports: [ProductManageFormComponent],
@@ -429,6 +546,10 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
                 provide: ProductManageFacade,
                 useValue: productManageFacade,
             },
+            {
+                provide: FdTourService,
+                useValue: tourService,
+            },
         ],
     }).compileComponents();
 
@@ -440,6 +561,7 @@ async function setupComponentAsync(): Promise<ProductManageFormSetup> {
         dialogService,
         productManageFacade,
         navigationService,
+        tourService,
         externalFoodFacade,
     };
 }

@@ -8,6 +8,8 @@
     --fd-nutrient-label-text-gap: calc(var(--fd-space-xxs) / 2);
     --fd-nutrient-control-font-size: var(--fd-text-metric-lg-size);
     --fd-nutrient-control-min-font-size: 1.5rem;
+    --fd-nutrient-control-line-height: var(--fd-text-metric-lg-size);
+    --fd-nutrient-control-row-min-height: calc(var(--fd-nutrient-control-line-height) + var(--fd-space-sm));
     display: flex;
     flex-direction: column;
     gap: var(--fd-space-nutrient-input-gap);
@@ -56,12 +58,16 @@
     line-height: 1;
 }
 
+.fd-ui-nutrient-input__label-unit {
+    text-transform: lowercase;
+}
+
 .fd-ui-nutrient-input__control {
     border: none;
     background: transparent;
     font-weight: var(--fd-text-metric-hero-weight);
     font-size: clamp(var(--fd-nutrient-control-min-font-size), 22cqi, var(--fd-nutrient-control-font-size));
-    line-height: 1;
+    line-height: var(--fd-nutrient-control-line-height);
     color: var(--fd-nutrient-text-color);
     outline: none;
     padding: 0;
@@ -90,6 +96,8 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 .fd-ui-nutrient-input--lg {
     --fd-nutrient-control-font-size: var(--fd-text-metric-hero-size);
     --fd-nutrient-control-min-font-size: 2rem;
+    --fd-nutrient-control-line-height: var(--fd-text-metric-hero-size);
+    --fd-nutrient-control-row-min-height: var(--fd-nutrient-control-line-height);
     padding: var(--fd-space-nutrient-input-padding-lg);
     border-radius: var(--fd-radius-panel);
 }
@@ -101,12 +109,47 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 .fd-ui-nutrient-input--sm {
     --fd-nutrient-control-font-size: var(--fd-text-card-title-size);
     --fd-nutrient-control-min-font-size: 1rem;
+    --fd-nutrient-control-line-height: var(--fd-text-card-title-size);
+    --fd-nutrient-control-row-min-height: var(--fd-nutrient-control-line-height);
     padding: var(--fd-space-nutrient-input-padding-sm);
     border-radius: var(--fd-radius-button);
 }
 
 .fd-ui-nutrient-input--sm .fd-ui-nutrient-input__control {
     font-size: clamp(var(--fd-nutrient-control-min-font-size), 20cqi, var(--fd-nutrient-control-font-size));
+}
+
+.fd-ui-nutrient-input--value-compact {
+    --fd-nutrient-control-font-size: 1.75rem;
+    --fd-nutrient-control-min-font-size: 1.35rem;
+    padding-inline: var(--fd-space-md);
+}
+
+.fd-ui-nutrient-input--value-dense {
+    --fd-nutrient-control-font-size: 1.5rem;
+    --fd-nutrient-control-min-font-size: 1.2rem;
+    padding-inline: var(--fd-space-sm);
+}
+
+.fd-ui-nutrient-input--value-x-dense {
+    --fd-nutrient-control-font-size: 1.25rem;
+    --fd-nutrient-control-min-font-size: 1rem;
+    padding-inline: var(--fd-space-xs);
+}
+
+.fd-ui-nutrient-input--sm.fd-ui-nutrient-input--value-compact {
+    --fd-nutrient-control-font-size: 1rem;
+    --fd-nutrient-control-min-font-size: 0.875rem;
+}
+
+.fd-ui-nutrient-input--sm.fd-ui-nutrient-input--value-dense {
+    --fd-nutrient-control-font-size: 0.925rem;
+    --fd-nutrient-control-min-font-size: 0.8125rem;
+}
+
+.fd-ui-nutrient-input--sm.fd-ui-nutrient-input--value-x-dense {
+    --fd-nutrient-control-font-size: 0.85rem;
+    --fd-nutrient-control-min-font-size: 0.75rem;
 }
 
 .fd-ui-nutrient-input--error {
@@ -141,9 +184,10 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
 
 .fd-ui-nutrient-input__value-row {
     display: inline-flex;
-    align-items: baseline;
+    align-items: center;
     gap: var(--fd-space-nutrient-input-value-gap);
     width: fit-content;
+    min-block-size: var(--fd-nutrient-control-row-min-height);
     max-width: 100%;
     overflow: hidden;
     justify-content: center;
@@ -158,15 +202,6 @@ input.fd-ui-nutrient-input__control[type='number']::-webkit-inner-spin-button {
     min-width: 1ch;
     max-width: 10ch;
     overflow: hidden;
-}
-
-.fd-ui-nutrient-input__unit {
-    font-size: inherit;
-    font-weight: var(--fd-font-weight-bold);
-    color: color-mix(in srgb, var(--fd-nutrient-text-color) 70%, var(--fd-color-white));
-    letter-spacing: var(--fd-letter-spacing-emphasis);
-    text-transform: lowercase;
-    flex: 0 0 auto;
 }
 
 .fd-ui-nutrient-input--value-left .fd-ui-nutrient-input__control {

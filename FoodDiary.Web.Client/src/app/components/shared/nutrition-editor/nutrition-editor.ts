@@ -17,9 +17,18 @@ export type NutritionMacroState = {
 };
 
 export type NutritionMismatchWarning = {
+    kind: 'caloriesMismatch';
     expectedCalories: number;
     actualCalories: number;
 };
+
+export type NutritionTextWarning = {
+    kind: 'text';
+    messageKey: string;
+    params?: Record<string, number | string>;
+};
+
+export type NutritionEditorWarning = NutritionMismatchWarning | NutritionTextWarning;
 
 export type NutritionFormModel = {
     calories: number | null;
@@ -35,6 +44,8 @@ export type NutritionEditorSignalForm = Pick<
     'calories' | 'proteins' | 'fats' | 'carbs' | 'fiber' | 'alcohol'
 >;
 
+export type NutritionEditorFieldErrors = Partial<Record<keyof NutritionFormModel, string | null>>;
+
 @Component({
     selector: 'fd-nutrition-editor',
     imports: [CommonModule, FormField, TranslatePipe, FdUiNutrientInputComponent, NutritionEditorMessagesComponent],
@@ -47,10 +58,13 @@ export class NutritionEditorComponent {
     public readonly macroState = input.required<NutritionMacroState>();
     public readonly readonly = input(false);
     public readonly caloriesError = input<string | null>(null);
+    public readonly fieldErrors = input<NutritionEditorFieldErrors>({});
     public readonly macrosError = input<string | null>(null);
+    public readonly maxCalories = input<number>();
+    public readonly maxNutrient = input<number>();
     public readonly showManualHint = input(false);
     public readonly manualHintKey = input('');
-    public readonly warning = input<NutritionMismatchWarning | null>(null);
+    public readonly warning = input<NutritionEditorWarning | null>(null);
     protected readonly hasCaloriesError = computed(() => this.hasText(this.caloriesError()));
 
     protected readonly nutrientFillColors = {

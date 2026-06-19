@@ -11,6 +11,7 @@ import { FdUiSegmentedToggleComponent } from 'fd-ui-kit/segmented-toggle/fd-ui-s
 import {
     NutritionEditorComponent,
     type NutritionEditorSignalForm,
+    type NutritionEditorWarning,
 } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import type { CalorieMismatchWarning, ConsumptionFormValues, MacroBarState, NutritionMode } from '../meal-manage-lib/meal-manage.types';
 import { buildMealNutritionModeOptions } from '../meal-manage-lib/meal-manage-options.mapper';
@@ -60,6 +61,10 @@ export class MealNutritionSidebarComponent {
     protected readonly nutritionModeOptions = computed(() => {
         this.activeLang();
         return buildMealNutritionModeOptions(this.translateService);
+    });
+    protected readonly nutritionEditorWarning = computed<NutritionEditorWarning | null>(() => {
+        const warning = this.nutritionWarning();
+        return warning === null ? null : { kind: 'caloriesMismatch', ...warning };
     });
     protected readonly isNutritionReadonly = computed(() => this.nutritionMode() === 'auto');
     protected readonly showManualNutritionHint = computed(() => !this.isNutritionReadonly());

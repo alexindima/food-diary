@@ -411,6 +411,26 @@
         "ADD_TITLE": "Create product",
         "EDIT_TITLE": "Edit Product",
         "SUBTITLE": "Fill nutrition and details to save",
+        "START_TOUR": "Show product form tour",
+        "TOUR": {
+            "LABELS": {
+                "PREVIOUS": "Back",
+                "NEXT": "Next",
+                "FINISH": "Done",
+                "SKIP": "Skip",
+                "CLOSE": "Close"
+            },
+            "BASIC_TITLE": "Product details",
+            "BASIC_TEXT": "Add the photo, name, barcode, type, and serving size that make this product easy to reuse.",
+            "NUTRITION_TITLE": "Nutrition values",
+            "NUTRITION_TEXT": "Fill calories and macros manually or recognize them from a label photo.",
+            "TRACKING_TITLE": "Tracking preferences",
+            "TRACKING_TEXT": "Choose who can use this product and keep optional notes for future edits.",
+            "ACTIONS_TITLE": "Save changes",
+            "ACTIONS_TEXT": "Save the product when the required fields are complete, or cancel to return to the product list.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "Use this button whenever you need a quick reminder of the product form."
+        },
         "NAME": "Name",
         "NAME_PLACEHOLDER": "Enter product name",
         "BRAND": "Brand / manufacturer",
@@ -459,6 +479,9 @@
             "CALORIES_REQUIRED": "Calories must be greater than 0.",
             "MACROS_REQUIRED": "Set at least one macro (proteins, fats, carbs, or alcohol)."
         },
+        "NUTRITION_WARNINGS": {
+            "PORTION_LIMIT": "For the current serving, these values look unusually high. Increase the serving size or double-check nutrients."
+        },
         "VISIBILITY": "Visibility",
         "VISIBILITY_GROUP_TITLE": "Visibility",
         "VISIBILITY_PLACEHOLDER": "Select visibility",
@@ -505,6 +528,14 @@
         "CARBS": "C",
         "FIBER": "Fiber",
         "ALCOHOL": "Alcohol",
+        "FIELD_LABELS": {
+            "CALORIES": "Calories",
+            "PROTEINS": "Proteins",
+            "FATS": "Fats",
+            "CARBS": "Carbs",
+            "FIBER": "Fiber",
+            "ALCOHOL": "Alcohol"
+        },
         "CALORIES_MISMATCH_WARNING": "Based on macros, expected about {{expected}} kcal, but you entered {{actual}} kcal. Please double-check."
     },
     "PRODUCT_AI_DIALOG": {

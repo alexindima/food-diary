@@ -17,7 +17,7 @@
             [readonly]="readonly()"
             [disabled]="disabled()"
             [attr.placeholder]="placeholderAttribute()"
-            [attr.maxlength]="maxLength() ?? null"
+            [attr.maxlength]="maximumLength() ?? maxLength() ?? null"
             [attr.rows]="rows()"
             [attr.aria-describedby]="hasError() ? `${id()}-error` : null"
             [attr.aria-invalid]="hasError() ? 'true' : null"

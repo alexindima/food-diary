@@ -14,6 +14,8 @@
             "INVALID_MIN_AMOUNT": "Value must be greater than 0"
         },
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Value must be greater than 0",
+        "INVALID_MAX_AMOUNT": "Value must be {{ max }} or less",
+        "MAX_LENGTH": "Use {{ requiredLength }} characters or fewer",
         "UNKNOWN": "Unknown error"
     },
     "COMMON": {

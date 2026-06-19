@@ -96,6 +96,54 @@ public class ProductsValidatorTests {
         result.ShouldHaveValidationErrorFor(c => c.BaseAmount);
     }
 
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("pcs", Product.MaxPieceDefaultPortionAmount + 1)]
+    public async Task CreateProduct_WithDefaultPortionAmountAboveUnitLimit_HasError(string baseUnit, double defaultPortionAmount) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                DefaultPortionAmount = defaultPortionAmount,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceCaloriesPerBase + 1)]
+    public async Task CreateProduct_WithCaloriesAboveUnitLimit_HasError(string baseUnit, double caloriesPerBase) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                CaloriesPerBase = caloriesPerBase,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceNutrientPerBase + 1)]
+    public async Task CreateProduct_WithNutrientAboveUnitLimit_HasError(string baseUnit, double nutrientPerBase) {
+        TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(
+            ValidCreateProduct() with {
+                BaseUnit = baseUnit,
+                BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+                ProteinsPerBase = nutrientPerBase,
+            });
+
+        result.ShouldHaveValidationErrorFor(c => c.ProteinsPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
     [Fact]
     public async Task CreateProduct_WithValidData_NoErrors() {
         TestValidationResult<CreateProductCommand> result = await new CreateProductCommandValidator().TestValidateAsync(ValidCreateProduct());
@@ -247,6 +295,114 @@ public class ProductsValidatorTests {
         Assert.Contains(result.Errors, error =>
             string.Equals(error.PropertyName, propertyName, StringComparison.Ordinal) &&
             string.Equals(error.ErrorCode, "Validation.Invalid", StringComparison.Ordinal));
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData("pcs", Product.MaxPieceDefaultPortionAmount + 1)]
+    public async Task UpdateProduct_WithDefaultPortionAmountAboveUnitLimit_HasValidationError(string baseUnit, double defaultPortionAmount) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            DefaultPortionAmount = defaultPortionAmount,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceCaloriesPerBase + 1)]
+    public async Task UpdateProduct_WithCaloriesAboveUnitLimit_HasValidationError(string baseUnit, double caloriesPerBase) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            CaloriesPerBase = caloriesPerBase,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Theory]
+    [InlineData("g", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("ml", Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData("pcs", Product.MaxPieceNutrientPerBase + 1)]
+    public async Task UpdateProduct_WithNutrientAboveUnitLimit_HasValidationError(string baseUnit, double nutrientPerBase) {
+        Product product = CreateProduct();
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = baseUnit,
+            BaseAmount = string.Equals(baseUnit, "pcs", StringComparison.OrdinalIgnoreCase) ? 1 : 100,
+            ProteinsPerBase = nutrientPerBase,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.ProteinsPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_ToStricterUnitWithExistingNutritionAboveLimit_HasValidationError() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Large piece",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: Product.MaxWeightOrVolumeCaloriesPerBase + 1,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = "g",
+            BaseAmount = 100,
+            CaloriesPerBase = null,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.CaloriesPerBase)
+            .WithErrorCode("Validation.Invalid");
+    }
+
+    [Fact]
+    public async Task UpdateProduct_WithPieceUnitAndDefaultPortionAbovePieceLimit_HasValidationError() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Vitamin",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: 1,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0,
+            visibility: Visibility.Private);
+        UpdateProductCommand command = ValidUpdateProduct(product.UserId.Value, product.Id.Value) with {
+            BaseUnit = null,
+            BaseAmount = null,
+            DefaultPortionAmount = Product.MaxPieceDefaultPortionAmount + 1,
+        };
+
+        TestValidationResult<UpdateProductCommand> result = await new UpdateProductCommandValidator(new ProductRepositoryStub(product)).TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.DefaultPortionAmount)
+            .WithErrorCode("Validation.Invalid");
     }
 
     [Fact]

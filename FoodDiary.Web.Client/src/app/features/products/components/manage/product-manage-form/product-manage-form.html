@@ -6,7 +6,19 @@
         [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
-    />
+    >
+        <fd-ui-button
+            class="product-manage__tour-action"
+            data-tour-id="product-manage-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [ariaLabel]="'PRODUCT_MANAGE.START_TOUR' | translate"
+            [fdUiHint]="'PRODUCT_MANAGE.START_TOUR' | translate"
+            (click)="startProductManageTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <form class="product-manage__form fd-stack fd-gap-lg" [formRoot]="productForm" [attr.aria-busy]="isSubmitting() || isDeleting()">
@@ -32,7 +44,7 @@
                             (openAiRecognition)="openAiRecognitionDialog()"
                         />
 
-                        <div class="product-manage__actions-panel">
+                        <div class="product-manage__actions-panel" data-tour-id="product-manage-actions">
                             <div class="product-manage__footer-actions fd-row fd-gap-md">
                                 <fd-ui-button
                                     type="button"

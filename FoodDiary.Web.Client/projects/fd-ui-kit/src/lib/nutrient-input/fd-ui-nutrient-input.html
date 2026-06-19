@@ -1,11 +1,19 @@
-<div [class]="hostClass" [style.--fd-nutrient-tint]="tintColor() || null" [style.--fd-nutrient-text-color]="textColor() || null">
+<div
+    [class]="hostClass"
+    [style.--fd-nutrient-tint]="tintColor() || null"
+    [style.--fd-nutrient-text-color]="textColor() || null"
+    (pointerdown)="focusControl($event)"
+>
     @if (label()) {
         <div class="fd-ui-nutrient-input__label" [class.fd-ui-nutrient-input__label--uppercase]="labelUppercase()">
             @if (icon(); as iconName) {
                 <fd-ui-icon class="fd-ui-nutrient-input__icon" [name]="iconName" />
             }
             <span class="fd-ui-nutrient-input__label-text">
-                {{ label() }}
+                <span>{{ label() }}</span>
+                @if (unitLabel()) {
+                    <span class="fd-ui-nutrient-input__label-unit">, {{ unitLabel() }}</span>
+                }
                 @if (required()) {
                     <span class="fd-ui-nutrient-input__required">*</span>
                 }
@@ -15,6 +23,7 @@
 
     <div class="fd-ui-nutrient-input__value-row">
         <input
+            #control
             class="fd-ui-nutrient-input__control"
             [attr.name]="name() || null"
             [attr.type]="type() === 'number' ? 'text' : type()"
@@ -24,7 +33,7 @@
             [readonly]="isReadonly()"
             [attr.step]="step() ?? null"
             [attr.min]="min() ?? null"
-            [attr.max]="max() ?? null"
+            [attr.max]="maximum() ?? max() ?? null"
             [attr.size]="inputSize"
             [style.width]="inputWidth"
             [disabled]="disabled()"
@@ -32,9 +41,6 @@
             (input)="onInput($event)"
             (blur)="onBlur()"
         />
-        @if (unitLabel()) {
-            <span class="fd-ui-nutrient-input__unit">{{ unitLabel() }}</span>
-        }
     </div>
 
     @if (error()) {

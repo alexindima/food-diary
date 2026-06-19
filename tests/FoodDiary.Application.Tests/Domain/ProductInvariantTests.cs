@@ -201,6 +201,25 @@ public class ProductInvariantTests {
     }
 
     [Theory]
+    [InlineData(MeasurementUnit.G, Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData(MeasurementUnit.Ml, Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData(MeasurementUnit.Pcs, Product.MaxPieceDefaultPortionAmount + 1)]
+    public void Create_WithDefaultPortionAmountAboveUnitLimit_Throws(MeasurementUnit unit, double defaultPortionAmount) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            unit,
+            baseAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            defaultPortionAmount: defaultPortionAmount,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+    }
+
+    [Theory]
     [InlineData(double.NaN)]
     [InlineData(double.PositiveInfinity)]
     public void Create_WithNonFiniteNutrition_Throws(double value) {
@@ -212,6 +231,44 @@ public class ProductInvariantTests {
             defaultPortionAmount: 100,
             caloriesPerBase: value,
             proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+    }
+
+    [Theory]
+    [InlineData(MeasurementUnit.G, Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData(MeasurementUnit.Ml, Product.MaxWeightOrVolumeCaloriesPerBase + 1)]
+    [InlineData(MeasurementUnit.Pcs, Product.MaxPieceCaloriesPerBase + 1)]
+    public void Create_WithCaloriesAboveUnitLimit_Throws(MeasurementUnit unit, double caloriesPerBase) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            unit,
+            baseAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            defaultPortionAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            caloriesPerBase: caloriesPerBase,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0));
+    }
+
+    [Theory]
+    [InlineData(MeasurementUnit.G, Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData(MeasurementUnit.Ml, Product.MaxWeightOrVolumeNutrientPerBase + 1)]
+    [InlineData(MeasurementUnit.Pcs, Product.MaxPieceNutrientPerBase + 1)]
+    public void Create_WithNutrientAboveUnitLimit_Throws(MeasurementUnit unit, double nutrientPerBase) {
+        Assert.Throws<ArgumentOutOfRangeException>(() => Product.Create(
+            UserId.New(),
+            "Apple",
+            unit,
+            baseAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            defaultPortionAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: nutrientPerBase,
             fatsPerBase: 0.2,
             carbsPerBase: 14,
             fiberPerBase: 2.4,
@@ -243,6 +300,30 @@ public class ProductInvariantTests {
             alcoholPerBase: 0);
 
         Assert.Throws<ArgumentOutOfRangeException>(() => product.UpdateMeasurement(defaultPortionAmount: 0));
+    }
+
+    [Theory]
+    [InlineData(MeasurementUnit.G, Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData(MeasurementUnit.Ml, Product.MaxWeightOrVolumeDefaultPortionAmount + 1)]
+    [InlineData(MeasurementUnit.Pcs, Product.MaxPieceDefaultPortionAmount + 1)]
+    public void UpdateMeasurement_WithDefaultPortionAmountAboveUnitLimit_Throws(MeasurementUnit unit, double defaultPortionAmount) {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Apple",
+            baseUnit: MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 52,
+            proteinsPerBase: 0.3,
+            fatsPerBase: 0.2,
+            carbsPerBase: 14,
+            fiberPerBase: 2.4,
+            alcoholPerBase: 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => product.UpdateMeasurement(
+            baseUnit: unit,
+            baseAmount: unit == MeasurementUnit.Pcs ? 1 : 100,
+            defaultPortionAmount: defaultPortionAmount));
     }
 
     [Fact]
@@ -514,6 +595,25 @@ public class ProductInvariantTests {
     }
 
     [Fact]
+    public void UpdateMeasurement_ToStricterUnitWithExistingNutritionAboveLimit_Throws() {
+        var product = Product.Create(
+            UserId.New(),
+            name: "Large piece",
+            baseUnit: MeasurementUnit.Pcs,
+            baseAmount: 1,
+            defaultPortionAmount: 1,
+            caloriesPerBase: Product.MaxWeightOrVolumeCaloriesPerBase + 1,
+            proteinsPerBase: 0,
+            fatsPerBase: 0,
+            carbsPerBase: 0,
+            fiberPerBase: 0,
+            alcoholPerBase: 0);
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            product.UpdateMeasurement(baseUnit: MeasurementUnit.G, baseAmount: 100, defaultPortionAmount: 100));
+    }
+
+    [Fact]
     public void Create_WithNullDefaultPortionAmount_UsesBaseAmount() {
         var product = Product.Create(
             UserId.New(),
@@ -593,6 +693,22 @@ public class ProductInvariantTests {
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
             product.UpdateNutrition(caloriesPerBase: double.PositiveInfinity));
+    }
+
+    [Fact]
+    public void UpdateNutrition_WithCaloriesAboveUnitLimit_Throws() {
+        Product product = CreateValidProduct();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            product.UpdateNutrition(caloriesPerBase: Product.MaxWeightOrVolumeCaloriesPerBase + 1));
+    }
+
+    [Fact]
+    public void UpdateNutrition_WithNutrientAboveUnitLimit_Throws() {
+        Product product = CreateValidProduct();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            product.UpdateNutrition(proteinsPerBase: Product.MaxWeightOrVolumeNutrientPerBase + 1));
     }
 
     [Fact]

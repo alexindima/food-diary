@@ -14,6 +14,8 @@
             "INVALID_MIN_AMOUNT": "Значение должно быть больше 0"
         },
         "INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO": "Значение должно быть больше 0",
+        "INVALID_MAX_AMOUNT": "Значение должно быть не больше {{ max }}",
+        "MAX_LENGTH": "Не больше {{ requiredLength }} символов",
         "UNKNOWN": "Неизвестная ошибка"
     },
     "COMMON": {

@@ -23,6 +23,7 @@ export class FdUiTextareaComponent implements FormValueControl<string | number |
     public readonly readonly = input(false);
     public readonly rows = input(DEFAULT_ROWS);
     public readonly maxLength = input<number>();
+    public readonly maximumLength = input<number>();
     public readonly size = input<FdUiFieldSize>('md');
     public readonly fillColor = input<string | null>(null);
     public readonly value = model<string | number | null>(null);

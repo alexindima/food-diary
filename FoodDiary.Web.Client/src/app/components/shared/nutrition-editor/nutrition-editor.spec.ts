@@ -80,4 +80,22 @@ describe('NutritionEditorComponent', () => {
         expect(macrosErrors.length).toBe(1);
         expect(macrosErrors[0].textContent).toContain('Macros do not match.');
     });
+
+    it('should render field errors below the nutrient cards', async () => {
+        const { el, fixture } = await setupNutritionEditorAsync();
+        fixture.componentRef.setInput('fieldErrors', {
+            proteins: 'Value must be at most 100.',
+            fats: 'Value must be at most 100.',
+        });
+
+        fixture.detectChanges();
+
+        expect(el.querySelector('.fd-ui-nutrient-input__error')).toBeNull();
+
+        const messagesErrors = el.querySelectorAll('.nutrition-editor-messages__errors');
+        expect(messagesErrors.length).toBe(1);
+        expect(messagesErrors[0].textContent).toContain('NUTRITION_EDITOR.FIELD_LABELS.PROTEINS');
+        expect(messagesErrors[0].textContent).toContain('NUTRITION_EDITOR.FIELD_LABELS.FATS');
+        expect(messagesErrors[0].textContent).toContain('Value must be at most 100.');
+    });
 });

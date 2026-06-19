@@ -10,11 +10,29 @@ import { FdUiSelectComponent, type FdUiSelectOption } from 'fd-ui-kit/select/fd-
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 
 import { ImageUploadFieldComponent } from '../../../../../components/shared/image-upload-field/image-upload-field';
+import {
+    getProductMaxAmountForUnit,
+    PRODUCT_BARCODE_MAX_LENGTH,
+    PRODUCT_BRAND_MAX_LENGTH,
+    PRODUCT_COMMENT_MAX_LENGTH,
+    PRODUCT_DESCRIPTION_MAX_LENGTH,
+    PRODUCT_NAME_MAX_LENGTH,
+} from '../../../lib/product-manage.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
 import type { ProductNameAutocompleteOption, ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 
-const ERROR_FIELDS = ['name', 'productType', 'defaultPortionAmount', 'baseUnit', 'visibility'] as const;
+const ERROR_FIELDS = [
+    'name',
+    'barcode',
+    'brand',
+    'description',
+    'productType',
+    'defaultPortionAmount',
+    'baseUnit',
+    'visibility',
+    'comment',
+] as const;
 type ErrorField = (typeof ERROR_FIELDS)[number];
 type FieldErrors = Record<ErrorField, string | null>;
 
@@ -79,6 +97,12 @@ export class ProductBasicInfoComponent {
     public readonly nameSuggestionSelected = output<ProductNameSuggestion>();
 
     protected readonly displayNameValue = (value: string | null): string => value ?? '';
+    protected readonly nameMaxLength = PRODUCT_NAME_MAX_LENGTH;
+    protected readonly barcodeMaxLength = PRODUCT_BARCODE_MAX_LENGTH;
+    protected readonly brandMaxLength = PRODUCT_BRAND_MAX_LENGTH;
+    protected readonly descriptionMaxLength = PRODUCT_DESCRIPTION_MAX_LENGTH;
+    protected readonly commentMaxLength = PRODUCT_COMMENT_MAX_LENGTH;
+    protected readonly maxAmount = computed(() => getProductMaxAmountForUnit(this.form().baseUnit().value()));
 
     public constructor() {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
@@ -106,10 +130,14 @@ export class ProductBasicInfoComponent {
     private createEmptyFieldErrors(): FieldErrors {
         return {
             name: null,
+            barcode: null,
+            brand: null,
+            description: null,
             productType: null,
             defaultPortionAmount: null,
             baseUnit: null,
             visibility: null,
+            comment: null,
         };
     }
 

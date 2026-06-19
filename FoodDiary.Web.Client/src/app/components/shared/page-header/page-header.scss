@@ -30,6 +30,7 @@
 .fd-page-header__title-block {
     display: flex;
     flex-direction: column;
+    flex: 1 1 220px;
     gap: var(--fd-space-xxs);
     min-width: 220px;
 }
@@ -43,12 +44,14 @@
     align-items: center;
     justify-content: flex-end;
     gap: var(--fd-page-actions-gap);
-    min-width: 240px;
-    width: 100%;
+    flex: 0 1 auto;
+    min-width: 0;
+    width: auto;
+    margin-left: auto;
 }
 
 .fd-page-header__actions fd-header-actions-overflow {
-    width: 100%;
+    width: auto;
 }
 
 :host(:where(.fd-page-header--compact-actions)) {
@@ -65,6 +68,10 @@
     .fd-page-header__actions fd-header-actions-overflow {
         width: auto;
     }
+}
+
+:host(:where(.fd-page-header--with-back)) .fd-page-header {
+    align-items: flex-start;
 }
 
 @media #{variables.$media-tablet} {

@@ -26,6 +26,7 @@
             [value]="queryText()"
             [required]="required()"
             [disabled]="disabled()"
+            [attr.maxlength]="maximumLength() ?? null"
             [attr.placeholder]="placeholderAttribute()"
             [attr.aria-describedby]="error() ? `${id()}-error` : null"
             [attr.aria-invalid]="error() ? 'true' : null"

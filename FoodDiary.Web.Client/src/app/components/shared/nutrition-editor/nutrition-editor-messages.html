@@ -1,14 +1,18 @@
 @if (hasMacrosError()) {
     <div class="nutrition-editor-messages__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">{{ macrosError() }}</div>
 }
+@if (fieldErrorsList().length > 0) {
+    <div class="nutrition-editor-messages__errors fd-grid fd-gap-inline-alert-content fd-ui-error-text">
+        @for (fieldError of fieldErrorsList(); track fieldError.labelKey) {
+            <div>{{ fieldError.labelKey | translate }}: {{ fieldError.message }}</div>
+        }
+    </div>
+}
 @if (hasManualHint()) {
     <p class="nutrition-editor-messages__hint fd-ui-body-sm">{{ manualHintKey() | translate }}</p>
 }
-@if (warning(); as warningData) {
+@if (warningMessage(); as warningData) {
     <div class="nutrition-editor-messages__warning fd-ui-body-sm">
-        {{
-            'NUTRITION_EDITOR.CALORIES_MISMATCH_WARNING'
-                | translate: { expected: warningData.expectedCalories, actual: warningData.actualCalories }
-        }}
+        {{ warningData.messageKey | translate: warningData.params }}
     </div>
 }

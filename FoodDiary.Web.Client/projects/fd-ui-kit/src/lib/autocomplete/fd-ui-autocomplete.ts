@@ -47,6 +47,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     public readonly placeholder = input<string>();
     public readonly error = input<string | null>();
     public readonly required = input(false);
+    public readonly maximumLength = input<number>();
     public readonly options = input<Array<FdUiAutocompleteOption<T>>>([]);
     public readonly loading = input(false);
     public readonly emptyText = input<string>();

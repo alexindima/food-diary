@@ -5,6 +5,7 @@
     density="relaxed"
     headerAlign="center"
     accent="success"
+    data-tour-id="product-manage-nutrition"
     [title]="'PRODUCT_MANAGE.NUTRITION_VALUE' | translate"
 >
     <div class="product-manage__nutrition fd-stack fd-gap-lg">
@@ -29,7 +30,10 @@
             [form]="nutritionForm()"
             [macroState]="macroBarState()"
             [caloriesError]="caloriesError()"
+            [fieldErrors]="nutritionFieldErrors()"
             [macrosError]="macrosError()"
+            [maxCalories]="maxCalories()"
+            [maxNutrient]="maxNutrient()"
             [warning]="nutritionWarning()"
         >
             <fd-ui-segmented-toggle

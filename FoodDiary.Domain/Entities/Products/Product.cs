@@ -12,6 +12,12 @@ namespace FoodDiary.Domain.Entities.Products;
 
 public sealed class Product : AggregateRoot<ProductId> {
     private const double ComparisonEpsilon = 0.000001d;
+    public const double MaxWeightOrVolumeDefaultPortionAmount = 10000d;
+    public const double MaxPieceDefaultPortionAmount = 1000d;
+    public const double MaxWeightOrVolumeCaloriesPerBase = 1000d;
+    public const double MaxWeightOrVolumeNutrientPerBase = 100d;
+    public const double MaxPieceCaloriesPerBase = 5000d;
+    public const double MaxPieceNutrientPerBase = 1000d;
     private const int NameMaxLength = 256;
     private const int BarcodeMaxLength = 128;
     private const int BrandMaxLength = 128;
@@ -77,7 +83,7 @@ public sealed class Product : AggregateRoot<ProductId> {
         EnsureUserId(userId);
         string normalizedName = NormalizeRequiredName(name);
         double normalizedBaseAmount = NormalizeBaseAmount(baseUnit, baseAmount, nameof(baseAmount));
-        double normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount ?? normalizedBaseAmount, nameof(defaultPortionAmount));
+        double normalizedDefaultPortionAmount = NormalizeDefaultPortionAmount(baseUnit, defaultPortionAmount ?? normalizedBaseAmount, nameof(defaultPortionAmount));
         var nutrition = ProductNutrition.Create(
             caloriesPerBase,
             proteinsPerBase,
@@ -85,6 +91,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             carbsPerBase,
             fiberPerBase,
             alcoholPerBase);
+        EnsureNutritionWithinLimit(baseUnit, nutrition);
         string? normalizedBarcode = NormalizeOptionalText(barcode, BarcodeMaxLength, nameof(barcode));
         string? normalizedBrand = NormalizeOptionalText(brand, BrandMaxLength, nameof(brand));
         string? normalizedCategory = NormalizeOptionalText(category, CategoryMaxLength, nameof(category));
@@ -236,12 +243,15 @@ public sealed class Product : AggregateRoot<ProductId> {
         }
 
         if (defaultPortionAmount.HasValue) {
-            double normalizedDefaultPortionAmount = RequirePositive(defaultPortionAmount.Value, nameof(defaultPortionAmount));
+            double normalizedDefaultPortionAmount = NormalizeDefaultPortionAmount(targetUnit, defaultPortionAmount.Value, nameof(defaultPortionAmount));
             if (!AreClose(state.DefaultPortionAmount, normalizedDefaultPortionAmount)) {
                 state = state with { DefaultPortionAmount = normalizedDefaultPortionAmount };
                 changed = true;
             }
         }
+
+        EnsureDefaultPortionAmountWithinLimit(targetUnit, state.DefaultPortionAmount, nameof(defaultPortionAmount));
+        EnsureNutritionWithinLimit(targetUnit, GetNutrition());
 
         if (changed) {
             ApplyMeasurementState(state);
@@ -264,6 +274,7 @@ public sealed class Product : AggregateRoot<ProductId> {
             carbsPerBase: carbsPerBase,
             fiberPerBase: fiberPerBase,
             alcoholPerBase: alcoholPerBase);
+        EnsureNutritionWithinLimit(BaseUnit, updatedNutrition);
 
         if (!currentNutrition.IsCloseTo(updatedNutrition, ComparisonEpsilon)) {
             ApplyNutrition(updatedNutrition);
@@ -382,6 +393,52 @@ public sealed class Product : AggregateRoot<ProductId> {
         return !AreClose(value, canonicalAmount)
             ? throw new ArgumentOutOfRangeException(paramName, string.Create(CultureInfo.InvariantCulture, $"Base amount for {unit} must be {canonicalAmount}."))
             : canonicalAmount;
+    }
+
+    public static double GetMaxDefaultPortionAmount(MeasurementUnit unit) {
+        return unit == MeasurementUnit.Pcs ? MaxPieceDefaultPortionAmount : MaxWeightOrVolumeDefaultPortionAmount;
+    }
+
+    public static double GetMaxCaloriesPerBase(MeasurementUnit unit) {
+        return unit == MeasurementUnit.Pcs ? MaxPieceCaloriesPerBase : MaxWeightOrVolumeCaloriesPerBase;
+    }
+
+    public static double GetMaxNutrientPerBase(MeasurementUnit unit) {
+        return unit == MeasurementUnit.Pcs ? MaxPieceNutrientPerBase : MaxWeightOrVolumeNutrientPerBase;
+    }
+
+    private static double NormalizeDefaultPortionAmount(MeasurementUnit unit, double value, string paramName) {
+        RequirePositive(value, paramName);
+        EnsureDefaultPortionAmountWithinLimit(unit, value, paramName);
+        return value;
+    }
+
+    private static void EnsureDefaultPortionAmountWithinLimit(MeasurementUnit unit, double value, string paramName) {
+        double maxAmount = GetMaxDefaultPortionAmount(unit);
+        if (value > maxAmount) {
+            throw new ArgumentOutOfRangeException(
+                paramName,
+                string.Create(CultureInfo.InvariantCulture, $"Default portion amount for {unit} must be at most {maxAmount}."));
+        }
+    }
+
+    private static void EnsureNutritionWithinLimit(MeasurementUnit unit, ProductNutrition nutrition) {
+        EnsureNutritionValueWithinLimit(nutrition.CaloriesPerBase, GetMaxCaloriesPerBase(unit), nameof(nutrition.CaloriesPerBase));
+
+        double maxNutrient = GetMaxNutrientPerBase(unit);
+        EnsureNutritionValueWithinLimit(nutrition.ProteinsPerBase, maxNutrient, nameof(nutrition.ProteinsPerBase));
+        EnsureNutritionValueWithinLimit(nutrition.FatsPerBase, maxNutrient, nameof(nutrition.FatsPerBase));
+        EnsureNutritionValueWithinLimit(nutrition.CarbsPerBase, maxNutrient, nameof(nutrition.CarbsPerBase));
+        EnsureNutritionValueWithinLimit(nutrition.FiberPerBase, maxNutrient, nameof(nutrition.FiberPerBase));
+        EnsureNutritionValueWithinLimit(nutrition.AlcoholPerBase, maxNutrient, nameof(nutrition.AlcoholPerBase));
+    }
+
+    private static void EnsureNutritionValueWithinLimit(double value, double maxValue, string paramName) {
+        if (value > maxValue) {
+            throw new ArgumentOutOfRangeException(
+                paramName,
+                string.Create(CultureInfo.InvariantCulture, $"Nutrition value must be at most {maxValue}."));
+        }
     }
 
     private static double GetCanonicalBaseAmount(MeasurementUnit unit) {

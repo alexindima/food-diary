@@ -1,11 +1,17 @@
 import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
-import { type FieldTree, form, min, required } from '@angular/forms/signals';
+import { type FieldTree, form, min, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { PRODUCT_MIN_AMOUNT } from '../../../lib/product-manage.constants';
+import {
+    getProductMaxAmountForUnit,
+    PRODUCT_BRAND_MAX_LENGTH,
+    PRODUCT_MAX_PIECE_AMOUNT,
+    PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT,
+    PRODUCT_MIN_AMOUNT,
+} from '../../../lib/product-manage.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../../models/product.data';
 import { createProductForm } from '../product-manage-lib/product-manage-form.mapper';
 import type { ProductFormValues } from '../product-manage-lib/product-manage-form.types';
@@ -27,7 +33,19 @@ beforeEach(() => {
             {
                 provide: TranslateService,
                 useValue: {
-                    instant: vi.fn((key: string, params?: { min?: number }) => (params?.min === undefined ? key : `${key}:${params.min}`)),
+                    instant: vi.fn((key: string, params?: { max?: number; min?: number; requiredLength?: number }) => {
+                        if (params?.min !== undefined) {
+                            return `${key}:${params.min}`;
+                        }
+                        if (params?.max !== undefined) {
+                            return `${key}:${params.max}`;
+                        }
+                        if (params?.requiredLength !== undefined) {
+                            return `${key}:${params.requiredLength}`;
+                        }
+
+                        return key;
+                    }),
                     onLangChange: languageChanges$.asObservable(),
                 },
             },
@@ -85,6 +103,34 @@ describe('ProductBasicInfoComponent field errors', () => {
 
         expect(component['fieldErrors']().defaultPortionAmount).toBe('FORM_ERRORS.INVALID_MIN_AMOUNT_MUST_BE_MORE_ZERO:0.001');
     });
+
+    it('returns max length and max amount errors with validator metadata', () => {
+        const productForm = createProductSignalForm(createProductForm());
+        productForm.brand().value.set('x'.repeat(PRODUCT_BRAND_MAX_LENGTH + 1));
+        productForm.brand().markAsTouched();
+        productForm.defaultPortionAmount().value.set(PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT + 1);
+        productForm.defaultPortionAmount().markAsTouched();
+        setRequiredInputs(productForm);
+        fixture.detectChanges();
+
+        expect(component['fieldErrors']().brand).toBe(`FORM_ERRORS.MAX_LENGTH:${PRODUCT_BRAND_MAX_LENGTH}`);
+        expect(component['fieldErrors']().defaultPortionAmount).toBe(
+            `FORM_ERRORS.INVALID_MAX_AMOUNT:${PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT}`,
+        );
+    });
+
+    it('updates maximum amount from selected serving unit', () => {
+        const productForm = createProductSignalForm(createProductForm());
+        setRequiredInputs(productForm);
+        fixture.detectChanges();
+
+        expect(component['maxAmount']()).toBe(PRODUCT_MAX_WEIGHT_OR_VOLUME_AMOUNT);
+
+        productForm.baseUnit().value.set(MeasurementUnit.PCS);
+        fixture.detectChanges();
+
+        expect(component['maxAmount']()).toBe(PRODUCT_MAX_PIECE_AMOUNT);
+    });
 });
 
 describe('ProductBasicInfoComponent name suggestions', () => {
@@ -141,8 +187,18 @@ function createProductSignalForm(model = createProductForm()): FieldTree<Product
     return TestBed.runInInjectionContext(() =>
         form(formModel, path => {
             required(path.name);
+            validate(path.brand, ({ value }) => {
+                const brand = value();
+                return brand !== null && brand.length > PRODUCT_BRAND_MAX_LENGTH
+                    ? { kind: 'maxLength', maxLength: PRODUCT_BRAND_MAX_LENGTH }
+                    : undefined;
+            });
             required(path.defaultPortionAmount);
             min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
+            validate(path.defaultPortionAmount, ({ value }) => {
+                const maximumAmount = getProductMaxAmountForUnit(formModel().baseUnit);
+                return value() > maximumAmount ? { kind: 'max', max: maximumAmount } : undefined;
+            });
             required(path.productType);
             required(path.baseUnit);
             required(path.visibility);

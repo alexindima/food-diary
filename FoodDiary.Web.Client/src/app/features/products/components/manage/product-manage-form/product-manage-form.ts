@@ -1,8 +1,9 @@
 import { type HttpErrorResponse, HttpStatusCode } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, output, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { form, FormRoot, min, required } from '@angular/forms/signals';
+import { form, FormRoot, maxLength, min, required, validate } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -29,7 +30,18 @@ import {
     buildSourceProductPrefillPatch,
     buildUsdaFoodDetailPrefillPatch,
 } from '../../../lib/manage/product-nutrition-prefill.mapper';
-import { PRODUCT_MIN_AMOUNT } from '../../../lib/product-manage.constants';
+import {
+    getProductMaxAmountForUnit,
+    getProductMaxCaloriesPerBaseForUnit,
+    getProductMaxNutrientPerBaseForUnit,
+    getProductMaxNutritionDisplayForUnit,
+    PRODUCT_BARCODE_MAX_LENGTH,
+    PRODUCT_BRAND_MAX_LENGTH,
+    PRODUCT_COMMENT_MAX_LENGTH,
+    PRODUCT_DESCRIPTION_MAX_LENGTH,
+    PRODUCT_MIN_AMOUNT,
+    PRODUCT_NAME_MAX_LENGTH,
+} from '../../../lib/product-manage.constants';
 import { ProductManageFacade } from '../../../lib/product-manage.facade';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import type { Product } from '../../../models/product.data';
@@ -49,6 +61,7 @@ import type {
     ProductManageMode,
     ProductManagePrefill,
 } from '../product-manage-lib/product-manage-form.types';
+import { buildProductManageTour } from '../product-manage-lib/product-manage-tour';
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import { ProductNutritionEditorComponent } from '../product-nutrition-editor/product-nutrition-editor';
 
@@ -76,6 +89,7 @@ export class ProductManageFormComponent {
     protected readonly navigationService = inject(NavigationService);
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly nameSearch = inject(ProductNameSearchFacade);
+    private readonly tourService = inject(FdTourService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
     private readonly externalFoodFacade = inject(ProductExternalFoodFacade);
@@ -100,18 +114,31 @@ export class ProductManageFormComponent {
         this.productFormModel,
         path => {
             required(path.name);
+            maxLength(path.name, PRODUCT_NAME_MAX_LENGTH);
+            validate(path.barcode, ({ value }) => validateNullableMaxLength(value(), PRODUCT_BARCODE_MAX_LENGTH));
+            validate(path.brand, ({ value }) => validateNullableMaxLength(value(), PRODUCT_BRAND_MAX_LENGTH));
+            validate(path.description, ({ value }) => validateNullableMaxLength(value(), PRODUCT_DESCRIPTION_MAX_LENGTH));
+            validate(path.comment, ({ value }) => validateNullableMaxLength(value(), PRODUCT_COMMENT_MAX_LENGTH));
             required(path.baseAmount);
             min(path.baseAmount, PRODUCT_MIN_AMOUNT);
+            validate(path.baseAmount, ({ value }) => validateProductAmountMax(value(), this.productFormModel().baseUnit));
             required(path.defaultPortionAmount);
             min(path.defaultPortionAmount, PRODUCT_MIN_AMOUNT);
+            validate(path.defaultPortionAmount, ({ value }) => validateProductAmountMax(value(), this.productFormModel().baseUnit));
             required(path.baseUnit);
             required(path.caloriesPerBase);
             min(path.caloriesPerBase, 0);
+            validate(path.caloriesPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxCalories()));
             min(path.proteinsPerBase, 0);
+            validate(path.proteinsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
             min(path.fatsPerBase, 0);
+            validate(path.fatsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
             min(path.carbsPerBase, 0);
+            validate(path.carbsPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
             min(path.fiberPerBase, 0);
+            validate(path.fiberPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
             min(path.alcoholPerBase, 0);
+            validate(path.alcoholPerBase, ({ value }) => validateProductNutritionMax(value(), this.getCurrentMaxNutrient()));
             required(path.visibility);
         },
         {
@@ -338,7 +365,7 @@ export class ProductManageFormComponent {
 
         this.productForm().markAsTouched();
 
-        if (this.hasMacrosError() || this.productForm().invalid()) {
+        if (this.hasMacrosError() || this.hasCurrentPortionNutritionWarning() || this.productForm().invalid()) {
             return null;
         }
 
@@ -379,6 +406,10 @@ export class ProductManageFormComponent {
         }
 
         this.nutritionMode = resolvedMode;
+    }
+
+    protected startProductManageTour(force = true): void {
+        this.tourService.start(buildProductManageTour(this.translateService), { force });
     }
 
     protected onNameQueryChange(query: string): void {
@@ -536,6 +567,47 @@ export class ProductManageFormComponent {
             dirty: state.dirty(),
         };
     }
+
+    private getCurrentMaxCalories(): number {
+        return this.getAllowedNutritionMax(getProductMaxCaloriesPerBaseForUnit(this.productFormModel().baseUnit));
+    }
+
+    private getCurrentMaxNutrient(): number {
+        return this.getAllowedNutritionMax(getProductMaxNutrientPerBaseForUnit(this.productFormModel().baseUnit));
+    }
+
+    private getAllowedNutritionMax(maxPerBase: number): number {
+        if (this.nutritionMode !== 'portion') {
+            return maxPerBase;
+        }
+
+        return getProductMaxNutritionDisplayForUnit(maxPerBase, this.productFormModel().baseUnit);
+    }
+
+    private hasCurrentPortionNutritionWarning(): boolean {
+        if (this.nutritionMode !== 'portion') {
+            return false;
+        }
+
+        const values = this.productFormModel();
+        const baseAmount = getDefaultProductBaseAmount(values.baseUnit);
+        const portionAmount = getProductControlNumberValue(values.defaultPortionAmount);
+        if (portionAmount <= 0) {
+            return false;
+        }
+
+        const factor = portionAmount / baseAmount;
+        const maxCalories = getProductMaxCaloriesPerBaseForUnit(values.baseUnit) * factor;
+        const maxNutrient = getProductMaxNutrientPerBaseForUnit(values.baseUnit) * factor;
+        return (
+            getProductControlNumberValue(values.caloriesPerBase) > maxCalories ||
+            getProductControlNumberValue(values.proteinsPerBase) > maxNutrient ||
+            getProductControlNumberValue(values.fatsPerBase) > maxNutrient ||
+            getProductControlNumberValue(values.carbsPerBase) > maxNutrient ||
+            getProductControlNumberValue(values.fiberPerBase) > maxNutrient ||
+            getProductControlNumberValue(values.alcoholPerBase) > maxNutrient
+        );
+    }
 }
 
 type ProductManageHeaderState = {
@@ -550,3 +622,25 @@ type ProductSubmitResult = {
     product: Product | null;
     error: HttpErrorResponse | null;
 };
+
+function validateNullableMaxLength(value: string | null, maximumLength: number): { kind: 'maxLength'; maxLength: number } | undefined {
+    return value !== null && value.length > maximumLength ? { kind: 'maxLength', maxLength: maximumLength } : undefined;
+}
+
+function validateProductAmountMax(
+    value: number | string | null,
+    unit: ProductFormValues['baseUnit'],
+): { kind: 'max'; max: number } | undefined {
+    const maximumAmount = getProductMaxAmountForUnit(unit);
+    const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
+    return numericValue !== null && Number.isFinite(numericValue) && numericValue > maximumAmount
+        ? { kind: 'max', max: maximumAmount }
+        : undefined;
+}
+
+function validateProductNutritionMax(value: number | string | null, maximumAmount: number): { kind: 'max'; max: number } | undefined {
+    const numericValue = typeof value === 'string' ? Number(value.replace(',', '.')) : value;
+    return numericValue !== null && Number.isFinite(numericValue) && numericValue > maximumAmount
+        ? { kind: 'max', max: maximumAmount }
+        : undefined;
+}
