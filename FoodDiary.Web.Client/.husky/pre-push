@@ -1,0 +1,25 @@
+echo "=== Running frontend verification before push ==="
+cd FoodDiary.Web.Client
+npm run lint || exit 1
+npm run lint:deps:strict || exit 1
+npm run check:depcruise-baseline || exit 1
+npm run stylelint || exit 1
+npm run test:ci:app || exit 1
+npm run check:i18n || exit 1
+cd ..
+
+echo "=== Running backend build before push ==="
+dotnet build FoodDiary.slnx --no-restore || exit 1
+
+echo "=== Running backend tests before push ==="
+dotnet test tests/FoodDiary.Application.Tests/FoodDiary.Application.Tests.csproj --no-restore --no-build || exit 1
+dotnet test tests/FoodDiary.ArchitectureTests/FoodDiary.ArchitectureTests.csproj --no-restore --no-build || exit 1
+dotnet test tests/FoodDiary.Infrastructure.Tests/FoodDiary.Infrastructure.Tests.csproj --no-restore --no-build || exit 1
+dotnet test tests/FoodDiary.JobManager.Tests/FoodDiary.JobManager.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailInbox/tests/FoodDiary.MailInbox.Tests/FoodDiary.MailInbox.Tests.csproj --no-restore --no-build || exit 1
+dotnet test MailRelay/tests/FoodDiary.MailRelay.Tests/FoodDiary.MailRelay.Tests.csproj --no-restore --no-build || exit 1
+dotnet test tests/FoodDiary.Presentation.Api.Tests/FoodDiary.Presentation.Api.Tests.csproj --no-restore --no-build || exit 1
+dotnet test tests/FoodDiary.Telegram.Bot.Tests/FoodDiary.Telegram.Bot.Tests.csproj --no-restore --no-build || exit 1
+
+echo "=== Running API contract integration tests before push ==="
+dotnet test tests/FoodDiary.Web.Api.IntegrationTests/FoodDiary.Web.Api.IntegrationTests.csproj --no-restore --no-build --filter "FullyQualifiedName~PresentationBoundaryIntegrationTests|FullyQualifiedName~PresentationPayloadContractIntegrationTests" || exit 1
