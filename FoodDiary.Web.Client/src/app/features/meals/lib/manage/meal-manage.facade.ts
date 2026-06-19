@@ -1,5 +1,7 @@
 import { inject, Service } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
 import { PremiumRequiredDialogComponent } from '../../../../components/shared/premium-required-dialog/premium-required-dialog';
@@ -23,11 +25,6 @@ import type {
     NutritionTotals,
 } from '../../components/manage/meal-manage-lib/meal-manage.types';
 import { createConsumptionItemValue } from '../../components/manage/meal-manage-lib/meal-manage-form.mapper';
-import {
-    type ConsumptionManageRedirectAction,
-    type ConsumptionManageSuccessDialogData,
-    MealManageSuccessDialogComponent,
-} from '../../dialogs/manage-success-dialog/meal-manage-success-dialog';
 import type { MealPhotoRecognitionDialogComponent } from '../../dialogs/photo-recognition-dialog/meal-photo-recognition-dialog';
 import {
     type Consumption,
@@ -45,6 +42,8 @@ export class MealManageFacade {
     private readonly navigationService = inject(NavigationService);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly recipeWeight = inject(RecipeServingWeightService);
+    private readonly translateService = inject(TranslateService);
+    private readonly toastService = inject(FdUiToastService);
 
     public ensurePremiumAccess(): boolean {
         if (this.authService.isPremium()) {
@@ -68,25 +67,11 @@ export class MealManageFacade {
             : firstValueFrom(this.mealService.create(consumptionData));
     }
 
-    public async showSuccessRedirectAsync(isEdit: boolean): Promise<void> {
-        const data: ConsumptionManageSuccessDialogData = { isEdit };
-        const redirectAction = await firstValueFrom(
-            this.fdDialogService
-                .open<MealManageSuccessDialogComponent, ConsumptionManageSuccessDialogData, ConsumptionManageRedirectAction>(
-                    MealManageSuccessDialogComponent,
-                    {
-                        size: 'sm',
-                        data,
-                    },
-                )
-                .afterClosed(),
+    public async showSuccessToastAndRedirectAsync(isEdit: boolean): Promise<void> {
+        this.toastService.success(
+            this.translateService.instant(isEdit ? 'CONSUMPTION_MANAGE.EDIT_SUCCESS' : 'CONSUMPTION_MANAGE.CREATE_SUCCESS'),
         );
-
-        if (redirectAction === 'Home') {
-            await this.navigationService.navigateToHomeAsync();
-        } else if (redirectAction === 'ConsumptionList') {
-            await this.navigationService.navigateToConsumptionListAsync();
-        }
+        await this.navigationService.navigateToConsumptionListAsync();
     }
 
     public async openEditAiPhotoSessionDialogAsync(session: ConsumptionAiSessionManageDto): Promise<ConsumptionAiSessionManageDto | null> {

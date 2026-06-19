@@ -1,8 +1,10 @@
 import { TestBed } from '@angular/core/testing';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
+import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MealService } from '../../api/meal.service';
@@ -99,6 +101,7 @@ let navigationService: {
     navigateToPremiumAccessAsync: ReturnType<typeof vi.fn>;
 };
 let dialogService: { open: ReturnType<typeof vi.fn> };
+let toastService: { success: ReturnType<typeof vi.fn> };
 let recipeWeightService: { loadServingWeight: ReturnType<typeof vi.fn>; convertGramsToServings: ReturnType<typeof vi.fn> };
 
 const consumption: Consumption = {
@@ -136,6 +139,9 @@ describe('MealManageFacade', () => {
         dialogService = {
             open: vi.fn(),
         };
+        toastService = {
+            success: vi.fn(),
+        };
         recipeWeightService = {
             loadServingWeight: vi.fn(),
             convertGramsToServings: vi.fn(),
@@ -153,11 +159,13 @@ describe('MealManageFacade', () => {
 
         TestBed.configureTestingModule({
             providers: [
+                provideTranslateTesting(),
                 MealManageFacade,
                 { provide: MealService, useValue: mealService },
                 { provide: AuthService, useValue: authService },
                 { provide: NavigationService, useValue: navigationService },
                 { provide: FdUiDialogService, useValue: dialogService },
+                { provide: FdUiToastService, useValue: toastService },
                 { provide: RecipeServingWeightService, useValue: recipeWeightService },
             ],
         });
@@ -187,10 +195,20 @@ function registerSubmitAndNavigationTests(): void {
             expect(result).toEqual(consumption);
         });
 
-        it('should redirect after success dialog choice', async () => {
-            await facade.showSuccessRedirectAsync(false);
+        it('should toast and redirect to list after create', async () => {
+            await facade.showSuccessToastAndRedirectAsync(false);
 
+            expect(toastService.success).toHaveBeenCalledWith('CONSUMPTION_MANAGE.CREATE_SUCCESS');
             expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
+            expect(dialogService.open).not.toHaveBeenCalled();
+        });
+
+        it('should toast and redirect to list after update', async () => {
+            await facade.showSuccessToastAndRedirectAsync(true);
+
+            expect(toastService.success).toHaveBeenCalledWith('CONSUMPTION_MANAGE.EDIT_SUCCESS');
+            expect(navigationService.navigateToConsumptionListAsync).toHaveBeenCalled();
+            expect(dialogService.open).not.toHaveBeenCalled();
         });
     });
 }

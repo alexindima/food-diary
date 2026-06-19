@@ -45,7 +45,7 @@ type MealManageFacadeMock = {
     openEditAiPhotoSessionDialogAsync: ReturnType<typeof vi.fn>;
     removeAiSession: ReturnType<typeof vi.fn>;
     replaceAiSession: ReturnType<typeof vi.fn>;
-    showSuccessRedirectAsync: ReturnType<typeof vi.fn>;
+    showSuccessToastAndRedirectAsync: ReturnType<typeof vi.fn>;
     submitConsumptionAsync: ReturnType<typeof vi.fn>;
 };
 
@@ -141,7 +141,7 @@ describe('MealManageFormComponent submit behavior', () => {
                 items: [{ productId: 'product-1', recipeId: null, amount: PRODUCT_AMOUNT, origin: 'Manual' }],
             }),
         );
-        expect(mealManageFacade.showSuccessRedirectAsync).toHaveBeenCalledWith(false);
+        expect(mealManageFacade.showSuccessToastAndRedirectAsync).toHaveBeenCalledWith(false);
         expect(component['aiSessions']()).toEqual([]);
         expect(component['items'].length).toBe(1);
     });
@@ -348,7 +348,7 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
             sessions.filter((_session, currentIndex) => currentIndex !== index),
         ),
         replaceAiSession: vi.fn(),
-        showSuccessRedirectAsync: vi.fn().mockResolvedValue(void 0),
+        showSuccessToastAndRedirectAsync: vi.fn().mockResolvedValue(void 0),
         submitConsumptionAsync: vi.fn().mockResolvedValue(null),
     };
 }

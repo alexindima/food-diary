@@ -587,7 +587,7 @@ export class MealManageFormComponent {
                 this.itemsTouchedState.reset();
                 this.updateSummary();
             }
-            await this.mealManageFacade.showSuccessRedirectAsync(Boolean(this.consumption()));
+            await this.mealManageFacade.showSuccessToastAndRedirectAsync(Boolean(this.consumption()));
         } else {
             this.handleSubmitError();
         }

@@ -45,6 +45,7 @@ import {
         FdUiCardComponent,
         FdUiInputComponent,
         FdUiTextareaComponent,
+        FormRoot,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
