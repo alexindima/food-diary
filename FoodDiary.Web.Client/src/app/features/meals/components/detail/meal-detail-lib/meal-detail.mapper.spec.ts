@@ -134,8 +134,14 @@ describe('buildMealDetailViewModel nutrition state', () => {
         expect(viewModel.carbs).toBe(TOTAL_CARBS);
         expect(viewModel.fiber).toBe(TOTAL_FIBER);
         expect(viewModel.alcohol).toBe(TOTAL_ALCOHOL);
-        expect(viewModel.mealTypeLabel).toBe('translated:MEAL_TYPES.breakfast');
+        expect(viewModel.mealTypeLabel).toBe('translated:MEAL_TYPES.BREAKFAST');
         expect(viewModel.nutritionModel.calories).toBe(TOTAL_CALORIES);
+    });
+
+    it('normalizes mixed-case meal type labels', () => {
+        const viewModel = buildMealDetailViewModel(createMeal({ mealType: 'Dinner' }), translate);
+
+        expect(viewModel.mealTypeLabel).toBe('translated:MEAL_TYPES.DINNER');
     });
 
     it('builds macro blocks and macro bar state from core macros', () => {

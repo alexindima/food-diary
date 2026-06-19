@@ -2,6 +2,7 @@ import { DEFAULT_HUNGER_LEVELS, DEFAULT_SATIETY_LEVELS } from 'fd-ui-kit/satiety
 
 import type { NutritionFormModel, NutritionMacroState } from '../../../../../components/shared/nutrition-editor/nutrition-editor';
 import { CHART_COLORS } from '../../../../../constants/chart-colors';
+import { normalizeMealType } from '../../../../../shared/lib/meal-type.util';
 import { PERCENT_MULTIPLIER } from '../../../../../shared/lib/nutrition.constants';
 import { normalizeSatietyLevel } from '../../../../../shared/lib/satiety-level.utils';
 import type { ConsumptionAiItem, Meal } from '../../../models/meal.data';
@@ -40,10 +41,7 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
         carbs,
         fiber,
         alcohol,
-        mealTypeLabel:
-            meal.mealType !== null && meal.mealType !== undefined && meal.mealType.length > 0
-                ? translate(`MEAL_TYPES.${meal.mealType}`)
-                : null,
+        mealTypeLabel: buildMealTypeLabel(meal.mealType, translate),
         preMealSatietyMeta: buildSatietyMeta('before', meal.preMealSatietyLevel, translate),
         postMealSatietyMeta: buildSatietyMeta('after', meal.postMealSatietyLevel, translate),
         itemPreview: buildItemPreview(meal, translate),
@@ -51,6 +49,11 @@ export function buildMealDetailViewModel(meal: Meal, translate: (key: string) =>
         nutritionModel: buildNutritionModel({ calories, proteins, fats, carbs, fiber, alcohol }),
         macroBarState: buildMacroBarState(datasetValues),
     };
+}
+
+function buildMealTypeLabel(mealType: string | null | undefined, translate: (key: string) => string): string | null {
+    const normalizedMealType = normalizeMealType(mealType);
+    return normalizedMealType === null ? null : translate(`MEAL_TYPES.${normalizedMealType}`);
 }
 
 function buildNutritionModel(values: {

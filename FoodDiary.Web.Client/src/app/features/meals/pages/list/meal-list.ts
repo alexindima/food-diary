@@ -16,7 +16,7 @@ import { APP_FILTER_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
-import { resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
+import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail';
@@ -66,11 +66,14 @@ export class MealListComponent {
     protected readonly errorKey = this.mealListFacade.errorKey;
     protected readonly favorites = this.mealListFacade.favorites;
     protected readonly favoriteViews = computed<FavoriteMealView[]>(() =>
-        this.favorites().map(favorite => ({
-            favorite,
-            displayName: favorite.name,
-            displayNameKey: `MEAL_TYPES.${favorite.mealType}`,
-        })),
+        this.favorites().map(favorite => {
+            const mealType = normalizeMealType(favorite.mealType);
+            return {
+                favorite,
+                displayName: favorite.name,
+                displayNameKey: mealType === null ? 'CONSUMPTION_LIST.FAVORITE_UNNAMED' : `MEAL_TYPES.${mealType}`,
+            };
+        }),
     );
     protected readonly favoriteTotalCount = this.mealListFacade.favoriteTotalCount;
     protected readonly isFavoritesLoadingMore = this.mealListFacade.isFavoritesLoadingMore;

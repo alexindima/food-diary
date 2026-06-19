@@ -454,6 +454,12 @@
         "OPEN": "Open image preview",
         "ALT": "Preview of {{name}}"
     },
+    "DASHBOARD": {
+        "MEALS_TITLE": "Today's meals",
+        "MEALS_EMPTY": "No consumptions logged for this date yet.",
+        "MEALS_VIEW_ALL": "Open consumptions",
+        "ADD_WITH_AI_BUTTON": "Add with AI"
+    },
     "MEAL_DETAILS": {
         "ADD": "Add details",
         "HIDE": "Hide details",
@@ -462,6 +468,10 @@
         "COMMENT": "Comment",
         "SATIETY_BEFORE": "Hunger before",
         "SATIETY_AFTER": "Satiety after"
+    },
+    "CONSUMPTION_MANAGE": {
+        "MANUAL_ITEM_EDIT": "Edit manual item",
+        "MANUAL_ITEM_EDIT_NAMED": "Edit manual item: {{name}}"
     },
     "QUICK_CONSUMPTION": {
         "TITLE": "Meal draft",
@@ -477,9 +487,55 @@
         "SAVE_ERROR": "Failed to save meal",
         "PREVIEW_EMPTY": "Add products or recipes — they will appear here",
         "CLEAR": "Clear draft",
+        "COLLAPSE": "Collapse draft",
+        "EXPAND": "Expand draft",
         "REMOVE_ITEM": "Remove item",
         "REMOVE_ITEM_NAMED": "Remove {name} from draft",
         "EDIT_ARIA": "Open meal draft editor",
         "SAVE_ARIA": "Save meal draft"
+    },
+    "HUNGER_BEFORE_SCALE": {
+        "LEVEL_1": {
+            "TITLE": "Very hungry",
+            "DESCRIPTION": "Strong hunger, hard to wait."
+        },
+        "LEVEL_2": {
+            "TITLE": "Hungry",
+            "DESCRIPTION": "Ready to eat soon."
+        },
+        "LEVEL_3": {
+            "TITLE": "Slightly hungry",
+            "DESCRIPTION": "A little hungry, but still comfortable."
+        },
+        "LEVEL_4": {
+            "TITLE": "Barely hungry",
+            "DESCRIPTION": "Hunger is weak or almost gone."
+        },
+        "LEVEL_5": {
+            "TITLE": "Not hungry",
+            "DESCRIPTION": "Calm and not hungry."
+        }
+    },
+    "SATIETY_AFTER_SCALE": {
+        "LEVEL_1": {
+            "TITLE": "Still hungry",
+            "DESCRIPTION": "Hunger is still noticeable after eating."
+        },
+        "LEVEL_2": {
+            "TITLE": "Not quite full",
+            "DESCRIPTION": "Satiety is light and more food still sounds good."
+        },
+        "LEVEL_3": {
+            "TITLE": "Comfortable",
+            "DESCRIPTION": "No hunger and no heaviness."
+        },
+        "LEVEL_4": {
+            "TITLE": "Full",
+            "DESCRIPTION": "Pleasantly satisfied without heaviness."
+        },
+        "LEVEL_5": {
+            "TITLE": "Overate",
+            "DESCRIPTION": "Too much food, with heaviness or discomfort."
+        }
     }
 }

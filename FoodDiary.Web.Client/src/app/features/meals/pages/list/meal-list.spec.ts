@@ -407,6 +407,21 @@ function registerFavoriteTests(context: TestContext): void {
             expect(context.component()['consumptionData'].items()[0]).toMatchObject({ isFavorite: true, favoriteMealId: 'favorite-1' });
             expect(context.mockFavoriteMealService.getAll).toHaveBeenCalled();
         });
+
+        it('should normalize favorite meal type translation keys', () => {
+            context
+                .component()
+                [
+                    'favorites'
+                ].set([createFavorite({ id: 'favorite-dinner', mealType: 'Dinner' }), createFavorite({ id: 'favorite-unknown', mealType: null })]);
+
+            expect(
+                context
+                    .component()
+                    ['favoriteViews']()
+                    .map(view => view.displayNameKey),
+            ).toEqual(['MEAL_TYPES.DINNER', 'CONSUMPTION_LIST.FAVORITE_UNNAMED']);
+        });
     });
 }
 
