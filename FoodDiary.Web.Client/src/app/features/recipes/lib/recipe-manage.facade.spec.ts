@@ -290,11 +290,19 @@ function createIngredientNutritionState(input: TestIngredientNutritionInput): In
         amount: input.amount,
         food,
         productId: food?.id ?? null,
-        foodName: food?.name ?? nestedRecipe?.name ?? null,
+        foodName: getIngredientNutritionName(food, nestedRecipe),
         nestedRecipe,
         nestedRecipeId: nestedRecipe?.id ?? null,
         nestedRecipeName: nestedRecipe?.name ?? null,
     };
+}
+
+function getIngredientNutritionName(food: IngredientFormValues['food'], nestedRecipe: IngredientFormValues['nestedRecipe']): string | null {
+    if (food !== null) {
+        return food.name;
+    }
+
+    return nestedRecipe?.name ?? null;
 }
 
 function createNutritionProduct(): NonNullable<IngredientFormValues['food']> {
