@@ -7,11 +7,13 @@
     </div>
     <div class="user-manage__body fd-grid fd-gap-lg fd-align-start">
         <fd-ui-input
+            data-user-field="height"
             type="number"
             size="lg"
             [formField]="userForm().height"
             [label]="'USER_MANAGE.HEIGHT' | translate"
             [placeholder]="'USER_MANAGE.HEIGHT_PLACEHOLDER' | translate"
+            (valueChange)="onHeightChange($event)"
         />
         <fd-ui-select
             size="lg"
@@ -19,6 +21,7 @@
             [label]="'USER_MANAGE.ACTIVITY_LEVEL' | translate"
             [placeholder]="'USER_MANAGE.SELECT_ACTIVITY_LEVEL' | translate"
             [options]="activityLevelOptions()"
+            (valueChange)="userFormChange.emit()"
         />
     </div>
 </fd-ui-card>

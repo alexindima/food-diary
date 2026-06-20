@@ -32,6 +32,7 @@
             [readonly]="readonly()"
             [disabled]="disabled()"
             [attr.placeholder]="placeholderAttribute()"
+            [attr.aria-label]="label() ?? null"
             [attr.maxlength]="maximumLength() ?? maxLength() ?? null"
             [attr.max]="maximum() ?? max() ?? null"
             [attr.step]="step() ?? null"

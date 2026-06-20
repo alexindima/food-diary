@@ -306,6 +306,14 @@ describe('FdUiInputComponent attributes', () => {
 
         expect(input().getAttribute('autocomplete')).toBe('current-password');
     });
+
+    it('should expose label text as an accessible name', async () => {
+        const { fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('label', 'Email');
+        fixture.detectChanges();
+
+        expect(input().getAttribute('aria-label')).toBe('Email');
+    });
 });
 
 describe('FdUiInputComponent with TestHost', () => {

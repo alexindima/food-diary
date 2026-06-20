@@ -25,6 +25,12 @@ describe('WeightHistoryFormCardComponent', () => {
         expect(cancelHandler).toHaveBeenCalledOnce();
     });
 
+    it('renders entry save error near the form actions', () => {
+        const { fixture } = setupComponent(false, undefined, 'WEIGHT_HISTORY.ERROR_DUPLICATE_DATE');
+
+        expect(getText(fixture)).toContain('WEIGHT_HISTORY.ERROR_DUPLICATE_DATE');
+    });
+
     it('cancels native submit and delegates to FormRoot submission', async () => {
         const submitWeightFormAsync = vi.fn(async (): Promise<void> => {
             await Promise.resolve();
@@ -46,6 +52,7 @@ describe('WeightHistoryFormCardComponent', () => {
 function setupComponent(
     isEditing: boolean,
     submitWeightFormAsync?: () => Promise<void>,
+    error: string | null = null,
 ): {
     component: WeightHistoryFormCardComponent;
     fixture: ComponentFixture<WeightHistoryFormCardComponent>;
@@ -73,6 +80,7 @@ function setupComponent(
     );
     fixture.componentRef.setInput('isSaving', false);
     fixture.componentRef.setInput('isEditing', isEditing);
+    fixture.componentRef.setInput('error', error);
     fixture.detectChanges();
 
     return {

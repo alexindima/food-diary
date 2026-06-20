@@ -101,6 +101,7 @@ export class MealManageFormComponent {
     });
     protected readonly globalError = signal<string | null>(null);
     protected readonly isSubmitting = signal(false);
+    protected readonly isSubmitDisabled = computed(() => this.isSubmitting() || !this.hasSelectedItems());
     protected readonly aiSessions = signal<ConsumptionAiSessionManageDto[]>([]);
     private readonly itemsTouchedState = createCollectionTouchedState({
         hasItems: () => this.hasSelectedItems(),

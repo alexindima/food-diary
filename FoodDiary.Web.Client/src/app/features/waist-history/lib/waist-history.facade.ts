@@ -8,6 +8,7 @@ import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
+import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { WaistEntriesService } from '../api/waist-entries.service';
 import type { CreateWaistEntryPayload, WaistEntry, WaistEntrySummaryFilters, WaistEntrySummaryPoint } from '../models/waist-entry.data';
 import { MAX_DESIRED_WAIST_CM, MAX_WAIST_CM, MIN_WAIST_CM } from './waist-history.constants';
@@ -56,6 +57,7 @@ export class WaistHistoryFacade {
     public readonly entries = signal<WaistEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
+    public readonly entryError = signal<string | null>(null);
     public readonly isEditing = signal(false);
     public readonly summaryPoints = signal<WaistEntrySummaryPoint[]>([]);
     public readonly isSummaryLoading = signal(false);
@@ -153,6 +155,7 @@ export class WaistHistoryFacade {
             editingId !== null ? this.waistEntriesService.update(editingId, payload) : this.waistEntriesService.create(payload);
 
         this.isSaving.set(true);
+        this.entryError.set(null);
         request$
             .pipe(
                 finalize(() => {
@@ -160,14 +163,19 @@ export class WaistHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(() => {
-                this.loadEntries(false, true);
-                if (editingId !== null) {
-                    this.resetEditingState();
-                    return;
-                }
+            .subscribe({
+                next: () => {
+                    this.loadEntries(false, true);
+                    if (editingId !== null) {
+                        this.resetEditingState();
+                        return;
+                    }
 
-                this.form.circumference().value.set(payload.circumference.toString());
+                    this.form.circumference().value.set(payload.circumference.toString());
+                },
+                error: (error: unknown) => {
+                    this.handleEntrySaveError(error);
+                },
             });
     }
 
@@ -348,5 +356,12 @@ export class WaistHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.date().value.set(formatWaistHistoryDateInput(new Date()));
+    }
+
+    private handleEntrySaveError(error: unknown): void {
+        const responseBody = getRecordProperty(error, 'error');
+        const errorCode = getStringProperty(responseBody, 'error');
+        const errorKey = errorCode === 'WaistEntry.AlreadyExists' ? 'WAIST_HISTORY.ERROR_DUPLICATE_DATE' : 'FORM_ERRORS.UNKNOWN';
+        this.entryError.set(this.translate.instant(errorKey));
     }
 }

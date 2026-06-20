@@ -26,6 +26,7 @@
                 [cropSize]="512"
                 [cropAspectRatio]="1"
                 [deleteOnClear]="true"
+                (valueChange)="userFormChange.emit()"
             />
         </div>
         <div class="user-manage__account-fields fd-stack fd-gap-lg">
@@ -41,26 +42,32 @@
                 />
                 <fd-ui-input
                     class="user-manage__account-row-field"
+                    data-user-field="username"
                     size="lg"
                     [formField]="userForm().username"
                     [label]="'USER_MANAGE.USERNAME' | translate"
                     [placeholder]="'USER_MANAGE.USERNAME_PLACEHOLDER' | translate"
+                    (valueChange)="onTextFieldChange('username', $event)"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
                 <fd-ui-input
                     class="user-manage__account-row-field"
+                    data-user-field="firstName"
                     size="lg"
                     [formField]="userForm().firstName"
                     [label]="'USER_MANAGE.FIRST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.FIRST_NAME_PLACEHOLDER' | translate"
+                    (valueChange)="onTextFieldChange('firstName', $event)"
                 />
                 <fd-ui-input
                     class="user-manage__account-row-field"
+                    data-user-field="lastName"
                     size="lg"
                     [formField]="userForm().lastName"
                     [label]="'USER_MANAGE.LAST_NAME' | translate"
                     [placeholder]="'USER_MANAGE.LAST_NAME_PLACEHOLDER' | translate"
+                    (valueChange)="onTextFieldChange('lastName', $event)"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
@@ -70,6 +77,7 @@
                     [formField]="userForm().birthDate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
+                    (valueChange)="userFormChange.emit()"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
@@ -78,6 +86,7 @@
                     [label]="'USER_MANAGE.GENDER' | translate"
                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                     [options]="genderOptions()"
+                    (valueChange)="userFormChange.emit()"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
@@ -88,6 +97,7 @@
                     [label]="'USER_MANAGE.LANGUAGE' | translate"
                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                     [options]="languageOptions()"
+                    (valueChange)="userFormChange.emit()"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
@@ -96,6 +106,7 @@
                     [label]="'USER_MANAGE.THEME' | translate"
                     [placeholder]="'USER_MANAGE.THEME_PLACEHOLDER' | translate"
                     [options]="themeOptions()"
+                    (valueChange)="userFormChange.emit()"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
@@ -106,6 +117,7 @@
                     [label]="'USER_MANAGE.UI_STYLE' | translate"
                     [placeholder]="'USER_MANAGE.UI_STYLE_PLACEHOLDER' | translate"
                     [options]="uiStyleOptions()"
+                    (valueChange)="userFormChange.emit()"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">

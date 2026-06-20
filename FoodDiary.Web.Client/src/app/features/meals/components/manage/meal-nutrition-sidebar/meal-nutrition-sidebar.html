@@ -57,7 +57,7 @@
                     appearance="brand-action"
                     icon="save"
                     [fullWidth]="true"
-                    [disabled]="isSubmitting()"
+                    [disabled]="submitDisabled()"
                     [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
@@ -69,7 +69,7 @@
                     appearance="brand-action"
                     icon="add"
                     [fullWidth]="true"
-                    [disabled]="isSubmitting()"
+                    [disabled]="submitDisabled()"
                     [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}

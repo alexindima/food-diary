@@ -1,5 +1,17 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, PLATFORM_ID, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    type ElementRef,
+    inject,
+    PLATFORM_ID,
+    Renderer2,
+    signal,
+    viewChild,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, email, form, FormRoot, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -26,7 +38,10 @@ import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
 import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
-import { UserManageAccountCardComponent } from '../user-manage-sections/account-card/user-manage-account-card';
+import {
+    UserManageAccountCardComponent,
+    type UserManageAccountTextFieldChange,
+} from '../user-manage-sections/account-card/user-manage-account-card';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card';
 import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/user-manage-body-card';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
@@ -87,9 +102,12 @@ export class UserManageComponent {
     private readonly toastService = inject(FdUiToastService);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
+    private readonly renderer = inject<Renderer2>(Renderer2);
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly isBrowser = isPlatformBrowser(this.platformId);
+    private readonly userFormElement = viewChild<ElementRef<HTMLFormElement>>('userFormElement');
     private lastNotificationSyncVersion = -1;
+    private userFormDomListenersRegistered = false;
     private readonly pendingPasswordSetupIntent = signal(false);
 
     protected genderOptions: Array<FdUiSelectOption<Gender | null>> = [];
@@ -98,6 +116,8 @@ export class UserManageComponent {
     protected themeOptions: Array<FdUiSelectOption<AppThemeName | null>> = [];
     protected uiStyleOptions: Array<FdUiSelectOption<AppUiStyleName | null>> = [];
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
+    private readonly lastSyncedUserFormData = signal<UserFormValues>(createUserManageFormModel());
+    private readonly userFormInputVersion = signal(0);
     private readonly submitUserFormAsync = async (): Promise<void> => {
         this.onSubmit();
         await Promise.resolve();
@@ -152,6 +172,7 @@ export class UserManageComponent {
 
     public constructor() {
         this.buildSelectOptions();
+        this.watchUserFormElement();
         this.watchLanguageChanges();
         this.watchPasswordSetupIntent();
         this.watchUserProfile();
@@ -171,6 +192,36 @@ export class UserManageComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.buildSelectOptions();
             this.updateDietologistInviteEmailError();
+        });
+    }
+
+    private watchUserFormElement(): void {
+        effect(() => {
+            const formElement = this.userFormElement()?.nativeElement;
+            if (!this.isBrowser || this.userFormDomListenersRegistered || formElement === undefined) {
+                return;
+            }
+
+            this.userFormDomListenersRegistered = true;
+            this.listenToUserFormDomEvents(formElement);
+        });
+    }
+
+    private listenToUserFormDomEvents(formElement: HTMLFormElement): void {
+        if (!this.isBrowser) {
+            return;
+        }
+
+        const stopInputListener = this.renderer.listen(formElement, 'input', (event: Event) => {
+            this.onUserFormInput(event);
+        });
+        const stopFocusoutListener = this.renderer.listen(formElement, 'focusout', (event: Event) => {
+            this.onUserFormInput(event);
+        });
+
+        this.destroyRef.onDestroy(() => {
+            stopInputListener();
+            stopFocusoutListener();
         });
     }
 
@@ -241,9 +292,10 @@ export class UserManageComponent {
 
     private watchUserFormChanges(): void {
         effect(() => {
-            this.userFormModel();
+            this.userFormInputVersion();
+            const formData = this.readUserFormValues();
             this.facade.clearGlobalError();
-            this.queueUserAutosave();
+            this.queueUserAutosave(formData);
             this.updateProfileStatus();
         });
     }
@@ -259,6 +311,21 @@ export class UserManageComponent {
 
     protected onSubmit(): void {
         this.facade.saveProfileNow(this.buildUserUpdateDto());
+    }
+
+    protected onUserFormInput(event?: Event): void {
+        this.syncUserFormInputEvent(event);
+        this.queueUserFormAutosaveCheck();
+    }
+
+    protected onUserTextFieldChange(change: UserManageAccountTextFieldChange): void {
+        this.userForm[change.field]().value.set(change.value);
+        this.queueUserFormAutosaveCheck();
+    }
+
+    protected onUserHeightChange(value: number | null): void {
+        this.userForm.height().value.set(value);
+        this.queueUserFormAutosaveCheck();
     }
 
     protected openChangePasswordDialog(): void {
@@ -432,7 +499,7 @@ export class UserManageComponent {
         return buildProfileStatus({
             globalError: this.globalError(),
             isSaving: this.isSavingProfile(),
-            isDirty: this.userForm().dirty(),
+            isDirty: this.hasUserFormChanges(),
             isValid: true,
         });
     }
@@ -477,27 +544,130 @@ export class UserManageComponent {
     }
 
     private applyUserData(userData: Partial<UserFormValues>): void {
-        this.userForm().reset({
+        const formData = {
             ...createUserManageFormModel(),
             ...userData,
-        });
+        };
+        this.userForm().reset(formData);
+        this.lastSyncedUserFormData.set(formData);
         this.updateProfileStatus();
     }
 
-    private queueUserAutosave(): void {
-        if (!this.userForm().dirty()) {
+    private queueUserAutosave(formData: UserFormValues): void {
+        if (!this.hasUserFormChanges(formData)) {
             return;
         }
 
-        this.facade.queueProfileAutosave(this.buildUserUpdateDto());
+        this.facade.queueProfileAutosave(this.buildUserUpdateDto(formData));
     }
 
-    private buildUserUpdateDto(): UpdateUserDto {
-        const formData = this.userFormModel();
+    private buildUserUpdateDto(formData: UserFormValues = this.readUserFormValues()): UpdateUserDto {
         return new UpdateUserDto({
             ...formData,
             profileImage: formData.profileImage,
         });
+    }
+
+    private readUserFormValues(): UserFormValues {
+        const userFormFields = this.userForm;
+        return {
+            username: userFormFields.username().value(),
+            firstName: userFormFields.firstName().value(),
+            lastName: userFormFields.lastName().value(),
+            email: userFormFields.email().value(),
+            birthDate: userFormFields.birthDate().value(),
+            gender: userFormFields.gender().value(),
+            language: userFormFields.language().value(),
+            theme: userFormFields.theme().value(),
+            uiStyle: userFormFields.uiStyle().value(),
+            height: userFormFields.height().value(),
+            activityLevel: userFormFields.activityLevel().value(),
+            stepGoal: userFormFields.stepGoal().value(),
+            profileImage: userFormFields.profileImage().value(),
+        };
+    }
+
+    private syncUserFormInputEvent(event: Event | undefined): void {
+        const view = this.document.defaultView;
+        if (!this.isBrowser || event === undefined || view === null || !(event.target instanceof view.HTMLInputElement)) {
+            return;
+        }
+
+        const field = event.target.closest('[data-user-field]')?.getAttribute('data-user-field');
+        if (field === null || field === undefined) {
+            return;
+        }
+
+        this.syncUserFormFieldValue(field, event.target.value);
+    }
+
+    private syncUserFormFieldValue(field: string, value: string): void {
+        switch (field) {
+            case 'username': {
+                this.userForm.username().value.set(this.normalizeOptionalTextInput(value));
+                break;
+            }
+            case 'firstName': {
+                this.userForm.firstName().value.set(this.normalizeOptionalTextInput(value));
+                break;
+            }
+            case 'lastName': {
+                this.userForm.lastName().value.set(this.normalizeOptionalTextInput(value));
+                break;
+            }
+            case 'height': {
+                this.userForm.height().value.set(this.parseOptionalNumberInput(value));
+                break;
+            }
+            default: {
+                break;
+            }
+        }
+    }
+
+    private normalizeOptionalTextInput(value: string): string | null {
+        return value.length > 0 ? value : null;
+    }
+
+    private parseOptionalNumberInput(value: string): number | null {
+        if (value.trim().length === 0) {
+            return null;
+        }
+
+        const parsed = Number(value);
+        return Number.isFinite(parsed) ? parsed : null;
+    }
+
+    private queueUserFormAutosaveCheck(): void {
+        const formData = this.readUserFormValues();
+        this.facade.clearGlobalError();
+        this.queueUserAutosave(formData);
+        this.updateProfileStatus();
+        this.userFormInputVersion.update(version => version + 1);
+    }
+
+    private hasUserFormChanges(formData: UserFormValues = this.readUserFormValues()): boolean {
+        const synced = this.lastSyncedUserFormData();
+        const comparableFields = [
+            'username',
+            'firstName',
+            'lastName',
+            'email',
+            'birthDate',
+            'gender',
+            'language',
+            'theme',
+            'uiStyle',
+            'height',
+            'activityLevel',
+            'stepGoal',
+        ] as const;
+
+        return (
+            comparableFields.some(field => formData[field] !== synced[field]) ||
+            formData.profileImage?.url !== synced.profileImage?.url ||
+            formData.profileImage?.assetId !== synced.profileImage?.assetId
+        );
     }
 
     private loadDietologistRelationship(): void {

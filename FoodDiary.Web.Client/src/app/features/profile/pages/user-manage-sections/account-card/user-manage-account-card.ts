@@ -13,6 +13,12 @@ import type { Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
 import type { PasswordActionState, ProfileStatusViewModel, UserFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
 
+export type UserManageAccountTextField = 'username' | 'firstName' | 'lastName';
+export type UserManageAccountTextFieldChange = {
+    field: UserManageAccountTextField;
+    value: string | null;
+};
+
 @Component({
     selector: 'fd-user-manage-account-card',
     imports: [
@@ -40,4 +46,15 @@ export class UserManageAccountCardComponent {
     public readonly uiStyleOptions = input.required<Array<FdUiSelectOption<AppUiStyleName | null>>>();
 
     public readonly passwordChange = output();
+    public readonly userFormChange = output();
+    public readonly userTextFieldChange = output<UserManageAccountTextFieldChange>();
+
+    protected onTextFieldChange(field: UserManageAccountTextField, value: string | number | null): void {
+        const nextValue = value === null ? '' : String(value);
+        this.userTextFieldChange.emit({
+            field,
+            value: nextValue.length > 0 ? nextValue : null,
+        });
+        this.userFormChange.emit();
+    }
 }

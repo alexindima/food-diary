@@ -43,6 +43,7 @@ export class WeightHistoryPageComponent {
     protected readonly entries = this.facade.entries;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
+    protected readonly entryError = this.facade.entryError;
     protected readonly isEditing = this.facade.isEditing;
     protected readonly desiredWeight = this.facade.desiredWeight;
     protected readonly isDesiredWeightSaving = this.facade.isDesiredWeightSaving;

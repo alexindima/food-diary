@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { type FieldTree, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
@@ -18,4 +18,18 @@ import type { UserFormValues } from '../../user-manage/user-manage-lib/user-mana
 export class UserManageBodyCardComponent {
     public readonly userForm = input.required<FieldTree<UserFormValues>>();
     public readonly activityLevelOptions = input.required<Array<FdUiSelectOption<ActivityLevelOption | null>>>();
+    public readonly userFormChange = output();
+    public readonly heightChange = output<number | null>();
+
+    protected onHeightChange(value: string | number | null): void {
+        if (value === null || String(value).trim().length === 0) {
+            this.heightChange.emit(null);
+            this.userFormChange.emit();
+            return;
+        }
+
+        const parsed = Number(value);
+        this.heightChange.emit(Number.isFinite(parsed) ? parsed : null);
+        this.userFormChange.emit();
+    }
 }

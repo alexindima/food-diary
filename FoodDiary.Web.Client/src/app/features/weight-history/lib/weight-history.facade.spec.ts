@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { TranslateService } from '@ngx-translate/core';
-import { of } from 'rxjs';
+import { of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { UserService } from '../../../shared/api/user.service';
@@ -102,6 +102,20 @@ describe('WeightHistoryFacade entries', () => {
         expect(weightEntriesService.create).not.toHaveBeenCalled();
         expect(weightEntriesService.update).not.toHaveBeenCalled();
         expect(facade.form().touched()).toBe(true);
+    });
+
+    it('shows duplicate date error when entry already exists', () => {
+        weightEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WeightEntry.AlreadyExists' } })));
+        facade.formModel.set({
+            date: '2026-04-02',
+            weight: '73.8',
+        });
+
+        facade.submit();
+
+        expect(facade.entryError()).toBe('WEIGHT_HISTORY.ERROR_DUPLICATE_DATE');
+        expect(weightEntriesService.getEntries).not.toHaveBeenCalled();
+        expect(weightEntriesService.getSummary).not.toHaveBeenCalled();
     });
 
     it('switches to edit mode and updates the existing entry', () => {

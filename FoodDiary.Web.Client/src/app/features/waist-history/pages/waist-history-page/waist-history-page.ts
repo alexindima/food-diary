@@ -40,6 +40,7 @@ export class WaistHistoryPageComponent {
     protected readonly currentRange = this.facade.currentRange;
     protected readonly isLoading = this.facade.isLoading;
     protected readonly isSaving = this.facade.isSaving;
+    protected readonly entryError = this.facade.entryError;
     protected readonly isEditing = this.facade.isEditing;
     protected readonly isSummaryLoading = this.facade.isSummaryLoading;
     protected readonly customRangeForm = this.facade.customRangeForm;

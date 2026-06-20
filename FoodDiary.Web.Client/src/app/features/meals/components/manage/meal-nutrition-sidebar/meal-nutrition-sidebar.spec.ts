@@ -46,6 +46,13 @@ describe('MealNutritionSidebarComponent state', () => {
 });
 
 describe('MealNutritionSidebarComponent actions', () => {
+    it('should disable submit action when requested', async () => {
+        const { fixture } = await setupComponentAsync({ submitDisabled: true });
+        const submitButton = (fixture.nativeElement as HTMLElement).querySelector('button[type="submit"]');
+
+        expect(submitButton?.hasAttribute('disabled')).toBe(true);
+    });
+
     it('should emit nutrition mode changes and cancel requests', async () => {
         const { component } = await setupComponentAsync();
         const modeHandler = vi.fn();
@@ -64,6 +71,7 @@ describe('MealNutritionSidebarComponent actions', () => {
 type MealNutritionSidebarSetupOptions = {
     formModel?: ReturnType<typeof signal<ConsumptionFormValues>>;
     nutritionMode?: NutritionMode;
+    submitDisabled?: boolean;
 };
 
 async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {}): Promise<{
@@ -86,6 +94,7 @@ async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {
     fixture.componentRef.setInput('macrosError', null);
     fixture.componentRef.setInput('isEditMode', false);
     fixture.componentRef.setInput('isSubmitting', false);
+    fixture.componentRef.setInput('submitDisabled', options.submitDisabled ?? false);
     fixture.componentRef.setInput('globalError', null);
     fixture.detectChanges();
 

@@ -32,5 +32,8 @@
                 </fd-ui-button>
             }
         </div>
+        @if (error()) {
+            <fd-ui-form-error [error]="error()" />
+        }
     </form>
 </fd-ui-card>

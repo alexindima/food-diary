@@ -53,6 +53,7 @@
                         [macrosError]="macrosError()"
                         [isEditMode]="consumption() !== null"
                         [isSubmitting]="isSubmitting()"
+                        [submitDisabled]="isSubmitDisabled()"
                         [globalError]="globalError()"
                         (nutritionModeChange)="onNutritionModeChange($event)"
                         (cancelRequested)="onCancelAsync()"

@@ -6,7 +6,12 @@
     />
 
     <fd-page-body>
-        <form class="user-manage__form fd-stack fd-gap-card-profile" [formRoot]="userForm" [attr.aria-busy]="isSurfaceBusy()">
+        <form
+            #userFormElement
+            class="user-manage__form fd-stack fd-gap-card-profile"
+            [formRoot]="userForm"
+            [attr.aria-busy]="isSurfaceBusy()"
+        >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-user-manage-account-card
                     [userForm]="userForm"
@@ -17,6 +22,8 @@
                     [themeOptions]="themeOptions"
                     [uiStyleOptions]="uiStyleOptions"
                     (passwordChange)="openChangePasswordDialog()"
+                    (userFormChange)="onUserFormInput()"
+                    (userTextFieldChange)="onUserTextFieldChange($event)"
                 />
 
                 <fd-user-manage-billing-card
@@ -29,7 +36,12 @@
                     (premiumPageOpen)="openPremiumPage()"
                 />
 
-                <fd-user-manage-body-card [userForm]="userForm" [activityLevelOptions]="activityLevelOptions" />
+                <fd-user-manage-body-card
+                    [userForm]="userForm"
+                    [activityLevelOptions]="activityLevelOptions"
+                    (heightChange)="onUserHeightChange($event)"
+                    (userFormChange)="onUserFormInput()"
+                />
 
                 <fd-user-manage-notifications-card
                     [pushNotificationsEnabled]="notifications.pushNotificationsEnabled()"

@@ -8,6 +8,7 @@ import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { compareDatesDesc } from '../../../shared/lib/local-date.utils';
 import { parseDecimalInput } from '../../../shared/lib/number.utils';
+import { getRecordProperty, getStringProperty } from '../../../shared/lib/unknown-value.utils';
 import { WeightEntriesService } from '../api/weight-entries.service';
 import type {
     CreateWeightEntryPayload,
@@ -61,6 +62,7 @@ export class WeightHistoryFacade {
     public readonly entries = signal<WeightEntry[]>([]);
     public readonly isLoading = signal(false);
     public readonly isSaving = signal(false);
+    public readonly entryError = signal<string | null>(null);
     public readonly isEditing = signal(false);
     public readonly desiredWeight = signal<number | null>(null);
     public readonly isDesiredWeightSaving = signal(false);
@@ -159,6 +161,7 @@ export class WeightHistoryFacade {
             editingId !== null ? this.weightEntriesService.update(editingId, payload) : this.weightEntriesService.create(payload);
 
         this.isSaving.set(true);
+        this.entryError.set(null);
         request$
             .pipe(
                 finalize(() => {
@@ -166,14 +169,19 @@ export class WeightHistoryFacade {
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(() => {
-                this.loadEntries(false, true);
-                if (editingId !== null) {
-                    this.resetEditingState();
-                    return;
-                }
+            .subscribe({
+                next: () => {
+                    this.loadEntries(false, true);
+                    if (editingId !== null) {
+                        this.resetEditingState();
+                        return;
+                    }
 
-                this.form.weight().value.set(payload.weight.toString());
+                    this.form.weight().value.set(payload.weight.toString());
+                },
+                error: (error: unknown) => {
+                    this.handleEntrySaveError(error);
+                },
             });
     }
 
@@ -354,5 +362,12 @@ export class WeightHistoryFacade {
         this.isEditing.set(false);
         this.editingEntryId.set(null);
         this.form.date().value.set(formatWeightHistoryDateInput(new Date()));
+    }
+
+    private handleEntrySaveError(error: unknown): void {
+        const responseBody = getRecordProperty(error, 'error');
+        const errorCode = getStringProperty(responseBody, 'error');
+        const errorKey = errorCode === 'WeightEntry.AlreadyExists' ? 'WEIGHT_HISTORY.ERROR_DUPLICATE_DATE' : 'FORM_ERRORS.UNKNOWN';
+        this.entryError.set(this.translate.instant(errorKey));
     }
 }
