@@ -58,7 +58,12 @@
                                 "output": "/assets"
                             }
                         ],
-                        "styles": ["src/styles/design-tokens.global.scss", "src/styles/material-theme.scss", "src/styles.scss"],
+                        "styles": [
+                            "node_modules/@material-design-icons/font/filled.css",
+                            "src/styles/design-tokens.global.scss",
+                            "src/styles/material-theme.scss",
+                            "src/styles.scss"
+                        ],
                         "scripts": [],
                         "stylePreprocessorOptions": {
                             "includePaths": ["src/styles", "projects/fd-ui-kit/src/lib"]
@@ -293,6 +298,7 @@
                             }
                         ],
                         "styles": [
+                            "node_modules/@material-design-icons/font/filled.css",
                             "src/styles/design-tokens.global.scss",
                             "src/styles/material-theme.scss",
                             "projects/fooddiary-admin/src/styles.scss"
