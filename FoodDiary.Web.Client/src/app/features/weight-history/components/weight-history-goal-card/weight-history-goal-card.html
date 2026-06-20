@@ -4,6 +4,7 @@
             class="weight-history-page__goal-input"
             type="number"
             [step]="0.1"
+            [ariaLabel]="'WEIGHT_HISTORY.GOAL_CARD_TITLE' | translate"
             [placeholder]="'WEIGHT_HISTORY.GOAL_PLACEHOLDER' | translate"
             [suffixButtonIcon]="weightField()().value() ? 'backspace' : undefined"
             [formField]="weightField()"

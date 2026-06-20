@@ -314,6 +314,15 @@ describe('FdUiInputComponent attributes', () => {
 
         expect(input().getAttribute('aria-label')).toBe('Email');
     });
+
+    it('should prefer explicit aria label over visible label', async () => {
+        const { fixture, input } = await setupInputAsync();
+        fixture.componentRef.setInput('label', 'Visible label');
+        fixture.componentRef.setInput('ariaLabel', 'Accessible label');
+        fixture.detectChanges();
+
+        expect(input().getAttribute('aria-label')).toBe('Accessible label');
+    });
 });
 
 describe('FdUiInputComponent with TestHost', () => {
