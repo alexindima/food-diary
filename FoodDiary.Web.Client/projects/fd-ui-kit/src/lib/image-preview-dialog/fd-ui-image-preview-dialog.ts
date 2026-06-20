@@ -1,6 +1,5 @@
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
 
 import { FdUiDialogComponent } from '../dialog/fd-ui-dialog';
 import { FD_UI_DIALOG_DATA } from '../dialog/fd-ui-dialog-data';
@@ -22,7 +21,7 @@ const MAX_COLLAGE_IMAGES = 4;
 
 @Component({
     selector: 'fd-ui-image-preview-dialog',
-    imports: [NgOptimizedImage, CommonModule, TranslatePipe, FdUiDialogComponent],
+    imports: [NgOptimizedImage, CommonModule, FdUiDialogComponent],
     templateUrl: './fd-ui-image-preview-dialog.html',
     styleUrls: ['./fd-ui-image-preview-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
