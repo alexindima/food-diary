@@ -4,6 +4,7 @@
     [class]="classes()"
     [attr.aria-label]="ariaLabel() || null"
     [attr.aria-busy]="loading() ? 'true' : null"
+    [attr.title]="effectiveDisabledReason()"
 >
     <span class="fd-ui-button__content">
         @if (icon(); as iconName) {

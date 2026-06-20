@@ -15,8 +15,18 @@
         }
 
         <div fdUiDialogFooter>
-            <fd-ui-button type="button" variant="secondary" [disabled]="isSubmitting()" (click)="close()">Cancel</fd-ui-button>
-            <fd-ui-button type="submit" [disabled]="isSubmitting()"> {{ submitLabel() }} </fd-ui-button>
+            <fd-ui-button
+                type="button"
+                variant="secondary"
+                disabledReason="Impersonation is already in progress."
+                [disabled]="isSubmitting()"
+                (click)="close()"
+            >
+                Cancel
+            </fd-ui-button>
+            <fd-ui-button type="submit" disabledReason="Impersonation is already in progress." [disabled]="isSubmitting()">
+                {{ submitLabel() }}
+            </fd-ui-button>
         </div>
     </form>
 </fd-ui-dialog>

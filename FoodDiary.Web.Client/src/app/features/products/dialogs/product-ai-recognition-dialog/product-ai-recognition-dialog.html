@@ -37,6 +37,7 @@
         <fd-product-ai-recognition-action
             [hasAnalyzed]="hasAnalyzed()"
             [disabled]="isAnalyzeDisabled()"
+            [disabledReason]="analyzeDisabledReason() === null ? null : (analyzeDisabledReason() | translate)"
             (analyze)="startAnalysis()"
             (reanalyze)="reanalyze()"
         />
@@ -66,7 +67,7 @@
                 variant="primary"
                 icon="check"
                 [disabled]="!canApply()"
-                [attr.title]="!canApply() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
+                [disabledReason]="!canApply() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
                 (click)="apply()"
             >
                 {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}

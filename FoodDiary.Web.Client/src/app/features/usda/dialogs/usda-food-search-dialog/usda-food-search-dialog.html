@@ -27,7 +27,7 @@
         <fd-ui-button
             variant="primary"
             [disabled]="!selectedFood()"
-            [attr.title]="!selectedFood() ? ('DISABLED_HINTS.SELECT_FOOD' | translate) : null"
+            [disabledReason]="!selectedFood() ? ('DISABLED_HINTS.SELECT_FOOD' | translate) : null"
             (click)="onConfirm()"
         >
             {{ 'USDA_SEARCH.LINK' | translate }}

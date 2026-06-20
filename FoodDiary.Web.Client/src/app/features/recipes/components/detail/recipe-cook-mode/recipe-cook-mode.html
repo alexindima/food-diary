@@ -51,7 +51,7 @@
                 fill="outline"
                 icon="arrow_back"
                 [disabled]="!canGoBack()"
-                [attr.title]="!canGoBack() ? ('DISABLED_HINTS.FIRST_STEP' | translate) : null"
+                [disabledReason]="!canGoBack() ? ('DISABLED_HINTS.FIRST_STEP' | translate) : null"
                 (click)="previousStep()"
             >
                 {{ 'RECIPE_DETAIL.COOK_MODE.PREVIOUS' | translate }}
@@ -61,7 +61,7 @@
                 appearance="brand-action"
                 icon="arrow_forward"
                 [disabled]="!canGoNext()"
-                [attr.title]="!canGoNext() ? ('DISABLED_HINTS.LAST_STEP' | translate) : null"
+                [disabledReason]="!canGoNext() ? ('DISABLED_HINTS.LAST_STEP' | translate) : null"
                 (click)="nextStep()"
             >
                 {{ 'RECIPE_DETAIL.COOK_MODE.NEXT' | translate }}

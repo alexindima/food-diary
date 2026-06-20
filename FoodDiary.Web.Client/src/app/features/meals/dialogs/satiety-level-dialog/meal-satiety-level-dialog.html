@@ -8,7 +8,7 @@
         <fd-ui-button
             variant="primary"
             [disabled]="selectedValue() === null"
-            [attr.title]="selectedValue() === null ? ('DISABLED_HINTS.SELECT_VALUE' | translate) : null"
+            [disabledReason]="selectedValue() === null ? ('DISABLED_HINTS.SELECT_VALUE' | translate) : null"
             (click)="closeWithValue()"
         >
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY' | translate }}

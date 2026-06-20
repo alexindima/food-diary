@@ -24,7 +24,7 @@
                 fill="solid"
                 icon="add"
                 [disabled]="isItemFormInvalid()"
-                [attr.title]="isItemFormInvalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                [disabledReason]="isItemFormInvalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                 (click)="itemAdd.emit()"
             >
                 {{ 'SHOPPING_LIST.ADD_ITEM_BUTTON' | translate }}

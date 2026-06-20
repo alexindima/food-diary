@@ -32,7 +32,7 @@
         <fd-ui-button
             type="button"
             [disabled]="!canImpersonate()"
-            [attr.title]="!canImpersonate() ? 'This user cannot be impersonated.' : null"
+            [disabledReason]="!canImpersonate() ? 'This user cannot be impersonated.' : null"
             (click)="impersonate()"
         >
             Impersonate

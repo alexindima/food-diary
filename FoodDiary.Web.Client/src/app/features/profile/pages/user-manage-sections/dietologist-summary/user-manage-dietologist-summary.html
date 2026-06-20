@@ -39,6 +39,7 @@
             [variant]="action.variant"
             [icon]="action.icon"
             [disabled]="action.disabled"
+            [disabledReason]="action.disabled && !isSavingDietologist() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
             [loading]="isSavingDietologist()"
             (click)="executeSummaryAction(action.action)"
         >

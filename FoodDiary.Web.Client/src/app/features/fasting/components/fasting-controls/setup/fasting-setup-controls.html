@@ -93,7 +93,7 @@
 }
 
 <div class="fasting-controls__actions fd-ui-actions">
-    <fd-ui-button [loading]="isStarting()" [disabled]="isStarting()" (click)="startFasting.emit()">
+    <fd-ui-button [loading]="isStarting()" (click)="startFasting.emit()">
         {{ 'FASTING.START_FAST' | translate }}
     </fd-ui-button>
 </div>

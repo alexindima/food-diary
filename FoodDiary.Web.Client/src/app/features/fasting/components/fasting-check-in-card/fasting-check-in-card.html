@@ -12,6 +12,7 @@
                             variant="secondary"
                             fill="outline"
                             [disabled]="isEnding() || isUpdatingCycle()"
+                            [disabledReason]="isEnding() || isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="formOpen.emit()"
                         >
                             {{ ctaKey() | translate }}
@@ -83,13 +84,19 @@
                 </div>
 
                 <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
-                    <fd-ui-button variant="secondary" fill="outline" [disabled]="isSaving()" (click)="formClose.emit()">
+                    <fd-ui-button
+                        variant="secondary"
+                        fill="outline"
+                        [disabled]="isSaving()"
+                        [disabledReason]="isSaving() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                        (click)="formClose.emit()"
+                    >
                         {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
                     </fd-ui-button>
                     <fd-ui-button
                         [loading]="isSaving()"
                         [disabled]="draftDisabled()"
-                        [attr.title]="isEnding() || isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                        [disabledReason]="isEnding() || isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                         (click)="save.emit()"
                     >
                         {{ 'FASTING.CHECK_IN.SAVE' | translate }}

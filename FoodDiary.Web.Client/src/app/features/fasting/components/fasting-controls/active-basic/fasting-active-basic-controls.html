@@ -6,7 +6,7 @@
                 fill="outline"
                 size="sm"
                 [disabled]="cyclicActionDisabled()"
-                [attr.title]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                [disabledReason]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                 (click)="skip.emit()"
             >
                 {{ skipCycleActionLabelKey() | translate }}
@@ -16,7 +16,7 @@
                 fill="outline"
                 size="sm"
                 [disabled]="cyclicActionDisabled()"
-                [attr.title]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                [disabledReason]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                 (click)="postpone.emit()"
             >
                 {{ postponeCycleActionLabelKey() | translate }}
@@ -28,7 +28,7 @@
         size="sm"
         [loading]="isEnding()"
         [disabled]="isEnding() || isUpdatingCycle()"
-        [attr.title]="isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+        [disabledReason]="isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
         (click)="end.emit()"
     >
         {{ endActionLabelKey() | translate }}

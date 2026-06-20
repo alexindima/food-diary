@@ -42,7 +42,6 @@
                 variant="secondary"
                 fill="outline"
                 [loading]="isOpeningBillingPortal()"
-                [disabled]="isOpeningBillingPortal()"
                 (click)="billingPortalOpen.emit()"
             >
                 {{ 'USER_MANAGE.BILLING_MANAGE' | translate }}

@@ -110,6 +110,7 @@
                                 fill="outline"
                                 variant="secondary"
                                 [disabled]="isUpdatingNotifications()"
+                                [disabledReason]="isUpdatingNotifications() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                                 [loading]="isUpdatingNotifications()"
                                 (click)="fastingReminderHoursSave.emit()"
                             >
@@ -145,7 +146,7 @@
                     icon="notifications_active"
                     [loading]="isSchedulingTestNotification()"
                     [disabled]="isSchedulingTestNotification() || !pushNotificationsSupported() || !fastingPushNotificationsEnabled()"
-                    [attr.title]="
+                    [disabledReason]="
                         !pushNotificationsSupported()
                             ? ('DISABLED_HINTS.PUSH_NOT_SUPPORTED' | translate)
                             : !fastingPushNotificationsEnabled()

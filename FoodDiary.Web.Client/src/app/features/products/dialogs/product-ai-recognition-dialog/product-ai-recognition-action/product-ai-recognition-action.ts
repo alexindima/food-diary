@@ -12,6 +12,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 export class ProductAiRecognitionActionComponent {
     public readonly hasAnalyzed = input.required<boolean>();
     public readonly disabled = input.required<boolean>();
+    public readonly disabledReason = input<string | null>(null);
 
     public readonly analyze = output();
     public readonly reanalyze = output();

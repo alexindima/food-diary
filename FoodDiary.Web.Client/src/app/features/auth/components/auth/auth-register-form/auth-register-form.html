@@ -2,15 +2,7 @@
     <fd-auth-register-fields [form]="form()" [errors]="errors()" />
 
     <div class="auth__actions fd-stack fd-gap-sm">
-        <fd-ui-button
-            type="submit"
-            appearance="brand-action"
-            size="lg"
-            variant="primary"
-            [disabled]="isSubmitting()"
-            [loading]="isSubmitting()"
-            [fullWidth]="true"
-        >
+        <fd-ui-button type="submit" appearance="brand-action" size="lg" variant="primary" [loading]="isSubmitting()" [fullWidth]="true">
             {{ 'AUTH.REGISTER.REGISTER' | translate }}
         </fd-ui-button>
         <fd-ui-form-error [error]="globalError()" />

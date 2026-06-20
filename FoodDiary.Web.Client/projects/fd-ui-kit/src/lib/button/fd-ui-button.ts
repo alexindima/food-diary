@@ -9,6 +9,9 @@ import { FdUiIconComponent } from '../icon/fd-ui-icon';
     templateUrl: './fd-ui-button.html',
     styleUrls: ['./fd-ui-button.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.title]': 'effectiveDisabledReason()',
+    },
 })
 export class FdUiButtonComponent {
     public readonly type = input<FdUiButtonType>('button');
@@ -22,6 +25,7 @@ export class FdUiButtonComponent {
     public readonly loading = input(false, { transform: booleanAttribute });
     public readonly fullWidth = input(false, { transform: booleanAttribute });
     public readonly ariaLabel = input<string | undefined>();
+    public readonly disabledReason = input<string | null>(null);
 
     private readonly normalizedFill = computed<FdUiButtonFill>(() => {
         const variant = this.variant();
@@ -50,6 +54,7 @@ export class FdUiButtonComponent {
             this.fullWidth() ? 'fd-ui-button--full-width' : '',
         ].filter((className): className is string => Boolean(className)),
     );
+    protected readonly effectiveDisabledReason = computed(() => (this.disabled() ? this.disabledReason() : null));
 }
 
 export type FdUiButtonType = 'button' | 'submit' | 'reset';

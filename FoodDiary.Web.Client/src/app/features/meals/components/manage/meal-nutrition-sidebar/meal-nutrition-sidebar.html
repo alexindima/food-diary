@@ -47,6 +47,7 @@
                 variant="primary"
                 icon="arrow_back"
                 [disabled]="isSubmitting()"
+                [disabledReason]="isSubmitting() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                 (click)="onCancel()"
             >
                 {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
@@ -59,6 +60,9 @@
                     icon="save"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
+                    [disabledReason]="
+                        submitDisabled() && !isSubmitting() ? ('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null
+                    "
                     [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.SAVE_BUTTON' | translate }}
@@ -71,6 +75,9 @@
                     icon="add"
                     [fullWidth]="true"
                     [disabled]="submitDisabled()"
+                    [disabledReason]="
+                        submitDisabled() && !isSubmitting() ? ('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate) : null
+                    "
                     [loading]="isSubmitting()"
                 >
                     {{ 'CONSUMPTION_MANAGE.ADD_BUTTON' | translate }}

@@ -17,6 +17,7 @@
                     variant="secondary"
                     fill="outline"
                     [disabled]="isLoadingMore()"
+                    [disabledReason]="isLoadingMore() ? 'Loading more items.' : null"
                     (click)="onLoadMore()"
                 >
                     {{ loadMoreLabel() }}

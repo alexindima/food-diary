@@ -44,7 +44,7 @@
             size="lg"
             variant="primary"
             [disabled]="isSubmitDisabled()"
-            [attr.title]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+            [disabledReason]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
             [loading]="isSubmitting()"
             [fullWidth]="true"
         >
@@ -58,7 +58,7 @@
                 variant="secondary"
                 fill="outline"
                 [disabled]="form()().invalid() || isRestoring() || isSubmitting()"
-                [attr.title]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                [disabledReason]="form()().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                 [loading]="isRestoring()"
                 [fullWidth]="true"
                 (click)="restoreSubmit.emit()"

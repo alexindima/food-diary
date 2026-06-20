@@ -19,7 +19,7 @@
         </div>
 
         <div class="waist-history-page__form-actions">
-            <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
+            <fd-ui-button type="submit" [loading]="isSaving()">
                 @if (isEditing()) {
                     {{ 'WAIST_HISTORY.UPDATE' | translate }}
                 } @else {

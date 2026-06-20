@@ -115,14 +115,7 @@
     </div>
 
     <div fdUiDialogFooter class="dashboard-notification-settings-dialog__footer fd-ui-actions fd-ui-actions--end">
-        <fd-ui-button
-            type="button"
-            fill="outline"
-            variant="secondary"
-            [disabled]="isOpeningProfile()"
-            [loading]="isOpeningProfile()"
-            (click)="openAdvancedSettingsAsync()"
-        >
+        <fd-ui-button type="button" fill="outline" variant="secondary" [loading]="isOpeningProfile()" (click)="openAdvancedSettingsAsync()">
             {{ 'DASHBOARD.NOTIFICATIONS.OPEN_PROFILE' | translate }}
         </fd-ui-button>
     </div>

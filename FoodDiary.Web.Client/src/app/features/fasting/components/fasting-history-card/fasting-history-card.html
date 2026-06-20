@@ -21,7 +21,6 @@
                         variant="secondary"
                         size="sm"
                         [loading]="isLoadingMoreHistory()"
-                        [disabled]="isLoadingMoreHistory()"
                         (click)="historyLoadMore.emit()"
                     >
                         {{ 'FASTING.LOAD_MORE_HISTORY' | translate }}

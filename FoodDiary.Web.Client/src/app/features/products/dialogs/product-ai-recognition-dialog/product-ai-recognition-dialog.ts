@@ -83,6 +83,17 @@ export class ProductAiRecognitionDialogComponent {
     });
     protected readonly canApply = computed(() => this.nutrition() !== null);
     protected readonly isAnalyzeDisabled = computed(() => this.selection() === null || this.isLoading() || this.isNutritionLoading());
+    protected readonly analyzeDisabledReason = computed(() => {
+        if (this.selection() === null) {
+            return 'DISABLED_HINTS.IMAGE_REQUIRED';
+        }
+
+        if (this.isLoading() || this.isNutritionLoading()) {
+            return 'DISABLED_HINTS.OPERATION_BUSY';
+        }
+
+        return null;
+    });
     protected readonly itemNames = computed(() =>
         this.results()
             .map(item => capitalizeName(item.nameLocal?.trim() ?? item.nameEn.trim()))

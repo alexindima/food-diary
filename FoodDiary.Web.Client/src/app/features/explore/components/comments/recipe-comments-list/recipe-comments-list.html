@@ -13,7 +13,7 @@
             <fd-recipe-comment-item [item]="item" (edit)="edit.emit($event)" (delete)="delete.emit($event)" />
         }
         @if (hasMore()) {
-            <fd-ui-button variant="outline" size="sm" [disabled]="isLoading()" [loading]="isLoading()" (click)="loadMore.emit()">
+            <fd-ui-button variant="outline" size="sm" [loading]="isLoading()" (click)="loadMore.emit()">
                 {{ 'COMMENTS.LOAD_MORE' | translate }}
             </fd-ui-button>
         }

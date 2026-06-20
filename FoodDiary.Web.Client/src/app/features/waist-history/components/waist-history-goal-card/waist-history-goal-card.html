@@ -11,7 +11,7 @@
             (suffixButtonClicked)="circumferenceField()().value.set('')"
         />
         <div class="waist-history-page__goal-actions">
-            <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">
+            <fd-ui-button type="button" [loading]="isSaving()" (click)="saveGoal.emit()">
                 {{ 'WAIST_HISTORY.SAVE_GOAL' | translate }}
             </fd-ui-button>
         </div>

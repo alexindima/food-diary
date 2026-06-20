@@ -36,6 +36,11 @@
                         icon="close"
                         [loading]="removingEndpoint() === device.subscription.endpoint"
                         [disabled]="pushNotificationsBusy() || removingEndpoint() === device.subscription.endpoint"
+                        [disabledReason]="
+                            pushNotificationsBusy() && removingEndpoint() !== device.subscription.endpoint
+                                ? ('DISABLED_HINTS.OPERATION_BUSY' | translate)
+                                : null
+                        "
                         (click)="deviceRemove.emit(device.subscription)"
                     >
                         {{ 'USER_MANAGE.NOTIFICATIONS_DEVICE_REMOVE' | translate }}

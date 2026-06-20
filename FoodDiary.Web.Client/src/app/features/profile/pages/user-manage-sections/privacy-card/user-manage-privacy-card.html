@@ -34,7 +34,7 @@
                     size="sm"
                     [disabled]="isAccountActionBusy() || isRevokingAiConsent()"
                     [loading]="isRevokingAiConsent()"
-                    [attr.title]="
+                    [disabledReason]="
                         isAccountActionBusy() && !isRevokingAiConsent() ? ('DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate) : null
                     "
                     (click)="aiConsentRevoke.emit()"
@@ -62,7 +62,7 @@
                 icon="delete"
                 [disabled]="isAccountActionBusy() || isDeleting()"
                 [loading]="isDeleting()"
-                [attr.title]="isAccountActionBusy() && !isDeleting() ? ('DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate) : null"
+                [disabledReason]="isAccountActionBusy() && !isDeleting() ? ('DISABLED_HINTS.ACCOUNT_ACTION_BUSY' | translate) : null"
                 (click)="accountDelete.emit()"
             >
                 {{ 'USER_MANAGE.DELETE_ACCOUNT_BUTTON' | translate }}

@@ -8,6 +8,7 @@
     [fragment]="fragment()"
     [disabled]="disabled()"
     [attr.role]="'menuitem'"
+    [attr.title]="effectiveDisabledReason()"
     (click)="selectMenuItem($event)"
 >
     <ng-content />

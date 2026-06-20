@@ -19,7 +19,7 @@
         </div>
 
         <div class="weight-history-page__form-actions fd-row fd-wrap fd-gap-actions">
-            <fd-ui-button type="submit" [disabled]="isSaving()" [loading]="isSaving()">
+            <fd-ui-button type="submit" [loading]="isSaving()">
                 @if (isEditing()) {
                     {{ 'WEIGHT_HISTORY.UPDATE' | translate }}
                 } @else {

@@ -15,6 +15,7 @@ type HeaderOverflowAction = {
     readonly label: string;
     readonly icon: string | null;
     readonly disabled: boolean;
+    readonly disabledReason: string | null;
     readonly target: HTMLElement;
 };
 
@@ -94,6 +95,7 @@ export class HeaderActionsOverflowComponent {
             label,
             icon: this.getActionIcon(target),
             disabled: this.isDisabled(target),
+            disabledReason: this.getDisabledReason(target),
             target,
         };
     }
@@ -123,6 +125,17 @@ export class HeaderActionsOverflowComponent {
         const glyph = glyphElement?.textContent.trim();
 
         return this.firstNonEmpty(metadataIcon, glyph) ?? null;
+    }
+
+    private getDisabledReason(target: HTMLElement): string | null {
+        if (!this.isDisabled(target)) {
+            return null;
+        }
+
+        return this.firstNonEmpty(
+            target.getAttribute('title')?.trim(),
+            target.closest<HTMLElement>('[title]')?.getAttribute('title')?.trim(),
+        );
     }
 
     private firstNonEmpty(...values: ReadonlyArray<string | null | undefined>): string | null {

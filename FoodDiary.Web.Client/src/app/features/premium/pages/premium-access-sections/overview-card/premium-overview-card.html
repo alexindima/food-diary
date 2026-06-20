@@ -6,17 +6,11 @@
         </div>
 
         @if (viewModel().showManageBilling) {
-            <fd-ui-button
-                variant="secondary"
-                fill="outline"
-                [loading]="portalLoading()"
-                [disabled]="portalLoading()"
-                (click)="manageBilling.emit()"
-            >
+            <fd-ui-button variant="secondary" fill="outline" [loading]="portalLoading()" (click)="manageBilling.emit()">
                 {{ 'PREMIUM_PAGE.OVERVIEW.MANAGE_ACTION' | translate }}
             </fd-ui-button>
         } @else if (viewModel().showStartTrial) {
-            <fd-ui-button variant="primary" [loading]="trialLoading()" [disabled]="trialLoading()" (click)="startTrial.emit()">
+            <fd-ui-button variant="primary" [loading]="trialLoading()" (click)="startTrial.emit()">
                 {{ 'PREMIUM_PAGE.OVERVIEW.START_TRIAL_ACTION' | translate }}
             </fd-ui-button>
         }

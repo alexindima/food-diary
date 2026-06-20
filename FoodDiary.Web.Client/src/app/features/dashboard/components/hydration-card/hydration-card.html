@@ -9,6 +9,7 @@
                 appearance="brand-action"
                 class="hydration-card__add"
                 [disabled]="isLoading()"
+                [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                 (click)="onAdd()"
             >
                 +{{ addAmount() }} {{ 'GENERAL.UNITS.ML' | translate }}

@@ -24,7 +24,6 @@
                 variant="danger"
                 icon="delete"
                 [loading]="isClearing()"
-                [disabled]="isClearing()"
                 [ariaLabel]="'CYCLE_TRACKING.CLEAR_DAY' | translate"
                 (click)="clearDay.emit(item().date)"
             />

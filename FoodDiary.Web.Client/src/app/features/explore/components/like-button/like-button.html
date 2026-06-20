@@ -6,6 +6,7 @@
     [class.like-button--liked]="isLiked()"
     [icon]="icon()"
     [disabled]="isToggling()"
+    [disabledReason]="isToggling() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
     (click)="onToggle()"
 >
     {{ totalLikes() }}

@@ -11,7 +11,7 @@
             (suffixButtonClicked)="weightField()().value.set('')"
         />
         <div class="weight-history-page__goal-actions fd-row fd-gap-actions">
-            <fd-ui-button type="button" [disabled]="isSaving()" [loading]="isSaving()" (click)="saveGoal.emit()">
+            <fd-ui-button type="button" [loading]="isSaving()" (click)="saveGoal.emit()">
                 {{ 'WEIGHT_HISTORY.SAVE_GOAL' | translate }}
             </fd-ui-button>
         </div>

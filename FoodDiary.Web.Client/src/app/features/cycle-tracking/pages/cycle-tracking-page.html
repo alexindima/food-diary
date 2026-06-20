@@ -5,8 +5,8 @@
         <div class="cycle-tracking__page-actions fd-ui-actions">
             <fd-ui-button
                 type="button"
-                [disabled]="!cycle() || isExportingCycle()"
-                [attr.title]="!cycle() ? ('DISABLED_HINTS.NO_CYCLE' | translate) : null"
+                [disabled]="!cycle()"
+                [disabledReason]="!cycle() ? ('DISABLED_HINTS.NO_CYCLE' | translate) : null"
                 [loading]="isExportingCycle()"
                 (click)="exportCycle()"
             >
@@ -69,7 +69,7 @@
                         </fd-ui-checkbox>
                     </div>
                     <div class="cycle-tracking__actions fd-ui-actions">
-                        <fd-ui-button type="submit" [disabled]="isSavingCycle()" [loading]="isSavingCycle()">
+                        <fd-ui-button type="submit" [loading]="isSavingCycle()">
                             {{ 'CYCLE_TRACKING.SAVE_CYCLE' | translate }}
                         </fd-ui-button>
                     </div>
@@ -160,7 +160,7 @@
                         />
 
                         <div class="cycle-tracking__actions fd-ui-actions">
-                            <fd-ui-button type="submit" [disabled]="isSavingDay()" [loading]="isSavingDay()">
+                            <fd-ui-button type="submit" [loading]="isSavingDay()">
                                 {{ (editingDayDate() ? 'CYCLE_TRACKING.UPDATE_DAY' : 'CYCLE_TRACKING.SAVE_DAY') | translate }}
                             </fd-ui-button>
                             <fd-ui-button
@@ -210,7 +210,7 @@
                         />
 
                         <div class="cycle-tracking__actions fd-ui-actions">
-                            <fd-ui-button type="submit" [disabled]="isSavingFactor()" [loading]="isSavingFactor()">
+                            <fd-ui-button type="submit" [loading]="isSavingFactor()">
                                 {{ (editingFactorId() ? 'CYCLE_TRACKING.UPDATE_FACTOR' : 'CYCLE_TRACKING.SAVE_FACTOR') | translate }}
                             </fd-ui-button>
                             <fd-ui-button

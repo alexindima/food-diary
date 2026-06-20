@@ -67,7 +67,7 @@
                         type="button"
                         variant="secondary"
                         [disabled]="form().invalid() || testEmailForm().invalid() || isSendingTest()"
-                        [attr.title]="form().invalid() || testEmailForm().invalid() ? 'Complete the required fields first.' : null"
+                        [disabledReason]="form().invalid() || testEmailForm().invalid() ? 'Complete the required fields first.' : null"
                         (click)="onSendTest()"
                     >
                         {{ isSendingTest() ? 'Sending...' : 'Send test' }}
@@ -92,7 +92,7 @@
             <fd-ui-button
                 type="submit"
                 [disabled]="form().invalid() || isSaving()"
-                [attr.title]="form().invalid() ? 'Complete the required fields first.' : null"
+                [disabledReason]="form().invalid() ? 'Complete the required fields first.' : null"
             >
                 Save
             </fd-ui-button>

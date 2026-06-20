@@ -62,7 +62,14 @@
                 <fd-ui-button size="md" variant="secondary" icon="edit" (click)="onEdit()">
                     {{ 'RECIPE_DETAIL.EDIT_BUTTON' | translate }}
                 </fd-ui-button>
-                <fd-ui-button size="md" variant="danger" icon="delete" [disabled]="isDeleteDisabled" (click)="onDelete()">
+                <fd-ui-button
+                    size="md"
+                    variant="danger"
+                    icon="delete"
+                    [disabled]="isDeleteDisabled"
+                    [disabledReason]="isDeleteDisabled && warningMessage ? (warningMessage | translate) : null"
+                    (click)="onDelete()"
+                >
                     {{ 'RECIPE_DETAIL.DELETE_BUTTON' | translate }}
                 </fd-ui-button>
             } @else {
@@ -72,6 +79,7 @@
                     fill="outline"
                     icon="content_copy"
                     [disabled]="isDuplicateInProgress()"
+                    [disabledReason]="isDuplicateInProgress() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                     (click)="onDuplicate()"
                 >
                     {{ 'RECIPE_DETAIL.DUPLICATE_BUTTON' | translate }}

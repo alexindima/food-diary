@@ -63,7 +63,7 @@
                         <fd-ui-button
                             type="submit"
                             [disabled]="dateFilterForm().invalid() || detailsLoading()"
-                            [attr.title]="dateFilterForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                            [disabledReason]="dateFilterForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                         >
                             {{ 'DIETOLOGIST.CLIENT_DASHBOARD.DATE_FILTER.APPLY' | translate }}
                         </fd-ui-button>
@@ -111,7 +111,7 @@
                             <fd-ui-button
                                 type="submit"
                                 [disabled]="recommendationForm().invalid() || savingRecommendation()"
-                                [attr.title]="recommendationForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+                                [disabledReason]="recommendationForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                             >
                                 {{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND' | translate }}
                             </fd-ui-button>

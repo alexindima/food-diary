@@ -25,6 +25,7 @@
                     [fdUiHint]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                     [ariaLabel]="'SHOPPING_LIST.NEW_LIST_BUTTON' | translate"
                     [disabled]="isLoading()"
+                    [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                     (click)="createNewList()"
                 />
             </div>
@@ -60,7 +61,14 @@
                     </div>
                     <h2 class="shopping-list__no-lists-title fd-ui-card-title">{{ 'SHOPPING_LIST.NO_LISTS_TITLE' | translate }}</h2>
                     <p class="shopping-list__no-lists-copy fd-ui-body-sm">{{ 'SHOPPING_LIST.NO_LISTS_COPY' | translate }}</p>
-                    <fd-ui-button variant="primary" fill="solid" icon="add" [disabled]="isLoading()" (click)="createNewList()">
+                    <fd-ui-button
+                        variant="primary"
+                        fill="solid"
+                        icon="add"
+                        [disabled]="isLoading()"
+                        [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                        (click)="createNewList()"
+                    >
                         {{ 'SHOPPING_LIST.NEW_LIST_BUTTON' | translate }}
                     </fd-ui-button>
                 </section>

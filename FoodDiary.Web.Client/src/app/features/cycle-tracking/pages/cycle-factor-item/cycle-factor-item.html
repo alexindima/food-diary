@@ -27,6 +27,7 @@
                 variant="secondary"
                 icon="event_busy"
                 [disabled]="isSaving()"
+                [disabledReason]="isSaving() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                 [ariaLabel]="'CYCLE_TRACKING.END_FACTOR' | translate"
                 (click)="endFactor.emit(factor().id)"
             />

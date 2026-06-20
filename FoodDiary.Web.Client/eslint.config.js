@@ -776,6 +776,44 @@ const formRequiresFormRootRule = {
     create: createFormRequiresFormRootRule,
 };
 
+const disabledReasonElementNames = new Set(['fd-ui-button', 'fd-ui-menu-item']);
+const disabledReasonAttributeNames = new Set(['disabledReason', 'fdUiHint', 'hint', 'title', 'attr.title', 'aria-describedby']);
+
+const hasDisabledReasonAttribute = node => getTemplateAttributes(node).some(attribute => disabledReasonAttributeNames.has(attribute.name));
+
+const fdUiDisabledReasonRule = {
+    meta: {
+        type: 'problem',
+        docs: {
+            description: 'Require fd-ui disabled controls to explain manual disabled states.',
+        },
+        messages: {
+            missingDisabledReason:
+                'Manual `[disabled]` on `{{element}}` needs a `disabledReason` or an existing hint/title. Use `[loading]` for operation-in-progress states instead of adding loading flags to `[disabled]`.',
+        },
+        schema: [],
+    },
+    create: context => ({
+        Element(node) {
+            if (!disabledReasonElementNames.has(node.name) || !hasTemplateAttribute(node, 'disabled')) {
+                return;
+            }
+
+            if (hasDisabledReasonAttribute(node)) {
+                return;
+            }
+
+            context.report({
+                node,
+                messageId: 'missingDisabledReason',
+                data: {
+                    element: node.name,
+                },
+            });
+        },
+    }),
+};
+
 const localTemplatePlugin = {
     rules: {
         'no-mojibake': noMojibakeRule,
@@ -783,6 +821,7 @@ const localTemplatePlugin = {
         'action-oriented-event-handlers': actionOrientedTemplateEventHandlersRule,
         'fd-page-container-structure': fdPageContainerStructureRule,
         'form-requires-form-root': formRequiresFormRootRule,
+        'fd-ui-disabled-reason': fdUiDisabledReasonRule,
         'no-label-wrapped-control': {
             meta: {
                 type: 'problem',
@@ -2482,6 +2521,7 @@ export default [
                 },
             ],
             'local/fd-ui-button-accessible-name': 'error',
+            'local/fd-ui-disabled-reason': 'error',
             'local/fd-page-container-structure': 'error',
             'local/action-oriented-event-handlers': 'error',
             'local/no-component-file-suffix': 'error',

@@ -13,7 +13,7 @@
         <fd-ui-button
             type="button"
             [disabled]="!isAgreed()"
-            [attr.title]="!isAgreed() ? ('DISABLED_HINTS.CHECK_AGREEMENT' | translate) : null"
+            [disabledReason]="!isAgreed() ? ('DISABLED_HINTS.CHECK_AGREEMENT' | translate) : null"
             (click)="onAccept()"
         >
             {{ 'AI_CONSENT.ACCEPT' | translate }}

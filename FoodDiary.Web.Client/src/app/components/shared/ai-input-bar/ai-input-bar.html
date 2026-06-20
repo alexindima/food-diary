@@ -53,6 +53,7 @@
             iconSize="lg"
             [icon]="textSubmitIcon()"
             [disabled]="isDisabled()"
+            [disabledReason]="isDisabled() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
             [ariaLabel]="'AI_INPUT_BAR.ADD_ACTION' | translate"
             (click)="submitTextAsync()"
         />

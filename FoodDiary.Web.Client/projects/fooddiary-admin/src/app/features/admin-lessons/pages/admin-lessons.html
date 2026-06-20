@@ -5,11 +5,17 @@
             type="button"
             variant="secondary"
             [disabled]="lessons().length === 0"
-            [attr.title]="lessons().length === 0 ? 'No lessons to export.' : null"
+            [disabledReason]="lessons().length === 0 ? 'No lessons to export.' : null"
             (click)="exportLessons()"
             >Export JSON</fd-ui-button
         >
-        <fd-ui-button type="button" variant="secondary" [disabled]="isImporting()" (click)="lessonImportInput.click()">
+        <fd-ui-button
+            type="button"
+            variant="secondary"
+            disabledReason="Import is already in progress."
+            [disabled]="isImporting()"
+            (click)="lessonImportInput.click()"
+        >
             {{ isImporting() ? 'Importing...' : 'Import JSON' }}
         </fd-ui-button>
         <fd-ui-button type="button" (click)="openCreate()">Create lesson</fd-ui-button>

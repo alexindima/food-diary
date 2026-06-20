@@ -8,7 +8,7 @@
         <fd-ui-button
             variant="primary"
             [disabled]="form.reason().invalid() || isSubmitting()"
-            [attr.title]="form.reason().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
+            [disabledReason]="form.reason().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
             [loading]="isSubmitting()"
             (click)="onSubmit()"
         >

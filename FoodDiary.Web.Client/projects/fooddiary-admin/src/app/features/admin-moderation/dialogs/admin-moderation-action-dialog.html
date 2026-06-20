@@ -14,7 +14,14 @@
 
     <div class="dialog-actions fd-row fd-justify-end fd-gap-xs">
         <fd-ui-button type="button" variant="secondary" fill="text" size="sm" (click)="onCancel()"> Cancel </fd-ui-button>
-        <fd-ui-button type="button" size="sm" [variant]="dialog.confirmVariant" [disabled]="isSubmitting()" (click)="onConfirm()">
+        <fd-ui-button
+            type="button"
+            size="sm"
+            disabledReason="Action is already in progress."
+            [variant]="dialog.confirmVariant"
+            [disabled]="isSubmitting()"
+            (click)="onConfirm()"
+        >
             {{ dialog.confirmLabel }}
         </fd-ui-button>
     </div>

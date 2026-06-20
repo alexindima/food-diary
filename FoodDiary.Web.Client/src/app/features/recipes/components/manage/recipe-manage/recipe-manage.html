@@ -126,7 +126,7 @@
                                     icon="save"
                                     [fullWidth]="true"
                                     [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
-                                    [attr.title]="
+                                    [disabledReason]="
                                         recipeSignalForm().invalid()
                                             ? ('DISABLED_HINTS.FORM_INVALID' | translate)
                                             : !areStepsValid()

@@ -12,11 +12,19 @@
             {{ 'STATISTICS.EXPORT_MENU_LABEL' | translate }}
         </fd-ui-button>
         <fd-ui-menu #exportMenu>
-            <fd-ui-menu-item [disabled]="exportingFormat() !== null" (itemClick)="export('csv')">
+            <fd-ui-menu-item
+                [disabled]="exportingFormat() !== null"
+                [disabledReason]="exportingFormat() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (itemClick)="export('csv')"
+            >
                 <fd-ui-icon name="table_view" />
                 {{ 'STATISTICS.EXPORT_CSV' | translate }}
             </fd-ui-menu-item>
-            <fd-ui-menu-item [disabled]="exportingFormat() !== null" (itemClick)="export('pdf')">
+            <fd-ui-menu-item
+                [disabled]="exportingFormat() !== null"
+                [disabledReason]="exportingFormat() !== null ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
+                (itemClick)="export('pdf')"
+            >
                 <fd-ui-icon name="picture_as_pdf" />
                 {{ 'STATISTICS.EXPORT_PDF' | translate }}
             </fd-ui-menu-item>

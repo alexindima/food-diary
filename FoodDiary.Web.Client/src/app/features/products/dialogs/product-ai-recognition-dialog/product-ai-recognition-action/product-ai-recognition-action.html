@@ -7,6 +7,7 @@
             fill="solid"
             icon="auto_awesome"
             [disabled]="disabled()"
+            [disabledReason]="disabledReason()"
             (click)="reanalyze.emit()"
         >
             {{ 'PRODUCT_AI_DIALOG.REANALYZE' | translate }}
@@ -19,6 +20,7 @@
             fill="solid"
             icon="auto_awesome"
             [disabled]="disabled()"
+            [disabledReason]="disabledReason()"
             (click)="analyze.emit()"
         >
             {{ 'PRODUCT_AI_DIALOG.ANALYZE' | translate }}

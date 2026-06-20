@@ -13,17 +13,10 @@
                 {{ 'DIETOLOGIST_INVITATION.EXPIRES' | translate: { date: currentInvitation.expiresDateLabel } }}
             </p>
             <div class="dietologist-invitation__actions fd-row fd-wrap fd-gap-sm">
-                <fd-ui-button type="button" variant="primary" [disabled]="isSubmitting()" [loading]="isSubmitting()" (click)="accept()">
+                <fd-ui-button type="button" variant="primary" [loading]="isSubmitting()" (click)="accept()">
                     {{ 'DIETOLOGIST_INVITATION.ACCEPT' | translate }}
                 </fd-ui-button>
-                <fd-ui-button
-                    type="button"
-                    variant="secondary"
-                    fill="outline"
-                    [disabled]="isSubmitting()"
-                    [loading]="isSubmitting()"
-                    (click)="decline()"
-                >
+                <fd-ui-button type="button" variant="secondary" fill="outline" [loading]="isSubmitting()" (click)="decline()">
                     {{ 'DIETOLOGIST_INVITATION.DECLINE' | translate }}
                 </fd-ui-button>
             </div>

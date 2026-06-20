@@ -1,5 +1,5 @@
 import { DOCUMENT } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, inject, input, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
@@ -10,6 +10,9 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
     templateUrl: './fd-ui-menu-item.html',
     styleUrls: ['./fd-ui-menu.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
+    host: {
+        '[attr.title]': 'effectiveDisabledReason()',
+    },
     providers: [
         {
             provide: FD_UI_MENU_ITEM,
@@ -27,7 +30,10 @@ export class FdUiMenuItemComponent {
     public readonly queryParams = input<Record<string, unknown>>();
     public readonly fragment = input<string>();
     public readonly disabled = input(false);
+    public readonly disabledReason = input<string | null>(null);
     public readonly itemClick = output<Event>();
+
+    protected readonly effectiveDisabledReason = computed(() => (this.disabled() ? this.disabledReason() : null));
 
     protected focus(): void {
         this.host.nativeElement.focus();

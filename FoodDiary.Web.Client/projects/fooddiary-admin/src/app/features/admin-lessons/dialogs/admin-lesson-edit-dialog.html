@@ -44,7 +44,7 @@
         <fd-ui-button
             type="button"
             [disabled]="form().invalid() || isSaving()"
-            [attr.title]="form().invalid() ? 'Complete the required fields first.' : null"
+            [disabledReason]="form().invalid() ? 'Complete the required fields first.' : null"
             (click)="onSave()"
         >
             {{ isNew ? 'Create' : 'Save' }}
