@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
@@ -9,7 +10,7 @@ import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade
     templateUrl: './like-button.html',
     styleUrls: ['./like-button.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FdUiButtonComponent],
+    imports: [FdUiButtonComponent, TranslatePipe],
 })
 export class LikeButtonComponent {
     private readonly exploreInteractionsFacade = inject(ExploreInteractionsFacade);
