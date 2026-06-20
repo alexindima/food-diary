@@ -44,6 +44,7 @@ export class MealManualItemDialogComponent {
     protected readonly sourceType = signal(this.data.item.sourceType);
     protected readonly product = signal<Product | null>(this.data.item.product);
     protected readonly recipe = signal<Recipe | null>(this.data.item.recipe);
+    private readonly sourceTouched = signal(false);
     protected readonly amountModel = signal<number | null>(this.data.item.amount);
     protected readonly amount = form(this.amountModel, path => {
         required(path);
@@ -68,9 +69,13 @@ export class MealManualItemDialogComponent {
             : 'CONSUMPTION_MANAGE.AMOUNT_PLACEHOLDER_PRODUCT',
     );
 
-    protected readonly sourceError = computed(() =>
-        this.product() !== null || this.recipe() !== null ? null : this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR'),
-    );
+    protected readonly sourceError = computed(() => {
+        if (!this.sourceTouched() || this.product() !== null || this.recipe() !== null) {
+            return null;
+        }
+
+        return this.translateService.instant('CONSUMPTION_MANAGE.ITEM_SOURCE_ERROR');
+    });
 
     protected readonly amountError = computed(() => {
         const state = this.amount();
@@ -124,6 +129,7 @@ export class MealManualItemDialogComponent {
     }
 
     protected save(): void {
+        this.sourceTouched.set(true);
         this.amount().markAsTouched();
 
         if (this.product() === null && this.recipe() === null) {

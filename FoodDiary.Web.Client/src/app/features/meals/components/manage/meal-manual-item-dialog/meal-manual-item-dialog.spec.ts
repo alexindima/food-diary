@@ -52,6 +52,12 @@ describe('MealManualItemDialogComponent selection', () => {
 });
 
 describe('MealManualItemDialogComponent save', () => {
+    it('should not show source error before submit attempt', async () => {
+        const { component } = await setupComponentAsync();
+
+        expect(component['sourceError']()).toBeNull();
+    });
+
     it('should close with item value on valid save', async () => {
         const product = createProduct();
         const { component, dialogRef } = await setupComponentAsync({
