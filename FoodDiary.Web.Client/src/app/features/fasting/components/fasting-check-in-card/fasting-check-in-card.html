@@ -86,7 +86,12 @@
                     <fd-ui-button variant="secondary" fill="outline" [disabled]="isSaving()" (click)="formClose.emit()">
                         {{ 'FASTING.CHECK_IN.HIDE_ACTION' | translate }}
                     </fd-ui-button>
-                    <fd-ui-button [loading]="isSaving()" [disabled]="draftDisabled()" (click)="save.emit()">
+                    <fd-ui-button
+                        [loading]="isSaving()"
+                        [disabled]="draftDisabled()"
+                        [attr.title]="isEnding() || isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                        (click)="save.emit()"
+                    >
                         {{ 'FASTING.CHECK_IN.SAVE' | translate }}
                     </fd-ui-button>
                 </div>

@@ -126,6 +126,13 @@
                                     icon="save"
                                     [fullWidth]="true"
                                     [disabled]="recipeSignalForm().invalid() || !areStepsValid() || isSubmitting()"
+                                    [attr.title]="
+                                        recipeSignalForm().invalid()
+                                            ? ('DISABLED_HINTS.FORM_INVALID' | translate)
+                                            : !areStepsValid()
+                                              ? ('DISABLED_HINTS.STEPS_INVALID' | translate)
+                                              : null
+                                    "
                                     [loading]="isSubmitting()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}

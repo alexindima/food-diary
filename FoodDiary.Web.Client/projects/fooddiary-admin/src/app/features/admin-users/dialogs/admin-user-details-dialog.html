@@ -29,6 +29,13 @@
 
     <div class="admin-user-details__footer" fdUiDialogFooter>
         <fd-ui-button type="button" variant="secondary" (click)="edit()">Edit</fd-ui-button>
-        <fd-ui-button type="button" [disabled]="!canImpersonate()" (click)="impersonate()">Impersonate</fd-ui-button>
+        <fd-ui-button
+            type="button"
+            [disabled]="!canImpersonate()"
+            [attr.title]="!canImpersonate() ? 'This user cannot be impersonated.' : null"
+            (click)="impersonate()"
+        >
+            Impersonate
+        </fd-ui-button>
     </div>
 </fd-ui-dialog>

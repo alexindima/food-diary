@@ -20,6 +20,7 @@
                             fill="outline"
                             size="sm"
                             [disabled]="extendActionsDisabled()"
+                            [attr.title]="extendActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="extendDay.emit()"
                         >
                             {{ 'FASTING.ADD_DAY' | translate }}
@@ -31,6 +32,7 @@
                             fill="outline"
                             size="sm"
                             [disabled]="extendActionsDisabled()"
+                            [attr.title]="extendActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="extend36Hours.emit()"
                         >
                             {{ 'FASTING.ADD_36_HOURS' | translate }}
@@ -42,6 +44,7 @@
                             [variant]="customExtendActionState().variant"
                             [fill]="customExtendActionState().fill"
                             [disabled]="extendActionsDisabled()"
+                            [attr.title]="extendActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="customExtendShow.emit()"
                         >
                             {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
@@ -65,6 +68,9 @@
                                 size="sm"
                                 [loading]="isExtending()"
                                 [disabled]="extendActionsDisabled()"
+                                [attr.title]="
+                                    extendActionsDisabled() && !isExtending() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null
+                                "
                                 (click)="extendCustom.emit()"
                             >
                                 {{ 'FASTING.ADD_TIME' | translate }}
@@ -93,6 +99,7 @@
                             fill="outline"
                             size="sm"
                             [disabled]="reduceActionsDisabled()"
+                            [attr.title]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="reduce4Hours.emit()"
                         >
                             {{ 'FASTING.REDUCE_4_HOURS' | translate }}
@@ -104,6 +111,7 @@
                             fill="outline"
                             size="sm"
                             [disabled]="reduceActionsDisabled()"
+                            [attr.title]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="reduce8Hours.emit()"
                         >
                             {{ 'FASTING.REDUCE_8_HOURS' | translate }}
@@ -115,6 +123,7 @@
                             [variant]="customReduceActionState().variant"
                             [fill]="customReduceActionState().fill"
                             [disabled]="reduceActionsDisabled()"
+                            [attr.title]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                             (click)="customReduceShow.emit()"
                         >
                             {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
@@ -138,6 +147,7 @@
                                 size="sm"
                                 [loading]="isReducing()"
                                 [disabled]="reduceActionsDisabled()"
+                                [attr.title]="reduceActionsDisabled() && !isReducing() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
                                 (click)="reduceCustom.emit()"
                             >
                                 {{ 'FASTING.REDUCE_TIME' | translate }}
@@ -150,7 +160,13 @@
     }
 
     <div class="fasting-controls__active-end-row">
-        <fd-ui-button size="sm" [loading]="isEnding()" [disabled]="endDisabled()" (click)="end.emit()">
+        <fd-ui-button
+            size="sm"
+            [loading]="isEnding()"
+            [disabled]="endDisabled()"
+            [attr.title]="endDisabled() && !isEnding() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+            (click)="end.emit()"
+        >
             {{ endActionLabelKey() | translate }}
         </fd-ui-button>
     </div>

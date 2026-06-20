@@ -10,6 +10,13 @@
         <fd-ui-button type="button" fill="ghost" variant="secondary" (click)="onCancel()">
             {{ 'AI_CONSENT.CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button type="button" [disabled]="!isAgreed()" (click)="onAccept()"> {{ 'AI_CONSENT.ACCEPT' | translate }} </fd-ui-button>
+        <fd-ui-button
+            type="button"
+            [disabled]="!isAgreed()"
+            [attr.title]="!isAgreed() ? ('DISABLED_HINTS.CHECK_AGREEMENT' | translate) : null"
+            (click)="onAccept()"
+        >
+            {{ 'AI_CONSENT.ACCEPT' | translate }}
+        </fd-ui-button>
     </div>
 </fd-ui-dialog>

@@ -58,6 +58,7 @@
                 variant="primary"
                 fill="solid"
                 [disabled]="!nutrition() || isLoading() || isNutritionLoading()"
+                [attr.title]="!nutrition() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
                 (click)="addToMeal()"
             >
                 {{ submitLabelKey() | translate }}

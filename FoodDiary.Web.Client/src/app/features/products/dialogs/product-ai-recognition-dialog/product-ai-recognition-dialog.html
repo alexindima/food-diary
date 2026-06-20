@@ -61,7 +61,14 @@
             <fd-ui-button type="button" variant="primary" fill="outline" (click)="close()">
                 {{ 'PRODUCT_AI_DIALOG.CANCEL' | translate }}
             </fd-ui-button>
-            <fd-ui-button type="button" variant="primary" icon="check" [disabled]="!canApply()" (click)="apply()">
+            <fd-ui-button
+                type="button"
+                variant="primary"
+                icon="check"
+                [disabled]="!canApply()"
+                [attr.title]="!canApply() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
+                (click)="apply()"
+            >
                 {{ 'PRODUCT_AI_DIALOG.APPLY' | translate }}
             </fd-ui-button>
         </div>

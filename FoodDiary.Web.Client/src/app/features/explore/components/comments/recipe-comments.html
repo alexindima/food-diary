@@ -11,6 +11,7 @@
                 variant="primary"
                 size="sm"
                 [disabled]="commentForm.text().invalid() || isSubmitting()"
+                [attr.title]="commentForm.text().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                 [loading]="isSubmitting()"
                 (click)="onSubmit()"
             >

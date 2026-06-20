@@ -1,16 +1,36 @@
 <div class="fasting-controls__active-actions">
     @if (canManageCurrentCyclicDay()) {
         <div class="fasting-controls__active-action-cluster">
-            <fd-ui-button variant="secondary" fill="outline" size="sm" [disabled]="cyclicActionDisabled()" (click)="skip.emit()">
+            <fd-ui-button
+                variant="secondary"
+                fill="outline"
+                size="sm"
+                [disabled]="cyclicActionDisabled()"
+                [attr.title]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                (click)="skip.emit()"
+            >
                 {{ skipCycleActionLabelKey() | translate }}
             </fd-ui-button>
-            <fd-ui-button variant="secondary" fill="outline" size="sm" [disabled]="cyclicActionDisabled()" (click)="postpone.emit()">
+            <fd-ui-button
+                variant="secondary"
+                fill="outline"
+                size="sm"
+                [disabled]="cyclicActionDisabled()"
+                [attr.title]="cyclicActionDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                (click)="postpone.emit()"
+            >
                 {{ postponeCycleActionLabelKey() | translate }}
             </fd-ui-button>
         </div>
     }
 
-    <fd-ui-button size="sm" [loading]="isEnding()" [disabled]="isEnding() || isUpdatingCycle()" (click)="end.emit()">
+    <fd-ui-button
+        size="sm"
+        [loading]="isEnding()"
+        [disabled]="isEnding() || isUpdatingCycle()"
+        [attr.title]="isUpdatingCycle() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+        (click)="end.emit()"
+    >
         {{ endActionLabelKey() | translate }}
     </fd-ui-button>
 </div>

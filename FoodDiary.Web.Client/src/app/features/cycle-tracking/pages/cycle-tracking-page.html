@@ -3,7 +3,13 @@
 
     <fd-page-body>
         <div class="cycle-tracking__page-actions fd-ui-actions">
-            <fd-ui-button type="button" [disabled]="!cycle() || isExportingCycle()" [loading]="isExportingCycle()" (click)="exportCycle()">
+            <fd-ui-button
+                type="button"
+                [disabled]="!cycle() || isExportingCycle()"
+                [attr.title]="!cycle() ? ('DISABLED_HINTS.NO_CYCLE' | translate) : null"
+                [loading]="isExportingCycle()"
+                (click)="exportCycle()"
+            >
                 {{ 'CYCLE_TRACKING.EXPORT_CYCLE' | translate }}
             </fd-ui-button>
         </div>

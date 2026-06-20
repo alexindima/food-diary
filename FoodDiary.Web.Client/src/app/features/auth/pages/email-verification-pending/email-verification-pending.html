@@ -28,6 +28,7 @@
                 variant="primary"
                 [disabled]="isSending() || resendCooldownSeconds() > 0"
                 [loading]="isSending()"
+                [attr.title]="resendCooldownSeconds() > 0 ? ('DISABLED_HINTS.COOLDOWN_ACTIVE' | translate) : null"
                 (click)="onResendEmail()"
             >
                 {{ 'AUTH.VERIFY_PENDING.RESEND' | translate }}

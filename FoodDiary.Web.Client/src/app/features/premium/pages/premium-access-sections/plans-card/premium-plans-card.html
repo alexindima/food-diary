@@ -30,6 +30,7 @@
                                 fullWidth
                                 [loading]="card.isLoading"
                                 [disabled]="checkoutDisabled()"
+                                [attr.title]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                                 (click)="checkout.emit({ plan: card.plan, provider: provider.provider })"
                             >
                                 {{ 'PREMIUM_PAGE.PLANS.PAY_WITH' | translate: { provider: provider.label } }}
@@ -41,6 +42,7 @@
                         fullWidth
                         [loading]="card.isLoading"
                         [disabled]="checkoutDisabled()"
+                        [attr.title]="checkoutDisabled() ? ('DISABLED_HINTS.CHECKOUT_IN_PROGRESS' | translate) : null"
                         (click)="checkout.emit({ plan: card.plan })"
                     >
                         {{ card.actionKey | translate }}

@@ -11,7 +11,11 @@
                 [value]="selectedDate()"
                 [disabled]="layout.isEditingLayout()"
                 [ariaLabel]="dashboardHeaderState().selectedDateLabel"
-                [hint]="'DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate"
+                [hint]="
+                    layout.isEditingLayout()
+                        ? ('DISABLED_HINTS.EDIT_LAYOUT_ACTIVE' | translate)
+                        : ('DASHBOARD.ACTIONS.OPEN_DATE_PICKER' | translate)
+                "
                 (valueChange)="changeDashboardDate($event)"
             />
         </div>
@@ -25,7 +29,11 @@
             icon="palette"
             [disabled]="layout.isEditingLayout()"
             [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
-            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate"
+            [fdUiHint]="
+                layout.isEditingLayout()
+                    ? ('DISABLED_HINTS.EDIT_LAYOUT_ACTIVE' | translate)
+                    : ('DASHBOARD.ACTIONS.OPEN_APPEARANCE' | translate)
+            "
             (click)="openAppearanceDialogAsync()"
         />
 
@@ -38,7 +46,11 @@
             icon="notifications"
             [disabled]="layout.isEditingLayout()"
             [ariaLabel]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
-            [fdUiHint]="'DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate"
+            [fdUiHint]="
+                layout.isEditingLayout()
+                    ? ('DISABLED_HINTS.EDIT_LAYOUT_ACTIVE' | translate)
+                    : ('DASHBOARD.ACTIONS.OPEN_NOTIFICATION_SETTINGS' | translate)
+            "
             (click)="openNotificationSettingsAsync()"
         />
 
@@ -51,7 +63,9 @@
             icon="help_outline"
             [disabled]="layout.isEditingLayout()"
             [ariaLabel]="'DASHBOARD.ACTIONS.START_TOUR' | translate"
-            [fdUiHint]="'DASHBOARD.ACTIONS.START_TOUR' | translate"
+            [fdUiHint]="
+                layout.isEditingLayout() ? ('DISABLED_HINTS.EDIT_LAYOUT_ACTIVE' | translate) : ('DASHBOARD.ACTIONS.START_TOUR' | translate)
+            "
             (click)="startDashboardWelcomeTour()"
         />
 

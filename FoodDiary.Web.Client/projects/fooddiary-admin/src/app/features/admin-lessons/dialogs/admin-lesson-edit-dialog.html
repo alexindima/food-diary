@@ -41,7 +41,12 @@
 
     <div class="dialog-actions fd-row fd-gap-sm">
         <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
-        <fd-ui-button type="button" [disabled]="form().invalid() || isSaving()" (click)="onSave()">
+        <fd-ui-button
+            type="button"
+            [disabled]="form().invalid() || isSaving()"
+            [attr.title]="form().invalid() ? 'Complete the required fields first.' : null"
+            (click)="onSave()"
+        >
             {{ isNew ? 'Create' : 'Save' }}
         </fd-ui-button>
     </div>

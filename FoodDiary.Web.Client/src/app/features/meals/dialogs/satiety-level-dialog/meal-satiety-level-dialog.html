@@ -5,7 +5,12 @@
         <fd-ui-button variant="secondary" fill="outline" (click)="close()">
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_CANCEL' | translate }}
         </fd-ui-button>
-        <fd-ui-button variant="primary" [disabled]="selectedValue() === null" (click)="closeWithValue()">
+        <fd-ui-button
+            variant="primary"
+            [disabled]="selectedValue() === null"
+            [attr.title]="selectedValue() === null ? ('DISABLED_HINTS.SELECT_VALUE' | translate) : null"
+            (click)="closeWithValue()"
+        >
             {{ 'CONSUMPTION_MANAGE.SATIETY_DIALOG_APPLY' | translate }}
         </fd-ui-button>
     </div>

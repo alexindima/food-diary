@@ -67,6 +67,7 @@
                         type="button"
                         variant="secondary"
                         [disabled]="form().invalid() || testEmailForm().invalid() || isSendingTest()"
+                        [attr.title]="form().invalid() || testEmailForm().invalid() ? 'Complete the required fields first.' : null"
                         (click)="onSendTest()"
                     >
                         {{ isSendingTest() ? 'Sending...' : 'Send test' }}
@@ -88,7 +89,13 @@
 
         <div fdUiDialogFooter class="actions fd-row fd-gap-sm fd-justify-end">
             <fd-ui-button type="button" variant="secondary" (click)="onCancel()">Cancel</fd-ui-button>
-            <fd-ui-button type="submit" [disabled]="form().invalid() || isSaving()">Save</fd-ui-button>
+            <fd-ui-button
+                type="submit"
+                [disabled]="form().invalid() || isSaving()"
+                [attr.title]="form().invalid() ? 'Complete the required fields first.' : null"
+            >
+                Save
+            </fd-ui-button>
         </div>
     </form>
 </fd-ui-dialog>

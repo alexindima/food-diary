@@ -25,6 +25,7 @@
             variant="secondary"
             fill="outline"
             [disabled]="!hasUnreadNotifications() || isMarkingAllRead()"
+            [attr.title]="!hasUnreadNotifications() ? ('DISABLED_HINTS.NO_UNREAD_NOTIFICATIONS' | translate) : null"
             [loading]="isMarkingAllRead()"
             (click)="markAllAsRead()"
         >

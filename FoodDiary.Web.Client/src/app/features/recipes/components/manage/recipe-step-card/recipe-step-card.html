@@ -41,7 +41,15 @@
                     [ariaLabel]="'RECIPE_MANAGE.TOGGLE_STEP' | translate"
                     (click)="onToggleExpanded()"
                 />
-                <fd-ui-button type="button" variant="danger" fill="text" icon="delete" [disabled]="isFirst()" (click)="onRemoveStep()">
+                <fd-ui-button
+                    type="button"
+                    variant="danger"
+                    fill="text"
+                    icon="delete"
+                    [disabled]="isFirst()"
+                    [attr.title]="isFirst() ? ('DISABLED_HINTS.FIRST_RECIPE_STEP_REQUIRED' | translate) : null"
+                    (click)="onRemoveStep()"
+                >
                     {{ 'RECIPE_MANAGE.REMOVE_STEP' | translate }}
                 </fd-ui-button>
             </div>
@@ -118,6 +126,7 @@
                                 [fdUiHint]="'COMMON.DELETE' | translate"
                                 [ariaLabel]="'COMMON.DELETE' | translate"
                                 [disabled]="$first"
+                                [attr.title]="$first ? ('DISABLED_HINTS.FIRST_INGREDIENT_REQUIRED' | translate) : null"
                                 (click)="onRemoveIngredient(row.index)"
                             />
                         </div>

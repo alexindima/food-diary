@@ -145,6 +145,13 @@
                     icon="notifications_active"
                     [loading]="isSchedulingTestNotification()"
                     [disabled]="isSchedulingTestNotification() || !pushNotificationsSupported() || !fastingPushNotificationsEnabled()"
+                    [attr.title]="
+                        !pushNotificationsSupported()
+                            ? ('DISABLED_HINTS.PUSH_NOT_SUPPORTED' | translate)
+                            : !fastingPushNotificationsEnabled()
+                              ? ('DISABLED_HINTS.ENABLE_FASTING_NOTIFICATIONS' | translate)
+                              : null
+                    "
                     (click)="testNotificationSchedule.emit()"
                 >
                     {{ 'USER_MANAGE.NOTIFICATIONS_TEST_BUTTON' | translate }}

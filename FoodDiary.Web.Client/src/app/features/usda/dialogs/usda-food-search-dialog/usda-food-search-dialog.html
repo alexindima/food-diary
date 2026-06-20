@@ -24,7 +24,12 @@
 
     <div *fdUiDialogFooter class="dialog-footer">
         <fd-ui-button variant="ghost" (click)="onCancel()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
-        <fd-ui-button variant="primary" [disabled]="!selectedFood()" (click)="onConfirm()">
+        <fd-ui-button
+            variant="primary"
+            [disabled]="!selectedFood()"
+            [attr.title]="!selectedFood() ? ('DISABLED_HINTS.SELECT_FOOD' | translate) : null"
+            (click)="onConfirm()"
+        >
             {{ 'USDA_SEARCH.LINK' | translate }}
         </fd-ui-button>
     </div>

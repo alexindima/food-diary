@@ -35,6 +35,7 @@
                         type="button"
                         variant="secondary"
                         [disabled]="!payment.providerMetadataJson"
+                        [attr.title]="!payment.providerMetadataJson ? 'No provider metadata is available.' : null"
                         (click)="metadataOpen.emit(payment.providerMetadataJson)"
                     >
                         View

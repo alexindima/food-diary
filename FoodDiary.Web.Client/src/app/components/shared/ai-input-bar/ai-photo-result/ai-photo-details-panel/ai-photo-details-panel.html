@@ -13,6 +13,7 @@
             size="sm"
             variant="primary"
             [disabled]="submitDisabled()"
+            [attr.title]="submitDisabled() ? ('DISABLED_HINTS.SELECT_RECOGNITION' | translate) : null"
             (click)="mealSubmit.emit()"
         >
             {{ submitLabelKey() | translate }}

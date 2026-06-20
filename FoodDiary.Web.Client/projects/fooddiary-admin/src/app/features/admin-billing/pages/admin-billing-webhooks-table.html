@@ -29,6 +29,7 @@
                         type="button"
                         variant="secondary"
                         [disabled]="!event.payloadJson"
+                        [attr.title]="!event.payloadJson ? 'No payload is available.' : null"
                         (click)="metadataOpen.emit(event.payloadJson)"
                     >
                         View

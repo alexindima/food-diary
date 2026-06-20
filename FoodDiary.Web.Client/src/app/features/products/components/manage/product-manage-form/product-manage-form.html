@@ -77,6 +77,7 @@
                                     [icon]="manageHeaderState().submitIcon"
                                     [fullWidth]="true"
                                     [disabled]="productForm().invalid() || isSubmitting() || isDeleting()"
+                                    [attr.title]="productForm().invalid() ? ('DISABLED_HINTS.FORM_INVALID' | translate) : null"
                                     [loading]="isSubmitting()"
                                 >
                                     {{ manageHeaderState().submitLabelKey | translate }}

@@ -43,6 +43,7 @@
                                 icon="save"
                                 [ariaLabel]="'SHOPPING_LIST.SAVE_NAME_BUTTON' | translate"
                                 [disabled]="renameDraft().trim().length === 0"
+                                [attr.title]="renameDraft().trim().length === 0 ? ('DISABLED_HINTS.LIST_NAME_REQUIRED' | translate) : null"
                                 (click)="saveRename(list.id)"
                             />
                         </div>
@@ -66,7 +67,11 @@
                         />
                     }
                     <fd-ui-menu #listMenu="fdUiMenu">
-                        <fd-ui-menu-item [disabled]="list.id === selectedListId()" (itemClick)="selectList(list.id)">
+                        <fd-ui-menu-item
+                            [disabled]="list.id === selectedListId()"
+                            [attr.title]="list.id === selectedListId() ? ('DISABLED_HINTS.LIST_ALREADY_ACTIVE' | translate) : null"
+                            (itemClick)="selectList(list.id)"
+                        >
                             <fd-ui-icon name="check_circle" />
                             <span>{{ 'SHOPPING_LIST.MAKE_ACTIVE_BUTTON' | translate }}</span>
                         </fd-ui-menu-item>
@@ -74,7 +79,11 @@
                             <fd-ui-icon name="edit" />
                             <span>{{ 'SHOPPING_LIST.RENAME_LIST_BUTTON' | translate }}</span>
                         </fd-ui-menu-item>
-                        <fd-ui-menu-item [disabled]="!canClearListCard(list)" (itemClick)="clearListById.emit(list.id)">
+                        <fd-ui-menu-item
+                            [disabled]="!canClearListCard(list)"
+                            [attr.title]="!canClearListCard(list) ? ('DISABLED_HINTS.LIST_EMPTY' | translate) : null"
+                            (itemClick)="clearListById.emit(list.id)"
+                        >
                             <fd-ui-icon name="delete_sweep" />
                             <span>{{ 'SHOPPING_LIST.CLEAR_LIST_BUTTON' | translate }}</span>
                         </fd-ui-menu-item>
@@ -82,6 +91,7 @@
                         <fd-ui-menu-item
                             class="fd-ui-menu-item--danger"
                             [disabled]="!canDeleteList()"
+                            [attr.title]="!canDeleteList() ? ('DISABLED_HINTS.KEEP_ONE_LIST' | translate) : null"
                             (itemClick)="deleteListById.emit(list.id)"
                         >
                             <fd-ui-icon name="delete" />
