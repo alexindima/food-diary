@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -150,8 +150,10 @@ export class FastingPageComponent {
                 return;
             }
 
-            this.isCheckInExpanded.set(false);
-            this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
+            untracked(() => {
+                this.isCheckInExpanded.set(false);
+                this.toastService.success(this.translateService.instant('FASTING.CHECK_IN.SAVED_TOAST'));
+            });
         });
     }
 

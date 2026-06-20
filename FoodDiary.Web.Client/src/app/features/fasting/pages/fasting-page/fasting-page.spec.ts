@@ -90,6 +90,21 @@ describe('FastingPageComponent setup and actions', () => {
         expect(toastService.success).toHaveBeenCalledWith('FASTING.CHECK_IN.SAVED_TOAST');
     });
 
+    it('does not subscribe the saved check-in effect to toast state changes', () => {
+        const toastState = signal(0);
+        toastService.success.mockImplementation(() => {
+            toastState();
+            toastState.update(value => value + 1);
+        });
+
+        facade.checkInSavedVersion.set(1);
+        fixture.detectChanges();
+        toastState.update(value => value + 1);
+        fixture.detectChanges();
+
+        expect(toastService.success).toHaveBeenCalledTimes(1);
+    });
+
     it('toggles history accordion with single expanded session', () => {
         component['toggleHistorySession']('session-1');
         expect(component['isHistorySessionExpanded']('session-1')).toBe(true);
