@@ -24,6 +24,15 @@
         </div>
     }
 
+    <fd-meal-list-planned
+        [groups]="plannedGroups()"
+        [isOpen]="isPlannedOpen()"
+        [favoriteLoadingIds]="favoriteLoadingIds()"
+        (toggleRequested)="plannedToggle.emit()"
+        (mealOpened)="mealOpened.emit($event)"
+        (mealFavoriteToggle)="mealFavoriteToggle.emit($event)"
+    />
+
     <div class="consumption-list__groups fd-stack fd-gap-card-profile">
         @for (group of groups(); track group.date) {
             <div class="consumption-list__day fd-stack fd-gap-sm">

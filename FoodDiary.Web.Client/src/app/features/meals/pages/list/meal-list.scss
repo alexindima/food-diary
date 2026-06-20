@@ -88,6 +88,15 @@
         grid-template-columns: 1fr;
     }
 
+    &__planned {
+        display: block;
+        margin-bottom: var(--fd-space-card-profile-gap);
+    }
+
+    &__planned-groups {
+        width: 100%;
+    }
+
     &__day-label {
         font-weight: var(--fd-text-metric-lg-weight);
         font-size: var(--fd-text-card-title-size);

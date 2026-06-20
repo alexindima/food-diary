@@ -325,6 +325,31 @@ function registerGroupingTests(context: TestContext): void {
             expect(grouped[1].date.getDate()).toBe(MAY_4);
             expect(grouped[1].items).toEqual([lateMeal]);
         });
+
+        it('should separate future meals from current diary groups', () => {
+            vi.useFakeTimers();
+            vi.setSystemTime(new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, MORNING_HOUR));
+            const currentMeal = createMockMeal({
+                id: 'current-meal',
+                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_5, AFTERNOON_HOUR).toISOString(),
+            });
+            const laterFutureMeal = createMockMeal({
+                id: 'later-future-meal',
+                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, AFTERNOON_HOUR).toISOString(),
+            });
+            const nearerFutureMeal = createMockMeal({
+                id: 'nearer-future-meal',
+                date: new Date(CURRENT_YEAR, MAY_MONTH_INDEX, MAY_6, MORNING_HOUR).toISOString(),
+            });
+
+            context.mockMealService.query.mockReturnValue(of(createPageOf([laterFutureMeal, currentMeal, nearerFutureMeal])));
+            context.component()['loadConsumptions'](1).subscribe();
+
+            expect(context.component()['groupedConsumptions']()).toHaveLength(1);
+            expect(context.component()['groupedConsumptions']()[0].items).toEqual([currentMeal]);
+            expect(context.component()['plannedGroups']()).toHaveLength(1);
+            expect(context.component()['plannedGroups']()[0].items).toEqual([nearerFutureMeal, laterFutureMeal]);
+        });
     });
 }
 

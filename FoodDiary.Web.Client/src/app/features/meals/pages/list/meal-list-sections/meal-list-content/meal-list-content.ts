@@ -9,6 +9,7 @@ import { MealCardComponent } from '../../../../../../components/shared/meal-card
 import { SkeletonCardComponent } from '../../../../../../components/shared/skeleton-card/skeleton-card';
 import type { Meal } from '../../../../models/meal.data';
 import type { MealDateGroupView } from '../../meal-list-lib/meal-list.types';
+import { MealListPlannedComponent } from '../meal-list-planned/meal-list-planned';
 
 export type MealListEmptyState = 'empty' | 'no-results';
 
@@ -21,6 +22,7 @@ export type MealListEmptyState = 'empty' | 'no-results';
         FdUiPaginationComponent,
         ErrorStateComponent,
         MealCardComponent,
+        MealListPlannedComponent,
         SkeletonCardComponent,
     ],
     templateUrl: './meal-list-content.html',
@@ -31,6 +33,8 @@ export class MealListContentComponent {
     public readonly errorKey = input.required<string | null>();
     public readonly isLoading = input.required<boolean>();
     public readonly emptyState = input.required<MealListEmptyState | null>();
+    public readonly plannedGroups = input.required<readonly MealDateGroupView[]>();
+    public readonly isPlannedOpen = input.required<boolean>();
     public readonly groups = input.required<readonly MealDateGroupView[]>();
     public readonly totalPages = input.required<number>();
     public readonly totalItems = input.required<number>();
@@ -39,6 +43,7 @@ export class MealListContentComponent {
 
     public readonly retry = output();
     public readonly mealAdd = output();
+    public readonly plannedToggle = output();
     public readonly mealOpened = output<Meal>();
     public readonly mealFavoriteToggle = output<Meal>();
     public readonly pageIndexChange = output<number>();

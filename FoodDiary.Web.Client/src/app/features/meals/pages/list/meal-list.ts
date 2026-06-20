@@ -80,11 +80,16 @@ export class MealListComponent {
     protected readonly favoriteLoadingIds = this.mealListFacade.favoriteLoadingIds;
     protected readonly isAiMealSaving = this.aiMealCreateFacade.isSaving;
     protected readonly aiMealClearToken = this.aiMealCreateFacade.clearToken;
+    protected readonly plannedGroups = computed(() => {
+        this.languageVersion();
+        return this.groupByDate(this.plannedConsumptions(), 'asc');
+    });
     protected readonly groupedConsumptions = computed(() => {
         this.languageVersion();
-        return this.groupByDate(this.consumptionData.items());
+        return this.groupByDate(this.currentConsumptions(), 'desc');
     });
     protected readonly isFavoritesOpen = signal(false);
+    protected readonly isPlannedOpen = signal(true);
     protected readonly isMobileView = this.viewportService.isMobile;
     protected readonly hasDateFilter = computed(() => {
         const dateRange = this.searchModel().dateRange;
@@ -123,6 +128,10 @@ export class MealListComponent {
 
     protected toggleFavorites(): void {
         this.isFavoritesOpen.update(v => !v);
+    }
+
+    protected togglePlanned(): void {
+        this.isPlannedOpen.update(v => !v);
     }
 
     protected repeatFavorite(favorite: FavoriteMeal): void {
@@ -293,7 +302,17 @@ export class MealListComponent {
         return this.searchModel().dateRange;
     }
 
-    private groupByDate(items: Meal[]): MealDateGroupView[] {
+    private plannedConsumptions(): Meal[] {
+        const today = normalizeStartOfLocalDay(new Date());
+        return this.consumptionData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() > today.getTime());
+    }
+
+    private currentConsumptions(): Meal[] {
+        const today = normalizeStartOfLocalDay(new Date());
+        return this.consumptionData.items().filter(item => normalizeStartOfLocalDay(new Date(item.date)).getTime() <= today.getTime());
+    }
+
+    private groupByDate(items: Meal[], sortDirection: 'asc' | 'desc'): MealDateGroupView[] {
         const buckets = new Map<string, MealDateGroupView>();
 
         for (const item of items) {
@@ -306,7 +325,20 @@ export class MealListComponent {
             buckets.get(key)?.items.push(item);
         }
 
-        return Array.from(buckets.values()).sort((a, b) => b.date.getTime() - a.date.getTime());
+        const groups = Array.from(buckets.values());
+        for (const group of groups) {
+            group.items.sort((a, b) => this.compareMealDates(a, b, sortDirection));
+        }
+
+        return groups.sort((a, b) => {
+            const diff = a.date.getTime() - b.date.getTime();
+            return sortDirection === 'asc' ? diff : -diff;
+        });
+    }
+
+    private compareMealDates(left: Meal, right: Meal, sortDirection: 'asc' | 'desc'): number {
+        const diff = new Date(left.date).getTime() - new Date(right.date).getTime();
+        return sortDirection === 'asc' ? diff : -diff;
     }
 
     private formatGroupDate(date: Date): string {

@@ -1,10 +1,11 @@
 import { CommonModule, formatDate } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, inject, input, LOCALE_ID, output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiImagePreviewDialogComponent } from 'fd-ui-kit/image-preview-dialog/fd-ui-image-preview-dialog';
 
 import { AuthService } from '../../../services/auth.service';
+import { resolveAppLocale } from '../../../shared/lib/locale.constants';
 import { resolveMealImageUrl } from '../../../shared/lib/meal-image.util';
 import { normalizeQualityScore } from '../../../shared/lib/quality-score.utils';
 import type { QualityGrade } from '../../../shared/models/quality-grade.data';
@@ -47,10 +48,10 @@ export class MealCardComponent {
     private readonly dialogService = inject(FdUiDialogService);
     private readonly translateService = inject(TranslateService);
     private readonly authService = inject(AuthService);
-    private readonly locale = inject(LOCALE_ID);
 
     public readonly meal = input.required<MealCardItem>();
     public readonly favoriteLoading = input(false);
+    public readonly showDate = input(false);
     public readonly open = output();
     public readonly favoriteToggle = output();
     protected readonly isFavorite = computed(() => Boolean(this.meal().isFavorite));
@@ -113,7 +114,10 @@ export class MealCardComponent {
         return manualCount + aiCount;
     });
     protected readonly description = computed(() => `${this.translateService.instant('MEAL_CARD.ITEM_COUNT')}: ${this.itemCount()}`);
-    protected readonly mealTime = computed(() => formatDate(this.meal().date, 'HH:mm', this.locale));
+    protected readonly mealTime = computed(() => {
+        const format = this.showDate() ? 'd MMM, HH:mm' : 'HH:mm';
+        return formatDate(this.meal().date, format, resolveAppLocale(this.translateService.getCurrentLang()));
+    });
     protected readonly mealTitle = computed(() => {
         const mealType = this.meal().mealType?.trim();
         const normalizedMealType = mealType !== undefined && mealType.length > 0 ? mealType.toUpperCase() : 'OTHER';

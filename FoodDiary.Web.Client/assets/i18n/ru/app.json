@@ -612,6 +612,7 @@
         "TOTAL_PROTEINS": "Всего белков",
         "TOTAL_FATS": "Всего жиров",
         "TOTAL_CARBS": "Всего углеводов",
+        "PLANNED_TITLE": "Запланированные приемы",
         "DATE_FILTER_BUTTON": "Фильтр дат",
         "FILTERS_TITLE": "Фильтры",
         "FILTER_APPLY_BUTTON": "Применить",

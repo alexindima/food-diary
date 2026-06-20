@@ -101,6 +101,19 @@ describe('MealCardComponent content', () => {
         expect(instantSpy).toHaveBeenCalledWith('MEAL_CARD.MEAL_TYPES.DINNER');
     });
 
+    it('should include date in title only when requested', async () => {
+        const { component, fixture } = await setupMealCardAsync();
+        fixture.detectChanges();
+
+        expect(component['mealTime']()).toBe('12:30');
+
+        fixture.componentRef.setInput('showDate', true);
+        fixture.detectChanges();
+
+        expect(component['mealTime']()).toContain('12:30');
+        expect(component['mealTime']()).toContain('Mar');
+    });
+
     it('should display meal comment', async () => {
         const { el, fixture } = await setupMealCardAsync();
         fixture.detectChanges();

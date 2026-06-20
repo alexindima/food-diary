@@ -118,7 +118,9 @@ async function setupComponentAsync(
         errorKey: string | null;
         favoriteLoadingIds: ReadonlySet<string>;
         groups: readonly MealDateGroupView[];
+        isPlannedOpen: boolean;
         isLoading: boolean;
+        plannedGroups: readonly MealDateGroupView[];
         totalItems: number;
         totalPages: number;
     }> = {},
@@ -138,19 +140,53 @@ async function setupComponentAsync(
         .compileComponents();
 
     const fixture = TestBed.createComponent(MealListContentComponent);
-    fixture.componentRef.setInput('errorKey', overrides.errorKey ?? null);
-    fixture.componentRef.setInput('isLoading', overrides.isLoading ?? false);
-    fixture.componentRef.setInput('emptyState', overrides.emptyState ?? null);
-    fixture.componentRef.setInput('groups', overrides.groups ?? []);
-    fixture.componentRef.setInput('totalPages', overrides.totalPages ?? 1);
-    fixture.componentRef.setInput('totalItems', overrides.totalItems ?? 0);
-    fixture.componentRef.setInput('currentPageIndex', overrides.currentPageIndex ?? 0);
-    fixture.componentRef.setInput('favoriteLoadingIds', overrides.favoriteLoadingIds ?? new Set<string>());
+    setComponentInputs(fixture, overrides);
 
     return {
         component: fixture.componentInstance,
         fixture,
     };
+}
+
+function setComponentInputs(
+    fixture: ComponentFixture<MealListContentComponent>,
+    overrides: Partial<{
+        currentPageIndex: number;
+        emptyState: 'empty' | 'no-results' | null;
+        errorKey: string | null;
+        favoriteLoadingIds: ReadonlySet<string>;
+        groups: readonly MealDateGroupView[];
+        isPlannedOpen: boolean;
+        isLoading: boolean;
+        plannedGroups: readonly MealDateGroupView[];
+        totalItems: number;
+        totalPages: number;
+    }>,
+): void {
+    const inputs = {
+        currentPageIndex: 0,
+        emptyState: null,
+        errorKey: null,
+        favoriteLoadingIds: new Set<string>(),
+        groups: [],
+        isLoading: false,
+        isPlannedOpen: false,
+        plannedGroups: [],
+        totalItems: 0,
+        totalPages: 1,
+        ...overrides,
+    };
+
+    fixture.componentRef.setInput('errorKey', inputs.errorKey);
+    fixture.componentRef.setInput('isLoading', inputs.isLoading);
+    fixture.componentRef.setInput('emptyState', inputs.emptyState);
+    fixture.componentRef.setInput('plannedGroups', inputs.plannedGroups);
+    fixture.componentRef.setInput('isPlannedOpen', inputs.isPlannedOpen);
+    fixture.componentRef.setInput('groups', inputs.groups);
+    fixture.componentRef.setInput('totalPages', inputs.totalPages);
+    fixture.componentRef.setInput('totalItems', inputs.totalItems);
+    fixture.componentRef.setInput('currentPageIndex', inputs.currentPageIndex);
+    fixture.componentRef.setInput('favoriteLoadingIds', inputs.favoriteLoadingIds);
 }
 
 function getFixtureText(fixture: ComponentFixture<MealListContentComponent>): string {
