@@ -323,6 +323,13 @@ html[data-theme='dark'] {
     --fd-color-nutrition-fiber: var(--fd-color-purple-700);
     --fd-color-nutrition-alcohol: var(--fd-color-slate-500);
 
+    --fd-color-nutrition-calories-text: color-mix(in srgb, var(--fd-color-nutrition-calories) 48%, var(--fd-color-text));
+    --fd-color-nutrition-proteins-text: color-mix(in srgb, var(--fd-color-nutrition-proteins) 48%, var(--fd-color-text));
+    --fd-color-nutrition-fats-text: color-mix(in srgb, var(--fd-color-nutrition-fats) 48%, var(--fd-color-text));
+    --fd-color-nutrition-carbs-text: color-mix(in srgb, var(--fd-color-nutrition-carbs) 48%, var(--fd-color-text));
+    --fd-color-nutrition-fiber-text: color-mix(in srgb, var(--fd-color-nutrition-fiber) 48%, var(--fd-color-text));
+    --fd-color-nutrition-alcohol-text: color-mix(in srgb, var(--fd-color-nutrition-alcohol) 48%, var(--fd-color-text));
+
     --fd-color-nutrition-calories-fill: color-mix(in srgb, var(--fd-color-nutrition-calories) 14%, transparent);
     --fd-color-nutrition-proteins-fill: color-mix(in srgb, var(--fd-color-nutrition-proteins) 14%, transparent);
     --fd-color-nutrition-fats-fill: color-mix(in srgb, var(--fd-color-nutrition-fats) 14%, transparent);

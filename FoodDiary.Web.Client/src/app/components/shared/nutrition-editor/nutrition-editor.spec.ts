@@ -98,4 +98,45 @@ describe('NutritionEditorComponent', () => {
         expect(messagesErrors[0].textContent).toContain('NUTRITION_EDITOR.FIELD_LABELS.FATS');
         expect(messagesErrors[0].textContent).toContain('Value must be at most 100.');
     });
+
+    it('should use contrast-safe text tokens for nutrient inputs', async () => {
+        const { el, fixture } = await setupNutritionEditorAsync();
+
+        fixture.detectChanges();
+
+        const expectedTokens: Record<string, string> = {
+            calories: 'var(--fd-color-nutrition-calories-text)',
+            proteins: 'var(--fd-color-nutrition-proteins-text)',
+            fats: 'var(--fd-color-nutrition-fats-text)',
+            carbs: 'var(--fd-color-nutrition-carbs-text)',
+            fiber: 'var(--fd-color-nutrition-fiber-text)',
+            alcohol: 'var(--fd-color-nutrition-alcohol-text)',
+        };
+
+        for (const [nutrient, token] of Object.entries(expectedTokens)) {
+            const card = el.querySelector<HTMLElement>(`.nutrition-editor__input--${nutrient} .fd-ui-nutrient-input`);
+            expect(card?.style.getPropertyValue('--fd-nutrient-text-color')).toBe(token);
+        }
+    });
+
+    it('should keep macro bar segments on saturated nutrition colors', async () => {
+        const { el, fixture } = await setupNutritionEditorAsync();
+        fixture.componentRef.setInput('macroState', {
+            isEmpty: false,
+            segments: [
+                { key: 'proteins', percent: 40 },
+                { key: 'fats', percent: 30 },
+                { key: 'carbs', percent: 30 },
+            ],
+        });
+
+        fixture.detectChanges();
+
+        const segments = [...el.querySelectorAll<HTMLElement>('.nutrition-editor__macro-bar-segment')];
+        expect(segments.map(segment => segment.style.backgroundColor)).toEqual([
+            'var(--fd-color-nutrition-proteins)',
+            'var(--fd-color-nutrition-fats)',
+            'var(--fd-color-nutrition-carbs)',
+        ]);
+    });
 });

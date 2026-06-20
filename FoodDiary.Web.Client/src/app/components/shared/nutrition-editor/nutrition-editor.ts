@@ -76,11 +76,17 @@ export class NutritionEditorComponent {
         alcohol: 'var(--fd-color-nutrition-alcohol-fill)',
     };
     protected readonly nutrientTextColors = {
-        calories: 'var(--fd-color-nutrition-calories)',
+        calories: 'var(--fd-color-nutrition-calories-text)',
+        proteins: 'var(--fd-color-nutrition-proteins-text)',
+        fats: 'var(--fd-color-nutrition-fats-text)',
+        carbs: 'var(--fd-color-nutrition-carbs-text)',
+        fiber: 'var(--fd-color-nutrition-fiber-text)',
+        alcohol: 'var(--fd-color-nutrition-alcohol-text)',
+    };
+    protected readonly macroBarColors = {
         proteins: 'var(--fd-color-nutrition-proteins)',
         fats: 'var(--fd-color-nutrition-fats)',
         carbs: 'var(--fd-color-nutrition-carbs)',
-        fiber: 'var(--fd-color-nutrition-fiber)',
     };
     protected readonly macroBarState = computed<NutritionMacroBarViewModel>(() => {
         const state = this.macroState();
@@ -89,7 +95,7 @@ export class NutritionEditorComponent {
             isEmpty: state.isEmpty,
             segments: state.segments.map(segment => ({
                 ...segment,
-                color: this.nutrientTextColors[segment.key],
+                color: this.macroBarColors[segment.key],
             })),
         };
     });
