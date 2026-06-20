@@ -127,6 +127,11 @@
         color: var(--fd-color-danger);
     }
 
+    &__submit-hint {
+        margin: var(--fd-space-sm) 0 0;
+        color: var(--fd-color-text-muted);
+    }
+
     @media #{variables.$media-tablet} {
         &__form {
             padding: var(--fd-space-xs) 0 0;

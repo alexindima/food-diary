@@ -738,6 +738,7 @@
         "IMAGE_DESCRIPTION": "Upload a photo for this meal. JPG, PNG, GIF, WebP up to 20 MB",
         "SAVE_BUTTON": "Save",
         "ADD_BUTTON": "Add",
+        "SUBMIT_DISABLED_ITEMS_HINT": "Add at least one product, recipe, or AI item before saving this meal.",
         "EDIT_SUCCESS": "Consumption successfully updated!",
         "CREATE_SUCCESS": "Consumption successfully created!",
         "GO_TO_HOME_BUTTON": "Go to Home",

@@ -51,6 +51,15 @@ describe('MealNutritionSidebarComponent actions', () => {
         const submitButton = (fixture.nativeElement as HTMLElement).querySelector('button[type="submit"]');
 
         expect(submitButton?.hasAttribute('disabled')).toBe(true);
+        expect((fixture.nativeElement as HTMLElement).textContent).toContain('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
+    });
+
+    it('should prioritize global error over disabled submit hint', async () => {
+        const { fixture } = await setupComponentAsync({ globalError: 'FORM_ERRORS.NON_EMPTY_ARRAY', submitDisabled: true });
+        const text = (fixture.nativeElement as HTMLElement).textContent;
+
+        expect(text).toContain('FORM_ERRORS.NON_EMPTY_ARRAY');
+        expect(text).not.toContain('CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT');
     });
 
     it('should emit nutrition mode changes and cancel requests', async () => {
@@ -70,6 +79,7 @@ describe('MealNutritionSidebarComponent actions', () => {
 
 type MealNutritionSidebarSetupOptions = {
     formModel?: ReturnType<typeof signal<ConsumptionFormValues>>;
+    globalError?: string | null;
     nutritionMode?: NutritionMode;
     submitDisabled?: boolean;
 };
@@ -95,7 +105,7 @@ async function setupComponentAsync(options: MealNutritionSidebarSetupOptions = {
     fixture.componentRef.setInput('isEditMode', false);
     fixture.componentRef.setInput('isSubmitting', false);
     fixture.componentRef.setInput('submitDisabled', options.submitDisabled ?? false);
-    fixture.componentRef.setInput('globalError', null);
+    fixture.componentRef.setInput('globalError', options.globalError ?? null);
     fixture.detectChanges();
 
     return {

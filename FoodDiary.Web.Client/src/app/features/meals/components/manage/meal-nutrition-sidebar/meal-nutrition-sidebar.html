@@ -79,6 +79,8 @@
         </div>
         @if (globalError()) {
             <fd-ui-form-error class="consumption-manage__footer-error" [error]="globalError()" />
+        } @else if (submitDisabled() && !isSubmitting()) {
+            <p class="consumption-manage__submit-hint fd-ui-body-sm">{{ 'CONSUMPTION_MANAGE.SUBMIT_DISABLED_ITEMS_HINT' | translate }}</p>
         }
     </div>
 </div>

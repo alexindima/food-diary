@@ -700,6 +700,7 @@
         "IMAGE_DESCRIPTION": "Загрузите фото блюда. JPG, PNG, GIF, WebP до 20 МБ",
         "SAVE_BUTTON": "Сохранить",
         "ADD_BUTTON": "Добавить",
+        "SUBMIT_DISABLED_ITEMS_HINT": "Добавьте хотя бы один продукт, рецепт или AI-позицию, чтобы сохранить приём пищи.",
         "EDIT_SUCCESS": "Прием пищи успешно обновлен!",
         "CREATE_SUCCESS": "Прием пищи успешно создан!",
         "GO_TO_HOME_BUTTON": "На главную",
