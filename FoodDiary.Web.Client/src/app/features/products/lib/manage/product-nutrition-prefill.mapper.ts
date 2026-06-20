@@ -21,6 +21,12 @@ export function buildOpenFoodFactsLookupPatch(values: ProductFormValues, offProd
     if (isEmpty(values.brand) && hasText(offProduct.brand)) {
         patch.brand = offProduct.brand;
     }
+    if (values.imageUrl === null && hasText(offProduct.imageUrl)) {
+        patch.imageUrl = {
+            url: offProduct.imageUrl,
+            assetId: null,
+        };
+    }
 
     applyNutritionSourcePatch(patch, values, offProduct, false);
     return patch;
@@ -37,6 +43,12 @@ export function buildSourceProductPrefillPatch(product: NutritionSourceProduct):
     }
     if (hasText(product.brand)) {
         patch.brand = product.brand;
+    }
+    if (hasText(product.imageUrl)) {
+        patch.imageUrl = {
+            url: product.imageUrl,
+            assetId: null,
+        };
     }
 
     applyNutritionSourcePatch(patch, null, product, true);

@@ -40,6 +40,7 @@ const OFF_PRODUCT: OpenFoodFactsProduct = {
     name: 'Open Food Facts product',
     brand: 'OFF brand',
     category: 'Category',
+    imageUrl: 'https://example.test/off-product.jpg',
     caloriesPer100G: 310.49,
     proteinsPer100G: 9.94,
     fatsPer100G: 7.15,
@@ -52,6 +53,10 @@ describe('Open Food Facts nutrition prefill mapper', () => {
         expect(buildOpenFoodFactsLookupPatch(EMPTY_FORM_VALUES, OFF_PRODUCT)).toEqual({
             name: OFF_PRODUCT.name,
             brand: OFF_PRODUCT.brand,
+            imageUrl: {
+                url: OFF_PRODUCT.imageUrl,
+                assetId: null,
+            },
             caloriesPerBase: 310,
             proteinsPerBase: 9.9,
             fatsPerBase: 7.2,
@@ -70,6 +75,10 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             fatsPerBase: 5,
             carbsPerBase: 20,
             fiberPerBase: 2,
+            imageUrl: {
+                url: 'https://example.test/user-image.jpg',
+                assetId: null,
+            },
         };
 
         expect(buildOpenFoodFactsLookupPatch(values, OFF_PRODUCT)).toEqual({});
@@ -82,6 +91,7 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             name: OFF_PRODUCT.name,
             brand: OFF_PRODUCT.brand,
             category: OFF_PRODUCT.category,
+            imageUrl: OFF_PRODUCT.imageUrl,
             caloriesPer100G: OFF_PRODUCT.caloriesPer100G,
             proteinsPer100G: OFF_PRODUCT.proteinsPer100G,
             fatsPer100G: OFF_PRODUCT.fatsPer100G,
@@ -93,6 +103,10 @@ describe('Open Food Facts nutrition prefill mapper', () => {
             barcode: OFF_PRODUCT.barcode,
             name: OFF_PRODUCT.name,
             brand: OFF_PRODUCT.brand,
+            imageUrl: {
+                url: OFF_PRODUCT.imageUrl,
+                assetId: null,
+            },
             caloriesPerBase: 310,
             proteinsPerBase: 9.9,
             fatsPerBase: 7.2,
