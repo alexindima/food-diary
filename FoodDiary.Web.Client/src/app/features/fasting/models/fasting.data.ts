@@ -142,10 +142,14 @@ export const CYCLIC_PRESETS: CyclicPresetOption[] = [
 ];
 
 export const FASTING_SYMPTOM_OPTIONS = [
-    { value: 'headache', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE' },
-    { value: 'weakness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.WEAKNESS' },
-    { value: 'irritability', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.IRRITABILITY' },
-    { value: 'dizziness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.DIZZINESS' },
-    { value: 'cravings', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.CRAVINGS' },
-    { value: 'good', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.GOOD' },
+    { value: 'headache', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE', descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.HEADACHE' },
+    { value: 'weakness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.WEAKNESS', descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.WEAKNESS' },
+    {
+        value: 'irritability',
+        labelKey: 'FASTING.CHECK_IN.SYMPTOMS.IRRITABILITY',
+        descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.IRRITABILITY',
+    },
+    { value: 'dizziness', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.DIZZINESS', descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.DIZZINESS' },
+    { value: 'cravings', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.CRAVINGS', descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.CRAVINGS' },
+    { value: 'good', labelKey: 'FASTING.CHECK_IN.SYMPTOMS.GOOD', descriptionKey: 'FASTING.CHECK_IN.SYMPTOM_HINTS.GOOD' },
 ] as const;

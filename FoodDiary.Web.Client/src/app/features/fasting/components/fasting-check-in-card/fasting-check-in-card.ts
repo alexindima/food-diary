@@ -15,6 +15,7 @@ import { FdUiChipSelectComponent, type FdUiChipSelectOption, FdUiEmojiPickerComp
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import type { FdUiEmojiPickerValue } from 'fd-ui-kit/emoji-picker/fd-ui-emoji-picker';
+import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { EMPTY, type Observable } from 'rxjs';
 
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
@@ -34,6 +35,7 @@ import { FastingCheckInSummaryComponent } from '../fasting-check-in-summary/fast
         TranslatePipe,
         FdUiChipSelectComponent,
         FdUiEmojiPickerComponent,
+        FdUiTextareaComponent,
         FdUiButtonComponent,
         FdUiCardComponent,
         FastingCheckInSummaryComponent,
@@ -75,11 +77,12 @@ export class FastingCheckInCardComponent {
 
         return FASTING_SYMPTOM_OPTIONS.map<FdUiChipSelectOption>(symptom => {
             const label = this.translateService.instant(symptom.labelKey);
+            const description = this.translateService.instant(symptom.descriptionKey);
             return {
                 value: symptom.value,
                 label,
-                ariaLabel: label,
-                hint: label,
+                ariaLabel: `${label}. ${description}`,
+                hint: description,
             };
         });
     });
@@ -104,8 +107,8 @@ export class FastingCheckInCardComponent {
         this.setNumericLevel(this.moodLevel(), value);
     }
 
-    protected setNotes(event: Event): void {
-        this.notes().set(event.target instanceof HTMLTextAreaElement ? event.target.value : '');
+    protected setNotesValue(value: string | number | null): void {
+        this.notes().set(value === null ? '' : String(value));
     }
 
     private setNumericLevel(target: WritableSignal<number>, value: FdUiEmojiPickerValue | null): void {
@@ -119,11 +122,14 @@ export class FastingCheckInCardComponent {
 
         return scale.map(option => {
             const label = this.translateService.instant(`${labelKey}_LEVEL_${option.value}`);
+            const description = this.translateService.instant(`${labelKey}_LEVEL_${option.value}_DESCRIPTION`);
             return {
                 value: option.value,
                 label,
                 emoji: option.emoji,
-                ariaLabel: label,
+                description,
+                ariaLabel: `${label}. ${description}`,
+                hint: `${label}. ${description}`,
             };
         });
     }

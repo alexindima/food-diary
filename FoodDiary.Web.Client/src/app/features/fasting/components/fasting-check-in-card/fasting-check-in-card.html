@@ -69,19 +69,14 @@
                     />
                 </div>
 
-                <div class="fasting__checkin-notes fd-stack fd-gap-xs">
-                    <label class="fasting__protocol-group-title fd-ui-overline" for="fasting-check-in-notes">
-                        {{ 'FASTING.CHECK_IN.NOTES' | translate }}
-                    </label>
-                    <textarea
-                        id="fasting-check-in-notes"
-                        class="fasting__textarea"
-                        rows="4"
-                        [value]="notes()()"
-                        [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
-                        (input)="setNotes($event)"
-                    ></textarea>
-                </div>
+                <fd-ui-textarea
+                    id="fasting-check-in-notes"
+                    [label]="'FASTING.CHECK_IN.NOTES' | translate"
+                    [rows]="4"
+                    [value]="notes()()"
+                    [placeholder]="'FASTING.CHECK_IN.NOTES_PLACEHOLDER' | translate"
+                    (valueChange)="setNotesValue($event)"
+                />
 
                 <div class="fasting__actions fasting__actions--split fd-ui-actions fd-ui-actions--split">
                     <fd-ui-button

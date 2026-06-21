@@ -135,27 +135,6 @@
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
 
-    &__textarea {
-        width: 100%;
-        min-height: 108px;
-        border: var(--fd-border-muted);
-        border-radius: var(--fd-radius-card);
-        padding: var(--fd-space-sm) var(--fd-space-md);
-        font-family: inherit;
-        font-size: inherit;
-        font-weight: inherit;
-        line-height: inherit;
-        color: var(--fd-color-slate-900);
-        resize: vertical;
-        background: var(--fd-bg-surface-raised);
-
-        &:focus {
-            outline: none;
-            border-color: var(--fd-color-purple-500);
-            box-shadow: var(--fd-shadow-focus-accent-subtle);
-        }
-    }
-
     &__stats {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));

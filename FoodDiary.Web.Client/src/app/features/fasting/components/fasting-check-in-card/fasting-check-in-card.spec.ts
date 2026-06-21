@@ -18,18 +18,7 @@ const UPDATED_MOOD_LEVEL = 2;
 
 describe('FastingCheckInCardComponent', () => {
     beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [FastingCheckInCardComponent],
-            providers: [
-                provideTranslateTesting(),
-                {
-                    provide: LocalizationService,
-                    useValue: {
-                        getCurrentLanguage: vi.fn(() => 'en'),
-                    },
-                },
-            ],
-        });
+        setupTestBed();
     });
 
     it('renders nothing while fasting is inactive', () => {
@@ -98,7 +87,41 @@ describe('FastingCheckInCardComponent', () => {
 
         expect((fixture.componentInstance as unknown as { draftDisabled: () => boolean }).draftDisabled()).toBe(true);
     });
+
+    it('provides descriptive hints for emoji scales and symptom chips', () => {
+        const fixture = createComponent({ isExpanded: true });
+        const emojiPicker = fixture.debugElement.query(By.css('fd-ui-emoji-picker')).componentInstance as OptionsHost;
+        const symptomChips = fixture.debugElement.query(By.css('fd-ui-chip-select')).componentInstance as OptionsHost;
+
+        expect(emojiPicker.options()[0]).toMatchObject({
+            ariaLabel: 'FASTING.CHECK_IN.HUNGER_LEVEL_1. FASTING.CHECK_IN.HUNGER_LEVEL_1_DESCRIPTION',
+            hint: 'FASTING.CHECK_IN.HUNGER_LEVEL_1. FASTING.CHECK_IN.HUNGER_LEVEL_1_DESCRIPTION',
+        });
+        expect(symptomChips.options()[0]).toMatchObject({
+            ariaLabel: 'FASTING.CHECK_IN.SYMPTOMS.HEADACHE. FASTING.CHECK_IN.SYMPTOM_HINTS.HEADACHE',
+            hint: 'FASTING.CHECK_IN.SYMPTOM_HINTS.HEADACHE',
+        });
+    });
 });
+
+type OptionsHost = {
+    options: () => Array<Record<string, unknown>>;
+};
+
+function setupTestBed(): void {
+    TestBed.configureTestingModule({
+        imports: [FastingCheckInCardComponent],
+        providers: [
+            provideTranslateTesting(),
+            {
+                provide: LocalizationService,
+                useValue: {
+                    getCurrentLanguage: vi.fn(() => 'en'),
+                },
+            },
+        ],
+    });
+}
 
 type CheckInCardInput = {
     isActive: boolean;

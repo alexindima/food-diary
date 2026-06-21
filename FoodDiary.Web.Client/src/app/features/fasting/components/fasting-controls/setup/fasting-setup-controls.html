@@ -4,6 +4,8 @@
         [options]="modeOptions()"
         [selectedValue]="selectedMode()"
         [ariaLabel]="'FASTING.MODE_GROUP' | translate"
+        [shrinkItems]="true"
+        [stackOnNarrow]="false"
         (selectedValueChange)="modeChange.emit($event)"
     />
 </div>
@@ -20,6 +22,7 @@
                     [selectedValue]="selectedProtocol()"
                     [ariaLabel]="'FASTING.INTERMITTENT_GROUP' | translate"
                     [shrinkItems]="true"
+                    [stackOnNarrow]="false"
                     (selectedValueChange)="protocolChange.emit($event)"
                 />
 
@@ -53,6 +56,7 @@
                     [selectedValue]="selectedProtocol()"
                     [ariaLabel]="'FASTING.EXTENDED_GROUP' | translate"
                     [shrinkItems]="true"
+                    [stackOnNarrow]="false"
                     (selectedValueChange)="protocolChange.emit($event)"
                 />
 

@@ -13,6 +13,12 @@
         grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     }
 
+    &__loading {
+        display: flex;
+        justify-content: center;
+        padding: var(--fd-space-xxl) 0;
+    }
+
     &__empty {
         padding: var(--fd-space-xxl) 0;
         color: var(--fd-color-text-muted);

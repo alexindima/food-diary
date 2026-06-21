@@ -1,5 +1,7 @@
 @if (isLoading()) {
-    <fd-ui-loader />
+    <div class="meal-plans-list__loading">
+        <fd-ui-loader />
+    </div>
 } @else if (plans().length === 0) {
     <div class="meal-plans-list__empty fd-stack fd-align-center fd-gap-sm">
         <fd-ui-icon name="restaurant_menu" size="xl" />

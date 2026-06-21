@@ -38,6 +38,7 @@ describe('MealPlanListContentComponent', () => {
         const fixture = createComponent({ isLoading: true, plans: [createPlanCard()] });
         const element = getElement(fixture);
 
+        expect(element.querySelector('.meal-plans-list__loading')).not.toBeNull();
         expect(element.querySelector('fd-ui-loader')).not.toBeNull();
         expect(element.querySelector('.meal-plan-card')).toBeNull();
     });
