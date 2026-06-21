@@ -11,6 +11,7 @@ import { FastingHistoryItemComponent } from '../fasting-history-item/fasting-his
     selector: 'fd-fasting-history-card',
     imports: [TranslatePipe, FdUiButtonComponent, FdUiCardComponent, FastingHistoryItemComponent],
     templateUrl: './fasting-history-card.html',
+    styleUrls: ['./fasting-history-card.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingHistoryCardComponent {

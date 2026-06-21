@@ -1,0 +1,32 @@
+.fasting {
+    &__history-checkin-entry {
+        padding: var(--fd-space-xs) 0;
+
+        &:where(:not(:last-child)) {
+            border-bottom: var(--fd-border-dashed);
+        }
+    }
+
+    &__history-checkin-header {
+        align-items: center;
+    }
+
+    &__history-checkin-time {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__history-checkin-summary {
+        color: var(--fd-color-text);
+    }
+
+    &__history-symptom {
+        --fd-pill-bg: var(--fd-bg-category-purple);
+        --fd-pill-border: transparent;
+        --fd-pill-color: var(--fd-color-purple-300);
+    }
+
+    &__history-notes {
+        margin: var(--fd-space-xxs) 0 0;
+        color: var(--fd-color-text-muted);
+    }
+}

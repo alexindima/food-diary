@@ -1,0 +1,16 @@
+.fasting {
+    &__history-actions {
+        margin-top: var(--fd-space-sm);
+    }
+
+    &__history-content {
+        padding-top: var(--fd-space-xs);
+    }
+
+    &__empty,
+    &__loader {
+        margin: 0;
+        padding: var(--fd-space-sm) var(--fd-space-xxs);
+        color: var(--fd-color-text-muted);
+    }
+}

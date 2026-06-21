@@ -9,6 +9,7 @@ import { FastingHistoryCheckInEntryComponent } from '../fasting-history-check-in
     selector: 'fd-fasting-history-check-in-list',
     imports: [TranslatePipe, FdUiButtonComponent, FastingHistoryCheckInEntryComponent],
     templateUrl: './fasting-history-check-in-list.html',
+    styleUrls: ['./fasting-history-check-in-list.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingHistoryCheckInListComponent {

@@ -1,0 +1,33 @@
+@use 'variables' as variables;
+
+.fasting {
+    &__history-checkin {
+        position: relative;
+        margin-top: var(--fd-space-xs);
+        padding-top: var(--fd-space-xs);
+        padding-left: var(--fd-space-md);
+        border-top: var(--fd-border-default);
+
+        &::before {
+            content: '';
+            position: absolute;
+            top: var(--fd-space-xs);
+            bottom: 0;
+            left: 0;
+            width: var(--fd-border-width-strong);
+            border-radius: var(--fd-radius-pill);
+            background: var(--fd-color-border-divider-strong);
+        }
+    }
+
+    &__history-toggle-actions {
+        justify-content: flex-start;
+        padding-top: var(--fd-space-xxs);
+    }
+
+    @media #{variables.$media-tablet} {
+        &__history-checkin {
+            padding-left: var(--fd-space-sm);
+        }
+    }
+}

@@ -11,6 +11,7 @@ import { FastingHistoryCheckInListComponent } from '../fasting-history-check-in-
     selector: 'fd-fasting-history-item',
     imports: [TranslatePipe, FdUiAccentSurfaceComponent, FdUiButtonComponent, FastingHistoryCheckInListComponent],
     templateUrl: './fasting-history-item.html',
+    styleUrls: ['./fasting-history-item.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingHistoryItemComponent {

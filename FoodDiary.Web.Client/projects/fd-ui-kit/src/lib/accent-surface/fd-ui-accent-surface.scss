@@ -4,6 +4,7 @@
     --fd-accent-thickness-active: var(--fd-size-accent-thickness-active);
     --fd-accent-overlay-opacity: 0;
     --fd-accent-surface-radius: var(--fd-radius-card);
+    display: block;
     position: relative;
     overflow: hidden;
     isolation: isolate;

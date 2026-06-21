@@ -6,6 +6,7 @@ import type { FastingCheckInViewModel } from '../../pages/fasting-page-lib/fasti
     selector: 'fd-fasting-history-check-in-entry',
     imports: [],
     templateUrl: './fasting-history-check-in-entry.html',
+    styleUrls: ['./fasting-history-check-in-entry.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FastingHistoryCheckInEntryComponent {
