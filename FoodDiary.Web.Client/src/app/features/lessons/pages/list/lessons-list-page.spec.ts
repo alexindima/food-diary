@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { LessonFacade } from '../../lib/lesson.facade';
 import type { LessonSummary } from '../../models/lesson.data';
 import { LessonsListPageComponent } from './lessons-list-page';
@@ -61,7 +62,7 @@ function createComponent(facade: FacadeStub, router = createRouterStub()): Lesso
 function createRouterStub(): { navigate: ReturnType<typeof vi.fn<(commands: string[]) => Promise<boolean>>> } {
     return {
         navigate: vi.fn(async () => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
             return true;
         }),
     };

@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { GamificationService } from '../api/gamification.service';
 import type { GamificationData } from '../models/gamification.data';
 import { GamificationFacade } from './gamification.facade';
@@ -80,6 +81,6 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
             return;
         }
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
     }
 }

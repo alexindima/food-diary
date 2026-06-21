@@ -43,8 +43,8 @@ type PasswordResetTestContext = {
 function createComponent(queryParams: Record<string, string> = DEFAULT_QUERY_PARAMS): PasswordResetTestContext {
     const authServiceSpy = { confirmPasswordReset: vi.fn() };
     const navigationServiceSpy = { navigateToHomeAsync: vi.fn(), navigateToAuthAsync: vi.fn() };
-    navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
-    navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
+    navigationServiceSpy.navigateToHomeAsync.mockResolvedValue(undefined);
+    navigationServiceSpy.navigateToAuthAsync.mockResolvedValue(undefined);
 
     TestBed.configureTestingModule({
         imports: [PasswordResetComponent],
@@ -163,25 +163,29 @@ describe('PasswordResetComponent submit', () => {
         expect(arg.newPassword).toBe('newPassword123');
     });
 
-    it('should navigate to home on successful submit', () => {
+    it('should navigate to home on successful submit', async () => {
         const { authServiceSpy, component, navigationServiceSpy } = createComponent();
         authServiceSpy.confirmPasswordReset.mockReturnValue(of(AUTH_RESPONSE));
 
         setValidPassword(component);
         component['onSubmit']();
 
-        expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
+        await vi.waitFor(() => {
+            expect(navigationServiceSpy.navigateToHomeAsync).toHaveBeenCalled();
+        });
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('should handle submit error', () => {
+    it('should handle submit error', async () => {
         const { authServiceSpy, component } = createComponent();
         authServiceSpy.confirmPasswordReset.mockReturnValue(throwError(() => new Error('fail')));
 
         setValidPassword(component);
         component['onSubmit']();
 
-        expect(component['state']()).toBe('error');
+        await vi.waitFor(() => {
+            expect(component['state']()).toBe('error');
+        });
         expect(component['errorMessage']()).toBe('AUTH.RESET.ERROR_GENERIC');
         expect(component['isSubmitting']()).toBe(false);
     });

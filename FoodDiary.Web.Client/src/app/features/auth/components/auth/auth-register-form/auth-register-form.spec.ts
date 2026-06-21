@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createEmptyRegisterFieldErrors, createRegisterFormModel } from '../auth-lib/auth-form.factory';
 import { AuthRegisterFormComponent } from './auth-register-form';
@@ -44,7 +45,7 @@ describe('AuthRegisterFormComponent', () => {
 
     it('should cancel native submit and delegate to FormRoot submission', async () => {
         const submitRegisterFormAsync = vi.fn(async (): Promise<void> => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
         });
         const { fixture } = createComponentWithSubmitAction(submitRegisterFormAsync);
 

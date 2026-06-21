@@ -4,6 +4,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { MeasurementUnit, type Product, ProductType, ProductVisibility } from '../../../products/models/product.data';
 import { type Recipe, RecipeVisibility } from '../../../recipes/models/recipe.data';
@@ -240,8 +241,8 @@ function createMealManageFacadeMock(): MealManageFacadeMock {
 }
 
 async function flushPromisesAsync(): Promise<void> {
-    await Promise.resolve();
-    await Promise.resolve();
+    await waitForAsyncTasksAsync();
+    await waitForAsyncTasksAsync();
 }
 
 function mockEditDialogResult(item: ConsumptionItemFormValues | null): void {

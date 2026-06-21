@@ -120,15 +120,7 @@ export class UserManageComponent {
     protected readonly userFormModel = signal<UserFormValues>(createUserManageFormModel());
     private readonly lastSyncedUserFormData = signal<UserFormValues>(createUserManageFormModel());
     private readonly userFormInputVersion = signal(0);
-    private readonly submitUserFormAsync = async (): Promise<void> => {
-        this.onSubmit();
-        await Promise.resolve(undefined);
-    };
-    protected readonly userForm = form(this.userFormModel, {
-        submission: {
-            action: this.submitUserFormAsync,
-        },
-    });
+    protected readonly userForm = form(this.userFormModel);
     protected readonly dietologistFormModel = signal<DietologistFormValues>(createDietologistFormModel());
     protected readonly dietologistForm = form(this.dietologistFormModel, path => {
         required(path.email);
@@ -317,6 +309,11 @@ export class UserManageComponent {
 
     protected onSubmit(): void {
         this.facade.saveProfileNow(this.buildUserUpdateDto());
+    }
+
+    protected onUserFormSubmit(event: SubmitEvent): void {
+        event.preventDefault();
+        this.onSubmit();
     }
 
     protected onUserFormInput(event?: Event): void {

@@ -124,24 +124,24 @@ describe('AuthComponent login', () => {
         expect(component['globalError']()).toBe('FORM_ERRORS.INVALID_CREDENTIALS');
     });
 
-    it('should show invalid credentials error and hide restore action', () => {
+    it('should show invalid credentials error and hide restore action', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('invalidCredentials'));
         component['loginModel'].set({ email: 'user@example.com', password: 'password123', rememberMe: false });
 
-        component['onLoginSubmit']();
+        await submit(component['loginForm']);
 
         expect(component['globalError']()).toBe('FORM_ERRORS.INVALID_CREDENTIALS');
         expect(component['showRestoreAction']()).toBe(false);
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('should show restore action when login returns deleted account', () => {
+    it('should show restore action when login returns deleted account', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.login.mockReturnValue(of('accountDeleted'));
         component['loginModel'].set({ email: 'deleted@example.com', password: 'password123', rememberMe: false });
 
-        component['onLoginSubmit']();
+        await submit(component['loginForm']);
 
         expect(component['globalError']()).toBe('AUTH.LOGIN.ACCOUNT_DELETED');
         expect(component['showRestoreAction']()).toBe(true);
@@ -200,17 +200,17 @@ describe('AuthComponent register', () => {
         expect(component['registerFieldErrors']().password).toContain('FORM_ERRORS.PASSWORD.MIN_LENGTH');
     });
 
-    it('should show register field errors after invalid submit', () => {
+    it('should show register field errors after invalid submit', async () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
 
-        component['onRegisterSubmit']();
+        await submit(component['registerForm']);
 
         expect(component['registerForm'].email().touched()).toBe(true);
         expect(component['registerFieldErrors']().email).toContain('FORM_ERRORS.REQUIRED');
         expect(authFlowFacadeSpy.register).not.toHaveBeenCalled();
     });
 
-    it('should mark email as existing when register returns conflict', () => {
+    it('should mark email as existing when register returns conflict', async () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('emailExists'));
         component['registerModel'].set({
@@ -220,13 +220,13 @@ describe('AuthComponent register', () => {
             agreeTerms: true,
         });
 
-        component['onRegisterSubmit']();
+        await submit(component['registerForm']);
 
         expect(component['registerForm'].email().getError('userExists')).toBeDefined();
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('should show deleted-account error when register returns accountDeleted', () => {
+    it('should show deleted-account error when register returns accountDeleted', async () => {
         const { authFlowFacadeSpy, component } = createComponent('register');
         authFlowFacadeSpy.register.mockReturnValue(of('accountDeleted'));
         component['registerModel'].set({
@@ -236,7 +236,7 @@ describe('AuthComponent register', () => {
             agreeTerms: true,
         });
 
-        component['onRegisterSubmit']();
+        await submit(component['registerForm']);
 
         expect(component['globalError']()).toBe('AUTH.REGISTER.ACCOUNT_DELETED');
         expect(component['isSubmitting']()).toBe(false);
@@ -266,13 +266,13 @@ describe('AuthComponent password reset', () => {
         expect(component['passwordResetModel']().email).toBe('user@example.com');
     });
 
-    it('should mark reset as sent and start cooldown after successful request', () => {
+    it('should mark reset as sent and start cooldown after successful request', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
         authFlowFacadeSpy.requestPasswordReset.mockReturnValue(of(true));
         component['onPasswordResetOpen']();
         component['passwordResetModel'].set({ email: 'user@example.com' });
 
-        component['onPasswordResetSubmit']();
+        await submit(component['passwordResetForm']);
 
         expect(authFlowFacadeSpy.requestPasswordReset).toHaveBeenCalledOnce();
         expect(component['passwordResetSent']()).toBe(true);
@@ -280,13 +280,13 @@ describe('AuthComponent password reset', () => {
         expect(component['isPasswordResetting']()).toBe(false);
     });
 
-    it('should not submit password reset during cooldown', () => {
+    it('should not submit password reset during cooldown', async () => {
         const { authFlowFacadeSpy, component } = createComponent();
         component['onPasswordResetOpen']();
         component['passwordResetModel'].set({ email: 'user@example.com' });
         component['passwordResetCooldownSeconds'].set(1);
 
-        component['onPasswordResetSubmit']();
+        await submit(component['passwordResetForm']);
 
         expect(authFlowFacadeSpy.requestPasswordReset).not.toHaveBeenCalled();
     });

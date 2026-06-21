@@ -70,7 +70,7 @@ describe('WeightHistoryFacade loading', () => {
 });
 
 describe('WeightHistoryFacade entries', () => {
-    it('submits a new entry and reloads the list', () => {
+    it('submits a new entry and reloads the list', async () => {
         facade.initialize();
         TestBed.tick();
         weightEntriesService.getEntries.mockClear();
@@ -87,7 +87,9 @@ describe('WeightHistoryFacade entries', () => {
             date: '2026-04-02T00:00:00.000Z',
             weight: UPDATED_ENTRY_WEIGHT,
         });
-        expect(weightEntriesService.getEntries).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => {
+            expect(weightEntriesService.getEntries).toHaveBeenCalledTimes(1);
+        });
         expect(weightEntriesService.getSummary).toHaveBeenCalledTimes(1);
     });
 
@@ -104,7 +106,7 @@ describe('WeightHistoryFacade entries', () => {
         expect(facade.form().touched()).toBe(true);
     });
 
-    it('shows duplicate date error when entry already exists', () => {
+    it('shows duplicate date error when entry already exists', async () => {
         weightEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WeightEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
@@ -113,18 +115,22 @@ describe('WeightHistoryFacade entries', () => {
 
         facade.submit();
 
-        expect(facade.entryError()).toBe('WEIGHT_HISTORY.ERROR_DUPLICATE_DATE');
+        await vi.waitFor(() => {
+            expect(facade.entryError()).toBe('WEIGHT_HISTORY.ERROR_DUPLICATE_DATE');
+        });
         expect(weightEntriesService.getEntries).not.toHaveBeenCalled();
         expect(weightEntriesService.getSummary).not.toHaveBeenCalled();
     });
 
-    it('switches to edit mode and updates the existing entry', () => {
+    it('switches to edit mode and updates the existing entry', async () => {
         const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', weight: 74.2 };
 
         facade.startEdit(entry);
         facade.submit();
 
-        expect(facade.isEditing()).toBe(false);
+        await vi.waitFor(() => {
+            expect(facade.isEditing()).toBe(false);
+        });
         expect(weightEntriesService.update).toHaveBeenCalledWith('entry-1', {
             date: '2026-04-01T00:00:00.000Z',
             weight: 74.2,

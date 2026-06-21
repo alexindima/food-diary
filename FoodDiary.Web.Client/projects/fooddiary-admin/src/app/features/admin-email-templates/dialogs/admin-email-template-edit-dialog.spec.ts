@@ -102,7 +102,9 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
             textBody: 'Verify {{brand}}: {{link}}',
             isActive: true,
         });
-        expect(dialogRef.close).toHaveBeenCalledWith(true);
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(true);
+        });
     });
 
     it('should prevent native form submit when saving', async () => {
@@ -126,7 +128,9 @@ describe('AdminEmailTemplateEditDialogComponent saving', () => {
 
         component['onSave']();
 
-        expect(component['isSaving']()).toBe(false);
+        await vi.waitFor(() => {
+            expect(component['isSaving']()).toBe(false);
+        });
     });
 });
 

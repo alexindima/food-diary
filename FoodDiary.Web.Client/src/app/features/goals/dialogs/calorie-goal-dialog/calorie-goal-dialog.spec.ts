@@ -70,8 +70,10 @@ describe('CalorieGoalDialogComponent', () => {
         field().value.set(0);
         expect(field().invalid()).toBe(false);
     });
+});
 
-    it('should submit updated goal', () => {
+describe('CalorieGoalDialogComponent submit', () => {
+    it('should submit updated goal', async () => {
         createComponent();
         const updatedGoals: GoalsResponse = { dailyCalorieTarget: UPDATED_CALORIE_TARGET, calorieCyclingEnabled: false };
         calorieGoalFacadeSpy.updateGoals.mockReturnValue(of(updatedGoals));
@@ -80,7 +82,9 @@ describe('CalorieGoalDialogComponent', () => {
         component['save']();
 
         expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        });
     });
 
     it('should prevent native form submit when saving', async () => {
@@ -102,14 +106,16 @@ describe('CalorieGoalDialogComponent', () => {
         expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: UPDATED_CALORIE_TARGET });
     });
 
-    it('should close dialog with false on update error', () => {
+    it('should close dialog with false on update error', async () => {
         createComponent();
         calorieGoalFacadeSpy.updateGoals.mockReturnValue(throwError(() => new Error('fail')));
 
         component['form'].dailyCalorieTarget().value.set(UPDATED_CALORIE_TARGET);
         component['save']();
 
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
+        });
     });
 
     it('should close dialog on cancel', () => {
@@ -125,7 +131,7 @@ describe('CalorieGoalDialogComponent', () => {
         expect(calorieGoalFacadeSpy.updateGoals).not.toHaveBeenCalled();
     });
 
-    it('should submit null when calorie target is cleared', () => {
+    it('should submit null when calorie target is cleared', async () => {
         createComponent();
         const updatedGoals: GoalsResponse = { dailyCalorieTarget: null, calorieCyclingEnabled: false };
         calorieGoalFacadeSpy.updateGoals.mockReturnValue(of(updatedGoals));
@@ -133,6 +139,8 @@ describe('CalorieGoalDialogComponent', () => {
         component['form'].dailyCalorieTarget().value.set(null);
         component['save']();
 
-        expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: null });
+        await vi.waitFor(() => {
+            expect(calorieGoalFacadeSpy.updateGoals).toHaveBeenCalledWith({ dailyCalorieTarget: null });
+        });
     });
 });

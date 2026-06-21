@@ -399,8 +399,8 @@ export class SidebarComponent {
         );
 
         if (result === 'save') {
-            await Promise.resolve(handler.save());
-            return true;
+            const saveResult = await handler.save();
+            return saveResult !== false;
         }
 
         if (result === 'discard') {

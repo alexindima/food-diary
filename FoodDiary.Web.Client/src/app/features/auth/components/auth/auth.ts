@@ -12,6 +12,7 @@ import {
     signal,
     viewChild,
 } from '@angular/core';
+import { submit } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
@@ -113,18 +114,15 @@ export class AuthComponent {
     }
 
     private readonly submitLoginFormAsync = async (): Promise<void> => {
-        this.onLoginSubmit();
-        await Promise.resolve(undefined);
+        await this.loginAsync();
     };
 
     private readonly submitRegisterFormAsync = async (): Promise<void> => {
-        this.onRegisterSubmit();
-        await Promise.resolve(undefined);
+        await this.registerAsync();
     };
 
     private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
-        this.onPasswordResetSubmit();
-        await Promise.resolve(undefined);
+        await this.requestPasswordResetAsync();
     };
 
     private subscribeFormChanges(): void {
@@ -189,6 +187,10 @@ export class AuthComponent {
     }
 
     protected onLoginSubmit(): void {
+        void submit(this.loginForm);
+    }
+
+    private async loginAsync(): Promise<void> {
         this.syncLoginNativeValues();
 
         if (this.loginForm().invalid() || this.isSubmitting()) {
@@ -199,15 +201,15 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
-        this.authFlowFacade.login(this.loginModel()).subscribe(result => {
-            this.isSubmitting.set(false);
-            if (result === 'success') {
-                this.completeAuthenticatedNavigationAndClose();
-                return;
-            }
+        const result = await firstValueFrom(this.authFlowFacade.login(this.loginModel()));
+        this.isSubmitting.set(false);
+        if (result === 'success') {
+            await this.completeAuthenticatedNavigationAsync();
+            this.closeDialogIfAny();
+            return;
+        }
 
-            this.handleLoginResult(result);
-        });
+        this.handleLoginResult(result);
     }
 
     protected isLoginSubmitDisabled(): boolean {
@@ -240,6 +242,10 @@ export class AuthComponent {
     }
 
     protected onRegisterSubmit(): void {
+        void submit(this.registerForm);
+    }
+
+    private async registerAsync(): Promise<void> {
         if (this.registerForm().invalid() || this.isSubmitting()) {
             this.registerForm().markAsTouched();
             this.formManager.updateFieldErrors();
@@ -248,16 +254,15 @@ export class AuthComponent {
 
         this.isSubmitting.set(true);
 
-        this.authFlowFacade.register(this.registerModel()).subscribe(result => {
-            this.isSubmitting.set(false);
-            if (result === 'success') {
-                void this.navigationService.navigateToEmailVerificationPendingAsync();
-                this.closeDialogIfAny();
-                return;
-            }
+        const result = await firstValueFrom(this.authFlowFacade.register(this.registerModel()));
+        this.isSubmitting.set(false);
+        if (result === 'success') {
+            await this.navigationService.navigateToEmailVerificationPendingAsync();
+            this.closeDialogIfAny();
+            return;
+        }
 
-            this.handleRegisterResult(result);
-        });
+        this.handleRegisterResult(result);
     }
 
     private renderGoogleButton(): void {
@@ -302,6 +307,10 @@ export class AuthComponent {
     }
 
     protected onPasswordResetSubmit(): void {
+        void submit(this.passwordResetForm);
+    }
+
+    private async requestPasswordResetAsync(): Promise<void> {
         if (this.passwordResetForm().invalid() || this.isPasswordResetting()) {
             this.passwordResetForm().markAsTouched();
             this.formManager.updateFieldErrors();
@@ -313,16 +322,15 @@ export class AuthComponent {
 
         this.isPasswordResetting.set(true);
 
-        this.authFlowFacade.requestPasswordReset(this.passwordResetModel()).subscribe(success => {
-            this.isPasswordResetting.set(false);
-            if (success) {
-                this.passwordResetSent.set(true);
-                this.startPasswordResetCooldown();
-                return;
-            }
+        const success = await firstValueFrom(this.authFlowFacade.requestPasswordReset(this.passwordResetModel()));
+        this.isPasswordResetting.set(false);
+        if (success) {
+            this.passwordResetSent.set(true);
+            this.startPasswordResetCooldown();
+            return;
+        }
 
-            this.setGlobalError('FORM_ERRORS.UNKNOWN');
-        });
+        this.setGlobalError('FORM_ERRORS.UNKNOWN');
     }
 
     private startPasswordResetCooldown(seconds = this.passwordResetCooldownSecondsDefault): void {

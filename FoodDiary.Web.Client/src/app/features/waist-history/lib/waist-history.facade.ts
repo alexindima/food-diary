@@ -2,7 +2,7 @@ import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, required, validate } from '@angular/forms/signals';
 import { TranslateService } from '@ngx-translate/core';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import { UserService } from '../../../shared/api/user.service';
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
@@ -73,8 +73,7 @@ export class WaistHistoryFacade {
         circumference: '',
     });
     private readonly submitWaistEntryFormAsync = async (): Promise<void> => {
-        this.submit();
-        await Promise.resolve(undefined);
+        await this.submitAsync();
     };
     public readonly form = form(
         this.formModel,
@@ -140,6 +139,10 @@ export class WaistHistoryFacade {
     }
 
     public submit(): void {
+        void this.submitAsync();
+    }
+
+    private async submitAsync(): Promise<void> {
         if (this.form().invalid()) {
             this.form().markAsTouched();
             return;
@@ -156,27 +159,25 @@ export class WaistHistoryFacade {
 
         this.isSaving.set(true);
         this.entryError.set(null);
-        request$
-            .pipe(
-                finalize(() => {
-                    this.isSaving.set(false);
-                }),
-                takeUntilDestroyed(this.destroyRef),
-            )
-            .subscribe({
-                next: () => {
-                    this.loadEntries(false, true);
-                    if (editingId !== null) {
-                        this.resetEditingState();
-                        return;
-                    }
+        try {
+            await firstValueFrom(
+                request$.pipe(
+                    finalize(() => {
+                        this.isSaving.set(false);
+                    }),
+                    takeUntilDestroyed(this.destroyRef),
+                ),
+            );
+            this.loadEntries(false, true);
+            if (editingId !== null) {
+                this.resetEditingState();
+                return;
+            }
 
-                    this.form.circumference().value.set(payload.circumference.toString());
-                },
-                error: (error: unknown) => {
-                    this.handleEntrySaveError(error);
-                },
-            });
+            this.form.circumference().value.set(payload.circumference.toString());
+        } catch (error: unknown) {
+            this.handleEntrySaveError(error);
+        }
     }
 
     public startEdit(entry: WaistEntry): void {

@@ -128,12 +128,10 @@ export class ProductListBaseComponent {
     }
 
     protected onProductClick(product: Product): void {
-        void this.handleProductClickAsync(product);
+        this.handleProductClick(product);
     }
 
-    protected async handleProductClickAsync(_product: Product): Promise<void> {
-        await Promise.resolve(undefined);
-    }
+    protected handleProductClick(_product: Product): void {}
 
     protected onAddToMeal(product: Product): void {
         this.productListFacade.onAddToMeal(product);

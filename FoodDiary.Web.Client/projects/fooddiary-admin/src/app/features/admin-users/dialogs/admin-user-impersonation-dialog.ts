@@ -7,6 +7,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+import { firstValueFrom } from 'rxjs';
 
 import { ADMIN_USER_IMPERSONATION_REASON_MAX_LENGTH } from '../lib/admin-user.constants';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
@@ -39,8 +40,7 @@ export class AdminUserImpersonationDialogComponent {
         reason: '',
     });
     private readonly submitImpersonationFormAsync = async (): Promise<void> => {
-        this.submit();
-        await Promise.resolve(undefined);
+        await this.submitAsync();
     };
     protected readonly form = form(
         this.formModel,
@@ -85,6 +85,10 @@ export class AdminUserImpersonationDialogComponent {
     }
 
     protected submit(): void {
+        void this.submitAsync();
+    }
+
+    private async submitAsync(): Promise<void> {
         this.submitError.set(null);
         this.form().markAsTouched();
         if (this.form().invalid() || this.isSubmitting()) {
@@ -92,17 +96,16 @@ export class AdminUserImpersonationDialogComponent {
         }
 
         this.isSubmitting.set(true);
-        this.usersService
-            .startImpersonation(this.user.id, this.formModel().reason.trim())
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: response => {
-                    this.dialogRef.close(response);
-                },
-                error: () => {
-                    this.submitError.set('Could not start impersonation. Please try again.');
-                    this.isSubmitting.set(false);
-                },
-            });
+        try {
+            const response = await firstValueFrom(
+                this.usersService
+                    .startImpersonation(this.user.id, this.formModel().reason.trim())
+                    .pipe(takeUntilDestroyed(this.destroyRef)),
+            );
+            this.dialogRef.close(response);
+        } catch {
+            this.submitError.set('Could not start impersonation. Please try again.');
+            this.isSubmitting.set(false);
+        }
     }
 }

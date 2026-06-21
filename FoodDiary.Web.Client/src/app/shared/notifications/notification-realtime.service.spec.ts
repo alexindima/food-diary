@@ -2,6 +2,7 @@ import { signal } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { AuthService } from '../../services/auth.service';
 import { FrontendLoggerService } from '../../services/frontend-logger.service';
 import { NotificationService } from './notification.service';
@@ -210,6 +211,6 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
             return;
         }
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
     }
 }

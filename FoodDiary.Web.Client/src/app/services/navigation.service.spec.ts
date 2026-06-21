@@ -16,8 +16,8 @@ describe('NavigationService', () => {
 
     beforeEach(() => {
         routerSpy = { navigate: vi.fn(), navigateByUrl: vi.fn() };
-        routerSpy.navigate.mockReturnValue(Promise.resolve(true));
-        routerSpy.navigateByUrl.mockReturnValue(Promise.resolve(true));
+        routerSpy.navigate.mockResolvedValue(true);
+        routerSpy.navigateByUrl.mockResolvedValue(true);
 
         TestBed.configureTestingModule({
             providers: [NavigationService, { provide: Router, useValue: routerSpy }],

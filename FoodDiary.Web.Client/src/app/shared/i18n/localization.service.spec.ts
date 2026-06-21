@@ -5,6 +5,7 @@ import { type LangChangeEvent, TranslateService } from '@ngx-translate/core';
 import { type Observable, of, Subject } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../testing/async-testing';
 import { FoodDiaryTranslationLoader } from './food-diary-translation.loader';
 import { LocalizationService } from './localization.service';
 
@@ -197,7 +198,7 @@ describe('LocalizationService translation loading', () => {
 
     it('should load public route translations on public navigation', async () => {
         routerEventsSubject.next(new NavigationEnd(1, '/calorie-counter', '/calorie-counter'));
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(translationLoaderSpy.loadRouteTranslations).toHaveBeenCalledWith('en', '/calorie-counter');
     });
@@ -206,7 +207,7 @@ describe('LocalizationService translation loading', () => {
         translationLoaderSpy.isPublicRoute.mockReturnValue(false);
 
         routerEventsSubject.next(new NavigationEnd(1, '/dashboard', '/dashboard'));
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(translationLoaderSpy.loadApplicationTranslations).toHaveBeenCalledWith('en');
     });

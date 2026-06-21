@@ -38,15 +38,7 @@ export class MealListFiltersDialogComponent {
     protected readonly formModel = signal({
         dateRange: this.data.dateRange ?? null,
     });
-    private readonly submitFiltersFormAsync = async (): Promise<void> => {
-        this.onApply();
-        await Promise.resolve(undefined);
-    };
-    protected readonly form = form(this.formModel, {
-        submission: {
-            action: this.submitFiltersFormAsync,
-        },
-    });
+    protected readonly form = form(this.formModel);
 
     protected onReset(): void {
         this.form.dateRange().value.set(null);
@@ -56,6 +48,11 @@ export class MealListFiltersDialogComponent {
         this.dialogRef.close({
             dateRange: this.formModel().dateRange,
         });
+    }
+
+    protected onSubmit(event: SubmitEvent): void {
+        event.preventDefault();
+        this.onApply();
     }
 
     protected onCancel(): void {

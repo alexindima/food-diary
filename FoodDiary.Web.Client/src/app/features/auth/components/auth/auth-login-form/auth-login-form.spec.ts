@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
 import { createEmptyLoginFieldErrors, createLoginFormModel } from '../auth-lib/auth-form.factory';
 import { AuthLoginFormComponent } from './auth-login-form';
@@ -47,7 +48,7 @@ describe('AuthLoginFormComponent', () => {
 
     it('should cancel native submit and delegate to FormRoot submission', async () => {
         const submitLoginFormAsync = vi.fn(async (): Promise<void> => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
         });
         const { fixture } = createComponentWithSubmitAction(submitLoginFormAsync);
         const formElement = (fixture.nativeElement as HTMLElement).querySelector('form');

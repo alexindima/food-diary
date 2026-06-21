@@ -3,6 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { TestBed } from '@angular/core/testing';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../../../src/testing/async-testing';
 import { environment } from '../../../../environments/environment';
 import { AdminAuthService } from './admin-auth.service';
 
@@ -109,7 +110,7 @@ describe('AdminAuthService admin upgrade', () => {
         expect(startReq.request.method).toBe('POST');
         startReq.flush({ code: 'upgrade-code' });
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         const exchangeReq = httpMock.expectOne(`${BASE_URL}/admin-sso/exchange`);
         expect(exchangeReq.request.method).toBe('POST');

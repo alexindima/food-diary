@@ -2,6 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../config/runtime-ui.tokens';
 import { UsdaService } from '../api/usda.service';
 import type { UsdaFood } from '../models/usda.data';
@@ -86,6 +87,6 @@ describe('UsdaFoodSearchFacade', () => {
 });
 
 async function flushSearchAsync(): Promise<void> {
-    await Promise.resolve();
+    await waitForAsyncTasksAsync();
     await vi.advanceTimersByTimeAsync(SEARCH_DEBOUNCE_MS);
 }

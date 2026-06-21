@@ -173,7 +173,7 @@ function createProductListFacadeMock(): ProductListFacadeMock {
 }
 
 async function handleProductClickAsync(component: ProductListPageComponent, product: Product): Promise<void> {
-    await (component as unknown as { handleProductClickAsync: (product: Product) => Promise<void> }).handleProductClickAsync(product);
+    await (component as unknown as { openProductDetailsAsync: (product: Product) => Promise<void> }).openProductDetailsAsync(product);
 }
 
 function createProduct(overrides: Partial<Product> = {}): Product {

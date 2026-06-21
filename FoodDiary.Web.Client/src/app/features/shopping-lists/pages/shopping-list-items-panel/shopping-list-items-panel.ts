@@ -61,4 +61,9 @@ export class ShoppingListItemsPanelComponent {
     protected toggleDetails(): void {
         this.areDetailsVisible.update(value => !value);
     }
+
+    protected onItemFormSubmit(event: SubmitEvent): void {
+        event.preventDefault();
+        this.itemAdd.emit();
+    }
 }

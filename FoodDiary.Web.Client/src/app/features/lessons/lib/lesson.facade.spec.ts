@@ -3,6 +3,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { LessonService } from '../api/lesson.service';
 import type { LessonDetail, LessonSummary } from '../models/lesson.data';
 import { LessonFacade } from './lesson.facade';
@@ -105,7 +106,7 @@ async function waitForAsync(predicate: () => boolean): Promise<void> {
             return;
         }
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
     }
 }
 

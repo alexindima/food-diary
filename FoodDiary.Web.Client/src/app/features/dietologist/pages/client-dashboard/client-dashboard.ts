@@ -9,7 +9,7 @@ import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
-import { catchError, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, tap } from 'rxjs';
 
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
@@ -118,8 +118,7 @@ export class ClientDashboardComponent {
         dateTo: this.selectedDateTo(),
     });
     private readonly submitDateFilterFormAsync = async (): Promise<void> => {
-        this.applyDateFilter();
-        await Promise.resolve(undefined);
+        await this.applyDateFilterAsync();
     };
     protected readonly dateFilterForm = form(
         this.dateFilterModel,
@@ -135,8 +134,7 @@ export class ClientDashboardComponent {
     );
     protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '' });
     private readonly submitRecommendationFormAsync = async (): Promise<void> => {
-        this.submitRecommendation();
-        await Promise.resolve(undefined);
+        await this.submitRecommendationAsync();
     };
     protected readonly recommendationForm = form(
         this.recommendationModel,
@@ -230,6 +228,10 @@ export class ClientDashboardComponent {
     }
 
     protected applyDateFilter(): void {
+        void this.applyDateFilterAsync();
+    }
+
+    private async applyDateFilterAsync(): Promise<void> {
         const client = this.client();
         const nextPeriod = this.getPeriodFromForm();
         if (
@@ -244,7 +246,7 @@ export class ClientDashboardComponent {
 
         this.selectedDateFrom.set(nextPeriod.dateFrom);
         this.selectedDateTo.set(nextPeriod.dateTo);
-        this.reloadDashboard(client);
+        await this.reloadDashboardAsync(client);
     }
 
     protected showPreviousPeriod(): void {
@@ -267,6 +269,10 @@ export class ClientDashboardComponent {
     }
 
     protected submitRecommendation(): void {
+        void this.submitRecommendationAsync();
+    }
+
+    private async submitRecommendationAsync(): Promise<void> {
         const client = this.client();
         if (client === null || this.recommendationForm().invalid() || this.savingRecommendation()) {
             this.recommendationForm().markAsTouched();
@@ -281,21 +287,18 @@ export class ClientDashboardComponent {
         }
 
         this.savingRecommendation.set(true);
-        this.dietologistFacade
-            .createRecommendation(client.userId, { text })
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: recommendation => {
-                    this.recommendations.update(items => [recommendation, ...items]);
-                    this.recommendationModel.set({ text: '' });
-                    this.savingRecommendation.set(false);
-                    this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
-                },
-                error: () => {
-                    this.savingRecommendation.set(false);
-                    this.toastService.error(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR'));
-                },
-            });
+        try {
+            const recommendation = await firstValueFrom(
+                this.dietologistFacade.createRecommendation(client.userId, { text }).pipe(takeUntilDestroyed(this.destroyRef)),
+            );
+            this.recommendations.update(items => [recommendation, ...items]);
+            this.recommendationModel.set({ text: '' });
+            this.savingRecommendation.set(false);
+            this.toastService.success(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SENT'));
+        } catch {
+            this.savingRecommendation.set(false);
+            this.toastService.error(this.translateService.instant('DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.SEND_ERROR'));
+        }
     }
 
     protected disconnectClient(): void {
@@ -346,6 +349,10 @@ export class ClientDashboardComponent {
     }
 
     private reloadDashboard(client: ClientSummary): void {
+        void this.reloadDashboardAsync(client);
+    }
+
+    private async reloadDashboardAsync(client: ClientSummary): Promise<void> {
         if (!this.shouldLoadDashboardSnapshot(client)) {
             this.dashboard.set(null);
             return;
@@ -353,13 +360,13 @@ export class ClientDashboardComponent {
 
         this.detailsLoading.set(true);
         this.sectionLoadError.set(null);
-        this.loadDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
-            .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(result => {
-                this.dashboard.set(result);
-                this.detailsLoading.set(false);
-            });
+        const result = await firstValueFrom(
+            this.loadDashboardSnapshot(client, resolveTranslateLanguage(this.translateService))
+                .pipe(this.handleSectionLoadError<DashboardSnapshot, null>(null))
+                .pipe(takeUntilDestroyed(this.destroyRef)),
+        );
+        this.dashboard.set(result);
+        this.detailsLoading.set(false);
     }
 
     private loadDashboardSnapshot(client: ClientSummary, language: string): Observable<DashboardSnapshot> {

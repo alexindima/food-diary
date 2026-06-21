@@ -1,5 +1,5 @@
 <div class="shopping-list__panel">
-    <form class="shopping-list__add-form" [formRoot]="itemForm()">
+    <form class="shopping-list__add-form" [formRoot]="itemForm()" (submit)="onItemFormSubmit($event)">
         <div class="shopping-list__quick-add-row">
             <fd-ui-input
                 class="shopping-list__quick-add-input"

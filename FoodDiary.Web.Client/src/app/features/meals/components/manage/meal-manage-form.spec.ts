@@ -5,6 +5,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { EMPTY, of } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { NavigationService } from '../../../../services/navigation.service';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
@@ -130,7 +131,7 @@ describe('MealManageFormComponent submit behavior', () => {
         });
 
         await component['onSubmitAsync']();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.submitConsumptionAsync).toHaveBeenCalledWith(
             null,
@@ -161,7 +162,7 @@ describe('MealManageFormComponent submit behavior', () => {
         });
 
         await component['onSubmitAsync']();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
         expect(component['globalError']()).toBe('FORM_ERRORS.UNKNOWN');
@@ -188,8 +189,8 @@ describe('MealManageFormComponent submit behavior', () => {
         });
 
         await component['onSubmitAsync']();
-        await Promise.resolve();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
+        await waitForAsyncTasksAsync();
 
         expect(component['globalError']()).toBe(serverMessage);
     });
@@ -206,7 +207,7 @@ describe('MealManageFormComponent item validation', () => {
         });
 
         await component['onSubmitAsync']();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.submitConsumptionAsync).not.toHaveBeenCalled();
         expect(component['globalError']()).toBe('FORM_ERRORS.NON_EMPTY_ARRAY');
@@ -254,7 +255,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
         const { component } = await setupComponentAsync();
 
         component['addConsumptionItem']();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(component['items'].length).toBe(1);
     });
@@ -286,7 +287,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
         component['aiSessions'].set([{ notes: 'recognized', items: [] }]);
 
         component['onEditAiSession'](0);
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).not.toHaveBeenCalled();
         expect(mealManageFacade.replaceAiSession).not.toHaveBeenCalled();
@@ -301,7 +302,7 @@ describe('MealManageFormComponent item and AI behavior', () => {
         mealManageFacade.replaceAiSession.mockReturnValueOnce([updatedSession]);
 
         component['onEditAiSession'](0);
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(mealManageFacade.openEditAiPhotoSessionDialogAsync).toHaveBeenCalledWith(session);
         expect(component['aiSessions']()).toEqual([updatedSession]);

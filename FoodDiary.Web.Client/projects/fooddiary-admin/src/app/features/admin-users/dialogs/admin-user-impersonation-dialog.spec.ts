@@ -7,27 +7,27 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { AdminUsersFacade } from '../lib/admin-users.facade';
 import { AdminUserImpersonationDialogComponent } from './admin-user-impersonation-dialog';
 
+const user = {
+    id: 'u1',
+    email: 'user@example.com',
+    username: 'alex',
+    isActive: true,
+    isEmailConfirmed: true,
+    createdOnUtc: '2026-01-01T00:00:00Z',
+    roles: [],
+};
+
+const response = {
+    accessToken: 'token',
+    expiresAtUtc: '2026-01-01T00:10:00Z',
+    reason: 'Support case investigation',
+};
+
 describe('AdminUserImpersonationDialogComponent', () => {
     let component: AdminUserImpersonationDialogComponent;
     let fixture: ComponentFixture<AdminUserImpersonationDialogComponent>;
     let usersService: { startImpersonation: ReturnType<typeof vi.fn> };
     let dialogRef: { close: ReturnType<typeof vi.fn> };
-
-    const user = {
-        id: 'u1',
-        email: 'user@example.com',
-        username: 'alex',
-        isActive: true,
-        isEmailConfirmed: true,
-        createdOnUtc: '2026-01-01T00:00:00Z',
-        roles: [],
-    };
-
-    const response = {
-        accessToken: 'token',
-        expiresAtUtc: '2026-01-01T00:10:00Z',
-        reason: 'Support case investigation',
-    };
 
     beforeEach(async () => {
         usersService = { startImpersonation: vi.fn() };
@@ -63,12 +63,14 @@ describe('AdminUserImpersonationDialogComponent', () => {
         expect(component['reasonError']()).toBe('Reason must be at least 10 characters.');
     });
 
-    it('should start impersonation and close with response', () => {
+    it('should start impersonation and close with response', async () => {
         component['form'].reason().value.set(' Support case investigation ');
         component['submit']();
 
         expect(usersService.startImpersonation).toHaveBeenCalledWith('u1', 'Support case investigation');
-        expect(dialogRef.close).toHaveBeenCalledWith(response);
+        await vi.waitFor(() => {
+            expect(dialogRef.close).toHaveBeenCalledWith(response);
+        });
     });
 
     it('should prevent native form submit when starting impersonation', async () => {
@@ -87,13 +89,15 @@ describe('AdminUserImpersonationDialogComponent', () => {
         expect(usersService.startImpersonation).toHaveBeenCalledWith('u1', 'Support case investigation');
     });
 
-    it('should show submit error on failure', () => {
+    it('should show submit error on failure', async () => {
         usersService.startImpersonation.mockReturnValueOnce(throwError(() => new Error('failed')));
         component['form'].reason().value.set('Support case investigation');
         component['submit']();
 
         expect(dialogRef.close).not.toHaveBeenCalled();
-        expect(component['submitError']()).toBe('Could not start impersonation. Please try again.');
+        await vi.waitFor(() => {
+            expect(component['submitError']()).toBe('Could not start impersonation. Please try again.');
+        });
         expect(component['isSubmitting']()).toBe(false);
     });
 

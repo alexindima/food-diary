@@ -4,6 +4,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { AuthService } from '../../../services/auth.service';
 import { NavigationService } from '../../../services/navigation.service';
 import { type UserProfileOverview, UserService } from '../../../shared/api/user.service';
@@ -313,7 +314,7 @@ describe('ProfileManageFacade autosave', () => {
 
         inFlightUpdate.next(user);
         inFlightUpdate.complete();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
         await vi.advanceTimersByTimeAsync(AUTOSAVE_DEBOUNCE_MS);
 
         expect(userService.update).toHaveBeenCalledTimes(2);

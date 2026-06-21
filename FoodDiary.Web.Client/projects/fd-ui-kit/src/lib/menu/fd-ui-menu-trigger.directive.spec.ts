@@ -5,6 +5,7 @@ import { By } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../src/testing/async-testing';
 import { FdUiMenuComponent } from './fd-ui-menu';
 import { FdUiMenuItemComponent } from './fd-ui-menu-item';
 import { FdUiMenuTriggerDirective } from './fd-ui-menu-trigger.directive';
@@ -55,7 +56,7 @@ describe('FdUiMenuTriggerDirective', () => {
     async function flushOverlayFocusAsync(): Promise<void> {
         fixture.detectChanges();
         await fixture.whenStable();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
         await new Promise(resolve => setTimeout(resolve, 0));
         fixture.detectChanges();
     }

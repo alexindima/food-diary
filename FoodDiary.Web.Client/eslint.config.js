@@ -455,12 +455,11 @@ const noQueueMicrotaskSyntax = [
     },
 ];
 
-const noEmptyPromiseResolveSyntax = [
+const noPromiseResolveSyntax = [
     {
-        selector:
-            'CallExpression[callee.type="MemberExpression"][callee.object.name="Promise"][callee.property.name="resolve"][arguments.length=0]',
+        selector: 'CallExpression[callee.type="MemberExpression"][callee.object.name="Promise"][callee.property.name="resolve"]',
         message:
-            'Do not use empty Promise.resolve() in runtime code. Return the real async operation, use afterNextRender() for post-render work, or keep test-only flushing in specs.',
+            'Do not use Promise.resolve() in runtime code. Return the real async operation, use afterNextRender() for post-render work, or keep test-only flushing in specs.',
     },
 ];
 
@@ -1840,6 +1839,7 @@ export default [
                 'error',
                 ...noAnyCastSyntax,
                 ...noQueueMicrotaskSyntax,
+                ...noPromiseResolveSyntax,
                 ...noRedundantBooleanComparisonSyntax,
                 {
                     selector: 'PropertyAssignment[key.name="changeDetection"][value.property.name="Eager"]',
@@ -1967,7 +1967,7 @@ export default [
                 'error',
                 ...noAnyCastSyntax,
                 ...noQueueMicrotaskSyntax,
-                ...noEmptyPromiseResolveSyntax,
+                ...noPromiseResolveSyntax,
                 ...noRedundantBooleanComparisonSyntax,
                 {
                     selector: 'Decorator[expression.callee.name="HostListener"]',

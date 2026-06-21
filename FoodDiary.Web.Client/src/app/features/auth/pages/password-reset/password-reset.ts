@@ -13,6 +13,7 @@ import {
     resolveSignalFormFieldError,
 } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { firstValueFrom } from 'rxjs';
 
 import { AuthService } from '../../../../services/auth.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -67,8 +68,7 @@ export class PasswordResetComponent {
         confirmPassword: '',
     });
     private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
-        this.onSubmit();
-        await Promise.resolve(undefined);
+        await this.submitAsync();
     };
     protected readonly form = form(
         this.formModel,
@@ -93,6 +93,10 @@ export class PasswordResetComponent {
     }
 
     protected onSubmit(): void {
+        void this.submitAsync();
+    }
+
+    private async submitAsync(): Promise<void> {
         this.form().markAsTouched();
         if (this.state() !== 'ready' || this.form().invalid() || this.isSubmitting()) {
             return;
@@ -114,20 +118,15 @@ export class PasswordResetComponent {
             newPassword: this.formModel().password,
         });
 
-        this.authService
-            .confirmPasswordReset(request)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe({
-                next: () => {
-                    this.isSubmitting.set(false);
-                    void this.navigationService.navigateToHomeAsync();
-                },
-                error: () => {
-                    this.isSubmitting.set(false);
-                    this.state.set('error');
-                    this.errorMessage.set(this.translateService.instant('AUTH.RESET.ERROR_GENERIC'));
-                },
-            });
+        try {
+            await firstValueFrom(this.authService.confirmPasswordReset(request).pipe(takeUntilDestroyed(this.destroyRef)));
+            this.isSubmitting.set(false);
+            await this.navigationService.navigateToHomeAsync();
+        } catch {
+            this.isSubmitting.set(false);
+            this.state.set('error');
+            this.errorMessage.set(this.translateService.instant('AUTH.RESET.ERROR_GENERIC'));
+        }
     }
 
     protected onBackToLogin(): void {

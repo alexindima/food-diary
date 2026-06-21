@@ -9,11 +9,17 @@ import {
 } from '../components/shared/unsaved-changes-dialog/unsaved-changes-dialog';
 import { UnsavedChangesService } from '../services/unsaved-changes.service';
 
+const isPromiseLike = (value: unknown): value is PromiseLike<unknown> =>
+    typeof value === 'object' && value !== null && 'then' in value && typeof value.then === 'function';
+
 const toObservable = (value: unknown): Observable<unknown> => {
     if (isObservable(value)) {
         return value;
     }
-    return from(Promise.resolve(value));
+    if (isPromiseLike(value)) {
+        return from(value);
+    }
+    return of(value);
 };
 
 export const unsavedChangesGuard: CanDeactivateFn<unknown> = () => {

@@ -69,7 +69,7 @@ describe('WaistHistoryFacade loading', () => {
 });
 
 describe('WaistHistoryFacade entries', () => {
-    it('submits a new entry and reloads the list', () => {
+    it('submits a new entry and reloads the list', async () => {
         facade.initialize();
         TestBed.tick();
         waistEntriesService.getEntries.mockClear();
@@ -86,7 +86,9 @@ describe('WaistHistoryFacade entries', () => {
             date: '2026-04-02T00:00:00.000Z',
             circumference: 81.7,
         });
-        expect(waistEntriesService.getEntries).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => {
+            expect(waistEntriesService.getEntries).toHaveBeenCalledTimes(1);
+        });
         expect(waistEntriesService.getSummary).toHaveBeenCalledTimes(1);
     });
 
@@ -103,7 +105,7 @@ describe('WaistHistoryFacade entries', () => {
         expect(facade.form().touched()).toBe(true);
     });
 
-    it('shows duplicate date error when entry already exists', () => {
+    it('shows duplicate date error when entry already exists', async () => {
         waistEntriesService.create.mockReturnValueOnce(throwError(() => ({ error: { error: 'WaistEntry.AlreadyExists' } })));
         facade.formModel.set({
             date: '2026-04-02',
@@ -112,18 +114,22 @@ describe('WaistHistoryFacade entries', () => {
 
         facade.submit();
 
-        expect(facade.entryError()).toBe('WAIST_HISTORY.ERROR_DUPLICATE_DATE');
+        await vi.waitFor(() => {
+            expect(facade.entryError()).toBe('WAIST_HISTORY.ERROR_DUPLICATE_DATE');
+        });
         expect(waistEntriesService.getEntries).not.toHaveBeenCalled();
         expect(waistEntriesService.getSummary).not.toHaveBeenCalled();
     });
 
-    it('switches to edit mode and updates the existing entry', () => {
+    it('switches to edit mode and updates the existing entry', async () => {
         const entry = { id: 'entry-1', userId: 'user-1', date: '2026-04-01T00:00:00Z', circumference: 82 };
 
         facade.startEdit(entry);
         facade.submit();
 
-        expect(facade.isEditing()).toBe(false);
+        await vi.waitFor(() => {
+            expect(facade.isEditing()).toBe(false);
+        });
         expect(waistEntriesService.update).toHaveBeenCalledWith('entry-1', {
             date: '2026-04-01T00:00:00.000Z',
             circumference: 82,

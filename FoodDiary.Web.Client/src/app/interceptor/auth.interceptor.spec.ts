@@ -28,7 +28,7 @@ let authServiceSpy: AuthServiceMock;
 
 beforeEach(() => {
     authServiceSpy = { getToken: vi.fn(), refreshToken: vi.fn(), onLogoutAsync: vi.fn() };
-    authServiceSpy.onLogoutAsync.mockReturnValue(Promise.resolve());
+    authServiceSpy.onLogoutAsync.mockResolvedValue(undefined);
 
     TestBed.configureTestingModule({
         providers: [

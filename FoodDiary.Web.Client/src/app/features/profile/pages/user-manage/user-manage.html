@@ -11,6 +11,7 @@
             class="user-manage__form fd-stack fd-gap-card-profile"
             [formRoot]="userForm"
             [attr.aria-busy]="isSurfaceBusy()"
+            (submit)="onUserFormSubmit($event)"
         >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-user-manage-account-card

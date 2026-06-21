@@ -88,7 +88,7 @@ describe('CycleTrackingFacade current cycle', () => {
         expect(facade.nutritionSummary()?.loggedCycleDays).toBe(LOGGED_CYCLE_DAYS);
     });
 
-    it('creates a new cycle from form values', () => {
+    it('creates a new cycle from form values', async () => {
         facade.startCycleModel.set({
             trackingStartDate: '2026-04-03',
             mode: CYCLE_TRACKING_MODE_PERIOD_TRACKING,
@@ -113,7 +113,9 @@ describe('CycleTrackingFacade current cycle', () => {
             showFertilityEstimates: true,
             discreetNotifications: false,
         });
-        expect(facade.cycle()?.id).toBe('cycle-2');
+        await vi.waitFor(() => {
+            expect(facade.cycle()?.id).toBe('cycle-2');
+        });
     });
 
     it('submits the start cycle form through Signal Forms submission', async () => {
@@ -139,7 +141,7 @@ describe('CycleTrackingFacade current cycle', () => {
 });
 
 describe('CycleTrackingFacade day saving', () => {
-    it('upserts a day and merges it into the current profile', () => {
+    it('upserts a day and merges it into the current profile', async () => {
         facade.initialize();
         setValidDayForm();
 
@@ -166,7 +168,9 @@ describe('CycleTrackingFacade day saving', () => {
             notes: undefined,
             clearNotes: false,
         });
-        expect(facade.bleedingEntries()).toHaveLength(1);
+        await vi.waitFor(() => {
+            expect(facade.bleedingEntries()).toHaveLength(1);
+        });
         expect(facade.bleedingEntries()[0].id).toBe('bleeding-1');
         expect(cyclesService.getNutritionSummary).toHaveBeenCalledTimes(2);
     });
@@ -405,7 +409,7 @@ describe('CycleTrackingFacade export', () => {
 });
 
 describe('CycleTrackingFacade day ordering', () => {
-    it('replaces existing entries by returned date', () => {
+    it('replaces existing entries by returned date', async () => {
         cyclesService.getCurrent.mockReturnValue(
             of({
                 ...createCycleResponse(),
@@ -422,7 +426,9 @@ describe('CycleTrackingFacade day ordering', () => {
 
         facade.saveDay();
 
-        expect(facade.bleedingEntries().map(entry => entry.id)).toEqual(['later-entry', 'bleeding-1']);
+        await vi.waitFor(() => {
+            expect(facade.bleedingEntries().map(entry => entry.id)).toEqual(['later-entry', 'bleeding-1']);
+        });
     });
 });
 

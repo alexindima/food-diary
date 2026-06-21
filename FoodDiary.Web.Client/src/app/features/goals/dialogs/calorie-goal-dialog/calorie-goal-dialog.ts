@@ -7,6 +7,7 @@ import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { firstValueFrom } from 'rxjs';
 
 import { CalorieGoalFacade } from '../../lib/calorie-goal.facade';
 
@@ -30,8 +31,7 @@ export class CalorieGoalDialogComponent {
         dailyCalorieTarget: this.data.dailyCalorieTarget ?? null,
     });
     private readonly submitCalorieGoalFormAsync = async (): Promise<void> => {
-        this.save();
-        await Promise.resolve(undefined);
+        await this.saveAsync();
     };
     protected readonly form = form(
         this.formModel,
@@ -46,6 +46,10 @@ export class CalorieGoalDialogComponent {
     );
 
     protected save(): void {
+        void this.saveAsync();
+    }
+
+    private async saveAsync(): Promise<void> {
         this.form().markAsTouched();
         if (this.form().invalid()) {
             return;
@@ -55,14 +59,12 @@ export class CalorieGoalDialogComponent {
             dailyCalorieTarget: this.formModel().dailyCalorieTarget ?? null,
         };
 
-        this.calorieGoalFacade.updateGoals(payload).subscribe({
-            next: result => {
-                this.dialogRef.close(result !== null);
-            },
-            error: () => {
-                this.dialogRef.close(false);
-            },
-        });
+        try {
+            const result = await firstValueFrom(this.calorieGoalFacade.updateGoals(payload));
+            this.dialogRef.close(result !== null);
+        } catch {
+            this.dialogRef.close(false);
+        }
     }
 
     protected cancel(): void {

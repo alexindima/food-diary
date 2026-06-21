@@ -4,6 +4,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { EMPTY, type Observable, of } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
@@ -221,7 +222,7 @@ function createRecipeListFacadeMock(): RecipeListFacadeMock {
 }
 
 async function flushPromisesAsync(): Promise<void> {
-    await Promise.resolve();
+    await waitForAsyncTasksAsync();
     await new Promise(resolve => {
         setTimeout(resolve, ASYNC_IMPORT_FLUSH_DELAY_MS);
     });

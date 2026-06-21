@@ -201,14 +201,16 @@ function registerActionTests(): void {
         expect(component['dashboard']()).toBeNull();
     });
 
-    it('sends recommendation and prepends it to the list', () => {
+    it('sends recommendation and prepends it to the list', async () => {
         createComponent('client-1');
 
         component['recommendationModel'].set({ text: 'Add protein' });
         component['submitRecommendation']();
 
         expect(dietologistService.createRecommendation).toHaveBeenCalledWith('client-1', { text: 'Add protein' });
-        expect(component['recommendations']()[0]?.id).toBe('rec-1');
+        await vi.waitFor(() => {
+            expect(component['recommendations']()[0]?.id).toBe('rec-1');
+        });
         expect(toastService.success).toHaveBeenCalled();
     });
 

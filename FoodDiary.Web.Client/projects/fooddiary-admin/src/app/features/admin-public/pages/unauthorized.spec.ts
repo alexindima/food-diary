@@ -19,7 +19,7 @@ describe('UnauthorizedComponent', () => {
         router = {
             navigateByUrl: vi.fn(),
         };
-        router.navigateByUrl.mockReturnValue(Promise.resolve(true));
+        router.navigateByUrl.mockResolvedValue(true);
 
         routeSnapshot = {
             queryParamMap: convertToParamMap({

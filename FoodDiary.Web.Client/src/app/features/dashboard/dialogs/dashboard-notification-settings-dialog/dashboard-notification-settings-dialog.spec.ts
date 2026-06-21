@@ -5,6 +5,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { NavigationService } from '../../../../services/navigation.service';
@@ -40,7 +41,7 @@ async function setupNotificationSettingsAsync(): Promise<NotificationSettingsCon
         isSubscribed: signal(false),
         isBusy: signal(false),
         ensureSubscriptionAsync: vi.fn(async () => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
 
             return 'subscribed';
         }),

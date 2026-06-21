@@ -6,6 +6,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import type { PageOf } from '../../../../shared/models/page-of.data';
@@ -288,11 +289,11 @@ describe('ProductListFacade actions', () => {
 });
 
 async function flushDebounceAsync(): Promise<void> {
-    await Promise.resolve();
+    await waitForAsyncTasksAsync();
     await new Promise(resolve => {
         setTimeout(resolve, DEBOUNCE_FLUSH_MS);
     });
-    await Promise.resolve();
+    await waitForAsyncTasksAsync();
 }
 
 function createPage(data: Product[]): PageOf<Product> {

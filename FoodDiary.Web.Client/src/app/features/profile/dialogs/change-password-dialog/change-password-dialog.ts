@@ -9,6 +9,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { firstValueFrom } from 'rxjs';
 
 import { UserFacade } from '../../../../shared/lib/user.facade';
 import type { ChangePasswordRequest, SetPasswordRequest } from '../../../../shared/models/user.data';
@@ -44,8 +45,7 @@ export class ChangePasswordDialogComponent {
         confirmPassword: '',
     });
     private readonly submitChangePasswordFormAsync = async (): Promise<void> => {
-        this.onSubmit();
-        await Promise.resolve(undefined);
+        await this.submitAsync();
     };
     protected readonly form = form(
         this.formModel,
@@ -98,6 +98,10 @@ export class ChangePasswordDialogComponent {
     }
 
     protected onSubmit(): void {
+        void this.submitAsync();
+    }
+
+    private async submitAsync(): Promise<void> {
         this.form().markAsTouched();
         if (this.form().invalid() || this.isSubmitting()) {
             return;
@@ -119,21 +123,19 @@ export class ChangePasswordDialogComponent {
                   newPassword,
               } satisfies SetPasswordRequest);
 
-        request$.subscribe({
-            next: success => {
-                this.isSubmitting.set(false);
-                if (success) {
-                    this.dialogRef.close(true);
-                    return;
-                }
+        try {
+            const success = await firstValueFrom(request$);
+            this.isSubmitting.set(false);
+            if (success) {
+                this.dialogRef.close(true);
+                return;
+            }
 
-                this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
-            },
-            error: () => {
-                this.isSubmitting.set(false);
-                this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
-            },
-        });
+            this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
+        } catch {
+            this.isSubmitting.set(false);
+            this.setPasswordError(this.hasPassword ? 'USER_MANAGE.CHANGE_PASSWORD_ERROR' : 'USER_MANAGE.SET_PASSWORD_ERROR');
+        }
     }
 
     private setPasswordError(key: string): void {

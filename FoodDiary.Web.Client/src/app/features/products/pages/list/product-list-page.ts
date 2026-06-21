@@ -54,7 +54,11 @@ export class ProductListPageComponent extends ProductListBaseComponent {
     private readonly toastService = inject(FdUiToastService);
     private isDeleteInProgress = false;
 
-    protected override async handleProductClickAsync(product: Product): Promise<void> {
+    protected override handleProductClick(product: Product): void {
+        void this.openProductDetailsAsync(product);
+    }
+
+    private async openProductDetailsAsync(product: Product): Promise<void> {
         const { ProductDetailComponent } = await import('../../components/detail/product-detail/product-detail');
         this.fdDialogService
             .open(ProductDetailComponent, {

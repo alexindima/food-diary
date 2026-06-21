@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { NEVER, of, throwError } from 'rxjs';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { MeasurementUnit } from '../../products/models/product.data';
 import { ShoppingListService } from '../api/shopping-list.service';
 import type { ShoppingList } from '../models/shopping-list.data';
@@ -72,7 +73,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
     it('should add item and persist after debounce', async () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         addMilk(facade);
 
@@ -87,7 +88,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
         const { facade, list, shoppingListService, toastService } = setupShoppingListFacade();
         shoppingListService.deleteById.mockReturnValueOnce(throwError(() => new Error('delete failed')));
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         facade.deleteCurrentList();
 
@@ -108,7 +109,7 @@ describe('ShoppingListFacade item persistence and errors', () => {
             ]),
         );
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         facade.deleteListById('list-2');
 
@@ -122,10 +123,10 @@ describe('ShoppingListFacade item persistence and errors', () => {
         shoppingListService.getAll.mockReturnValueOnce(of([{ id: 'list-1', name: 'Main list', createdAt: '', itemsCount: 0 }]));
         shoppingListService.getAll.mockReturnValueOnce(of([]));
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         facade.deleteCurrentList();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(shoppingListService.deleteById).toHaveBeenCalledWith('list-1');
         expect(facade.lists()).toEqual([]);
@@ -152,7 +153,7 @@ describe('ShoppingListFacade autosave', () => {
     it('should persist renamed list after debounce', async () => {
         const { facade, shoppingListService } = setupShoppingListFacade();
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         facade.setListName('Renamed list');
         vi.advanceTimersByTime(AUTOSAVE_DEBOUNCE_MS);
@@ -164,7 +165,7 @@ describe('ShoppingListFacade autosave', () => {
         const { facade, list, shoppingListService } = setupShoppingListFacade();
         shoppingListService.update.mockReturnValueOnce(of({ ...list, name: 'Inline rename' }));
         facade.initialize();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         facade.renameListById('list-1', ' Inline rename ');
 

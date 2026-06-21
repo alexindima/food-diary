@@ -21,7 +21,7 @@ describe('adminAuthInterceptor', () => {
             url: '/users?page=2',
             navigate: vi.fn(),
         };
-        router.navigate.mockReturnValue(Promise.resolve(true));
+        router.navigate.mockResolvedValue(true);
 
         TestBed.configureTestingModule({
             providers: [

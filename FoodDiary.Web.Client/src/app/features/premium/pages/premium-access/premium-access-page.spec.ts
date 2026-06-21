@@ -7,6 +7,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { NEVER, type Observable, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { AuthService } from '../../../../services/auth.service';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
@@ -228,7 +229,7 @@ function resetMocks(): void {
     };
     router = {
         navigate: vi.fn(async () => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
             return true;
         }),
     };
@@ -266,7 +267,7 @@ function getPremiumAccessPageProviders(): unknown[] {
             provide: PaddleCheckoutService,
             useValue: {
                 openTransactionCheckoutAsync: vi.fn(async () => {
-                    await Promise.resolve();
+                    await waitForAsyncTasksAsync();
                 }),
             },
         },
@@ -296,7 +297,7 @@ function createTranslateServiceStub(): {
 
 async function settleAsync(): Promise<void> {
     for (let index = 0; index < ASYNC_SETTLE_TURNS; index++) {
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
     }
 }
 

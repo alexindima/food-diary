@@ -4,6 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { provideRouter } from '@angular/router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../testing/translate-testing.module';
 import type { User } from '../../../shared/models/user.data';
 import { SidebarUserMenuComponent } from './sidebar-user-menu';
@@ -95,7 +96,7 @@ describe('SidebarUserMenuComponent', () => {
         const focusSpy = vi.spyOn(HTMLElement.prototype, 'focus').mockImplementation(() => {});
 
         createComponent({ isOpen: true });
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(focusSpy).toHaveBeenCalled();
         focusSpy.mockRestore();

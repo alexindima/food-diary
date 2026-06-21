@@ -64,15 +64,15 @@ beforeEach(() => {
         navigateToHomeAsync: vi.fn(),
         navigateToLandingAsync: vi.fn(),
     };
-    navigationServiceSpy.navigateToAuthAsync.mockReturnValue(Promise.resolve());
-    navigationServiceSpy.navigateToHomeAsync.mockReturnValue(Promise.resolve());
-    navigationServiceSpy.navigateToLandingAsync.mockReturnValue(Promise.resolve());
+    navigationServiceSpy.navigateToAuthAsync.mockResolvedValue(undefined);
+    navigationServiceSpy.navigateToHomeAsync.mockResolvedValue(undefined);
+    navigationServiceSpy.navigateToLandingAsync.mockResolvedValue(undefined);
 
     localizationServiceSpy = {
         applyLanguagePreferenceAsync: vi.fn(),
         clearStoredLanguage: vi.fn(),
     };
-    localizationServiceSpy.applyLanguagePreferenceAsync.mockReturnValue(Promise.resolve());
+    localizationServiceSpy.applyLanguagePreferenceAsync.mockResolvedValue(undefined);
 
     quickMealServiceSpy = { exitPreview: vi.fn() };
 

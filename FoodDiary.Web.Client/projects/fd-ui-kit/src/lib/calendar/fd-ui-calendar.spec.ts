@@ -1,6 +1,7 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../src/testing/async-testing';
 import { FdUiCalendarComponent } from './fd-ui-calendar';
 
 const TEST_YEAR = 2025;
@@ -149,7 +150,7 @@ function registerNavigationTests(): void {
 
             component['onCellKeydown'](event, new Date(TEST_YEAR, MARCH_INDEX, MIN_DAY));
             fixture.detectChanges();
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
 
             expect(preventDefaultSpy).toHaveBeenCalled();
             const active = requireElement('[data-date="2025-03-10"]');

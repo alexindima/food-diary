@@ -1,7 +1,7 @@
 import { computed, DestroyRef, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, max, min, required } from '@angular/forms/signals';
-import { finalize } from 'rxjs';
+import { finalize, firstValueFrom } from 'rxjs';
 
 import { ExportService } from '../../../shared/api/export.service';
 import { formatDateInputValue } from '../../../shared/lib/local-date.utils';
@@ -18,6 +18,7 @@ import {
     type CycleFactor,
     type CycleFactorType,
     type CycleFlowLevel,
+    type CycleLogDay,
     type CycleNutritionSummary,
     type CyclePredictions,
     type CycleResponse,
@@ -117,8 +118,7 @@ export class CycleTrackingFacade {
         discreetNotifications: true,
     });
     private readonly submitStartCycleFormAsync = async (): Promise<void> => {
-        this.startCycle();
-        await Promise.resolve(undefined);
+        await this.startCycleAsync();
     };
     public readonly startCycleForm = form(
         this.startCycleModel,
@@ -158,8 +158,7 @@ export class CycleTrackingFacade {
         notes: null,
     });
     private readonly submitDayFormAsync = async (): Promise<void> => {
-        this.saveDay();
-        await Promise.resolve(undefined);
+        await this.saveDayAsync();
     };
     public readonly dayForm = form(
         this.dayModel,
@@ -180,8 +179,7 @@ export class CycleTrackingFacade {
         notes: null,
     });
     private readonly submitFactorFormAsync = async (): Promise<void> => {
-        this.saveFactor();
-        await Promise.resolve(undefined);
+        await this.saveFactorAsync();
     };
     public readonly factorForm = form(
         this.factorModel,
@@ -207,6 +205,10 @@ export class CycleTrackingFacade {
     }
 
     public startCycle(): void {
+        void this.startCycleAsync();
+    }
+
+    private async startCycleAsync(): Promise<void> {
         if (this.startCycleForm().invalid()) {
             this.startCycleForm().markAsTouched();
             return;
@@ -231,17 +233,15 @@ export class CycleTrackingFacade {
         };
 
         this.isSavingCycle.set(true);
-        this.cyclesService
-            .create(payload)
-            .pipe(
+        const cycle = await firstValueFrom(
+            this.cyclesService.create(payload).pipe(
                 finalize(() => {
                     this.isSavingCycle.set(false);
                 }),
-            )
-            .subscribe(cycle => {
-                this.cycle.set(cycle);
-                this.loadNutritionSummary(cycle);
-            });
+            ),
+        );
+        this.cycle.set(cycle);
+        this.loadNutritionSummary(cycle);
     }
 
     private loadNutritionSummary(cycle: CycleResponse | null): void {
@@ -268,6 +268,10 @@ export class CycleTrackingFacade {
     }
 
     public saveDay(): void {
+        void this.saveDayAsync();
+    }
+
+    private async saveDayAsync(): Promise<void> {
         const currentCycle = this.cycle();
         if (currentCycle === null || currentCycle.id.length === 0) {
             return;
@@ -288,54 +292,56 @@ export class CycleTrackingFacade {
         const symptoms = this.buildSymptomPayload(formValue);
 
         this.isSavingDay.set(true);
-        this.cyclesService
-            .upsertDay(currentCycle.id, {
-                date: entryDate.toISOString(),
-                bleeding: formValue.isBleeding
-                    ? {
-                          type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
-                          flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
-                          painImpact: this.clampSymptom(formValue.pain),
-                          notes: formValue.notes ?? undefined,
-                          clearNotes: false,
-                      }
-                    : null,
-                symptoms,
-                fertilitySignal: this.buildFertilitySignalPayload(formValue),
-            })
-            .pipe(
-                finalize(() => {
-                    this.isSavingDay.set(false);
-                }),
-            )
-            .subscribe(day => {
-                const current = this.cycle();
-                if (current === null) {
-                    return;
-                }
+        const day = await firstValueFrom(
+            this.cyclesService
+                .upsertDay(currentCycle.id, {
+                    date: entryDate.toISOString(),
+                    bleeding: formValue.isBleeding
+                        ? {
+                              type: formValue.bleedingType ?? BLEEDING_TYPE_BLEEDING,
+                              flow: formValue.flow ?? CYCLE_FLOW_LIGHT,
+                              painImpact: this.clampSymptom(formValue.pain),
+                              notes: formValue.notes ?? undefined,
+                              clearNotes: false,
+                          }
+                        : null,
+                    symptoms,
+                    fertilitySignal: this.buildFertilitySignalPayload(formValue),
+                })
+                .pipe(
+                    finalize(() => {
+                        this.isSavingDay.set(false);
+                    }),
+                ),
+        );
+        this.applySavedDay(day);
+    }
 
-                const dayDateKey = this.toDateKey(day.date);
-                const updatedCycle = {
-                    ...current,
-                    bleedingEntries: [
-                        ...current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dayDateKey),
-                        ...day.bleedingEntries,
-                    ],
-                    symptoms: [...current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
-                    fertilitySignals:
-                        day.fertilitySignal === null || day.fertilitySignal === undefined
-                            ? current.fertilitySignals
-                            : [
-                                  ...current.fertilitySignals.filter(
-                                      fertilitySignal => this.toDateKey(fertilitySignal.date) !== dayDateKey,
-                                  ),
-                                  day.fertilitySignal,
-                              ],
-                };
-                this.editingDayDate.set(null);
-                this.cycle.set(updatedCycle);
-                this.loadNutritionSummary(updatedCycle);
-            });
+    private applySavedDay(day: CycleLogDay): void {
+        const current = this.cycle();
+        if (current === null) {
+            return;
+        }
+
+        const dayDateKey = this.toDateKey(day.date);
+        const updatedCycle = {
+            ...current,
+            bleedingEntries: [
+                ...current.bleedingEntries.filter(entry => this.toDateKey(entry.date) !== dayDateKey),
+                ...day.bleedingEntries,
+            ],
+            symptoms: [...current.symptoms.filter(symptom => this.toDateKey(symptom.date) !== dayDateKey), ...day.symptoms],
+            fertilitySignals:
+                day.fertilitySignal === null || day.fertilitySignal === undefined
+                    ? current.fertilitySignals
+                    : [
+                          ...current.fertilitySignals.filter(fertilitySignal => this.toDateKey(fertilitySignal.date) !== dayDateKey),
+                          day.fertilitySignal,
+                      ],
+        };
+        this.editingDayDate.set(null);
+        this.cycle.set(updatedCycle);
+        this.loadNutritionSummary(updatedCycle);
     }
 
     public editDay(date: string): void {
@@ -359,6 +365,10 @@ export class CycleTrackingFacade {
     }
 
     public saveFactor(): void {
+        void this.saveFactorAsync();
+    }
+
+    private async saveFactorAsync(): Promise<void> {
         const currentCycle = this.cycle();
         if (currentCycle === null || currentCycle.id.length === 0) {
             return;
@@ -383,18 +393,16 @@ export class CycleTrackingFacade {
         };
 
         this.isSavingFactor.set(true);
-        this.cyclesService
-            .upsertFactor(currentCycle.id, payload)
-            .pipe(
+        const cycle = await firstValueFrom(
+            this.cyclesService.upsertFactor(currentCycle.id, payload).pipe(
                 finalize(() => {
                     this.isSavingFactor.set(false);
                 }),
-            )
-            .subscribe(cycle => {
-                this.editingFactorId.set(null);
-                this.cycle.set(cycle);
-                this.loadNutritionSummary(cycle);
-            });
+            ),
+        );
+        this.editingFactorId.set(null);
+        this.cycle.set(cycle);
+        this.loadNutritionSummary(cycle);
     }
 
     public editFactor(factorId: string): void {

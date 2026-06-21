@@ -9,6 +9,7 @@ import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
+import { firstValueFrom } from 'rxjs';
 
 import { AdminEmailTemplatesFacade } from '../lib/admin-email-templates.facade';
 import type { AdminEmailTemplate } from '../models/admin-email-template.data';
@@ -70,8 +71,7 @@ export class AdminEmailTemplateEditDialogComponent {
         isActive: this.data.isActive,
     });
     private readonly submitTemplateFormAsync = async (): Promise<void> => {
-        this.onSave();
-        await Promise.resolve(undefined);
+        await this.saveAsync();
     };
     protected readonly form = form(
         this.formModel,
@@ -111,6 +111,10 @@ export class AdminEmailTemplateEditDialogComponent {
     }
 
     protected onSave(): void {
+        void this.saveAsync();
+    }
+
+    private async saveAsync(): Promise<void> {
         this.form().markAsTouched();
         if (this.form().invalid() || this.isSaving()) {
             return;
@@ -121,22 +125,20 @@ export class AdminEmailTemplateEditDialogComponent {
         const key = value.key.trim();
         const locale = value.locale.trim();
 
-        this.templatesFacade
-            .upsert(key, locale, {
-                subject: value.subject,
-                htmlBody: value.htmlBody,
-                textBody: value.textBody,
-                isActive: value.isActive,
-            })
-            .subscribe({
-                next: () => {
-                    this.isSaving.set(false);
-                    this.dialogRef.close(true);
-                },
-                error: () => {
-                    this.isSaving.set(false);
-                },
-            });
+        try {
+            await firstValueFrom(
+                this.templatesFacade.upsert(key, locale, {
+                    subject: value.subject,
+                    htmlBody: value.htmlBody,
+                    textBody: value.textBody,
+                    isActive: value.isActive,
+                }),
+            );
+            this.isSaving.set(false);
+            this.dialogRef.close(true);
+        } catch {
+            this.isSaving.set(false);
+        }
     }
 
     protected setPreviewMode(mode: 'html' | 'text'): void {

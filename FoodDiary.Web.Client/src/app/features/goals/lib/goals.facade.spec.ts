@@ -4,6 +4,7 @@ import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, Subject, throwError } from 'rxjs';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { GoalsService } from '../api/goals.service';
 import type { GoalsResponse } from '../models/goals.data';
 import { GoalsFacade } from './goals.facade';
@@ -234,7 +235,7 @@ function registerAutosaveTests(): void {
 
             inFlightUpdate.next({ calorieCyclingEnabled: false });
             inFlightUpdate.complete();
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
 
             expect(goalsService.updateGoals).toHaveBeenCalledTimes(2);
@@ -257,7 +258,7 @@ function registerAutosaveTests(): void {
 
             facade.updateWaterValue(RETRY_WATER);
             inFlightUpdate.error(new Error('save failed'));
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
             await vi.advanceTimersByTimeAsync(AUTOSAVE_DELAY_MS);
 
             expect(goalsService.updateGoals).toHaveBeenCalledTimes(2);

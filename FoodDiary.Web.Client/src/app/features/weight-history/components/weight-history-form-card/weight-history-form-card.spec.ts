@@ -3,6 +3,7 @@ import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { form } from '@angular/forms/signals';
 import { describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../../testing/async-testing';
 import { provideTranslateTesting } from '../../../../../testing/translate-testing.module';
 import { WeightHistoryFormCardComponent } from './weight-history-form-card';
 
@@ -33,7 +34,7 @@ describe('WeightHistoryFormCardComponent', () => {
 
     it('cancels native submit and delegates to FormRoot submission', async () => {
         const submitWeightFormAsync = vi.fn(async (): Promise<void> => {
-            await Promise.resolve();
+            await waitForAsyncTasksAsync();
         });
         const { fixture } = setupComponent(false, submitWeightFormAsync);
         const formElement = (fixture.nativeElement as HTMLElement).querySelector('form');

@@ -115,7 +115,7 @@ describe('ChangePasswordDialogComponent submit', () => {
         });
     });
 
-    it('should close dialog on success', () => {
+    it('should close dialog on success', async () => {
         userServiceSpy.changePassword.mockReturnValue(of(true));
 
         component['form'].currentPassword().value.set('oldPass');
@@ -123,11 +123,13 @@ describe('ChangePasswordDialogComponent submit', () => {
         component['form'].confirmPassword().value.set('newPass123');
         component['onSubmit']();
 
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        });
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('should handle error response from service returning false', () => {
+    it('should handle error response from service returning false', async () => {
         userServiceSpy.changePassword.mockReturnValue(of(false));
 
         component['form'].currentPassword().value.set('oldPass');
@@ -136,11 +138,13 @@ describe('ChangePasswordDialogComponent submit', () => {
         component['onSubmit']();
 
         expect(dialogRefSpy.close).not.toHaveBeenCalled();
-        expect(component['passwordError']()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+        await vi.waitFor(() => {
+            expect(component['passwordError']()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+        });
         expect(component['isSubmitting']()).toBe(false);
     });
 
-    it('should handle error response from service throwing', () => {
+    it('should handle error response from service throwing', async () => {
         userServiceSpy.changePassword.mockReturnValue(throwError(() => new Error('network error')));
 
         component['form'].currentPassword().value.set('oldPass');
@@ -148,7 +152,9 @@ describe('ChangePasswordDialogComponent submit', () => {
         component['form'].confirmPassword().value.set('newPass123');
         component['onSubmit']();
 
-        expect(component['passwordError']()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+        await vi.waitFor(() => {
+            expect(component['passwordError']()).toBe('USER_MANAGE.CHANGE_PASSWORD_ERROR');
+        });
         expect(component['isSubmitting']()).toBe(false);
     });
 
@@ -171,7 +177,7 @@ describe('ChangePasswordDialogComponent cancel and set password mode', () => {
         expect(dialogRefSpy.close).toHaveBeenCalledWith(false);
     });
 
-    it('should use setPassword mode when account has no password', () => {
+    it('should use setPassword mode when account has no password', async () => {
         TestBed.resetTestingModule();
         configureComponent({ hasPassword: false });
 
@@ -186,6 +192,8 @@ describe('ChangePasswordDialogComponent cancel and set password mode', () => {
             newPassword: 'newPass123',
         });
         expect(userServiceSpy.changePassword).not.toHaveBeenCalled();
-        expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        await vi.waitFor(() => {
+            expect(dialogRefSpy.close).toHaveBeenCalledWith(true);
+        });
     });
 });

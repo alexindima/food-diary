@@ -47,8 +47,8 @@ describe('authGuard', () => {
             navigateToAuthAsync: vi.fn(),
             navigateToEmailVerificationPendingAsync: vi.fn(),
         };
-        navigationServiceMock.navigateToAuthAsync.mockReturnValue(Promise.resolve());
-        navigationServiceMock.navigateToEmailVerificationPendingAsync.mockReturnValue(Promise.resolve());
+        navigationServiceMock.navigateToAuthAsync.mockResolvedValue(undefined);
+        navigationServiceMock.navigateToEmailVerificationPendingAsync.mockResolvedValue(undefined);
         localizationServiceMock = {
             loadApplicationTranslationsAsync: vi.fn().mockResolvedValue(void 0),
         };

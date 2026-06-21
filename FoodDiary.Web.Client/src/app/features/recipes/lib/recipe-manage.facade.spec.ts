@@ -4,6 +4,7 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { firstValueFrom, of, throwError } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { NavigationService } from '../../../services/navigation.service';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
@@ -82,7 +83,7 @@ describe('RecipeManageFacade submit', () => {
             calculateNutritionAutomatically: true,
         });
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(recipeService.create).toHaveBeenCalled();
         expect(navigationService.navigateToRecipeListAsync).toHaveBeenCalledTimes(1);
@@ -100,7 +101,7 @@ describe('RecipeManageFacade submit', () => {
             calculateNutritionAutomatically: true,
         });
 
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
 
         expect(recipeService.update).toHaveBeenCalledWith(
             'recipe-1',

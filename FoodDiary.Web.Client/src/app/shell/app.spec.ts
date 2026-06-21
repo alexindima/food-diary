@@ -4,6 +4,7 @@ import { ActivatedRoute, NavigationEnd, type Route, RouteConfigLoadEnd, RouteCon
 import { Subject } from 'rxjs';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { waitForAsyncTasksAsync } from '../../testing/async-testing';
 import { AuthService } from '../services/auth.service';
 import { GlobalLoadingService } from '../services/global-loading.service';
 import { RouteLoadingService } from '../services/route-loading.service';
@@ -36,8 +37,8 @@ describe('AppComponent shell behavior', () => {
         const { localizationService, router, routerEvents, seoService, themeService } = await createComponentAsync();
 
         routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard', '/dashboard'));
-        await Promise.resolve();
-        await Promise.resolve();
+        await waitForAsyncTasksAsync();
+        await waitForAsyncTasksAsync();
 
         expect(themeService.applyThemeForRoute).toHaveBeenCalledWith('/dashboard');
         expect(localizationService.loadTranslationsForRouteAsync).toHaveBeenCalledWith('/dashboard');
