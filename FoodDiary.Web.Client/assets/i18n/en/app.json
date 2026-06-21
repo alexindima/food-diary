@@ -103,6 +103,8 @@
         "FILTER_MY_PRODUCTS": "My products",
         "FILTER_CATEGORIES": "Categories",
         "FILTER_APPLY_BUTTON": "Apply",
+        "ACTIVE_FILTERS_LABEL": "Active filters",
+        "ACTIVE_FILTERS_EDIT": "Edit",
         "NO_PRODUCTS_FOUND": "No products found",
         "EMPTY_TITLE": "No products yet",
         "EMPTY_COPY": "Add your first product to reuse nutrition data, build meals faster, and keep your own catalogue handy.",
@@ -209,6 +211,8 @@
         "FILTER_ALL_RECIPES": "All recipes",
         "FILTER_MY_RECIPES": "My recipes",
         "FILTER_APPLY_BUTTON": "Apply",
+        "ACTIVE_FILTERS_LABEL": "Active filters",
+        "ACTIVE_FILTERS_EDIT": "Edit",
         "NO_RECIPES_FOUND": "No recipes found",
         "EMPTY_TITLE": "No recipes yet",
         "EMPTY_COPY": "Save your first recipe to keep dishes, meal ideas, and reusable combinations in one place.",
@@ -634,6 +638,8 @@
         "FILTERS_TITLE": "Filters",
         "FILTER_APPLY_BUTTON": "Apply",
         "FILTER_RESET_BUTTON": "Reset",
+        "ACTIVE_FILTERS_LABEL": "Active filters",
+        "ACTIVE_FILTERS_EDIT": "Edit",
         "NO_CONSUMPTIONS_FOUND": "No consumptions found",
         "EMPTY_TITLE": "No meals logged yet",
         "EMPTY_COPY": "Start with your first meal or snack entry so this timeline can show your recent nutrition history.",
@@ -2083,7 +2089,7 @@
         "TITLE": "Scan the barcode",
         "CAMERA_INITIALIZING": "Initializing camera, please wait...",
         "CAMERA_ERROR": "Camera initialization failed. Please check your camera settings.",
-        "UNSUPPORTED": "Barcode scanning is not supported in this browser. Please use Chrome or Edge."
+        "UNSUPPORTED": "Barcode scanning is not available on this device or browser version. Enter the barcode manually instead."
     },
     "WEIGHT_CARD": {
         "TITLE": "Weight trend",

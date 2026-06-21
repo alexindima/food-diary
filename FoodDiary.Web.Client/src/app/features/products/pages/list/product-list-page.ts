@@ -14,6 +14,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { ProductDetailActionResult } from '../../components/detail/product-detail-lib/product-detail.types';
 import { ProductListBaseComponent } from '../../components/list/product-list-base/product-list-base';
+import { ProductListActiveFiltersComponent } from '../../components/list/product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../../components/list/product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListFavoritesComponent } from '../../components/list/product-list-sections/product-list-favorites/product-list-favorites';
 import { ProductListGroupsComponent } from '../../components/list/product-list-sections/product-list-groups/product-list-groups';
@@ -40,6 +41,7 @@ import type { Product } from '../../models/product.data';
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ProductListActiveFiltersComponent,
         ProductListFavoritesComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,

@@ -134,6 +134,20 @@ describe('FdUiNutrientInputComponent signal form control', () => {
 
         expect(component.touched()).toBe(true);
     });
+
+    it('should hide placeholder while focused', async () => {
+        const { fixture, input } = await setupNutrientInputAsync();
+        fixture.componentRef.setInput('placeholder', '0');
+        fixture.detectChanges();
+
+        input().dispatchEvent(new Event('focus'));
+        fixture.detectChanges();
+        expect(input().getAttribute('placeholder')).toBeNull();
+
+        input().dispatchEvent(new Event('blur'));
+        fixture.detectChanges();
+        expect(input().getAttribute('placeholder')).toBe('0');
+    });
 });
 
 describe('FdUiNutrientInputComponent input handling', () => {

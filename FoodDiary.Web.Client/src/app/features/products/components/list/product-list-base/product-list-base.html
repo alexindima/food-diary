@@ -101,6 +101,12 @@
                 </form>
             </div>
         }
+        <fd-product-list-active-filters
+            [hidden]="!hasActiveFilters()"
+            [attr.aria-hidden]="!hasActiveFilters()"
+            [filterKeys]="activeFilterKeys()"
+            (filtersEdit)="openFilters()"
+        />
         @if (errorKey()) {
             <fd-error-state (retry)="retryLoad()" />
         } @else if (productData.isLoading()) {

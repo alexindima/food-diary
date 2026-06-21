@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, inject, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective } from 'fd-ui-kit';
@@ -11,8 +11,10 @@ import { PageHeaderComponent } from '../../../../../components/shared/page-heade
 import { SkeletonCardComponent } from '../../../../../components/shared/skeleton-card/skeleton-card';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
+import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
 import type { OpenFoodFactsProduct } from '../../../models/open-food-facts.data';
 import type { FavoriteProduct, Product } from '../../../models/product.data';
+import { ProductListActiveFiltersComponent } from '../product-list-sections/product-list-active-filters/product-list-active-filters';
 import { ProductListEmptyStateComponent } from '../product-list-sections/product-list-empty-state/product-list-empty-state';
 import { ProductListFavoritesComponent } from '../product-list-sections/product-list-favorites/product-list-favorites';
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';
@@ -37,6 +39,7 @@ import { ProductListPaginationComponent } from '../product-list-sections/product
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
+        ProductListActiveFiltersComponent,
         ProductListFavoritesComponent,
         ProductListGroupsComponent,
         ProductListEmptyStateComponent,
@@ -63,6 +66,13 @@ export class ProductListBaseComponent {
     protected readonly allProductItems = this.productListFacade.allProductItems;
     protected readonly hasVisibleProducts = this.productListFacade.hasVisibleProducts;
     protected readonly hasActiveFilters = this.productListFacade.hasActiveFilters;
+    protected readonly selectedProductTypeKeys = computed(() =>
+        this.productListFacade.selectedProductTypes().map(type => buildProductTypeTranslationKey(type)),
+    );
+    protected readonly activeFilterKeys = computed(() => {
+        const keys = this.selectedProductTypeKeys();
+        return this.onlyMineFilter() ? ['PRODUCT_LIST.FILTER_MY_PRODUCTS', ...keys] : keys;
+    });
     protected readonly isEmptyState = this.productListFacade.isEmptyState;
     protected readonly allProductsSectionLabelKey = this.productListFacade.allProductsSectionLabelKey;
     protected readonly isMobileSearchVisible = this.productListFacade.isMobileSearchVisible;

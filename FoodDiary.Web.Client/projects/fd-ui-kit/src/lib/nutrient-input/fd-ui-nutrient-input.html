@@ -28,7 +28,7 @@
             [attr.name]="name() || null"
             [attr.type]="type() === 'number' ? 'text' : type()"
             [attr.inputmode]="type() === 'number' ? 'decimal' : null"
-            [attr.placeholder]="placeholder()"
+            [attr.placeholder]="visiblePlaceholder()"
             [required]="required()"
             [readonly]="isReadonly()"
             [attr.step]="step() ?? null"
@@ -38,6 +38,7 @@
             [style.width]="inputWidth"
             [disabled]="disabled()"
             [value]="displayValue"
+            (focus)="onFocus()"
             (input)="onInput($event)"
             (blur)="onBlur()"
         />

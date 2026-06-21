@@ -95,6 +95,8 @@ export class MealListComponent {
         const dateRange = this.searchModel().dateRange;
         return (dateRange?.start !== null && dateRange?.start !== undefined) || (dateRange?.end !== null && dateRange?.end !== undefined);
     });
+    protected readonly activeDateFilterStart = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.start));
+    protected readonly activeDateFilterEnd = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.end));
     protected readonly emptyState = computed<MealListEmptyState | null>(() => {
         if (this.consumptionData.items().length > 0) {
             return null;
@@ -286,6 +288,10 @@ export class MealListComponent {
 
     private getDateRangeTimestamp(value: FdUiDateRangeValue | null, key: keyof FdUiDateRangeValue): number | null {
         return getDateTimestamp(value?.[key]);
+    }
+
+    private formatDateFilterValue(value: Date | null | undefined): string | null {
+        return value !== null && value !== undefined ? formatDateInputValue(value) : null;
     }
 
     protected scrollToTop(): void {

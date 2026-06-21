@@ -145,6 +145,8 @@ function createProductListFacadeMock(): ProductListFacadeMock {
         recentProductItems: signal([]),
         allProductItems: signal([]),
         hasVisibleProducts: signal(false),
+        selectedProductTypes: signal([]),
+        activeFilterCount: signal(0),
         hasActiveFilters: signal(false),
         isEmptyState: signal(true),
         allProductsSectionLabelKey: signal('PRODUCT_LIST.ALL_PRODUCTS'),

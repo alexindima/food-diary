@@ -1,0 +1,22 @@
+<section class="product-list__active-filters" [attr.aria-label]="'PRODUCT_LIST.ACTIVE_FILTERS_LABEL' | translate">
+    <span class="product-list__active-filters-label">
+        {{ 'PRODUCT_LIST.ACTIVE_FILTERS_LABEL' | translate }}
+    </span>
+    <div class="product-list__active-filter-chips">
+        @for (filterKey of filterKeys(); track filterKey) {
+            <button type="button" class="product-list__active-filter-chip" (click)="filtersEdit.emit()">
+                {{ filterKey | translate }}
+            </button>
+        }
+    </div>
+    <fd-ui-button
+        class="product-list__active-filters-edit"
+        appearance="toolbar"
+        variant="secondary"
+        fill="outline"
+        icon="tune"
+        [fdUiHint]="'PRODUCT_LIST.ACTIVE_FILTERS_EDIT' | translate"
+        [ariaLabel]="'PRODUCT_LIST.ACTIVE_FILTERS_EDIT' | translate"
+        (click)="filtersEdit.emit()"
+    />
+</section>

@@ -83,6 +83,10 @@
     color: color-mix(in srgb, var(--fd-nutrient-text-color) 45%, var(--fd-color-white));
 }
 
+:where(.fd-ui-nutrient-input:focus-within) .fd-ui-nutrient-input__control::placeholder {
+    color: transparent;
+}
+
 input.fd-ui-nutrient-input__control[type='number'] {
     -moz-appearance: textfield;
 }

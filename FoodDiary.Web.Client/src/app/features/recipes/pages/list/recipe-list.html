@@ -99,6 +99,26 @@
                 </form>
             </div>
         }
+        @if (hasActiveFilters()) {
+            <section class="recipe-list__active-filters" [attr.aria-label]="'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate">
+                <span class="recipe-list__active-filters-label">{{ 'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
+                <div class="recipe-list__active-filter-chips">
+                    <button type="button" class="recipe-list__active-filter-chip" (click)="openFilters()">
+                        {{ 'RECIPE_LIST.FILTER_MY_RECIPES' | translate }}
+                    </button>
+                </div>
+                <fd-ui-button
+                    class="recipe-list__active-filters-edit"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="tune"
+                    [fdUiHint]="'RECIPE_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    [ariaLabel]="'RECIPE_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    (click)="openFilters()"
+                />
+            </section>
+        }
         @if (errorKey()) {
             <fd-error-state (retry)="retryLoad()" />
         } @else if (recipeData.isLoading()) {

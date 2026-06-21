@@ -1336,8 +1336,8 @@ $fd-theme-design-tokens: (
         );
         --fd-bg-list-empty: linear-gradient(
             180deg,
-            color-mix(in srgb, var(--fd-color-slate-50) 90%, transparent),
-            color-mix(in srgb, var(--fd-color-white) 95%, transparent)
+            color-mix(in srgb, var(--fd-bg-surface-raised) 94%, var(--fd-color-text-muted) 6%),
+            color-mix(in srgb, var(--fd-bg-surface-raised) 98%, var(--fd-color-text-muted) 2%)
         );
         --fd-bg-quality-good: linear-gradient(
             90deg,

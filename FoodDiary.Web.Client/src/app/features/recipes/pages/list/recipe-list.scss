@@ -64,6 +64,68 @@
         min-width: auto;
     }
 
+    &__active-filters {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--fd-space-sm);
+        padding: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-surface-raised);
+        box-shadow: var(--fd-shadow-sm);
+    }
+
+    &__active-filters-label {
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-caption-size);
+        font-weight: var(--fd-text-caption-weight);
+        letter-spacing: var(--fd-letter-spacing-overline);
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+
+    &__active-filter-chips {
+        display: flex;
+        flex: 1;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: var(--fd-space-xxs);
+        min-width: 0;
+    }
+
+    &__active-filter-chip {
+        appearance: none;
+        border: var(--fd-border-strong);
+        border-radius: var(--fd-radius-pill);
+        background: var(--fd-bg-accent-soft);
+        color: var(--fd-color-primary-700);
+        cursor: pointer;
+        font-size: var(--fd-text-caption-size);
+        font-weight: var(--fd-font-weight-semibold);
+        line-height: 1.2;
+        padding: var(--fd-space-micro) var(--fd-space-xs);
+        transition:
+            background 160ms ease,
+            border-color 160ms ease,
+            color 160ms ease;
+    }
+
+    &__active-filter-chip:hover {
+        background: var(--fd-bg-accent-medium);
+        border-color: var(--fd-color-primary-500);
+        color: var(--fd-color-primary-800);
+    }
+
+    &__active-filter-chip:focus-visible {
+        outline: var(--fd-outline-focus);
+        outline-offset: var(--fd-outline-offset);
+    }
+
+    &__active-filters-edit {
+        flex: 0 0 auto;
+    }
+
     @media #{variables.$media-xs} {
         &__add-button {
             font-size: 0;
@@ -230,6 +292,18 @@
 
         &__section-header {
             padding: 0;
+        }
+
+        &__active-filters {
+            align-items: flex-start;
+        }
+
+        &__active-filters-label {
+            padding-top: var(--fd-space-micro);
+        }
+
+        &__active-filter-chips {
+            gap: var(--fd-space-micro);
         }
 
         &__section-grid {

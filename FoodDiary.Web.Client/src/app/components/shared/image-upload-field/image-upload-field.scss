@@ -21,6 +21,12 @@
             background 160ms ease,
             box-shadow 160ms ease,
             opacity 160ms ease;
+        outline: none;
+
+        &:where(:focus-visible) {
+            border-color: var(--fd-color-primary-500);
+            box-shadow: var(--fd-shadow-focus);
+        }
 
         &--dragging {
             border-color: var(--fd-color-primary-600);
@@ -202,11 +208,11 @@
     }
 
     &__cropper-title {
-        color: var(--fd-color-slate-900);
+        color: var(--fd-color-text-strong);
     }
 
     &__cropper-subtitle {
-        color: var(--fd-color-slate-600);
+        color: var(--fd-color-text-muted);
     }
 
     &__cropper-body {

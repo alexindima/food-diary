@@ -49,6 +49,34 @@
             <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
         }
 
+        @if (hasDateFilter()) {
+            <section class="consumption-list__active-filters" [attr.aria-label]="'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate">
+                <span class="consumption-list__active-filters-label">{{ 'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
+                <div class="consumption-list__active-filter-chips">
+                    @if (activeDateFilterStart(); as startDate) {
+                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
+                            {{ 'CONSUMPTION_LIST.DATE_FILTER_FROM_LABEL' | translate }}: {{ startDate }}
+                        </button>
+                    }
+                    @if (activeDateFilterEnd(); as endDate) {
+                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
+                            {{ 'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate }}: {{ endDate }}
+                        </button>
+                    }
+                </div>
+                <fd-ui-button
+                    class="consumption-list__active-filters-edit"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="tune"
+                    [fdUiHint]="'CONSUMPTION_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    [ariaLabel]="'CONSUMPTION_LIST.ACTIVE_FILTERS_EDIT' | translate"
+                    (click)="openFilters()"
+                />
+            </section>
+        }
+
         <fd-meal-list-favorites
             [favoriteViews]="favoriteViews()"
             [count]="favoriteTotalCount()"

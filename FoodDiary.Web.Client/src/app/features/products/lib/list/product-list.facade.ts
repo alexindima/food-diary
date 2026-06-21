@@ -106,8 +106,10 @@ export class ProductListFacade {
             imageUrl: this.resolveImage(product),
         })),
     );
+    public readonly selectedProductTypes = signal<ProductType[]>([]);
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
-    public readonly hasActiveFilters = computed(() => this.onlyMineFilter() || this.selectedProductTypes().length > 0);
+    public readonly activeFilterCount = computed(() => (this.onlyMineFilter() ? 1 : 0) + this.selectedProductTypes().length);
+    public readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
     public readonly allProductsSectionLabelKey = computed(() =>
         this.hasSearchValue() ? 'PRODUCT_LIST.SEARCH_RESULTS' : 'PRODUCT_LIST.ALL_PRODUCTS',
@@ -116,7 +118,6 @@ export class ProductListFacade {
     public readonly offProducts = signal<OpenFoodFactsProduct[]>([]);
     public readonly offLoading = signal(false);
     private readonly isMobileSearchOpen = signal(false);
-    private readonly selectedProductTypes = signal<ProductType[]>([]);
     private offSearchRequestId = 0;
 
     public constructor() {

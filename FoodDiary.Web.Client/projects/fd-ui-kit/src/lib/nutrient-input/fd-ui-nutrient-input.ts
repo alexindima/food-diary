@@ -1,5 +1,16 @@
 import type { ElementRef } from '@angular/core';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, effect, inject, input, model, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    effect,
+    inject,
+    input,
+    model,
+    signal,
+    viewChild,
+} from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
@@ -49,6 +60,8 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     protected inputWidth = '1ch';
     protected valueDensityClass = 'fd-ui-nutrient-input--value-normal';
     protected readonly maxInputChars = DEFAULT_MAX_INPUT_CHARS;
+    protected readonly isFocused = signal(false);
+    protected readonly visiblePlaceholder = computed(() => (this.isFocused() ? null : this.placeholder()));
 
     public constructor() {
         effect(() => {
@@ -98,7 +111,12 @@ export class FdUiNutrientInputComponent implements FormValueControl<string | num
     }
 
     protected onBlur(): void {
+        this.isFocused.set(false);
         this.touched.set(true);
+    }
+
+    protected onFocus(): void {
+        this.isFocused.set(true);
     }
 
     private sanitizeDecimalInput(value: string): string {
