@@ -294,6 +294,10 @@
         --fd-switch-align-self: center;
     }
 
+    &__dietologist-permission-switch {
+        --fd-switch-disabled-opacity: 1;
+    }
+
     &__dietologist-empty {
         color: var(--fd-color-text-muted);
         font-size: var(--fd-text-stat-value-size);

@@ -140,7 +140,11 @@ export class UserManageComponent {
     protected readonly dietologistError = signal<string | null>(null);
     protected readonly dietologistPermissions = signal<DietologistPermissions>(DEFAULT_DIETOLOGIST_PERMISSIONS);
     protected readonly isLoadingDietologist = signal(false);
-    protected readonly isSavingDietologist = signal(false);
+    protected readonly isSavingDietologistPermissions = signal(false);
+    protected readonly isSavingDietologistRelationshipAction = signal(false);
+    protected readonly isSavingDietologist = computed(
+        () => this.isSavingDietologistPermissions() || this.isSavingDietologistRelationshipAction(),
+    );
     protected readonly billingOverview = signal<BillingOverview | null>(null);
     protected readonly isLoadingBilling = signal(false);
     protected readonly isOpeningBillingPortal = signal(false);
@@ -316,7 +320,10 @@ export class UserManageComponent {
     }
 
     protected onUserFormInput(event?: Event): void {
-        this.syncUserFormInputEvent(event);
+        if (!this.syncUserFormInputEvent(event)) {
+            return;
+        }
+
         this.queueUserFormAutosaveCheck();
     }
 
@@ -342,7 +349,7 @@ export class UserManageComponent {
     }
 
     protected inviteDietologist(): void {
-        if (this.isSavingDietologist()) {
+        if (this.isSavingDietologistRelationshipAction()) {
             return;
         }
 
@@ -352,7 +359,7 @@ export class UserManageComponent {
             return;
         }
 
-        this.isSavingDietologist.set(true);
+        this.isSavingDietologistRelationshipAction.set(true);
         this.dietologistFacade
             .invite({
                 dietologistEmail: this.dietologistFormModel().email,
@@ -360,7 +367,7 @@ export class UserManageComponent {
             })
             .pipe(
                 finalize(() => {
-                    this.isSavingDietologist.set(false);
+                    this.isSavingDietologistRelationshipAction.set(false);
                 }),
             )
             .subscribe({
@@ -375,7 +382,7 @@ export class UserManageComponent {
     }
 
     protected updateDietologistPermission(controlName: DietologistPermissionControlName, nextValue: boolean): void {
-        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologistPermissions()) {
             return;
         }
 
@@ -389,22 +396,23 @@ export class UserManageComponent {
     }
 
     protected persistDietologistPermissions(previousPermissions?: DietologistPermissions): void {
-        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologistPermissions()) {
             return;
         }
 
-        this.isSavingDietologist.set(true);
+        const nextPermissions = getDietologistPermissions(this.dietologistFormModel());
+        this.isSavingDietologistPermissions.set(true);
         this.dietologistFacade
-            .updatePermissions(getDietologistPermissions(this.dietologistFormModel()))
+            .updatePermissions(nextPermissions)
             .pipe(
                 finalize(() => {
-                    this.isSavingDietologist.set(false);
+                    this.isSavingDietologistPermissions.set(false);
                 }),
             )
             .subscribe({
                 next: () => {
                     this.dietologistError.set(null);
-                    this.loadDietologistRelationship();
+                    this.updateDietologistRelationshipPermissions(nextPermissions);
                 },
                 error: () => {
                     if (previousPermissions !== undefined) {
@@ -421,7 +429,7 @@ export class UserManageComponent {
     }
 
     protected revokeDietologistRelationship(): void {
-        if (!this.hasDietologistRelationship() || this.isSavingDietologist()) {
+        if (!this.hasDietologistRelationship() || this.isSavingDietologistRelationshipAction()) {
             return;
         }
 
@@ -449,7 +457,7 @@ export class UserManageComponent {
     }
 
     protected onDietologistProfileToggle(nextValue: boolean): void {
-        if (this.isSavingDietologist()) {
+        if (this.isSavingDietologistPermissions()) {
             return;
         }
 
@@ -588,18 +596,19 @@ export class UserManageComponent {
         };
     }
 
-    private syncUserFormInputEvent(event: Event | undefined): void {
+    private syncUserFormInputEvent(event: Event | undefined): boolean {
         const view = this.document.defaultView;
         if (!this.isBrowser || event === undefined || view === null || !(event.target instanceof view.HTMLInputElement)) {
-            return;
+            return false;
         }
 
         const field = event.target.closest('[data-user-field]')?.getAttribute('data-user-field');
         if (field === null || field === undefined) {
-            return;
+            return false;
         }
 
         this.syncUserFormFieldValue(field, event.target.value);
+        return true;
     }
 
     private syncUserFormFieldValue(field: string, value: string): void {
@@ -720,17 +729,29 @@ export class UserManageComponent {
         this.dietologistPermissions.set(getDietologistPermissions(this.dietologistFormModel()));
     }
 
+    private updateDietologistRelationshipPermissions(permissions: DietologistPermissions): void {
+        const relationship = this.facade.dietologistRelationship();
+        if (relationship === null) {
+            return;
+        }
+
+        this.facade.dietologistRelationship.set({
+            ...relationship,
+            permissions,
+        });
+    }
+
     private setDietologistError(errorKey: string): void {
         this.dietologistError.set(this.translateService.instant(errorKey));
     }
 
     private executeDietologistRevoke(): void {
-        this.isSavingDietologist.set(true);
+        this.isSavingDietologistRelationshipAction.set(true);
         this.dietologistFacade
             .revokeRelationship()
             .pipe(
                 finalize(() => {
-                    this.isSavingDietologist.set(false);
+                    this.isSavingDietologistRelationshipAction.set(false);
                 }),
             )
             .subscribe({

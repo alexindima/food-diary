@@ -55,6 +55,16 @@ describe('UserManageDietologistSummaryComponent', () => {
         expect(view.summaryAction().action).toBe('revoke');
         expect(view.showPendingStatus()).toBe(false);
     });
+
+    it('shows loading only for relationship actions', async () => {
+        const fixture = await createComponentAsync(createRelationship('Accepted'), true);
+        const view = getProtectedView(fixture.componentInstance);
+        const host = fixture.nativeElement as HTMLElement;
+        const button = host.querySelector('button');
+
+        expect(view.summaryAction().disabled).toBe(true);
+        expect(button?.getAttribute('aria-busy')).toBe('true');
+    });
 });
 
 type DietologistSummaryActionView = {
@@ -87,6 +97,7 @@ function getProtectedView(component: UserManageDietologistSummaryComponent): {
 
 async function createComponentAsync(
     relationship: DietologistRelationship | null,
+    isSavingDietologist = false,
 ): Promise<ComponentFixture<UserManageDietologistSummaryComponent>> {
     await TestBed.configureTestingModule({
         imports: [UserManageDietologistSummaryComponent],
@@ -105,7 +116,7 @@ async function createComponentAsync(
     );
     fixture.componentRef.setInput('dietologistRelationship', relationship);
     fixture.componentRef.setInput('dietologistInviteEmailError', null);
-    fixture.componentRef.setInput('isSavingDietologist', false);
+    fixture.componentRef.setInput('isSavingDietologist', isSavingDietologist);
     fixture.detectChanges();
     return fixture;
 }

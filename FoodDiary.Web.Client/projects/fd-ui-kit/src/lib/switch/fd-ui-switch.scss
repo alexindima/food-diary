@@ -1,5 +1,6 @@
 :host {
     --fd-switch-align-self: auto;
+    --fd-switch-disabled-opacity: 0.6;
     display: inline-flex;
     align-self: var(--fd-switch-align-self);
 }
@@ -18,7 +19,12 @@
 
     &--disabled {
         cursor: default;
-        opacity: 0.6;
+        opacity: var(--fd-switch-disabled-opacity);
+    }
+
+    &:where(:focus-visible) {
+        outline: none;
+        box-shadow: var(--fd-shadow-focus);
     }
 
     &__track {

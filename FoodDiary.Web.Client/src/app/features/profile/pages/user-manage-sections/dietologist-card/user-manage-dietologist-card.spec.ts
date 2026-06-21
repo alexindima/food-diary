@@ -50,7 +50,8 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageDietol
     fixture.componentRef.setInput('dietologistError', null);
     fixture.componentRef.setInput('dietologistInviteEmailError', null);
     fixture.componentRef.setInput('isLoadingDietologist', false);
-    fixture.componentRef.setInput('isSavingDietologist', false);
+    fixture.componentRef.setInput('isSavingDietologistPermissions', false);
+    fixture.componentRef.setInput('isSavingDietologistRelationshipAction', false);
     fixture.detectChanges();
     return fixture;
 }

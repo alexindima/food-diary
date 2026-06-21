@@ -29,7 +29,8 @@ export class UserManageDietologistCardComponent {
     public readonly dietologistError = input.required<string | null>();
     public readonly dietologistInviteEmailError = input.required<string | null>();
     public readonly isLoadingDietologist = input.required<boolean>();
-    public readonly isSavingDietologist = input.required<boolean>();
+    public readonly isSavingDietologistPermissions = input.required<boolean>();
+    public readonly isSavingDietologistRelationshipAction = input.required<boolean>();
 
     public readonly dietologistInvite = output();
     public readonly dietologistRevoke = output();

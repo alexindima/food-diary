@@ -26,9 +26,22 @@ describe('UserManageDietologistPermissionsComponent', () => {
 
         expect(permissionChange).toHaveBeenCalledWith({ controlName: 'shareMeals', value: false });
     });
+
+    it('keeps disabled autosave switches visually stable', async () => {
+        const fixture = await createComponentAsync(true);
+        const host = fixture.nativeElement as HTMLElement;
+        const switchComponent = host.querySelector<HTMLElement>('fd-ui-switch');
+        const switchButton = host.querySelector<HTMLButtonElement>('button[role="switch"]');
+
+        expect(switchComponent).not.toBeNull();
+        expect(switchButton).not.toBeNull();
+        expect(switchComponent?.classList.contains('user-manage__dietologist-permission-switch')).toBe(true);
+        expect(switchButton?.disabled).toBe(true);
+        expect(switchButton?.classList.contains('fd-ui-switch--disabled')).toBe(true);
+    });
 });
 
-async function createComponentAsync(): Promise<ComponentFixture<UserManageDietologistPermissionsComponent>> {
+async function createComponentAsync(isSavingDietologist = false): Promise<ComponentFixture<UserManageDietologistPermissionsComponent>> {
     await TestBed.configureTestingModule({
         imports: [UserManageDietologistPermissionsComponent],
         providers: [provideTranslateTesting()],
@@ -36,7 +49,7 @@ async function createComponentAsync(): Promise<ComponentFixture<UserManageDietol
 
     const fixture = TestBed.createComponent(UserManageDietologistPermissionsComponent);
     fixture.componentRef.setInput('permissions', createPermissions());
-    fixture.componentRef.setInput('isSavingDietologist', false);
+    fixture.componentRef.setInput('isSavingDietologist', isSavingDietologist);
     fixture.detectChanges();
     return fixture;
 }

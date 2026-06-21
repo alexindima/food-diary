@@ -17,14 +17,14 @@
                 [dietologistForm]="dietologistForm()"
                 [dietologistRelationship]="dietologistRelationship()"
                 [dietologistInviteEmailError]="dietologistInviteEmailError()"
-                [isSavingDietologist]="isSavingDietologist()"
+                [isSavingDietologist]="isSavingDietologistRelationshipAction()"
                 (dietologistInvite)="dietologistInvite.emit()"
                 (dietologistRevoke)="dietologistRevoke.emit()"
             />
 
             <fd-user-manage-dietologist-permissions
                 [permissions]="dietologistPermissions()"
-                [isSavingDietologist]="isSavingDietologist()"
+                [isSavingDietologist]="isSavingDietologistPermissions()"
                 (permissionChange)="changeDietologistPermission($event)"
             />
 

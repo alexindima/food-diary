@@ -136,6 +136,36 @@ describe('UserManageComponent dietologist permissions', () => {
             shareFasting: false,
         });
     });
+
+    it('updates relationship permissions without reloading the dietologist section', async () => {
+        await createComponentAsync({
+            invitationId: 'inv-1',
+            status: 'Accepted',
+            email: 'diet@example.com',
+            firstName: null,
+            lastName: null,
+            dietologistUserId: 'diet-1',
+            permissions: {
+                shareProfile: true,
+                shareMeals: true,
+                shareStatistics: true,
+                shareWeight: true,
+                shareWaist: true,
+                shareGoals: true,
+                shareHydration: true,
+                shareFasting: true,
+            },
+            createdAtUtc: '2026-04-15T00:00:00Z',
+            expiresAtUtc: '2026-04-22T00:00:00Z',
+            acceptedAtUtc: '2026-04-15T01:00:00Z',
+        });
+
+        component['updateDietologistPermission']('shareMeals', false);
+
+        expect(dietologistService.getRelationship).not.toHaveBeenCalled();
+        expect(facade.dietologistRelationship()?.permissions.shareMeals).toBe(false);
+        expect(component['isLoadingDietologist']()).toBe(false);
+    });
 });
 
 describe('UserManageComponent dietologist disconnect', () => {
@@ -240,6 +270,18 @@ describe('UserManageComponent profile autosave feedback', () => {
 
         expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
         expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
+    });
+
+    it('ignores bubbled input events outside profile fields', async () => {
+        await createComponentAsync(null);
+        const unrelatedInput = document.createElement('input');
+        unrelatedInput.value = 'ignored';
+        const inputEvent = new Event('input', { bubbles: true });
+        Object.defineProperty(inputEvent, 'target', { value: unrelatedInput });
+
+        component['onUserFormInput'](inputEvent);
+
+        expect(facade.queueProfileAutosave).not.toHaveBeenCalled();
     });
 
     it('queues select changes using the emitted value', async () => {

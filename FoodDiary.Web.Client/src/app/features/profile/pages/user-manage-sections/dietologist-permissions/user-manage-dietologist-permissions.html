@@ -8,6 +8,7 @@
                     <div class="user-manage__notifications-label">{{ permission.labelKey | translate }}</div>
                 </div>
                 <fd-ui-switch
+                    class="user-manage__dietologist-permission-switch"
                     [checked]="permissions()[permission.controlName]"
                     [disabled]="isSavingDietologist()"
                     [fdUiHint]="permission.labelKey | translate"
