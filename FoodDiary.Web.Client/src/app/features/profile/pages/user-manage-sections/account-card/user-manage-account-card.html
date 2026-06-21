@@ -26,7 +26,7 @@
                 [cropSize]="512"
                 [cropAspectRatio]="1"
                 [deleteOnClear]="true"
-                (valueChange)="userFormChange.emit()"
+                (valueChange)="emitFormPatch({ profileImage: $event })"
             />
         </div>
         <div class="user-manage__account-fields fd-stack fd-gap-lg">
@@ -77,7 +77,7 @@
                     [formField]="userForm().birthDate"
                     [label]="'USER_MANAGE.BIRTH_DATE' | translate"
                     [placeholder]="'USER_MANAGE.BIRTH_DATE_PLACEHOLDER' | translate"
-                    (valueChange)="userFormChange.emit()"
+                    (valueChange)="onBirthDateChange($event)"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
@@ -86,7 +86,7 @@
                     [label]="'USER_MANAGE.GENDER' | translate"
                     [placeholder]="'USER_MANAGE.SELECT_GENDER' | translate"
                     [options]="genderOptions()"
-                    (valueChange)="userFormChange.emit()"
+                    (valueChange)="emitFormPatch({ gender: $event })"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
@@ -97,7 +97,7 @@
                     [label]="'USER_MANAGE.LANGUAGE' | translate"
                     [placeholder]="'USER_MANAGE.LANGUAGE_PLACEHOLDER' | translate"
                     [options]="languageOptions()"
-                    (valueChange)="userFormChange.emit()"
+                    (valueChange)="emitFormPatch({ language: $event })"
                 />
                 <fd-ui-select
                     class="user-manage__account-row-field"
@@ -106,7 +106,7 @@
                     [label]="'USER_MANAGE.THEME' | translate"
                     [placeholder]="'USER_MANAGE.THEME_PLACEHOLDER' | translate"
                     [options]="themeOptions()"
-                    (valueChange)="userFormChange.emit()"
+                    (valueChange)="emitFormPatch({ theme: $event })"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">
@@ -117,7 +117,7 @@
                     [label]="'USER_MANAGE.UI_STYLE' | translate"
                     [placeholder]="'USER_MANAGE.UI_STYLE_PLACEHOLDER' | translate"
                     [options]="uiStyleOptions()"
-                    (valueChange)="userFormChange.emit()"
+                    (valueChange)="emitFormPatch({ uiStyle: $event })"
                 />
             </div>
             <div class="user-manage__account-row fd-grid fd-gap-lg fd-align-start">

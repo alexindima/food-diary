@@ -13,11 +13,11 @@ import type { Gender } from '../../../../../shared/models/user.data';
 import type { AppThemeName, AppUiStyleName } from '../../../../../theme/app-theme.config';
 import type { PasswordActionState, ProfileStatusViewModel, UserFormValues } from '../../user-manage/user-manage-lib/user-manage.types';
 
-export type UserManageAccountTextField = 'username' | 'firstName' | 'lastName';
-export type UserManageAccountTextFieldChange = {
-    field: UserManageAccountTextField;
-    value: string | null;
-};
+const ISO_DATE_LENGTH = 10;
+
+export type UserManageAccountFormPatch = Partial<
+    Pick<UserFormValues, 'username' | 'firstName' | 'lastName' | 'birthDate' | 'gender' | 'language' | 'theme' | 'uiStyle' | 'profileImage'>
+>;
 
 @Component({
     selector: 'fd-user-manage-account-card',
@@ -46,15 +46,19 @@ export class UserManageAccountCardComponent {
     public readonly uiStyleOptions = input.required<Array<FdUiSelectOption<AppUiStyleName | null>>>();
 
     public readonly passwordChange = output();
-    public readonly userFormChange = output();
-    public readonly userTextFieldChange = output<UserManageAccountTextFieldChange>();
+    public readonly userFormPatch = output<UserManageAccountFormPatch>();
 
-    protected onTextFieldChange(field: UserManageAccountTextField, value: string | number | null): void {
+    protected onTextFieldChange(field: 'username' | 'firstName' | 'lastName', value: string | number | null): void {
         const nextValue = value === null ? '' : String(value);
-        this.userTextFieldChange.emit({
-            field,
-            value: nextValue.length > 0 ? nextValue : null,
-        });
-        this.userFormChange.emit();
+        this.emitFormPatch({ [field]: nextValue.length > 0 ? nextValue : null });
+    }
+
+    protected onBirthDateChange(value: string | Date | null): void {
+        const nextValue = value instanceof Date ? value.toISOString().slice(0, ISO_DATE_LENGTH) : value;
+        this.emitFormPatch({ birthDate: nextValue });
+    }
+
+    protected emitFormPatch(patch: UserManageAccountFormPatch): void {
+        this.userFormPatch.emit(patch);
     }
 }

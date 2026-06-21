@@ -74,18 +74,40 @@ describe('AuthLoginFormComponent', () => {
         fixture.detectChanges();
 
         const root = fixture.nativeElement as HTMLElement;
-        const formElement = root.querySelector('form') as HTMLFormElement;
+        const formElement = root.querySelector<HTMLFormElement>('form');
+        if (formElement === null) {
+            throw new Error('Expected login form element to render');
+        }
+
         formElement.dispatchEvent(new Event('input', { bubbles: true }));
 
         const buttons = Array.from(root.querySelectorAll('button'));
-        const lastButton = buttons.at(-1);
-        buttons.find(button => button.type === 'button')?.click();
-        expect(lastButton).toBeDefined();
-        lastButton?.click();
+        const resetButton = root.querySelector<HTMLButtonElement>('.auth__link button');
+        const restoreButton = buttons.at(-1);
+        resetButton?.click();
+        expect(restoreButton).toBeDefined();
+        restoreButton?.click();
 
         expect(inputSpy).toHaveBeenCalledTimes(1);
         expect(resetOpenSpy).toHaveBeenCalledTimes(1);
         expect(restoreSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('should toggle password visibility from the suffix button', () => {
+        const { fixture } = createComponent();
+        const root = fixture.nativeElement as HTMLElement;
+        const passwordInput = root.querySelector<HTMLInputElement>('input[autocomplete="current-password"]');
+        const toggleButton = root.querySelector<HTMLButtonElement>('.fd-ui-input__suffix');
+
+        expect(passwordInput?.type).toBe('password');
+        expect(toggleButton).not.toBeNull();
+        expect(toggleButton?.getAttribute('aria-label')).toBe('AUTH.LOGIN.SHOW_PASSWORD');
+
+        toggleButton?.click();
+        fixture.detectChanges();
+
+        expect(passwordInput?.type).toBe('text');
+        expect(toggleButton?.getAttribute('aria-label')).toBe('AUTH.LOGIN.HIDE_PASSWORD');
     });
 });
 

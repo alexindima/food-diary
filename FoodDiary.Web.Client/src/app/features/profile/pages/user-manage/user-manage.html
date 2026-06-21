@@ -22,8 +22,7 @@
                     [themeOptions]="themeOptions"
                     [uiStyleOptions]="uiStyleOptions"
                     (passwordChange)="openChangePasswordDialog()"
-                    (userFormChange)="onUserFormInput()"
-                    (userTextFieldChange)="onUserTextFieldChange($event)"
+                    (userFormPatch)="onUserFormPatch($event)"
                 />
 
                 <fd-user-manage-billing-card
@@ -39,8 +38,7 @@
                 <fd-user-manage-body-card
                     [userForm]="userForm"
                     [activityLevelOptions]="activityLevelOptions"
-                    (heightChange)="onUserHeightChange($event)"
-                    (userFormChange)="onUserFormInput()"
+                    (userFormPatch)="onUserFormPatch($event)"
                 />
 
                 <fd-user-manage-notifications-card

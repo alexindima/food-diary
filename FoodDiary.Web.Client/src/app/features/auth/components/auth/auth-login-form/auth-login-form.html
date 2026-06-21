@@ -22,12 +22,15 @@
     <div class="auth__field fd-stack fd-gap-xs">
         <fd-ui-input
             appearance="auth"
-            type="password"
             autocomplete="current-password"
+            [type]="passwordInputType()"
             [formField]="form().password"
             [label]="'AUTH.LOGIN.PASSWORD' | translate"
             [placeholder]="'AUTH.LOGIN.PASSWORD_PLACEHOLDER' | translate"
             [error]="loginErrors.password"
+            [suffixButtonIcon]="passwordToggleIcon()"
+            [suffixButtonAriaLabel]="passwordToggleLabelKey() | translate"
+            (suffixButtonClicked)="togglePasswordVisibility()"
         />
     </div>
 

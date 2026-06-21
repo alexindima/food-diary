@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, type ElementRef, input, output, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, type ElementRef, input, output, signal, viewChild } from '@angular/core';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -42,4 +42,15 @@ export class AuthLoginFormComponent {
 
     public readonly formElement = viewChild<ElementRef<HTMLFormElement>>('loginFormElement');
     public readonly googleButton = viewChild<ElementRef<HTMLElement>>('googleLoginButton');
+
+    protected readonly isPasswordVisible = signal(false);
+    protected readonly passwordInputType = computed<'password' | 'text'>(() => (this.isPasswordVisible() ? 'text' : 'password'));
+    protected readonly passwordToggleIcon = computed(() => (this.isPasswordVisible() ? 'visibility_off' : 'visibility'));
+    protected readonly passwordToggleLabelKey = computed(() =>
+        this.isPasswordVisible() ? 'AUTH.LOGIN.HIDE_PASSWORD' : 'AUTH.LOGIN.SHOW_PASSWORD',
+    );
+
+    protected togglePasswordVisibility(): void {
+        this.isPasswordVisible.update(isVisible => !isVisible);
+    }
 }

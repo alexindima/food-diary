@@ -40,10 +40,10 @@ import type { BillingOverview } from '../../../premium/models/billing.models';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import {
     UserManageAccountCardComponent,
-    type UserManageAccountTextFieldChange,
+    type UserManageAccountFormPatch,
 } from '../user-manage-sections/account-card/user-manage-account-card';
 import { UserManageBillingCardComponent } from '../user-manage-sections/billing-card/user-manage-billing-card';
-import { UserManageBodyCardComponent } from '../user-manage-sections/body-card/user-manage-body-card';
+import { UserManageBodyCardComponent, type UserManageBodyFormPatch } from '../user-manage-sections/body-card/user-manage-body-card';
 import { UserManageDietologistCardComponent } from '../user-manage-sections/dietologist-card/user-manage-dietologist-card';
 import { UserManageNotificationsCardComponent } from '../user-manage-sections/notifications-card/user-manage-notifications-card';
 import { UserManagePrivacyCardComponent } from '../user-manage-sections/privacy-card/user-manage-privacy-card';
@@ -67,6 +67,8 @@ import {
 } from './user-manage-lib/user-manage-form.mapper';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
+
+type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
 
 @Component({
     selector: 'fd-user-manage',
@@ -318,14 +320,13 @@ export class UserManageComponent {
         this.queueUserFormAutosaveCheck();
     }
 
-    protected onUserTextFieldChange(change: UserManageAccountTextFieldChange): void {
-        this.userForm[change.field]().value.set(change.value);
-        this.queueUserFormAutosaveCheck();
-    }
-
-    protected onUserHeightChange(value: number | null): void {
-        this.userForm.height().value.set(value);
-        this.queueUserFormAutosaveCheck();
+    protected onUserFormPatch(patch: UserManageFormPatch): void {
+        const formData = {
+            ...this.readUserFormValues(),
+            ...patch,
+        };
+        this.userFormModel.set(formData);
+        this.queueUserFormAutosaveCheck(formData);
     }
 
     protected openChangePasswordDialog(): void {
@@ -638,8 +639,7 @@ export class UserManageComponent {
         return Number.isFinite(parsed) ? parsed : null;
     }
 
-    private queueUserFormAutosaveCheck(): void {
-        const formData = this.readUserFormValues();
+    private queueUserFormAutosaveCheck(formData: UserFormValues = this.readUserFormValues()): void {
         this.facade.clearGlobalError();
         this.queueUserAutosave(formData);
         this.updateProfileStatus();

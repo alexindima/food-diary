@@ -12,7 +12,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
-import type { User } from '../../../../shared/models/user.data';
+import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
 import { PushNotificationService } from '../../../../shared/notifications/push-notification.service';
 import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
@@ -242,6 +242,29 @@ describe('UserManageComponent profile autosave feedback', () => {
         expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ firstName: 'Alex' }));
     });
 
+    it('queues select changes using the emitted value', async () => {
+        await createComponentAsync(null, false, {
+            id: 'u1',
+            email: 'user@example.com',
+            hasPassword: true,
+            gender: 'M',
+            theme: 'dark',
+            uiStyle: 'modern',
+            pushNotificationsEnabled: true,
+            fastingPushNotificationsEnabled: true,
+            socialPushNotificationsEnabled: false,
+            fastingCheckInReminderHours: 4,
+            fastingCheckInFollowUpReminderHours: 8,
+            isActive: true,
+            isEmailConfirmed: true,
+        });
+
+        component['onUserFormPatch']({ gender: Gender.Female });
+
+        expect(facade.queueProfileAutosave).toHaveBeenCalledTimes(1);
+        expect(facade.queueProfileAutosave.mock.calls[0][0]).toEqual(expect.objectContaining({ gender: 'F' }));
+    });
+
     it('reports pending and saving profile states for autosave feedback', async () => {
         await createComponentAsync(null);
 
@@ -250,6 +273,7 @@ describe('UserManageComponent profile autosave feedback', () => {
         component['userForm'].firstName().markAsDirty();
         component['userForm'].firstName().value.set('Alex');
         fixture.detectChanges();
+
         expect(component['profileStatus']().key).toBe('USER_MANAGE.PROFILE_STATUS_PENDING');
 
         facade.isSavingProfile.set(true);

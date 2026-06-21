@@ -104,6 +104,8 @@
             "EMAIL_PLACEHOLDER": "user@example.com",
             "PASSWORD": "Пароль",
             "PASSWORD_PLACEHOLDER": "Введите пароль",
+            "SHOW_PASSWORD": "Показать пароль",
+            "HIDE_PASSWORD": "Скрыть пароль",
             "REMEMBER_ME": "Запомнить меня",
             "FORGOT_PASSWORD": "Забыли пароль?",
             "LOGIN": "Войти",
