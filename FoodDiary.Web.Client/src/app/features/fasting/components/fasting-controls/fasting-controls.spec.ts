@@ -19,6 +19,7 @@ const INTERMITTENT_FAST_HOURS = 16;
 const DEFAULT_EXTEND_HOURS = 24;
 const DEFAULT_REDUCE_HOURS = 4;
 const DEFAULT_EATING_WINDOW_HOURS = 8;
+const SHORT_REDUCIBLE_HOURS = 2;
 
 let fixture: ComponentFixture<FastingControlsComponent>;
 let component: FastingControlsComponent;
@@ -192,6 +193,52 @@ describe('FastingControlsComponent active extended session', () => {
     });
 });
 
+describe('FastingControlsComponent target reductions', () => {
+    it('does not request unavailable target reductions', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createExtendedSession());
+        facade.maxReducibleHours.set(SHORT_REDUCIBLE_HOURS);
+        facade.reduceHours.set(DEFAULT_REDUCE_HOURS);
+        fixture.detectChanges();
+
+        component['reduceBy4Hours']();
+        component['reduceBy8Hours']();
+        component['reduceByCustom']();
+
+        expect(facade.reduceTargetByHours).not.toHaveBeenCalled();
+    });
+
+    it('disables preset target reductions that exceed the remaining time', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createExtendedSession());
+        facade.maxReducibleHours.set(SHORT_REDUCIBLE_HOURS);
+        fixture.detectChanges();
+
+        component['toggleReducePanel']();
+        fixture.detectChanges();
+
+        const reduce4Button = getNativeButtonByText(fixture, 'FASTING.REDUCE_4_HOURS');
+        const reduce8Button = getNativeButtonByText(fixture, 'FASTING.REDUCE_8_HOURS');
+
+        expect(reduce4Button.disabled).toBe(true);
+        expect(reduce4Button.title).toBe('DISABLED_HINTS.FASTING_REDUCE_UNAVAILABLE');
+        expect(reduce8Button.disabled).toBe(true);
+        expect(reduce8Button.title).toBe('DISABLED_HINTS.FASTING_REDUCE_UNAVAILABLE');
+    });
+
+    it('allows custom target reduction when it fits the remaining time', () => {
+        facade.isActive.set(true);
+        facade.currentSession.set(createExtendedSession());
+        facade.maxReducibleHours.set(SHORT_REDUCIBLE_HOURS);
+        facade.reduceHours.set(SHORT_REDUCIBLE_HOURS);
+        fixture.detectChanges();
+
+        component['reduceByCustom']();
+
+        expect(facade.reduceTargetByHours).toHaveBeenCalledWith(SHORT_REDUCIBLE_HOURS);
+    });
+});
+
 function host(componentFixture: ComponentFixture<FastingControlsComponent>): HTMLElement {
     return componentFixture.nativeElement as HTMLElement;
 }
@@ -202,6 +249,16 @@ function getButtonByText(componentFixture: ComponentFixture<FastingControlsCompo
     );
     if (button === undefined) {
         throw new Error(`Button with text "${text}" was not found.`);
+    }
+
+    return button;
+}
+
+function getNativeButtonByText(componentFixture: ComponentFixture<FastingControlsComponent>, text: string): HTMLButtonElement {
+    const buttonHost = getButtonByText(componentFixture, text);
+    const button = buttonHost.querySelector('button');
+    if (button === null) {
+        throw new Error(`Native button with text "${text}" was not found.`);
     }
 
     return button;
@@ -245,6 +302,7 @@ type FastingFacadeMock = {
     isReducing: WritableSignal<boolean>;
     isUpdatingCycle: WritableSignal<boolean>;
     canExtendActiveSession: WritableSignal<boolean>;
+    maxReducibleHours: WritableSignal<number>;
 };
 
 function createFacadeMock(): FastingFacadeMock {
@@ -318,6 +376,7 @@ function createFacadeSignals(): Omit<FastingFacadeMock, keyof ReturnType<typeof 
         isReducing: signal(false),
         isUpdatingCycle: signal(false),
         canExtendActiveSession: signal(true),
+        maxReducibleHours: signal(DEFAULT_REDUCE_HOURS),
     };
 }
 

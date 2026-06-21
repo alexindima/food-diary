@@ -98,8 +98,8 @@
                             variant="danger"
                             fill="outline"
                             size="sm"
-                            [disabled]="reduceActionsDisabled()"
-                            [disabledReason]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                            [disabled]="isReduceActionDisabled(4)"
+                            [disabledReason]="getReduceDisabledReason(4) !== null ? (getReduceDisabledReason(4) | translate) : null"
                             (click)="reduce4Hours.emit()"
                         >
                             {{ 'FASTING.REDUCE_4_HOURS' | translate }}
@@ -110,8 +110,8 @@
                             variant="danger"
                             fill="outline"
                             size="sm"
-                            [disabled]="reduceActionsDisabled()"
-                            [disabledReason]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                            [disabled]="isReduceActionDisabled(8)"
+                            [disabledReason]="getReduceDisabledReason(8) !== null ? (getReduceDisabledReason(8) | translate) : null"
                             (click)="reduce8Hours.emit()"
                         >
                             {{ 'FASTING.REDUCE_8_HOURS' | translate }}
@@ -122,8 +122,8 @@
                             size="sm"
                             [variant]="customReduceActionState().variant"
                             [fill]="customReduceActionState().fill"
-                            [disabled]="reduceActionsDisabled()"
-                            [disabledReason]="reduceActionsDisabled() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null"
+                            [disabled]="isReduceActionDisabled(1)"
+                            [disabledReason]="getReduceDisabledReason(1) !== null ? (getReduceDisabledReason(1) | translate) : null"
                             (click)="customReduceShow.emit()"
                         >
                             {{ 'FASTING.PROTOCOL_CUSTOM' | translate }}
@@ -146,9 +146,11 @@
                                 fill="outline"
                                 size="sm"
                                 [loading]="isReducing()"
-                                [disabled]="reduceActionsDisabled()"
+                                [disabled]="isReduceActionDisabled(reduceHours())"
                                 [disabledReason]="
-                                    reduceActionsDisabled() && !isReducing() ? ('DISABLED_HINTS.FASTING_BUSY' | translate) : null
+                                    !isReducing() && getReduceDisabledReason(reduceHours()) !== null
+                                        ? (getReduceDisabledReason(reduceHours()) | translate)
+                                        : null
                                 "
                                 (click)="reduceCustom.emit()"
                             >

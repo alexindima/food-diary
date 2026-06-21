@@ -23,6 +23,7 @@ export class FastingActiveExtendedControlsComponent {
     public readonly isCustomReduceExpanded = input.required<boolean>();
     public readonly extendHours = input.required<number>();
     public readonly reduceHours = input.required<number>();
+    public readonly maxReducibleHours = input.required<number>();
     public readonly isExtending = input.required<boolean>();
     public readonly isReducing = input.required<boolean>();
     public readonly isEnding = input.required<boolean>();
@@ -70,6 +71,22 @@ export class FastingActiveExtendedControlsComponent {
     protected readonly extendActionsDisabled = (): boolean => this.isExtending() || this.isReducing() || this.isEnding();
     protected readonly reduceActionsDisabled = (): boolean => this.isReducing() || this.isExtending() || this.isEnding();
     protected readonly endDisabled = (): boolean => this.isEnding() || this.isReducing() || this.isExtending() || this.isUpdatingCycle();
+
+    protected isReduceActionDisabled(hours: number): boolean {
+        return this.reduceActionsDisabled() || hours > this.maxReducibleHours();
+    }
+
+    protected getReduceDisabledReason(hours: number): string | null {
+        if (this.reduceActionsDisabled()) {
+            return 'DISABLED_HINTS.FASTING_BUSY';
+        }
+
+        if (hours > this.maxReducibleHours()) {
+            return 'DISABLED_HINTS.FASTING_REDUCE_UNAVAILABLE';
+        }
+
+        return null;
+    }
 
     protected normalizeNumericControlValue(value: FdUiInputValue): string | number {
         return fdUiCoerceInputNumberValue(value);

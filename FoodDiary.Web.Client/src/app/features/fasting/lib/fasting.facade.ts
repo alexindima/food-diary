@@ -27,6 +27,7 @@ import {
     DEFAULT_FOLLOW_UP_REMINDER_HOURS,
     DEFAULT_INTERMITTENT_FAST_HOURS,
     DEFAULT_REDUCE_HOURS,
+    EMPTY_FASTING_DURATION_HOURS,
     FASTING_HISTORY_PAGE_SIZE,
     FASTING_PROMPT_SNOOZE_HOURS,
     MAX_CHECK_IN_LEVEL,
@@ -138,6 +139,17 @@ export class FastingFacade {
     public readonly remainingFormatted = computed(() => {
         const remaining = Math.max(0, this.totalMs() - this.elapsedMs());
         return this.formatDuration(remaining);
+    });
+
+    public readonly maxReducibleHours = computed(() => {
+        const session = this.currentSession();
+        if (session?.endedAtUtc !== null) {
+            return EMPTY_FASTING_DURATION_HOURS;
+        }
+
+        const maxByRemainingTime = Math.floor(Math.max(0, this.totalMs() - this.elapsedMs()) / MS_PER_HOUR);
+        const maxByMinimumDuration = Math.max(EMPTY_FASTING_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
+        return Math.min(maxByRemainingTime, maxByMinimumDuration);
     });
 
     public readonly isOvertime = computed(() => this.elapsedMs() > this.totalMs());
@@ -322,6 +334,10 @@ export class FastingFacade {
 
     public reduceTargetByHours(hours: number): void {
         const reducedHours = this.clampFastingHours(hours);
+        if (reducedHours > this.maxReducibleHours()) {
+            return;
+        }
+
         runTrackedRequest(this.destroyRef, this.isReducing, this.fastingService.reduceTarget({ reducedHours }), {
             next: session => {
                 if (session.endedAtUtc !== null) {

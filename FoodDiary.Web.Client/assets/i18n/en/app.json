@@ -32,7 +32,8 @@
         "ACCOUNT_ACTION_BUSY": "Finish the current account action first.",
         "OPERATION_BUSY": "Finish the current operation first.",
         "COOLDOWN_ACTIVE": "Wait for the cooldown to finish.",
-        "FASTING_BUSY": "Finish the current fasting update first."
+        "FASTING_BUSY": "Finish the current fasting update first.",
+        "FASTING_REDUCE_UNAVAILABLE": "Choose fewer hours than the time remaining in this fast."
     },
     "MACRO_SUMMARY": {
         "TITLE": "Nutrient balance",

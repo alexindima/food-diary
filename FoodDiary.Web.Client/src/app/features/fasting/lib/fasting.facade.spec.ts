@@ -358,6 +358,24 @@ describe('FastingFacade setup modes and target changes', () => {
         expect(fastingService.getOverview).not.toHaveBeenCalled();
         expect(facade.currentSession()?.plannedDurationHours).toBe(REDUCED_PLANNED_HOURS);
     });
+
+    it('does not reduce target beyond the remaining full hours', () => {
+        facade.currentSession.set({
+            ...activeSession,
+            startedAtUtc: '2026-04-12T10:00:00Z',
+            protocol: 'F24',
+            planType: 'Extended',
+            occurrenceKind: 'FastDay',
+            initialPlannedDurationHours: DEFAULT_EXTEND_HOURS,
+            plannedDurationHours: DEFAULT_EXTEND_HOURS,
+        });
+
+        expect(facade.maxReducibleHours()).toBe(0);
+
+        facade.reduceTargetByHours(CUSTOM_REDUCE_HOURS);
+
+        expect(fastingService.reduceTarget).not.toHaveBeenCalled();
+    });
 });
 
 type FastingServiceMock = {

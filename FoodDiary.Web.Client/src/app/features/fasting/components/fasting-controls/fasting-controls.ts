@@ -68,6 +68,7 @@ export class FastingControlsComponent {
     protected readonly cyclicEatDayFastHours = this.facade.cyclicEatDayFastHours;
     protected readonly extendHours = this.facade.extendHours;
     protected readonly reduceHours = this.facade.reduceHours;
+    protected readonly maxReducibleHours = this.facade.maxReducibleHours;
     protected readonly isStarting = this.facade.isStarting;
     protected readonly isEnding = this.facade.isEnding;
     protected readonly isExtending = this.facade.isExtending;
@@ -462,13 +463,11 @@ export class FastingControlsComponent {
             return;
         }
 
-        const maxReducibleHours = Math.max(EMPTY_FASTING_DURATION_HOURS, session.plannedDurationHours - MIN_FASTING_HOURS);
-        const normalizedHours = Math.max(MIN_FASTING_HOURS, Math.min(maxReducibleHours, reducedHours));
-        if (normalizedHours <= EMPTY_FASTING_DURATION_HOURS) {
+        if (reducedHours < MIN_FASTING_HOURS || reducedHours > this.maxReducibleHours()) {
             return;
         }
 
-        this.facade.reduceTargetByHours(normalizedHours);
+        this.facade.reduceTargetByHours(reducedHours);
     }
 
     private openCycleActionDialog(titleKey: string, messageKey: string, confirmLabelKey: string, action: () => void): void {

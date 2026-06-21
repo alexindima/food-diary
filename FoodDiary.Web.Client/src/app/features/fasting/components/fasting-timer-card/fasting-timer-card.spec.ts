@@ -358,6 +358,7 @@ type FastingFacadeStub = {
     isReducing: WritableSignal<boolean>;
     isUpdatingCycle: WritableSignal<boolean>;
     canExtendActiveSession: Signal<boolean>;
+    maxReducibleHours: Signal<number>;
     elapsedMs: WritableSignal<number>;
     selectMode: () => void;
     selectProtocol: () => void;
@@ -403,6 +404,7 @@ function createFastingFacadeStub(): FastingFacadeStub {
         isReducing: signal(false),
         isUpdatingCycle: signal(false),
         canExtendActiveSession: computed(() => false),
+        maxReducibleHours: computed(() => DEFAULT_REDUCE_HOURS),
         elapsedMs: signal(0),
         selectMode: noop,
         selectProtocol: noop,
