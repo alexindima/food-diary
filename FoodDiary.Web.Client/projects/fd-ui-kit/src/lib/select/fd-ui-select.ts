@@ -1,6 +1,19 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, input, model, signal, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    type ElementRef,
+    inject,
+    Injector,
+    input,
+    model,
+    signal,
+    viewChild,
+} from '@angular/core';
 import type { FormValueControl } from '@angular/forms/signals';
 
 import { FdUiIconComponent } from '../icon/fd-ui-icon';
@@ -27,6 +40,7 @@ export type FdUiSelectOption<T = unknown> = {
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | null> {
+    private readonly injector = inject(Injector);
     protected readonly isEqual = Object.is;
     protected readonly controlRef = viewChild<ElementRef<HTMLButtonElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
@@ -226,9 +240,12 @@ export class FdUiSelectComponent<T = unknown> implements FormValueControl<T | nu
     }
 
     protected onMenuAttached(): void {
-        queueMicrotask(() => {
-            this.listboxRef()?.nativeElement.focus();
-        });
+        afterNextRender(
+            () => {
+                this.listboxRef()?.nativeElement.focus();
+            },
+            { injector: this.injector },
+        );
     }
 
     protected getOptionId(index: number): string {

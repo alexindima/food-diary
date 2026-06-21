@@ -442,6 +442,28 @@ const noAnyCastSyntax = [
     },
 ];
 
+const noQueueMicrotaskSyntax = [
+    {
+        selector: 'CallExpression[callee.name="queueMicrotask"]',
+        message:
+            'Do not use queueMicrotask in Angular code. Use afterNextRender() for post-render DOM work, or model async state explicitly.',
+    },
+    {
+        selector: 'CallExpression[callee.type="MemberExpression"][callee.property.name="queueMicrotask"]',
+        message:
+            'Do not use queueMicrotask in Angular code. Use afterNextRender() for post-render DOM work, or model async state explicitly.',
+    },
+];
+
+const noEmptyPromiseResolveSyntax = [
+    {
+        selector:
+            'CallExpression[callee.type="MemberExpression"][callee.object.name="Promise"][callee.property.name="resolve"][arguments.length=0]',
+        message:
+            'Do not use empty Promise.resolve() in runtime code. Return the real async operation, use afterNextRender() for post-render work, or keep test-only flushing in specs.',
+    },
+];
+
 const noRedundantBooleanComparisonSyntax = [
     {
         selector:
@@ -1817,6 +1839,7 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 ...noAnyCastSyntax,
+                ...noQueueMicrotaskSyntax,
                 ...noRedundantBooleanComparisonSyntax,
                 {
                     selector: 'PropertyAssignment[key.name="changeDetection"][value.property.name="Eager"]',
@@ -1943,6 +1966,8 @@ export default [
             'no-restricted-syntax': [
                 'error',
                 ...noAnyCastSyntax,
+                ...noQueueMicrotaskSyntax,
+                ...noEmptyPromiseResolveSyntax,
                 ...noRedundantBooleanComparisonSyntax,
                 {
                     selector: 'Decorator[expression.callee.name="HostListener"]',

@@ -45,7 +45,7 @@ export class ChangePasswordDialogComponent {
     });
     private readonly submitChangePasswordFormAsync = async (): Promise<void> => {
         this.onSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(
         this.formModel,

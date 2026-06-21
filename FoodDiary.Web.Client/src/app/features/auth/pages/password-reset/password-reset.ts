@@ -68,7 +68,7 @@ export class PasswordResetComponent {
     });
     private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
         this.onSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(
         this.formModel,

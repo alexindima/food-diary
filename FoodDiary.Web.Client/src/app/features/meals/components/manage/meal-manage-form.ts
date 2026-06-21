@@ -1,5 +1,17 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, input, signal, untracked } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    DestroyRef,
+    effect,
+    inject,
+    Injector,
+    input,
+    signal,
+    untracked,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormRoot, max, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -82,6 +94,7 @@ export class MealManageFormComponent {
     private readonly translateService = inject(TranslateService);
     private readonly navigationService = inject(NavigationService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly router = inject(Router);
     private readonly route = inject(ActivatedRoute);
     private readonly mealManageFacade = inject(MealManageFacade);
@@ -264,9 +277,12 @@ export class MealManageFormComponent {
             });
         }
 
-        queueMicrotask(() => {
-            this.openManualItemDialog(itemIndex);
-        });
+        afterNextRender(
+            () => {
+                this.openManualItemDialog(itemIndex);
+            },
+            { injector: this.injector },
+        );
     }
 
     protected removeItem(index: number): void {

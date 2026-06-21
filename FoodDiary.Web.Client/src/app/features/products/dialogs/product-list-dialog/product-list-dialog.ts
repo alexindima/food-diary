@@ -63,7 +63,7 @@ export class ProductListDialogComponent extends ProductListBaseComponent {
 
     protected override async handleProductClickAsync(product: Product): Promise<void> {
         this.handleSelection(product);
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     }
 
     private handleSelection(product: Product): void {

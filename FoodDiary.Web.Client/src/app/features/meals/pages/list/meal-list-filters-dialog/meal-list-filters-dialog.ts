@@ -40,7 +40,7 @@ export class MealListFiltersDialogComponent {
     });
     private readonly submitFiltersFormAsync = async (): Promise<void> => {
         this.onApply();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(this.formModel, {
         submission: {

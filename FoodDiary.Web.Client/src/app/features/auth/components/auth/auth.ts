@@ -114,17 +114,17 @@ export class AuthComponent {
 
     private readonly submitLoginFormAsync = async (): Promise<void> => {
         this.onLoginSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
 
     private readonly submitRegisterFormAsync = async (): Promise<void> => {
         this.onRegisterSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
 
     private readonly submitPasswordResetFormAsync = async (): Promise<void> => {
         this.onPasswordResetSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
 
     private subscribeFormChanges(): void {

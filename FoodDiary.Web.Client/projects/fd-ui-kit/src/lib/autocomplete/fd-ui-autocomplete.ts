@@ -1,11 +1,14 @@
 import { CdkConnectedOverlay, CdkOverlayOrigin } from '@angular/cdk/overlay';
 import { CommonModule } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
     effect,
     type ElementRef,
+    inject,
+    Injector,
     input,
     model,
     output,
@@ -37,6 +40,7 @@ let uniqueId = 0;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<T | string | null> {
+    private readonly injector = inject(Injector);
     protected readonly controlRef = viewChild<ElementRef<HTMLInputElement>>('control');
     protected readonly controlWrapRef = viewChild<ElementRef<HTMLDivElement>>('controlWrap');
     protected readonly listboxRef = viewChild<ElementRef<HTMLDivElement>>('listbox');
@@ -209,7 +213,7 @@ export class FdUiAutocompleteComponent<T = unknown> implements FormValueControl<
     }
 
     protected onMenuAttached(): void {
-        queueMicrotask(() => this.listboxRef()?.nativeElement.scrollTo({ top: 0 }));
+        afterNextRender(() => this.listboxRef()?.nativeElement.scrollTo({ top: 0 }), { injector: this.injector });
     }
 
     protected getOptionId(index: number): string {

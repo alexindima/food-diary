@@ -1,4 +1,16 @@
-import { ChangeDetectionStrategy, Component, computed, effect, type ElementRef, input, output, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    effect,
+    type ElementRef,
+    inject,
+    Injector,
+    input,
+    output,
+    viewChild,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiHintDirective, FdUiIconComponent } from 'fd-ui-kit';
@@ -20,6 +32,8 @@ import { SidebarRouteLinksComponent } from '../sidebar-route-links/sidebar-route
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarMobileComponent {
+    private readonly injector = inject(Injector);
+
     public readonly isProgressVisible = input.required<boolean>();
     public readonly dailyConsumedKcalRounded = input.required<number>();
     public readonly dailyGoalKcalRounded = input.required<number>();
@@ -55,9 +69,12 @@ export class SidebarMobileComponent {
                 return;
             }
 
-            queueMicrotask(() => {
-                focusFirstSidebarInteractiveElement(this.mobileSheetRef()?.nativeElement);
-            });
+            afterNextRender(
+                () => {
+                    focusFirstSidebarInteractiveElement(this.mobileSheetRef()?.nativeElement);
+                },
+                { injector: this.injector },
+            );
         });
     }
 }

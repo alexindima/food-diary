@@ -1,5 +1,16 @@
 import { NgOptimizedImage, SlicePipe, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, effect, type ElementRef, input, output, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    effect,
+    type ElementRef,
+    inject,
+    Injector,
+    input,
+    output,
+    viewChild,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiIconComponent } from 'fd-ui-kit';
@@ -16,6 +27,8 @@ import { focusFirstSidebarInteractiveElement } from '../sidebar-lib/sidebar-view
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SidebarUserMenuComponent {
+    private readonly injector = inject(Injector);
+
     public readonly user = input.required<User>();
     public readonly userPlanLabelKey = input.required<string>();
     public readonly isOpen = input.required<boolean>();
@@ -33,9 +46,12 @@ export class SidebarUserMenuComponent {
                 return;
             }
 
-            queueMicrotask(() => {
-                focusFirstSidebarInteractiveElement(this.userMenuRef()?.nativeElement);
-            });
+            afterNextRender(
+                () => {
+                    focusFirstSidebarInteractiveElement(this.userMenuRef()?.nativeElement);
+                },
+                { injector: this.injector },
+            );
         });
     }
 }

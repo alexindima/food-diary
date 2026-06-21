@@ -1,5 +1,6 @@
 import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import {
+    afterNextRender,
     ChangeDetectionStrategy,
     Component,
     computed,
@@ -7,6 +8,7 @@ import {
     effect,
     type ElementRef,
     inject,
+    Injector,
     PLATFORM_ID,
     signal,
     viewChild,
@@ -64,6 +66,7 @@ export class FdTourHostComponent {
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly injector = inject(Injector);
     private readonly popover = viewChild<ElementRef<HTMLElement>>('popover');
     private presentedStepKey: string | null = null;
     private cleanupPopoverReveal: (() => void) | null = null;
@@ -205,9 +208,12 @@ export class FdTourHostComponent {
         const rect = element?.getBoundingClientRect();
         if (rect === undefined) {
             this.targetRect.set(null);
-            queueMicrotask(() => {
-                this.tour.next();
-            });
+            afterNextRender(
+                () => {
+                    this.tour.next();
+                },
+                { injector: this.injector },
+            );
             return;
         }
 

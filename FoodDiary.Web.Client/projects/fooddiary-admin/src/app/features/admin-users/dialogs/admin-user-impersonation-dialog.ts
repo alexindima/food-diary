@@ -40,7 +40,7 @@ export class AdminUserImpersonationDialogComponent {
     });
     private readonly submitImpersonationFormAsync = async (): Promise<void> => {
         this.submit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(
         this.formModel,

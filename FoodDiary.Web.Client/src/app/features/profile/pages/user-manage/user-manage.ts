@@ -122,7 +122,7 @@ export class UserManageComponent {
     private readonly userFormInputVersion = signal(0);
     private readonly submitUserFormAsync = async (): Promise<void> => {
         this.onSubmit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly userForm = form(this.userFormModel, {
         submission: {

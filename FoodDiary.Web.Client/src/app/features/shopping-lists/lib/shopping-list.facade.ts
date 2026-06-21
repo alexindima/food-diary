@@ -345,28 +345,33 @@ export class ShoppingListFacade {
     }
 
     private applyEmptyListState(): void {
-        this.suppressAutosave = true;
-        this.lists.set([]);
-        this.list.set(null);
-        this.items.set([]);
-        this.listName.set('');
-        this.selectedListId.set(null);
-        this.lastLoadedListId.set(null);
-        queueMicrotask(() => {
-            this.suppressAutosave = false;
+        this.runWithAutosaveSuppressed(() => {
+            this.lists.set([]);
+            this.list.set(null);
+            this.items.set([]);
+            this.listName.set('');
+            this.selectedListId.set(null);
+            this.lastLoadedListId.set(null);
         });
     }
 
     private applyList(list: ShoppingList): void {
-        this.suppressAutosave = true;
-        this.list.set(list);
-        this.items.set(rebuildShoppingListSortOrder(list.items));
-        this.listName.set(list.name);
-        this.selectedListId.set(list.id);
-        this.lastLoadedListId.set(list.id);
-        queueMicrotask(() => {
-            this.suppressAutosave = false;
+        this.runWithAutosaveSuppressed(() => {
+            this.list.set(list);
+            this.items.set(rebuildShoppingListSortOrder(list.items));
+            this.listName.set(list.name);
+            this.selectedListId.set(list.id);
+            this.lastLoadedListId.set(list.id);
         });
+    }
+
+    private runWithAutosaveSuppressed(action: () => void): void {
+        this.suppressAutosave = true;
+        try {
+            action();
+        } finally {
+            this.suppressAutosave = false;
+        }
     }
 
     private updateListSummary(list: ShoppingList): void {

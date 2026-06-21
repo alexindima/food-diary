@@ -31,7 +31,7 @@ export class CalorieGoalDialogComponent {
     });
     private readonly submitCalorieGoalFormAsync = async (): Promise<void> => {
         this.save();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(
         this.formModel,

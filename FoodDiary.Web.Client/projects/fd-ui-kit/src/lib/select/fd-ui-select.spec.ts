@@ -215,7 +215,7 @@ describe('FdUiSelectComponent classes', () => {
 
 describe('FdUiSelectComponent overlay', () => {
     it('should focus listbox when overlay attaches', async () => {
-        const { component } = await setupSelectAsync();
+        const { component, fixture } = await setupSelectAsync();
         const focus = vi.fn();
         Object.defineProperty(component, 'listboxRef', {
             value: vi.fn(() => ({
@@ -224,7 +224,7 @@ describe('FdUiSelectComponent overlay', () => {
         });
 
         component['onMenuAttached']();
-        await Promise.resolve();
+        await fixture.whenStable();
 
         expect(focus).toHaveBeenCalled();
     });

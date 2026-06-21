@@ -119,7 +119,7 @@ export class ClientDashboardComponent {
     });
     private readonly submitDateFilterFormAsync = async (): Promise<void> => {
         this.applyDateFilter();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly dateFilterForm = form(
         this.dateFilterModel,
@@ -136,7 +136,7 @@ export class ClientDashboardComponent {
     protected readonly recommendationModel = signal<RecommendationFormModel>({ text: '' });
     private readonly submitRecommendationFormAsync = async (): Promise<void> => {
         this.submitRecommendation();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly recommendationForm = form(
         this.recommendationModel,

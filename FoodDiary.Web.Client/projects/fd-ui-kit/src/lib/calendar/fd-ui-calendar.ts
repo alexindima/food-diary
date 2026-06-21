@@ -1,5 +1,17 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, input, LOCALE_ID, model, signal } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    computed,
+    ElementRef,
+    inject,
+    Injector,
+    input,
+    LOCALE_ID,
+    model,
+    signal,
+} from '@angular/core';
 
 import { FdUiButtonComponent } from '../button/fd-ui-button';
 import {
@@ -44,6 +56,7 @@ type FdUiCalendarCell = {
 export class FdUiCalendarComponent {
     private readonly locale = inject(LOCALE_ID);
     private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
+    private readonly injector = inject(Injector);
     private readonly today = this.stripTime(new Date());
     private readonly activeDate = signal<Date>(this.today);
 
@@ -177,14 +190,17 @@ export class FdUiCalendarComponent {
     }
 
     private focusCell(date: Date): void {
-        queueMicrotask(() => {
-            const iso = this.toIsoDate(date);
-            const host = this.host.nativeElement;
-            const cell = host.querySelector(`[data-date="${iso}"]`);
-            if (cell instanceof HTMLElement) {
-                cell.focus();
-            }
-        });
+        afterNextRender(
+            () => {
+                const iso = this.toIsoDate(date);
+                const host = this.host.nativeElement;
+                const cell = host.querySelector(`[data-date="${iso}"]`);
+                if (cell instanceof HTMLElement) {
+                    cell.focus();
+                }
+            },
+            { injector: this.injector },
+        );
     }
 
     private startOfWeek(date: Date): Date {

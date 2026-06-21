@@ -118,7 +118,7 @@ export class CycleTrackingFacade {
     });
     private readonly submitStartCycleFormAsync = async (): Promise<void> => {
         this.startCycle();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     public readonly startCycleForm = form(
         this.startCycleModel,
@@ -159,7 +159,7 @@ export class CycleTrackingFacade {
     });
     private readonly submitDayFormAsync = async (): Promise<void> => {
         this.saveDay();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     public readonly dayForm = form(
         this.dayModel,
@@ -181,7 +181,7 @@ export class CycleTrackingFacade {
     });
     private readonly submitFactorFormAsync = async (): Promise<void> => {
         this.saveFactor();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     public readonly factorForm = form(
         this.factorModel,

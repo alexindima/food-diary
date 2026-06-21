@@ -77,7 +77,7 @@ export class WeightHistoryFacade {
     });
     private readonly submitWeightEntryFormAsync = async (): Promise<void> => {
         this.submit();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     public readonly form = form(
         this.formModel,

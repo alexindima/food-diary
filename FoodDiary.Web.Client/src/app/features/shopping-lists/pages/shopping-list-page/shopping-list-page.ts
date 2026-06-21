@@ -75,7 +75,7 @@ export class ShoppingListPageComponent {
     protected readonly listSelectForm = form(this.listSelectModel);
     private readonly submitItemFormAsync = async (): Promise<void> => {
         this.addItem();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly itemForm = form(
         this.itemFormModel,

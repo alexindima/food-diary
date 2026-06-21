@@ -132,7 +132,7 @@ export class ProductListBaseComponent {
     }
 
     protected async handleProductClickAsync(_product: Product): Promise<void> {
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     }
 
     protected onAddToMeal(product: Product): void {

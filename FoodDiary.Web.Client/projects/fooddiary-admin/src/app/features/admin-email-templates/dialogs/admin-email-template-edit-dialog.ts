@@ -71,7 +71,7 @@ export class AdminEmailTemplateEditDialogComponent {
     });
     private readonly submitTemplateFormAsync = async (): Promise<void> => {
         this.onSave();
-        await Promise.resolve();
+        await Promise.resolve(undefined);
     };
     protected readonly form = form(
         this.formModel,

@@ -1,4 +1,14 @@
-import { ChangeDetectionStrategy, Component, contentChildren, output, TemplateRef, viewChild } from '@angular/core';
+import {
+    afterNextRender,
+    ChangeDetectionStrategy,
+    Component,
+    contentChildren,
+    inject,
+    Injector,
+    output,
+    TemplateRef,
+    viewChild,
+} from '@angular/core';
 
 import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
 
@@ -16,6 +26,7 @@ import { FD_UI_MENU, FD_UI_MENU_ITEM } from './fd-ui-menu.tokens';
     ],
 })
 export class FdUiMenuComponent {
+    private readonly injector = inject(Injector);
     private readonly templateRefValue = viewChild.required(TemplateRef<unknown>);
     private readonly menuItems = contentChildren(FD_UI_MENU_ITEM, { descendants: true });
 
@@ -89,8 +100,11 @@ export class FdUiMenuComponent {
             return;
         }
 
-        queueMicrotask(() => {
-            this.menuItems()[index]?.focus();
-        });
+        afterNextRender(
+            () => {
+                this.menuItems()[index]?.focus();
+            },
+            { injector: this.injector },
+        );
     }
 }
