@@ -16,6 +16,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormRoot, max, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_VALIDATION_ERRORS, type FdValidationErrors, resolveSignalFormFieldError } from 'fd-ui-kit/form-error/fd-ui-form-error';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
@@ -37,6 +40,7 @@ import { DEFAULT_SATIETY_LEVEL, normalizeSatietyLevel } from '../../../../shared
 import { patchSignalFormModel } from '../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty, getStringProperty } from '../../../../shared/lib/unknown-value.utils';
 import type { NutrientData } from '../../../../shared/models/charts.data';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MEAL_MANAGE_MIN_ITEM_AMOUNT } from '../../lib/manage/meal-manage.config';
 import { MealManageFacade } from '../../lib/manage/meal-manage.facade';
@@ -68,6 +72,7 @@ import {
     getTimeInputValue,
 } from './meal-manage-lib/meal-manage-form.mapper';
 import { buildMealTypeSelectOptions, type MealSatietyControlName } from './meal-manage-lib/meal-manage-options.mapper';
+import { MEAL_MANAGE_TOUR } from './meal-manage-tour';
 import { MealManualItemDialogComponent, type MealManualItemDialogData } from './meal-manual-item-dialog/meal-manual-item-dialog';
 import { MealNutritionSidebarComponent } from './meal-nutrition-sidebar/meal-nutrition-sidebar';
 import { MealSatietyCardComponent } from './meal-satiety-card/meal-satiety-card';
@@ -80,6 +85,8 @@ const GENERAL_ERROR_FIELDS = ['date', 'time', 'mealType'] as const;
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PageBodyComponent,
         PageHeaderComponent,
         FdPageContainerDirective,
@@ -99,6 +106,8 @@ export class MealManageFormComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly mealManageFacade = inject(MealManageFacade);
     private readonly fdDialogService = inject(FdUiDialogService);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly calorieMismatchThreshold = DEFAULT_CALORIE_MISMATCH_THRESHOLD;
     private readonly validationErrors = inject<FdValidationErrors>(FD_VALIDATION_ERRORS, { optional: true });
     private readonly languageVersion = signal(0);
@@ -259,6 +268,10 @@ export class MealManageFormComponent {
 
     protected async onCancelAsync(): Promise<void> {
         await this.navigationService.navigateToConsumptionListAsync();
+    }
+
+    protected startMealManageTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(MEAL_MANAGE_TOUR), { force });
     }
 
     protected get items(): ConsumptionItemFormValues[] {

@@ -406,6 +406,19 @@
             "EMPTY_ERROR": "Paste recipe text or add a source URL first.",
             "SOURCE_LABEL": "Source",
             "INGREDIENTS_LABEL": "Ingredients"
+        },
+        "TOUR": {
+            "START_TOUR": "Show recipe form tour",
+            "BASIC_INFO_TITLE": "Recipe basics",
+            "BASIC_INFO_DESCRIPTION": "Set the name, description, timing, servings, image, and visibility for this recipe.",
+            "STEPS_TITLE": "Cooking steps",
+            "STEPS_DESCRIPTION": "Build the recipe steps, add ingredients, and keep instructions in the right order.",
+            "NUTRITION_TITLE": "Nutrition settings",
+            "NUTRITION_DESCRIPTION": "Choose automatic nutrition calculation or enter manual nutrient values.",
+            "ACTIONS_TITLE": "Save or cancel",
+            "ACTIONS_DESCRIPTION": "Save the recipe when the form is valid, or return without applying changes.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
         }
     },
     "RECIPE_DETAIL": {
@@ -940,7 +953,20 @@
         "MANUAL_ITEM_EDIT": "Edit manual item",
         "MANUAL_ITEM_EDIT_NAMED": "Edit manual item: {{name}}",
         "MANUAL_ITEM_DIALOG_TITLE": "Manual item",
-        "MANUAL_ITEM_DIALOG_SAVE": "Save item"
+        "MANUAL_ITEM_DIALOG_SAVE": "Save item",
+        "TOUR": {
+            "START_TOUR": "Show meal form tour",
+            "GENERAL_TITLE": "Meal details",
+            "GENERAL_DESCRIPTION": "Set the date, time, and meal type before adding products or recipes.",
+            "ITEMS_TITLE": "Meal items",
+            "ITEMS_DESCRIPTION": "Add products, recipes, or AI-recognized items that make up this meal.",
+            "SATIETY_TITLE": "Satiety notes",
+            "SATIETY_DESCRIPTION": "Record how full you felt before and after the meal for better context.",
+            "NUTRITION_TITLE": "Nutrition summary",
+            "NUTRITION_DESCRIPTION": "Review calories, macros, warnings, and save actions before submitting.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this form."
+        }
     },
     "HUNGER_BEFORE_SCALE": {
         "LEVEL_1": {
@@ -2553,6 +2579,13 @@
             "GRID_DESCRIPTION": "Open lessons from the grid and mark them as read as you learn.",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        },
+        "DETAIL_TOUR": {
+            "START_TOUR": "Show lesson tour",
+            "CONTENT_TITLE": "Lesson content",
+            "CONTENT_DESCRIPTION": "Read the lesson and mark it as completed when you are done.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this lesson."
         }
     },
     "MEAL_PLANS": {
@@ -2593,6 +2626,15 @@
             "PLANS_DESCRIPTION": "Open a plan to review its days, recipes, and shopping list actions.",
             "HELP_TITLE": "Replay this tour anytime",
             "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        },
+        "DETAIL_TOUR": {
+            "START_TOUR": "Show meal plan tour",
+            "HEADER_TITLE": "Plan overview",
+            "HEADER_DESCRIPTION": "Review the plan summary and use actions to adopt it or generate a shopping list.",
+            "DAYS_TITLE": "Plan days",
+            "DAYS_DESCRIPTION": "Inspect each day of the plan and the recipes assigned to it.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this plan."
         }
     },
     "QUALITY": {
@@ -2761,7 +2803,14 @@
             "HEADING": "My clients",
             "LOADING": "Loading clients...",
             "EMPTY": "No clients yet. Clients can invite you by email.",
-            "CONNECTED": "Connected {{ date }}"
+            "CONNECTED": "Connected {{ date }}",
+            "TOUR": {
+                "START_TOUR": "Show clients tour",
+                "CLIENTS_TITLE": "Connected clients",
+                "CLIENTS_DESCRIPTION": "Open a client to review the data they have shared with you.",
+                "HELP_TITLE": "Replay this tour anytime",
+                "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+            }
         },
         "CLIENT_DASHBOARD": {
             "TITLE": "Client dashboard",
@@ -2854,6 +2903,19 @@
                 "HYDRATION_BODY": "Hydration data will be displayed here.",
                 "FASTING_TITLE": "Fasting",
                 "FASTING_BODY": "Fasting data will be displayed here."
+            },
+            "TOUR": {
+                "START_TOUR": "Show client dashboard tour",
+                "PROFILE_TITLE": "Client profile",
+                "PROFILE_DESCRIPTION": "Review client identity, profile chips, and shared context.",
+                "PERIOD_TITLE": "Shared period",
+                "PERIOD_DESCRIPTION": "Change the date range for shared meals, metrics, and progress data.",
+                "METRICS_TITLE": "Shared metrics",
+                "METRICS_DESCRIPTION": "Review nutrition, body progress, meals, hydration, fasting, and goals when permitted.",
+                "RECOMMENDATIONS_TITLE": "Send recommendations",
+                "RECOMMENDATIONS_DESCRIPTION": "Write recommendations and review what you have already sent to this client.",
+                "HELP_TITLE": "Replay this tour anytime",
+                "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this dashboard."
             }
         }
     },

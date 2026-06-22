@@ -6,7 +6,18 @@
         [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="recipe-manage-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'RECIPE_MANAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'RECIPE_MANAGE.TOUR.START_TOUR' | translate"
+            (click)="startRecipeManageTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <form
@@ -77,9 +88,10 @@
                         </fd-ui-card>
                     }
 
-                    <fd-recipe-basic-info [form]="recipeSignalForm" />
+                    <fd-recipe-basic-info data-tour-id="recipe-manage-basic-info" [form]="recipeSignalForm" />
 
                     <fd-recipe-steps-list
+                        data-tour-id="recipe-manage-steps"
                         [steps]="stepListItems()"
                         [expandedSteps]="expandedStepsSet"
                         [stepsError]="stepsError()"
@@ -100,6 +112,7 @@
                 <div class="recipe-manage__column recipe-manage__column--secondary fd-stack">
                     <div class="recipe-manage__sticky-stack fd-stack fd-gap-lg">
                         <fd-recipe-nutrition-editor
+                            data-tour-id="recipe-manage-nutrition"
                             [form]="recipeSignalForm"
                             [nutritionMode]="nutritionMode()"
                             [nutritionScaleMode]="nutritionScaleMode"
@@ -107,7 +120,7 @@
                             (nutritionScaleModeChange)="onNutritionScaleModeChange($event)"
                         />
 
-                        <div class="recipe-manage__actions-panel">
+                        <div class="recipe-manage__actions-panel" data-tour-id="recipe-manage-actions">
                             <div class="recipe-manage__footer-actions fd-ui-actions fd-ui-actions--split">
                                 <fd-ui-button
                                     type="button"

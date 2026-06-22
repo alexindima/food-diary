@@ -6,7 +6,18 @@
         [backVisible]="true"
         [backAriaLabel]="'PRODUCT_MANAGE.CANCEL_BUTTON' | translate"
         (back)="onCancelAsync()"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="meal-manage-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'CONSUMPTION_MANAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'CONSUMPTION_MANAGE.TOUR.START_TOUR' | translate"
+            (click)="startMealManageTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <form class="consumption-manage__form fd-stack fd-gap-lg" [formRoot]="consumptionSignalForm" [attr.aria-busy]="isSubmitting()">
@@ -14,12 +25,14 @@
             <div class="consumption-manage__grid fd-grid fd-gap-xl">
                 <div class="consumption-manage__column consumption-manage__column--primary fd-stack fd-gap-lg">
                     <fd-meal-general-info
+                        data-tour-id="meal-manage-general"
                         [consumptionForm]="consumptionSignalForm"
                         [mealTypeSelectOptions]="mealTypeSelectOptions"
                         [generalErrors]="generalErrors"
                     />
 
                     <fd-meal-items-section
+                        data-tour-id="meal-manage-items"
                         [items]="itemListItems()"
                         [itemsError]="itemsError()"
                         [aiSessions]="aiSessions()"
@@ -36,6 +49,7 @@
                     />
 
                     <fd-meal-satiety-card
+                        data-tour-id="meal-manage-satiety"
                         [preMealSatietyLevel]="preMealSatietyLevel()"
                         [postMealSatietyLevel]="postMealSatietyLevel()"
                         (preMealSatietyLevelChange)="onSatietyLevelChange('preMealSatietyLevel', $event)"
@@ -45,6 +59,7 @@
 
                 <div class="consumption-manage__column consumption-manage__column--secondary fd-stack fd-gap-lg">
                     <fd-meal-nutrition-sidebar
+                        data-tour-id="meal-manage-nutrition"
                         [consumptionForm]="consumptionSignalForm"
                         [macroBarState]="macroBarState()"
                         [nutritionMode]="nutritionMode()"

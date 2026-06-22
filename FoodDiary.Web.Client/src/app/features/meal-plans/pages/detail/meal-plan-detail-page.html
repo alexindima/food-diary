@@ -4,15 +4,31 @@
         [backVisible]="true"
         [backAriaLabel]="'MEAL_PLANS.BACK' | translate"
         (back)="goBack()"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="meal-plan-detail-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'MEAL_PLANS.DETAIL_TOUR.START_TOUR' | translate"
+            [ariaLabel]="'MEAL_PLANS.DETAIL_TOUR.START_TOUR' | translate"
+            (click)="startMealPlanDetailTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (facade.isDetailLoading()) {
             <fd-ui-loader />
         } @else if (selectedPlanView(); as plan) {
-            <fd-meal-plan-detail-header [plan]="plan.header" (adoptPlan)="adopt()" (generateShoppingList)="generateShoppingList()" />
+            <fd-meal-plan-detail-header
+                data-tour-id="meal-plan-detail-header"
+                [plan]="plan.header"
+                (adoptPlan)="adopt()"
+                (generateShoppingList)="generateShoppingList()"
+            />
 
-            <fd-meal-plan-detail-days [days]="plan.days" />
+            <fd-meal-plan-detail-days data-tour-id="meal-plan-detail-days" [days]="plan.days" />
         }
     </fd-page-body>
 </div>

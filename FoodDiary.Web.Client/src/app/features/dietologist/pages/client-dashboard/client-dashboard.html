@@ -1,9 +1,22 @@
 <div class="client-dashboard">
     <div class="client-dashboard__header fd-stack fd-gap-xs">
-        <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">
-            {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BACK' | translate }}
-        </fd-ui-button>
+        <div class="client-dashboard__header-actions fd-row fd-justify-between fd-gap-sm">
+            <fd-ui-button variant="secondary" fill="outline" (click)="goBack()">
+                {{ 'DIETOLOGIST.CLIENT_DASHBOARD.BACK' | translate }}
+            </fd-ui-button>
+            <fd-ui-button
+                data-tour-id="client-dashboard-tour-help"
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="help_outline"
+                [fdUiHint]="'DIETOLOGIST.CLIENT_DASHBOARD.TOUR.START_TOUR' | translate"
+                [ariaLabel]="'DIETOLOGIST.CLIENT_DASHBOARD.TOUR.START_TOUR' | translate"
+                (click)="startClientDashboardTour()"
+            />
+        </div>
         <fd-client-dashboard-header
+            data-tour-id="client-dashboard-profile"
             [show]="client() !== null"
             [title]="clientTitle()"
             [email]="client()?.email ?? ''"
@@ -25,7 +38,7 @@
         </div>
 
         @if (hasPeriodFilterPermission()) {
-            <fd-ui-card>
+            <fd-ui-card data-tour-id="client-dashboard-period">
                 <form class="client-dashboard__date-filter" [formRoot]="dateFilterForm">
                     <div class="client-dashboard__date-field">
                         <fd-ui-date-input
@@ -74,7 +87,7 @@
 
         <fd-client-dashboard-notices [detailsLoading]="detailsLoading()" [sectionLoadError]="sectionLoadError()" />
 
-        <div class="client-dashboard__sections fd-stack fd-gap-md">
+        <div class="client-dashboard__sections fd-stack fd-gap-md" data-tour-id="client-dashboard-metrics">
             <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.STATISTICS_TITLE" [tiles]="nutritionTiles()" />
             <fd-client-dashboard-metric-list titleKey="DIETOLOGIST.CLIENT_DASHBOARD.SECTIONS.PROGRESS_TITLE" [tiles]="bodyTiles()" />
             <fd-client-dashboard-metric-list
@@ -96,7 +109,7 @@
                 <p class="client-dashboard__no-data fd-ui-body-sm">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.NO_DATA' | translate }}</p>
             }
 
-            <fd-ui-card>
+            <fd-ui-card data-tour-id="client-dashboard-recommendations">
                 <div class="client-dashboard__section client-dashboard__recommendations">
                     <h2 class="fd-ui-card-title">{{ 'DIETOLOGIST.CLIENT_DASHBOARD.RECOMMENDATIONS.TITLE' | translate }}</h2>
                     <form class="client-dashboard__recommendation-form fd-stack fd-gap-sm" [formRoot]="recommendationForm">

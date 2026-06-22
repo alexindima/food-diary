@@ -4,9 +4,25 @@
         [backVisible]="true"
         [backAriaLabel]="'LESSONS.BACK' | translate"
         (back)="goBack()"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="lesson-detail-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'LESSONS.DETAIL_TOUR.START_TOUR' | translate"
+            [ariaLabel]="'LESSONS.DETAIL_TOUR.START_TOUR' | translate"
+            (click)="startLessonDetailTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
-        <fd-lesson-detail-content [isLoading]="facade.isDetailLoading()" [lesson]="lesson()" (markRead)="markRead()" />
+        <fd-lesson-detail-content
+            data-tour-id="lesson-detail-content"
+            [isLoading]="facade.isDetailLoading()"
+            [lesson]="lesson()"
+            (markRead)="markRead()"
+        />
     </fd-page-body>
 </div>

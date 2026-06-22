@@ -1,20 +1,27 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiLoaderComponent } from 'fd-ui-kit/loader/fd-ui-loader';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { MealPlanFacade } from '../../lib/meal-plan.facade';
 import { buildMealPlanDetailView } from '../../lib/meal-plan-view.mapper';
 import { MealPlanDetailDaysComponent } from './meal-plan-detail-sections/meal-plan-detail-days/meal-plan-detail-days';
 import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-plan-detail-header/meal-plan-detail-header';
+import { MEAL_PLAN_DETAIL_TOUR } from './meal-plan-detail-tour';
 
 @Component({
     selector: 'fd-meal-plan-detail-page',
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         FdUiLoaderComponent,
         PageBodyComponent,
         PageHeaderComponent,
@@ -30,6 +37,8 @@ import { MealPlanDetailHeaderComponent } from './meal-plan-detail-sections/meal-
 export class MealPlanDetailPageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     protected readonly facade = inject(MealPlanFacade);
     protected readonly selectedPlanView = computed(() => buildMealPlanDetailView(this.facade.selectedPlan()));
 
@@ -58,5 +67,9 @@ export class MealPlanDetailPageComponent {
 
     protected goBack(): void {
         void this.router.navigate(['/meal-plans']);
+    }
+
+    protected startMealPlanDetailTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(MEAL_PLAN_DETAIL_TOUR), { force });
     }
 }

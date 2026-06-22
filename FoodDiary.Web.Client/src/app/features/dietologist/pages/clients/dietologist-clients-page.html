@@ -1,5 +1,22 @@
 <div class="dietologist-clients">
-    <h1 class="dietologist-clients__title fd-page-title">{{ 'DIETOLOGIST.CLIENTS.HEADING' | translate }}</h1>
+    <div class="dietologist-clients__header fd-row fd-justify-between fd-gap-md">
+        <h1 class="dietologist-clients__title fd-page-title">{{ 'DIETOLOGIST.CLIENTS.HEADING' | translate }}</h1>
+        <fd-ui-button
+            data-tour-id="dietologist-clients-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'DIETOLOGIST.CLIENTS.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'DIETOLOGIST.CLIENTS.TOUR.START_TOUR' | translate"
+            (click)="startDietologistClientsTour()"
+        />
+    </div>
 
-    <fd-dietologist-clients-list [loading]="loading()" [items]="clientItems()" (clientOpen)="openClient($event)" />
+    <fd-dietologist-clients-list
+        data-tour-id="dietologist-clients-list"
+        [loading]="loading()"
+        [items]="clientItems()"
+        (clientOpen)="openClient($event)"
+    />
 </div>

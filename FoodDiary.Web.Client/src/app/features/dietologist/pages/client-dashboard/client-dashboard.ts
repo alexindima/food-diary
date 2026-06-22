@@ -4,6 +4,8 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot, maxLength, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiDateInputComponent } from 'fd-ui-kit/date-input/fd-ui-date-input';
@@ -14,6 +16,7 @@ import { catchError, firstValueFrom, forkJoin, type Observable, of, switchMap, t
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { formatDateInputValue, parseLocalDateInputValue } from '../../../../shared/lib/local-date.utils';
 import type { ClientSummary, DietologistClientGoals, DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import type { DashboardSnapshot } from '../../../dashboard/models/dashboard.data';
 import { DietologistFacade } from '../../lib/dietologist.facade';
 import {
@@ -39,6 +42,7 @@ import {
     type ClientRecommendationView,
     getClientDashboardTitle,
 } from './client-dashboard-lib/client-dashboard.mapper';
+import { CLIENT_DASHBOARD_TOUR } from './client-dashboard-tour';
 import { ClientDashboardFastingCardComponent } from './components/client-dashboard-fasting-card';
 import { ClientDashboardHeaderComponent } from './components/client-dashboard-header';
 import { ClientDashboardHydrationCardComponent } from './components/client-dashboard-hydration-card';
@@ -78,6 +82,7 @@ type RecommendationFormModel = {
         FormField,
         FormRoot,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiCardComponent,
         FdUiDateInputComponent,
@@ -100,6 +105,8 @@ export class ClientDashboardComponent {
     private readonly translateService = inject(TranslateService);
     private readonly toastService = inject(FdUiToastService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly periodPresetDays = PERIOD_PRESET_DAYS;
     protected readonly client = signal<ClientSummary | null>(null);
@@ -225,6 +232,10 @@ export class ClientDashboardComponent {
 
     protected goBack(): void {
         void this.router.navigate(['/dietologist']);
+    }
+
+    protected startClientDashboardTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(CLIENT_DASHBOARD_TOUR), { force });
     }
 
     protected applyDateFilter(): void {

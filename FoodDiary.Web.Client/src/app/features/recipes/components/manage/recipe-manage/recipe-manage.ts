@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { form, FormRoot, max, min, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -13,6 +15,7 @@ import { PageHeaderComponent } from '../../../../../components/shared/page-heade
 import { createCollectionTouchedState } from '../../../../../shared/lib/collection-touched-state.utils';
 import { MANUAL_NUTRITION_MAX_CALORIES, MANUAL_NUTRITION_MAX_NUTRIENT } from '../../../../../shared/lib/nutrition.constants';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
+import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { RecipeManageFacade, type RecipeNutritionSummary } from '../../../lib/recipe-manage.facade';
 import type { Recipe, RecipeDto } from '../../../models/recipe.data';
@@ -37,11 +40,13 @@ import {
     type StepIngredientAmountEvent,
     type StepIngredientEvent,
 } from '../recipe-steps-list/recipe-steps-list';
+import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
 
 @Component({
     selector: 'fd-recipe-manage',
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiCardComponent,
         FdUiInputComponent,
@@ -62,6 +67,8 @@ import {
 export class RecipeManageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly stepFormManager: RecipeStepFormManager;
     private readonly nutritionFormManager: RecipeNutritionFormManager;
     private lastRecipe: Recipe | null = null;
@@ -273,6 +280,10 @@ export class RecipeManageComponent {
     protected onFormSubmit(event: SubmitEvent): void {
         event.preventDefault();
         this.onSubmit();
+    }
+
+    protected startRecipeManageTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(RECIPE_MANAGE_TOUR), { force });
     }
 
     protected onSubmit(): void {
