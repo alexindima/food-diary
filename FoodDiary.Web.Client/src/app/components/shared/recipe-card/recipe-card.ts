@@ -48,6 +48,7 @@ export class RecipeCardComponent {
     public readonly recipe = input.required<RecipeCardItem>();
     public readonly imageUrl = input.required<string | null | undefined>();
     public readonly favoriteLoading = input(false);
+    public readonly showOwnership = input(true);
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
@@ -57,7 +58,13 @@ export class RecipeCardComponent {
     protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'RECIPE_DETAIL.REMOVE_FAVORITE' : 'RECIPE_DETAIL.ADD_FAVORITE',
     );
-    protected readonly ownershipIcon = computed(() => (this.recipe().isOwnedByCurrentUser ? 'person' : 'groups'));
+    protected readonly ownershipIcon = computed(() => {
+        if (!this.showOwnership()) {
+            return null;
+        }
+
+        return this.recipe().isOwnedByCurrentUser ? 'person' : 'groups';
+    });
     protected readonly nutrition = computed(() => ({
         proteins: this.recipe().totalProteins ?? 0,
         fats: this.recipe().totalFats ?? 0,

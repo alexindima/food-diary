@@ -9,80 +9,55 @@
     (toggleRequested)="favoritesToggle.emit()"
     (loadMore)="loadMore.emit()"
 >
-    <div class="product-list__favorites-grid fd-grid fd-gap-xs">
+    <div class="product-list__favorites-grid fd-grid fd-gap-card-profile">
         @for (favorite of favorites(); track favorite.id) {
-            <div class="product-list__favorite-card fd-row fd-justify-between fd-gap-xs">
-                <button type="button" class="product-list__favorite-info" (click)="openProduct.emit(favorite)">
-                    <div class="product-list__favorite-name fd-ui-action-text fd-truncate">
-                        {{ favorite.name || favorite.productName || ('PRODUCT_LIST.FAVORITE_UNNAMED' | translate) }}
-                    </div>
-                    <div class="product-list__favorite-meta fd-ui-caption fd-row fd-wrap fd-gap-xxs">
-                        @if (favorite.brand) {
-                            <span>{{ favorite.brand }}</span>
-                            <span>&middot;</span>
-                        }
-                        <span>{{ favorite.caloriesPerBase | number: '1.0-0' }} {{ 'GENERAL.UNITS.KCAL' | translate }}</span>
-                        <span>&middot;</span>
-                        <span>{{ favorite.preferredPortionAmount | number: '1.0-1' }} {{ favorite.baseUnit }}</span>
-                    </div>
-                </button>
-                <div class="product-list__favorite-actions fd-row fd-gap-xxs">
-                    <div class="product-list__favorite-portion">
-                        <label class="cdk-visually-hidden" [attr.for]="`favorite-portion-${favorite.id}`">
+            <div class="product-list__favorite-card fd-stack">
+                <fd-product-card
+                    [product]="toProductCardItem(favorite)"
+                    [imageUrl]="favorite.imageUrl"
+                    [favoriteLoading]="favoriteLoadingIds().has(favorite.productId)"
+                    [showOwnership]="false"
+                    (open)="openProduct.emit(favorite)"
+                    (addToMeal)="addToMeal.emit(favorite)"
+                    (favoriteToggle)="favoriteRemove.emit(favorite)"
+                />
+                <div class="product-list__favorite-portion-row fd-row fd-justify-between fd-gap-xs">
+                    <div class="product-list__favorite-portion-summary fd-stack fd-gap-micro">
+                        <span class="product-list__favorite-portion-label fd-ui-caption">
                             {{ 'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate }}
-                        </label>
-                        <input
-                            class="product-list__favorite-portion-input"
-                            type="number"
-                            min="0.001"
-                            step="0.1"
-                            [id]="`favorite-portion-${favorite.id}`"
-                            [value]="portionDraftValue(favorite)"
-                            [disabled]="portionSavingIds().has(favorite.id)"
-                            [attr.aria-label]="'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate"
-                            (input)="onPortionInput(favorite, $event)"
-                            (blur)="onPortionBlur(favorite)"
-                            (keydown)="onPortionKeydown(favorite, $event)"
-                        />
-                        <span class="product-list__favorite-portion-unit fd-ui-caption">{{ favorite.baseUnit }}</span>
+                        </span>
                     </div>
-                    <fd-ui-button
-                        class="product-list__favorite-btn"
-                        variant="secondary"
-                        fill="text"
-                        icon="save"
-                        [disabled]="portionSavingIds().has(favorite.id)"
-                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
-                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
-                        (click)="onPortionSave(favorite)"
-                    />
-                    <fd-ui-button
-                        class="product-list__favorite-btn"
-                        variant="secondary"
-                        fill="text"
-                        icon="open_in_new"
-                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_OPEN' | translate"
-                        (click)="openProduct.emit(favorite)"
-                    />
-                    <fd-ui-button
-                        class="product-list__favorite-btn"
-                        variant="secondary"
-                        fill="text"
-                        icon="add"
-                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                        (click)="addToMeal.emit(favorite)"
-                    />
-                    <fd-ui-button
-                        class="product-list__favorite-btn product-list__favorite-btn--remove"
-                        variant="danger"
-                        fill="text"
-                        icon="close"
-                        [fdUiHint]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                        [ariaLabel]="'PRODUCT_LIST.FAVORITE_REMOVE' | translate"
-                        (click)="favoriteRemove.emit(favorite)"
-                    />
+                    <div class="product-list__favorite-portion-actions fd-row fd-gap-xxs">
+                        <div class="product-list__favorite-portion">
+                            <label class="product-list__favorite-portion-input-label" [attr.for]="`favorite-portion-${favorite.id}`">
+                                {{ 'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate }}
+                            </label>
+                            <input
+                                class="product-list__favorite-portion-input"
+                                type="number"
+                                min="0.001"
+                                step="0.1"
+                                [id]="`favorite-portion-${favorite.id}`"
+                                [value]="portionDraftValue(favorite)"
+                                [disabled]="portionSavingIds().has(favorite.id)"
+                                [attr.aria-label]="'PRODUCT_LIST.FAVORITE_PORTION_AMOUNT' | translate"
+                                (input)="onPortionInput(favorite, $event)"
+                                (blur)="onPortionBlur(favorite)"
+                                (keydown)="onPortionKeydown(favorite, $event)"
+                            />
+                            <span class="product-list__favorite-portion-unit fd-ui-caption">{{ favorite.baseUnit }}</span>
+                        </div>
+                        <fd-ui-button
+                            class="product-list__favorite-btn"
+                            variant="secondary"
+                            fill="text"
+                            icon="save"
+                            [disabled]="portionSavingIds().has(favorite.id)"
+                            [fdUiHint]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
+                            [ariaLabel]="'PRODUCT_LIST.FAVORITE_SAVE_PORTION' | translate"
+                            (click)="onPortionSave(favorite)"
+                        />
+                    </div>
                 </div>
             </div>
         }

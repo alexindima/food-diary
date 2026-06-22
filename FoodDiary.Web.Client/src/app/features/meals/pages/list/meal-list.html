@@ -107,6 +107,7 @@
             [isOpen]="isFavoritesOpen()"
             [showLoadMore]="hasMoreFavorites()"
             [isLoadingMore]="isFavoritesLoadingMore()"
+            [favoriteLoadingIds]="favoriteLoadingIds()"
             (toggleRequested)="toggleFavorites()"
             (loadMore)="loadFavorites()"
             (favoriteRepeated)="repeatFavorite($event)"

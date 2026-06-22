@@ -42,6 +42,7 @@ export class ProductCardComponent {
     public readonly product = input.required<ProductCardItem>();
     public readonly imageUrl = input.required<string | null | undefined>();
     public readonly favoriteLoading = input(false);
+    public readonly showOwnership = input(true);
     public readonly open = output();
     public readonly addToMeal = output();
     public readonly favoriteToggle = output();
@@ -51,7 +52,13 @@ export class ProductCardComponent {
     protected readonly favoriteAriaLabelKey = computed(() =>
         this.isFavorite() ? 'PRODUCT_DETAIL.REMOVE_FAVORITE' : 'PRODUCT_DETAIL.ADD_FAVORITE',
     );
-    protected readonly ownershipIcon = computed(() => (this.product().isOwnedByCurrentUser ? 'person' : 'groups'));
+    protected readonly ownershipIcon = computed(() => {
+        if (!this.showOwnership()) {
+            return null;
+        }
+
+        return this.product().isOwnedByCurrentUser ? 'person' : 'groups';
+    });
     protected readonly nutrition = computed(() => ({
         proteins: this.product().proteinsPerBase,
         fats: this.product().fatsPerBase,

@@ -113,6 +113,15 @@ describe('RecipeCardComponent content', () => {
         expect(commentEl).not.toBeNull();
         expect(commentEl?.textContent.trim()).toBe('Family weekend option');
     });
+
+    it('should hide ownership badge when ownership display is disabled', async () => {
+        const { component, el, fixture } = await setupRecipeCardAsync();
+        fixture.componentRef.setInput('showOwnership', false);
+        fixture.detectChanges();
+
+        expect(component['ownershipIcon']()).toBeNull();
+        expect(el.querySelector('.entity-card__ownership-badge')).toBeNull();
+    });
 });
 
 describe('RecipeCardComponent events', () => {

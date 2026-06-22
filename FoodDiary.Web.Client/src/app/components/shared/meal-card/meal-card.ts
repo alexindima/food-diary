@@ -52,8 +52,12 @@ export class MealCardComponent {
     public readonly meal = input.required<MealCardItem>();
     public readonly favoriteLoading = input(false);
     public readonly showDate = input(false);
+    public readonly showAction = input(false);
+    public readonly actionIcon = input('replay');
+    public readonly actionAriaLabel = input<string | null>(null);
     public readonly open = output();
     public readonly favoriteToggle = output();
+    public readonly action = output();
     protected readonly isFavorite = computed(() => Boolean(this.meal().isFavorite));
     protected readonly isAuthenticated = this.authService.isAuthenticated;
     protected readonly canToggleFavorite = computed(() => this.isAuthenticated() && this.meal().id.length > 0);
@@ -155,6 +159,10 @@ export class MealCardComponent {
         }
 
         this.favoriteToggle.emit();
+    }
+
+    protected emitAction(): void {
+        this.action.emit();
     }
 
     private resolvePreviewImage(): string | undefined {

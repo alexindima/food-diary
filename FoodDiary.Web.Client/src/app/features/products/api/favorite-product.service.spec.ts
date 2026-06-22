@@ -8,6 +8,12 @@ import { FavoriteProductService } from './favorite-product.service';
 
 const BASE_URL = 'http://localhost:5300/api/v1/favorite-products';
 const PRODUCT_CALORIES = 52;
+const PRODUCT_PROTEINS = 1;
+const PRODUCT_FATS = 2;
+const PRODUCT_CARBS = 3;
+const PRODUCT_FIBER = 4;
+const PRODUCT_ALCOHOL = 0;
+const PRODUCT_QUALITY_SCORE = 72;
 const DEFAULT_PORTION_AMOUNT = 100;
 const CREATED_PORTION_AMOUNT = 125;
 const UPDATED_PORTION_AMOUNT = 150;
@@ -111,8 +117,18 @@ function createFavoriteProduct(): FavoriteProduct {
         createdAtUtc: '2026-01-01T00:00:00Z',
         productName: 'Apple',
         brand: 'Garden',
+        barcode: '1234567890123',
+        comment: 'Fresh',
         imageUrl: null,
         caloriesPerBase: PRODUCT_CALORIES,
+        proteinsPerBase: PRODUCT_PROTEINS,
+        fatsPerBase: PRODUCT_FATS,
+        carbsPerBase: PRODUCT_CARBS,
+        fiberPerBase: PRODUCT_FIBER,
+        alcoholPerBase: PRODUCT_ALCOHOL,
+        qualityScore: PRODUCT_QUALITY_SCORE,
+        qualityGrade: 'green',
+        isOwnedByCurrentUser: true,
         baseUnit: 'G',
         preferredPortionAmount: DEFAULT_PORTION_AMOUNT,
         defaultPortionAmount: DEFAULT_PORTION_AMOUNT,

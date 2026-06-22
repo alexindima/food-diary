@@ -108,6 +108,15 @@ describe('ProductCardComponent content', () => {
         expect(commentEl).not.toBeNull();
         expect(commentEl?.textContent.trim()).toBe('Best with grilled chicken');
     });
+
+    it('should hide ownership badge when ownership display is disabled', async () => {
+        const { el, fixture } = await setupProductCardAsync();
+        fixture.componentRef.setInput('showOwnership', false);
+        fixture.detectChanges();
+
+        const ownershipBadge = el.querySelector('.entity-card__ownership-badge');
+        expect(ownershipBadge).toBeNull();
+    });
 });
 
 describe('ProductCardComponent events', () => {

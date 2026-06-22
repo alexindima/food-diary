@@ -10,53 +10,17 @@
         (toggleRequested)="favoritesToggle.emit()"
         (loadMore)="favoritesLoadMore.emit()"
     >
-        <div class="recipe-list__favorites-grid fd-grid fd-gap-xs">
+        <div class="recipe-list__section-grid fd-grid fd-gap-card-profile fd-align-start">
             @for (favorite of favorites(); track favorite.id) {
-                <div class="recipe-list__favorite-card fd-row fd-justify-between fd-gap-xs">
-                    <button type="button" class="recipe-list__favorite-info" (click)="favoriteOpen.emit(favorite)">
-                        <div class="recipe-list__favorite-name">
-                            {{ favorite.name || favorite.recipeName || ('RECIPE_LIST.FAVORITE_UNNAMED' | translate) }}
-                        </div>
-                        <div class="recipe-list__favorite-meta fd-ui-caption fd-row fd-wrap fd-gap-xxs">
-                            <span>{{ favorite.ingredientCount }} {{ 'RECIPE_LIST.FAVORITE_INGREDIENTS' | translate }}</span>
-                            @if (favorite.totalTimeMinutes) {
-                                <span>&middot;</span>
-                                <span>{{ favorite.totalTimeMinutes }} {{ 'RECIPE_LIST.FAVORITE_MINUTES' | translate }}</span>
-                            }
-                            <span>&middot;</span>
-                            <span>{{ favorite.servings }} {{ 'RECIPE_LIST.FAVORITE_SERVINGS' | translate }}</span>
-                        </div>
-                    </button>
-                    <div class="recipe-list__favorite-actions fd-row fd-gap-xxs">
-                        <fd-ui-button
-                            class="recipe-list__favorite-btn"
-                            variant="secondary"
-                            fill="text"
-                            icon="open_in_new"
-                            [fdUiHint]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
-                            [ariaLabel]="'RECIPE_LIST.FAVORITE_OPEN' | translate"
-                            (click)="favoriteOpen.emit(favorite)"
-                        />
-                        <fd-ui-button
-                            class="recipe-list__favorite-btn"
-                            variant="secondary"
-                            fill="text"
-                            icon="add"
-                            [fdUiHint]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                            [ariaLabel]="'RECIPE_LIST.FAVORITE_ADD_TO_MEAL' | translate"
-                            (click)="favoriteAddToMeal.emit(favorite)"
-                        />
-                        <fd-ui-button
-                            class="recipe-list__favorite-btn recipe-list__favorite-btn--remove"
-                            variant="danger"
-                            fill="text"
-                            icon="close"
-                            [fdUiHint]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
-                            [ariaLabel]="'RECIPE_LIST.FAVORITE_REMOVE' | translate"
-                            (click)="favoriteRemove.emit(favorite)"
-                        />
-                    </div>
-                </div>
+                <fd-recipe-card
+                    [recipe]="toRecipeCardItem(favorite)"
+                    [imageUrl]="favorite.imageUrl"
+                    [showOwnership]="false"
+                    [favoriteLoading]="favoriteLoadingIds().has(favorite.recipeId)"
+                    (open)="favoriteOpen.emit(favorite)"
+                    (addToMeal)="favoriteAddToMeal.emit(favorite)"
+                    (favoriteToggle)="favoriteRemove.emit(favorite)"
+                />
             }
         </div>
     </fd-favorites-section>

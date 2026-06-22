@@ -110,8 +110,18 @@ export type FavoriteProduct = {
     createdAtUtc: string;
     productName: string;
     brand?: string | null;
+    barcode?: string | null;
+    comment?: string | null;
     imageUrl?: string | null;
     caloriesPerBase: number;
+    proteinsPerBase: number;
+    fatsPerBase: number;
+    carbsPerBase: number;
+    fiberPerBase: number;
+    alcoholPerBase: number;
+    qualityScore: number;
+    qualityGrade: QualityGrade;
+    isOwnedByCurrentUser: boolean;
     baseUnit: string;
     preferredPortionAmount: number;
     defaultPortionAmount: number;

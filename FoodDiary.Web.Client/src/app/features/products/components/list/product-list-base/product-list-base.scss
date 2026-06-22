@@ -177,40 +177,36 @@
     }
 
     &__favorites-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: minmax(0, 1fr);
     }
 
     &__favorite-card {
         min-width: 0;
-        padding: var(--fd-space-xs) var(--fd-space-sm);
-        border-radius: var(--fd-radius-card);
-        background: var(--fd-bg-surface-raised);
-        border: var(--fd-border-strong);
     }
 
-    &__favorite-info {
-        flex: 1;
-        min-width: 0;
-        cursor: pointer;
-        appearance: none;
-        border: none;
-        background: transparent;
-        padding: 0;
-        text-align: left;
-    }
-
-    &__favorite-name {
-        color: var(--fd-color-text);
-    }
-
-    &__favorite-meta {
-        color: var(--fd-color-text-muted);
-        margin-top: var(--fd-space-micro);
-    }
-
-    &__favorite-actions {
+    &__favorite-portion-row {
         align-items: center;
         flex-wrap: nowrap;
+        margin-top: var(--fd-space-xxs);
+        padding: var(--fd-space-xs) var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-card);
+        background: var(--fd-bg-surface-raised);
+    }
+
+    &__favorite-portion-summary {
+        flex: 1 1 auto;
+        min-width: 0;
+    }
+
+    &__favorite-portion-label {
+        color: var(--fd-color-text-muted);
+        font-weight: var(--fd-font-weight-semibold);
+    }
+
+    &__favorite-portion-actions {
+        align-items: center;
+        flex: 0 0 auto;
     }
 
     &__favorite-portion {
@@ -218,6 +214,15 @@
         align-items: center;
         gap: var(--fd-space-micro);
         min-width: 0;
+    }
+
+    &__favorite-portion-input-label {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
     }
 
     &__favorite-portion-input {
@@ -369,6 +374,20 @@
 
         &__favorites-grid {
             grid-template-columns: minmax(0, 1fr);
+        }
+
+        &__favorite-portion-row {
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        &__favorite-portion-summary,
+        &__favorite-portion-actions {
+            flex-basis: 100%;
+        }
+
+        &__favorite-portion-actions {
+            justify-content: space-between;
         }
 
         &__search-form--mobile {

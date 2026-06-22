@@ -367,9 +367,19 @@ export class ProductListFacade {
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {
+        if (this.favoriteLoadingIds().has(favorite.productId)) {
+            return;
+        }
+
+        this.setFavoriteLoading(favorite.productId, true);
         this.favoriteProductService
             .remove(favorite.id)
-            .pipe(take(1))
+            .pipe(
+                take(1),
+                finalize(() => {
+                    this.setFavoriteLoading(favorite.productId, false);
+                }),
+            )
             .subscribe({
                 next: () => {
                     this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));

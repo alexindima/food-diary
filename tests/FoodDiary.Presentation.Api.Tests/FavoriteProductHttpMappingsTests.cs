@@ -67,8 +67,18 @@ public sealed class FavoriteProductHttpMappingsTests {
             createdAtUtc,
             "Milk",
             "Brand",
-            "https://cdn.example/milk.png",
+            Barcode: "1234567890123",
+            Comment: "Fresh",
+            ImageUrl: "https://cdn.example/milk.png",
             CaloriesPerBase: 60,
+            ProteinsPerBase: 3,
+            FatsPerBase: 2,
+            CarbsPerBase: 5,
+            FiberPerBase: 1,
+            AlcoholPerBase: 0,
+            QualityScore: 78,
+            QualityGrade: "green",
+            IsOwnedByCurrentUser: true,
             BaseUnit: "100g",
             PreferredPortionAmount: 150,
             DefaultPortionAmount: 100);
@@ -81,8 +91,18 @@ public sealed class FavoriteProductHttpMappingsTests {
         Assert.Equal(createdAtUtc, response.CreatedAtUtc);
         Assert.Equal("Milk", response.ProductName);
         Assert.Equal("Brand", response.Brand);
+        Assert.Equal("1234567890123", response.Barcode);
+        Assert.Equal("Fresh", response.Comment);
         Assert.Equal("https://cdn.example/milk.png", response.ImageUrl);
         Assert.Equal(60, response.CaloriesPerBase);
+        Assert.Equal(3, response.ProteinsPerBase);
+        Assert.Equal(2, response.FatsPerBase);
+        Assert.Equal(5, response.CarbsPerBase);
+        Assert.Equal(1, response.FiberPerBase);
+        Assert.Equal(0, response.AlcoholPerBase);
+        Assert.Equal(78, response.QualityScore);
+        Assert.Equal("green", response.QualityGrade);
+        Assert.True(response.IsOwnedByCurrentUser);
         Assert.Equal("100g", response.BaseUnit);
         Assert.Equal(150, response.PreferredPortionAmount);
         Assert.Equal(100, response.DefaultPortionAmount);

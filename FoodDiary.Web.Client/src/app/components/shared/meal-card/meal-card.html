@@ -15,8 +15,11 @@
     [nutrition]="nutrition()"
     [quality]="quality()"
     [calories]="meal().totalCalories"
-    [showAction]="false"
+    [showAction]="showAction()"
+    [actionIcon]="actionIcon()"
+    [actionAriaLabel]="actionAriaLabel()"
     (open)="openCard()"
     (preview)="previewCardImage()"
     (favoriteToggle)="toggleFavorite()"
+    (action)="emitAction()"
 />

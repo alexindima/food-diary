@@ -1,10 +1,10 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
 import { FavoritesSectionComponent } from '../../../../../../components/shared/favorites-section/favorites-section';
+import { MealCardComponent } from '../../../../../../components/shared/meal-card/meal-card';
 import type { FavoriteMeal } from '../../../../models/meal.data';
 import type { FavoriteMealView } from '../../meal-list-lib/meal-list.types';
 import { MealListFavoritesComponent } from './meal-list-favorites';
@@ -60,7 +60,7 @@ describe('MealListFavoritesComponent', () => {
         expect(getFixtureText(fixture)).toContain('CONSUMPTION_LIST.FAVORITE_UNNAMED');
     });
 
-    it('should emit repeat and remove actions with selected favorite', async () => {
+    it('should render favorites as meal cards and emit repeat and remove actions', async () => {
         const favorite = createFavorite();
         const { component, fixture } = await setupComponentAsync({ favoriteViews: [createFavoriteView({ favorite })], isOpen: true });
         const repeatedSpy = vi.fn();
@@ -69,9 +69,18 @@ describe('MealListFavoritesComponent', () => {
         component['favoriteRemoved'].subscribe(removedSpy);
 
         fixture.detectChanges();
-        const buttons = fixture.debugElement.queryAll(By.directive(FdUiButtonComponent));
-        buttons[0].triggerEventHandler('click');
-        buttons[1].triggerEventHandler('click');
+        const mealCard = fixture.debugElement.query(By.directive(MealCardComponent)).componentInstance as MealCardComponent;
+        expect(mealCard['showAction']()).toBe(true);
+        expect(mealCard['actionIcon']()).toBe('replay');
+        expect(mealCard['meal']()).toMatchObject({
+            id: favorite.mealId,
+            isFavorite: true,
+            favoriteMealId: favorite.id,
+            totalCalories: favorite.totalCalories,
+        });
+
+        mealCard['action'].emit();
+        mealCard['favoriteToggle'].emit();
 
         expect(repeatedSpy).toHaveBeenCalledWith(favorite);
         expect(removedSpy).toHaveBeenCalledWith(favorite);
@@ -85,6 +94,7 @@ async function setupComponentAsync(
         isLoadingMore: boolean;
         isOpen: boolean;
         showLoadMore: boolean;
+        favoriteLoadingIds: ReadonlySet<string>;
     }> = {},
 ): Promise<{
     component: MealListFavoritesComponent;
@@ -103,6 +113,7 @@ async function setupComponentAsync(
     fixture.componentRef.setInput('isOpen', overrides.isOpen ?? false);
     fixture.componentRef.setInput('showLoadMore', overrides.showLoadMore ?? false);
     fixture.componentRef.setInput('isLoadingMore', overrides.isLoadingMore ?? false);
+    fixture.componentRef.setInput('favoriteLoadingIds', overrides.favoriteLoadingIds ?? new Set<string>());
 
     return {
         component: fixture.componentInstance,

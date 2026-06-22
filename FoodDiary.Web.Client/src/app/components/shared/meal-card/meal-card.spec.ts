@@ -137,6 +137,25 @@ describe('MealCardComponent events', () => {
 
         expect(openSpy).toHaveBeenCalledOnce();
     });
+
+    it('should emit action from card action slot', async () => {
+        const { component, fixture } = await setupMealCardAsync();
+        const actionSpy = vi.fn();
+        component['action'].subscribe(actionSpy);
+
+        fixture.componentRef.setInput('showAction', true);
+        fixture.componentRef.setInput('actionIcon', 'replay');
+        fixture.componentRef.setInput('actionAriaLabel', 'Repeat meal');
+        fixture.detectChanges();
+
+        expect(component['showAction']()).toBe(true);
+        expect(component['actionIcon']()).toBe('replay');
+        expect(component['actionAriaLabel']()).toBe('Repeat meal');
+
+        component['emitAction']();
+
+        expect(actionSpy).toHaveBeenCalledOnce();
+    });
 });
 
 describe('MealCardComponent item count', () => {

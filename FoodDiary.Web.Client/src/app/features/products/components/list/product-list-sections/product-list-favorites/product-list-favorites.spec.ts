@@ -1,7 +1,10 @@
+import { signal } from '@angular/core';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../../testing/translate-testing.module';
+import { AuthService } from '../../../../../../services/auth.service';
 import type { FavoriteProduct } from '../../../../models/product.data';
 import { ProductListFavoritesComponent } from './product-list-favorites';
 
@@ -17,7 +20,7 @@ describe('ProductListFavoritesComponent', () => {
 
         expect(element.textContent).toContain(favorite.name);
         expect(element.textContent).toContain(favorite.brand);
-        expect(element.textContent).toContain('100');
+        expect(getPortionInput(fixture).value).toBe('100');
     });
 
     it('should emit favorite section actions', async () => {
@@ -90,7 +93,21 @@ async function setupComponentAsync(
 
     await TestBed.configureTestingModule({
         imports: [ProductListFavoritesComponent],
-        providers: [provideTranslateTesting()],
+        providers: [
+            provideTranslateTesting(),
+            {
+                provide: AuthService,
+                useValue: {
+                    isAuthenticated: signal(true),
+                },
+            },
+            {
+                provide: FdUiDialogService,
+                useValue: {
+                    open: vi.fn(),
+                },
+            },
+        ],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(ProductListFavoritesComponent);
@@ -124,7 +141,18 @@ function createFavoriteProduct(): FavoriteProduct {
         createdAtUtc: '2026-04-05T10:30:00Z',
         productName: 'Apple',
         brand: 'Garden',
+        barcode: '1234567890123',
+        comment: 'Fresh',
+        imageUrl: null,
         caloriesPerBase: 52,
+        proteinsPerBase: 1,
+        fatsPerBase: 2,
+        carbsPerBase: 3,
+        fiberPerBase: 4,
+        alcoholPerBase: 0,
+        qualityScore: 72,
+        qualityGrade: 'green',
+        isOwnedByCurrentUser: true,
         baseUnit: 'G',
         preferredPortionAmount: DEFAULT_PORTION_AMOUNT,
         defaultPortionAmount: DEFAULT_PORTION_AMOUNT,
