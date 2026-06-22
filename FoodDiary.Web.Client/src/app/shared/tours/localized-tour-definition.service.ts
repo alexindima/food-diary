@@ -1,4 +1,4 @@
-import { inject, Service } from '@angular/core';
+import { inject, Injector, Service } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import type { FdTourDefinition, FdTourPlacement, FdTourStep } from 'fd-tour';
 
@@ -19,7 +19,7 @@ export type LocalizedTourStep = {
 
 @Service()
 export class LocalizedTourDefinitionService {
-    private readonly translateService = inject(TranslateService);
+    private readonly injector = inject(Injector);
 
     public build(config: LocalizedTourConfig): FdTourDefinition {
         return {
@@ -47,7 +47,7 @@ export class LocalizedTourDefinitionService {
     }
 
     private translateTourText(key: string): string {
-        const translation = this.translateService.instant(key);
+        const translation = this.injector.get(TranslateService).instant(key);
         return typeof translation === 'string' ? translation : key;
     }
 }

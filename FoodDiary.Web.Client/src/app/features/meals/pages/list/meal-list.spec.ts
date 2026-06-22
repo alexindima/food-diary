@@ -2,6 +2,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { provideHttpClient } from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { of, throwError } from 'rxjs';
@@ -169,6 +170,7 @@ describe('MealListComponent', () => {
             imports: [MealListComponent],
             providers: [
                 provideTranslateTesting(),
+                provideRouter([]),
                 provideHttpClient(),
                 provideHttpClientTesting(),
                 { provide: MealService, useValue: mockMealService },
