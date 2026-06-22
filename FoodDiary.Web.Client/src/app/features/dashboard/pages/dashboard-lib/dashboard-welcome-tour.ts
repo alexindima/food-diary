@@ -1,74 +1,57 @@
-import type { TranslateService } from '@ngx-translate/core';
-import type { FdTourDefinition } from 'fd-tour';
+import type { LocalizedTourConfig } from '../../../../shared/tours/localized-tour-definition.service';
 
-const DASHBOARD_WELCOME_TOUR_VERSION = 2;
-
-export function buildDashboardWelcomeTour(translateService: TranslateService): FdTourDefinition {
-    return {
-        id: 'dashboard-welcome',
-        version: DASHBOARD_WELCOME_TOUR_VERSION,
-        labels: {
-            previous: translateTourText(translateService, 'LABELS.PREVIOUS'),
-            next: translateTourText(translateService, 'LABELS.NEXT'),
-            finish: translateTourText(translateService, 'LABELS.FINISH'),
-            skip: translateTourText(translateService, 'LABELS.SKIP'),
-            close: translateTourText(translateService, 'LABELS.CLOSE'),
+export const DASHBOARD_WELCOME_TOUR: LocalizedTourConfig = {
+    id: 'dashboard-welcome',
+    translationRoot: 'DASHBOARD.TOUR',
+    steps: [
+        {
+            id: 'quick-add',
+            target: 'dashboard-quick-add',
+            titleKey: 'QUICK_ADD_TITLE',
+            descriptionKey: 'QUICK_ADD_TEXT',
+            placement: 'bottom',
         },
-        steps: [
-            {
-                id: 'quick-add',
-                target: '[data-tour-id="dashboard-quick-add"]',
-                title: translateTourText(translateService, 'QUICK_ADD_TITLE'),
-                description: translateTourText(translateService, 'QUICK_ADD_TEXT'),
-                placement: 'bottom',
-            },
-            {
-                id: 'summary',
-                target: '[data-tour-id="dashboard-summary"]',
-                title: translateTourText(translateService, 'SUMMARY_TITLE'),
-                description: translateTourText(translateService, 'SUMMARY_TEXT'),
-                placement: 'right',
-            },
-            {
-                id: 'meals',
-                target: '[data-tour-id="dashboard-meals"]',
-                title: translateTourText(translateService, 'MEALS_TITLE'),
-                description: translateTourText(translateService, 'MEALS_TEXT'),
-                placement: 'top',
-            },
-            {
-                id: 'hydration',
-                target: '[data-tour-id="dashboard-hydration"]',
-                title: translateTourText(translateService, 'HYDRATION_TITLE'),
-                description: translateTourText(translateService, 'HYDRATION_TEXT'),
-                placement: 'left',
-            },
-            {
-                id: 'appearance',
-                target: '[data-tour-id="dashboard-appearance"]',
-                title: translateTourText(translateService, 'APPEARANCE_TITLE'),
-                description: translateTourText(translateService, 'APPEARANCE_TEXT'),
-                placement: 'bottom',
-            },
-            {
-                id: 'header-actions',
-                target: '[data-tour-id="dashboard-layout-settings"]',
-                title: translateTourText(translateService, 'SETTINGS_TITLE'),
-                description: translateTourText(translateService, 'SETTINGS_TEXT'),
-                placement: 'bottom',
-            },
-            {
-                id: 'help',
-                target: '[data-tour-id="dashboard-tour-help"]',
-                title: translateTourText(translateService, 'HELP_TITLE'),
-                description: translateTourText(translateService, 'HELP_TEXT'),
-                placement: 'bottom',
-            },
-        ],
-    };
-}
-
-function translateTourText(translateService: TranslateService, key: string): string {
-    const translation = translateService.instant(`DASHBOARD.TOUR.${key}`);
-    return typeof translation === 'string' ? translation : key;
-}
+        {
+            id: 'summary',
+            target: 'dashboard-summary',
+            titleKey: 'SUMMARY_TITLE',
+            descriptionKey: 'SUMMARY_TEXT',
+            placement: 'right',
+        },
+        {
+            id: 'meals',
+            target: 'dashboard-meals',
+            titleKey: 'MEALS_TITLE',
+            descriptionKey: 'MEALS_TEXT',
+            placement: 'top',
+        },
+        {
+            id: 'hydration',
+            target: 'dashboard-hydration',
+            titleKey: 'HYDRATION_TITLE',
+            descriptionKey: 'HYDRATION_TEXT',
+            placement: 'left',
+        },
+        {
+            id: 'appearance',
+            target: 'dashboard-appearance',
+            titleKey: 'APPEARANCE_TITLE',
+            descriptionKey: 'APPEARANCE_TEXT',
+            placement: 'bottom',
+        },
+        {
+            id: 'header-actions',
+            target: 'dashboard-layout-settings',
+            titleKey: 'SETTINGS_TITLE',
+            descriptionKey: 'SETTINGS_TEXT',
+            placement: 'bottom',
+        },
+        {
+            id: 'help',
+            target: 'dashboard-tour-help',
+            titleKey: 'HELP_TITLE',
+            descriptionKey: 'HELP_TEXT',
+            placement: 'bottom',
+        },
+    ],
+};

@@ -18,6 +18,7 @@ import { NavigationService } from '../../../../../services/navigation.service';
 import { checkMacrosError } from '../../../../../shared/lib/nutrition-form.utils';
 import { patchSignalFormModel } from '../../../../../shared/lib/signal-form-model.utils';
 import { getRecordProperty } from '../../../../../shared/lib/unknown-value.utils';
+import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import type { UsdaFoodDetail } from '../../../../usda/models/usda.data';
 import { ProductAiRecognitionDialogComponent } from '../../../dialogs/product-ai-recognition-dialog/product-ai-recognition-dialog';
@@ -61,7 +62,7 @@ import type {
     ProductManageMode,
     ProductManagePrefill,
 } from '../product-manage-lib/product-manage-form.types';
-import { buildProductManageTour } from '../product-manage-lib/product-manage-tour';
+import { PRODUCT_MANAGE_TOUR } from '../product-manage-lib/product-manage-tour';
 import type { ProductNameSuggestion } from '../product-manage-lib/product-name-search.types';
 import { ProductNutritionEditorComponent } from '../product-nutrition-editor/product-nutrition-editor';
 
@@ -90,6 +91,7 @@ export class ProductManageFormComponent {
     protected readonly fdDialogService = inject(FdUiDialogService);
     protected readonly nameSearch = inject(ProductNameSearchFacade);
     private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly productManageFacade = inject(ProductManageFacade);
     private readonly externalFoodFacade = inject(ProductExternalFoodFacade);
@@ -409,7 +411,7 @@ export class ProductManageFormComponent {
     }
 
     protected startProductManageTour(force = true): void {
-        this.tourService.start(buildProductManageTour(this.translateService), { force });
+        this.tourService.start(this.localizedTour.build(PRODUCT_MANAGE_TOUR), { force });
     }
 
     protected onNameQueryChange(query: string): void {

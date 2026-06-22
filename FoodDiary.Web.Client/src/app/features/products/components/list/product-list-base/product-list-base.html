@@ -6,7 +6,7 @@
         [compactActions]="true"
     >
         @if (isMobileView()) {
-            <div class="product-list__mobile-toolbar">
+            <div class="product-list__mobile-toolbar" data-tour-id="product-list-actions">
                 <fd-ui-button
                     class="product-list__icon-button product-list__filter-button"
                     appearance="toolbar"
@@ -38,9 +38,20 @@
                     [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
                     (click)="onAddProductClick()"
                 />
+                <fd-ui-button
+                    class="product-list__icon-button"
+                    data-tour-id="product-list-tour-help"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="help_outline"
+                    [fdUiHint]="'PRODUCT_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'PRODUCT_LIST.TOUR.START_TOUR' | translate"
+                    (click)="startProductListTour()"
+                />
             </div>
         } @else {
-            <div class="product-list__header-actions">
+            <div class="product-list__header-actions" data-tour-id="product-list-actions">
                 <fd-ui-button
                     class="product-list__icon-button product-list__filter-button"
                     appearance="toolbar"
@@ -63,13 +74,24 @@
                 >
                     {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
                 </fd-ui-button>
+                <fd-ui-button
+                    class="product-list__icon-button"
+                    data-tour-id="product-list-tour-help"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="help_outline"
+                    [fdUiHint]="'PRODUCT_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'PRODUCT_LIST.TOUR.START_TOUR' | translate"
+                    (click)="startProductListTour()"
+                />
             </div>
         }
     </fd-page-header>
 
     <fd-page-body>
         @if (!isMobileView()) {
-            <div class="product-list__desktop-search">
+            <div class="product-list__desktop-search" data-tour-id="product-list-search">
                 <form class="product-list__search-form product-list__search-form--desktop" [formRoot]="searchForm">
                     <fd-ui-input
                         class="product-list__search-input"
@@ -85,7 +107,11 @@
                 </form>
             </div>
         } @else {
-            <div class="product-list__mobile-search" [class.product-list__mobile-search--open]="isMobileSearchVisible()">
+            <div
+                class="product-list__mobile-search"
+                data-tour-id="product-list-search"
+                [class.product-list__mobile-search--open]="isMobileSearchVisible()"
+            >
                 <form class="product-list__search-form product-list__search-form--mobile" [formRoot]="searchForm">
                     <fd-ui-input
                         class="product-list__search-input"
@@ -118,6 +144,7 @@
         } @else {
             @if (favorites().length > 0) {
                 <fd-product-list-favorites
+                    data-tour-id="product-list-favorites"
                     [favorites]="favorites()"
                     [totalCount]="favoriteTotalCount()"
                     [isOpen]="isFavoritesOpen()"
@@ -133,6 +160,7 @@
             }
             @if (hasVisibleProducts()) {
                 <fd-product-list-groups
+                    data-tour-id="product-list-results"
                     [recentItems]="recentProductItems()"
                     [allItems]="allProductItems()"
                     [allProductsSectionLabelKey]="allProductsSectionLabelKey()"
@@ -147,7 +175,12 @@
                 <fd-product-list-empty-state state="no-results" />
             }
 
-            <fd-product-list-off-section [products]="offProducts()" [isLoading]="offLoading()" (productOpen)="onOffProductClick($event)" />
+            <fd-product-list-off-section
+                data-tour-id="product-list-external"
+                [products]="offProducts()"
+                [isLoading]="offLoading()"
+                (productOpen)="onOffProductClick($event)"
+            />
         }
 
         <fd-product-list-pagination

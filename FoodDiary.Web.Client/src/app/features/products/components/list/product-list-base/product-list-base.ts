@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, ElementRef, inject, viewChild } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -9,6 +10,7 @@ import { ErrorStateComponent } from '../../../../../components/shared/error-stat
 import { PageBodyComponent } from '../../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../../../components/shared/skeleton-card/skeleton-card';
+import { LocalizedTourDefinitionService } from '../../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../../shared/ui/layout/page-container.directive';
 import { ProductListFacade } from '../../../lib/list/product-list.facade';
 import { buildProductTypeTranslationKey } from '../../../lib/product-type.utils';
@@ -20,6 +22,7 @@ import { ProductListFavoritesComponent } from '../product-list-sections/product-
 import { ProductListGroupsComponent } from '../product-list-sections/product-list-groups/product-list-groups';
 import { ProductListOffSectionComponent } from '../product-list-sections/product-list-off-section/product-list-off-section';
 import { ProductListPaginationComponent } from '../product-list-sections/product-list-pagination/product-list-pagination';
+import { PRODUCT_LIST_TOUR } from './product-list-tour';
 
 @Component({
     selector: 'fd-product-list-base',
@@ -49,6 +52,8 @@ import { ProductListPaginationComponent } from '../product-list-sections/product
 })
 export class ProductListBaseComponent {
     protected readonly productListFacade = inject(ProductListFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly header = viewChild.required<PageHeaderComponent, ElementRef<HTMLElement>>(PageHeaderComponent, { read: ElementRef });
 
     protected readonly searchForm = this.productListFacade.searchForm;
@@ -117,6 +122,10 @@ export class ProductListBaseComponent {
 
     protected openFilters(): void {
         this.productListFacade.openFilters();
+    }
+
+    protected startProductListTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(PRODUCT_LIST_TOUR), { force });
     }
 
     protected onOffProductClick(offProduct: OpenFoodFactsProduct): void {

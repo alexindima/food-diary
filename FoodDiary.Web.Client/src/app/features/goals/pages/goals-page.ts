@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import type { FdUiSelectOption } from 'fd-ui-kit/select/fd-ui-select';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { SkeletonCardComponent } from '../../../components/shared/skeleton-card/skeleton-card';
+import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { MAX_BODY_TARGET } from '../lib/goals.constants';
 import { type BodyTargetKey, GoalsFacade, type MacroKey, type MacroPresetKey } from '../lib/goals.facade';
@@ -21,6 +25,7 @@ import {
     isPointInsideGoalRing,
     withMacroProgressStyles,
 } from './goals-page-lib/goals-page-view.mapper';
+import { GOALS_TOUR } from './goals-page-lib/goals-tour';
 import { GoalsBodyTargetsComponent } from './goals-page-sections/body-targets/goals-body-targets';
 import { GoalsCalorieCardComponent } from './goals-page-sections/calorie-card/goals-calorie-card';
 import { GoalsCyclingCardComponent } from './goals-page-sections/cycling-card/goals-cycling-card';
@@ -33,6 +38,8 @@ import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-
     providers: [GoalsFacade],
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -52,6 +59,8 @@ import { GoalsWaterCardComponent } from './goals-page-sections/water-card/goals-
 export class GoalsPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly facade = inject(GoalsFacade);
 
     protected readonly minCalories = this.facade.minCalories;
@@ -85,6 +94,10 @@ export class GoalsPageComponent {
 
     protected reload(): void {
         this.facade.reload();
+    }
+
+    protected startGoalsTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(GOALS_TOUR), { force });
     }
 
     protected readonly currentBodyTargets = computed(() => buildBodyTargets(this.facade.bodyTargetValues()));

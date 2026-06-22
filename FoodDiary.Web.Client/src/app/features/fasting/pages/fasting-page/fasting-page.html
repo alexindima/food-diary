@@ -1,5 +1,16 @@
 <div class="fasting fd-stack fd-gap-md" fdPageContainer>
-    <fd-page-header class="fasting__header" [title]="'FASTING.TITLE' | translate" [subtitle]="'FASTING.SUBTITLE' | translate" />
+    <fd-page-header class="fasting__header" [title]="'FASTING.TITLE' | translate" [subtitle]="'FASTING.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="fasting-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'FASTING.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'FASTING.TOUR.START_TOUR' | translate"
+            (click)="startFastingTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (isLoading()) {
@@ -12,12 +23,13 @@
             <div class="fasting__grid fd-grid fd-gap-lg">
                 <fd-fasting-timer-card
                     class="fasting__card"
+                    data-tour-id="fasting-timer"
                     layout="page"
                     [class.fasting__card--page-summary]="isActive()"
                     [class.fasting__card--setup]="!isActive()"
                 />
 
-                <fd-fasting-stats-card [stats]="stats()" />
+                <fd-fasting-stats-card data-tour-id="fasting-stats" [stats]="stats()" />
             </div>
 
             @if (isActive()) {
@@ -29,6 +41,7 @@
             }
 
             <fd-fasting-check-in-card
+                data-tour-id="fasting-check-in"
                 [isActive]="isActive()"
                 [isSaving]="isSavingCheckIn()"
                 [isEnding]="isEnding()"
@@ -45,9 +58,10 @@
                 (save)="saveCheckIn()"
             />
 
-            <fd-fasting-insights-section [insights]="insightItems()" />
+            <fd-fasting-insights-section data-tour-id="fasting-insights" [insights]="insightItems()" />
 
             <fd-fasting-history-card
+                data-tour-id="fasting-history"
                 [historyItems]="historyItems()"
                 [canLoadMoreHistory]="canLoadMoreHistory()"
                 [isLoadingMoreHistory]="isLoadingMoreHistory()"

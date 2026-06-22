@@ -12,6 +12,7 @@ import {
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -25,6 +26,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { SkeletonCardComponent } from '../../../../components/shared/skeleton-card/skeleton-card';
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
@@ -38,6 +40,7 @@ import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
 import type { FavoriteRecipe, Recipe } from '../../models/recipe.data';
 import type { RecipeCardViewModel } from './recipe-list.types';
+import { RECIPE_LIST_TOUR } from './recipe-list-tour';
 
 @Component({
     selector: 'fd-recipe-list',
@@ -67,6 +70,8 @@ export class RecipeListComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly recipeListFacade = inject(RecipeListFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
 
     private readonly container = viewChild.required<ElementRef<HTMLElement>>('container');
@@ -219,6 +224,10 @@ export class RecipeListComponent {
 
                 this.searchForm.onlyMine().value.set(result.onlyMine);
             });
+    }
+
+    protected startRecipeListTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(RECIPE_LIST_TOUR), { force });
     }
 
     protected clearSearch(): void {

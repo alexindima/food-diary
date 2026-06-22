@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiEmptyStateComponent } from 'fd-ui-kit/empty-state/fd-ui-empty-state';
 
 import { ErrorStateComponent } from '../../../components/shared/error-state/error-state';
@@ -12,10 +15,12 @@ import { StatisticsBodyComponent } from '../../../components/shared/statistics-b
 import { StatisticsNutritionComponent } from '../../../components/shared/statistics-nutrition/statistics-nutrition';
 import { StatisticsSummaryComponent } from '../../../components/shared/statistics-summary/statistics-summary';
 import type { ExportFormat } from '../../../shared/models/export.models';
+import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { StatisticsFacade } from '../lib/statistics.facade';
 import { isBodyTab, isNutritionTab, isStatisticsRange } from '../lib/statistics-data-mapper';
 import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS } from '../lib/statistics-tabs.config';
+import { STATISTICS_TOUR } from './statistics-tour';
 
 @Component({
     selector: 'fd-statistics',
@@ -23,6 +28,8 @@ import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS 
     imports: [
         CommonModule,
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         FdUiEmptyStateComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -40,6 +47,8 @@ import { STATISTICS_BODY_TABS, STATISTICS_NUTRITION_TABS, STATISTICS_RANGE_TABS 
 })
 export class StatisticsComponent {
     protected readonly facade = inject(StatisticsFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     public constructor() {
         this.facade.initialize();
@@ -90,6 +99,10 @@ export class StatisticsComponent {
 
     protected reload(): void {
         this.facade.reload();
+    }
+
+    protected startStatisticsTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(STATISTICS_TOUR), { force });
     }
 
     protected exportDiary(format: ExportFormat): void {

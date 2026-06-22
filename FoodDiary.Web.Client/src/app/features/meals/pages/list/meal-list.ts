@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementR
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
@@ -18,6 +19,7 @@ import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { normalizeMealType, resolveMealTypeByTime } from '../../../../shared/lib/meal-type.util';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
@@ -28,6 +30,7 @@ import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
 import { MealListContentComponent, type MealListEmptyState } from './meal-list-sections/meal-list-content/meal-list-content';
 import { MealListFavoritesComponent } from './meal-list-sections/meal-list-favorites/meal-list-favorites';
+import { MEAL_LIST_TOUR } from './meal-list-tour';
 
 @Component({
     selector: 'fd-meal-list',
@@ -55,6 +58,8 @@ export class MealListComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly translateService = inject(TranslateService);
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
@@ -261,6 +266,10 @@ export class MealListComponent {
             .subscribe(result => {
                 this.applyFilterDialogResult(currentDateRange, result);
             });
+    }
+
+    protected startMealListTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(MEAL_LIST_TOUR), { force });
     }
 
     private applyFilterDialogResult(

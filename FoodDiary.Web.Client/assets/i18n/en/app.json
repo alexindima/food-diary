@@ -35,6 +35,15 @@
         "FASTING_BUSY": "Finish the current fasting update first.",
         "FASTING_REDUCE_UNAVAILABLE": "Choose fewer hours than the time remaining in this fast."
     },
+    "PAGE_TOURS": {
+        "LABELS": {
+            "PREVIOUS": "Back",
+            "NEXT": "Next",
+            "FINISH": "Done",
+            "SKIP": "Skip",
+            "CLOSE": "Close"
+        }
+    },
     "MACRO_SUMMARY": {
         "TITLE": "Nutrient balance",
         "PROTEINS": "Proteins",
@@ -132,7 +141,22 @@
         "SEARCH_LABEL": "Search",
         "SCAN_BARCODE": "Scan barcode",
         "OFF_RESULTS": "Found in Open Food Facts",
-        "OFF_KCAL": "kcal / 100g"
+        "OFF_KCAL": "kcal / 100g",
+        "TOUR": {
+            "START_TOUR": "Show products tour",
+            "ACTIONS_TITLE": "Create and filter products",
+            "ACTIONS_TEXT": "Use these actions to narrow the catalogue, add your own product, or scan food from a barcode.",
+            "SEARCH_TITLE": "Search the catalogue",
+            "SEARCH_TEXT": "Search by name or barcode. The scanner button fills the search from a package barcode.",
+            "FAVORITES_TITLE": "Reuse favorites",
+            "FAVORITES_TEXT": "Favorite products stay close so you can add common foods to meals faster.",
+            "RESULTS_TITLE": "Browse product groups",
+            "RESULTS_TEXT": "Recent and full catalogue sections help you open details, favorite products, or add them to a meal.",
+            "EXTERNAL_TITLE": "External matches",
+            "EXTERNAL_TEXT": "When Open Food Facts has matches, you can use them as a starting point for a product.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the products tour whenever you need a reminder."
+        }
     },
     "PRODUCT_CARD": {
         "ADD_TO_CONSUMPTION": "Add to meal",
@@ -183,7 +207,20 @@
         "CUSTOM_RANGE_TO_LABEL": "To",
         "GRAMS": "g",
         "NO_DATA": "Add more entries to see data for this period.",
-        "LOADING": "Loading statistics..."
+        "LOADING": "Loading statistics...",
+        "TOUR": {
+            "START_TOUR": "Show statistics tour",
+            "PERIOD_TITLE": "Choose a period",
+            "PERIOD_TEXT": "Switch between week, month, year, or a custom date range before reviewing trends.",
+            "SUMMARY_TITLE": "Review totals",
+            "SUMMARY_TEXT": "The summary cards show intake, averages, and export actions for the selected period.",
+            "NUTRITION_TITLE": "Nutrition trends",
+            "NUTRITION_TEXT": "Use these charts to compare calories, macros, and nutrient distribution over time.",
+            "BODY_TITLE": "Body metrics",
+            "BODY_TEXT": "Weight, BMI, waist, and WHtR charts help compare body changes with your diary data.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the statistics tour whenever you need a reminder."
+        }
     },
     "PRODUCT_VISIBILITY": {
         "Public": "Public",
@@ -238,7 +275,20 @@
         "STEPS_COUNT": "Steps",
         "EDIT": "Edit",
         "DELETE": "Delete",
-        "DELETE_ERROR": "Unable to delete the recipe. Please try again."
+        "DELETE_ERROR": "Unable to delete the recipe. Please try again.",
+        "TOUR": {
+            "START_TOUR": "Show recipes tour",
+            "ACTIONS_TITLE": "Create and filter recipes",
+            "ACTIONS_TEXT": "Use the header actions to create a recipe or show only the recipes you own.",
+            "SEARCH_TITLE": "Find saved recipes",
+            "SEARCH_TEXT": "Search by recipe name to quickly return to meals you reuse often.",
+            "FAVORITES_TITLE": "Favorite recipes",
+            "FAVORITES_TEXT": "Favorites keep your regular dishes available for quick repeat use or adding to meals.",
+            "RESULTS_TITLE": "Recipe catalogue",
+            "RESULTS_TEXT": "Open a recipe for details, add it to a meal, or mark it as a favorite from the results.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the recipes tour whenever you need a reminder."
+        }
     },
     "RECIPE_CARD": {
         "ADD_TO_MEAL": "Add to meal"
@@ -670,7 +720,20 @@
         "VOICE_PLACEHOLDER": "Describe your meal, e.g. \"two eggs and toast\"...",
         "VOICE_RESULT_TITLE": "AI recognized items",
         "VOICE_CREATE_MEAL": "Log as meal",
-        "VOICE_MIC_TITLE": "Speak your meal"
+        "VOICE_MIC_TITLE": "Speak your meal",
+        "TOUR": {
+            "START_TOUR": "Show meals tour",
+            "FILTERS_TITLE": "Filter by date",
+            "FILTERS_TEXT": "Use the date filter to review a specific day, week, or custom range of logged meals.",
+            "CREATE_TITLE": "Log a meal",
+            "CREATE_TEXT": "Describe a meal with AI or use the manual action to add products and recipes yourself.",
+            "FAVORITES_TITLE": "Repeat favorites",
+            "FAVORITES_TEXT": "Favorite meals can be repeated for today without rebuilding the same entry.",
+            "RESULTS_TITLE": "Meal timeline",
+            "RESULTS_TEXT": "Open a meal to review details, edit it, repeat it, favorite it, or remove it.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the meals tour whenever you need a reminder."
+        }
     },
     "AI_INPUT_BAR": {
         "PHOTO_TITLE": "Recognize from photo",
@@ -1763,6 +1826,21 @@
         "WIDGET_LABEL": "Fasting",
         "SUBTITLE": "Track your fasting sessions and build healthy habits",
         "LOADING": "Loading fasting data...",
+        "TOUR": {
+            "START_TOUR": "Show fasting tour",
+            "TIMER_TITLE": "Current fasting session",
+            "TIMER_TEXT": "Start, finish, extend, or adjust the active fasting cycle from the main timer card.",
+            "STATS_TITLE": "Fasting stats",
+            "STATS_TEXT": "This card summarizes recent fasting consistency and completed session progress.",
+            "CHECK_IN_TITLE": "Check in during a fast",
+            "CHECK_IN_TEXT": "Log hunger, energy, mood, symptoms, and notes so each session has context.",
+            "INSIGHTS_TITLE": "Session insights",
+            "INSIGHTS_TEXT": "Insights surface prompts and patterns that can help you adjust your fasting routine.",
+            "HISTORY_TITLE": "Fasting history",
+            "HISTORY_TEXT": "Review previous sessions, check-ins, and charts to compare how different fasts felt.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the fasting tour whenever you need a reminder."
+        },
         "READY": "Ready",
         "SELECT_AND_START": "Select a protocol and start",
         "REMAINING": "Remaining",
@@ -2105,7 +2183,22 @@
         "MACRO_PRESET_CLASSIC": "30/30/40 · classic",
         "MACRO_PRESET_LOW_CARB": "50/30/20 · low carb",
         "MACRO_PRESET_HIGH_CARB": "25/25/50 · high carb",
-        "MACRO_PRESET_ENDURANCE": "20/30/50 · endurance"
+        "MACRO_PRESET_ENDURANCE": "20/30/50 · endurance",
+        "TOUR": {
+            "START_TOUR": "Show goals tour",
+            "CALORIES_TITLE": "Daily calorie target",
+            "CALORIES_TEXT": "Set your main calorie target with the ring, slider, or direct input.",
+            "CYCLING_TITLE": "Calorie cycling",
+            "CYCLING_TEXT": "Enable cycling when different weekdays should have different calorie targets.",
+            "WATER_TITLE": "Water target",
+            "WATER_TEXT": "Adjust your daily water goal so hydration appears alongside nutrition goals.",
+            "MACROS_TITLE": "Macro targets",
+            "MACROS_TEXT": "Choose a preset or tune protein, carbs, and fats manually for your routine.",
+            "BODY_TITLE": "Body goals",
+            "BODY_TEXT": "Track weight and waist targets so dashboard trend cards have clear context.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_TEXT": "This help button restarts the goals tour whenever you need a reminder."
+        }
     },
     "NUTRIENTS": {
         "PROTEINS": "Proteins",

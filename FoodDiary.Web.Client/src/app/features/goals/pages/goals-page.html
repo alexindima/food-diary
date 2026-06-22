@@ -9,6 +9,16 @@
                 {{ statusKey | translate }}
             </span>
         }
+        <fd-ui-button
+            data-tour-id="goals-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'GOALS_PAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'GOALS_PAGE.TOUR.START_TOUR' | translate"
+            (click)="startGoalsTour()"
+        />
     </fd-page-header>
 
     <fd-page-body>
@@ -40,6 +50,7 @@
                     <div class="goals__main-grid">
                         <div class="goals__calorie-stack">
                             <fd-goals-calorie-card
+                                data-tour-id="goals-calories"
                                 [minCalories]="minCalories"
                                 [maxCalories]="maxCalories"
                                 [calorieTarget]="calorieTarget()"
@@ -55,6 +66,7 @@
                             />
 
                             <fd-goals-cycling-card
+                                data-tour-id="goals-cycling"
                                 [enabled]="calorieCyclingEnabled()"
                                 [dayControls]="cyclingDayControls()"
                                 [dayCalories]="dayCalories()"
@@ -65,6 +77,7 @@
 
                             @if (waterViewState(); as water) {
                                 <fd-goals-water-card
+                                    data-tour-id="goals-water"
                                     [water]="water"
                                     (waterInput)="onWaterInputChange($event)"
                                     (waterSlider)="onWaterSliderChange($event)"
@@ -74,6 +87,7 @@
 
                         <div class="goals__macro-stack">
                             <fd-goals-macros-card
+                                data-tour-id="goals-macros"
                                 [macroPresetOptions]="macroPresetOptions"
                                 [selectedPreset]="selectedPreset()"
                                 [macros]="coreMacroViewStates()"
@@ -88,7 +102,11 @@
                                 (macroSlider)="onMacroSliderInput($event)"
                             />
 
-                            <fd-goals-body-targets [targets]="currentBodyTargets()" (targetInput)="onBodyTargetInput($event)" />
+                            <fd-goals-body-targets
+                                data-tour-id="goals-body"
+                                [targets]="currentBodyTargets()"
+                                (targetInput)="onBodyTargetInput($event)"
+                            />
                         </div>
                     </div>
                 </div>

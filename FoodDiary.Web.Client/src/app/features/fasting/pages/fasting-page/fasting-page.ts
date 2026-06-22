@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, signal, untracked } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import type { FdUiInlineAlertSeverity } from 'fd-ui-kit/inline-alert/fd-ui-inline-alert';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
@@ -12,6 +15,7 @@ import { SkeletonCardComponent } from '../../../../components/shared/skeleton-ca
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
 import { HOURS_PER_DAY, MINUTES_PER_HOUR, MS_PER_MINUTE } from '../../../../shared/lib/time.constants';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { FastingCheckInCardComponent } from '../../components/fasting-check-in-card/fasting-check-in-card';
 import {
@@ -47,6 +51,7 @@ import type {
     FastingHistorySessionViewModel,
     FastingMessageViewModel,
 } from '../fasting-page-lib/fasting-page.types';
+import { FASTING_TOUR } from '../fasting-page-lib/fasting-tour';
 import { FastingAlertsSectionComponent } from '../fasting-page-sections/alerts-section/fasting-alerts-section';
 import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/fasting-stats-card';
 
@@ -54,6 +59,8 @@ import { FastingStatsCardComponent } from '../fasting-page-sections/stats-card/f
     selector: 'fd-fasting-page',
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -75,6 +82,8 @@ export class FastingPageComponent {
     private readonly translateService = inject(TranslateService);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly localizationService = inject(LocalizationService);
     private readonly toastService = inject(FdUiToastService);
     private readonly currentLanguage = signal(this.localizationService.getCurrentLanguage());
@@ -168,6 +177,10 @@ export class FastingPageComponent {
     protected closeCheckInForm(): void {
         this.isCheckInExpanded.set(false);
         this.facade.resetCheckInDraft();
+    }
+
+    protected startFastingTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(FASTING_TOUR), { force });
     }
 
     protected dismissPrompt(promptId: string): void {

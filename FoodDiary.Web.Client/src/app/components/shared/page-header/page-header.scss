@@ -17,7 +17,7 @@
 
 .fd-page-header {
     display: flex;
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: var(--fd-space-page-header-actions-gap) var(--fd-space-page-header-gap);
@@ -55,10 +55,6 @@
 }
 
 :host(:where(.fd-page-header--compact-actions)) {
-    .fd-page-header {
-        align-items: flex-start;
-    }
-
     .fd-page-header__actions {
         width: auto;
         margin-left: auto;

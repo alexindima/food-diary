@@ -26,6 +26,7 @@ import { type UnsavedChangesHandler, UnsavedChangesService } from '../../../serv
 import { resolveTranslateLanguage } from '../../../shared/i18n/translate-language.utils';
 import { ViewportService } from '../../../shared/platform/viewport.service';
 import { ThemeService } from '../../../shared/theme/theme.service';
+import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { AiMealCreateFacade } from '../../meals/lib/ai/ai-meal-create.facade';
 import type { TdeeInsightDialogComponent as TdeeInsightDialogComponentType } from '../dialogs/tdee-insight-dialog/tdee-insight-dialog';
@@ -50,7 +51,7 @@ import {
     buildDashboardMealsPreviewState,
     isDashboardAsideBlock,
 } from './dashboard-lib/dashboard-view-state.mapper';
-import { buildDashboardWelcomeTour } from './dashboard-lib/dashboard-welcome-tour';
+import { DASHBOARD_WELCOME_TOUR } from './dashboard-lib/dashboard-welcome-tour';
 import { DashboardAdviceBlockComponent } from './dashboard-sections/dashboard-advice-block/dashboard-advice-block';
 import { DashboardCycleBlockComponent } from './dashboard-sections/dashboard-cycle-block/dashboard-cycle-block';
 import { DashboardEditHintComponent } from './dashboard-sections/dashboard-edit-hint/dashboard-edit-hint';
@@ -101,6 +102,7 @@ export class DashboardComponent {
     private readonly viewportService = inject(ViewportService);
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly facade = inject(DashboardFacade);
     protected readonly layout = inject(DashboardLayoutService);
     private readonly languageVersion = signal(0);
@@ -309,7 +311,7 @@ export class DashboardComponent {
             return;
         }
 
-        this.tourService.start(buildDashboardWelcomeTour(this.translateService), { force });
+        this.tourService.start(this.localizedTour.build(DASHBOARD_WELCOME_TOUR), { force });
     }
 
     protected async addConsumptionAsync(mealType?: string | null): Promise<void> {

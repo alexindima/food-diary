@@ -6,7 +6,7 @@
         [compactActions]="true"
     >
         @if (isMobileView()) {
-            <div class="consumption-list__mobile-toolbar">
+            <div class="consumption-list__mobile-toolbar" data-tour-id="meal-list-filters">
                 <fd-ui-button
                     class="consumption-list__icon-button consumption-list__filter-button"
                     appearance="toolbar"
@@ -18,9 +18,20 @@
                     [class.consumption-list__filter-button--active]="hasDateFilter()"
                     (click)="openFilters()"
                 />
+                <fd-ui-button
+                    class="consumption-list__icon-button"
+                    data-tour-id="meal-list-tour-help"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="help_outline"
+                    [fdUiHint]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    (click)="startMealListTour()"
+                />
             </div>
         } @else {
-            <div class="consumption-list__header-actions">
+            <div class="consumption-list__header-actions" data-tour-id="meal-list-filters">
                 <fd-ui-button
                     class="consumption-list__icon-button consumption-list__filter-button"
                     appearance="toolbar"
@@ -31,6 +42,17 @@
                     [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                     [class.consumption-list__filter-button--active]="hasDateFilter()"
                     (click)="openFilters()"
+                />
+                <fd-ui-button
+                    class="consumption-list__icon-button"
+                    data-tour-id="meal-list-tour-help"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="help_outline"
+                    [fdUiHint]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'CONSUMPTION_LIST.TOUR.START_TOUR' | translate"
+                    (click)="startMealListTour()"
                 />
             </div>
         }
@@ -39,6 +61,7 @@
     <fd-page-body>
         @defer (on idle) {
             <fd-ai-input-action-bar
+                data-tour-id="meal-list-create"
                 mode="create"
                 [isProcessing]="isAiMealSaving()"
                 [clearToken]="aiMealClearToken()"
@@ -78,6 +101,7 @@
         }
 
         <fd-meal-list-favorites
+            data-tour-id="meal-list-favorites"
             [favoriteViews]="favoriteViews()"
             [count]="favoriteTotalCount()"
             [isOpen]="isFavoritesOpen()"
@@ -90,6 +114,7 @@
         />
 
         <fd-meal-list-content
+            data-tour-id="meal-list-results"
             [errorKey]="errorKey()"
             [isLoading]="consumptionData.isLoading()"
             [emptyState]="emptyState()"

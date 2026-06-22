@@ -1,5 +1,16 @@
 <div class="statistics" fdPageContainer>
-    <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" [subtitle]="'STATISTICS.SUBTITLE' | translate" />
+    <fd-page-header class="statistics__header" [title]="'STATISTICS.TITLE' | translate" [subtitle]="'STATISTICS.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="statistics-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'STATISTICS.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'STATISTICS.TOUR.START_TOUR' | translate"
+            (click)="startStatisticsTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (hasLoadError()) {
@@ -7,6 +18,7 @@
         } @else {
             <fd-period-filter
                 class="statistics__period"
+                data-tour-id="statistics-period"
                 [tabs]="rangeTabs"
                 [selectedValue]="selectedRange()"
                 [rangeField]="customRangeForm.range"
@@ -30,6 +42,7 @@
             }
 
             <fd-statistics-summary
+                data-tour-id="statistics-summary"
                 [summary]="summaryMetrics()"
                 [summarySparklinePoints]="summarySparklinePoints()"
                 [macroSparklinePoints]="macroSparklinePoints()"
@@ -39,6 +52,7 @@
 
             <fd-statistics-nutrition
                 class="statistics__card statistics__card--charts"
+                data-tour-id="statistics-nutrition"
                 [tabs]="nutritionTabs"
                 [selectedTab]="selectedNutritionTab()"
                 [hasData]="hasStatisticsData()"
@@ -51,6 +65,7 @@
 
             <fd-statistics-body
                 class="statistics__card statistics__card--body"
+                data-tour-id="statistics-body"
                 [tabs]="bodyTabs"
                 [selectedTab]="selectedBodyTab()"
                 [isLoading]="isBodyLoading()"
