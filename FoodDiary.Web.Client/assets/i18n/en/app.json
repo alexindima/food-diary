@@ -1319,7 +1319,24 @@
         "UPDATE_SUCCESS": "User information updated successfully!",
         "ADMIN_PANEL": "Open admin panel",
         "ADMIN_SSO_ERROR": "Failed to open the admin panel. Please try again.",
-        "GO_TO_HOME_BUTTON": "Go to Home"
+        "GO_TO_HOME_BUTTON": "Go to Home",
+        "TOUR": {
+            "START_TOUR": "Show profile tour",
+            "ACCOUNT_TITLE": "Account settings",
+            "ACCOUNT_DESCRIPTION": "Update your name, email, language, theme, and password settings.",
+            "BILLING_TITLE": "Subscription",
+            "BILLING_DESCRIPTION": "Review your current billing state and open subscription management.",
+            "BODY_TITLE": "Body profile",
+            "BODY_DESCRIPTION": "Keep body details current so goals and insights can use better context.",
+            "NOTIFICATIONS_TITLE": "Notifications",
+            "NOTIFICATIONS_DESCRIPTION": "Manage push notifications, fasting reminders, and connected devices.",
+            "DIETOLOGIST_TITLE": "Dietologist access",
+            "DIETOLOGIST_DESCRIPTION": "Invite or disconnect a dietologist and control which data they can see.",
+            "PRIVACY_TITLE": "Privacy and data",
+            "PRIVACY_DESCRIPTION": "Review AI consent, privacy links, and account deletion controls.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "SIDEBAR": {
         "PLAN_PRO": "Pro",
@@ -1383,7 +1400,14 @@
         "FROM_GENERIC": "From your dietologist",
         "STATUS_UNREAD": "New",
         "STATUS_READ": "Read",
-        "STATUS_MARKING": "Marking..."
+        "STATUS_MARKING": "Marking...",
+        "TOUR": {
+            "START_TOUR": "Show recommendations tour",
+            "LIST_TITLE": "Dietologist recommendations",
+            "LIST_DESCRIPTION": "Read new recommendations and mark them as reviewed when you open an item.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "SHOPPING_LIST": {
         "TITLE": "Shopping list",
@@ -1426,7 +1450,18 @@
         "CREATE_ERROR": "Failed to create shopping list.",
         "DELETE_ERROR": "Failed to delete shopping list.",
         "CLEAR_ERROR": "Failed to clear shopping list.",
-        "SAVE_ERROR": "Failed to save shopping list."
+        "SAVE_ERROR": "Failed to save shopping list.",
+        "TOUR": {
+            "START_TOUR": "Show shopping list tour",
+            "SUMMARY_TITLE": "Current list summary",
+            "SUMMARY_DESCRIPTION": "See which list is active and how many items are still left to buy.",
+            "ITEMS_TITLE": "Shopping items",
+            "ITEMS_DESCRIPTION": "Add products, amounts, categories, and notes, then check items off as you shop.",
+            "MANAGE_TITLE": "Manage lists",
+            "MANAGE_DESCRIPTION": "Switch lists, rename them, clear completed planning, or create a new list.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "TODAY_CONSUMPTION": {
         "TITLE": "Today's Consumption",
@@ -1639,7 +1674,22 @@
         "NO_PREVIOUS": "Not enough data yet",
         "NO_CHANGE": "No change since last log",
         "NO_DATA": "Tap to add your weight",
-        "LOADING": "Loading weight entries..."
+        "LOADING": "Loading weight entries...",
+        "TOUR": {
+            "START_TOUR": "Show weight history tour",
+            "PERIOD_TITLE": "Choose a period",
+            "PERIOD_DESCRIPTION": "Switch between week, month, year, or a custom date range for the chart.",
+            "CHART_TITLE": "Weight trend",
+            "CHART_DESCRIPTION": "Track how your weight changes across the selected period.",
+            "ENTRY_FORM_TITLE": "Log a weight entry",
+            "ENTRY_FORM_DESCRIPTION": "Add a new measurement or edit an existing one from the history list.",
+            "GOAL_TITLE": "Target weight",
+            "GOAL_DESCRIPTION": "Set the weight goal used by dashboard progress and body insights.",
+            "ENTRIES_TITLE": "Measurement history",
+            "ENTRIES_DESCRIPTION": "Review previous entries and edit or delete incorrect logs.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "WAIST_HISTORY": {
         "SUBTITLE": "Body measurements",
@@ -1696,6 +1746,21 @@
             "NORMAL": "Great job — keep balanced meals and activity.",
             "ELEVATED": "Adjust nutrition and workouts to return to the optimal zone.",
             "HIGH": "We recommend creating a plan with your doctor."
+        },
+        "TOUR": {
+            "START_TOUR": "Show waist tracking tour",
+            "PERIOD_TITLE": "Choose a period",
+            "PERIOD_DESCRIPTION": "Switch between week, month, year, or a custom date range for the chart.",
+            "CHART_TITLE": "Waist trend",
+            "CHART_DESCRIPTION": "Track how your waist measurement changes across the selected period.",
+            "ENTRY_FORM_TITLE": "Log a waist entry",
+            "ENTRY_FORM_DESCRIPTION": "Add a new measurement or edit an existing one from the history list.",
+            "GOAL_TITLE": "Target waist",
+            "GOAL_DESCRIPTION": "Set the waist goal used by body progress insights.",
+            "ENTRIES_TITLE": "Measurement history",
+            "ENTRIES_DESCRIPTION": "Review previous entries and edit or delete incorrect logs.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
     },
     "CYCLE_TRACKING": {
@@ -1819,7 +1884,22 @@
         "CLEAR_DAY": "Clear day",
         "BADGE_PERIOD": "Period",
         "BADGE_FOLLICULAR": "Logged",
-        "BADGE_TRACKED": "Logged"
+        "BADGE_TRACKED": "Logged",
+        "TOUR": {
+            "START_TOUR": "Show cycle tracking tour",
+            "SETUP_TITLE": "Cycle setup",
+            "SETUP_DESCRIPTION": "Set cycle length, period length, tracking mode, and notification preferences.",
+            "CURRENT_TITLE": "Current cycle",
+            "CURRENT_DESCRIPTION": "Review the current cycle phase, predictions, and logged status.",
+            "DAY_LOG_TITLE": "Daily log",
+            "DAY_LOG_DESCRIPTION": "Record bleeding, symptoms, fertility details, and notes for a specific day.",
+            "FACTORS_TITLE": "Cycle factors",
+            "FACTORS_DESCRIPTION": "Track events that may affect predictions, such as contraception or postpartum changes.",
+            "HISTORY_TITLE": "Logged days",
+            "HISTORY_DESCRIPTION": "Review saved cycle days and edit or clear records when needed.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "FASTING": {
         "TITLE": "Intermittent fasting",
@@ -2105,7 +2185,18 @@
         "BADGE_MEALS_10": "10 meals",
         "BADGE_MEALS_50": "50 meals",
         "BADGE_MEALS_100": "100 meals",
-        "BADGE_MEALS_500": "500 meals"
+        "BADGE_MEALS_500": "500 meals",
+        "TOUR": {
+            "START_TOUR": "Show achievements tour",
+            "STATS_TITLE": "Progress stats",
+            "STATS_DESCRIPTION": "Review streaks, logged meals, and weekly adherence at a glance.",
+            "HEALTH_SCORE_TITLE": "Health score",
+            "HEALTH_SCORE_DESCRIPTION": "This score combines consistency, goal adherence, and activity signals.",
+            "BADGES_TITLE": "Badges",
+            "BADGES_DESCRIPTION": "Earn badges as you build consistent nutrition habits.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "WEEKLY_CHECK_IN": {
         "TITLE": "Weekly review",
@@ -2133,7 +2224,18 @@
         "suggestion.weight_decreasing": "Your weight is going down. Keep up the good work!",
         "suggestion.drink_more_water": "Your water intake is low. Aim for at least 1.5L per day.",
         "suggestion.low_protein": "Your protein intake is low. Consider adding more protein sources.",
-        "suggestion.keep_going": "Keep logging and stay consistent!"
+        "suggestion.keep_going": "Keep logging and stay consistent!",
+        "TOUR": {
+            "START_TOUR": "Show weekly review tour",
+            "TRENDS_TITLE": "Weekly trends",
+            "TRENDS_DESCRIPTION": "Compare this week with the previous one across key nutrition and body metrics.",
+            "STATS_TITLE": "This week",
+            "STATS_DESCRIPTION": "See the main totals and averages for the current weekly review.",
+            "SUGGESTIONS_TITLE": "Suggestions",
+            "SUGGESTIONS_DESCRIPTION": "Use personalized suggestions to adjust the next week of tracking.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "GOALS_PAGE": {
         "TITLE": "Goals",
@@ -2402,6 +2504,17 @@
         },
         "SUPPORT": {
             "TEXT": "If checkout or billing management does not open correctly, contact"
+        },
+        "TOUR": {
+            "START_TOUR": "Show Premium tour",
+            "OVERVIEW_TITLE": "Access overview",
+            "OVERVIEW_DESCRIPTION": "Check your current Premium state, renewal details, and account actions.",
+            "PLANS_TITLE": "Available plans",
+            "PLANS_DESCRIPTION": "Compare monthly and yearly options when checkout is available.",
+            "BENEFITS_TITLE": "Premium benefits",
+            "BENEFITS_DESCRIPTION": "Review what Premium unlocks across insights, AI features, and collaboration.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
     },
     "LESSONS": {
@@ -2429,6 +2542,17 @@
             "Beginner": "Beginner",
             "Intermediate": "Intermediate",
             "Advanced": "Advanced"
+        },
+        "TOUR": {
+            "START_TOUR": "Show lessons tour",
+            "PROGRESS_TITLE": "Learning progress",
+            "PROGRESS_DESCRIPTION": "Track how many lessons you have completed.",
+            "FILTERS_TITLE": "Lesson filters",
+            "FILTERS_DESCRIPTION": "Filter the academy by topic to focus on what matters now.",
+            "GRID_TITLE": "Lesson library",
+            "GRID_DESCRIPTION": "Open lessons from the grid and mark them as read as you learn.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
     },
     "MEAL_PLANS": {
@@ -2460,6 +2584,15 @@
             "DINNER": "Dinner",
             "SNACK": "Snack",
             "OTHER": "Other"
+        },
+        "TOUR": {
+            "START_TOUR": "Show meal plans tour",
+            "FILTERS_TITLE": "Diet filters",
+            "FILTERS_DESCRIPTION": "Filter curated plans by diet type to narrow the list.",
+            "PLANS_TITLE": "Meal plans",
+            "PLANS_DESCRIPTION": "Open a plan to review its days, recipes, and shopping list actions.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
         }
     },
     "QUALITY": {
@@ -2583,7 +2716,18 @@
         "NO_RESULTS_MESSAGE": "Try adjusting your search or filters.",
         "MAX_PREP_TIME": "Max prep time (min)",
         "FILTERS": "Filters",
-        "CLEAR_FILTERS": "Clear Filters"
+        "CLEAR_FILTERS": "Clear Filters",
+        "TOUR": {
+            "START_TOUR": "Show explore tour",
+            "SEARCH_TITLE": "Search recipes",
+            "SEARCH_DESCRIPTION": "Search public recipes by name or keyword.",
+            "SORT_TITLE": "Sort recipes",
+            "SORT_DESCRIPTION": "Switch between the newest and most popular recipes.",
+            "RECIPES_TITLE": "Recipe results",
+            "RECIPES_DESCRIPTION": "Open a recipe card to inspect the details.",
+            "HELP_TITLE": "Replay this tour anytime",
+            "HELP_DESCRIPTION": "Use this help button whenever you want a quick reminder of this page."
+        }
     },
     "COMMENTS": {
         "TITLE": "Comments",

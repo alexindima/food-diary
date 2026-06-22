@@ -1,5 +1,16 @@
 <section fdPageContainer class="premium-access-page fd-stack">
-    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate" />
+    <fd-page-header [title]="'PREMIUM_PAGE.TITLE' | translate" [subtitle]="'PREMIUM_PAGE.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="premium-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'PREMIUM_PAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'PREMIUM_PAGE.TOUR.START_TOUR' | translate"
+            (click)="startPremiumTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <fd-premium-access-banners
@@ -10,6 +21,7 @@
         />
 
         <fd-premium-overview-card
+            data-tour-id="premium-overview"
             [viewModel]="overviewViewModel()"
             [portalLoading]="portalLoading()"
             [trialLoading]="trialLoading()"
@@ -20,9 +32,9 @@
         />
 
         @if (showPlans()) {
-            <fd-premium-plans-card [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
+            <fd-premium-plans-card data-tour-id="premium-plans" [cards]="planCards()" (checkout)="startCheckoutFromViewAsync($event)" />
         }
 
-        <fd-premium-benefits-card />
+        <fd-premium-benefits-card data-tour-id="premium-benefits" />
     </fd-page-body>
 </section>

@@ -3,14 +3,19 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import type { DietologistRecommendation } from '../../../../shared/models/dietologist.data';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecommendationsFacade } from '../../lib/recommendations.facade';
+import { RECOMMENDATIONS_TOUR } from './recommendations-tour';
 
 type RecommendationViewModel = DietologistRecommendation & {
     dietologistName: string | null;
@@ -23,6 +28,8 @@ type RecommendationViewModel = DietologistRecommendation & {
     imports: [
         DatePipe,
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         FdUiCardComponent,
         FdUiIconComponent,
         PageBodyComponent,
@@ -37,6 +44,8 @@ export class RecommendationsPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly route = inject(ActivatedRoute);
     private readonly recommendationsFacade = inject(RecommendationsFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly recommendations = signal<DietologistRecommendation[]>([]);
     protected readonly selectedRecommendationId = signal<string | null>(null);
@@ -92,6 +101,10 @@ export class RecommendationsPageComponent {
                     });
                 },
             });
+    }
+
+    protected startRecommendationsTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(RECOMMENDATIONS_TOUR), { force });
     }
 
     private loadRecommendations(): void {

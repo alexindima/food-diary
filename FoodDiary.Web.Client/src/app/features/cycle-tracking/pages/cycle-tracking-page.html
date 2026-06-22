@@ -1,5 +1,16 @@
 <div class="cycle-tracking" fdPageContainer>
-    <fd-page-header [title]="'CYCLE_TRACKING.TITLE' | translate" [subtitle]="'CYCLE_TRACKING.SUBTITLE' | translate" />
+    <fd-page-header [title]="'CYCLE_TRACKING.TITLE' | translate" [subtitle]="'CYCLE_TRACKING.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="cycle-tracking-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'CYCLE_TRACKING.TOUR.START_TOUR' | translate"
+            (click)="startCycleTrackingTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <div class="cycle-tracking__page-actions fd-ui-actions">
@@ -15,7 +26,11 @@
         </div>
 
         <div class="cycle-tracking__grid fd-grid fd-gap-card-content">
-            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate">
+            <fd-ui-card
+                class="cycle-tracking__card"
+                data-tour-id="cycle-tracking-setup"
+                [title]="'CYCLE_TRACKING.CREATE_CYCLE_TITLE' | translate"
+            >
                 <form class="cycle-tracking__form fd-stack fd-gap-card-header" [formRoot]="startCycleForm">
                     <div class="cycle-tracking__form-row fd-grid fd-gap-card-header">
                         <fd-ui-date-input
@@ -76,11 +91,20 @@
                 </form>
             </fd-ui-card>
 
-            <fd-cycle-current-card [isLoading]="isLoading()" [current]="currentCycleView()" [prediction]="predictionView()" />
+            <fd-cycle-current-card
+                data-tour-id="cycle-tracking-current"
+                [isLoading]="isLoading()"
+                [current]="currentCycleView()"
+                [prediction]="predictionView()"
+            />
         </div>
 
         <div class="cycle-tracking__grid cycle-tracking__grid--log fd-grid fd-gap-card-content">
-            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate">
+            <fd-ui-card
+                class="cycle-tracking__card"
+                data-tour-id="cycle-tracking-day-log"
+                [title]="'CYCLE_TRACKING.LOG_DAY_TITLE' | translate"
+            >
                 @if (!cycle()) {
                     <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
@@ -177,7 +201,11 @@
                 }
             </fd-ui-card>
 
-            <fd-ui-card class="cycle-tracking__card" [title]="'CYCLE_TRACKING.FACTORS_TITLE' | translate">
+            <fd-ui-card
+                class="cycle-tracking__card"
+                data-tour-id="cycle-tracking-factors"
+                [title]="'CYCLE_TRACKING.FACTORS_TITLE' | translate"
+            >
                 @if (!cycle()) {
                     <p class="cycle-tracking__empty fd-ui-body-sm">{{ 'CYCLE_TRACKING.NO_CYCLE_SHORT' | translate }}</p>
                 } @else {
@@ -235,6 +263,7 @@
             </fd-ui-card>
 
             <fd-cycle-days-card
+                data-tour-id="cycle-tracking-history"
                 [isLoading]="isLoading()"
                 [items]="dayItems()"
                 [clearingDate]="clearingDayDate()"

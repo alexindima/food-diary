@@ -1,15 +1,26 @@
 <div class="check-in" fdPageContainer>
-    <fd-page-header [title]="'WEEKLY_CHECK_IN.TITLE' | translate" [subtitle]="'WEEKLY_CHECK_IN.SUBTITLE' | translate" />
+    <fd-page-header [title]="'WEEKLY_CHECK_IN.TITLE' | translate" [subtitle]="'WEEKLY_CHECK_IN.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="weekly-check-in-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'WEEKLY_CHECK_IN.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'WEEKLY_CHECK_IN.TOUR.START_TOUR' | translate"
+            (click)="startWeeklyCheckInTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (isLoading()) {
             <div class="check-in__loader fd-ui-body-sm">{{ 'WEEKLY_CHECK_IN.LOADING' | translate }}</div>
         } @else {
-            <fd-weekly-check-in-trends [trends]="trendCards()" />
+            <fd-weekly-check-in-trends data-tour-id="weekly-check-in-trends" [trends]="trendCards()" />
 
             <div class="check-in__grid fd-grid fd-gap-md">
-                <fd-weekly-check-in-stats-card [week]="thisWeek()" />
-                <fd-weekly-check-in-suggestions-card [suggestions]="suggestionRows()" />
+                <fd-weekly-check-in-stats-card data-tour-id="weekly-check-in-stats" [week]="thisWeek()" />
+                <fd-weekly-check-in-suggestions-card data-tour-id="weekly-check-in-suggestions" [suggestions]="suggestionRows()" />
             </div>
         }
     </fd-page-body>

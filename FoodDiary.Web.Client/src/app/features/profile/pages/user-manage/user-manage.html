@@ -3,7 +3,18 @@
         class="user-manage__header"
         [title]="'USER_MANAGE.EDIT_TITLE' | translate"
         [subtitle]="'USER_MANAGE.EDIT_SUBTITLE' | translate"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="user-manage-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'USER_MANAGE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'USER_MANAGE.TOUR.START_TOUR' | translate"
+            (click)="startUserManageTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <form
@@ -15,6 +26,7 @@
         >
             <div class="user-manage__stack fd-stack fd-gap-card-profile">
                 <fd-user-manage-account-card
+                    data-tour-id="user-manage-account"
                     [userForm]="userForm"
                     [profileStatus]="profileStatus()"
                     [passwordActionState]="passwordActionState()"
@@ -27,6 +39,7 @@
                 />
 
                 <fd-user-manage-billing-card
+                    data-tour-id="user-manage-billing"
                     [isLoadingBilling]="isLoadingBilling()"
                     [billingError]="billingError()"
                     [billingView]="billingView()"
@@ -37,12 +50,14 @@
                 />
 
                 <fd-user-manage-body-card
+                    data-tour-id="user-manage-body"
                     [userForm]="userForm"
                     [activityLevelOptions]="activityLevelOptions"
                     (userFormPatch)="onUserFormPatch($event)"
                 />
 
                 <fd-user-manage-notifications-card
+                    data-tour-id="user-manage-notifications"
                     [pushNotificationsEnabled]="notifications.pushNotificationsEnabled()"
                     [isUpdatingNotifications]="notifications.isUpdatingNotifications()"
                     [pushNotificationsBusy]="notifications.pushNotificationsBusy()"
@@ -69,6 +84,7 @@
                 />
 
                 <fd-user-manage-dietologist-card
+                    data-tour-id="user-manage-dietologist"
                     [dietologistForm]="dietologistForm"
                     [dietologistRelationship]="dietologistRelationship()"
                     [dietologistPermissions]="dietologistPermissions()"
@@ -85,6 +101,7 @@
             </div>
 
             <fd-user-manage-privacy-card
+                data-tour-id="user-manage-privacy"
                 [hasAiConsent]="hasAiConsent()"
                 [isRevokingAiConsent]="isRevokingAiConsent()"
                 [isDeleting]="isDeleting()"

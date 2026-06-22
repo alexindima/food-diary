@@ -1,10 +1,14 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
 import { NavigationService } from '../../../../services/navigation.service';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { WeightHistoryBmiCardComponent } from '../../components/weight-history-bmi-card/weight-history-bmi-card';
 import { WeightHistoryChartCardComponent } from '../../components/weight-history-chart-card/weight-history-chart-card';
@@ -14,11 +18,14 @@ import { WeightHistoryGoalCardComponent } from '../../components/weight-history-
 import { WeightHistoryFacade } from '../../lib/weight-history.facade';
 import { WEIGHT_HISTORY_RANGE_TABS } from '../../lib/weight-history-page.config';
 import type { WeightEntry } from '../../models/weight-entry.data';
+import { WEIGHT_HISTORY_TOUR } from './weight-history-tour';
 
 @Component({
     selector: 'fd-weight-history-page',
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -37,6 +44,8 @@ import type { WeightEntry } from '../../models/weight-entry.data';
 export class WeightHistoryPageComponent {
     private readonly navigationService = inject(NavigationService);
     private readonly facade = inject(WeightHistoryFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly currentRange = this.facade.currentRange;
@@ -83,5 +92,9 @@ export class WeightHistoryPageComponent {
 
     protected changeRange(value: string): void {
         this.facade.changeRange(value);
+    }
+
+    protected startWeightHistoryTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(WEIGHT_HISTORY_TOUR), { force });
     }
 }

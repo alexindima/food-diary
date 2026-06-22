@@ -3,6 +3,9 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, PLATF
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import { firstValueFrom } from 'rxjs';
 
@@ -12,6 +15,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { AuthService } from '../../../../services/auth.service';
 import { resolveTranslateLanguage } from '../../../../shared/i18n/translate-language.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { PaddleCheckoutService } from '../../lib/paddle-checkout.service';
 import { PremiumBillingFacade } from '../../lib/premium-billing.facade';
@@ -28,6 +32,7 @@ import type {
 import { formatPremiumMediumDate } from './premium-access-lib/premium-access-date.utils';
 import { resolvePremiumErrorMessage } from './premium-access-lib/premium-access-error.utils';
 import { buildPremiumOverviewCardViewModel, buildPremiumPlanCards } from './premium-access-lib/premium-access-view.mapper';
+import { PREMIUM_ACCESS_TOUR } from './premium-access-tour';
 
 @Component({
     selector: 'fd-premium-access-page',
@@ -39,6 +44,8 @@ import { buildPremiumOverviewCardViewModel, buildPremiumPlanCards } from './prem
         PageBodyComponent,
         PageHeaderComponent,
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PremiumAccessBannersComponent,
         PremiumOverviewCardComponent,
         PremiumPlansCardComponent,
@@ -59,6 +66,8 @@ export class PremiumAccessPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly document = inject(DOCUMENT);
     private readonly platformId = inject(PLATFORM_ID);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     private readonly isBrowser = isPlatformBrowser(this.platformId);
 
@@ -170,6 +179,10 @@ export class PremiumAccessPageComponent {
 
     protected async reloadOverviewAsync(): Promise<void> {
         await this.loadOverviewAsync();
+    }
+
+    protected startPremiumTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(PREMIUM_ACCESS_TOUR), { force });
     }
 
     private formatMediumDate(value: string | null | undefined): string | null {

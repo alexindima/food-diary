@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
@@ -15,6 +17,7 @@ import { PageHeaderComponent } from '../../../../components/shared/page-header/p
 import { RecipeCardComponent } from '../../../../components/shared/recipe-card/recipe-card';
 import { EXPLORE_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { RecipeDetailComponent } from '../../../recipes/components/detail/recipe-detail/recipe-detail';
 import { resolveRecipeImageUrl } from '../../../recipes/lib/recipe-image.util';
@@ -22,6 +25,7 @@ import type { Recipe } from '../../../recipes/models/recipe.data';
 import { ExploreInteractionsFacade } from '../../lib/explore-interactions.facade';
 import type { ExploreFilters, ExploreRecipe } from '../../models/explore.data';
 import { EXPLORE_PAGE_SIZE, type ExploreSort, type ExploreSortAction } from './explore-page-lib/explore-page.constants';
+import { EXPLORE_TOUR } from './explore-tour';
 
 @Component({
     selector: 'fd-explore-page',
@@ -31,6 +35,7 @@ import { EXPLORE_PAGE_SIZE, type ExploreSort, type ExploreSortAction } from './e
     imports: [
         FormField,
         TranslatePipe,
+        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiInputComponent,
         FdUiPaginationComponent,
@@ -47,6 +52,8 @@ export class ExplorePageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly fdDialogService = inject(FdUiDialogService);
     private readonly searchDebounceMs = inject(EXPLORE_SEARCH_DEBOUNCE_MS);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly searchModel = signal({ search: '' });
     protected readonly searchForm = form(this.searchModel);
@@ -86,6 +93,10 @@ export class ExplorePageComponent {
     protected onPageChange(pageIndex: number): void {
         this.currentPageIndex.set(pageIndex);
         this.loadRecipes();
+    }
+
+    protected startExploreTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(EXPLORE_TOUR), { force });
     }
 
     protected onRecipeClick(recipe: ExploreRecipe): void {

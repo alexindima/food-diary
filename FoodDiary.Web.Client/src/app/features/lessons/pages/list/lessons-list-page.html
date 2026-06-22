@@ -1,9 +1,29 @@
 <div class="lessons-list" fdPageContainer>
-    <fd-page-header [title]="'LESSONS.TITLE' | translate" [subtitle]="'LESSONS.SUBTITLE' | translate" />
+    <fd-page-header [title]="'LESSONS.TITLE' | translate" [subtitle]="'LESSONS.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="lessons-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'LESSONS.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'LESSONS.TOUR.START_TOUR' | translate"
+            (click)="startLessonsListTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
-        <fd-lessons-list-progress [progress]="progress()" />
-        <fd-lessons-list-filters [selectedCategory]="facade.categoryFilter()" (filterChange)="filterByCategory($event)" />
-        <fd-lessons-list-grid [isLoading]="facade.isLoading()" [lessons]="lessons()" (lessonOpen)="openLesson($event)" />
+        <fd-lessons-list-progress data-tour-id="lessons-progress" [progress]="progress()" />
+        <fd-lessons-list-filters
+            data-tour-id="lessons-filters"
+            [selectedCategory]="facade.categoryFilter()"
+            (filterChange)="filterByCategory($event)"
+        />
+        <fd-lessons-list-grid
+            data-tour-id="lessons-grid"
+            [isLoading]="facade.isLoading()"
+            [lessons]="lessons()"
+            (lessonOpen)="openLesson($event)"
+        />
     </fd-page-body>
 </div>

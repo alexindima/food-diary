@@ -3,11 +3,23 @@
         class="weight-history-page__header"
         [title]="'WEIGHT_HISTORY.TITLE' | translate"
         [subtitle]="'WEIGHT_HISTORY.SUBTITLE' | translate"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="weight-history-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'WEIGHT_HISTORY.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'WEIGHT_HISTORY.TOUR.START_TOUR' | translate"
+            (click)="startWeightHistoryTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <fd-period-filter
             class="weight-history-page__period"
+            data-tour-id="weight-history-period"
             [tabs]="rangeTabs"
             [selectedValue]="selectedRange()"
             [rangeField]="customRangeForm.range"
@@ -19,7 +31,7 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-weight-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
+        <fd-weight-history-chart-card data-tour-id="weight-history-chart" [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
             <fd-weight-history-bmi-card [viewModel]="bmiViewModel()" />
@@ -29,6 +41,7 @@
 
         <div class="weight-history-page__content weight-history-page__content--form fd-grid fd-gap-card-content">
             <fd-weight-history-form-card
+                data-tour-id="weight-history-entry-form"
                 [form]="form"
                 [isSaving]="isSaving()"
                 [isEditing]="isEditing()"
@@ -37,6 +50,7 @@
             />
 
             <fd-weight-history-goal-card
+                data-tour-id="weight-history-goal"
                 [weightField]="desiredWeightForm.weight"
                 [isSaving]="isDesiredWeightSaving()"
                 (saveGoal)="saveDesiredWeight()"
@@ -46,6 +60,7 @@
         @defer (on viewport) {
             <div class="weight-history-page__content weight-history-page__content--full fd-grid fd-gap-card-content">
                 <fd-weight-history-entries-card
+                    data-tour-id="weight-history-entries"
                     [isLoading]="isLoading()"
                     [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"

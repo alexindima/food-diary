@@ -1,14 +1,26 @@
 <div fdPageContainer>
-    <fd-page-header [title]="'EXPLORE.TITLE' | translate" />
+    <fd-page-header [title]="'EXPLORE.TITLE' | translate">
+        <fd-ui-button
+            data-tour-id="explore-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'EXPLORE.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'EXPLORE.TOUR.START_TOUR' | translate"
+            (click)="startExploreTour()"
+        />
+    </fd-page-header>
     <fd-page-body>
         <div class="explore-controls fd-row fd-wrap fd-gap-sm">
             <fd-ui-input
                 class="explore-search"
+                data-tour-id="explore-search"
                 type="text"
                 [formField]="searchForm.search"
                 [placeholder]="'EXPLORE.SEARCH_PLACEHOLDER' | translate"
             />
-            <div class="explore-sort fd-row fd-gap-xs">
+            <div class="explore-sort fd-row fd-gap-xs" data-tour-id="explore-sort">
                 @for (action of sortActions(); track action.value) {
                     <fd-ui-button size="sm" [variant]="action.variant" (click)="onSortChange(action.value)">
                         {{ action.labelKey | translate }}
@@ -28,7 +40,7 @@
                 <p>{{ 'EXPLORE.NO_RESULTS_MESSAGE' | translate }}</p>
             </div>
         } @else {
-            <div class="explore-grid fd-grid fd-gap-md">
+            <div class="explore-grid fd-grid fd-gap-md" data-tour-id="explore-recipes">
                 @for (recipe of recipeData.items(); track recipe.id) {
                     <fd-recipe-card [recipe]="recipe" [imageUrl]="resolveImageUrl(recipe.imageUrl)" (open)="onRecipeClick(recipe)" />
                 }

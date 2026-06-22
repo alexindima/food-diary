@@ -1,8 +1,28 @@
 <div class="meal-plans-list" fdPageContainer>
-    <fd-page-header [title]="'MEAL_PLANS.TITLE' | translate" [subtitle]="'MEAL_PLANS.SUBTITLE' | translate" />
+    <fd-page-header [title]="'MEAL_PLANS.TITLE' | translate" [subtitle]="'MEAL_PLANS.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="meal-plans-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'MEAL_PLANS.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'MEAL_PLANS.TOUR.START_TOUR' | translate"
+            (click)="startMealPlansListTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
-        <fd-meal-plan-list-filters [selectedType]="facade.dietTypeFilter()" (filterChange)="filterByDiet($event)" />
-        <fd-meal-plan-list-content [isLoading]="facade.isLoading()" [plans]="planCards()" (planOpen)="openPlan($event)" />
+        <fd-meal-plan-list-filters
+            data-tour-id="meal-plans-filters"
+            [selectedType]="facade.dietTypeFilter()"
+            (filterChange)="filterByDiet($event)"
+        />
+        <fd-meal-plan-list-content
+            data-tour-id="meal-plans-list"
+            [isLoading]="facade.isLoading()"
+            [plans]="planCards()"
+            (planOpen)="openPlan($event)"
+        />
     </fd-page-body>
 </div>

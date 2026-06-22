@@ -28,7 +28,29 @@
                     [disabledReason]="isLoading() ? ('DISABLED_HINTS.OPERATION_BUSY' | translate) : null"
                     (click)="createNewList()"
                 />
+                <fd-ui-button
+                    class="shopping-list__icon-button"
+                    data-tour-id="shopping-list-tour-help"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="help_outline"
+                    [fdUiHint]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+                    [ariaLabel]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+                    (click)="startShoppingListTour()"
+                />
             </div>
+        } @else {
+            <fd-ui-button
+                data-tour-id="shopping-list-tour-help"
+                appearance="toolbar"
+                variant="secondary"
+                fill="outline"
+                icon="help_outline"
+                [fdUiHint]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+                [ariaLabel]="'SHOPPING_LIST.TOUR.START_TOUR' | translate"
+                (click)="startShoppingListTour()"
+            />
         }
     </fd-page-header>
 
@@ -36,6 +58,7 @@
         @if (isMobileView()) {
             <div class="shopping-list__mobile-manage" [class.shopping-list__mobile-manage--open]="isMobileManageVisible()">
                 <fd-shopping-list-manage-controls
+                    data-tour-id="shopping-list-manage"
                     [listSelectField]="listSelectForm.id"
                     [lists]="lists()"
                     [isLoading]="isLoading()"
@@ -73,7 +96,7 @@
                     </fd-ui-button>
                 </section>
             } @else {
-                <section class="shopping-list__summary">
+                <section class="shopping-list__summary" data-tour-id="shopping-list-summary">
                     <div class="shopping-list__summary-icon fd-center">
                         <fd-ui-icon name="shopping_cart" size="lg" />
                     </div>
@@ -94,6 +117,7 @@
                 <div class="shopping-list__workspace">
                     <fd-shopping-list-items-panel
                         class="shopping-list__items-panel"
+                        data-tour-id="shopping-list-items"
                         [itemForm]="itemForm"
                         [items]="items()"
                         (itemAdd)="addItem()"
@@ -103,6 +127,7 @@
                     @if (!isMobileView()) {
                         <aside class="shopping-list__sidebar">
                             <fd-shopping-list-manage-controls
+                                data-tour-id="shopping-list-manage"
                                 [listSelectField]="listSelectForm.id"
                                 [lists]="lists()"
                                 [isLoading]="isLoading()"

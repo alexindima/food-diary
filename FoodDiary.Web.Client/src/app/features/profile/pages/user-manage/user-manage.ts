@@ -16,6 +16,9 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { disabled, email, form, FormRoot, required } from '@angular/forms/signals';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiConfirmDialogComponent } from 'fd-ui-kit/dialog/fd-ui-confirm-dialog';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import {
@@ -32,6 +35,7 @@ import { PageBodyComponent } from '../../../../components/shared/page-body/page-
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import type { DietologistPermissions, DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { type ActivityLevelOption, type Gender, UpdateUserDto } from '../../../../shared/models/user.data';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import type { AppThemeName, AppUiStyleName } from '../../../../theme/app-theme.config';
 import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
@@ -67,6 +71,7 @@ import {
 } from './user-manage-lib/user-manage-form.mapper';
 import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 import { buildProfileStatus } from './user-manage-lib/user-manage-profile-status.mapper';
+import { USER_MANAGE_TOUR } from './user-manage-tour';
 
 type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
 
@@ -75,6 +80,8 @@ type UserManageFormPatch = UserManageAccountFormPatch | UserManageBodyFormPatch;
     imports: [
         TranslatePipe,
         FormRoot,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         FdUiFormErrorComponent,
         PageHeaderComponent,
         PageBodyComponent,
@@ -97,6 +104,8 @@ export class UserManageComponent {
     private readonly route = inject(ActivatedRoute);
     private readonly router = inject(Router);
     private readonly facade = inject(ProfileManageFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     protected readonly notifications = inject(UserManageNotificationsFacade);
     private readonly dialogService = inject(FdUiDialogService);
     private readonly dietologistFacade = inject(DietologistFacade);
@@ -314,6 +323,10 @@ export class UserManageComponent {
     protected onUserFormSubmit(event: SubmitEvent): void {
         event.preventDefault();
         this.onSubmit();
+    }
+
+    protected startUserManageTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(USER_MANAGE_TOUR), { force });
     }
 
     protected onUserFormInput(event?: Event): void {

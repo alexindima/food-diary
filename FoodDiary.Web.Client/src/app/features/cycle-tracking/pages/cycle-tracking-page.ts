@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, inject, signa
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { type FieldTree, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiCardComponent } from 'fd-ui-kit/card/fd-ui-card';
 import { FdUiCheckboxComponent } from 'fd-ui-kit/checkbox/fd-ui-checkbox';
@@ -13,6 +15,7 @@ import { FdUiTextareaComponent } from 'fd-ui-kit/textarea/fd-ui-textarea';
 import { PageBodyComponent } from '../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../components/shared/page-header/page-header';
 import { resolveAppLocale } from '../../../shared/lib/locale.constants';
+import { LocalizedTourDefinitionService } from '../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../shared/ui/layout/page-container.directive';
 import { CycleTrackingFacade } from '../lib/cycle-tracking.facade';
 import {
@@ -55,6 +58,7 @@ import {
     buildCycleNutritionSummaryView,
     buildCyclePredictionView,
 } from './cycle-tracking-page-lib/cycle-tracking-page.mapper';
+import { CYCLE_TRACKING_TOUR } from './cycle-tracking-page-lib/cycle-tracking-tour';
 
 @Component({
     selector: 'fd-cycle-tracking-page',
@@ -65,6 +69,7 @@ import {
         FdPageContainerDirective,
         FormField,
         FormRoot,
+        FdUiHintDirective,
         FdUiCardComponent,
         FdUiButtonComponent,
         FdUiInputComponent,
@@ -86,6 +91,8 @@ export class CycleTrackingPageComponent {
     private readonly facade = inject(CycleTrackingFacade);
     private readonly translateService = inject(TranslateService);
     private readonly destroyRef = inject(DestroyRef);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
     private readonly languageVersion = signal(0);
 
     protected readonly isLoading = this.facade.isLoading;
@@ -208,6 +215,10 @@ export class CycleTrackingPageComponent {
 
     protected exportCycle(): void {
         this.facade.exportCycle();
+    }
+
+    protected startCycleTrackingTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(CYCLE_TRACKING_TOUR), { force });
     }
 
     protected symptomField(key: CycleSymptomField['key']): FieldTree<number> {

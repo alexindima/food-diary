@@ -1,5 +1,16 @@
 <main class="recommendations-page fd-stack fd-gap-xl" fdPageContainer>
-    <fd-page-header [title]="'RECOMMENDATIONS.TITLE' | translate" [subtitle]="'RECOMMENDATIONS.SUBTITLE' | translate" />
+    <fd-page-header [title]="'RECOMMENDATIONS.TITLE' | translate" [subtitle]="'RECOMMENDATIONS.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="recommendations-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'RECOMMENDATIONS.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'RECOMMENDATIONS.TOUR.START_TOUR' | translate"
+            (click)="startRecommendationsTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (isLoading()) {
@@ -11,13 +22,17 @@
                 {{ error | translate }}
             </section>
         } @else if (recommendationItems().length === 0) {
-            <section class="recommendations-page__empty fd-place-center fd-stack fd-gap-sm" role="status">
+            <section
+                class="recommendations-page__empty fd-place-center fd-stack fd-gap-sm"
+                data-tour-id="recommendations-list"
+                role="status"
+            >
                 <fd-ui-icon name="medical_information" />
                 <h2 class="fd-ui-card-title">{{ 'RECOMMENDATIONS.EMPTY_TITLE' | translate }}</h2>
                 <p class="fd-ui-body-sm">{{ 'RECOMMENDATIONS.EMPTY_TEXT' | translate }}</p>
             </section>
         } @else {
-            <section class="recommendations-page__list fd-grid fd-gap-md" aria-live="polite">
+            <section class="recommendations-page__list fd-grid fd-gap-md" data-tour-id="recommendations-list" aria-live="polite">
                 @for (recommendation of recommendationItems(); track recommendation.id) {
                     <button
                         type="button"

@@ -1,9 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
+import { FdUiHintDirective } from 'fd-ui-kit';
+import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { PeriodFilterComponent } from '../../../../components/shared/period-filter/period-filter';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { WaistHistoryChartCardComponent } from '../../components/waist-history-chart-card/waist-history-chart-card';
 import { WaistHistoryEntriesCardComponent } from '../../components/waist-history-entries-card/waist-history-entries-card';
@@ -13,11 +17,14 @@ import { WaistHistoryWhtCardComponent } from '../../components/waist-history-wht
 import { WaistHistoryFacade } from '../../lib/waist-history.facade';
 import { WAIST_HISTORY_RANGE_TABS } from '../../lib/waist-history-page.config';
 import type { WaistEntry } from '../../models/waist-entry.data';
+import { WAIST_HISTORY_TOUR } from './waist-history-tour';
 
 @Component({
     selector: 'fd-waist-history-page',
     imports: [
         TranslatePipe,
+        FdUiHintDirective,
+        FdUiButtonComponent,
         PageHeaderComponent,
         PageBodyComponent,
         FdPageContainerDirective,
@@ -35,6 +42,8 @@ import type { WaistEntry } from '../../models/waist-entry.data';
 })
 export class WaistHistoryPageComponent {
     private readonly facade = inject(WaistHistoryFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly selectedRange = this.facade.selectedRange;
     protected readonly currentRange = this.facade.currentRange;
@@ -75,5 +84,9 @@ export class WaistHistoryPageComponent {
 
     protected changeRange(value: string): void {
         this.facade.changeRange(value);
+    }
+
+    protected startWaistHistoryTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(WAIST_HISTORY_TOUR), { force });
     }
 }

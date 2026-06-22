@@ -1,11 +1,23 @@
 <div class="gamification" fdPageContainer>
-    <fd-page-header [title]="'GAMIFICATION.TITLE' | translate" [subtitle]="'GAMIFICATION.SUBTITLE' | translate" />
+    <fd-page-header [title]="'GAMIFICATION.TITLE' | translate" [subtitle]="'GAMIFICATION.SUBTITLE' | translate">
+        <fd-ui-button
+            data-tour-id="gamification-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'GAMIFICATION.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'GAMIFICATION.TOUR.START_TOUR' | translate"
+            (click)="startGamificationTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         @if (isLoading()) {
             <div class="gamification__loader fd-ui-body-sm">{{ 'GAMIFICATION.LOADING' | translate }}</div>
         } @else {
             <fd-gamification-stats-grid
+                data-tour-id="gamification-stats"
                 [currentStreak]="currentStreak()"
                 [longestStreak]="longestStreak()"
                 [totalMealsLogged]="totalMealsLogged()"
@@ -13,8 +25,8 @@
             />
 
             <div class="gamification__grid fd-grid fd-gap-card-content">
-                <fd-gamification-health-score-card [score]="healthScore()" />
-                <fd-gamification-badges-card [badges]="badges()" />
+                <fd-gamification-health-score-card data-tour-id="gamification-health-score" [score]="healthScore()" />
+                <fd-gamification-badges-card data-tour-id="gamification-badges" [badges]="badges()" />
             </div>
         }
     </fd-page-body>

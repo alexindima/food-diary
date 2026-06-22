@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, injec
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, required } from '@angular/forms/signals';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
+import { FdTourService } from 'fd-tour';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
@@ -16,11 +17,13 @@ import {
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
+import { LocalizedTourDefinitionService } from '../../../../shared/tours/localized-tour-definition.service';
 import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-container.directive';
 import { ShoppingListFacade } from '../../lib/shopping-list.facade';
 import type { ShoppingListItemFormModel } from '../../lib/shopping-list-form.types';
 import { ShoppingListItemsPanelComponent } from '../shopping-list-items-panel/shopping-list-items-panel';
 import { ShoppingListManageControlsComponent } from '../shopping-list-manage-controls/shopping-list-manage-controls';
+import { SHOPPING_LIST_TOUR } from './shopping-list-tour';
 
 @Component({
     selector: 'fd-shopping-list-page',
@@ -47,6 +50,8 @@ export class ShoppingListPageComponent {
     private readonly destroyRef = inject(DestroyRef);
     private readonly viewportService = inject(ViewportService);
     private readonly facade = inject(ShoppingListFacade);
+    private readonly tourService = inject(FdTourService);
+    private readonly localizedTour = inject(LocalizedTourDefinitionService);
 
     protected readonly list = this.facade.list;
     protected readonly items = this.facade.items;
@@ -247,5 +252,9 @@ export class ShoppingListPageComponent {
 
     protected createNewList(): void {
         this.facade.createNewList();
+    }
+
+    protected startShoppingListTour(force = true): void {
+        this.tourService.start(this.localizedTour.build(SHOPPING_LIST_TOUR), { force });
     }
 }

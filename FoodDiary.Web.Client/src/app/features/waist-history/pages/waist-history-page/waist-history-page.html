@@ -3,11 +3,23 @@
         class="waist-history-page__header"
         [title]="'WAIST_HISTORY.TITLE' | translate"
         [subtitle]="'WAIST_HISTORY.SUBTITLE' | translate"
-    />
+    >
+        <fd-ui-button
+            data-tour-id="waist-history-tour-help"
+            appearance="toolbar"
+            variant="secondary"
+            fill="outline"
+            icon="help_outline"
+            [fdUiHint]="'WAIST_HISTORY.TOUR.START_TOUR' | translate"
+            [ariaLabel]="'WAIST_HISTORY.TOUR.START_TOUR' | translate"
+            (click)="startWaistHistoryTour()"
+        />
+    </fd-page-header>
 
     <fd-page-body>
         <fd-period-filter
             class="waist-history-page__period"
+            data-tour-id="waist-history-period"
             [tabs]="rangeTabs"
             [selectedValue]="selectedRange()"
             [rangeField]="customRangeForm.range"
@@ -19,7 +31,7 @@
             (rangeChange)="changeRange($event)"
         />
 
-        <fd-waist-history-chart-card [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
+        <fd-waist-history-chart-card data-tour-id="waist-history-chart" [isLoading]="isSummaryLoading()" [chartPoints]="chartPoints()" />
 
         @defer (on viewport) {
             <fd-waist-history-wht-card [viewModel]="whtViewModel()" />
@@ -29,6 +41,7 @@
 
         <div class="waist-history-page__content waist-history-page__content--form">
             <fd-waist-history-form-card
+                data-tour-id="waist-history-entry-form"
                 [form]="form"
                 [isSaving]="isSaving()"
                 [isEditing]="isEditing()"
@@ -37,6 +50,7 @@
             />
 
             <fd-waist-history-goal-card
+                data-tour-id="waist-history-goal"
                 [circumferenceField]="desiredWaistForm.circumference"
                 [isSaving]="isDesiredWaistSaving()"
                 (saveGoal)="saveDesiredWaist()"
@@ -46,6 +60,7 @@
         @defer (on viewport) {
             <div class="waist-history-page__content waist-history-page__content--full">
                 <fd-waist-history-entries-card
+                    data-tour-id="waist-history-entries"
                     [isLoading]="isLoading()"
                     [entries]="entriesDescending()"
                     (editEntry)="startEdit($event)"
