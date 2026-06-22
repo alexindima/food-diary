@@ -97,8 +97,13 @@
     }
 }
 
-.recipe-ingredient__name {
+.recipe-ingredient__selection {
     flex: 1;
+    min-width: 0;
+}
+
+.recipe-ingredient__name {
+    width: 100%;
 }
 
 .recipe-ingredient__amount {

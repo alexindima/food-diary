@@ -13,15 +13,17 @@ import {
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form, FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { catchError, debounceTime, distinctUntilChanged, finalize, map, type Observable, of, skip, switchMap, tap } from 'rxjs';
+import { catchError, debounceTime, EMPTY, finalize, map, type Observable, of, skip, switchMap, tap } from 'rxjs';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { PagedData } from '../../../../shared/lib/paged-data.data';
+import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
+import type { RecipeListFiltersDialogResult } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog.types';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
 import type { Recipe, RecipeFilters } from '../../models/recipe.data';
@@ -42,7 +44,6 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
         FormField,
         FormRoot,
         TranslatePipe,
-        FdUiHintDirective,
         FdUiButtonComponent,
         FdUiPaginationComponent,
         FdUiInputComponent,
@@ -51,6 +52,7 @@ import type { RecipeSelectItemViewModel } from './recipe-select-dialog-lib/recip
 })
 export class RecipeSelectDialogComponent {
     private readonly recipeSelectFacade = inject(RecipeSelectFacade);
+    private readonly fdDialogService = inject(FdUiDialogService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly searchDebounceMs = inject(APP_SEARCH_DEBOUNCE_MS);
     private readonly dialogRef = inject(FdUiDialogRef<RecipeSelectDialogComponent, Recipe | null>, {
@@ -64,15 +66,30 @@ export class RecipeSelectDialogComponent {
     protected readonly searchModel = signal<RecipeSearchFormValues>({
         search: null,
         onlyMine: false,
+        category: null,
+        maxTotalTime: null,
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
     });
     protected readonly searchForm = form(this.searchModel);
     protected readonly searchValue = computed(() => this.searchModel().search);
     protected readonly onlyMineFilter = computed(() => this.searchModel().onlyMine);
+    protected readonly activeFilterCount = computed(() => {
+        const filters = this.searchModel();
+        return (
+            (filters.onlyMine ? 1 : 0) +
+            (this.hasTextValue(filters.category) ? 1 : 0) +
+            (filters.maxTotalTime !== null ? 1 : 0) +
+            (filters.caloriesFrom !== null || filters.caloriesTo !== null ? 1 : 0) +
+            (filters.hasImage !== null ? 1 : 0)
+        );
+    });
+    protected readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
     protected readonly searchSuffixIcon = computed(() => {
         const search = this.searchValue();
         return search !== null && search.length > 0 ? 'close' : undefined;
     });
-    protected readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
     protected readonly recipeItems = computed<RecipeSelectItemViewModel[]>(() =>
         this.recipeData
             .items()
@@ -100,23 +117,12 @@ export class RecipeSelectDialogComponent {
                 switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
             )
             .subscribe();
-
-        toObservable(this.onlyMineFilter)
-            .pipe(
-                skip(1),
-                takeUntilDestroyed(this.destroyRef),
-                distinctUntilChanged(),
-                switchMap(() => this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE)),
-            )
-            .subscribe();
     }
 
     protected loadRecipes(page: number): Observable<void> {
         this.recipeData.setLoading(true);
         const includePublic = !this.onlyMineFilter();
-        const filters: RecipeFilters = {
-            search: this.searchValue() ?? undefined,
-        };
+        const filters = this.buildRecipeFilters();
 
         return this.recipeSelectFacade.query(page, RECIPE_SELECT_DIALOG_PAGE_SIZE, filters, includePublic).pipe(
             tap(pageData => {
@@ -148,8 +154,45 @@ export class RecipeSelectDialogComponent {
         this.searchForm.search().value.set('');
     }
 
-    protected toggleOnlyMine(): void {
-        this.searchForm.onlyMine().value.set(!this.onlyMineFilter());
+    protected openFilters(): void {
+        const currentFilters = this.searchModel();
+        this.fdDialogService
+            .open<RecipeListFiltersDialogComponent, RecipeSearchFilterValues, RecipeListFiltersDialogResult | null>(
+                RecipeListFiltersDialogComponent,
+                {
+                    preset: 'form',
+                    data: {
+                        onlyMine: currentFilters.onlyMine,
+                        category: currentFilters.category,
+                        maxTotalTime: currentFilters.maxTotalTime,
+                        caloriesFrom: currentFilters.caloriesFrom,
+                        caloriesTo: currentFilters.caloriesTo,
+                        hasImage: currentFilters.hasImage,
+                    },
+                },
+            )
+            .afterClosed()
+            .pipe(
+                takeUntilDestroyed(this.destroyRef),
+                switchMap(result => {
+                    if (result === null || result === undefined || this.hasSameFilters(currentFilters, result)) {
+                        return EMPTY;
+                    }
+
+                    this.searchModel.update(value => ({
+                        ...value,
+                        onlyMine: result.onlyMine,
+                        category: result.category,
+                        maxTotalTime: result.maxTotalTime,
+                        caloriesFrom: result.caloriesFrom,
+                        caloriesTo: result.caloriesTo,
+                        hasImage: result.hasImage,
+                    }));
+                    this.currentPageIndex = 0;
+                    return this.loadRecipes(RECIPE_SELECT_DIALOG_FIRST_PAGE);
+                }),
+            )
+            .subscribe();
     }
 
     private resolveImage(recipe: Recipe): string | undefined {
@@ -171,9 +214,58 @@ export class RecipeSelectDialogComponent {
     private scrollToTop(): void {
         this.container().nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
+
+    private buildRecipeFilters(): RecipeFilters {
+        const filters = this.searchModel();
+        const recipeFilters: RecipeFilters = {
+            search: filters.search ?? undefined,
+        };
+        if (this.hasTextValue(filters.category)) {
+            recipeFilters.category = filters.category;
+        }
+        if (filters.maxTotalTime !== null) {
+            recipeFilters.maxTotalTime = filters.maxTotalTime;
+        }
+        if (filters.caloriesFrom !== null) {
+            recipeFilters.caloriesFrom = filters.caloriesFrom;
+        }
+        if (filters.caloriesTo !== null) {
+            recipeFilters.caloriesTo = filters.caloriesTo;
+        }
+        if (filters.hasImage !== null) {
+            recipeFilters.hasImage = filters.hasImage;
+        }
+
+        return recipeFilters;
+    }
+
+    private hasSameFilters(current: RecipeSearchFilterValues, next: RecipeSearchFilterValues): boolean {
+        return RECIPE_FILTER_COMPARE_KEYS.every(key => (current[key] ?? null) === (next[key] ?? null));
+    }
+
+    private hasTextValue(value: string | null): value is string {
+        return value !== null && value.trim().length > 0;
+    }
 }
 
-type RecipeSearchFormValues = {
-    search: string | null;
+type RecipeSearchFilterValues = {
     onlyMine: boolean;
+    category: string | null;
+    maxTotalTime: number | null;
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
 };
+
+type RecipeSearchFormValues = RecipeSearchFilterValues & {
+    search: string | null;
+};
+
+const RECIPE_FILTER_COMPARE_KEYS: ReadonlyArray<keyof RecipeSearchFilterValues> = [
+    'onlyMine',
+    'category',
+    'maxTotalTime',
+    'caloriesFrom',
+    'caloriesTo',
+    'hasImage',
+];

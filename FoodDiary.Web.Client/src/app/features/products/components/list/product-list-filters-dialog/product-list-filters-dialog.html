@@ -5,6 +5,7 @@
         [selectedValue]="visibilityValue"
         [fdUiHint]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
         [ariaLabel]="'PRODUCT_LIST.FILTERS_TITLE' | translate"
+        [fullWidth]="true"
         (selectedValueChange)="onVisibilityChange($event)"
     />
 
@@ -43,9 +44,11 @@
     <section class="product-list-filters-dialog__section fd-grid fd-gap-xs">
         <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_MEDIA' | translate }}</h3>
         <fd-ui-segmented-toggle
+            class="product-list-filters-dialog__image"
             [options]="imageOptions"
             [selectedValue]="imageValue"
             [ariaLabel]="'PRODUCT_LIST.FILTER_MEDIA' | translate"
+            [fullWidth]="true"
             (selectedValueChange)="onImageChange($event)"
         />
     </section>

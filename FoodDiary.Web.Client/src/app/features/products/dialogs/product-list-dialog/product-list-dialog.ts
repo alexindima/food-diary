@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input, output } from '@angular/core';
 import { FormField, FormRoot } from '@angular/forms/signals';
 import { TranslatePipe } from '@ngx-translate/core';
-import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
@@ -25,7 +24,6 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
         FormField,
         FormRoot,
         TranslatePipe,
-        FdUiHintDirective,
         FdUiInputComponent,
         FdUiButtonComponent,
         FdUiPaginationComponent,
@@ -35,7 +33,7 @@ import { ProductListDialogContentComponent } from './product-list-dialog-content
 export class ProductListDialogComponent extends ProductListBaseComponent {
     public readonly embedded = input<boolean>(false);
     public readonly productSelected = output<Product>();
-    protected readonly filterIcon = computed(() => (this.onlyMineFilter() ? 'person' : 'groups'));
+    protected readonly activeFilterCount = this.productListFacade.activeFilterCount;
     protected readonly productItems = computed<ProductSelectItemViewModel[]>(() =>
         this.productData.items().map(product => ({
             product,

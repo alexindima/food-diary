@@ -39,6 +39,7 @@ import {
     type StepFieldEvent,
     type StepIngredientAmountEvent,
     type StepIngredientEvent,
+    type StepIngredientSelectEvent,
 } from '../recipe-steps-list/recipe-steps-list';
 import { RECIPE_MANAGE_TOUR } from './recipe-manage-tour';
 
@@ -222,9 +223,9 @@ export class RecipeManageComponent {
         this.updateSummaryFromCurrentForm();
     }
 
-    protected onProductSelectClick(event: StepIngredientEvent): void {
-        const { stepIndex, ingredientIndex } = event;
-        this.recipeManageFacade.openItemSelectionDialog(this.recipe()?.id ?? null).subscribe(selection => {
+    protected onProductSelectClick(event: StepIngredientSelectEvent): void {
+        const { stepIndex, ingredientIndex, itemType } = event;
+        this.recipeManageFacade.openItemSelectionDialog(itemType, this.recipe()?.id ?? null).subscribe(selection => {
             if (selection === null) {
                 return;
             }

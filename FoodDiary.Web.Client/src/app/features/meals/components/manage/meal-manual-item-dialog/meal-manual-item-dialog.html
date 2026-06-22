@@ -1,14 +1,41 @@
 <fd-ui-dialog size="md" [title]="'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_TITLE' | translate">
     <div class="meal-manual-item-dialog fd-stack fd-gap-md">
-        <fd-ui-input
-            [value]="itemSourceName()"
-            [label]="'CONSUMPTION_MANAGE.ITEM_SOURCE_LABEL' | translate"
-            [placeholder]="'CONSUMPTION_MANAGE.ITEM_SOURCE_PLACEHOLDER' | translate"
-            [readonly]="true"
-            [prefixIcon]="itemSourceIcon()"
-            [error]="sourceError()"
-            (click)="chooseItemAsync()"
-        />
+        <section class="meal-manual-item-dialog__section">
+            <h3 class="meal-manual-item-dialog__label">{{ 'CONSUMPTION_MANAGE.MANUAL_ITEM_TYPE_LABEL' | translate }}</h3>
+            <fd-ui-segmented-toggle
+                [options]="sourceTypeOptions"
+                [selectedValue]="sourceTypeValue()"
+                [ariaLabel]="'CONSUMPTION_MANAGE.MANUAL_ITEM_TYPE_LABEL' | translate"
+                [fullWidth]="true"
+                (selectedValueChange)="onSourceTypeChange($event)"
+            />
+        </section>
+
+        <section class="meal-manual-item-dialog__section">
+            <h3 class="meal-manual-item-dialog__label">{{ sourceTypeLabelKey() | translate }}</h3>
+            <button
+                type="button"
+                class="meal-manual-item-dialog__source-selector"
+                [class.is-invalid]="sourceError() !== null"
+                (click)="chooseItemAsync()"
+            >
+                <fd-ui-icon class="meal-manual-item-dialog__source-icon" [name]="itemSourceIcon()" />
+                <span class="meal-manual-item-dialog__source-content">
+                    @if (selectedItemName(); as itemName) {
+                        <span class="meal-manual-item-dialog__source-name">{{ itemName }}</span>
+                        @if (selectedItemMeta(); as meta) {
+                            <span class="meal-manual-item-dialog__source-meta">{{ meta }}</span>
+                        }
+                    } @else {
+                        <span class="meal-manual-item-dialog__source-placeholder">{{ sourceActionLabelKey() | translate }}</span>
+                    }
+                </span>
+                <fd-ui-icon class="meal-manual-item-dialog__source-chevron" name="chevron_right" />
+            </button>
+            @if (sourceError(); as error) {
+                <p class="meal-manual-item-dialog__error">{{ error }}</p>
+            }
+        </section>
 
         <fd-ui-input
             type="number"
@@ -24,7 +51,15 @@
         <fd-ui-button type="button" variant="secondary" fill="outline" (click)="cancel()">
             {{ 'PRODUCT_MANAGE.CANCEL_BUTTON' | translate }}
         </fd-ui-button>
-        <fd-ui-button type="button" variant="primary" fill="solid" icon="check" (click)="save()">
+        <fd-ui-button
+            type="button"
+            variant="primary"
+            fill="solid"
+            icon="check"
+            [disabled]="!canSave()"
+            [disabledReason]="'CONSUMPTION_MANAGE.MANUAL_ITEM_SAVE_DISABLED' | translate"
+            (click)="save()"
+        >
             {{ 'CONSUMPTION_MANAGE.MANUAL_ITEM_DIALOG_SAVE' | translate }}
         </fd-ui-button>
     </div>

@@ -1,3 +1,95 @@
 .meal-manual-item-dialog {
     min-width: min(100%, 360px);
+
+    &__section {
+        display: grid;
+        gap: var(--fd-space-xs);
+    }
+
+    &__label {
+        margin: 0;
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-text-helper-size);
+        font-weight: var(--fd-text-helper-weight);
+        letter-spacing: var(--fd-letter-spacing-overline);
+        line-height: var(--fd-text-helper-line-height);
+        text-transform: uppercase;
+    }
+
+    &__source-selector {
+        display: grid;
+        grid-template-columns: auto minmax(0, 1fr) auto;
+        align-items: center;
+        width: 100%;
+        min-height: var(--fd-size-control-lg);
+        padding: var(--fd-space-sm) var(--fd-space-md);
+        gap: var(--fd-space-sm);
+        border: var(--fd-border-muted);
+        border-radius: var(--fd-radius-md);
+        background: var(--fd-bg-surface);
+        color: var(--fd-color-text);
+        cursor: pointer;
+        text-align: start;
+        transition:
+            border-color 0.2s ease,
+            background 0.2s ease,
+            box-shadow 0.2s ease;
+
+        &:hover {
+            border-color: var(--fd-color-primary-500);
+            background: var(--fd-bg-surface-elevated);
+        }
+
+        &:focus-visible {
+            outline: var(--fd-outline-focus);
+            outline-offset: var(--fd-outline-offset);
+        }
+
+        &.is-invalid {
+            border-color: var(--fd-color-danger);
+        }
+    }
+
+    &__source-icon,
+    &__source-chevron {
+        color: var(--fd-color-text-muted);
+        font-size: var(--fd-icon-size-md);
+        line-height: 1;
+    }
+
+    &__source-content {
+        display: grid;
+        min-width: 0;
+        gap: var(--fd-space-xxs);
+    }
+
+    &__source-name,
+    &__source-placeholder {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: var(--fd-text-body-size);
+        font-weight: var(--fd-text-action-weight);
+        line-height: var(--fd-text-body-line-height);
+    }
+
+    &__source-placeholder,
+    &__source-meta {
+        color: var(--fd-color-text-muted);
+    }
+
+    &__source-meta {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+    }
+
+    &__error {
+        margin: 0;
+        color: var(--fd-color-danger);
+        font-size: var(--fd-text-caption-size);
+        line-height: var(--fd-text-caption-line-height);
+    }
 }

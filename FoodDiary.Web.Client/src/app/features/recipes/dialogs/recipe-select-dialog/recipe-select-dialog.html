@@ -25,12 +25,15 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="filterIcon()"
-            [fdUiHint]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
-            [ariaLabel]="'RECIPE_SELECT_DIALOG.ONLY_MY_RECIPES' | translate"
-            [class.recipe-select__filter-button--active]="onlyMineFilter()"
-            (click)="toggleOnlyMine()"
-        />
+            icon="filter_alt"
+            [class.recipe-select__filter-button--active]="hasActiveFilters()"
+            (click)="openFilters()"
+        >
+            {{ 'RECIPE_LIST.FILTERS_TITLE' | translate }}
+            @if (activeFilterCount() > 0) {
+                <span class="recipe-select__filter-count">{{ activeFilterCount() }}</span>
+            }
+        </fd-ui-button>
     </div>
 
     <fd-recipe-select-dialog-content

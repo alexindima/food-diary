@@ -95,18 +95,31 @@
                 <div class="recipe-step-card__subtitle fd-ui-caption">{{ 'RECIPE_MANAGE.INGREDIENTS' | translate }}</div>
                 @for (row of ingredientRows(); track row.index) {
                     <div class="recipe-ingredient fd-row fd-gap-md">
-                        <fd-ui-input
-                            class="recipe-ingredient__name"
-                            size="lg"
-                            [value]="ingredients[row.index]?.foodName.value ?? ''"
-                            [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
-                            [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
-                            [readonly]="true"
-                            [prefixIcon]="row.prefixIcon"
-                            [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
-                            [error]="row.foodNameError"
-                            (click)="onProductSelectClick(row.index)"
-                        />
+                        <div class="recipe-ingredient__selection fd-stack fd-gap-xs">
+                            <fd-ui-segmented-toggle
+                                class="recipe-ingredient__type-toggle"
+                                appearance="soft"
+                                size="sm"
+                                [options]="ingredientTypeOptions"
+                                [selectedValue]="row.itemType"
+                                [ariaLabel]="'RECIPE_MANAGE.INGREDIENT_TYPE' | translate"
+                                [shrinkItems]="true"
+                                [stackOnNarrow]="false"
+                                (selectedValueChange)="onIngredientTypeChange(row.index, $event)"
+                            />
+                            <fd-ui-input
+                                class="recipe-ingredient__name"
+                                size="lg"
+                                [value]="ingredients[row.index]?.foodName.value ?? ''"
+                                [label]="'RECIPE_MANAGE.INGREDIENT_NAME' | translate"
+                                [placeholder]="'RECIPE_MANAGE.INGREDIENT_NAME_PLACEHOLDER' | translate"
+                                [readonly]="true"
+                                [prefixIcon]="row.prefixIcon"
+                                [ariaLabel]="'RECIPE_MANAGE.SELECT_INGREDIENT' | translate"
+                                [error]="row.foodNameError"
+                                (click)="onProductSelectClick(row.index, row.itemType)"
+                            />
+                        </div>
 
                         <div class="recipe-ingredient__amount fd-row fd-align-start fd-gap-sm">
                             <fd-ui-input

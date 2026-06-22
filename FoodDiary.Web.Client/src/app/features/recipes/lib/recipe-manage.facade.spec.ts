@@ -6,6 +6,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { waitForAsyncTasksAsync } from '../../../../testing/async-testing';
 import { NavigationService } from '../../../services/navigation.service';
+import { ItemSelectDialogComponent } from '../../../shared/dialogs/item-select-dialog/item-select-dialog';
 import { DEFAULT_NUTRITION_BASE_AMOUNT } from '../../../shared/lib/nutrition.constants';
 import { MeasurementUnit, ProductType, ProductVisibility } from '../../products/models/product.data';
 import { RecipeService } from '../api/recipe.service';
@@ -158,10 +159,14 @@ describe('RecipeManageFacade selection', () => {
             afterClosed: () => afterClosed,
         });
 
-        const result$ = facade.openItemSelectionDialog();
+        const result$ = facade.openItemSelectionDialog('Recipe');
         const result = await firstValueFrom(result$);
 
         expect(dialogService.open).toHaveBeenCalledTimes(1);
+        expect(dialogService.open).toHaveBeenCalledWith(ItemSelectDialogComponent, {
+            size: 'lg',
+            data: { initialTab: 'Recipe', lockInitialTab: true, excludedRecipeId: null },
+        });
         expect(result).toBeNull();
     });
 

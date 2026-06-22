@@ -79,6 +79,14 @@ describe('ProductListDialogComponent', () => {
 
         expect(dialogRef.close).not.toHaveBeenCalled();
     });
+
+    it('opens structured product filters from picker controls', () => {
+        const { component, facade } = setupComponent();
+
+        component['openFilters']();
+
+        expect(facade.openFilters).toHaveBeenCalledTimes(1);
+    });
 });
 
 function setupComponent(): {

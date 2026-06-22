@@ -3,11 +3,20 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { TranslatePipe } from '@ngx-translate/core';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 
-import { RecipeStepCardComponent, type RecipeStepCardState } from '../recipe-step-card/recipe-step-card';
+import {
+    type RecipeIngredientItemType,
+    type RecipeIngredientSelectEvent,
+    RecipeStepCardComponent,
+    type RecipeStepCardState,
+} from '../recipe-step-card/recipe-step-card';
 
 export type StepIngredientEvent = {
     stepIndex: number;
     ingredientIndex: number;
+};
+
+export type StepIngredientSelectEvent = StepIngredientEvent & {
+    itemType: RecipeIngredientItemType;
 };
 
 export type StepDropEvent = {
@@ -37,7 +46,7 @@ export class RecipeStepsListComponent {
     public readonly stepExpandedToggle = output<number>();
     public readonly addIngredient = output<number>();
     public readonly removeIngredient = output<StepIngredientEvent>();
-    public readonly selectProduct = output<StepIngredientEvent>();
+    public readonly selectProduct = output<StepIngredientSelectEvent>();
     public readonly stepTitleChange = output<StepFieldEvent<string | null>>();
     public readonly stepImageChange = output<StepFieldEvent<RecipeStepCardState['imageUrl']['value']>>();
     public readonly stepDescriptionChange = output<StepFieldEvent<string>>();
@@ -78,8 +87,8 @@ export class RecipeStepsListComponent {
         this.removeIngredient.emit({ stepIndex, ingredientIndex });
     }
 
-    protected onSelectProduct(stepIndex: number, ingredientIndex: number): void {
-        this.selectProduct.emit({ stepIndex, ingredientIndex });
+    protected onSelectProduct(stepIndex: number, event: RecipeIngredientSelectEvent): void {
+        this.selectProduct.emit({ stepIndex, ingredientIndex: event.ingredientIndex, itemType: event.itemType });
     }
 
     protected onStepTitleChange(stepIndex: number, value: string | null): void {

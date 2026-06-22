@@ -79,6 +79,13 @@ describe('ItemSelectDialogComponent', () => {
         expect(configureComponent({ dialogData: { initialTab: 'Recipe' } }).componentInstance['activeTab']()).toBe('Recipe');
     });
 
+    it('locks tab navigation when initial tab is fixed by caller', () => {
+        const component = configureComponent({ dialogData: { initialTab: 'Recipe', lockInitialTab: true } }).componentInstance;
+
+        expect(component['activeTab']()).toBe('Recipe');
+        expect(component['isInitialTabLocked']()).toBe(true);
+    });
+
     it('closes dialog with selected product in dialog mode', () => {
         const dialogRef = { close: vi.fn() };
         const component = configureComponent({ dialogRef }).componentInstance;

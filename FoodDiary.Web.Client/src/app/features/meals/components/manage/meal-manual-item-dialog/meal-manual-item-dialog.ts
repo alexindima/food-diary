@@ -7,7 +7,9 @@ import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FD_UI_DIALOG_DATA } from 'fd-ui-kit/dialog/fd-ui-dialog-data';
 import { FdUiDialogFooterDirective } from 'fd-ui-kit/dialog/fd-ui-dialog-footer.directive';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
+import { FdUiIconComponent } from 'fd-ui-kit/icon/fd-ui-icon';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
+import { FdUiSegmentedToggleComponent, type FdUiSegmentedToggleOption } from 'fd-ui-kit/segmented-toggle/fd-ui-segmented-toggle';
 import { firstValueFrom } from 'rxjs';
 
 import { ItemSelectDialogComponent } from '../../../../../shared/dialogs/item-select-dialog/item-select-dialog';
@@ -22,6 +24,8 @@ import { ConsumptionSourceType } from '../../../models/meal.data';
 import type { ConsumptionItemFormValues } from '../meal-manage-lib/meal-manage.types';
 
 const MIN_AMOUNT = 0.01;
+const PRODUCT_SOURCE_VALUE = 'Product';
+const RECIPE_SOURCE_VALUE = 'Recipe';
 
 export type MealManualItemDialogData = {
     item: ConsumptionItemFormValues;
@@ -32,7 +36,16 @@ export type MealManualItemDialogData = {
     templateUrl: './meal-manual-item-dialog.html',
     styleUrls: ['./meal-manual-item-dialog.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [FormField, TranslatePipe, FdUiButtonComponent, FdUiDialogComponent, FdUiDialogFooterDirective, FdUiInputComponent],
+    imports: [
+        FormField,
+        TranslatePipe,
+        FdUiButtonComponent,
+        FdUiDialogComponent,
+        FdUiDialogFooterDirective,
+        FdUiIconComponent,
+        FdUiInputComponent,
+        FdUiSegmentedToggleComponent,
+    ],
 })
 export class MealManualItemDialogComponent {
     private readonly data = inject<MealManualItemDialogData>(FD_UI_DIALOG_DATA);
@@ -42,6 +55,7 @@ export class MealManualItemDialogComponent {
     private readonly translateService = inject(TranslateService);
 
     protected readonly sourceType = signal(this.data.item.sourceType);
+    protected readonly sourceTypeValue = signal(this.toSourceTypeValue(this.data.item.sourceType));
     protected readonly product = signal<Product | null>(this.data.item.product);
     protected readonly recipe = signal<Recipe | null>(this.data.item.recipe);
     private readonly sourceTouched = signal(false);
@@ -51,7 +65,46 @@ export class MealManualItemDialogComponent {
         min(path, MIN_AMOUNT);
     });
 
-    protected readonly itemSourceName = computed(() => this.recipe()?.name ?? this.product()?.name ?? '');
+    protected readonly sourceTypeOptions: FdUiSegmentedToggleOption[] = [
+        { value: PRODUCT_SOURCE_VALUE, label: this.translateService.instant('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Product') },
+        { value: RECIPE_SOURCE_VALUE, label: this.translateService.instant('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Recipe') },
+    ];
+
+    protected readonly selectedItemName = computed(() => this.recipe()?.name ?? this.product()?.name ?? null);
+    protected readonly itemSourceName = computed(() => this.selectedItemName() ?? '');
+
+    protected readonly sourceActionLabelKey = computed(() =>
+        this.sourceType() === ConsumptionSourceType.Recipe
+            ? 'CONSUMPTION_MANAGE.MANUAL_ITEM_CHOOSE_RECIPE'
+            : 'CONSUMPTION_MANAGE.MANUAL_ITEM_CHOOSE_PRODUCT',
+    );
+
+    protected readonly sourceTypeLabelKey = computed(() =>
+        this.sourceType() === ConsumptionSourceType.Recipe
+            ? 'CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Recipe'
+            : 'CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Product',
+    );
+
+    protected readonly selectedItemMeta = computed(() => {
+        const recipe = this.recipe();
+        if (recipe !== null) {
+            const calories = recipe.manualCalories ?? recipe.totalCalories;
+            return calories === null || calories === undefined
+                ? this.translateService.instant('CONSUMPTION_MANAGE.ITEM_TYPE_OPTIONS.Recipe')
+                : this.translateService.instant('CONSUMPTION_MANAGE.MANUAL_ITEM_RECIPE_META', { calories: Math.round(calories) });
+        }
+
+        const product = this.product();
+        if (product !== null) {
+            return this.translateService.instant('CONSUMPTION_MANAGE.MANUAL_ITEM_PRODUCT_META', {
+                amount: product.baseAmount,
+                unit: product.baseUnit,
+                calories: Math.round(product.caloriesPerBase),
+            });
+        }
+
+        return null;
+    });
 
     protected readonly itemSourceIcon = computed(() => {
         if (this.recipe() !== null) {
@@ -94,13 +147,30 @@ export class MealManualItemDialogComponent {
         return this.translateService.instant('FORM_ERRORS.UNKNOWN');
     });
 
+    protected readonly canSave = computed(() => (this.product() !== null || this.recipe() !== null) && !this.amount().invalid());
+
+    protected onSourceTypeChange(value: string): void {
+        const nextSourceType = value === RECIPE_SOURCE_VALUE ? ConsumptionSourceType.Recipe : ConsumptionSourceType.Product;
+        if (nextSourceType === this.sourceType()) {
+            this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
+            return;
+        }
+
+        this.sourceType.set(nextSourceType);
+        this.sourceTypeValue.set(this.toSourceTypeValue(nextSourceType));
+        this.sourceTouched.set(false);
+        this.product.set(null);
+        this.recipe.set(null);
+        this.amount().value.set(null);
+    }
+
     protected async chooseItemAsync(): Promise<void> {
-        const initialTab = this.sourceType() === ConsumptionSourceType.Recipe ? 'Recipe' : 'Product';
+        const initialTab = this.sourceType() === ConsumptionSourceType.Recipe ? RECIPE_SOURCE_VALUE : PRODUCT_SOURCE_VALUE;
         const selection = await firstValueFrom(
             this.fdDialogService
                 .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
                     preset: 'list',
-                    data: { initialTab },
+                    data: { initialTab, lockInitialTab: true },
                 })
                 .afterClosed(),
         );
@@ -111,6 +181,7 @@ export class MealManualItemDialogComponent {
 
         if (selection.type === 'Product') {
             this.sourceType.set(ConsumptionSourceType.Product);
+            this.sourceTypeValue.set(PRODUCT_SOURCE_VALUE);
             this.product.set(selection.product);
             this.recipe.set(null);
             this.amount().value.set(this.resolveProductAmount(selection.product));
@@ -118,6 +189,7 @@ export class MealManualItemDialogComponent {
         }
 
         this.sourceType.set(ConsumptionSourceType.Recipe);
+        this.sourceTypeValue.set(RECIPE_SOURCE_VALUE);
         this.recipe.set(selection.recipe);
         this.product.set(null);
         this.amount().value.set(1);
@@ -162,5 +234,9 @@ export class MealManualItemDialogComponent {
         }
 
         return 1;
+    }
+
+    private toSourceTypeValue(sourceType: ConsumptionSourceType): string {
+        return sourceType === ConsumptionSourceType.Recipe ? RECIPE_SOURCE_VALUE : PRODUCT_SOURCE_VALUE;
     }
 }

@@ -1,10 +1,12 @@
 import { type ComponentFixture, TestBed } from '@angular/core/testing';
+import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { of, throwError } from 'rxjs';
 import { describe, expect, it, vi } from 'vitest';
 
 import { APP_SEARCH_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import type { PageOf } from '../../../../shared/models/page-of.data';
+import { RecipeListFiltersDialogComponent } from '../../components/list/recipe-list-filters-dialog/recipe-list-filters-dialog';
 import { RecipeSelectFacade } from '../../lib/recipe-select.facade';
 import { type Recipe, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeSelectDialogComponent } from './recipe-select-dialog';
@@ -14,6 +16,7 @@ const PAGE_SIZE = 10;
 const SECOND_PAGE_INDEX = 1;
 const SECOND_PAGE = 2;
 const ZERO_DEBOUNCE_MS = 0;
+const FULL_FILTER_COUNT = 5;
 
 describe('RecipeSelectDialogComponent', () => {
     it('loads recipes on creation and maps them to selectable items', () => {
@@ -69,14 +72,50 @@ describe('RecipeSelectDialogComponent', () => {
         expect(scrollSpy).toHaveBeenCalled();
         expect(recipeService.query).toHaveBeenLastCalledWith(SECOND_PAGE, PAGE_SIZE, { search: undefined }, true);
     });
+});
 
-    it('toggles only-mine filter through form control', () => {
-        const { component } = setupComponent([createRecipe()]);
+describe('RecipeSelectDialogComponent filters and actions', () => {
+    it('opens structured filters and reloads recipes with applied values', () => {
+        const { component, dialogService, recipeService } = setupComponent([createRecipe()]);
+        dialogService.open.mockReturnValueOnce({
+            afterClosed: () =>
+                of({
+                    onlyMine: true,
+                    category: 'Dinner',
+                    maxTotalTime: 30,
+                    caloriesFrom: 100,
+                    caloriesTo: 500,
+                    hasImage: true,
+                }),
+        });
 
-        component['toggleOnlyMine']();
+        component['openFilters']();
 
-        expect(component['searchModel']().onlyMine).toBe(true);
-        expect(component['onlyMineFilter']()).toBe(true);
+        expect(dialogService.open).toHaveBeenCalledWith(RecipeListFiltersDialogComponent, {
+            preset: 'form',
+            data: {
+                onlyMine: false,
+                category: null,
+                maxTotalTime: null,
+                caloriesFrom: null,
+                caloriesTo: null,
+                hasImage: null,
+            },
+        });
+        expect(component['activeFilterCount']()).toBe(FULL_FILTER_COUNT);
+        expect(recipeService.query).toHaveBeenLastCalledWith(
+            1,
+            PAGE_SIZE,
+            {
+                search: undefined,
+                category: 'Dinner',
+                maxTotalTime: 30,
+                caloriesFrom: 100,
+                caloriesTo: 500,
+                hasImage: true,
+            },
+            false,
+        );
     });
 
     it('clears search through form control', () => {
@@ -114,6 +153,7 @@ describe('RecipeSelectDialogComponent', () => {
 
 function setupComponent(recipes: Recipe[]): {
     component: RecipeSelectDialogComponent;
+    dialogService: { open: ReturnType<typeof vi.fn> };
     dialogRef: { close: ReturnType<typeof vi.fn> };
     fixture: ComponentFixture<RecipeSelectDialogComponent>;
     recipeService: { query: ReturnType<typeof vi.fn> };
@@ -121,12 +161,16 @@ function setupComponent(recipes: Recipe[]): {
     const recipeService = {
         query: vi.fn().mockReturnValue(of(createPage(recipes))),
     };
+    const dialogService = {
+        open: vi.fn().mockReturnValue({ afterClosed: () => of(null) }),
+    };
     const dialogRef = { close: vi.fn() };
 
     TestBed.configureTestingModule({
         imports: [RecipeSelectDialogComponent],
         providers: [
             { provide: RecipeSelectFacade, useValue: recipeService },
+            { provide: FdUiDialogService, useValue: dialogService },
             { provide: FdUiDialogRef, useValue: dialogRef },
             { provide: APP_SEARCH_DEBOUNCE_MS, useValue: ZERO_DEBOUNCE_MS },
         ],
@@ -140,7 +184,7 @@ function setupComponent(recipes: Recipe[]): {
     const fixture = TestBed.createComponent(RecipeSelectDialogComponent);
     fixture.detectChanges();
 
-    return { component: fixture.componentInstance, dialogRef, fixture, recipeService };
+    return { component: fixture.componentInstance, dialogService, dialogRef, fixture, recipeService };
 }
 
 function readRecipeItems(component: RecipeSelectDialogComponent): RecipeSelectItemViewModel[] {

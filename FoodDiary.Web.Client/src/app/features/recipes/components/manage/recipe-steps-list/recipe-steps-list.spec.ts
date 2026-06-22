@@ -40,6 +40,18 @@ describe('RecipeStepsListComponent', () => {
         expect(removed).toEqual([{ stepIndex: 1, ingredientIndex: 2 }]);
     });
 
+    it('emits ingredient selection events with requested item type', () => {
+        const { component } = setupComponent(new Set([0]));
+        const selected: Array<{ stepIndex: number; ingredientIndex: number; itemType: string }> = [];
+        component['selectProduct'].subscribe(event => {
+            selected.push(event);
+        });
+
+        component['onSelectProduct'](1, { ingredientIndex: 2, itemType: 'Recipe' });
+
+        expect(selected).toEqual([{ stepIndex: 1, ingredientIndex: 2, itemType: 'Recipe' }]);
+    });
+
     it('emits step drop event without mutating supplied steps', () => {
         const { component } = setupComponent(new Set([0]));
         const handler = vi.fn();

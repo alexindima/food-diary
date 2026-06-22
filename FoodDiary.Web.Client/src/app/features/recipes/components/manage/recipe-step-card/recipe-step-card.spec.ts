@@ -77,8 +77,25 @@ describe('RecipeStepCardComponent', () => {
             expect.objectContaining({
                 prefixIcon: 'restaurant',
                 amountLabel: 'RECIPE_MANAGE.INGREDIENT_AMOUNT (PRODUCT_AMOUNT_UNITS.G)',
+                itemType: 'Product',
             }),
         );
+    });
+
+    it('emits ingredient selection with requested item type', () => {
+        const { component } = setupComponent();
+        const selections: Array<{ ingredientIndex: number; itemType: string }> = [];
+        component['selectProduct'].subscribe(event => {
+            selections.push(event);
+        });
+
+        component['onIngredientTypeChange'](0, 'Recipe');
+        component['onProductSelectClick'](0, 'Product');
+
+        expect(selections).toEqual([
+            { ingredientIndex: 0, itemType: 'Recipe' },
+            { ingredientIndex: 0, itemType: 'Product' },
+        ]);
     });
 });
 

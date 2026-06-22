@@ -5,6 +5,7 @@
         [selectedValue]="visibilityValue"
         [fdUiHint]="'RECIPE_LIST.FILTERS_TITLE' | translate"
         [ariaLabel]="'RECIPE_LIST.FILTERS_TITLE' | translate"
+        [fullWidth]="true"
         (selectedValueChange)="onVisibilityChange($event)"
     />
 
@@ -48,9 +49,11 @@
     <section class="recipe-list-filters-dialog__section fd-grid fd-gap-xs">
         <h3 class="recipe-list-filters-dialog__section-title">{{ 'RECIPE_LIST.FILTER_MEDIA' | translate }}</h3>
         <fd-ui-segmented-toggle
+            class="recipe-list-filters-dialog__image"
             [options]="imageOptions"
             [selectedValue]="imageValue"
             [ariaLabel]="'RECIPE_LIST.FILTER_MEDIA' | translate"
+            [fullWidth]="true"
             (selectedValueChange)="onImageChange($event)"
         />
     </section>

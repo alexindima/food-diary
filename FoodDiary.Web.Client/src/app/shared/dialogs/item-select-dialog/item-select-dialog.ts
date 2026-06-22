@@ -50,6 +50,7 @@ export class ItemSelectDialogComponent {
         },
     ];
     protected readonly activeTab = signal<'Product' | 'Recipe'>(this.dialogData?.initialTab === 'Recipe' ? 'Recipe' : 'Product');
+    protected readonly isInitialTabLocked = computed(() => this.dialogData?.lockInitialTab === true);
     protected readonly createActionLabelKey = computed(() =>
         this.activeTab() === 'Product' ? 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' : 'RECIPE_SELECT_DIALOG.ADD_RECIPE_BUTTON',
     );

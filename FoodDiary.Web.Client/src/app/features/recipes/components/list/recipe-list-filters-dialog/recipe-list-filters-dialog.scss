@@ -1,6 +1,7 @@
 .recipe-list-filters-dialog {
     &__visibility {
         margin-bottom: var(--fd-space-md);
+        width: 100%;
     }
 
     &__section {
@@ -19,5 +20,9 @@
 
     &__range {
         grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    &__image {
+        width: 100%;
     }
 }

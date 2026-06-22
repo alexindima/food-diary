@@ -24,12 +24,15 @@
             appearance="chip"
             variant="secondary"
             fill="outline"
-            [icon]="filterIcon()"
-            [fdUiHint]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
-            [ariaLabel]="'PRODUCT_LIST.ONLY_MY_PRODUCTS' | translate"
-            [class.product-select__filter-button--active]="onlyMineFilter()"
-            (click)="toggleOnlyMine()"
-        />
+            icon="filter_alt"
+            [class.product-select__filter-button--active]="hasActiveFilters()"
+            (click)="openFilters()"
+        >
+            {{ 'PRODUCT_LIST.FILTERS_TITLE' | translate }}
+            @if (activeFilterCount() > 0) {
+                <span class="product-select__filter-count">{{ activeFilterCount() }}</span>
+            }
+        </fd-ui-button>
     </div>
 
     <fd-product-list-dialog-content

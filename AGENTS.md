@@ -61,6 +61,7 @@ When working in a project folder, prefer that folder's `AGENTS.md` for concrete 
 - Backend coverage: `dotnet test FoodDiary.slnx --settings coverage.runsettings --collect:"XPlat Code Coverage" --results-directory .\TestResults\coverage-backend`
 - Frontend full verification: `cd FoodDiary.Web.Client && npm run verify`
 - Commits can take a while because the pre-commit hook runs formatting, linters, and tests. If `git commit` appears to time out, check `git status` and `git log -1` before retrying; the commit may still finish successfully after the command wrapper stops waiting.
+- Pushes can take a long time because the pre-push hook runs the full frontend and backend test suites. If `git push` appears to time out, check `git status`, `git log -1`, and the remote branch state before retrying.
 
 ## Documentation
 - Long-form documentation lives under `docs/`.

@@ -310,9 +310,9 @@ describe('RecipeManageComponent steps and ingredients', () => {
             });
         });
 
-        component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0 });
+        component['onProductSelectClick']({ stepIndex: 0, ingredientIndex: 0, itemType: 'Recipe' });
 
-        expect(facade.openItemSelectionDialog).toHaveBeenCalledTimes(1);
+        expect(facade.openItemSelectionDialog).toHaveBeenCalledWith('Recipe', null);
         expect(facade.applyItemSelection).toHaveBeenCalledTimes(1);
         expect(facade.calculateAutoSummary).toHaveBeenCalled();
         expect(component['steps'][0]?.ingredients[0]?.foodName).toBe(selectedProduct.name);

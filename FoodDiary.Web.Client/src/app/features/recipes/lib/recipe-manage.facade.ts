@@ -41,11 +41,14 @@ export class RecipeManageFacade {
     public readonly globalError = signal<string | null>(null);
     public readonly isSubmitting = signal(false);
 
-    public openItemSelectionDialog(excludedRecipeId: string | null = null): Observable<ItemSelection | null> {
+    public openItemSelectionDialog(
+        initialTab: 'Product' | 'Recipe',
+        excludedRecipeId: string | null = null,
+    ): Observable<ItemSelection | null> {
         return this.dialogService
             .open<ItemSelectDialogComponent, ItemSelectDialogData, ItemSelection | null>(ItemSelectDialogComponent, {
                 size: 'lg',
-                data: { initialTab: 'Product', excludedRecipeId },
+                data: { initialTab, lockInitialTab: true, excludedRecipeId },
             })
             .afterClosed()
             .pipe(map(selection => selection ?? null));

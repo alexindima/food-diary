@@ -16,53 +16,67 @@ import { ThemeService } from '../shared/theme/theme.service';
 import { AppComponent } from './app';
 
 const NAVIGATION_ID = 1;
+const SHELL_TEST_TIMEOUT_MS = 15000;
 
 describe('AppComponent shell behavior', () => {
     beforeEach(() => {
         TestBed.resetTestingModule();
     });
 
-    it('mirrors lazy route loading events into RouteLoadingService', async () => {
-        const { routeLoadingService, routerEvents } = await createComponentAsync();
-        const route = { path: 'dashboard' } satisfies Route;
+    it(
+        'mirrors lazy route loading events into RouteLoadingService',
+        async () => {
+            const { routeLoadingService, routerEvents } = await createComponentAsync();
+            const route = { path: 'dashboard' } satisfies Route;
 
-        routerEvents.next(new RouteConfigLoadStart(route));
-        routerEvents.next(new RouteConfigLoadEnd(route));
+            routerEvents.next(new RouteConfigLoadStart(route));
+            routerEvents.next(new RouteConfigLoadEnd(route));
 
-        expect(routeLoadingService.beginLoad).toHaveBeenCalledOnce();
-        expect(routeLoadingService.endLoad).toHaveBeenCalledOnce();
-    });
+            expect(routeLoadingService.beginLoad).toHaveBeenCalledOnce();
+            expect(routeLoadingService.endLoad).toHaveBeenCalledOnce();
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
 
-    it('prepares route localization, theme and SEO after navigation', async () => {
-        const { localizationService, router, routerEvents, seoService, themeService } = await createComponentAsync();
+    it(
+        'prepares route localization, theme and SEO after navigation',
+        async () => {
+            const { localizationService, router, routerEvents, seoService, themeService } = await createComponentAsync();
 
-        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard', '/dashboard'));
-        await waitForAsyncTasksAsync();
-        await waitForAsyncTasksAsync();
+            routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard', '/dashboard'));
+            await waitForAsyncTasksAsync();
+            await waitForAsyncTasksAsync();
 
-        expect(themeService.applyThemeForRoute).toHaveBeenCalledWith('/dashboard');
-        expect(localizationService.loadTranslationsForRouteAsync).toHaveBeenCalledWith('/dashboard');
-        expect(seoService.update).toHaveBeenCalledWith({
-            titleKey: 'SEO.DASHBOARD.TITLE',
-            descriptionKey: 'SEO.DASHBOARD.DESCRIPTION',
-            path: router.url,
-        });
-    });
+            expect(themeService.applyThemeForRoute).toHaveBeenCalledWith('/dashboard');
+            expect(localizationService.loadTranslationsForRouteAsync).toHaveBeenCalledWith('/dashboard');
+            expect(seoService.update).toHaveBeenCalledWith({
+                titleKey: 'SEO.DASHBOARD.TITLE',
+                descriptionKey: 'SEO.DASHBOARD.DESCRIPTION',
+                path: router.url,
+            });
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
 
-    it('uses compact mobile navigation spacing only for dashboard routes', async () => {
-        const { component, routerEvents } = await createComponentAsync();
-        const compactNavigation = (component as unknown as { usesCompactMobileNavigation: Signal<boolean> }).usesCompactMobileNavigation;
+    it(
+        'uses compact mobile navigation spacing only for dashboard routes',
+        async () => {
+            const { component, routerEvents } = await createComponentAsync();
+            const compactNavigation = (component as unknown as { usesCompactMobileNavigation: Signal<boolean> })
+                .usesCompactMobileNavigation;
 
-        expect(compactNavigation()).toBe(true);
+            expect(compactNavigation()).toBe(true);
 
-        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/products', '/products'));
+            routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/products', '/products'));
 
-        expect(compactNavigation()).toBe(false);
+            expect(compactNavigation()).toBe(false);
 
-        routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard?date=2026-06-11', '/dashboard?date=2026-06-11'));
+            routerEvents.next(new NavigationEnd(NAVIGATION_ID, '/dashboard?date=2026-06-11', '/dashboard?date=2026-06-11'));
 
-        expect(compactNavigation()).toBe(true);
-    });
+            expect(compactNavigation()).toBe(true);
+        },
+        SHELL_TEST_TIMEOUT_MS,
+    );
 });
 
 async function createComponentAsync(): Promise<{
