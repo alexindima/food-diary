@@ -5,7 +5,7 @@ import { FdUiDialogRef } from 'fd-ui-kit/dialog/fd-ui-dialog-ref';
 import { describe, expect, it, vi } from 'vitest';
 
 import { provideTranslateTesting } from '../../../../../../testing/translate-testing.module';
-import { MealListFiltersDialogComponent } from './meal-list-filters-dialog';
+import { MealListFiltersDialogComponent, type MealListFiltersDialogData } from './meal-list-filters-dialog';
 
 const dateRange: FdUiDateRangeValue = {
     start: new Date('2026-05-01T00:00:00Z'),
@@ -30,10 +30,22 @@ describe('MealListFiltersDialogComponent', () => {
     it('should close with selected filters', async () => {
         const { component, dialogRef } = await setupComponentAsync(null);
         component['form'].dateRange().value.set(dateRange);
+        component['onSelectedMealTypesChange'](['Breakfast', 'DINNER', 'invalid']);
+        component['caloriesFromValue'] = '100';
+        component['caloriesToValue'] = 500;
+        component['onImageChange']('yes');
+        component['onAiChange']('no');
 
         component['onApply']();
 
-        expect(dialogRef.close).toHaveBeenCalledWith({ dateRange });
+        expect(dialogRef.close).toHaveBeenCalledWith({
+            dateRange,
+            mealTypes: ['BREAKFAST', 'DINNER'],
+            caloriesFrom: 100,
+            caloriesTo: 500,
+            hasImage: true,
+            hasAiSession: false,
+        });
     });
 
     it('should cancel native submit and delegate to FormRoot submission', async () => {
@@ -48,7 +60,14 @@ describe('MealListFiltersDialogComponent', () => {
         expect(formElement).not.toBeNull();
         expect(wasNotCancelled).toBe(false);
         expect(submitEvent.defaultPrevented).toBe(true);
-        expect(dialogRef.close).toHaveBeenCalledWith({ dateRange });
+        expect(dialogRef.close).toHaveBeenCalledWith({
+            dateRange,
+            mealTypes: [],
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
+            hasAiSession: null,
+        });
     });
 
     it('should close with null on cancel', async () => {
@@ -75,7 +94,7 @@ async function setupComponentAsync(initialDateRange: FdUiDateRangeValue | null):
             providers: [
                 provideTranslateTesting(),
                 { provide: FdUiDialogRef, useValue: dialogRef },
-                { provide: FD_UI_DIALOG_DATA, useValue: { dateRange: initialDateRange } },
+                { provide: FD_UI_DIALOG_DATA, useValue: createDialogData(initialDateRange) },
             ],
         })
         .compileComponents();
@@ -87,5 +106,16 @@ async function setupComponentAsync(initialDateRange: FdUiDateRangeValue | null):
         component: fixture.componentInstance,
         dialogRef,
         fixture,
+    };
+}
+
+function createDialogData(dateRangeValue: FdUiDateRangeValue | null): MealListFiltersDialogData {
+    return {
+        dateRange: dateRangeValue,
+        mealTypes: [],
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
+        hasAiSession: null,
     };
 }

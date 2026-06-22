@@ -79,8 +79,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
         UserId userId,
         int page,
         int limit,
-        DateTime? dateFrom,
-        DateTime? dateTo,
+        MealQueryFilters filters,
         CancellationToken cancellationToken = default) {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
@@ -89,15 +88,7 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .AsNoTracking()
             .Where(m => m.UserId == userId);
 
-        if (dateFrom.HasValue) {
-            DateTime from = NormalizeUtcInstant(dateFrom.Value);
-            filteredQuery = filteredQuery.Where(m => m.Date >= from);
-        }
-
-        if (dateTo.HasValue) {
-            DateTime to = NormalizeInclusiveEndInstant(dateTo.Value);
-            filteredQuery = filteredQuery.Where(m => m.Date <= to);
-        }
+        filteredQuery = ApplyFilters(filteredQuery, filters);
 
         int totalItems = await filteredQuery.CountAsync(cancellationToken).ConfigureAwait(false);
         int skip = (pageNumber - 1) * pageSize;
@@ -121,6 +112,48 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, totalItems);
+    }
+
+    private static IQueryable<Meal> ApplyFilters(IQueryable<Meal> query, MealQueryFilters filters) {
+        if (filters.DateFrom.HasValue) {
+            DateTime from = NormalizeUtcInstant(filters.DateFrom.Value);
+            query = query.Where(m => m.Date >= from);
+        }
+
+        if (filters.DateTo.HasValue) {
+            DateTime to = NormalizeInclusiveEndInstant(filters.DateTo.Value);
+            query = query.Where(m => m.Date <= to);
+        }
+
+        if (filters.MealTypes is { Count: > 0 }) {
+            query = query.Where(m => m.MealType.HasValue && filters.MealTypes.Contains(m.MealType.Value));
+        }
+
+        if (filters.CaloriesFrom.HasValue) {
+            query = query.Where(m => (m.ManualCalories ?? m.TotalCalories) >= filters.CaloriesFrom.Value);
+        }
+
+        if (filters.CaloriesTo.HasValue) {
+            query = query.Where(m => (m.ManualCalories ?? m.TotalCalories) <= filters.CaloriesTo.Value);
+        }
+
+        return ApplyPresenceFilters(query, filters);
+    }
+
+    private static IQueryable<Meal> ApplyPresenceFilters(IQueryable<Meal> query, MealQueryFilters filters) {
+        if (filters.HasImage.HasValue) {
+            query = filters.HasImage.Value
+                ? query.Where(m => m.ImageUrl != null || m.ImageAssetId != null)
+                : query.Where(m => m.ImageUrl == null && m.ImageAssetId == null);
+        }
+
+        if (filters.HasAiSession.HasValue) {
+            query = filters.HasAiSession.Value
+                ? query.Where(m => m.AiSessions.Any())
+                : query.Where(m => !m.AiSessions.Any());
+        }
+
+        return query;
     }
 
     public async Task<IReadOnlyList<Meal>> GetByPeriodAsync(

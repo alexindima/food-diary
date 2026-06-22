@@ -1,6 +1,9 @@
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
+using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Meals;
 
@@ -35,8 +38,9 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             user.Id,
             page: 1,
             limit: 1,
-            dateFrom: new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
-            dateTo: new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc));
+            filters: new MealQueryFilters(
+                new DateTime(2026, 3, 1, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 3, 31, 0, 0, 0, DateTimeKind.Utc)));
 
         Meal item = Assert.Single(items);
         Assert.Equal(2, totalItems);
@@ -69,8 +73,9 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             user.Id,
             page: 1,
             limit: 10,
-            dateFrom: new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc),
-            dateTo: new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc));
+            filters: new MealQueryFilters(
+                new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 5, 2, 0, 0, 0, DateTimeKind.Utc)));
 
         Assert.Equal(2, totalItems);
         Assert.Collection(
@@ -108,14 +113,60 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
             user.Id,
             page: 1,
             limit: 10,
-            dateFrom: new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc),
-            dateTo: new DateTime(2026, 5, 5, 19, 59, 59, 999, DateTimeKind.Utc));
+            filters: new MealQueryFilters(
+                new DateTime(2026, 5, 4, 20, 0, 0, DateTimeKind.Utc),
+                new DateTime(2026, 5, 5, 19, 59, 59, 999, DateTimeKind.Utc)));
 
         Assert.Equal(2, totalItems);
         Assert.Collection(
             items,
             item => Assert.Equal(lastLocalDayMeal.Id, item.Id),
             item => Assert.Equal(firstLocalDayMeal.Id, item.Id));
+    }
+
+    [RequiresDockerFact]
+    public async Task GetPagedAsync_AppliesStructuredFilters() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-filters-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        (Meal breakfastWithImage, Meal lunchWithAi, Meal dinnerNoImage) =
+            await SeedMealFiltersAsync(context, user.Id);
+        var repository = new MealRepository(context);
+
+        IReadOnlyList<MealId> mealTypeIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            MealTypes: [MealType.Breakfast, MealType.Lunch]));
+        IReadOnlyList<MealId> calorieIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            CaloriesFrom: 600,
+            CaloriesTo: 700));
+        IReadOnlyList<MealId> withImageIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            HasImage: true));
+        IReadOnlyList<MealId> withoutImageIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            HasImage: false));
+        IReadOnlyList<MealId> withAiIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            HasAiSession: true));
+        IReadOnlyList<MealId> withoutAiIds = await GetMealIdsAsync(repository, user.Id, new MealQueryFilters(
+            DateFrom: null,
+            DateTo: null,
+            HasAiSession: false));
+
+        AssertIds([breakfastWithImage.Id, lunchWithAi.Id], mealTypeIds);
+        Assert.Equal([lunchWithAi.Id], calorieIds);
+        Assert.Equal([breakfastWithImage.Id], withImageIds);
+        AssertIds([lunchWithAi.Id, dinnerNoImage.Id], withoutImageIds);
+        Assert.Equal([lunchWithAi.Id], withAiIds);
+        AssertIds([breakfastWithImage.Id, dinnerNoImage.Id], withoutAiIds);
     }
 
     [RequiresDockerFact]
@@ -205,4 +256,60 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
         MealAiItem item = Assert.Single(session.Items);
         Assert.Equal("Rice", item.NameEn);
     }
+
+    private static MealNutritionUpdate CreateManualNutrition(double calories) =>
+        new(
+            TotalCalories: calories,
+            TotalProteins: 1,
+            TotalFats: 1,
+            TotalCarbs: 1,
+            TotalFiber: 0,
+            TotalAlcohol: 0,
+            IsAutoCalculated: false,
+            ManualCalories: calories,
+            ManualProteins: 1,
+            ManualFats: 1,
+            ManualCarbs: 1,
+            ManualFiber: 0,
+            ManualAlcohol: 0);
+
+    private static async Task<IReadOnlyList<MealId>> GetMealIdsAsync(
+        MealRepository repository,
+        UserId userId,
+        MealQueryFilters filters) {
+        (IReadOnlyList<Meal> items, int _) = await repository.GetPagedAsync(
+            userId,
+            page: 1,
+            limit: 50,
+            filters: filters).ConfigureAwait(false);
+
+        return [.. items.Select(item => item.Id)];
+    }
+
+    private static async Task<(Meal BreakfastWithImage, Meal LunchWithAi, Meal DinnerNoImage)> SeedMealFiltersAsync(
+        FoodDiaryDbContext context,
+        UserId userId) {
+        var breakfastWithImage = Meal.Create(
+            userId,
+            new DateTime(2026, 6, 1, 8, 0, 0, DateTimeKind.Utc),
+            MealType.Breakfast,
+            imageUrl: "https://cdn.example.com/breakfast.webp");
+        breakfastWithImage.ApplyNutrition(CreateManualNutrition(calories: 350));
+
+        var lunchWithAi = Meal.Create(userId, new DateTime(2026, 6, 1, 13, 0, 0, DateTimeKind.Utc), MealType.Lunch);
+        lunchWithAi.ApplyNutrition(CreateManualNutrition(calories: 650));
+        lunchWithAi.AddAiSession(imageAssetId: null, AiRecognitionSource.Text, new DateTime(2026, 6, 1, 13, 5, 0, DateTimeKind.Utc), notes: null, items: []);
+
+        var dinnerNoImage = Meal.Create(userId, new DateTime(2026, 6, 1, 19, 0, 0, DateTimeKind.Utc), MealType.Dinner);
+        dinnerNoImage.ApplyNutrition(CreateManualNutrition(calories: 820));
+
+        context.Meals.AddRange(breakfastWithImage, lunchWithAi, dinnerNoImage);
+        await context.SaveChangesAsync().ConfigureAwait(false);
+        return (breakfastWithImage, lunchWithAi, dinnerNoImage);
+    }
+
+    private static void AssertIds(IReadOnlyCollection<MealId> expected, IReadOnlyCollection<MealId> actual) =>
+        Assert.Equal(
+            [.. expected.Select(id => id.Value).Order()],
+            [.. actual.Select(id => id.Value).Order()]);
 }

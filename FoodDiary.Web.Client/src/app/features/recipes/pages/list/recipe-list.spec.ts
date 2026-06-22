@@ -10,7 +10,7 @@ import { PagedData } from '../../../../shared/lib/paged-data.data';
 import { ViewportService } from '../../../../shared/platform/viewport.service';
 import { RecipeDetailActionResult } from '../../components/detail/recipe-detail-lib/recipe-detail.types';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import { type FavoriteRecipe, type Recipe, RecipeVisibility } from '../../models/recipe.data';
+import { type FavoriteRecipe, type Recipe, type RecipeFilters, RecipeVisibility } from '../../models/recipe.data';
 import { RecipeListComponent } from './recipe-list';
 
 const PAGE_SIZE = 10;
@@ -51,7 +51,7 @@ describe('RecipeListComponent initial loading and filters', () => {
     it('loads initial overview on creation', () => {
         setupComponent();
 
-        expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, null, false);
+        expect(facade.loadInitialOverview).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
     });
 
     it('reloads recipes when only-mine filter changes', async () => {
@@ -60,7 +60,7 @@ describe('RecipeListComponent initial loading and filters', () => {
         component['searchForm'].onlyMine().value.set(true);
         await flushPromisesAsync();
 
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, null, true);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), true);
     });
 
     it('applies changed filter dialog result', () => {
@@ -82,7 +82,7 @@ describe('RecipeListComponent detail actions', () => {
         await waitForAsync(() => facade.loadFavorites.mock.calls.length > 0);
 
         expect(facade.loadFavorites).toHaveBeenCalled();
-        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, null, false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(1, PAGE_SIZE, emptyRecipeFilters(), false);
     });
 
     it('delegates edit action from detail dialog to facade', async () => {
@@ -107,7 +107,7 @@ describe('RecipeListComponent actions', () => {
         component['onPageChange'](SECOND_PAGE_INDEX);
 
         expect(scrollSpy).toHaveBeenCalledWith({ behavior: 'smooth', block: 'start' });
-        expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, null, false);
+        expect(facade.loadRecipes).toHaveBeenCalledWith(SECOND_PAGE, PAGE_SIZE, emptyRecipeFilters(), false);
     });
 
     it('opens favorite recipe from favorite entry', () => {
@@ -266,5 +266,16 @@ function createFavoriteRecipe(): FavoriteRecipe {
         servings: 1,
         totalTimeMinutes: null,
         ingredientCount: 0,
+    };
+}
+
+function emptyRecipeFilters(): RecipeFilters {
+    return {
+        search: null,
+        category: null,
+        maxTotalTime: null,
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
     };
 }

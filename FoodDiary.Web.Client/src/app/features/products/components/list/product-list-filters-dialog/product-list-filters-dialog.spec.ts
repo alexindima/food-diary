@@ -15,6 +15,9 @@ describe('ProductListFiltersDialogComponent', () => {
     const defaultData: ProductListFiltersDialogData = {
         onlyMine: false,
         productTypes: [ProductType.Meat, ProductType.Fruit],
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
     };
 
     function createComponent(data: ProductListFiltersDialogData = defaultData): void {
@@ -40,7 +43,7 @@ describe('ProductListFiltersDialogComponent', () => {
     });
 
     it('should initialize with provided filter data', () => {
-        createComponent({ onlyMine: true, productTypes: [ProductType.Dairy] });
+        createComponent({ ...defaultData, onlyMine: true, productTypes: [ProductType.Dairy] });
 
         expect(component['visibilityValue']).toBe('mine');
         expect(component['selectedTypeValues']()).toEqual([ProductType.Dairy]);
@@ -55,7 +58,7 @@ describe('ProductListFiltersDialogComponent', () => {
     });
 
     it('should apply filters on submit', () => {
-        createComponent({ onlyMine: false, productTypes: [] });
+        createComponent({ ...defaultData, onlyMine: false, productTypes: [] });
 
         component['onVisibilityChange']('mine');
         component['onSelectedTypesChange']([ProductType.Seafood]);

@@ -107,8 +107,17 @@ export class ProductListFacade {
         })),
     );
     public readonly selectedProductTypes = signal<ProductType[]>([]);
+    public readonly caloriesFromFilter = signal<number | null>(null);
+    public readonly caloriesToFilter = signal<number | null>(null);
+    public readonly hasImageFilter = signal<boolean | null>(null);
     public readonly hasVisibleProducts = computed(() => this.showRecentSection() || this.allProductsSectionItems().length > 0);
-    public readonly activeFilterCount = computed(() => (this.onlyMineFilter() ? 1 : 0) + this.selectedProductTypes().length);
+    public readonly activeFilterCount = computed(
+        () =>
+            (this.onlyMineFilter() ? 1 : 0) +
+            this.selectedProductTypes().length +
+            (this.caloriesFromFilter() !== null || this.caloriesToFilter() !== null ? 1 : 0) +
+            (this.hasImageFilter() !== null ? 1 : 0),
+    );
     public readonly hasActiveFilters = computed(() => this.activeFilterCount() > 0);
     public readonly isEmptyState = computed(() => !this.hasVisibleProducts() && !this.hasSearchValue() && !this.hasActiveFilters());
     public readonly allProductsSectionLabelKey = computed(() =>
@@ -173,6 +182,9 @@ export class ProductListFacade {
     public openFilters(): void {
         const currentOnlyMine = this.onlyMineFilter();
         const currentTypes = this.selectedProductTypes();
+        const currentCaloriesFrom = this.caloriesFromFilter();
+        const currentCaloriesTo = this.caloriesToFilter();
+        const currentHasImage = this.hasImageFilter();
 
         this.fdDialogService
             .open<
@@ -180,6 +192,9 @@ export class ProductListFacade {
                 {
                     onlyMine: boolean;
                     productTypes: ProductType[];
+                    caloriesFrom: number | null;
+                    caloriesTo: number | null;
+                    hasImage: boolean | null;
                 },
                 ProductListFiltersDialogResult | null
             >(ProductListFiltersDialogComponent, {
@@ -187,6 +202,9 @@ export class ProductListFacade {
                 data: {
                     onlyMine: currentOnlyMine,
                     productTypes: [...currentTypes],
+                    caloriesFrom: currentCaloriesFrom,
+                    caloriesTo: currentCaloriesTo,
+                    hasImage: currentHasImage,
                 },
             })
             .afterClosed()
@@ -196,19 +214,35 @@ export class ProductListFacade {
                         return EMPTY;
                     }
 
-                    const normalizedTypes = this.normalizeProductTypes(result.productTypes);
-                    const onlyMineChanged = currentOnlyMine !== result.onlyMine;
-                    const typesChanged = !this.areProductTypesEqual(currentTypes, normalizedTypes);
+                    const changes = this.resolveFilterDialogChanges(
+                        {
+                            onlyMine: currentOnlyMine,
+                            productTypes: currentTypes,
+                            caloriesFrom: currentCaloriesFrom,
+                            caloriesTo: currentCaloriesTo,
+                            hasImage: currentHasImage,
+                        },
+                        result,
+                    );
 
-                    if (!onlyMineChanged && !typesChanged) {
+                    if (!changes.hasChanges) {
                         return EMPTY;
                     }
 
-                    if (typesChanged) {
-                        this.selectedProductTypes.set(normalizedTypes);
+                    if (changes.typesChanged) {
+                        this.selectedProductTypes.set(changes.productTypes);
                     }
 
-                    if (onlyMineChanged) {
+                    if (changes.caloriesChanged) {
+                        this.caloriesFromFilter.set(result.caloriesFrom);
+                        this.caloriesToFilter.set(result.caloriesTo);
+                    }
+
+                    if (changes.imageChanged) {
+                        this.hasImageFilter.set(result.hasImage);
+                    }
+
+                    if (changes.onlyMineChanged) {
                         this.searchForm.onlyMine().value.set(result.onlyMine);
                         return EMPTY;
                     }
@@ -223,7 +257,13 @@ export class ProductListFacade {
     public loadProducts(page: number, limit: number, search: string | null): Observable<void> {
         this.productData.setLoading(true);
         this.offProducts.set([]);
-        const filters = new ProductFilters(search, this.selectedProductTypes());
+        const filters = new ProductFilters({
+            search,
+            productTypes: this.selectedProductTypes(),
+            caloriesFrom: this.caloriesFromFilter(),
+            caloriesTo: this.caloriesToFilter(),
+            hasImage: this.hasImageFilter(),
+        });
         const includePublic = !this.onlyMineFilter();
 
         this.searchOpenFoodFacts(search);
@@ -487,6 +527,23 @@ export class ProductListFacade {
         return right.every(type => leftSet.has(type));
     }
 
+    private resolveFilterDialogChanges(current: ProductListFilterState, result: ProductListFiltersDialogResult): ProductListFilterChanges {
+        const productTypes = this.normalizeProductTypes(result.productTypes);
+        const onlyMineChanged = current.onlyMine !== result.onlyMine;
+        const typesChanged = !this.areProductTypesEqual(current.productTypes, productTypes);
+        const caloriesChanged = current.caloriesFrom !== result.caloriesFrom || current.caloriesTo !== result.caloriesTo;
+        const imageChanged = current.hasImage !== result.hasImage;
+
+        return {
+            productTypes,
+            onlyMineChanged,
+            typesChanged,
+            caloriesChanged,
+            imageChanged,
+            hasChanges: onlyMineChanged || typesChanged || caloriesChanged || imageChanged,
+        };
+    }
+
     private syncProductFavoriteState(productId: string, isFavorite: boolean, favoriteProductId: string | null): void {
         this.productData.items.update(items =>
             items.map(product => (product.id === productId ? { ...product, isFavorite, favoriteProductId } : product)),
@@ -551,4 +608,21 @@ export class ProductListFacade {
 type ProductSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
+};
+
+type ProductListFilterState = {
+    onlyMine: boolean;
+    productTypes: ProductType[];
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
+};
+
+type ProductListFilterChanges = {
+    productTypes: ProductType[];
+    onlyMineChanged: boolean;
+    typesChanged: boolean;
+    caloriesChanged: boolean;
+    imageChanged: boolean;
+    hasChanges: boolean;
 };

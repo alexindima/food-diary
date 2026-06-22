@@ -1342,7 +1342,7 @@ public class RecipesFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Recipe?> GetByIdAsync(
@@ -1403,7 +1403,7 @@ public class RecipesFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Recipe?> GetByIdAsync(
@@ -1450,7 +1450,7 @@ public class RecipesFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Recipe?> GetByIdAsync(
@@ -1499,7 +1499,7 @@ public class RecipesFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) =>
             Task.FromResult((_pagedItems, _pagedItems.Count));
 
@@ -1802,7 +1802,7 @@ public class RecipesFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 

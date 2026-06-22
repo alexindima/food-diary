@@ -1,19 +1,17 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, type ElementRef, inject, signal, viewChild } from '@angular/core';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { form } from '@angular/forms/signals';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { FdTourService } from 'fd-tour';
 import type { FdUiDateRangeValue } from 'fd-ui-kit';
 import { FdUiHintDirective } from 'fd-ui-kit';
 import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { debounceTime, EMPTY, type Observable, skip, switchMap } from 'rxjs';
+import { EMPTY, type Observable, switchMap } from 'rxjs';
 
 import { AiInputActionBarComponent } from '../../../../components/shared/ai-input-bar/ai-input-action-bar';
 import type { AiInputBarResult } from '../../../../components/shared/ai-input-bar/ai-input-bar.types';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
 import { PageHeaderComponent } from '../../../../components/shared/page-header/page-header';
-import { APP_FILTER_DEBOUNCE_MS } from '../../../../config/runtime-ui.tokens';
 import { NavigationService } from '../../../../services/navigation.service';
 import { formatDateInputValue, getDateTimestamp, normalizeStartOfLocalDay } from '../../../../shared/lib/local-date.utils';
 import { resolveAppLocale } from '../../../../shared/lib/locale.constants';
@@ -24,7 +22,7 @@ import { FdPageContainerDirective } from '../../../../shared/ui/layout/page-cont
 import type { MealDetailComponent } from '../../components/detail/meal-detail/meal-detail';
 import type { MealDetailActionResult } from '../../components/detail/meal-detail-lib/meal-detail.types';
 import { AiMealCreateFacade } from '../../lib/ai/ai-meal-create.facade';
-import { MealListFacade } from '../../lib/list/meal-list.facade';
+import { MealListFacade, type MealListStructuredFilters } from '../../lib/list/meal-list.facade';
 import type { FavoriteMeal, Meal } from '../../models/meal.data';
 import { MealListFiltersDialogComponent, type MealListFiltersDialogResult } from './meal-list-filters-dialog/meal-list-filters-dialog';
 import type { FavoriteMealView, MealDateGroupView } from './meal-list-lib/meal-list.types';
@@ -60,13 +58,16 @@ export class MealListComponent {
     private readonly aiMealCreateFacade = inject(AiMealCreateFacade);
     private readonly tourService = inject(FdTourService);
     private readonly localizedTour = inject(LocalizedTourDefinitionService);
-    private readonly filterDebounceMs = inject(APP_FILTER_DEBOUNCE_MS);
     private readonly languageVersion = signal(0);
 
     protected readonly searchModel = signal<SearchFormValues>({
         dateRange: null,
+        mealTypes: [],
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
+        hasAiSession: null,
     });
-    protected readonly searchForm = form(this.searchModel);
     protected readonly consumptionData = this.mealListFacade.consumptionData;
     protected readonly errorKey = this.mealListFacade.errorKey;
     protected readonly favorites = this.mealListFacade.favorites;
@@ -100,6 +101,39 @@ export class MealListComponent {
         const dateRange = this.searchModel().dateRange;
         return (dateRange?.start !== null && dateRange?.start !== undefined) || (dateRange?.end !== null && dateRange?.end !== undefined);
     });
+    protected readonly hasStructuredFilters = computed(
+        () =>
+            this.searchModel().mealTypes.length > 0 ||
+            this.searchModel().caloriesFrom !== null ||
+            this.searchModel().caloriesTo !== null ||
+            this.searchModel().hasImage !== null ||
+            this.searchModel().hasAiSession !== null,
+    );
+    protected readonly hasActiveFilters = computed(() => this.hasDateFilter() || this.hasStructuredFilters());
+    protected readonly activeFilterKeys = computed(() => {
+        const model = this.searchModel();
+        const keys: string[] = [];
+        if (model.mealTypes.length > 0) {
+            keys.push('CONSUMPTION_LIST.FILTER_MEAL_TYPES_ACTIVE');
+        }
+        if (model.caloriesFrom !== null || model.caloriesTo !== null) {
+            keys.push('CONSUMPTION_LIST.FILTER_CALORIES_ACTIVE');
+        }
+        if (model.hasImage === true) {
+            keys.push('CONSUMPTION_LIST.FILTER_IMAGE_WITH');
+        }
+        if (model.hasImage === false) {
+            keys.push('CONSUMPTION_LIST.FILTER_IMAGE_WITHOUT');
+        }
+        if (model.hasAiSession === true) {
+            keys.push('CONSUMPTION_LIST.FILTER_AI_WITH');
+        }
+        if (model.hasAiSession === false) {
+            keys.push('CONSUMPTION_LIST.FILTER_AI_WITHOUT');
+        }
+
+        return keys;
+    });
     protected readonly activeDateFilterStart = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.start));
     protected readonly activeDateFilterEnd = computed(() => this.formatDateFilterValue(this.searchModel().dateRange?.end));
     protected readonly emptyState = computed<MealListEmptyState | null>(() => {
@@ -107,7 +141,7 @@ export class MealListComponent {
             return null;
         }
 
-        return this.hasDateFilter() ? 'no-results' : 'empty';
+        return this.hasActiveFilters() ? 'no-results' : 'empty';
     });
     protected readonly hasMoreFavorites = computed(() => this.favoriteTotalCount() > this.favorites().length);
     protected readonly currentPageIndex = computed(() => this.mealListFacade.currentPageIndex());
@@ -118,15 +152,6 @@ export class MealListComponent {
         this.translateService.onLangChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
             this.languageVersion.update(version => version + 1);
         });
-
-        toObservable(computed(() => this.searchModel().dateRange))
-            .pipe(
-                skip(1),
-                takeUntilDestroyed(this.destroyRef),
-                debounceTime(this.filterDebounceMs),
-                switchMap(() => this.loadConsumptions(1)),
-            )
-            .subscribe();
     }
 
     protected loadFavorites(): void {
@@ -144,7 +169,7 @@ export class MealListComponent {
     protected repeatFavorite(favorite: FavoriteMeal): void {
         const targetDate = new Date();
         this.mealListFacade
-            .repeatMeal(favorite.mealId, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.dateRange)
+            .repeatMeal(favorite.mealId, targetDate.toISOString(), resolveMealTypeByTime(targetDate), this.structuredFilters)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(repeated => {
                 if (repeated) {
@@ -178,11 +203,11 @@ export class MealListComponent {
     }
 
     protected loadConsumptions(page: number): Observable<void> {
-        return this.mealListFacade.loadConsumptions(page, this.dateRange);
+        return this.mealListFacade.loadConsumptions(page, this.structuredFilters);
     }
 
     protected loadInitialOverview(): Observable<void> {
-        return this.mealListFacade.loadInitialOverview(this.dateRange);
+        return this.mealListFacade.loadInitialOverview(this.structuredFilters);
     }
 
     protected onPageChange(pageIndex: number): void {
@@ -193,7 +218,7 @@ export class MealListComponent {
     }
 
     protected retryLoad(): void {
-        const request = this.hasDateFilter() ? this.loadConsumptions(1) : this.loadInitialOverview();
+        const request = this.hasActiveFilters() ? this.loadConsumptions(1) : this.loadInitialOverview();
         request.pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
@@ -229,11 +254,11 @@ export class MealListComponent {
                             data.id,
                             targetDate.toISOString(),
                             resolveMealTypeByTime(targetDate),
-                            this.dateRange,
+                            this.structuredFilters,
                         );
                     }
 
-                    return this.mealListFacade.deleteMeal(data.id, this.dateRange);
+                    return this.mealListFacade.deleteMeal(data.id, this.structuredFilters);
                 }),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -250,21 +275,20 @@ export class MealListComponent {
 
     protected openFilters(): void {
         const currentDateRange = this.searchModel().dateRange;
+        const currentFilters = this.structuredFilters;
 
         this.fdDialogService
-            .open<MealListFiltersDialogComponent, { dateRange: FdUiDateRangeValue | null }, MealListFiltersDialogResult | null>(
+            .open<MealListFiltersDialogComponent, MealListStructuredFilters, MealListFiltersDialogResult | null>(
                 MealListFiltersDialogComponent,
                 {
                     preset: 'form',
-                    data: {
-                        dateRange: currentDateRange,
-                    },
+                    data: currentFilters,
                 },
             )
             .afterClosed()
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(result => {
-                this.applyFilterDialogResult(currentDateRange, result);
+                this.applyFilterDialogResult(currentDateRange, currentFilters, result);
             });
     }
 
@@ -274,6 +298,7 @@ export class MealListComponent {
 
     private applyFilterDialogResult(
         currentDateRange: FdUiDateRangeValue | null,
+        currentFilters: MealListStructuredFilters,
         result: MealListFiltersDialogResult | null | undefined,
     ): void {
         if (result === null || result === undefined) {
@@ -281,11 +306,20 @@ export class MealListComponent {
         }
 
         const nextDateRange = result.dateRange ?? null;
-        if (this.hasSameDateRange(currentDateRange, nextDateRange)) {
+        if (this.hasSameDateRange(currentDateRange, nextDateRange) && this.hasSameStructuredFilters(currentFilters, result)) {
             return;
         }
 
-        this.searchForm.dateRange().value.set(nextDateRange);
+        this.searchModel.update(value => ({
+            ...value,
+            dateRange: nextDateRange,
+            mealTypes: result.mealTypes,
+            caloriesFrom: result.caloriesFrom,
+            caloriesTo: result.caloriesTo,
+            hasImage: result.hasImage,
+            hasAiSession: result.hasAiSession,
+        }));
+        this.loadConsumptions(1).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
     }
 
     private hasSameDateRange(left: FdUiDateRangeValue | null, right: FdUiDateRangeValue | null): boolean {
@@ -313,8 +347,35 @@ export class MealListComponent {
             .subscribe();
     }
 
-    private get dateRange(): FdUiDateRangeValue | null {
-        return this.searchModel().dateRange;
+    private get structuredFilters(): MealListStructuredFilters {
+        const model = this.searchModel();
+        return {
+            dateRange: model.dateRange,
+            mealTypes: model.mealTypes,
+            caloriesFrom: model.caloriesFrom,
+            caloriesTo: model.caloriesTo,
+            hasImage: model.hasImage,
+            hasAiSession: model.hasAiSession,
+        };
+    }
+
+    private hasSameStructuredFilters(left: MealListStructuredFilters, right: MealListFiltersDialogResult): boolean {
+        return (
+            this.hasSameStringValues(left.mealTypes, right.mealTypes) &&
+            left.caloriesFrom === right.caloriesFrom &&
+            left.caloriesTo === right.caloriesTo &&
+            left.hasImage === right.hasImage &&
+            left.hasAiSession === right.hasAiSession
+        );
+    }
+
+    private hasSameStringValues(left: string[], right: string[]): boolean {
+        if (left.length !== right.length) {
+            return false;
+        }
+
+        const leftValues = new Set(left);
+        return right.every(value => leftValues.has(value));
     }
 
     private plannedConsumptions(): Meal[] {
@@ -367,4 +428,9 @@ export class MealListComponent {
 
 type SearchFormValues = {
     dateRange: FdUiDateRangeValue | null;
+    mealTypes: string[];
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
+    hasAiSession: boolean | null;
 };

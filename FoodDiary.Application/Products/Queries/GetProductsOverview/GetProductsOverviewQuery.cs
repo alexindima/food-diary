@@ -12,5 +12,8 @@ public sealed record GetProductsOverviewQuery(
     bool IncludePublic,
     int RecentLimit = 10,
     int FavoriteLimit = 10,
-    IReadOnlyCollection<string>? ProductTypes = null)
+    IReadOnlyCollection<string>? ProductTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null)
     : IQuery<Result<ProductOverviewModel>>, IUserRequest;

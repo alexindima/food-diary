@@ -21,9 +21,21 @@
         --fd-chip-select-item-height: var(--fd-size-control-md);
     }
 
+    &__section {
+        margin-bottom: var(--fd-space-md);
+    }
+
+    &__range {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
     @media #{variables.$media-mobile} {
         &__types {
             --fd-chip-select-item-height: var(--fd-size-chip-select-item-height);
+        }
+
+        &__range {
+            grid-template-columns: 1fr;
         }
     }
 }

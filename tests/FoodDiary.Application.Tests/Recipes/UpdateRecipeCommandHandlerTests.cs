@@ -939,7 +939,7 @@ public class UpdateRecipeCommandHandlerTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
+            RecipeQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Recipe?> GetByIdAsync(

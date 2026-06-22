@@ -26,7 +26,10 @@ public sealed class GetProductsOverviewQueryHandler(
         int RecentLimit,
         int FavoriteLimit,
         ProductType[]? ProductTypes,
-        HashSet<ProductType>? SelectedProductTypes);
+        HashSet<ProductType>? SelectedProductTypes,
+        double? CaloriesFrom,
+        double? CaloriesTo,
+        bool? HasImage);
 
     private sealed record ProductListItem(
         Product Product,
@@ -47,8 +50,12 @@ public sealed class GetProductsOverviewQueryHandler(
             query.IncludePublic,
             options.PageNumber,
             options.PageSize,
-            query.Search,
-            options.ProductTypes,
+            new ProductQueryFilters(
+                query.Search,
+                options.ProductTypes,
+                options.CaloriesFrom,
+                options.CaloriesTo,
+                options.HasImage),
             cancellationToken).ConfigureAwait(false);
 
         var allProducts = items
@@ -94,7 +101,10 @@ public sealed class GetProductsOverviewQueryHandler(
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
             productTypes is { Length: > 0 } ? productTypes : null,
-            productTypes is { Length: > 0 } ? [.. productTypes] : null);
+            productTypes is { Length: > 0 } ? [.. productTypes] : null,
+            query.CaloriesFrom,
+            query.CaloriesTo,
+            query.HasImage);
     }
 
     private async Task<IReadOnlyList<ProductListItem>> GetRecentItemsAsync(
@@ -123,7 +133,7 @@ public sealed class GetProductsOverviewQueryHandler(
         return recentIds
             .Where(productsById.ContainsKey)
             .Select(id => productsById[id])
-            .Where(item => IsSelectedProductType(item.Product, options.SelectedProductTypes))
+            .Where(item => MatchesRecentFilters(item.Product, options))
             .Select(item => ToListItem(item.Product, item.UsageCount, options.UserId))
             .ToArray();
     }
@@ -135,6 +145,15 @@ public sealed class GetProductsOverviewQueryHandler(
         Product product,
         IReadOnlySet<ProductType>? selectedProductTypes) =>
         selectedProductTypes?.Contains(product.ProductType) != false;
+
+    private static bool MatchesRecentFilters(Product product, ProductOverviewOptions options) =>
+        IsSelectedProductType(product, options.SelectedProductTypes) &&
+        (!options.CaloriesFrom.HasValue || product.CaloriesPerBase >= options.CaloriesFrom.Value) &&
+        (!options.CaloriesTo.HasValue || product.CaloriesPerBase <= options.CaloriesTo.Value) &&
+        (!options.HasImage.HasValue || HasImage(product) == options.HasImage.Value);
+
+    private static bool HasImage(Product product) =>
+        product.ImageUrl is not null || product.ImageAssetId is not null;
 
     private static PagedResponse<ProductModel> CreatePagedProducts(
         IReadOnlyList<ProductListItem> products,

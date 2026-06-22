@@ -23,7 +23,8 @@ public sealed class GetRecipesOverviewQueryHandler(
         int PageNumber,
         int PageSize,
         int RecentLimit,
-        int FavoriteLimit);
+        int FavoriteLimit,
+        RecipeQueryFilters Filters);
 
     private sealed record RecipeListItem(
         Recipe Recipe,
@@ -44,7 +45,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             query.IncludePublic,
             options.PageNumber,
             options.PageSize,
-            query.Search,
+            options.Filters,
             cancellationToken).ConfigureAwait(false);
 
         var allRecipes = items
@@ -82,7 +83,14 @@ public sealed class GetRecipesOverviewQueryHandler(
             Math.Max(query.Page, 1),
             Math.Max(query.Limit, 1),
             Math.Clamp(query.RecentLimit, 1, 50),
-            Math.Clamp(query.FavoriteLimit, 1, 50));
+            Math.Clamp(query.FavoriteLimit, 1, 50),
+            new RecipeQueryFilters(
+                query.Search,
+                query.Category,
+                query.MaxTotalTime,
+                query.CaloriesFrom,
+                query.CaloriesTo,
+                query.HasImage));
 
     private async Task<IReadOnlyList<RecipeListItem>> GetRecentItemsAsync(
         GetRecipesOverviewQuery query,
@@ -110,12 +118,24 @@ public sealed class GetRecipesOverviewQueryHandler(
         return recentIds
             .Where(recipesById.ContainsKey)
             .Select(id => recipesById[id])
+            .Where(item => MatchesRecentFilters(item.Recipe, options.Filters))
             .Select(item => ToListItem(item.Recipe, item.UsageCount, options.UserId))
             .ToArray();
     }
 
     private static RecipeListItem ToListItem(Recipe recipe, int usageCount, UserId userId) =>
         new(recipe, usageCount, recipe.UserId == userId);
+
+    private static bool MatchesRecentFilters(Recipe recipe, RecipeQueryFilters filters) =>
+        (string.IsNullOrWhiteSpace(filters.Category) ||
+         (recipe.Category?.Contains(filters.Category.Trim(), StringComparison.OrdinalIgnoreCase) ?? false)) &&
+        (!filters.MaxTotalTime.HasValue || (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0) <= filters.MaxTotalTime.Value) &&
+        (!filters.CaloriesFrom.HasValue || (recipe.ManualCalories ?? recipe.TotalCalories ?? 0) >= filters.CaloriesFrom.Value) &&
+        (!filters.CaloriesTo.HasValue || (recipe.ManualCalories ?? recipe.TotalCalories ?? 0) <= filters.CaloriesTo.Value) &&
+        (!filters.HasImage.HasValue || HasImage(recipe) == filters.HasImage.Value);
+
+    private static bool HasImage(Recipe recipe) =>
+        recipe.ImageUrl is not null || recipe.ImageAssetId is not null;
 
     private static PagedResponse<RecipeModel> CreatePagedRecipes(
         IReadOnlyList<RecipeListItem> recipes,

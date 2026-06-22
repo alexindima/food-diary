@@ -31,7 +31,13 @@ public class GetRecipesQueryHandler(
             query.IncludePublic,
             pageNumber,
             pageSize,
-            query.Search,
+            new RecipeQueryFilters(
+                query.Search,
+                query.Category,
+                query.MaxTotalTime,
+                query.CaloriesFrom,
+                query.CaloriesTo,
+                query.HasImage),
             cancellationToken).ConfigureAwait(false);
 
         var recipes = items.Select(item => new {

@@ -12,6 +12,15 @@ import { MealService } from '../../api/meal.service';
 import type { FavoriteMeal, Meal, MealFilters } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
 
+export type MealListStructuredFilters = {
+    dateRange: FdUiDateRangeValue | null;
+    mealTypes: string[];
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
+    hasAiSession: boolean | null;
+};
+
 @Service()
 export class MealListFacade {
     private readonly mealService = inject(MealService);
@@ -49,9 +58,9 @@ export class MealListFacade {
             });
     }
 
-    public loadConsumptions(page: number, dateRange: FdUiDateRangeValue | null): Observable<void> {
+    public loadConsumptions(page: number, filtersModel: MealListStructuredFilters): Observable<void> {
         this.consumptionData.setLoading(true);
-        const filters = this.buildFilters(dateRange);
+        const filters = this.buildFilters(filtersModel);
 
         return this.mealService.query(page, this.pageSize, filters).pipe(
             tap(pageData => {
@@ -71,9 +80,9 @@ export class MealListFacade {
         );
     }
 
-    public loadInitialOverview(dateRange: FdUiDateRangeValue | null): Observable<void> {
+    public loadInitialOverview(filtersModel: MealListStructuredFilters): Observable<void> {
         this.consumptionData.setLoading(true);
-        const filters = this.buildFilters(dateRange);
+        const filters = this.buildFilters(filtersModel);
 
         return this.mealService.queryOverview(1, this.pageSize, filters, MEAL_LIST_OVERVIEW_FAVORITES_LIMIT).pipe(
             tap(data => {
@@ -97,9 +106,9 @@ export class MealListFacade {
         );
     }
 
-    public repeatMeal(mealId: string, targetDate: string, mealType: string, dateRange: FdUiDateRangeValue | null): Observable<boolean> {
+    public repeatMeal(mealId: string, targetDate: string, mealType: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
         return this.mealService.repeat(mealId, targetDate, mealType).pipe(
-            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, dateRange)),
+            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {
                 this.showOperationError();
@@ -108,9 +117,9 @@ export class MealListFacade {
         );
     }
 
-    public deleteMeal(mealId: string, dateRange: FdUiDateRangeValue | null): Observable<boolean> {
+    public deleteMeal(mealId: string, filtersModel: MealListStructuredFilters): Observable<boolean> {
         return this.mealService.deleteById(mealId).pipe(
-            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, dateRange)),
+            switchMap(() => this.loadConsumptions(this.currentPageIndex() + 1, filtersModel)),
             map(() => true),
             catchError(() => {
                 this.showOperationError();
@@ -215,11 +224,29 @@ export class MealListFacade {
         });
     }
 
-    private buildFilters(dateRange: FdUiDateRangeValue | null): MealFilters {
-        return {
-            dateFrom: toLocalDayStartIso(dateRange?.start ?? null),
-            dateTo: toLocalDayEndIso(dateRange?.end ?? null),
+    private buildFilters(filtersModel: MealListStructuredFilters): MealFilters {
+        const filters: MealFilters = {
+            dateFrom: toLocalDayStartIso(filtersModel.dateRange?.start ?? null),
+            dateTo: toLocalDayEndIso(filtersModel.dateRange?.end ?? null),
         };
+
+        if (filtersModel.mealTypes.length > 0) {
+            filters.mealTypes = filtersModel.mealTypes.join(',');
+        }
+        if (filtersModel.caloriesFrom !== null) {
+            filters.caloriesFrom = filtersModel.caloriesFrom;
+        }
+        if (filtersModel.caloriesTo !== null) {
+            filters.caloriesTo = filtersModel.caloriesTo;
+        }
+        if (filtersModel.hasImage !== null) {
+            filters.hasImage = filtersModel.hasImage;
+        }
+        if (filtersModel.hasAiSession !== null) {
+            filters.hasAiSession = filtersModel.hasAiSession;
+        }
+
+        return filters;
     }
 
     private clearError(): void {

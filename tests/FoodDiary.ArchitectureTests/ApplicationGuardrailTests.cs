@@ -100,6 +100,8 @@ public sealed class ApplicationGuardrailTests {
             "IProductRepository.cs",
             "IRecipeRepository.cs",
             "IUserRepository.cs",
+            "ProductQueryFilters.cs",
+            "RecipeQueryFilters.cs",
             "UserAccountStatusFilter.cs",
         ];
 

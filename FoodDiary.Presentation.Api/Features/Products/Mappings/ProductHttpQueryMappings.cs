@@ -14,7 +14,10 @@ public static class ProductHttpQueryMappings {
             Math.Clamp(query.Limit, 1, 100),
             SanitizeSearch(query.Search),
             query.IncludePublic,
-            ParseProductTypes(query.ProductTypes));
+            ParseCsv(query.ProductTypes),
+            NormalizeNonNegative(query.CaloriesFrom),
+            NormalizeNonNegative(query.CaloriesTo),
+            query.HasImage);
     }
 
     public static GetProductsOverviewQuery ToQuery(this GetProductsOverviewHttpQuery query, Guid userId) {
@@ -26,7 +29,10 @@ public static class ProductHttpQueryMappings {
             query.IncludePublic,
             Math.Clamp(query.RecentLimit, 1, 50),
             Math.Clamp(query.FavoriteLimit, 1, 50),
-            ParseProductTypes(query.ProductTypes));
+            ParseCsv(query.ProductTypes),
+            NormalizeNonNegative(query.CaloriesFrom),
+            NormalizeNonNegative(query.CaloriesTo),
+            query.HasImage);
     }
 
     public static GetRecentProductsQuery ToQuery(this GetRecentProductsHttpQuery query, Guid userId) {
@@ -41,15 +47,18 @@ public static class ProductHttpQueryMappings {
         return string.IsNullOrWhiteSpace(search) ? null : search.Trim();
     }
 
-    private static IReadOnlyCollection<string>? ParseProductTypes(string? productTypes) {
-        if (string.IsNullOrWhiteSpace(productTypes)) {
+    private static IReadOnlyCollection<string>? ParseCsv(string? value) {
+        if (string.IsNullOrWhiteSpace(value)) {
             return null;
         }
 
-        string[] values = [.. productTypes
+        string[] values = [.. value
             .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             .Distinct(StringComparer.OrdinalIgnoreCase)];
 
         return values.Length > 0 ? values : null;
     }
+
+    private static double? NormalizeNonNegative(double? value) =>
+        value is >= 0 ? value : null;
 }

@@ -4,4 +4,9 @@ public sealed record GetConsumptionsHttpQuery(
     int Page = 1,
     int Limit = 10,
     DateTime? DateFrom = null,
-    DateTime? DateTo = null);
+    DateTime? DateTo = null,
+    string? MealTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null,
+    bool? HasAiSession = null);

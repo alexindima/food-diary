@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Billing;
@@ -510,7 +511,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
 
         (IReadOnlyList<(Product Product, int UsageCount)> searchedItems, int searchedTotal) =
-            await repository.GetPagedAsync(userId, includePublic: true, page: 0, limit: 0, search: "100% Milk_", [ProductType.Dairy]);
+            await repository.GetPagedAsync(userId, includePublic: true, page: 0, limit: 0, filters: new ProductQueryFilters("100% Milk_", [ProductType.Dairy]));
         Product? publicById = await repository.GetByIdAsync(otherPublic.Id, userId);
         Product? privateByIdWithoutPublic = await repository.GetByIdAsync(privateProduct.Id, userId, includePublic: false);
         Product? tracked = await repository.GetByIdForUpdateAsync(searchable.Id, userId, includePublic: false);
@@ -546,7 +547,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await cachedRepository.GetByIdAsync(productId, userId));
         Assert.NotNull(await cachedRepository.GetByIdAsync(productId, userId));
         Assert.NotNull(await cachedRepository.GetByIdForUpdateAsync(productId, userId, includePublic: false));
-        Assert.Single((await cachedRepository.GetPagedAsync(userId, includePublic: false, page: 1, limit: 10, search: "Updated", [ProductType.Dairy])).Items);
+        Assert.Single((await cachedRepository.GetPagedAsync(userId, includePublic: false, page: 1, limit: 10, filters: new ProductQueryFilters("Updated", [ProductType.Dairy]))).Items);
         Assert.Single(await cachedRepository.GetByIdsAsync([productId], userId));
         Assert.Single(await cachedRepository.GetByIdsWithUsageAsync([productId], userId));
 
@@ -568,10 +569,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         Assert.NotNull(await repository.GetByIdAsync(meal.Id, userId));
         Assert.NotNull(await repository.GetByIdAsync(meal.Id, userId, includeItems: true, asTracking: true));
-        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 0, limit: 0, dateFrom: now.Date.ToLocalTime(), dateTo: now.Date)).Items);
-        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, dateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Local), dateTo: null)).Items);
-        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, dateFrom: null, dateTo: now.Date.AddHours(23))).Items);
-        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, dateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Unspecified), dateTo: null)).Items);
+        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 0, limit: 0, filters: new MealQueryFilters(now.Date.ToLocalTime(), now.Date))).Items);
+        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Local), DateTo: null))).Items);
+        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: null, DateTo: now.Date.AddHours(23)))).Items);
+        Assert.NotEmpty((await repository.GetPagedAsync(userId, page: 1, limit: 10, filters: new MealQueryFilters(DateFrom: DateTime.SpecifyKind(now.Date, DateTimeKind.Unspecified), DateTo: null))).Items);
         Assert.NotEmpty(await repository.GetByPeriodAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.NotEmpty(await repository.GetDistinctMealDatesAsync(userId, now.Date.AddDays(-1), now.Date.AddDays(1)));
         Assert.True(await repository.GetTotalMealCountAsync(userId) >= 1);
@@ -657,7 +658,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Recipe privateRecipe,
         Recipe otherPublic) {
         (IReadOnlyList<(Recipe Recipe, int UsageCount)> searchedItems, int searchedTotal) =
-            await repository.GetPagedAsync(ownerId, includePublic: false, page: 0, limit: 0, search: "100% Pancake");
+            await repository.GetPagedAsync(ownerId, includePublic: false, page: 0, limit: 0, filters: new RecipeQueryFilters("100% Pancake"));
         Recipe? withSteps = await repository.GetByIdAsync(publicRecipe.Id, ownerId, includeSteps: true, asTracking: true);
         Assert.NotNull(withSteps);
         withSteps.ApplyComputedNutrition(220, 9, 5, 31, 4, 0);

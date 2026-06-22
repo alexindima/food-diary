@@ -11,6 +11,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 
@@ -38,13 +39,13 @@ public class GetConsumptionsQueryHandler(
         DateTime? normalizedTo = request.DateTo.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
+        MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
 
         (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
-            normalizedFrom,
-            normalizedTo,
+            filters,
             cancellationToken).ConfigureAwait(false);
 
         MealId[] mealIds = [.. Items
@@ -66,5 +67,24 @@ public class GetConsumptionsQueryHandler(
             totalPages,
             TotalItems);
         return Result.Success(response);
+    }
+
+    private static MealQueryFilters CreateFilters(GetConsumptionsQuery request, DateTime? normalizedFrom, DateTime? normalizedTo) =>
+        new(
+            normalizedFrom,
+            normalizedTo,
+            ParseMealTypes(request.MealTypes),
+            request.CaloriesFrom,
+            request.CaloriesTo,
+            request.HasImage,
+            request.HasAiSession);
+
+    private static MealType[]? ParseMealTypes(IReadOnlyCollection<string>? values) {
+        MealType[] parsed = [.. values?
+            .Select(value => Enum.TryParse(value, ignoreCase: true, out MealType mealType) ? mealType : (MealType?)null)
+            .OfType<MealType>()
+            .Distinct() ?? []];
+
+        return parsed.Length > 0 ? parsed : null;
     }
 }

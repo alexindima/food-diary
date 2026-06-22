@@ -21,7 +21,7 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
         bool includePublic,
         int page,
         int limit,
-        string? search,
+        RecipeQueryFilters filters,
         CancellationToken cancellationToken = default) {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
@@ -31,12 +31,36 @@ public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
                 ? r => r.UserId == userId || r.Visibility == Visibility.Public
                 : r => r.UserId == userId);
 
-        if (!string.IsNullOrWhiteSpace(search)) {
-            string normalized = $"%{EscapeLikePattern(search.Trim())}%";
+        if (!string.IsNullOrWhiteSpace(filters.Search)) {
+            string normalized = $"%{EscapeLikePattern(filters.Search.Trim())}%";
             query = query.Where(r =>
                 EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
                 EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
+        }
+
+        if (!string.IsNullOrWhiteSpace(filters.Category)) {
+            string category = $"%{EscapeLikePattern(filters.Category.Trim())}%";
+            query = query.Where(r => EF.Functions.ILike(r.Category ?? string.Empty, category, LikeEscapeCharacter));
+        }
+
+        if (filters.MaxTotalTime.HasValue) {
+            int maxTotalTime = filters.MaxTotalTime.Value;
+            query = query.Where(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
+        }
+
+        if (filters.CaloriesFrom.HasValue) {
+            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) >= filters.CaloriesFrom.Value);
+        }
+
+        if (filters.CaloriesTo.HasValue) {
+            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) <= filters.CaloriesTo.Value);
+        }
+
+        if (filters.HasImage.HasValue) {
+            query = filters.HasImage.Value
+                ? query.Where(r => r.ImageUrl != null || r.ImageAssetId != null)
+                : query.Where(r => r.ImageUrl == null && r.ImageAssetId == null);
         }
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);

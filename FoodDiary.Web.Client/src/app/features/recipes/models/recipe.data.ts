@@ -80,6 +80,11 @@ export type RecipeIngredient = {
 
 export type RecipeFilters = {
     search?: string | null;
+    category?: string | null;
+    maxTotalTime?: number | null;
+    caloriesFrom?: number | null;
+    caloriesTo?: number | null;
+    hasImage?: boolean | null;
 };
 
 export type RecipeOverview = {

@@ -42,7 +42,8 @@ export class MealService extends ApiService {
     protected readonly baseUrl = environment.apiUrls.consumptions;
 
     public query(page: number, limit: number, filters: MealFilters): Observable<PageOf<Meal>> {
-        const params = { page, limit, ...filters };
+        const params: Record<string, string | number | boolean> = { page, limit };
+        this.applyMealFilters(params, filters);
         return this.get<PageOf<ConsumptionResponseDto>>('', params).pipe(
             map(pageData => ({
                 ...pageData,
@@ -58,7 +59,8 @@ export class MealService extends ApiService {
         filters: MealFilters,
         favoriteLimit = MEAL_API_DEFAULT_FAVORITE_LIMIT,
     ): Observable<MealOverview> {
-        const params = { page, limit, favoriteLimit, ...filters };
+        const params: Record<string, string | number | boolean> = { page, limit, favoriteLimit };
+        this.applyMealFilters(params, filters);
         return this.get<ConsumptionOverview>('overview', params).pipe(
             map(response => ({
                 allConsumptions: {
@@ -102,6 +104,30 @@ export class MealService extends ApiService {
             map(response => this.mapConsumption(response)),
             catchError((error: unknown) => rethrowApiError('Repeat meal error', error)),
         );
+    }
+
+    private applyMealFilters(params: Record<string, string | number | boolean>, filters: MealFilters): void {
+        if (filters.dateFrom !== undefined) {
+            params['dateFrom'] = filters.dateFrom;
+        }
+        if (filters.dateTo !== undefined) {
+            params['dateTo'] = filters.dateTo;
+        }
+        if (filters.mealTypes !== undefined && filters.mealTypes.length > 0) {
+            params['mealTypes'] = filters.mealTypes;
+        }
+        if (filters.caloriesFrom !== undefined) {
+            params['caloriesFrom'] = filters.caloriesFrom;
+        }
+        if (filters.caloriesTo !== undefined) {
+            params['caloriesTo'] = filters.caloriesTo;
+        }
+        if (filters.hasImage !== undefined) {
+            params['hasImage'] = filters.hasImage;
+        }
+        if (filters.hasAiSession !== undefined) {
+            params['hasAiSession'] = filters.hasAiSession;
+        }
     }
 
     private mapConsumption(response: ConsumptionResponseDto): Consumption {

@@ -34,6 +34,7 @@ export class RecipeService extends ApiService {
         if (search !== undefined && search.length > 0) {
             params['search'] = search;
         }
+        this.applyRecipeFilters(params, filters);
 
         return this.get<PageOf<Recipe>>('', params).pipe(
             catchError((error: unknown) =>
@@ -68,6 +69,7 @@ export class RecipeService extends ApiService {
         if (search !== undefined && search.length > 0) {
             params['search'] = search;
         }
+        this.applyRecipeFilters(params, filters);
 
         return this.get<RecipeOverview>('overview', params).pipe(
             catchError((error: unknown) =>
@@ -83,6 +85,31 @@ export class RecipeService extends ApiService {
 
     public create(data: RecipeDto): Observable<Recipe> {
         return this.post<Recipe>('', data).pipe(catchError((error: unknown) => rethrowApiError('Create recipe error', error)));
+    }
+
+    private applyRecipeFilters(params: Record<string, string | number | boolean>, filters?: RecipeFilters): void {
+        const category = filters?.category?.trim();
+        this.addStringParam(params, 'category', category);
+        this.addOptionalParam(params, 'maxTotalTime', filters?.maxTotalTime);
+        this.addOptionalParam(params, 'caloriesFrom', filters?.caloriesFrom);
+        this.addOptionalParam(params, 'caloriesTo', filters?.caloriesTo);
+        this.addOptionalParam(params, 'hasImage', filters?.hasImage);
+    }
+
+    private addStringParam(params: Record<string, string | number | boolean>, key: string, value: string | undefined): void {
+        if (value !== undefined && value.length > 0) {
+            params[key] = value;
+        }
+    }
+
+    private addOptionalParam(
+        params: Record<string, string | number | boolean>,
+        key: string,
+        value: string | number | boolean | null | undefined,
+    ): void {
+        if (value !== null && value !== undefined) {
+            params[key] = value;
+        }
     }
 
     public update(id: string, data: RecipeDto): Observable<Recipe> {

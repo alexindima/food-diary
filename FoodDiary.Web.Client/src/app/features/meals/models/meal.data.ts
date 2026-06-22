@@ -175,6 +175,11 @@ export enum ConsumptionSourceType {
 export type ConsumptionFilters = {
     dateFrom?: string;
     dateTo?: string;
+    mealTypes?: string;
+    caloriesFrom?: number;
+    caloriesTo?: number;
+    hasImage?: boolean;
+    hasAiSession?: boolean;
 };
 
 export type ConsumptionManageDto = {

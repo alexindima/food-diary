@@ -8,6 +8,16 @@
         @if (isMobileView()) {
             <div class="recipe-list__mobile-toolbar" data-tour-id="recipe-list-actions">
                 <fd-ui-button
+                    class="recipe-list__icon-button recipe-list__icon-button--primary"
+                    appearance="toolbar"
+                    variant="primary"
+                    fill="solid"
+                    icon="add"
+                    [fdUiHint]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
+                    [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
+                    (click)="onAddRecipeClickAsync()"
+                />
+                <fd-ui-button
                     class="recipe-list__icon-button recipe-list__filter-button"
                     appearance="toolbar"
                     variant="secondary"
@@ -29,16 +39,6 @@
                     (click)="toggleMobileSearch()"
                 />
                 <fd-ui-button
-                    class="recipe-list__icon-button recipe-list__icon-button--primary"
-                    appearance="toolbar"
-                    variant="primary"
-                    fill="solid"
-                    icon="add"
-                    [fdUiHint]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
-                    [ariaLabel]="'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate"
-                    (click)="onAddRecipeClickAsync()"
-                />
-                <fd-ui-button
                     class="recipe-list__icon-button"
                     data-tour-id="recipe-list-tour-help"
                     appearance="toolbar"
@@ -53,17 +53,6 @@
         } @else {
             <div class="recipe-list__header-actions" data-tour-id="recipe-list-actions">
                 <fd-ui-button
-                    class="recipe-list__icon-button recipe-list__filter-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="filter_alt"
-                    [fdUiHint]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
-                    [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
-                    [class.recipe-list__filter-button--active]="hasActiveFilters()"
-                    (click)="openFilters()"
-                />
-                <fd-ui-button
                     class="recipe-list__add-button"
                     appearance="brand-action"
                     variant="primary"
@@ -74,6 +63,17 @@
                 >
                     {{ 'RECIPE_LIST.ADD_RECIPE_BUTTON' | translate }}
                 </fd-ui-button>
+                <fd-ui-button
+                    class="recipe-list__icon-button recipe-list__filter-button"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="filter_alt"
+                    [fdUiHint]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
+                    [ariaLabel]="'RECIPE_LIST.FILTERS_BUTTON' | translate"
+                    [class.recipe-list__filter-button--active]="hasActiveFilters()"
+                    (click)="openFilters()"
+                />
                 <fd-ui-button
                     class="recipe-list__icon-button"
                     data-tour-id="recipe-list-tour-help"
@@ -129,9 +129,11 @@
             <section class="recipe-list__active-filters" [attr.aria-label]="'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate">
                 <span class="recipe-list__active-filters-label">{{ 'RECIPE_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
                 <div class="recipe-list__active-filter-chips">
-                    <button type="button" class="recipe-list__active-filter-chip" (click)="openFilters()">
-                        {{ 'RECIPE_LIST.FILTER_MY_RECIPES' | translate }}
-                    </button>
+                    @for (filterKey of activeFilterKeys(); track filterKey) {
+                        <button type="button" class="recipe-list__active-filter-chip" (click)="openFilters()">
+                            {{ filterKey | translate }}
+                        </button>
+                    }
                 </div>
                 <fd-ui-button
                     class="recipe-list__active-filters-edit"
@@ -181,14 +183,12 @@
                 (recipeAdd)="onAddRecipeClickAsync()"
             />
         }
-        @if (recipeData.totalPages > 1) {
-            <fd-ui-pagination
-                class="recipe-list__pagination"
-                [length]="recipeData.totalItems"
-                [pageSize]="pageSize"
-                [pageIndex]="pageIndex()"
-                (pageIndexChange)="onPageChange($event)"
-            />
-        }
+        <fd-ui-pagination
+            class="recipe-list__pagination"
+            [length]="recipeData.totalItems"
+            [pageSize]="pageSize"
+            [pageIndex]="pageIndex()"
+            (pageIndexChange)="onPageChange($event)"
+        />
     </fd-page-body>
 </div>

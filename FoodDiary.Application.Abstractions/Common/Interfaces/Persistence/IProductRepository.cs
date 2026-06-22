@@ -1,5 +1,4 @@
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -12,8 +11,7 @@ public interface IProductRepository {
         bool includePublic,
         int page,
         int limit,
-        string? search,
-        IReadOnlyCollection<ProductType>? productTypes = null,
+        ProductQueryFilters filters,
         CancellationToken cancellationToken = default);
 
     Task<Product?> GetByIdAsync(

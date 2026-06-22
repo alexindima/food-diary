@@ -4,6 +4,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Recipes;
@@ -48,11 +49,46 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             includePublic: false,
             page: 0,
             limit: 0,
-            search: "100% Soup");
+            filters: new RecipeQueryFilters("100% Soup"));
 
         (Recipe Recipe, int UsageCount) item = Assert.Single(items);
         Assert.Equal(1, totalItems);
         Assert.Equal(matchingRecipe.Id, item.Recipe.Id);
+    }
+
+    [RequiresDockerFact]
+    public async Task GetPagedAsync_AppliesStructuredFilters() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"recipes-filters-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        (Recipe quickSaladWithImage, Recipe longSaladNoImage, Recipe quickSoupNoImage) =
+            await SeedRecipeFiltersAsync(context, user.Id);
+        var repository = new RecipeRepository(context);
+
+        IReadOnlyList<RecipeId> saladIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+            Search: null,
+            Category: "salad"));
+        IReadOnlyList<RecipeId> quickIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+            Search: null,
+            MaxTotalTime: 25));
+        IReadOnlyList<RecipeId> mediumCalorieIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+            Search: null,
+            CaloriesFrom: 200,
+            CaloriesTo: 300));
+        IReadOnlyList<RecipeId> withImageIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+            Search: null,
+            HasImage: true));
+        IReadOnlyList<RecipeId> withoutImageIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+            Search: null,
+            HasImage: false));
+
+        AssertIds([quickSaladWithImage.Id, longSaladNoImage.Id], saladIds);
+        AssertIds([quickSaladWithImage.Id, quickSoupNoImage.Id], quickIds);
+        Assert.Equal([quickSoupNoImage.Id], mediumCalorieIds);
+        Assert.Equal([quickSaladWithImage.Id], withImageIds);
+        AssertIds([longSaladNoImage.Id, quickSoupNoImage.Id], withoutImageIds);
     }
 
     [RequiresDockerFact]
@@ -79,7 +115,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             includePublic: false,
             page: 1,
             limit: 25,
-            search: null);
+            filters: new RecipeQueryFilters(Search: null));
 
         var stopwatch = Stopwatch.StartNew();
         (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
@@ -87,7 +123,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             includePublic: false,
             page: 1,
             limit: 25,
-            search: null);
+            filters: new RecipeQueryFilters(Search: null));
         stopwatch.Stop();
 
         Assert.Equal(PerformanceSeedCount, totalItems);
@@ -137,4 +173,47 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.NotNull(byId);
         Assert.Equal(favorite.Id, Assert.Single(all).Id);
     }
+
+    private static async Task<IReadOnlyList<RecipeId>> GetRecipeIdsAsync(
+        RecipeRepository repository,
+        UserId userId,
+        RecipeQueryFilters filters) {
+        (IReadOnlyList<(Recipe Recipe, int UsageCount)> items, int _) = await repository.GetPagedAsync(
+            userId,
+            includePublic: false,
+            page: 1,
+            limit: 50,
+            filters: filters).ConfigureAwait(false);
+
+        return [.. items.Select(item => item.Recipe.Id)];
+    }
+
+    private static async Task<(Recipe QuickSaladWithImage, Recipe LongSaladNoImage, Recipe QuickSoupNoImage)> SeedRecipeFiltersAsync(
+        FoodDiaryDbContext context,
+        UserId userId) {
+        var quickSaladWithImage = Recipe.Create(
+            userId,
+            "Quick salad",
+            servings: 2,
+            category: "Salad",
+            imageUrl: "https://cdn.example.com/salad.webp",
+            prepTime: 10,
+            cookTime: 0);
+        quickSaladWithImage.ApplyComputedNutrition(180, 6, 9, 20, 6, 0);
+
+        var longSaladNoImage = Recipe.Create(userId, "Roasted salad", servings: 2, category: "Salad", prepTime: 20, cookTime: 45);
+        longSaladNoImage.ApplyComputedNutrition(520, 18, 31, 42, 8, 0);
+
+        var quickSoupNoImage = Recipe.Create(userId, "Tomato soup", servings: 4, category: "Soup", prepTime: 5, cookTime: 20);
+        quickSoupNoImage.ApplyComputedNutrition(240, 7, 6, 40, 7, 0);
+
+        context.Recipes.AddRange(quickSaladWithImage, longSaladNoImage, quickSoupNoImage);
+        await context.SaveChangesAsync().ConfigureAwait(false);
+        return (quickSaladWithImage, longSaladNoImage, quickSoupNoImage);
+    }
+
+    private static void AssertIds(IReadOnlyCollection<RecipeId> expected, IReadOnlyCollection<RecipeId> actual) =>
+        Assert.Equal(
+            [.. expected.Select(id => id.Value).Order()],
+            [.. actual.Select(id => id.Value).Order()]);
 }

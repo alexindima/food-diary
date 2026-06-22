@@ -2,6 +2,8 @@
     --fd-segmented-toggle-active-background: var(--fd-bg-brand-tint-strong);
     --fd-segmented-toggle-active-color: var(--fd-color-primary-600);
     --fd-segmented-toggle-active-shadow: var(--fd-shadow-ring-inset-brand-strong);
+    --fd-segmented-toggle-item-min-width: 64px;
+    --fd-segmented-toggle-item-min-width-sm: 58px;
     display: block;
     width: 100%;
     max-width: 100%;
@@ -37,9 +39,10 @@
     flex: 1 1 0;
     align-items: center;
     justify-content: center;
-    min-width: 54px;
+    min-width: var(--fd-segmented-toggle-item-min-width);
     min-height: var(--fd-size-control-touch);
     padding: var(--fd-space-segmented-toggle-item-padding);
+    padding-inline: max(14px, var(--fd-space-sm));
     border: none;
     border-radius: var(--fd-radius-toggle);
     appearance: none;
@@ -87,8 +90,10 @@
 }
 
 .fd-ui-segmented-toggle--size-sm .fd-ui-segmented-toggle__item {
+    min-width: var(--fd-segmented-toggle-item-min-width-sm);
     min-height: var(--fd-size-control-sm);
     padding: 0 var(--fd-space-xs);
+    padding-inline: max(12px, var(--fd-space-xs));
 }
 
 .fd-ui-segmented-toggle--shrink-items .fd-ui-segmented-toggle__item {

@@ -57,10 +57,9 @@ export class RecipeListFacade {
 
     private readonly searchValue = signal<string | null>(null);
 
-    public loadRecipes(page: number, limit: number, search: string | null, onlyMine: boolean): Observable<void> {
+    public loadRecipes(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
         this.recipeData.setLoading(true);
-        this.searchValue.set(search);
-        const filters: RecipeFilters = { search };
+        this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
 
         return this.recipeService.query(page, limit, filters, includePublic).pipe(
@@ -83,10 +82,9 @@ export class RecipeListFacade {
         );
     }
 
-    public loadInitialOverview(page: number, limit: number, search: string | null, onlyMine: boolean): Observable<void> {
+    public loadInitialOverview(page: number, limit: number, filters: RecipeFilters, onlyMine: boolean): Observable<void> {
         this.recipeData.setLoading(true);
-        this.searchValue.set(search);
-        const filters: RecipeFilters = { search };
+        this.searchValue.set(filters.search ?? null);
         const includePublic = !onlyMine;
 
         return this.recipeService
@@ -165,7 +163,7 @@ export class RecipeListFacade {
         this.recipeData.setLoading(true);
 
         return this.recipeService.deleteById(recipe.id).pipe(
-            switchMap(() => this.loadRecipes(1, this.pageSize, search, onlyMine)),
+            switchMap(() => this.loadRecipes(1, this.pageSize, { search }, onlyMine)),
             catchError(() => {
                 this.toastService.error(this.translateService.instant('RECIPE_LIST.DELETE_ERROR'));
                 return of(void 0);
@@ -233,8 +231,8 @@ export class RecipeListFacade {
         );
     }
 
-    public hasActiveFilters(onlyMine: boolean): boolean {
-        return onlyMine;
+    public hasActiveFilters(onlyMine: boolean, filters: RecipeFilters): boolean {
+        return onlyMine || this.hasStructuredFilters(filters);
     }
 
     public hasSearch(search: string | null): boolean {
@@ -288,5 +286,19 @@ export class RecipeListFacade {
 
     private hasSearchValue(value: string | null): boolean {
         return value !== null && value.trim().length > 0;
+    }
+
+    private hasStructuredFilters(filters: RecipeFilters): boolean {
+        return (
+            this.hasSearchValue(filters.category ?? null) ||
+            this.hasOptionalValue(filters.maxTotalTime) ||
+            this.hasOptionalValue(filters.caloriesFrom) ||
+            this.hasOptionalValue(filters.caloriesTo) ||
+            this.hasOptionalValue(filters.hasImage)
+        );
+    }
+
+    private hasOptionalValue(value: number | boolean | null | undefined): boolean {
+        return value !== null && value !== undefined;
     }
 }

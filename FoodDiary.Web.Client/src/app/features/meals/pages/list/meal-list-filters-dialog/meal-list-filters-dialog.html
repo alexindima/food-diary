@@ -9,6 +9,57 @@
             [endPlaceholder]="'CONSUMPTION_LIST.DATE_TO_PLACEHOLDER' | translate"
         />
 
+        <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
+            <h3 class="meal-list-filters-dialog__section-title">{{ 'CONSUMPTION_LIST.FILTER_MEAL_TYPES' | translate }}</h3>
+            <fd-ui-chip-select
+                size="sm"
+                [options]="mealTypeOptions"
+                [selectedValues]="selectedMealTypes()"
+                [ariaLabel]="'CONSUMPTION_LIST.FILTER_MEAL_TYPES' | translate"
+                (selectedValuesChange)="onSelectedMealTypesChange($event)"
+            />
+        </section>
+
+        <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
+            <h3 class="meal-list-filters-dialog__section-title">{{ 'CONSUMPTION_LIST.FILTER_NUTRITION' | translate }}</h3>
+            <div class="meal-list-filters-dialog__range fd-grid fd-gap-xs">
+                <fd-ui-input
+                    type="number"
+                    size="sm"
+                    min="0"
+                    [label]="'CONSUMPTION_LIST.FILTER_CALORIES_FROM' | translate"
+                    [(value)]="caloriesFromValue"
+                />
+                <fd-ui-input
+                    type="number"
+                    size="sm"
+                    min="0"
+                    [label]="'CONSUMPTION_LIST.FILTER_CALORIES_TO' | translate"
+                    [(value)]="caloriesToValue"
+                />
+            </div>
+        </section>
+
+        <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
+            <h3 class="meal-list-filters-dialog__section-title">{{ 'CONSUMPTION_LIST.FILTER_MEDIA' | translate }}</h3>
+            <fd-ui-segmented-toggle
+                [options]="binaryOptions"
+                [selectedValue]="imageValue"
+                [ariaLabel]="'CONSUMPTION_LIST.FILTER_HAS_IMAGE' | translate"
+                (selectedValueChange)="onImageChange($event)"
+            />
+        </section>
+
+        <section class="meal-list-filters-dialog__section fd-grid fd-gap-xs">
+            <h3 class="meal-list-filters-dialog__section-title">{{ 'CONSUMPTION_LIST.FILTER_AI' | translate }}</h3>
+            <fd-ui-segmented-toggle
+                [options]="binaryOptions"
+                [selectedValue]="aiValue"
+                [ariaLabel]="'CONSUMPTION_LIST.FILTER_HAS_AI' | translate"
+                (selectedValueChange)="onAiChange($event)"
+            />
+        </section>
+
         <div fdUiDialogFooter class="meal-list-filters-dialog__footer">
             <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onReset()">
                 {{ 'CONSUMPTION_LIST.FILTER_RESET_BUTTON' | translate }}

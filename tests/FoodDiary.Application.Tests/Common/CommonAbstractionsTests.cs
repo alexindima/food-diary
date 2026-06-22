@@ -12,7 +12,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -468,8 +467,7 @@ public class CommonAbstractionsTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
+            ProductQueryFilters filters,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 

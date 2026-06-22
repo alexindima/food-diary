@@ -12,6 +12,7 @@ using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.FavoriteMeals;
+using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 
@@ -42,13 +43,13 @@ public sealed class GetConsumptionsOverviewQueryHandler(
         DateTime? normalizedTo = request.DateTo.HasValue
             ? UtcDateNormalizer.NormalizeInstantPreservingUnspecifiedAsUtc(request.DateTo.Value)
             : null;
+        MealQueryFilters filters = CreateFilters(request, normalizedFrom, normalizedTo);
 
         (IReadOnlyList<Meal> Items, int TotalItems) = await mealRepository.GetPagedAsync(
             userId,
             sanitizedPage,
             sanitizedLimit,
-            normalizedFrom,
-            normalizedTo,
+            filters,
             cancellationToken).ConfigureAwait(false);
 
         IReadOnlyList<FavoriteMeal> favorites = await favoriteMealRepository.GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
@@ -78,5 +79,27 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             TotalItems);
 
         return Result.Success(new ConsumptionOverviewModel(allConsumptions, favoriteItems, favorites.Count));
+    }
+
+    private static MealQueryFilters CreateFilters(
+        GetConsumptionsOverviewQuery request,
+        DateTime? normalizedFrom,
+        DateTime? normalizedTo) =>
+        new(
+            normalizedFrom,
+            normalizedTo,
+            ParseMealTypes(request.MealTypes),
+            request.CaloriesFrom,
+            request.CaloriesTo,
+            request.HasImage,
+            request.HasAiSession);
+
+    private static MealType[]? ParseMealTypes(IReadOnlyCollection<string>? values) {
+        MealType[] parsed = [.. values?
+            .Select(value => Enum.TryParse(value, ignoreCase: true, out MealType mealType) ? mealType : (MealType?)null)
+            .OfType<MealType>()
+            .Distinct() ?? []];
+
+        return parsed.Length > 0 ? parsed : null;
     }
 }

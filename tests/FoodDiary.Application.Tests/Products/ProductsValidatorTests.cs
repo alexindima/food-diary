@@ -549,8 +549,7 @@ public class ProductsValidatorTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
+            ProductQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Product?> GetByIdAsync(

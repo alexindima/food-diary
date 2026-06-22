@@ -7,7 +7,14 @@ import { provideTranslateTesting } from '../../../../../../testing/translate-tes
 import { RecipeListFiltersDialogComponent } from './recipe-list-filters-dialog';
 import type { RecipeListFiltersDialogData } from './recipe-list-filters-dialog.types';
 
-const DEFAULT_DIALOG_DATA: RecipeListFiltersDialogData = { onlyMine: false };
+const DEFAULT_DIALOG_DATA: RecipeListFiltersDialogData = {
+    onlyMine: false,
+    category: null,
+    maxTotalTime: null,
+    caloriesFrom: null,
+    caloriesTo: null,
+    hasImage: null,
+};
 
 describe('RecipeListFiltersDialogComponent', () => {
     let component: RecipeListFiltersDialogComponent;
@@ -36,12 +43,12 @@ describe('RecipeListFiltersDialogComponent', () => {
     });
 
     it('should initialize visibility from data when onlyMine is false', () => {
-        createComponent({ onlyMine: false });
+        createComponent({ ...DEFAULT_DIALOG_DATA, onlyMine: false });
         expect(component['visibilityValue']).toBe('all');
     });
 
     it('should initialize visibility from data when onlyMine is true', () => {
-        createComponent({ onlyMine: true });
+        createComponent({ ...DEFAULT_DIALOG_DATA, onlyMine: true });
         expect(component['visibilityValue']).toBe('mine');
     });
 
@@ -55,10 +62,17 @@ describe('RecipeListFiltersDialogComponent', () => {
     });
 
     it('should close with result on apply', () => {
-        createComponent({ onlyMine: false });
+        createComponent({ ...DEFAULT_DIALOG_DATA, onlyMine: false });
         component['onVisibilityChange']('mine');
         component['onApply']();
-        expect(dialogRefSpy.close).toHaveBeenCalledWith({ onlyMine: true });
+        expect(dialogRefSpy.close).toHaveBeenCalledWith({
+            onlyMine: true,
+            category: null,
+            maxTotalTime: null,
+            caloriesFrom: null,
+            caloriesTo: null,
+            hasImage: null,
+        });
     });
 
     it('should close with null on cancel', () => {

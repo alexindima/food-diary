@@ -180,7 +180,7 @@ describe('RecipeListFacade favorites', () => {
 
 describe('RecipeListFacade overview', () => {
     it('loads initial overview and updates derived state', () => {
-        facade.loadInitialOverview(1, PAGE_LIMIT, null, false).subscribe();
+        facade.loadInitialOverview(1, PAGE_LIMIT, { search: null }, false).subscribe();
 
         expect(recipeService.queryOverview).toHaveBeenCalledWith({
             page: 1,
@@ -199,7 +199,7 @@ describe('RecipeListFacade overview', () => {
     it('sets load error state when overview query fails', () => {
         recipeService.queryOverview.mockReturnValueOnce(throwError(() => ({ status: HttpStatusCode.InternalServerError })));
 
-        facade.loadInitialOverview(1, PAGE_LIMIT, ' soup ', false).subscribe();
+        facade.loadInitialOverview(1, PAGE_LIMIT, { search: ' soup ' }, false).subscribe();
 
         expect(facade.recipeData.items()).toEqual([]);
         expect(facade.recentRecipes()).toEqual([]);

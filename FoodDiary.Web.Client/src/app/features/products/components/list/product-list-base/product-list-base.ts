@@ -66,6 +66,9 @@ export class ProductListBaseComponent {
     protected readonly isFavoritesLoadingMore = this.productListFacade.isFavoritesLoadingMore;
     protected readonly errorKey = this.productListFacade.errorKey;
     protected readonly onlyMineFilter = this.productListFacade.onlyMineFilter;
+    protected readonly caloriesFromFilter = this.productListFacade.caloriesFromFilter;
+    protected readonly caloriesToFilter = this.productListFacade.caloriesToFilter;
+    protected readonly hasImageFilter = this.productListFacade.hasImageFilter;
     protected readonly isMobileView = this.productListFacade.isMobileView;
     protected readonly recentProductItems = this.productListFacade.recentProductItems;
     protected readonly allProductItems = this.productListFacade.allProductItems;
@@ -75,8 +78,21 @@ export class ProductListBaseComponent {
         this.productListFacade.selectedProductTypes().map(type => buildProductTypeTranslationKey(type)),
     );
     protected readonly activeFilterKeys = computed(() => {
-        const keys = this.selectedProductTypeKeys();
-        return this.onlyMineFilter() ? ['PRODUCT_LIST.FILTER_MY_PRODUCTS', ...keys] : keys;
+        const keys = [...this.selectedProductTypeKeys()];
+        if (this.onlyMineFilter()) {
+            keys.unshift('PRODUCT_LIST.FILTER_MY_PRODUCTS');
+        }
+        if (this.caloriesFromFilter() !== null || this.caloriesToFilter() !== null) {
+            keys.push('PRODUCT_LIST.FILTER_CALORIES_ACTIVE');
+        }
+        if (this.hasImageFilter() === true) {
+            keys.push('PRODUCT_LIST.FILTER_IMAGE_WITH');
+        }
+        if (this.hasImageFilter() === false) {
+            keys.push('PRODUCT_LIST.FILTER_IMAGE_WITHOUT');
+        }
+
+        return keys;
     });
     protected readonly isEmptyState = this.productListFacade.isEmptyState;
     protected readonly allProductsSectionLabelKey = this.productListFacade.allProductsSectionLabelKey;

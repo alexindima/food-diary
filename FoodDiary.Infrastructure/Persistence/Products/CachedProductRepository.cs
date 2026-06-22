@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Products;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;
@@ -22,10 +21,9 @@ public class CachedProductRepository(
         bool includePublic,
         int page,
         int limit,
-        string? search,
-        IReadOnlyCollection<ProductType>? productTypes = null,
+        ProductQueryFilters filters,
         CancellationToken cancellationToken = default) =>
-        inner.GetPagedAsync(userId, includePublic, page, limit, search, productTypes, cancellationToken);
+        inner.GetPagedAsync(userId, includePublic, page, limit, filters, cancellationToken);
 
     public async Task<Product?> GetByIdAsync(
         ProductId id,

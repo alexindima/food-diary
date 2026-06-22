@@ -39,8 +39,12 @@ public class GetProductsQueryHandler(
             query.IncludePublic,
             pageNumber,
             pageSize,
-            query.Search,
-            productTypes is { Length: > 0 } ? productTypes : null,
+            new ProductQueryFilters(
+                query.Search,
+                productTypes is { Length: > 0 } ? productTypes : null,
+                query.CaloriesFrom,
+                query.CaloriesTo,
+                query.HasImage),
             cancellationToken).ConfigureAwait(false);
 
         var productsWithUsage = items.Select(item => new {

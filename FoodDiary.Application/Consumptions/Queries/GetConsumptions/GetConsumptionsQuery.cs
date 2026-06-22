@@ -10,4 +10,9 @@ public record GetConsumptionsQuery(
     int Page,
     int Limit,
     DateTime? DateFrom,
-    DateTime? DateTo) : IQuery<Result<PagedResponse<ConsumptionModel>>>, IUserRequest;
+    DateTime? DateTo,
+    IReadOnlyCollection<string>? MealTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null,
+    bool? HasAiSession = null) : IQuery<Result<PagedResponse<ConsumptionModel>>>, IUserRequest;

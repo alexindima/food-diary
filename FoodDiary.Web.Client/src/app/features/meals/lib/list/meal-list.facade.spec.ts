@@ -9,7 +9,7 @@ import { FavoriteMealService } from '../../api/favorite-meal.service';
 import { MealService } from '../../api/meal.service';
 import type { FavoriteMeal, Meal, MealOverview } from '../../models/meal.data';
 import { MEAL_LIST_OVERVIEW_FAVORITES_LIMIT, MEAL_LIST_PAGE_SIZE } from './meal-list.config';
-import { MealListFacade } from './meal-list.facade';
+import { MealListFacade, type MealListStructuredFilters } from './meal-list.facade';
 
 const DEFAULT_CALORIES = 500;
 const DEFAULT_PROTEINS = 30;
@@ -99,6 +99,18 @@ function createOverview(meals: Meal[], favorites: FavoriteMeal[] = []): MealOver
     };
 }
 
+function emptyMealFilters(overrides: Partial<MealListStructuredFilters> = {}): MealListStructuredFilters {
+    return {
+        dateRange: null,
+        mealTypes: [],
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
+        hasAiSession: null,
+        ...overrides,
+    };
+}
+
 describe('MealListFacade', () => {
     beforeEach(() => {
         mealService = {
@@ -146,7 +158,7 @@ function registerLoadTests(): void {
             const start = new Date(TEST_YEAR, MAY_INDEX, START_DAY);
             const end = new Date(TEST_YEAR, MAY_INDEX, END_DAY);
 
-            facade.loadInitialOverview({ start, end }).subscribe();
+            facade.loadInitialOverview(emptyMealFilters({ dateRange: { start, end } })).subscribe();
 
             expect(mealService.queryOverview).toHaveBeenCalledWith(
                 1,
@@ -174,7 +186,7 @@ function registerLoadTests(): void {
         it('sets retry error state when list load fails', () => {
             mealService.query.mockReturnValue(throwError(() => new Error('load failed')));
 
-            facade.loadConsumptions(1, null).subscribe();
+            facade.loadConsumptions(1, emptyMealFilters()).subscribe();
 
             expect(facade.errorKey()).toBe('ERRORS.LOAD_FAILED_TITLE');
             expect(facade.consumptionData.items()).toEqual([]);
@@ -200,7 +212,7 @@ function registerMutationTests(): void {
             facade.currentPageIndex.set(1);
             let result = false;
 
-            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', null).subscribe(value => {
+            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', emptyMealFilters()).subscribe(value => {
                 result = value;
             });
 
@@ -213,7 +225,7 @@ function registerMutationTests(): void {
             mealService.repeat.mockReturnValue(throwError(() => new Error('repeat failed')));
             let result = true;
 
-            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', null).subscribe(value => {
+            facade.repeatMeal('meal-1', '2026-05-05T08:30:00.000Z', 'BREAKFAST', emptyMealFilters()).subscribe(value => {
                 result = value;
             });
 
@@ -226,7 +238,7 @@ function registerMutationTests(): void {
             facade.currentPageIndex.set(1);
             let result = false;
 
-            facade.deleteMeal('meal-1', null).subscribe(value => {
+            facade.deleteMeal('meal-1', emptyMealFilters()).subscribe(value => {
                 result = value;
             });
 

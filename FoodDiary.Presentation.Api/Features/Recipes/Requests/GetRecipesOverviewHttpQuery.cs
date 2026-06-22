@@ -6,4 +6,9 @@ public sealed record GetRecipesOverviewHttpQuery(
     int RecentLimit = 10,
     int FavoriteLimit = 10,
     string? Search = null,
-    bool IncludePublic = true);
+    bool IncludePublic = true,
+    string? Category = null,
+    int? MaxTotalTime = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null);

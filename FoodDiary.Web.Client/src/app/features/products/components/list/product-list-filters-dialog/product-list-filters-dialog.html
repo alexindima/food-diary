@@ -20,6 +20,36 @@
         />
     </section>
 
+    <section class="product-list-filters-dialog__section fd-grid fd-gap-xs">
+        <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_NUTRITION' | translate }}</h3>
+        <div class="product-list-filters-dialog__range fd-grid fd-gap-xs">
+            <fd-ui-input
+                type="number"
+                size="sm"
+                min="0"
+                [label]="'PRODUCT_LIST.FILTER_CALORIES_FROM' | translate"
+                [(value)]="caloriesFromValue"
+            />
+            <fd-ui-input
+                type="number"
+                size="sm"
+                min="0"
+                [label]="'PRODUCT_LIST.FILTER_CALORIES_TO' | translate"
+                [(value)]="caloriesToValue"
+            />
+        </div>
+    </section>
+
+    <section class="product-list-filters-dialog__section fd-grid fd-gap-xs">
+        <h3 class="product-list-filters-dialog__section-title">{{ 'PRODUCT_LIST.FILTER_MEDIA' | translate }}</h3>
+        <fd-ui-segmented-toggle
+            [options]="imageOptions"
+            [selectedValue]="imageValue"
+            [ariaLabel]="'PRODUCT_LIST.FILTER_MEDIA' | translate"
+            (selectedValueChange)="onImageChange($event)"
+        />
+    </section>
+
     <div fdUiDialogFooter class="product-list-filters-dialog__footer fd-row fd-gap-xs fd-justify-end">
         <fd-ui-button type="button" variant="secondary" fill="ghost" (click)="onCancel()"> {{ 'COMMON.CANCEL' | translate }} </fd-ui-button>
         <fd-ui-button type="button" variant="primary" fill="solid" (click)="onApply()">

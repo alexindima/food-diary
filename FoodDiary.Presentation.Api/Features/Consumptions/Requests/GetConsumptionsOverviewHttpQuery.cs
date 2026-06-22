@@ -5,4 +5,9 @@ public sealed record GetConsumptionsOverviewHttpQuery(
     int Limit = 10,
     DateTime? DateFrom = null,
     DateTime? DateTo = null,
-    int FavoriteLimit = 10);
+    int FavoriteLimit = 10,
+    string? MealTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null,
+    bool? HasAiSession = null);

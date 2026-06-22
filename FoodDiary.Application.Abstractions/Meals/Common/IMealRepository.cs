@@ -21,8 +21,7 @@ public interface IMealRepository {
         UserId userId,
         int page,
         int limit,
-        DateTime? dateFrom,
-        DateTime? dateTo,
+        MealQueryFilters filters,
         CancellationToken cancellationToken = default);
 
     Task<IReadOnlyList<Meal>> GetByPeriodAsync(

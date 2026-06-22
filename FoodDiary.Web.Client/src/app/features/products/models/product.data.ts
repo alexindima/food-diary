@@ -84,16 +84,38 @@ export type UpdateProductRequest = {
 export class ProductFilters {
     public search?: string;
     public productTypes?: ProductType[];
+    public caloriesFrom?: number;
+    public caloriesTo?: number;
+    public hasImage?: boolean;
 
-    public constructor(search: string | null, productTypes?: ProductType[]) {
-        if (search !== null && search.trim().length > 0) {
-            this.search = search;
+    public constructor(filters: ProductFilterValues) {
+        if (filters.search !== null && filters.search.trim().length > 0) {
+            this.search = filters.search;
         }
 
-        if (productTypes !== undefined && productTypes.length > 0) {
-            this.productTypes = productTypes;
+        if (filters.productTypes !== undefined && filters.productTypes.length > 0) {
+            this.productTypes = filters.productTypes;
+        }
+
+        this.caloriesFrom = normalizeProductNumberFilter(filters.caloriesFrom);
+        this.caloriesTo = normalizeProductNumberFilter(filters.caloriesTo);
+
+        if (filters.hasImage !== null && filters.hasImage !== undefined) {
+            this.hasImage = filters.hasImage;
         }
     }
+}
+
+export type ProductFilterValues = {
+    search: string | null;
+    productTypes?: ProductType[];
+    caloriesFrom?: number | null;
+    caloriesTo?: number | null;
+    hasImage?: boolean | null;
+};
+
+function normalizeProductNumberFilter(value: number | null | undefined): number | undefined {
+    return value !== null && value !== undefined && value >= 0 ? value : undefined;
 }
 
 export type ProductOverview = {

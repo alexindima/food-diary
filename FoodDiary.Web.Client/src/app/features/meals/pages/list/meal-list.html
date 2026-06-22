@@ -15,7 +15,7 @@
                     icon="filter_alt"
                     [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                     [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [class.consumption-list__filter-button--active]="hasDateFilter()"
+                    [class.consumption-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
                 <fd-ui-button
@@ -40,7 +40,7 @@
                     icon="filter_alt"
                     [fdUiHint]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
                     [ariaLabel]="'CONSUMPTION_LIST.DATE_FILTER_BUTTON' | translate"
-                    [class.consumption-list__filter-button--active]="hasDateFilter()"
+                    [class.consumption-list__filter-button--active]="hasActiveFilters()"
                     (click)="openFilters()"
                 />
                 <fd-ui-button
@@ -72,7 +72,7 @@
             <div class="consumption-list__ai-placeholder" aria-hidden="true"></div>
         }
 
-        @if (hasDateFilter()) {
+        @if (hasActiveFilters()) {
             <section class="consumption-list__active-filters" [attr.aria-label]="'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate">
                 <span class="consumption-list__active-filters-label">{{ 'CONSUMPTION_LIST.ACTIVE_FILTERS_LABEL' | translate }}</span>
                 <div class="consumption-list__active-filter-chips">
@@ -84,6 +84,11 @@
                     @if (activeDateFilterEnd(); as endDate) {
                         <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
                             {{ 'CONSUMPTION_LIST.DATE_FILTER_TO_LABEL' | translate }}: {{ endDate }}
+                        </button>
+                    }
+                    @for (filterKey of activeFilterKeys(); track filterKey) {
+                        <button type="button" class="consumption-list__active-filter-chip" (click)="openFilters()">
+                            {{ filterKey | translate }}
                         </button>
                     }
                 </div>

@@ -11,5 +11,10 @@ public sealed record GetRecipesOverviewQuery(
     string? Search,
     bool IncludePublic,
     int RecentLimit = 10,
-    int FavoriteLimit = 10)
+    int FavoriteLimit = 10,
+    string? Category = null,
+    int? MaxTotalTime = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null)
     : IQuery<Result<RecipeOverviewModel>>, IUserRequest;

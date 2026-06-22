@@ -71,11 +71,28 @@ export class ProductService extends ApiService {
 
     private applyProductFilters(params: Record<string, string | number | boolean>, filters?: ProductFilters): void {
         const search = filters?.search?.trim();
-        if (search !== undefined && search.length > 0) {
-            params['search'] = search;
-        }
+        this.addStringParam(params, 'search', search);
         if (filters?.productTypes !== undefined && filters.productTypes.length > 0) {
             params['productTypes'] = filters.productTypes.join(',');
+        }
+        this.addOptionalParam(params, 'caloriesFrom', filters?.caloriesFrom);
+        this.addOptionalParam(params, 'caloriesTo', filters?.caloriesTo);
+        this.addOptionalParam(params, 'hasImage', filters?.hasImage);
+    }
+
+    private addStringParam(params: Record<string, string | number | boolean>, key: string, value: string | undefined): void {
+        if (value !== undefined && value.length > 0) {
+            params[key] = value;
+        }
+    }
+
+    private addOptionalParam(
+        params: Record<string, string | number | boolean>,
+        key: string,
+        value: string | number | boolean | undefined,
+    ): void {
+        if (value !== undefined) {
+            params[key] = value;
         }
     }
 

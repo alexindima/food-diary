@@ -10,5 +10,10 @@ public sealed record GetConsumptionsOverviewQuery(
     int Limit,
     DateTime? DateFrom,
     DateTime? DateTo,
-    int FavoriteLimit = 10)
+    int FavoriteLimit = 10,
+    IReadOnlyCollection<string>? MealTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null,
+    bool? HasAiSession = null)
     : IQuery<Result<ConsumptionOverviewModel>>, IUserRequest;

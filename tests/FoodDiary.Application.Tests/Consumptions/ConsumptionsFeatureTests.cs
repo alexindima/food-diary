@@ -2330,8 +2330,7 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
@@ -2380,8 +2379,7 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
@@ -2428,8 +2426,7 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
@@ -2476,8 +2473,7 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
@@ -2524,11 +2520,10 @@ public class ConsumptionsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) {
-            LastDateFrom = dateFrom;
-            LastDateTo = dateTo;
+            LastDateFrom = filters.DateFrom;
+            LastDateTo = filters.DateTo;
             return Task.FromResult((_items, totalItems));
         }
 

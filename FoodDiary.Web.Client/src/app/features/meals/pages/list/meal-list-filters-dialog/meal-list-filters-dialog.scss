@@ -1,7 +1,25 @@
 .meal-list-filters-dialog {
     &__date-range {
         display: block;
-        margin-bottom: var(--fd-space-xs);
+        margin-bottom: var(--fd-space-md);
+    }
+
+    &__section {
+        margin-bottom: var(--fd-space-md);
+    }
+
+    &__section-title {
+        margin: 0;
+        font-size: var(--fd-text-helper-size);
+        line-height: var(--fd-text-helper-line-height);
+        letter-spacing: var(--fd-letter-spacing-overline);
+        text-transform: uppercase;
+        color: var(--fd-color-text-muted);
+        font-weight: var(--fd-text-helper-weight);
+    }
+
+    &__range {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     &__footer {

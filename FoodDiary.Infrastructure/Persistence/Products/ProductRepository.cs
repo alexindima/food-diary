@@ -20,8 +20,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
         bool includePublic,
         int page,
         int limit,
-        string? search,
-        IReadOnlyCollection<ProductType>? productTypes = null,
+        ProductQueryFilters filters,
         CancellationToken cancellationToken = default) {
         int pageNumber = Math.Max(page, 1);
         int pageSize = Math.Max(limit, 1);
@@ -32,8 +31,8 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 ? p => p.UserId == userId || p.Visibility == Visibility.Public
                 : p => p.UserId == userId);
 
-        if (!string.IsNullOrWhiteSpace(search)) {
-            string normalizedSearch = $"%{EscapeLikePattern(search.Trim())}%";
+        if (!string.IsNullOrWhiteSpace(filters.Search)) {
+            string normalizedSearch = $"%{EscapeLikePattern(filters.Search.Trim())}%";
             query = query.Where(p =>
                 EF.Functions.ILike(p.Name, normalizedSearch, LikeEscapeCharacter) ||
                 EF.Functions.ILike(p.Brand ?? string.Empty, normalizedSearch, LikeEscapeCharacter) ||
@@ -41,8 +40,22 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
                 EF.Functions.ILike(p.Barcode ?? string.Empty, normalizedSearch, LikeEscapeCharacter));
         }
 
-        if (productTypes is { Count: > 0 }) {
-            query = query.Where(p => productTypes.Contains(p.ProductType));
+        if (filters.ProductTypes is { Count: > 0 }) {
+            query = query.Where(p => filters.ProductTypes.Contains(p.ProductType));
+        }
+
+        if (filters.CaloriesFrom.HasValue) {
+            query = query.Where(p => p.CaloriesPerBase >= filters.CaloriesFrom.Value);
+        }
+
+        if (filters.CaloriesTo.HasValue) {
+            query = query.Where(p => p.CaloriesPerBase <= filters.CaloriesTo.Value);
+        }
+
+        if (filters.HasImage.HasValue) {
+            query = filters.HasImage.Value
+                ? query.Where(p => p.ImageUrl != null || p.ImageAssetId != null)
+                : query.Where(p => p.ImageUrl == null && p.ImageAssetId == null);
         }
 
         int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);

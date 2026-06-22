@@ -5,4 +5,7 @@ public sealed record GetProductsHttpQuery(
     int Limit = 10,
     string? Search = null,
     bool IncludePublic = true,
-    string? ProductTypes = null);
+    string? ProductTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null);

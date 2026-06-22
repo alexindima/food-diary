@@ -1382,8 +1382,7 @@ public class ProductsFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
+            ProductQueryFilters filters,
             CancellationToken cancellationToken = default) =>
             Task.FromResult((Items: (IReadOnlyList<(Product Product, int UsageCount)>)[], TotalItems: 0));
 
@@ -1429,8 +1428,7 @@ public class ProductsFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
+            ProductQueryFilters filters,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Product?> GetByIdAsync(
@@ -1501,11 +1499,10 @@ public class ProductsFeatureTests {
             bool includePublic,
             int page,
             int limit,
-            string? search,
-            IReadOnlyCollection<ProductType>? productTypes = null,
+            ProductQueryFilters filters,
             CancellationToken cancellationToken = default) {
             var filtered = _pagedItems
-                .Where(item => productTypes?.Contains(item.Product.ProductType) != false)
+                .Where(item => filters.ProductTypes?.Contains(item.Product.ProductType) != false)
                 .ToList();
             return Task.FromResult(((IReadOnlyList<(Product Product, int UsageCount)>)filtered, filtered.Count));
         }

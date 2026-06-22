@@ -11,7 +11,7 @@ public interface IRecipeRepository {
         bool includePublic,
         int page,
         int limit,
-        string? search,
+        RecipeQueryFilters filters,
         CancellationToken cancellationToken = default);
 
     Task<Recipe?> GetByIdAsync(

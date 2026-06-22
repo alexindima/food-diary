@@ -18,7 +18,7 @@ import { FdUiButtonComponent } from 'fd-ui-kit/button/fd-ui-button';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
 import { FdUiInputComponent } from 'fd-ui-kit/input/fd-ui-input';
 import { FdUiPaginationComponent } from 'fd-ui-kit/pagination/fd-ui-pagination';
-import { debounceTime, distinctUntilChanged, skip, switchMap } from 'rxjs';
+import { debounceTime, distinctUntilChanged, EMPTY, skip, switchMap } from 'rxjs';
 
 import { ErrorStateComponent } from '../../../../components/shared/error-state/error-state';
 import { PageBodyComponent } from '../../../../components/shared/page-body/page-body';
@@ -38,7 +38,7 @@ import {
 } from '../../components/list/recipe-list-sections/recipe-list-results/recipe-list-results';
 import { resolveRecipeImageUrl } from '../../lib/recipe-image.util';
 import { RecipeListFacade } from '../../lib/recipe-list.facade';
-import type { FavoriteRecipe, Recipe } from '../../models/recipe.data';
+import type { FavoriteRecipe, Recipe, RecipeFilters } from '../../models/recipe.data';
 import type { RecipeCardViewModel } from './recipe-list.types';
 import { RECIPE_LIST_TOUR } from './recipe-list-tour';
 
@@ -100,7 +100,33 @@ export class RecipeListComponent {
         })),
     );
     protected readonly hasVisibleRecipes = computed(() => this.recipeListFacade.hasVisibleRecipes());
-    protected readonly hasActiveFilters = computed(() => this.recipeListFacade.hasActiveFilters(this.searchModel().onlyMine));
+    protected readonly activeFilterKeys = computed(() => {
+        const filters = this.buildRecipeFilters();
+        const keys: string[] = [];
+        if (this.searchModel().onlyMine) {
+            keys.push('RECIPE_LIST.FILTER_MY_RECIPES');
+        }
+        if (this.hasFilterText(filters.category)) {
+            keys.push('RECIPE_LIST.FILTER_CATEGORY_ACTIVE');
+        }
+        if (filters.maxTotalTime !== null && filters.maxTotalTime !== undefined) {
+            keys.push('RECIPE_LIST.FILTER_MAX_TOTAL_TIME_ACTIVE');
+        }
+        if (filters.caloriesFrom !== null || filters.caloriesTo !== null) {
+            keys.push('RECIPE_LIST.FILTER_CALORIES_ACTIVE');
+        }
+        if (filters.hasImage === true) {
+            keys.push('RECIPE_LIST.FILTER_IMAGE_WITH');
+        }
+        if (filters.hasImage === false) {
+            keys.push('RECIPE_LIST.FILTER_IMAGE_WITHOUT');
+        }
+
+        return keys;
+    });
+    protected readonly hasActiveFilters = computed(() =>
+        this.recipeListFacade.hasActiveFilters(this.searchModel().onlyMine, this.buildRecipeFilters()),
+    );
     protected readonly isEmptyState = computed(
         () => !this.hasVisibleRecipes() && !this.recipeListFacade.hasSearch(this.searchModel().search) && !this.hasActiveFilters(),
     );
@@ -114,6 +140,11 @@ export class RecipeListComponent {
     protected readonly searchModel = signal<RecipeSearchFormValues>({
         search: null,
         onlyMine: false,
+        category: null,
+        maxTotalTime: null,
+        caloriesFrom: null,
+        caloriesTo: null,
+        hasImage: null,
     });
     protected readonly searchForm = form(this.searchModel);
     protected readonly isDeleting = this.recipeListFacade.isDeleting;
@@ -126,13 +157,15 @@ export class RecipeListComponent {
             }
         });
 
-        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine).subscribe();
+        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
 
         toObservable(computed(() => this.searchModel().search))
             .pipe(
                 skip(1),
                 debounceTime(this.searchDebounceMs),
-                switchMap(value => this.recipeListFacade.loadRecipes(1, this.pageSize, value, this.searchModel().onlyMine)),
+                switchMap(() =>
+                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
+                ),
                 takeUntilDestroyed(this.destroyRef),
             )
             .subscribe();
@@ -142,7 +175,7 @@ export class RecipeListComponent {
                 skip(1),
                 distinctUntilChanged(),
                 switchMap(() =>
-                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine),
+                    this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine),
                 ),
                 takeUntilDestroyed(this.destroyRef),
             )
@@ -154,7 +187,7 @@ export class RecipeListComponent {
     }
 
     protected retryLoad(): void {
-        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine).subscribe();
+        this.recipeListFacade.loadInitialOverview(1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine).subscribe();
     }
 
     protected async onAddRecipeClickAsync(): Promise<void> {
@@ -198,7 +231,7 @@ export class RecipeListComponent {
         this.scrollToTop();
         this.currentPageIndex.set(pageIndex);
         this.recipeListFacade
-            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine)
+            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
             .subscribe();
     }
 
@@ -208,22 +241,51 @@ export class RecipeListComponent {
 
     protected openFilters(): void {
         const currentOnlyMine = this.searchModel().onlyMine;
+        const currentFilters = this.buildRecipeFilters();
         this.fdDialogService
-            .open<RecipeListFiltersDialogComponent, { onlyMine: boolean }, RecipeListFiltersDialogResult | null>(
+            .open<
                 RecipeListFiltersDialogComponent,
                 {
-                    preset: 'form',
-                    data: { onlyMine: currentOnlyMine },
+                    onlyMine: boolean;
+                    category: string | null;
+                    maxTotalTime: number | null;
+                    caloriesFrom: number | null;
+                    caloriesTo: number | null;
+                    hasImage: boolean | null;
                 },
-            )
+                RecipeListFiltersDialogResult | null
+            >(RecipeListFiltersDialogComponent, {
+                preset: 'form',
+                data: {
+                    onlyMine: currentOnlyMine,
+                    category: currentFilters.category ?? null,
+                    maxTotalTime: currentFilters.maxTotalTime ?? null,
+                    caloriesFrom: currentFilters.caloriesFrom ?? null,
+                    caloriesTo: currentFilters.caloriesTo ?? null,
+                    hasImage: currentFilters.hasImage ?? null,
+                },
+            })
             .afterClosed()
-            .subscribe(result => {
-                if (result === null || result === undefined || result.onlyMine === currentOnlyMine) {
-                    return;
-                }
+            .pipe(
+                switchMap(result => {
+                    if (result === null || result === undefined || this.hasSameFilters(currentOnlyMine, currentFilters, result)) {
+                        return EMPTY;
+                    }
 
-                this.searchForm.onlyMine().value.set(result.onlyMine);
-            });
+                    this.searchModel.update(value => ({
+                        ...value,
+                        onlyMine: result.onlyMine,
+                        category: result.category,
+                        maxTotalTime: result.maxTotalTime,
+                        caloriesFrom: result.caloriesFrom,
+                        caloriesTo: result.caloriesTo,
+                        hasImage: result.hasImage,
+                    }));
+                    return this.recipeListFacade.loadRecipes(1, this.pageSize, this.buildRecipeFilters(), result.onlyMine);
+                }),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe();
     }
 
     protected startRecipeListTour(force = true): void {
@@ -282,12 +344,47 @@ export class RecipeListComponent {
 
     private reloadCurrentPage(): void {
         this.recipeListFacade
-            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.searchModel().search, this.searchModel().onlyMine)
+            .loadRecipes(this.currentPageIndex() + 1, this.pageSize, this.buildRecipeFilters(), this.searchModel().onlyMine)
             .subscribe();
+    }
+
+    private buildRecipeFilters(): RecipeFilters {
+        const model = this.searchModel();
+        return {
+            search: model.search,
+            category: model.category,
+            maxTotalTime: model.maxTotalTime,
+            caloriesFrom: model.caloriesFrom,
+            caloriesTo: model.caloriesTo,
+            hasImage: model.hasImage,
+        };
+    }
+
+    private hasSameFilters(currentOnlyMine: boolean, currentFilters: RecipeFilters, next: RecipeListFiltersDialogResult): boolean {
+        return currentOnlyMine === next.onlyMine && this.hasSameRecipeFilterValues(currentFilters, next);
+    }
+
+    private hasSameRecipeFilterValues(currentFilters: RecipeFilters, next: RecipeListFiltersDialogResult): boolean {
+        return (
+            (currentFilters.category ?? null) === next.category &&
+            (currentFilters.maxTotalTime ?? null) === next.maxTotalTime &&
+            (currentFilters.caloriesFrom ?? null) === next.caloriesFrom &&
+            (currentFilters.caloriesTo ?? null) === next.caloriesTo &&
+            (currentFilters.hasImage ?? null) === next.hasImage
+        );
+    }
+
+    private hasFilterText(value: string | null | undefined): boolean {
+        return value !== null && value !== undefined && value.trim().length > 0;
     }
 }
 
 type RecipeSearchFormValues = {
     search: string | null;
     onlyMine: boolean;
+    category: string | null;
+    maxTotalTime: number | null;
+    caloriesFrom: number | null;
+    caloriesTo: number | null;
+    hasImage: boolean | null;
 };

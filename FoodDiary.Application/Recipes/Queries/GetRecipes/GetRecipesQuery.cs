@@ -10,4 +10,9 @@ public record GetRecipesQuery(
     int Page,
     int Limit,
     string? Search,
-    bool IncludePublic) : IQuery<Result<PagedResponse<RecipeModel>>>, IUserRequest;
+    bool IncludePublic,
+    string? Category = null,
+    int? MaxTotalTime = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null) : IQuery<Result<PagedResponse<RecipeModel>>>, IUserRequest;

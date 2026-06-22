@@ -150,8 +150,7 @@ public class StatisticsFeatureTests {
             UserId userId,
             int page,
             int limit,
-            DateTime? dateFrom,
-            DateTime? dateTo,
+            MealQueryFilters filters,
             CancellationToken cancellationToken = default) =>
             Task.FromResult((Items: (IReadOnlyList<Meal>)[], TotalItems: 0));
 

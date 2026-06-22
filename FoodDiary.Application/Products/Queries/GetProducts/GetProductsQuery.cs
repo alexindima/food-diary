@@ -11,5 +11,8 @@ public record GetProductsQuery(
     int Limit,
     string? Search,
     bool IncludePublic,
-    IReadOnlyCollection<string>? ProductTypes = null)
+    IReadOnlyCollection<string>? ProductTypes = null,
+    double? CaloriesFrom = null,
+    double? CaloriesTo = null,
+    bool? HasImage = null)
     : IQuery<Result<PagedResponse<ProductModel>>>, IUserRequest;

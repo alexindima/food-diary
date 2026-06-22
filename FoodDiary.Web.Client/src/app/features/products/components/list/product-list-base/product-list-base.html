@@ -8,6 +8,16 @@
         @if (isMobileView()) {
             <div class="product-list__mobile-toolbar" data-tour-id="product-list-actions">
                 <fd-ui-button
+                    class="product-list__icon-button product-list__icon-button--primary"
+                    appearance="toolbar"
+                    variant="primary"
+                    fill="solid"
+                    icon="add"
+                    [fdUiHint]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
+                    [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
+                    (click)="onAddProductClick()"
+                />
+                <fd-ui-button
                     class="product-list__icon-button product-list__filter-button"
                     appearance="toolbar"
                     variant="secondary"
@@ -29,16 +39,6 @@
                     (click)="toggleMobileSearch()"
                 />
                 <fd-ui-button
-                    class="product-list__icon-button product-list__icon-button--primary"
-                    appearance="toolbar"
-                    variant="primary"
-                    fill="solid"
-                    icon="add"
-                    [fdUiHint]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
-                    [ariaLabel]="'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate"
-                    (click)="onAddProductClick()"
-                />
-                <fd-ui-button
                     class="product-list__icon-button"
                     data-tour-id="product-list-tour-help"
                     appearance="toolbar"
@@ -53,17 +53,6 @@
         } @else {
             <div class="product-list__header-actions" data-tour-id="product-list-actions">
                 <fd-ui-button
-                    class="product-list__icon-button product-list__filter-button"
-                    appearance="toolbar"
-                    variant="secondary"
-                    fill="outline"
-                    icon="filter_alt"
-                    [fdUiHint]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
-                    [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
-                    [class.product-list__filter-button--active]="hasActiveFilters()"
-                    (click)="openFilters()"
-                />
-                <fd-ui-button
                     class="product-list__add-button"
                     appearance="brand-action"
                     variant="primary"
@@ -74,6 +63,17 @@
                 >
                     {{ 'PRODUCT_LIST.ADD_PRODUCT_BUTTON' | translate }}
                 </fd-ui-button>
+                <fd-ui-button
+                    class="product-list__icon-button product-list__filter-button"
+                    appearance="toolbar"
+                    variant="secondary"
+                    fill="outline"
+                    icon="filter_alt"
+                    [fdUiHint]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
+                    [ariaLabel]="'PRODUCT_LIST.FILTERS_BUTTON' | translate"
+                    [class.product-list__filter-button--active]="hasActiveFilters()"
+                    (click)="openFilters()"
+                />
                 <fd-ui-button
                     class="product-list__icon-button"
                     data-tour-id="product-list-tour-help"
