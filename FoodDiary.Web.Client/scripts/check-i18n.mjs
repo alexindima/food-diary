@@ -49,6 +49,7 @@ for (const bundle of localeBundles) {
 checkRuntimeTranslationKeys();
 checkBundleScopedTranslationKeys();
 checkUnsafeMealTypeTranslationKeys();
+checkLegacyLocaleFiles();
 
 if (issues.length > 0) {
     console.error('i18n check failed:');
@@ -235,6 +236,23 @@ function checkUnsafeMealTypeTranslationKeys() {
             issues.push(
                 `unsafe meal type translation key: ${match} referenced in ${path.relative(rootDir, filePath)}; normalize mealType before building MEAL_TYPES keys`,
             );
+        }
+    }
+}
+
+function checkLegacyLocaleFiles() {
+    for (const locale of Object.keys(locales)) {
+        const expected = `${JSON.stringify(mergeBundles(locales[locale]), null, 4)}\n`;
+        const filePath = path.join(i18nDir, `${locale}.json`);
+
+        if (!fs.existsSync(filePath)) {
+            issues.push(`missing legacy i18n file: ${path.relative(rootDir, filePath)}`);
+            continue;
+        }
+
+        const actual = fs.readFileSync(filePath, 'utf8');
+        if (actual !== expected) {
+            issues.push(`stale legacy i18n file: ${path.relative(rootDir, filePath)}; run node scripts/generate-legacy-i18n.mjs`);
         }
     }
 }
