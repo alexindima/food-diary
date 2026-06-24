@@ -1,6 +1,7 @@
 @if (favorites().length > 0) {
     <fd-favorites-section
         class="recipe-list__favorites"
+        data-tour-id="recipe-list-favorites"
         [title]="'RECIPE_LIST.FAVORITES_TITLE' | translate"
         [count]="favoriteTotalCount()"
         [isOpen]="isFavoritesOpen()"

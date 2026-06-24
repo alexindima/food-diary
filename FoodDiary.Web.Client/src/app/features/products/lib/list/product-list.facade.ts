@@ -1,9 +1,7 @@
 import { computed, DestroyRef, effect, inject, Service, signal } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { form } from '@angular/forms/signals';
-import { TranslateService } from '@ngx-translate/core';
 import { FdUiDialogService } from 'fd-ui-kit/dialog/fd-ui-dialog.service';
-import { FdUiToastService } from 'fd-ui-kit/toast/fd-ui-toast.service';
 import {
     catchError,
     debounceTime,
@@ -39,8 +37,17 @@ import type { ProductCardViewModel } from '../../components/list/product-list.ty
 import { ProductListFiltersDialogComponent } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog';
 import type { ProductListFiltersDialogResult } from '../../components/list/product-list-filters-dialog/product-list-filters-dialog.types';
 import type { OpenFoodFactsProduct } from '../../models/open-food-facts.data';
-import { type FavoriteProduct, type Product, ProductFilters, ProductType } from '../../models/product.data';
+import {
+    type FavoriteProduct,
+    MeasurementUnit,
+    type Product,
+    ProductFilters,
+    ProductType,
+    ProductVisibility,
+} from '../../models/product.data';
 import { resolveProductImageUrl } from '../product-image.util';
+
+const FAVORITE_GRAM_BASE_AMOUNT = 100;
 
 @Service()
 export class ProductListFacade {
@@ -49,8 +56,6 @@ export class ProductListFacade {
     public readonly fdDialogService = inject(FdUiDialogService);
     private readonly quickConsumptionService = inject(QuickMealService);
     private readonly favoriteProductService = inject(FavoriteProductService);
-    private readonly toastService = inject(FdUiToastService);
-    private readonly translateService = inject(TranslateService);
     private readonly viewportService = inject(ViewportService);
     private readonly destroyRef = inject(DestroyRef);
     private readonly openFoodFactsService = inject(OpenFoodFactsService);
@@ -69,7 +74,6 @@ export class ProductListFacade {
     public readonly favoriteTotalCount = signal(0);
     public readonly isFavoritesOpen = signal(false);
     public readonly favoriteLoadingIds = signal<ReadonlySet<string>>(new Set<string>());
-    public readonly favoritePortionSavingIds = signal<ReadonlySet<string>>(new Set<string>());
     public readonly isFavoritesLoadingMore = signal(false);
     public readonly errorKey = signal<string | null>(null);
     public readonly searchValue = computed(() => this.searchModel().search);
@@ -396,14 +400,7 @@ export class ProductListFacade {
     }
 
     public addFavoriteProductToMeal(favorite: FavoriteProduct): void {
-        this.productService
-            .getById(favorite.productId)
-            .pipe(takeUntilDestroyed(this.destroyRef))
-            .subscribe(product => {
-                if (product !== null) {
-                    this.quickConsumptionService.addProduct(product, favorite.preferredPortionAmount);
-                }
-            });
+        this.quickConsumptionService.addProduct(this.toFavoriteProductSnapshot(favorite), favorite.defaultPortionAmount);
     }
 
     public removeFavorite(favorite: FavoriteProduct): void {
@@ -425,30 +422,6 @@ export class ProductListFacade {
                     this.favorites.update(favorites => favorites.filter(item => item.id !== favorite.id));
                     this.favoriteTotalCount.update(count => Math.max(0, count - 1));
                     this.syncProductFavoriteState(favorite.productId, false, null);
-                },
-            });
-    }
-
-    public updateFavoritePreferredPortion(favorite: FavoriteProduct, preferredPortionAmount: number): void {
-        if (this.favoritePortionSavingIds().has(favorite.id)) {
-            return;
-        }
-
-        this.setFavoritePortionSaving(favorite.id, true);
-        this.favoriteProductService
-            .update(favorite.id, favorite.name ?? null, preferredPortionAmount)
-            .pipe(
-                take(1),
-                finalize(() => {
-                    this.setFavoritePortionSaving(favorite.id, false);
-                }),
-            )
-            .subscribe({
-                next: updatedFavorite => {
-                    this.favorites.update(favorites => favorites.map(item => (item.id === updatedFavorite.id ? updatedFavorite : item)));
-                },
-                error: () => {
-                    this.toastService.error(this.translateService.instant('ERRORS.FAVORITE_UPDATE_FAILED'));
                 },
             });
     }
@@ -553,6 +526,59 @@ export class ProductListFacade {
         );
     }
 
+    private toFavoriteProductSnapshot(favorite: FavoriteProduct): Product {
+        return {
+            id: favorite.productId,
+            name: this.resolveFavoriteName(favorite),
+            barcode: favorite.barcode ?? null,
+            brand: favorite.brand ?? null,
+            productType: ProductType.Unknown,
+            category: null,
+            description: null,
+            comment: favorite.comment ?? null,
+            imageUrl: favorite.imageUrl ?? null,
+            imageAssetId: null,
+            baseUnit: this.normalizeMeasurementUnit(favorite.baseUnit),
+            baseAmount: this.resolveFavoriteBaseAmount(favorite.baseUnit),
+            defaultPortionAmount: favorite.defaultPortionAmount,
+            caloriesPerBase: favorite.caloriesPerBase,
+            proteinsPerBase: favorite.proteinsPerBase,
+            fatsPerBase: favorite.fatsPerBase,
+            carbsPerBase: favorite.carbsPerBase,
+            fiberPerBase: favorite.fiberPerBase,
+            alcoholPerBase: favorite.alcoholPerBase,
+            usageCount: 0,
+            visibility: ProductVisibility.Private,
+            createdAt: new Date(favorite.createdAtUtc),
+            isOwnedByCurrentUser: favorite.isOwnedByCurrentUser,
+            qualityScore: favorite.qualityScore,
+            qualityGrade: favorite.qualityGrade,
+            isFavorite: true,
+            favoriteProductId: favorite.id,
+        };
+    }
+
+    private resolveFavoriteName(favorite: FavoriteProduct): string {
+        const name = favorite.name?.trim();
+        return name !== undefined && name.length > 0 ? name : favorite.productName;
+    }
+
+    private normalizeMeasurementUnit(value: string): MeasurementUnit {
+        if (value === 'ML') {
+            return MeasurementUnit.ML;
+        }
+
+        if (value === 'PCS') {
+            return MeasurementUnit.PCS;
+        }
+
+        return MeasurementUnit.G;
+    }
+
+    private resolveFavoriteBaseAmount(baseUnit: string): number {
+        return this.normalizeMeasurementUnit(baseUnit) === MeasurementUnit.PCS ? 1 : FAVORITE_GRAM_BASE_AMOUNT;
+    }
+
     private removeProductFavorite(product: Product): void {
         const favoriteId = product.favoriteProductId;
         const request$ =
@@ -585,19 +611,6 @@ export class ProductListFacade {
                 next.add(productId);
             } else {
                 next.delete(productId);
-            }
-
-            return next;
-        });
-    }
-
-    private setFavoritePortionSaving(favoriteId: string, isSaving: boolean): void {
-        this.favoritePortionSavingIds.update(current => {
-            const next = new Set(current);
-            if (isSaving) {
-                next.add(favoriteId);
-            } else {
-                next.delete(favoriteId);
             }
 
             return next;

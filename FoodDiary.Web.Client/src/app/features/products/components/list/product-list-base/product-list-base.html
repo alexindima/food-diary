@@ -150,12 +150,10 @@
                     [isOpen]="isFavoritesOpen()"
                     [isLoadingMore]="isFavoritesLoadingMore()"
                     [favoriteLoadingIds]="favoriteLoadingIds()"
-                    [portionSavingIds]="favoritePortionSavingIds()"
                     (favoritesToggle)="toggleFavorites()"
                     (loadMore)="loadFavorites()"
                     (openProduct)="openFavoriteProduct($event)"
                     (addToMeal)="addFavoriteProductToMeal($event)"
-                    (preferredPortionSave)="updateFavoritePreferredPortion($event)"
                     (favoriteRemove)="removeFavorite($event)"
                 />
             }

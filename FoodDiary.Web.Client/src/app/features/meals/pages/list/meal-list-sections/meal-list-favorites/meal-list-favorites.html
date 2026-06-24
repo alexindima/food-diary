@@ -1,6 +1,7 @@
 @if (favoriteViews().length > 0) {
     <fd-favorites-section
         class="consumption-list__favorites"
+        data-tour-id="meal-list-favorites"
         [title]="'CONSUMPTION_LIST.FAVORITES_TITLE' | translate"
         [count]="count()"
         [isOpen]="isOpen()"

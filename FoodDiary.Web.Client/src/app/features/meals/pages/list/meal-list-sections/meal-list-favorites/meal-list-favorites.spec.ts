@@ -18,6 +18,7 @@ describe('MealListFavoritesComponent', () => {
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.directive(FavoritesSectionComponent))).toBeNull();
+        expect((fixture.nativeElement as HTMLElement).querySelector('[data-tour-id="meal-list-favorites"]')).toBeNull();
     });
 
     it('should pass section inputs and emit section actions', async () => {
@@ -37,6 +38,7 @@ describe('MealListFavoritesComponent', () => {
         section.toggleRequested.emit();
         section.loadMore.emit();
 
+        expect((fixture.nativeElement as HTMLElement).querySelector('[data-tour-id="meal-list-favorites"]')).not.toBeNull();
         expect(section.count()).toBe(FAVORITE_COUNT);
         expect(section.isOpen()).toBe(true);
         expect(section.showLoadMore()).toBe(true);

@@ -33,7 +33,7 @@ const PRODUCT_FATS = 4;
 const PRODUCT_CARBS = 8;
 const QUALITY_SCORE_GREEN = 80;
 const DEFAULT_PORTION_AMOUNT = 100;
-const UPDATED_PORTION_AMOUNT = 150;
+const FAVORITE_DEFAULT_PORTION_AMOUNT = 180;
 
 let facade: ProductListFacade;
 let productService: {
@@ -105,7 +105,6 @@ beforeEach(() => {
     productService.deleteById.mockReturnValue(of(void 0));
     favoriteProductService.getAll.mockReturnValue(of([createFavoriteProduct()]));
     favoriteProductService.add.mockReturnValue(of(createFavoriteProduct()));
-    favoriteProductService.update.mockReturnValue(of(createFavoriteProduct({ preferredPortionAmount: UPDATED_PORTION_AMOUNT })));
     favoriteProductService.remove.mockReturnValue(of(null));
     openFoodFactsService.search.mockReturnValue(of([createOpenFoodFactsProduct()]));
     dialogService.open.mockReturnValue({ afterClosed: () => of(null) });
@@ -244,29 +243,24 @@ describe('ProductListFacade favorites', () => {
         expect(facade.favoriteLoadingIds().size).toBe(0);
     });
 
-    it('updates favorite preferred portion amount', () => {
-        const favorite = createFavoriteProduct();
-        facade.favorites.set([favorite]);
+    it('adds favorite product to quick meal draft from favorite snapshot', () => {
+        const favorite = createFavoriteProduct({ defaultPortionAmount: FAVORITE_DEFAULT_PORTION_AMOUNT, preferredPortionAmount: 250 });
 
-        facade.updateFavoritePreferredPortion(favorite, UPDATED_PORTION_AMOUNT);
+        facade.addFavoriteProductToMeal(favorite);
 
-        expect(favoriteProductService.update).toHaveBeenCalledWith('favorite-1', 'Test product', UPDATED_PORTION_AMOUNT);
-        expect(facade.favorites()[0]).toEqual(expect.objectContaining({ preferredPortionAmount: UPDATED_PORTION_AMOUNT }));
-        expect(facade.favoritePortionSavingIds().size).toBe(0);
-    });
-
-    it('shows toast when favorite preferred portion update fails', () => {
-        const favorite = createFavoriteProduct();
-        facade.favorites.set([favorite]);
-        favoriteProductService.update.mockReturnValueOnce(throwError(() => new Error('Update failed')));
-
-        facade.updateFavoritePreferredPortion(favorite, UPDATED_PORTION_AMOUNT);
-
-        expect(favoriteProductService.update).toHaveBeenCalledWith('favorite-1', 'Test product', UPDATED_PORTION_AMOUNT);
-        expect(translateService.instant).toHaveBeenCalledWith('ERRORS.FAVORITE_UPDATE_FAILED');
-        expect(toastService.error).toHaveBeenCalledWith('ERRORS.FAVORITE_UPDATE_FAILED');
-        expect(facade.favorites()[0]).toEqual(favorite);
-        expect(facade.favoritePortionSavingIds().size).toBe(0);
+        expect(productService.getById).not.toHaveBeenCalled();
+        expect(quickMealService.addProduct).toHaveBeenCalledWith(
+            expect.objectContaining({
+                id: favorite.productId,
+                name: favorite.name,
+                brand: favorite.brand,
+                barcode: favorite.barcode,
+                caloriesPerBase: favorite.caloriesPerBase,
+                isFavorite: true,
+                favoriteProductId: favorite.id,
+            }),
+            FAVORITE_DEFAULT_PORTION_AMOUNT,
+        );
     });
 });
 

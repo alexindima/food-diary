@@ -10,6 +10,12 @@ import type { FavoriteRecipe } from '../../../../models/recipe.data';
 import { RecipeListFavoritesComponent } from './recipe-list-favorites';
 
 describe('RecipeListFavoritesComponent', () => {
+    it('hides tour target when favorite list is empty', () => {
+        const { fixture } = setupComponent({ favorites: [] });
+
+        expect((fixture.nativeElement as HTMLElement).querySelector('[data-tour-id="recipe-list-favorites"]')).toBeNull();
+    });
+
     it('derives has-more state from total count and visible favorites', () => {
         const { component } = setupComponent({ favoriteTotalCount: 2 });
 
@@ -27,6 +33,7 @@ describe('RecipeListFavoritesComponent', () => {
         component['favoriteRemove'].subscribe(item => removed.push(item));
 
         const recipeCard = fixture.debugElement.query(By.directive(RecipeCardComponent)).componentInstance as RecipeCardComponent;
+        expect((fixture.nativeElement as HTMLElement).querySelector('[data-tour-id="recipe-list-favorites"]')).not.toBeNull();
         expect(recipeCard['recipe']()).toMatchObject({
             id: favorite.recipeId,
             name: favorite.name,
