@@ -33,6 +33,40 @@ public interface IUserRepository {
     Task<User> AddAsync(User user, CancellationToken cancellationToken = default);
     Task UpdateAsync(User user, CancellationToken cancellationToken = default);
 
+    async Task EnsureRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
+
+        string normalizedRoleName = roleName.Trim();
+        if (user.HasRole(normalizedRoleName)) {
+            return;
+        }
+
+        IReadOnlyList<string> roleNames = [
+            .. user.GetRoleNames().Append(normalizedRoleName).Distinct(StringComparer.Ordinal),
+        ];
+        IReadOnlyList<Role> roles = await GetRolesByNamesAsync(roleNames, cancellationToken).ConfigureAwait(false);
+        user.ReplaceRoles(roles);
+        await UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+    }
+
+    async Task RemoveRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
+
+        string normalizedRoleName = roleName.Trim();
+        if (!user.HasRole(normalizedRoleName)) {
+            return;
+        }
+
+        IReadOnlyList<string> roleNames = [
+            .. user.GetRoleNames().Where(name => !string.Equals(name, normalizedRoleName, StringComparison.Ordinal)),
+        ];
+        IReadOnlyList<Role> roles = await GetRolesByNamesAsync(roleNames, cancellationToken).ConfigureAwait(false);
+        user.ReplaceRoles(roles);
+        await UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+    }
+
     Task UpdateAsync(
         User user,
         IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,

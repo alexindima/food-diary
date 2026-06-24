@@ -104,4 +104,43 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         Assert.Equal(2, RecentUsers.Count);
         Assert.DoesNotContain(RecentUsers, user => user.Id == deletedUser.Id);
     }
+
+    [RequiresDockerFact]
+    public async Task EnsureRoleAsync_IsIdempotentForExistingUserRole() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        var user = User.Create($"billing-role-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        var repository = new UserRepository(context);
+
+        await repository.EnsureRoleAsync(user, RoleNames.Premium);
+        await repository.EnsureRoleAsync(user, RoleNames.Premium);
+
+        int roleCount = await context.UserRoles.CountAsync(userRole =>
+            userRole.UserId == user.Id &&
+            userRole.RoleId == premiumRole.Id);
+        Assert.Equal(1, roleCount);
+    }
+
+    [RequiresDockerFact]
+    public async Task RemoveRoleAsync_IsIdempotentForMissingUserRole() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
+        var user = User.Create($"billing-role-remove-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        context.UserRoles.Add(new UserRole(user.Id, premiumRole.Id));
+        await context.SaveChangesAsync();
+
+        var repository = new UserRepository(context);
+
+        await repository.RemoveRoleAsync(user, RoleNames.Premium);
+        await repository.RemoveRoleAsync(user, RoleNames.Premium);
+
+        int roleCount = await context.UserRoles.CountAsync(userRole =>
+            userRole.UserId == user.Id &&
+            userRole.RoleId == premiumRole.Id);
+        Assert.Equal(0, roleCount);
+    }
 }

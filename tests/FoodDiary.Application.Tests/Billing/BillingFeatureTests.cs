@@ -1219,6 +1219,30 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task BillingAccessService_WhenGrantingPremium_AddsRoleAndMarksSubscriptionManaged() {
+        var user = User.Create("managed-premium-grant@example.com", "hash");
+        var subscription = BillingSubscription.CreatePending(
+            user.Id,
+            BillingProviderNames.Paddle,
+            "customer_managed_premium_grant",
+            "price_monthly",
+            "monthly");
+        var userRepository = new FakeUserRepository(user);
+        var subscriptionRepository = new InMemoryBillingSubscriptionRepository(subscription);
+        var service = new BillingAccessService(
+            userRepository,
+            subscriptionRepository,
+            new FixedDateTimeProvider(Now));
+
+        await service.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium: true, CancellationToken.None);
+
+        Assert.True(user.HasRole(RoleNames.Premium));
+        Assert.True(subscription.PremiumRoleManagedByBilling);
+        Assert.Equal(1, userRepository.UpdateCount);
+        Assert.Equal(1, subscriptionRepository.UpdateCount);
+    }
+
+    [Fact]
     public void BillingAccessService_WithBlankStatus_DoesNotGrantPremiumAccess() {
         var service = new BillingAccessService(
             new FakeUserRepository(),

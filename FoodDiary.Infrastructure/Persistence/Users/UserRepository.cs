@@ -129,6 +129,30 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task EnsureRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
+
+        FormattableString sql = $"""
+            INSERT INTO "UserRoles" ("UserId", "RoleId")
+            SELECT {user.Id.Value}, "Id"
+            FROM "Roles"
+            WHERE "Name" = {roleName.Trim()}
+            ON CONFLICT DO NOTHING
+            """;
+        await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task RemoveRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
+        ArgumentNullException.ThrowIfNull(user);
+        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
+
+        string normalizedRoleName = roleName.Trim();
+        await context.UserRoles
+            .Where(userRole => userRole.UserId == user.Id && userRole.Role.Name == normalizedRoleName)
+            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Add(user);
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

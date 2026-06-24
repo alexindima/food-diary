@@ -31,21 +31,20 @@ public sealed class BillingAccessService(
             return;
         }
 
+        DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            currentRoles.Add(RoleNames.Premium);
-            subscription.MarkPremiumRoleManagedByBilling(value: true, dateTimeProvider.GetUtcNow().UtcDateTime);
+            await userRepository.EnsureRoleAsync(user, RoleNames.Premium, cancellationToken).ConfigureAwait(false);
+            subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
+            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         } else {
             if (!subscription.PremiumRoleManagedByBilling) {
                 return;
             }
 
-            currentRoles.RemoveAll(role => string.Equals(role, RoleNames.Premium, StringComparison.Ordinal));
-            subscription.MarkPremiumRoleManagedByBilling(value: false, dateTimeProvider.GetUtcNow().UtcDateTime);
+            await userRepository.RemoveRoleAsync(user, RoleNames.Premium, cancellationToken).ConfigureAwait(false);
+            subscription.MarkPremiumRoleManagedByBilling(value: false, nowUtc);
+            await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }
-
-        IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(currentRoles, cancellationToken).ConfigureAwait(false);
-        user.ReplaceRoles(roleEntities);
-        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
     }
 
     public bool ShouldHavePremiumAccess(string status, DateTime? currentPeriodEndUtc) {
