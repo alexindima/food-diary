@@ -9,7 +9,6 @@ namespace FoodDiary.Infrastructure.Persistence.ContentReports;
 internal sealed class ContentReportRepository(FoodDiaryDbContext context) : IContentReportRepository {
     public async Task<ContentReport> AddAsync(ContentReport report, CancellationToken cancellationToken = default) {
         await context.ContentReports.AddAsync(report, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return report;
     }
 
@@ -19,9 +18,9 @@ internal sealed class ContentReportRepository(FoodDiaryDbContext context) : ICon
         return await query.FirstOrDefaultAsync(r => r.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(ContentReport report, CancellationToken cancellationToken = default) {
         context.ContentReports.Update(report);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> HasUserReportedAsync(

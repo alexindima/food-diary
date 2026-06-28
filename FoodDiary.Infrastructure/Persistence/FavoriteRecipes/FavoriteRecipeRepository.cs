@@ -6,15 +6,14 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 
 public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRecipeRepository {
-    public async Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
+    public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
         context.FavoriteRecipes.Add(favorite);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return favorite;
+        return Task.FromResult(favorite);
     }
 
-    public async Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
         context.FavoriteRecipes.Remove(favorite);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<FavoriteRecipe?> GetByIdAsync(

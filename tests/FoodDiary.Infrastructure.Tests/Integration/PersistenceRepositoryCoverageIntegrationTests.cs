@@ -115,11 +115,13 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var targetId = Guid.NewGuid();
         ContentReport report = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Recipe, targetId, "Spam"));
         ContentReport otherReport = await repository.AddAsync(ContentReport.Create(user.Id, ReportTargetType.Comment, Guid.NewGuid(), "Abuse"));
+        await context.SaveChangesAsync();
 
         ContentReport? tracked = await repository.GetByIdAsync(report.Id, asTracking: true);
         Assert.NotNull(tracked);
         tracked.MarkDismissed("Not actionable");
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         bool hasReported = await repository.HasUserReportedAsync(user.Id, ReportTargetType.Recipe, targetId);
         (IReadOnlyList<ContentReport> pendingItems, int pendingTotal) =
@@ -158,6 +160,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             aisle: "A1",
             note: "Organic");
         await repository.AddAsync(list);
+        await context.SaveChangesAsync();
 
         ShoppingList? byId = await repository.GetByIdAsync(list.Id, user.Id, includeItems: true);
         ShoppingList? current = await repository.GetCurrentAsync(user.Id, includeItems: true, asTracking: true);
@@ -176,9 +179,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             checkedOnUtc: DateTime.UtcNow,
             sortOrder: 2);
         await repository.UpdateAsync(current);
+        await context.SaveChangesAsync();
 
         await repository.DeleteAsync(current);
+        await context.SaveChangesAsync();
         await repository.DeleteAsync(current);
+        await context.SaveChangesAsync();
 
         Assert.Equal(item.Id, Assert.Single(byId!.Items).Id);
         Assert.Single(allLists);
@@ -215,8 +221,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var hydrationRepository = new HydrationEntryRepository(context);
         HydrationEntry hydration = await hydrationRepository.AddAsync(HydrationEntry.Create(user.Id, today.AddHours(8), 250));
         await hydrationRepository.AddAsync(HydrationEntry.Create(user.Id, today.AddHours(10), 500));
+        await context.SaveChangesAsync();
         hydration.Update(300, today.AddHours(9));
         await hydrationRepository.UpdateAsync(hydration);
+        await context.SaveChangesAsync();
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id));
         Assert.NotNull(await hydrationRepository.GetByIdAsync(hydration.Id, asTracking: true));
         Assert.Equal(2, (await hydrationRepository.GetByDateAsync(user.Id, today)).Count);
@@ -227,8 +235,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         var exerciseRepository = new ExerciseEntryRepository(context);
         ExerciseEntry exercise = await exerciseRepository.AddAsync(ExerciseEntry.Create(user.Id, today, ExerciseType.Cardio, 45, 300, "Run", "Easy"));
+        await context.SaveChangesAsync();
         exercise.Update(caloriesBurned: 320, clearNotes: true);
         await exerciseRepository.UpdateAsync(exercise);
+        await context.SaveChangesAsync();
         Assert.NotNull(await exerciseRepository.GetByIdAsync(exercise.Id, user.Id, asTracking: true));
         Assert.Single(await exerciseRepository.GetByDateRangeAsync(user.Id, today.AddDays(-1), today.AddDays(1)));
         Assert.Equal(320, await exerciseRepository.GetTotalCaloriesBurnedAsync(user.Id, today));
@@ -237,6 +247,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await new WeightEntryRepository(context).DeleteAsync(weight);
         await new WaistEntryRepository(context).DeleteAsync(waist);
         await exerciseRepository.DeleteAsync(exercise);
+        await context.SaveChangesAsync();
     }
 
 #pragma warning disable MA0004
@@ -246,8 +257,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         DateTime today) {
         var weightRepository = new WeightEntryRepository(context);
         WeightEntry weight = await weightRepository.AddAsync(WeightEntry.Create(userId, today, 80));
+        await context.SaveChangesAsync();
         weight.Update(79.5, today.AddDays(-1));
         await weightRepository.UpdateAsync(weight);
+        await context.SaveChangesAsync();
         Assert.NotNull(await weightRepository.GetByIdAsync(weight.Id, userId));
         Assert.NotNull(await weightRepository.GetByIdAsync(weight.Id, userId, asTracking: true));
         Assert.NotNull(await weightRepository.GetByDateAsync(userId, today.AddDays(-1)));
@@ -257,8 +270,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         var waistRepository = new WaistEntryRepository(context);
         WaistEntry waist = await waistRepository.AddAsync(WaistEntry.Create(userId, today, 90));
+        await context.SaveChangesAsync();
         waist.Update(89.5, today.AddDays(-1));
         await waistRepository.UpdateAsync(waist);
+        await context.SaveChangesAsync();
         Assert.NotNull(await waistRepository.GetByIdAsync(waist.Id, userId));
         Assert.NotNull(await waistRepository.GetByIdAsync(waist.Id, userId, asTracking: true));
         Assert.NotNull(await waistRepository.GetByDateAsync(userId, today.AddDays(-1)));
@@ -977,17 +992,20 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new FavoriteProductRepository(context);
         Assert.Empty(await repository.GetByProductIdsAsync(userId, []));
         FavoriteProduct favorite = await repository.AddAsync(FavoriteProduct.Create(userId, productId, "Rice", 120));
+        await context.SaveChangesAsync();
         FavoriteProduct? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
         tracked.UpdateName("Brown rice");
         tracked.UpdatePreferredPortionAmount(150);
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByProductIdAsync(productId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByProductIdsAsync(userId, [productId])).ContainsKey(productId));
 
         await repository.DeleteAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByProductIdAsync(productId, userId));
     }
@@ -999,15 +1017,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new FavoriteRecipeRepository(context);
         Assert.Empty(await repository.GetByRecipeIdsAsync(userId, []));
         FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(userId, recipeId, "Dinner recipe"));
+        await context.SaveChangesAsync();
         FavoriteRecipe? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
         tracked.UpdateName("Weekend recipe");
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByRecipeIdAsync(recipeId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByRecipeIdsAsync(userId, [recipeId])).ContainsKey(recipeId));
 
         await repository.DeleteAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByRecipeIdAsync(recipeId, userId));
     }
@@ -1019,15 +1040,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new FavoriteMealRepository(context);
         Assert.Empty(await repository.GetByMealIdsAsync(userId, []));
         FavoriteMeal favorite = await repository.AddAsync(FavoriteMeal.Create(userId, mealId, "Dinner meal"));
+        await context.SaveChangesAsync();
         FavoriteMeal? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
         tracked.UpdateName("Weekend dinner");
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByMealIdAsync(mealId, userId));
         Assert.Single(await repository.GetAllAsync(userId));
         Assert.True((await repository.GetByMealIdsAsync(userId, [mealId])).ContainsKey(mealId));
 
         await repository.DeleteAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.Null(await repository.GetByMealIdAsync(mealId, userId));
     }

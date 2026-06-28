@@ -6,10 +6,9 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
 
 public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
-    public async Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
+    public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Add(list);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return list;
+        return Task.FromResult(list);
     }
 
     public async Task<ShoppingList?> GetByIdAsync(
@@ -76,16 +75,15 @@ public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListR
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Update(list);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         ShoppingList? tracked = await context.ShoppingLists.FindAsync([list.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.ShoppingLists.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 }

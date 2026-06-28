@@ -129,6 +129,20 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
+        IReadOnlyList<Role> existingRoles = await GetRolesByNamesAsync(names, cancellationToken).ConfigureAwait(false);
+        var existingNames = existingRoles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
+        List<Role> roles = [.. existingRoles];
+
+        foreach (string roleName in names.Where(name => !existingNames.Contains(name))) {
+            var role = Role.Create(roleName);
+            roles.Add(role);
+            await context.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);
+        }
+
+        return roles;
+    }
+
     public async Task EnsureRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(roleName);

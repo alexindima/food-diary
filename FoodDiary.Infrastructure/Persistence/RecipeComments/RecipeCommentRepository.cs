@@ -8,7 +8,6 @@ namespace FoodDiary.Infrastructure.Persistence.RecipeComments;
 internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRecipeCommentRepository {
     public async Task<RecipeComment> AddAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         await context.RecipeComments.AddAsync(comment, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return comment;
     }
 
@@ -18,14 +17,14 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
         return await query.FirstOrDefaultAsync(c => c.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         context.RecipeComments.Update(comment);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(RecipeComment comment, CancellationToken cancellationToken = default) {
         context.RecipeComments.Remove(comment);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<(IReadOnlyList<RecipeComment> Items, int Total)> GetPagedByRecipeAsync(

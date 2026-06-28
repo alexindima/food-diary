@@ -37,6 +37,26 @@ public sealed class HostCompositionBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void PrimaryWebApiHost_DoesNotUseDomainTypesDirectly() {
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(
+            hostRoot,
+            ["using FoodDiary.Domain", "FoodDiary.Domain."]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PrimaryWebApiHost_UsesTimeProviderInsteadOfDateTimeUtcNow() {
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(hostRoot, ["DateTime.UtcNow"]);
+
+        Assert.Empty(violations);
+    }
+
     private static string ProjectFolderFromProjectName(string projectName) =>
         string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
             ? Path.Combine("Shared", "FoodDiary.Mediator")

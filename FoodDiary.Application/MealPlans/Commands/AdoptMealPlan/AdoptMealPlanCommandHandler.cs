@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
@@ -9,7 +10,9 @@ using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 
-public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
+public class AdoptMealPlanCommandHandler(
+    IMealPlanRepository mealPlanRepository,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<AdoptMealPlanCommand, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
         AdoptMealPlanCommand command,
@@ -31,6 +34,7 @@ public class AdoptMealPlanCommandHandler(IMealPlanRepository mealPlanRepository)
 
         MealPlan adoptedPlan = sourcePlan.Adopt(userIdResult.Value);
         await mealPlanRepository.AddAsync(adoptedPlan, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         // Re-fetch with includes for full model
         MealPlan? saved = await mealPlanRepository.GetByIdAsync(adoptedPlan.Id, includeDays: true, cancellationToken).ConfigureAwait(false);

@@ -6,19 +6,16 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.FavoriteProducts;
 
 public class FavoriteProductRepository(FoodDiaryDbContext context) : IFavoriteProductRepository {
-    public async Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
+    public Task<FavoriteProduct> AddAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
         context.FavoriteProducts.Add(favorite);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return favorite;
+        return Task.FromResult(favorite);
     }
 
-    public async Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-    }
+    public Task UpdateAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-    public async Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(FavoriteProduct favorite, CancellationToken cancellationToken = default) {
         context.FavoriteProducts.Remove(favorite);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<FavoriteProduct?> GetByIdAsync(

@@ -1,9 +1,7 @@
-using FoodDiary.Application.Abstractions.Authentication.Common;
-using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Web.Api.Options;
-using Microsoft.EntityFrameworkCore;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.Services;
@@ -12,58 +10,41 @@ public sealed class InitialAdminHostedService(
     IServiceProvider serviceProvider,
     IOptions<InitialAdminOptions> options,
     ILogger<InitialAdminHostedService> logger) : IHostedService {
-    private static readonly string[] BootstrapRoles = [
-        RoleNames.Owner,
-        RoleNames.Admin,
-        RoleNames.Premium,
-    ];
-
     public async Task StartAsync(CancellationToken cancellationToken) {
         InitialAdminOptions settings = options.Value;
-        if (string.IsNullOrWhiteSpace(settings.Password)) {
-            logger.LogInformation("Initial admin bootstrap skipped because InitialAdmin:Password is not configured.");
-            return;
-        }
 
         AsyncServiceScope scope = serviceProvider.CreateAsyncScope();
         await using (scope.ConfigureAwait(false)) {
-            FoodDiaryDbContext dbContext = scope.ServiceProvider.GetRequiredService<FoodDiaryDbContext>();
-            IPasswordHasher passwordHasher = scope.ServiceProvider.GetRequiredService<IPasswordHasher>();
-            string normalizedEmail = settings.Email.Trim();
+            ISender sender = scope.ServiceProvider.GetRequiredService<ISender>();
+            Result<BootstrapInitialAdminModel> result = await sender.Send(
+                new BootstrapInitialAdminCommand(settings.Email, settings.Password),
+                cancellationToken).ConfigureAwait(false);
 
-            if (await dbContext.Users.AnyAsync(user => user.Email == normalizedEmail, cancellationToken).ConfigureAwait(false)) {
-                logger.LogInformation("Initial admin bootstrap skipped because user {Email} already exists.", normalizedEmail);
+            if (result.IsFailure) {
+                logger.LogWarning(
+                    "Initial admin bootstrap failed for {Email}: {ErrorCode}",
+                    settings.Email.Trim(),
+                    result.Error.Code);
                 return;
             }
 
-            IReadOnlyList<Role> roles = await EnsureBootstrapRolesAsync(dbContext, cancellationToken).ConfigureAwait(false);
-            var admin = User.Create(normalizedEmail, passwordHasher.Hash(settings.Password));
-            admin.SetEmailConfirmed(isConfirmed: true);
-            admin.ReplaceRoles(roles);
-
-            await dbContext.Users.AddAsync(admin, cancellationToken).ConfigureAwait(false);
-            await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
-            logger.LogInformation("Initial admin user {Email} was created.", normalizedEmail);
+            LogBootstrapResult(result.Value);
         }
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
-    private static async Task<IReadOnlyList<Role>> EnsureBootstrapRolesAsync(
-        FoodDiaryDbContext dbContext,
-        CancellationToken cancellationToken) {
-        List<Role> roles = await dbContext.Roles
-            .Where(role => ((IEnumerable<string>)BootstrapRoles).Contains(role.Name))
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        var existingNames = roles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
-        foreach (string roleName in BootstrapRoles.Where(roleName => !existingNames.Contains(roleName))) {
-            var role = Role.Create(roleName);
-            roles.Add(role);
-            await dbContext.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);
+    private void LogBootstrapResult(BootstrapInitialAdminModel result) {
+        switch (result.Status) {
+            case BootstrapInitialAdminStatus.SkippedMissingPassword:
+                logger.LogInformation("Initial admin bootstrap skipped because InitialAdmin:Password is not configured.");
+                break;
+            case BootstrapInitialAdminStatus.SkippedExistingUser:
+                logger.LogInformation("Initial admin bootstrap skipped because user {Email} already exists.", result.Email);
+                break;
+            case BootstrapInitialAdminStatus.Created:
+                logger.LogInformation("Initial admin user {Email} was created.", result.Email);
+                break;
         }
-
-        return roles;
     }
 }

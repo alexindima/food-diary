@@ -160,17 +160,21 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         var likeRepository = new RecipeLikeRepository(context);
         RecipeLike like = await likeRepository.AddAsync(RecipeLike.Create(user.Id, recipe.Id));
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await likeRepository.GetByUserAndRecipeAsync(user.Id, recipe.Id));
         Assert.Equal(1, await likeRepository.CountByRecipeAsync(recipe.Id));
 
         await likeRepository.DeleteAsync(like);
+        await context.SaveChangesAsync();
         Assert.Equal(0, await likeRepository.CountByRecipeAsync(recipe.Id));
 
         var commentRepository = new RecipeCommentRepository(context);
         RecipeComment comment = await commentRepository.AddAsync(RecipeComment.Create(user.Id, recipe.Id, "First comment"));
+        await context.SaveChangesAsync();
         comment.UpdateText("Updated comment");
         await commentRepository.UpdateAsync(comment);
+        await context.SaveChangesAsync();
 
         RecipeComment? savedComment = await commentRepository.GetByIdAsync(comment.Id, asTracking: false);
         (IReadOnlyList<RecipeComment> comments, int totalComments) = await commentRepository.GetPagedByRecipeAsync(recipe.Id, page: 1, limit: 10);
@@ -181,6 +185,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.Equal(1, totalComments);
 
         await commentRepository.DeleteAsync(comment);
+        await context.SaveChangesAsync();
         Assert.Null(await commentRepository.GetByIdAsync(comment.Id));
     }
 
@@ -202,6 +207,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         await repository.AddAsync(curated);
         await repository.AddAsync(keto);
         await repository.AddAsync(userPlan);
+        await context.SaveChangesAsync();
 
         MealPlan? withDays = await repository.GetByIdAsync(curated.Id, includeDays: true);
         IReadOnlyList<MealPlan> balancedCurated = await repository.GetCuratedAsync(DietType.Balanced);

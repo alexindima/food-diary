@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -61,6 +63,28 @@ public class PresentationConventionsTests {
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(featuresPath, bannedPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PresentationFeatureControllers_UseBaseControllerExceptDocumentedPresentationOnlyEndpoints() {
+        string root = GetRepositoryRoot();
+        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+        string[] allowedFiles = [
+            Path.Combine(featuresPath, "Admin", "AdminTelemetryController.cs"),
+            Path.Combine(featuresPath, "Logs", "LogsController.cs"),
+        ];
+
+        string[] violations = [.. SourceScanner.SourceFiles(featuresPath)
+            .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => entry.line.Contains(": ControllerBase", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .OrderBy(static value => value, StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

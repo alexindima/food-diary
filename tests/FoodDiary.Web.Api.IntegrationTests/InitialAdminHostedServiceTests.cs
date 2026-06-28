@@ -1,6 +1,10 @@
+using FoodDiary.Application;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
@@ -101,9 +105,21 @@ public sealed class InitialAdminHostedServiceTests {
         var services = new ServiceCollection();
         services.AddDbContext<FoodDiaryDbContext>(options =>
             options.UseInMemoryDatabase(databaseName));
+        services.AddLogging();
+        services.AddApplication();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUnitOfWork, TestUnitOfWork>();
         services.AddSingleton<TestPasswordHasher>();
         services.AddSingleton<FoodDiary.Application.Abstractions.Authentication.Common.IPasswordHasher>(
             provider => provider.GetRequiredService<TestPasswordHasher>());
         return services.BuildServiceProvider();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestUnitOfWork(FoodDiaryDbContext dbContext) : IUnitOfWork {
+        public bool HasPendingChanges => dbContext.ChangeTracker.HasChanges();
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
+            dbContext.SaveChangesAsync(cancellationToken);
     }
 }

@@ -6,20 +6,19 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
-    public async Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+    public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Add(entry);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return entry;
+        return Task.FromResult(entry);
     }
 
-    public async Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Remove(entry);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<HydrationEntry?> GetByIdAsync(

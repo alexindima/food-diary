@@ -23,6 +23,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 BatchSize = 10,
                 PollIntervalHours = 1,
             }),
+            TimeProvider.System,
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
@@ -34,6 +35,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
     [Fact]
     public async Task StartAsync_WhenEnabled_DeletesExpiredLoginEventsUntilBatchIsNotFull() {
         var repository = new RecordingUserLoginEventRepository(10, 10, 3);
+        DateTime nowUtc = new(2026, 6, 29, 10, 0, 0, DateTimeKind.Utc);
         await using ServiceProvider provider = BuildServiceProvider(repository);
         var service = new UserLoginEventCleanupHostedService(
             provider.GetRequiredService<IServiceScopeFactory>(),
@@ -43,21 +45,17 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 BatchSize = 10,
                 PollIntervalHours = 1,
             }),
+            new FixedTimeProvider(nowUtc),
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
-        DateTime beforeStartUtc = DateTime.UtcNow;
 
         await service.StartAsync(CancellationToken.None);
         await repository.WaitAsync();
         await service.StopAsync(CancellationToken.None);
 
-        DateTime afterStartUtc = DateTime.UtcNow;
         Assert.Equal(3, repository.DeleteCallCount);
         Assert.Equal([10, 10, 10], repository.BatchSizes);
         Assert.Equal([10, 10, 3], repository.DeletedCounts);
-        Assert.All(repository.Cutoffs, cutoff => {
-            Assert.True(cutoff >= beforeStartUtc.AddDays(-30).AddSeconds(-1));
-            Assert.True(cutoff <= afterStartUtc.AddDays(-30).AddSeconds(1));
-        });
+        Assert.All(repository.Cutoffs, cutoff => Assert.Equal(nowUtc.AddDays(-30), cutoff));
     }
 
     [Fact]
@@ -72,6 +70,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 BatchSize = 10,
                 PollIntervalHours = 1,
             }),
+            TimeProvider.System,
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
@@ -93,6 +92,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
                 BatchSize = 10,
                 PollIntervalHours = 1,
             }),
+            TimeProvider.System,
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
         await service.StartAsync(CancellationToken.None);
@@ -106,6 +106,11 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         var services = new ServiceCollection();
         services.AddSingleton(repository);
         return services.BuildServiceProvider();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

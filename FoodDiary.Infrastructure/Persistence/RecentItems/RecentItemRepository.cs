@@ -38,6 +38,7 @@ public class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateT
             await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
         }
 
+        // Follow-up: move this two-phase touch-and-trim workflow behind an explicit application unit-of-work boundary.
         await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         if (distinctProductIds.Count > 0) {

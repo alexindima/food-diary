@@ -8,18 +8,17 @@ namespace FoodDiary.Infrastructure.Persistence.Tracking;
 public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         await context.WeightEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return entry;
     }
 
-    public async Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Update(entry);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         context.WeightEntries.Remove(entry);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<WeightEntry?> GetByIdAsync(

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
@@ -12,7 +13,8 @@ namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public class ToggleRecipeLikeCommandHandler(
     IRecipeLikeRepository likeRepository,
-    IRecipeRepository recipeRepository)
+    IRecipeRepository recipeRepository,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<ToggleRecipeLikeCommand, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         ToggleRecipeLikeCommand command,
@@ -43,6 +45,7 @@ public class ToggleRecipeLikeCommandHandler(
             isLiked = true;
         }
 
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         int totalLikes = await likeRepository.CountByRecipeAsync(recipeId, cancellationToken).ConfigureAwait(false);
         return Result.Success(new RecipeLikeStatusModel(isLiked, totalLikes));
     }

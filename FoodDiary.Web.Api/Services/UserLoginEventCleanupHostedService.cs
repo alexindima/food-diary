@@ -7,6 +7,7 @@ namespace FoodDiary.Web.Api.Services;
 public sealed class UserLoginEventCleanupHostedService(
     IServiceScopeFactory serviceScopeFactory,
     IOptions<UserLoginEventCleanupOptions> options,
+    TimeProvider timeProvider,
     ILogger<UserLoginEventCleanupHostedService> logger)
     : BackgroundService {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
@@ -32,7 +33,7 @@ public sealed class UserLoginEventCleanupHostedService(
     private async Task DeleteExpiredLoginEventsAsync(
         UserLoginEventCleanupOptions settings,
         CancellationToken cancellationToken) {
-        DateTime cutoffUtc = DateTime.UtcNow.AddDays(-settings.RetentionDays);
+        DateTime cutoffUtc = timeProvider.GetUtcNow().UtcDateTime.AddDays(-settings.RetentionDays);
 
         using IServiceScope scope = serviceScopeFactory.CreateScope();
         IUserLoginEventRepository repository = scope.ServiceProvider.GetRequiredService<IUserLoginEventRepository>();

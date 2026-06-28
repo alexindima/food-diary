@@ -166,6 +166,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         var repository = new FavoriteRecipeRepository(context);
         FavoriteRecipe favorite = await repository.AddAsync(FavoriteRecipe.Create(user.Id, recipe.Id, "Dinner"));
+        await context.SaveChangesAsync();
 
         FavoriteRecipe? byId = await repository.GetByIdAsync(favorite.Id, user.Id);
         IReadOnlyList<FavoriteRecipe> all = await repository.GetAllAsync(user.Id);

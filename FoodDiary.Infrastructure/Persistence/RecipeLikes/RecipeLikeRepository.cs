@@ -15,13 +15,12 @@ internal sealed class RecipeLikeRepository(FoodDiaryDbContext context) : IRecipe
 
     public async Task<RecipeLike> AddAsync(RecipeLike like, CancellationToken cancellationToken = default) {
         await context.RecipeLikes.AddAsync(like, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return like;
     }
 
-    public async Task DeleteAsync(RecipeLike like, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(RecipeLike like, CancellationToken cancellationToken = default) {
         context.RecipeLikes.Remove(like);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<int> CountByRecipeAsync(RecipeId recipeId, CancellationToken cancellationToken = default) {
