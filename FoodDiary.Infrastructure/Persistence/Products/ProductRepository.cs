@@ -10,8 +10,7 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {
-        context.Products.Add(product);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Products.AddAsync(product, cancellationToken).ConfigureAwait(false);
         return product;
     }
 
@@ -152,14 +151,13 @@ public class ProductRepository(FoodDiaryDbContext context) : IProductRepository 
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         context.Products.Update(product);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Product product, CancellationToken cancellationToken = default) {
         Product? tracked = await context.Products.FindAsync([product.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Products.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 

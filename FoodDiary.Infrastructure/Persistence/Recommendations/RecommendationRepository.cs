@@ -42,14 +42,13 @@ public class RecommendationRepository(FoodDiaryDbContext context) : IRecommendat
     }
 
     public async Task<Recommendation> AddAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
-        context.Recommendations.Add(recommendation);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Recommendations.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
         return recommendation;
     }
 
     public async Task UpdateAsync(Recommendation recommendation, CancellationToken cancellationToken = default) {
         context.Recommendations.Update(recommendation);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public async Task<int> GetUnreadCountAsync(UserId clientUserId, CancellationToken cancellationToken = default) {

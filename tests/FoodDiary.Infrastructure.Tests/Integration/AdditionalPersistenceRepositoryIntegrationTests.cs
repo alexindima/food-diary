@@ -41,8 +41,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             DateTime.UtcNow.AddHours(1));
 
         await connectionRepository.AddAsync(connection);
+        await context.SaveChangesAsync();
         connection.UpdateTokens("access-token-2", "refresh-token-2", DateTime.UtcNow.AddHours(2));
         await connectionRepository.UpdateAsync(connection);
+        await context.SaveChangesAsync();
 
         WearableConnection? savedConnection = await connectionRepository.GetAsync(user.Id, WearableProvider.Fitbit);
         IReadOnlyList<WearableConnection> allConnections = await connectionRepository.GetAllForUserAsync(user.Id);
@@ -56,8 +58,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var syncEntry = WearableSyncEntry.Create(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date.AddHours(9), 1200);
 
         await syncRepository.AddAsync(syncEntry);
+        await context.SaveChangesAsync();
         syncEntry.UpdateValue(1500);
         await syncRepository.UpdateAsync(syncEntry);
+        await context.SaveChangesAsync();
 
         WearableSyncEntry? savedEntry = await syncRepository.GetAsync(user.Id, WearableProvider.Fitbit, WearableDataType.Steps, date);
         IReadOnlyList<WearableSyncEntry> summary = await syncRepository.GetDailySummaryAsync(user.Id, date.AddHours(12));

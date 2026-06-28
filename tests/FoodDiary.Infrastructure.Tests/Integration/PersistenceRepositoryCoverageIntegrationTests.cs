@@ -334,6 +334,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             notes: "Initial");
         AddCycleDetails(profile, today);
         await repository.AddAsync(profile);
+        await context.SaveChangesAsync();
 
         CycleProfile? tracked = await repository.GetByIdAsync(profile.Id, user.Id, includeDetails: true, asTracking: true);
         Assert.NotNull(tracked);
@@ -349,6 +350,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             Notes: "Updated"));
         tracked.UpsertSymptomEntry(today, CycleSymptomCategory.Pain, 5, ["mild"], "updated");
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         CycleProfile? byId = await repository.GetByIdAsync(profile.Id, user.Id, includeDetails: true);
         CycleProfile? current = await repository.GetCurrentAsync(user.Id, includeDetails: true);
@@ -419,6 +421,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.AddAsync(publicRecipe);
         await repository.AddAsync(privateRecipe);
         await repository.AddAsync(otherPublic);
+        await context.SaveChangesAsync();
 
         var meal = Meal.Create(owner.Id, DateTime.UtcNow, MealType.Lunch);
         meal.AddRecipe(publicRecipe.Id, servings: 1);
@@ -519,6 +522,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.AddAsync(searchable);
         await repository.AddAsync(privateProduct);
         await repository.AddAsync(otherPublic);
+        await context.SaveChangesAsync();
 
         var meal = Meal.Create(userId, DateTime.UtcNow, MealType.Breakfast);
         meal.AddProduct(searchable.Id, 200);
@@ -533,6 +537,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(tracked);
         tracked.UpdateCoreIdentity(name: "Updated milk");
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         IReadOnlyDictionary<ProductId, Product> emptyByIds = await repository.GetByIdsAsync([], userId);
         IReadOnlyDictionary<ProductId, Product> byIds = await repository.GetByIdsAsync([searchable.Id, otherPublic.Id, otherPublic.Id], userId);
@@ -541,6 +546,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         await CoverCachedProductRepositoryAsync(repository, searchable.Id, userId);
         await repository.DeleteAsync(privateProduct);
+        await context.SaveChangesAsync();
         await repository.DeleteAsync(privateProduct);
 
         Assert.Single(searchedItems);
@@ -578,9 +584,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         DateTime now = DateTime.UtcNow;
         var meal = Meal.Create(userId, DateTime.SpecifyKind(now.Date.AddHours(8), DateTimeKind.Unspecified), MealType.Breakfast, "Start");
         await repository.AddAsync(meal);
+        await context.SaveChangesAsync();
 
         meal.UpdateComment("Updated");
         await repository.UpdateAsync(meal);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByIdAsync(meal.Id, userId));
         Assert.NotNull(await repository.GetByIdAsync(meal.Id, userId, includeItems: true, asTracking: true));
@@ -594,6 +602,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await repository.GetWithItemsAndProductsAsync(userId, now.Date));
 
         await repository.DeleteAsync(meal);
+        await context.SaveChangesAsync();
         await repository.DeleteAsync(meal);
     }
 
@@ -678,8 +687,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(withSteps);
         withSteps.ApplyComputedNutrition(220, 9, 5, 31, 4, 0);
         await repository.UpdateNutritionAsync(withSteps);
+        await context.SaveChangesAsync();
         context.Entry(withSteps).State = EntityState.Detached;
         await repository.UpdateNutritionAsync(withSteps);
+        await context.SaveChangesAsync();
         var missingRecipe = Recipe.Create(ownerId, "Missing nutrition", servings: 1);
         await Assert.ThrowsAsync<DbUpdateConcurrencyException>(
             () => repository.UpdateNutritionAsync(missingRecipe));
@@ -692,6 +703,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             await repository.GetExplorePagedAsync(page: 1, limit: 10, search: "Public", category: "Salad", maxPrepTime: 10, sortBy: "popular");
 
         await repository.DeleteAsync(privateRecipe);
+        await context.SaveChangesAsync();
         await repository.DeleteAsync(privateRecipe);
 
         Assert.Single(searchedItems);
@@ -912,10 +924,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         UserId clientUserId) {
         var repository = new RecommendationRepository(context);
         Recommendation recommendation = await repository.AddAsync(Recommendation.Create(dietologistUserId, clientUserId, "More protein"));
+        await context.SaveChangesAsync();
         Recommendation? tracked = await repository.GetByIdAsync(recommendation.Id, asTracking: true);
         Assert.NotNull(tracked);
         tracked.MarkAsRead();
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByIdAsync(recommendation.Id));
         Assert.Single(await repository.GetByClientAsync(clientUserId, limit: 5));
@@ -936,12 +950,14 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             DietologistPermissions.AllEnabled);
         invitation.Accept(dietologistUserId);
         await repository.AddAsync(invitation);
+        await context.SaveChangesAsync();
 
         context.ChangeTracker.Clear();
         DietologistInvitation? detached = await repository.GetByIdAsync(invitation.Id);
         Assert.NotNull(detached);
         detached.UpdatePermissions(new DietologistPermissions(ShareMeals: false));
         await repository.UpdateAsync(detached);
+        await context.SaveChangesAsync();
 
         var missingInvitation = DietologistInvitation.Create(
             clientUserId,

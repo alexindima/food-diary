@@ -28,20 +28,18 @@ public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
 
     public async Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
         await context.Meals.AddAsync(meal, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return meal;
     }
 
     public async Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) {
         context.Meals.Update(meal);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     public async Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) {
         Meal? tracked = await context.Meals.FindAsync([meal.Id], cancellationToken).ConfigureAwait(false);
         if (tracked is not null) {
             context.Meals.Remove(tracked);
-            await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
     }
 

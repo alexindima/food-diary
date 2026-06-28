@@ -87,8 +87,7 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
 
     public async Task<DietologistInvitation> AddAsync(
         DietologistInvitation invitation, CancellationToken cancellationToken = default) {
-        context.DietologistInvitations.Add(invitation);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.DietologistInvitations.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
         return invitation;
     }
 
@@ -106,7 +105,6 @@ public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDiet
 
             context.Entry(existing).CurrentValues.SetValues(invitation);
         }
-
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }

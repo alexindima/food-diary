@@ -25,13 +25,12 @@ internal sealed class WearableConnectionRepository(FoodDiaryDbContext context) :
     public async Task<WearableConnection> AddAsync(
         WearableConnection connection, CancellationToken cancellationToken = default) {
         await context.WearableConnections.AddAsync(connection, cancellationToken).ConfigureAwait(false);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return connection;
     }
 
     public async Task UpdateAsync(
         WearableConnection connection, CancellationToken cancellationToken = default) {
         context.WearableConnections.Update(connection);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 }
