@@ -601,13 +601,13 @@ public sealed class DiaryPdfGeneratorTests {
     }
 
     [Fact]
-    public async Task IsAllowedRemoteImageUriAsync_CoversSchemeLocalhostAndLiteralAddresses() {
+    public async Task IsAllowedRemoteImageUriAsync_CoversSchemeLocalhostLiteralAndUnresolvableAddresses() {
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("ftp://example.com/image.png"), CancellationToken.None));
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://localhost/image.png"), CancellationToken.None));
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://assets.localhost/image.png"), CancellationToken.None));
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("http://127.0.0.1/image.png"), CancellationToken.None));
         Assert.True(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://93.184.216.34/image.png"), CancellationToken.None));
-        Assert.True(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://example.com/image.png"), CancellationToken.None));
+        Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://unresolvable.invalid/image.png"), CancellationToken.None));
     }
 
     [Fact]

@@ -191,8 +191,12 @@ internal sealed partial class DiaryPdfGenerator {
             return IsPublicAddress(literalAddress);
         }
 
-        IPAddress[] addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
-        return addresses.Length > 0 && addresses.All(IsPublicAddress);
+        try {
+            IPAddress[] addresses = await Dns.GetHostAddressesAsync(host, cancellationToken).ConfigureAwait(false);
+            return addresses.Length > 0 && addresses.All(IsPublicAddress);
+        } catch (SocketException) {
+            return false;
+        }
     }
 
     private static bool IsPublicAddress(IPAddress address) {

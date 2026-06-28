@@ -17,7 +17,9 @@ const CLIENT_API_MOCKS: readonly ClientApiMock[] = [
     { matches: pathname => pathname.endsWith('/usda/daily-micronutrients'), createResponse: createDailyMicronutrients },
     { matches: pathname => pathname.endsWith('/notifications/unread-count'), createResponse: () => ({ count: 2 }) },
     { matches: pathname => pathname.endsWith('/notifications'), createResponse: () => [] },
+    { matches: pathname => pathname.endsWith('/recommendations'), createResponse: createRecommendations },
     { matches: pathname => pathname.endsWith('/favorite-products'), createResponse: createEmptyProductsPage },
+    { matches: pathname => pathname.endsWith('/products/overview'), createResponse: createProductsOverview },
     { matches: pathname => pathname.endsWith('/products/search'), createResponse: createProductsPage },
     { matches: pathname => pathname.endsWith('/products'), createResponse: createProductsPage },
 ];
@@ -76,8 +78,28 @@ test.describe('client smoke', () => {
 
         await expect(page).toHaveURL(/\/products$/);
         await expect(page.getByRole('heading', { name: 'Products' })).toBeVisible();
-        await expect(page.locator('.product-list__mobile-toolbar')).toBeVisible();
-        await expect(page.getByRole('button', { name: 'Create' })).toBeVisible();
+        await page.getByRole('button', { name: 'More actions' }).click();
+        await expect(page.getByRole('menuitem', { name: 'Create' })).toBeVisible();
+        await expect(page.getByRole('menuitem', { name: 'Filters' })).toBeVisible();
+    });
+
+    test('renders recommendations and marks selected item as read', async ({ page }) => {
+        await page.addInitScript((token: string) => {
+            window.localStorage.setItem('authToken', token);
+            window.localStorage.setItem('refreshToken', 'refresh-token');
+            window.localStorage.setItem('userId', 'u1');
+            window.localStorage.setItem('emailConfirmed', 'true');
+        }, createAuthenticatedUserJwt());
+
+        await mockAuthenticatedClientApiAsync(page);
+
+        await page.goto('/recommendations?recommendationId=rec-1');
+
+        await expect(page).toHaveURL(/\/recommendations\?recommendationId=rec-1$/);
+        await expect(page.getByRole('heading', { name: 'Recommendations' })).toBeVisible();
+        await expect(page.getByText('Add a protein source to breakfast.')).toBeVisible();
+        await expect(page.getByText('From Ada Lovelace')).toBeVisible();
+        await expect(page.getByRole('button', { name: /From Ada Lovelace.*Read/s })).toBeVisible();
     });
 
     test('keeps meal collage thumbnails inside the media slot', async ({ page }) => {
@@ -156,11 +178,17 @@ async function mockAuthenticatedClientApiAsync(page: Page): Promise<void> {
 
 async function fulfillClientApiRouteAsync(route: Route): Promise<void> {
     const { pathname } = new URL(route.request().url());
+    if (route.request().method() === 'PUT' && pathname.endsWith('/recommendations/rec-1/read')) {
+        await route.fulfill(jsonResponse(null));
+        return;
+    }
+
     await route.fulfill(jsonResponse(resolveClientApiResponse(pathname)));
 }
 
 function resolveClientApiResponse(pathname: string): unknown {
-    const mock = CLIENT_API_MOCKS.find(item => item.matches(pathname));
+    const normalizedPathname = pathname.replace(/\/$/, '');
+    const mock = CLIENT_API_MOCKS.find(item => item.matches(normalizedPathname));
     return mock === undefined ? {} : mock.createResponse();
 }
 
@@ -257,6 +285,21 @@ function createDailyMicronutrients(): Record<string, unknown> {
         nutrients: [],
         healthScores: null,
     };
+}
+
+function createRecommendations(): Array<Record<string, unknown>> {
+    return [
+        {
+            id: 'rec-1',
+            dietologistUserId: 'dietologist-1',
+            dietologistFirstName: 'Ada',
+            dietologistLastName: 'Lovelace',
+            text: 'Add a protein source to breakfast.',
+            isRead: false,
+            createdAtUtc: '2026-05-01T10:00:00.000Z',
+            readAtUtc: null,
+        },
+    ];
 }
 
 function createMealsOverview(): Record<string, unknown> {
@@ -366,6 +409,15 @@ function createProductsPage(): Record<string, unknown> {
         limit: 20,
         totalPages: 1,
         totalItems: 1,
+    };
+}
+
+function createProductsOverview(): Record<string, unknown> {
+    return {
+        allProducts: createProductsPage(),
+        recentItems: [],
+        favoriteItems: [],
+        favoriteTotalCount: 0,
     };
 }
 
