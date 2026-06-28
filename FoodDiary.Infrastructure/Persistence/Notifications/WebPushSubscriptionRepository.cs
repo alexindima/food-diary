@@ -26,19 +26,18 @@ public sealed class WebPushSubscriptionRepository(FoodDiaryDbContext context) : 
     }
 
     public async Task<WebPushSubscription> AddAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
-        context.WebPushSubscriptions.Add(subscription);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.WebPushSubscriptions.AddAsync(subscription, cancellationToken).ConfigureAwait(false);
         return subscription;
     }
 
-    public async Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
         context.WebPushSubscriptions.Update(subscription);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(WebPushSubscription subscription, CancellationToken cancellationToken = default) {
         context.WebPushSubscriptions.Remove(subscription);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task DeleteRangeAsync(IReadOnlyCollection<WebPushSubscription> subscriptions, CancellationToken cancellationToken = default) {

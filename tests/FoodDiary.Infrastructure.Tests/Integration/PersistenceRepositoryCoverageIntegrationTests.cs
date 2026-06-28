@@ -78,6 +78,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         await repository.AddRangeAsync([hydration]);
         await repository.AddAsync(basics);
+        await context.SaveChangesAsync();
 
         IReadOnlyList<NutritionLesson> nutritionLessons =
             await repository.GetByLocaleAsync("en", LessonCategory.NutritionBasics);
@@ -87,13 +88,16 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(tracked);
         tracked.Update("Basics updated", "Updated content", "Updated", "en", LessonCategory.NutritionBasics, LessonDifficulty.Advanced, 5, 3);
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         UserLessonProgress progress = await repository.AddProgressAsync(
             UserLessonProgress.Create(user.Id, basics.Id, DateTime.UtcNow));
+        await context.SaveChangesAsync();
         IReadOnlyList<UserLessonProgress> allProgress = await repository.GetUserProgressAsync(user.Id);
         UserLessonProgress? lessonProgress = await repository.GetUserProgressForLessonAsync(user.Id, basics.Id);
 
         await repository.DeleteAsync(hydration);
+        await context.SaveChangesAsync();
 
         Assert.Single(nutritionLessons);
         Assert.Equal(2, allLessons.Count);
@@ -842,10 +846,12 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             DateTime.UtcNow.AddDays(1),
             locale: "en",
             userAgent: "tests"));
+        await context.SaveChangesAsync();
         WebPushSubscription? tracked = await repository.GetByEndpointAsync(subscription.Endpoint, asTracking: true);
         Assert.NotNull(tracked);
         tracked.Refresh(userId, "p256-new", "auth-new", DateTime.UtcNow.AddDays(2), locale: "ru", userAgent: "tests/2");
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByEndpointAsync(subscription.Endpoint));
         Assert.Single(await repository.GetByUserAsync(userId));
@@ -856,7 +862,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             $"https://push.example.com/{Guid.NewGuid():N}",
             "p256",
             "auth"));
+        await context.SaveChangesAsync();
         await repository.DeleteAsync(second);
+        await context.SaveChangesAsync();
 
         Assert.Empty(await repository.GetByUserAsync(userId));
     }

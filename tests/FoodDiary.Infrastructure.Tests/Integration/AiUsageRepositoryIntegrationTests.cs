@@ -79,6 +79,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         var repository = new AiPromptTemplateRepository(context);
         AiPromptTemplate nutrition = await repository.AddAsync(AiPromptTemplate.Create("Nutrition", "EN", "Estimate nutrients"));
         await repository.AddAsync(AiPromptTemplate.Create("Vision", "ru", "Analyze image", isActive: false));
+        await context.SaveChangesAsync();
 
         IReadOnlyList<AiPromptTemplate> all = await repository.GetAllAsync();
         AiPromptTemplate? byKey = await repository.GetByKeyAsync("nutrition", "en");
@@ -86,6 +87,7 @@ public sealed class AiUsageRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.NotNull(tracked);
         tracked.Update("Estimate nutrients precisely", isActive: false);
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
         AiPromptTemplate? updated = await repository.GetByIdAsync(nutrition.Id);
 
         Assert.Equal(["nutrition", "vision"], [.. all.Select(template => template.Key)]);

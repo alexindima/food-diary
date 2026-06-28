@@ -72,35 +72,32 @@ internal sealed class NutritionLessonRepository(FoodDiaryDbContext context) : IN
     public async Task<UserLessonProgress> AddProgressAsync(
         UserLessonProgress progress,
         CancellationToken cancellationToken = default) {
-        context.Set<UserLessonProgress>().Add(progress);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Set<UserLessonProgress>().AddAsync(progress, cancellationToken).ConfigureAwait(false);
         return progress;
     }
 
     public async Task AddAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        context.Set<NutritionLesson>().Add(lesson);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Set<NutritionLesson>().AddAsync(lesson, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task AddRangeAsync(
         IReadOnlyCollection<NutritionLesson> lessons,
         CancellationToken cancellationToken = default) {
-        context.Set<NutritionLesson>().AddRange(lessons);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Set<NutritionLesson>().AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(
+    public Task UpdateAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
-    public async Task DeleteAsync(
+    public Task DeleteAsync(
         NutritionLesson lesson,
         CancellationToken cancellationToken = default) {
         context.Set<NutritionLesson>().Remove(lesson);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 }

@@ -9,8 +9,7 @@ public sealed class AdminImpersonationSessionRepository(FoodDiaryDbContext conte
     private const string LikeEscapeCharacter = "\\";
 
     public async Task AddAsync(AdminImpersonationSession session, CancellationToken cancellationToken = default) {
-        context.AdminImpersonationSessions.Add(session);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.AdminImpersonationSessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<AdminImpersonationSessionReadModel> Items, int TotalItems)> GetPagedAsync(

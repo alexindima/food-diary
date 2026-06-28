@@ -241,6 +241,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             "127.0.0.1",
             "UnitTest",
             DateTime.UtcNow));
+        await context.SaveChangesAsync();
 
         (IReadOnlyList<AdminImpersonationSessionReadModel> sessions, int totalSessions) =
             await sessionRepository.GetPagedAsync(page: 0, limit: 500, search: "support");
@@ -371,8 +372,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var repository = new EmailTemplateRepository(context);
 
         await repository.UpsertAsync("welcome", "en", "Welcome", "<p>Hello</p>", "Hello", isActive: true);
+        await context.SaveChangesAsync();
         await repository.UpsertAsync("welcome", "en", "Welcome back", "<p>Hi</p>", "Hi", isActive: false);
+        await context.SaveChangesAsync();
         await repository.UpsertAsync("reset", "ru", "Reset", "<p>Reset</p>", "Reset", isActive: true);
+        await context.SaveChangesAsync();
 
         IReadOnlyList<FoodDiary.Domain.Entities.Content.EmailTemplate> templates = await repository.GetAllAsync();
         FoodDiary.Domain.Entities.Content.EmailTemplate? template = await repository.GetByKeyAsync("welcome", "en");

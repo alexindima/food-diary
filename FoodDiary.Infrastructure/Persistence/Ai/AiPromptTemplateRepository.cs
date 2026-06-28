@@ -35,12 +35,11 @@ internal sealed class AiPromptTemplateRepository(FoodDiaryDbContext context) : I
     }
 
     public async Task<AiPromptTemplate> AddAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
-        context.Set<AiPromptTemplate>().Add(template);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Set<AiPromptTemplate>().AddAsync(template, cancellationToken).ConfigureAwait(false);
         return template;
     }
 
-    public async Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+    public Task UpdateAsync(AiPromptTemplate template, CancellationToken cancellationToken = default) {
+        return Task.CompletedTask;
     }
 }
