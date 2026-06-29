@@ -92,8 +92,10 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
             product with { Name = "Duplicate ignored" },
             product with { Barcode = " ", Name = "No barcode" },
         ]);
+        await context.SaveChangesAsync();
         await repository.UpsertAsync([]);
         await repository.UpsertAsync([product with { Name = "100% Cocoa Updated" }]);
+        await context.SaveChangesAsync();
 
         IReadOnlyList<OpenFoodFactsProductModel> matches = await repository.SearchAsync("100% Cocoa", limit: 5);
         IReadOnlyList<OpenFoodFactsProductModel> blankMatches = await repository.SearchAsync("   ", limit: 5);

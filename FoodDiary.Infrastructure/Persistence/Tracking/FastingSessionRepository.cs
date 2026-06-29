@@ -69,14 +69,13 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
         return streak;
     }
 
-    public async Task<FastingSession> AddAsync(FastingSession session, CancellationToken cancellationToken = default) {
+    public Task<FastingSession> AddAsync(FastingSession session, CancellationToken cancellationToken = default) {
         context.FastingSessions.Add(session);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return session;
+        return Task.FromResult(session);
     }
 
-    public async Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) {
         context.FastingSessions.Update(session);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 }

@@ -6,20 +6,19 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Images;
 
 public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
-    public async Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
+    public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Add(asset);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return asset;
+        return Task.FromResult(asset);
     }
 
     public async Task<ImageAsset?> GetByIdAsync(ImageAssetId id, CancellationToken cancellationToken = default) {
         return await context.ImageAssets.AsNoTracking().FirstOrDefaultAsync(a => a.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
+    public Task DeleteAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Attach(asset);
         context.ImageAssets.Remove(asset);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> IsAssetInUseAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {

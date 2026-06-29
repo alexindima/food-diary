@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -13,7 +14,8 @@ namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 public sealed class GetWebPushSubscriptionsQueryHandler(
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
     IUserRepository userRepository,
-    TimeProvider dateTimeProvider)
+    TimeProvider dateTimeProvider,
+    IUnitOfWork unitOfWork)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {
     public async Task<Result<IReadOnlyList<WebPushSubscriptionModel>>> Handle(
         GetWebPushSubscriptionsQuery query,
@@ -35,6 +37,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
 
         if (expiredSubscriptions.Count > 0) {
             await webPushSubscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             subscriptions = subscriptions.Except(expiredSubscriptions).ToList();
         }
 

@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
 
 public sealed class GetImageUploadUrlCommandHandler(
     IImageStorageService imageStorageService,
-    IImageAssetRepository imageAssetRepository) : IRequestHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
+    IImageAssetRepository imageAssetRepository) : ICommandHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
     public async Task<Result<GetImageUploadUrlResult>> Handle(GetImageUploadUrlCommand request, CancellationToken cancellationToken) {
         Result validationResult = ValidateRequest(request);
         if (validationResult.IsFailure) {

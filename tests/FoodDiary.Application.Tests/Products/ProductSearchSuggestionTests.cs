@@ -1,4 +1,5 @@
 using FluentValidation.TestHelper;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
@@ -74,7 +75,8 @@ public sealed class ProductSearchSuggestionTests {
         IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
             cachedProducts,
             out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
-        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache, unitOfWork);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 2, CancellationToken.None);
 
@@ -83,6 +85,7 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal("cached-1", result[0].Barcode);
         Assert.Equal(0, getSearchCallCount());
         Assert.Empty(getUpsertedProducts());
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -94,7 +97,8 @@ public sealed class ProductSearchSuggestionTests {
         IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
             [CreateOpenFoodFactsProduct("cached-1")],
             out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
-        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache, unitOfWork);
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
@@ -103,6 +107,7 @@ public sealed class ProductSearchSuggestionTests {
         Assert.Equal("cached-1", result[1].Barcode);
         Assert.Equal(2, getUpsertedProducts().Count);
         Assert.Equal(1, getSearchCallCount());
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -248,6 +253,12 @@ public sealed class ProductSearchSuggestionTests {
 
         getSearchCallCount = () => searchCallCount;
         return service;
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(1));
+        return unitOfWork;
     }
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(

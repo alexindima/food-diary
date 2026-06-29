@@ -1,14 +1,14 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 
 public sealed class DeleteImageAssetCommandHandler(
     IImageAssetRepository imageAssetRepository,
-    IImageAssetCleanupService cleanupService) : IRequestHandler<DeleteImageAssetCommand, Result> {
+    IImageAssetCleanupService cleanupService) : ICommandHandler<DeleteImageAssetCommand, Result> {
     public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
         if (request.UserId == Guid.Empty) {
             return Result.Failure(Errors.Image.InvalidData("UserId is required."));

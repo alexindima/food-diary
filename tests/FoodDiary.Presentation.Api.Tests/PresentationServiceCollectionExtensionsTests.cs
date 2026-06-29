@@ -1,4 +1,5 @@
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Responses;
@@ -70,6 +71,7 @@ public sealed class PresentationServiceCollectionExtensionsTests {
         builder.Services.AddAuthorization();
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddScoped<IFastingTelemetryEventRepository, StubFastingTelemetryEventRepository>();
+        builder.Services.AddScoped<IUnitOfWork, StubUnitOfWork>();
         builder.Services.AddSingleton<TimeProvider, StubDateTimeProvider>();
         builder.Services.AddPresentationApi();
 
@@ -83,6 +85,14 @@ public sealed class PresentationServiceCollectionExtensionsTests {
 
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification", StringComparison.Ordinal));
         Assert.Contains(endpoints, endpoint => string.Equals(endpoint.RoutePattern.RawText, "/hubs/email-verification/negotiate", StringComparison.Ordinal));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubUnitOfWork : IUnitOfWork {
+        public bool HasPendingChanges => false;
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
+            Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

@@ -93,7 +93,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
                 now));
         }
 
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.Products.Common;
@@ -7,7 +8,8 @@ namespace FoodDiary.Application.Products.SearchSuggestions;
 
 public sealed class OpenFoodFactsProductSearchSuggestionProvider(
     IOpenFoodFactsService openFoodFactsService,
-    IOpenFoodFactsProductCacheRepository productCacheRepository) : IProductSearchSuggestionProvider {
+    IOpenFoodFactsProductCacheRepository productCacheRepository,
+    IUnitOfWork unitOfWork) : IProductSearchSuggestionProvider {
     public string Source => "openFoodFacts";
 
     public async Task<IReadOnlyList<ProductSearchSuggestionModel>> SearchAsync(
@@ -22,6 +24,7 @@ public sealed class OpenFoodFactsProductSearchSuggestionProvider(
         IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         if (externalProducts.Count > 0) {
             await productCacheRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
         return externalProducts

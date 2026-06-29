@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Mediator;
+using FoodDiary.Application.Common.Abstractions.Messaging;
 
 namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
 
@@ -7,4 +7,4 @@ public sealed record GetImageUploadUrlCommand(
     Guid UserId,
     string FileName,
     string ContentType,
-    long FileSizeBytes) : IRequest<Result<GetImageUploadUrlResult>>;
+    long FileSizeBytes) : ICommand<Result<GetImageUploadUrlResult>>;

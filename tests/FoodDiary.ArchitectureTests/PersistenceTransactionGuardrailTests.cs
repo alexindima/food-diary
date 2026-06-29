@@ -8,18 +8,12 @@ public sealed class PersistenceTransactionGuardrailTests {
     public void PersistenceSaveChangesAsyncUsage_StaysInsideCurrentExplicitAllowlist() {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
-            Path.Combine(persistenceRoot, "Ai", "AiUsageRepository.cs"),
             Path.Combine(persistenceRoot, "Billing", "BillingPaymentRepository.cs"),
             Path.Combine(persistenceRoot, "Billing", "BillingSubscriptionRepository.cs"),
             Path.Combine(persistenceRoot, "Billing", "BillingWebhookEventRepository.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
-            Path.Combine(persistenceRoot, "Images", "ImageAssetRepository.cs"),
             Path.Combine(persistenceRoot, "Notifications", "NotificationRepository.cs"),
-            Path.Combine(persistenceRoot, "Notifications", "WebPushSubscriptionRepository.cs"),
-            Path.Combine(persistenceRoot, "OpenFoodFacts", "OpenFoodFactsProductCacheRepository.cs"),
             Path.Combine(persistenceRoot, "RecentItems", "RecentItemRepository.cs"),
-            Path.Combine(persistenceRoot, "Tracking", "FastingSessionRepository.cs"),
-            Path.Combine(persistenceRoot, "Tracking", "FastingTelemetryEventRepository.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);

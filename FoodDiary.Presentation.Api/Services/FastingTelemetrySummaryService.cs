@@ -1,11 +1,14 @@
 using System.Globalization;
 using System.Text.Json;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Services;
 
-public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventRepository repository) : IFastingTelemetrySummaryService {
+public sealed class FastingTelemetrySummaryService(
+    IFastingTelemetryEventRepository repository,
+    IUnitOfWork unitOfWork) : IFastingTelemetrySummaryService {
     public async Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken) {
         if (!string.Equals(request.Category, "user_action", StringComparison.OrdinalIgnoreCase) ||
             !request.Name.StartsWith("fasting.", StringComparison.OrdinalIgnoreCase)) {
@@ -34,6 +37,7 @@ public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventReposit
             ReadBool(details, "hadNotes"));
 
         await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {

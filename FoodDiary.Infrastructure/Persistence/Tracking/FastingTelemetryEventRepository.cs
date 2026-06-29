@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
 public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) : IFastingTelemetryEventRepository {
-    public async Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) {
+    public Task AddAsync(FastingTelemetryEventRecord record, CancellationToken cancellationToken = default) {
         var entity = FastingTelemetryEvent.Create(
             record.Name,
             record.OccurredAtUtc,
@@ -27,7 +27,7 @@ public sealed class FastingTelemetryEventRepository(FoodDiaryDbContext context) 
             record.HadNotes);
 
         context.FastingTelemetryEvents.Add(entity);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<IReadOnlyList<FastingTelemetryEventRecord>> GetSinceAsync(DateTime sinceUtc, CancellationToken cancellationToken = default) {

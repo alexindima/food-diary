@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Images.Commands.DeleteImageAsset;
 using FoodDiary.Application.Images.Commands.GetUploadUrl;
@@ -156,7 +157,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
 
@@ -174,7 +176,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repository,
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
@@ -192,7 +195,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repository,
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
         int removed = await service.CleanupOrphansAsync(localCutoff, 10, CancellationToken.None);
@@ -212,7 +216,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
 
@@ -225,7 +230,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
 
@@ -238,7 +244,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
 
@@ -255,7 +262,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             CreateThrowingImageStorageService(),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
         ImageAsset? storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
@@ -275,7 +283,8 @@ public class ImagesFeatureTests {
         var service = new ImageAssetCleanupService(
             repo,
             CreateSelectivelyThrowingImageStorageService("images/fail.jpg"),
-            NullLogger<ImageAssetCleanupService>.Instance);
+            NullLogger<ImageAssetCleanupService>.Instance,
+            CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
             DateTime.UtcNow.AddYears(1),
@@ -406,6 +415,12 @@ public class ImagesFeatureTests {
             .ValidateUploadedObjectAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new ImageObjectValidationResult(IsValid: true)));
         return service;
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        return unitOfWork;
     }
 
     [ExcludeFromCodeCoverage]

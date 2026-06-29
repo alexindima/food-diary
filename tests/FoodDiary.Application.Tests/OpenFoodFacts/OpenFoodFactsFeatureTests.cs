@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
@@ -51,7 +52,8 @@ public class OpenFoodFactsFeatureTests {
         IOpenFoodFactsService service = CreateOpenFoodFactsService(barcodeResult: null, products);
         IOpenFoodFactsProductCacheRepository cache = CreateOpenFoodFactsProductCacheRepository(
             out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
-        var handler = new SearchOpenFoodFactsQueryHandler(service, cache);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var handler = new SearchOpenFoodFactsQueryHandler(service, cache, unitOfWork);
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 10),
@@ -62,12 +64,13 @@ public class OpenFoodFactsFeatureTests {
         Assert.Equal("111", result.Value[0].Barcode);
         Assert.Equal("222", result.Value[1].Barcode);
         Assert.Equal(2, getUpsertedProducts().Count);
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
     public async Task SearchProducts_WhenNoResults_ReturnsEmptyList() {
         IOpenFoodFactsService service = CreateOpenFoodFactsService(barcodeResult: null, []);
-        var handler = new SearchOpenFoodFactsQueryHandler(service, CreateOpenFoodFactsProductCacheRepository());
+        var handler = new SearchOpenFoodFactsQueryHandler(service, CreateOpenFoodFactsProductCacheRepository(), CreateUnitOfWork());
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("nonexistent", 10),
@@ -89,7 +92,8 @@ public class OpenFoodFactsFeatureTests {
             out Func<int> getSearchCallCount);
         var handler = new SearchOpenFoodFactsQueryHandler(
             service,
-            CreateOpenFoodFactsProductCacheRepository(cachedProducts));
+            CreateOpenFoodFactsProductCacheRepository(cachedProducts),
+            CreateUnitOfWork());
 
         Result<IReadOnlyList<OpenFoodFactsProductModel>> result = await handler.Handle(
             new SearchOpenFoodFactsQuery("test", 2),
@@ -128,6 +132,12 @@ public class OpenFoodFactsFeatureTests {
 
         getSearchCallCount = () => searchCallCount;
         return service;
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(1));
+        return unitOfWork;
     }
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(

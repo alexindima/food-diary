@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -8,7 +9,8 @@ namespace FoodDiary.Application.Images.Services;
 public sealed class ImageAssetCleanupService(
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService,
-    ILogger<ImageAssetCleanupService> logger) : IImageAssetCleanupService {
+    ILogger<ImageAssetCleanupService> logger,
+    IUnitOfWork unitOfWork) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
             return new DeleteImageAssetResult(Deleted: false, "invalid");
@@ -32,6 +34,7 @@ public sealed class ImageAssetCleanupService(
         }
 
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
     }
 
@@ -52,6 +55,7 @@ public sealed class ImageAssetCleanupService(
             try {
                 await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
                 await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
+                await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 removed++;
             } catch (Exception ex) {
                 logger.LogWarning(ex, "Failed to remove orphan image asset {AssetId}", asset.Id);

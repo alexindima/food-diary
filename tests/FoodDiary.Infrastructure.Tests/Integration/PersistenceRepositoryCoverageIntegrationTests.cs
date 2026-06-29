@@ -645,6 +645,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new ImageAssetRepository(context);
         ImageAsset asset = await repository.AddAsync(ImageAsset.Create(userId, $"images/{Guid.NewGuid():N}.webp", "https://cdn.example.com/image.webp"));
         ImageAsset usedAsset = await repository.AddAsync(ImageAsset.Create(userId, $"images/{Guid.NewGuid():N}.webp", "https://cdn.example.com/used.webp"));
+        await context.SaveChangesAsync();
         var product = Product.Create(userId, "Product with image", MeasurementUnit.G, 100, 100, 10, 1, 1, 1, 1, 0, imageAssetId: usedAsset.Id);
         context.Products.Add(product);
         await context.SaveChangesAsync();
@@ -655,6 +656,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Contains(await repository.GetUnusedOlderThanAsync(DateTime.UtcNow.AddDays(1), batchSize: 10), item => item.Id == asset.Id);
 
         await repository.DeleteAsync(asset);
+        await context.SaveChangesAsync();
         Assert.Null(await repository.GetByIdAsync(asset.Id));
     }
 
@@ -874,6 +876,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await repository.GetByEndpointAsync(subscription.Endpoint));
         Assert.Single(await repository.GetByUserAsync(userId));
         await repository.DeleteRangeAsync([tracked]);
+        await context.SaveChangesAsync();
 
         WebPushSubscription second = await repository.AddAsync(WebPushSubscription.Create(
             userId,
@@ -1139,15 +1142,18 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FastingSession completedSession = await repository.AddAsync(FastingSession.Create(userId, FastingProtocol.F24_0, 24, now.AddDays(-2)));
         completedSession.End(now.AddDays(-1));
         await repository.UpdateAsync(completedSession);
+        await context.SaveChangesAsync();
         var yesterdaySession = FastingSession.Create(userId, FastingProtocol.F16_8, 16, DateTime.UtcNow.Date.AddDays(-1).AddHours(1));
         yesterdaySession.End(DateTime.UtcNow.Date.AddHours(1));
         await repository.AddAsync(yesterdaySession);
+        await context.SaveChangesAsync();
         var oldStreakUser = User.Create($"old-streak-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(oldStreakUser);
         await context.SaveChangesAsync();
         var oldSession = FastingSession.Create(oldStreakUser.Id, FastingProtocol.F16_8, 16, DateTime.UtcNow.Date.AddDays(-5).AddHours(1));
         oldSession.End(DateTime.UtcNow.Date.AddDays(-4).AddHours(1));
         await repository.AddAsync(oldSession);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetCurrentAsync(userId));
         Assert.NotNull(await repository.GetByIdAsync(currentSession.Id));
@@ -1184,6 +1190,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             MoodLevel: 5,
             SymptomsCount: 1,
             HadNotes: true));
+        await context.SaveChangesAsync();
 
         Assert.Single(await repository.GetSinceAsync(now.AddMinutes(-1)));
     }

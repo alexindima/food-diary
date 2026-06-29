@@ -40,12 +40,12 @@ public sealed class WebPushSubscriptionRepository(FoodDiaryDbContext context) : 
         return Task.CompletedTask;
     }
 
-    public async Task DeleteRangeAsync(IReadOnlyCollection<WebPushSubscription> subscriptions, CancellationToken cancellationToken = default) {
+    public Task DeleteRangeAsync(IReadOnlyCollection<WebPushSubscription> subscriptions, CancellationToken cancellationToken = default) {
         if (subscriptions.Count == 0) {
-            return;
+            return Task.CompletedTask;
         }
 
         context.WebPushSubscriptions.RemoveRange(subscriptions);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 }
