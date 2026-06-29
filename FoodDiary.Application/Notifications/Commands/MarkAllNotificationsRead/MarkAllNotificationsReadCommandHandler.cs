@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -10,7 +11,8 @@ namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 public class MarkAllNotificationsReadCommandHandler(
     INotificationRepository notificationRepository,
     IUserRepository userRepository,
-    INotificationPusher notificationPusher)
+    INotificationPusher notificationPusher,
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<MarkAllNotificationsReadCommand, Result> {
     public async Task<Result> Handle(MarkAllNotificationsReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -24,8 +26,10 @@ public class MarkAllNotificationsReadCommandHandler(
         }
 
         await notificationRepository.MarkAllReadAsync(userId, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(userId.Value, 0, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        postCommitActionQueue.Enqueue(async ct => {
+            await notificationPusher.PushUnreadCountAsync(userId.Value, 0, ct).ConfigureAwait(false);
+            await notificationPusher.PushNotificationsChangedAsync(userId.Value, ct).ConfigureAwait(false);
+        });
         return Result.Success();
     }
 }

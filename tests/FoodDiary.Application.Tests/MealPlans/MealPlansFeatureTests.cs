@@ -1,5 +1,4 @@
 using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
@@ -23,7 +22,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task AdoptMealPlan_WhenPlanNotFound_ReturnsFailure() {
         var repo = new StubMealPlanRepository(plan: null);
-        var handler = new AdoptMealPlanCommandHandler(repo, NoopUnitOfWork.Instance);
+        var handler = new AdoptMealPlanCommandHandler(repo);
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -37,7 +36,7 @@ public class MealPlansFeatureTests {
         var userId = UserId.New();
         var plan = MealPlan.CreateForUser(userId, "My Plan", description: null, DietType.Balanced, 7, targetCaloriesPerDay: null);
         var repo = new StubMealPlanRepository(plan);
-        var handler = new AdoptMealPlanCommandHandler(repo, NoopUnitOfWork.Instance);
+        var handler = new AdoptMealPlanCommandHandler(repo);
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
@@ -48,7 +47,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task AdoptMealPlan_WithNullUserId_ReturnsFailure() {
-        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(plan: null), NoopUnitOfWork.Instance);
+        var handler = new AdoptMealPlanCommandHandler(new StubMealPlanRepository(plan: null));
 
         Result<MealPlanModel> result = await handler.Handle(
             new AdoptMealPlanCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -158,12 +157,12 @@ public class MealPlansFeatureTests {
     }
 
     [Fact]
-    public async Task AdoptMealPlan_WithCuratedPlan_AddsAdoptedPlanAndReturnsSavedModel() {
+    public async Task AdoptMealPlan_WithCuratedPlan_AddsAdoptedPlanAndReturnsModel() {
         var userId = UserId.New();
         var curated = MealPlan.CreateCurated("Starter plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         curated.AddDay(1).AddMeal(MealType.Breakfast, RecipeId.New(), servings: 1);
         var repository = new StubMealPlanRepository(curated);
-        var handler = new AdoptMealPlanCommandHandler(repository, NoopUnitOfWork.Instance);
+        var handler = new AdoptMealPlanCommandHandler(repository);
 
         Result<MealPlanModel> result = await handler.Handle(new AdoptMealPlanCommand(userId.Value, curated.Id.Value), CancellationToken.None);
 
@@ -355,15 +354,6 @@ public class MealPlansFeatureTests {
 
         public Task DeleteAsync(ShoppingList list, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class NoopUnitOfWork : IUnitOfWork {
-        public static readonly NoopUnitOfWork Instance = new();
-
-        public bool HasPendingChanges => false;
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private static void SetProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) where TTarget : class {

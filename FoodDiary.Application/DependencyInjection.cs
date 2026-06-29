@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
+using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -17,6 +18,7 @@ using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
 using FoodDiary.Mediator;
@@ -31,11 +33,13 @@ public static class DependencyInjection {
             cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            cfg.AddOpenBehavior(typeof(PostCommitBehavior<,>));
             cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
+        services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();

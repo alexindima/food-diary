@@ -91,6 +91,27 @@ public class BehaviorTests {
         await unitOfWork.Received(requiredNumberOfCalls: 1).SaveChangesAsync(CancellationToken.None);
     }
 
+    [Fact]
+    public async Task PostCommitBehavior_WhenPostCommitActionsExist_FlushesAfterHandler() {
+        IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
+        postCommitActionQueue.HasActions.Returns(returnThis: true);
+        postCommitActionQueue.FlushAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        var behavior = new PostCommitBehavior<TestCommand, Result<string>>(postCommitActionQueue);
+        bool handlerCalled = false;
+
+        Result<string> result = await behavior.Handle(
+            new TestCommand(),
+            ct => {
+                handlerCalled = true;
+                return Task.FromResult(Result.Success("saved"));
+            },
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.True(handlerCalled);
+        await postCommitActionQueue.Received(requiredNumberOfCalls: 1).FlushAsync(CancellationToken.None);
+    }
+
     [ExcludeFromCodeCoverage]
     private record TestQuery : IQuery<Result<string>>;
 

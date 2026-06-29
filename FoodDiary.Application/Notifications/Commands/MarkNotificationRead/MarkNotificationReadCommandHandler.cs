@@ -13,7 +13,7 @@ public class MarkNotificationReadCommandHandler(
     INotificationRepository notificationRepository,
     IUserRepository userRepository,
     INotificationPusher notificationPusher,
-    IUnitOfWork unitOfWork)
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<MarkNotificationReadCommand, Result> {
     public async Task<Result> Handle(MarkNotificationReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -37,10 +37,11 @@ public class MarkNotificationReadCommandHandler(
 
         notification.MarkAsRead();
         await notificationRepository.UpdateAsync(notification, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        postCommitActionQueue.Enqueue(async ct => {
+            int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, ct).ConfigureAwait(false);
+            await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, ct).ConfigureAwait(false);
+            await notificationPusher.PushNotificationsChangedAsync(userId.Value, ct).ConfigureAwait(false);
+        });
         return Result.Success();
     }
 }

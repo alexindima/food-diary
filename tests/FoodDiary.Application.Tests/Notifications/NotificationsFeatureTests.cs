@@ -45,6 +45,8 @@ public class NotificationsFeatureTests {
         return unitOfWork;
     }
 
+    private static RecordingPostCommitActionQueue CreatePostCommitActionQueue() => new();
+
     [Fact]
     public async Task MarkNotificationRead_WithValidOwnership_Succeeds() {
         var userId = UserId.New();
@@ -53,18 +55,22 @@ public class NotificationsFeatureTests {
         repo.Seed(notification);
         var pusher = new RecordingNotificationPusher();
 
-        IUnitOfWork unitOfWork = CreateUnitOfWork();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, unitOfWork);
+        RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, postCommitActionQueue);
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.True(notification.IsRead);
+        Assert.Null(pusher.UnreadCountUserId);
+        Assert.True(postCommitActionQueue.HasActions);
+
+        await postCommitActionQueue.FlushAsync();
+
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
         Assert.Equal(userId.Value, pusher.NotificationsChangedUserId);
-        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -75,7 +81,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreateUnitOfWork());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -87,7 +93,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
         var userId = UserId.New();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher(), CreateUnitOfWork());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
@@ -102,7 +108,7 @@ public class NotificationsFeatureTests {
             new InMemoryNotificationRepository(),
             new SingleUserRepository(CreateUser()),
             new RecordingNotificationPusher(),
-            CreateUnitOfWork());
+            CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(UserId: null, Guid.NewGuid()),
@@ -117,7 +123,7 @@ public class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreateUnitOfWork());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
@@ -135,7 +141,8 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         repo.Seed(Notification.Create(userId, "info", "{}"));
         var pusher = new RecordingNotificationPusher();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
+        RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, postCommitActionQueue);
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -143,6 +150,11 @@ public class NotificationsFeatureTests {
 
         ResultAssert.Success(result);
         Assert.True(repo.MarkAllReadCalled);
+        Assert.Null(pusher.UnreadCountUserId);
+        Assert.True(postCommitActionQueue.HasActions);
+
+        await postCommitActionQueue.FlushAsync();
+
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
         Assert.Equal(userId.Value, pusher.NotificationsChangedUserId);
@@ -153,7 +165,8 @@ public class NotificationsFeatureTests {
         var handler = new MarkAllNotificationsReadCommandHandler(
             new InMemoryNotificationRepository(),
             new SingleUserRepository(CreateUser()),
-            new RecordingNotificationPusher());
+            new RecordingNotificationPusher(),
+            CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(UserId: null),
@@ -166,7 +179,7 @@ public class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -864,6 +877,24 @@ public class NotificationsFeatureTests {
         public Task PushNotificationsChangedAsync(Guid userId, CancellationToken cancellationToken = default) {
             NotificationsChangedUserId = userId;
             return Task.CompletedTask;
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingPostCommitActionQueue : IPostCommitActionQueue {
+        private readonly List<Func<CancellationToken, Task>> actions = [];
+
+        public bool HasActions => actions.Count > 0;
+
+        public void Enqueue(Func<CancellationToken, Task> action) => actions.Add(action);
+
+        public async Task FlushAsync(CancellationToken cancellationToken = default) {
+            Func<CancellationToken, Task>[] pendingActions = [.. actions];
+            actions.Clear();
+
+            foreach (Func<CancellationToken, Task> action in pendingActions) {
+                await action(cancellationToken).ConfigureAwait(false);
+            }
         }
     }
 

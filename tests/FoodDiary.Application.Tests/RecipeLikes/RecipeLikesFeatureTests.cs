@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
@@ -21,7 +20,7 @@ public class RecipeLikesFeatureTests {
         var repo = new InMemoryRecipeLikeRepository();
         IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo, NoopUnitOfWork.Instance);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
@@ -38,7 +37,7 @@ public class RecipeLikesFeatureTests {
         repo.Seed(RecipeLike.Create(userId, recipe.Id));
         IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo, NoopUnitOfWork.Instance);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
@@ -52,7 +51,7 @@ public class RecipeLikesFeatureTests {
         var repo = new InMemoryRecipeLikeRepository();
         IRecipeRepository recipeRepo = CreateRecipeRepository(recipe: null);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo, NoopUnitOfWork.Instance);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
@@ -64,8 +63,7 @@ public class RecipeLikesFeatureTests {
     public async Task ToggleRecipeLike_WithNullUserId_ReturnsFailure() {
         var handler = new ToggleRecipeLikeCommandHandler(
             new InMemoryRecipeLikeRepository(),
-            CreateRecipeRepository(recipe: null),
-            NoopUnitOfWork.Instance);
+            CreateRecipeRepository(recipe: null));
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -133,15 +131,6 @@ public class RecipeLikesFeatureTests {
 
         public Task<int> CountByRecipeAsync(RecipeId recipeId, CancellationToken ct = default) =>
             Task.FromResult(_likes.Count(l => l.RecipeId == recipeId));
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class NoopUnitOfWork : IUnitOfWork {
-        public static readonly NoopUnitOfWork Instance = new();
-
-        public bool HasPendingChanges => false;
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {
