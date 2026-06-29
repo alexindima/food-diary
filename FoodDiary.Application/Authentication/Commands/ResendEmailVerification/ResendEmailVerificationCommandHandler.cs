@@ -7,6 +7,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
@@ -16,6 +17,7 @@ public class ResendEmailVerificationCommandHandler(
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
+    IPostCommitActionQueue postCommitActionQueue,
     ILogger<ResendEmailVerificationCommandHandler> logger) : ICommandHandler<ResendEmailVerificationCommand, Result> {
     private static readonly TimeSpan ResendCooldown = TimeSpan.FromMinutes(1);
 
@@ -54,17 +56,14 @@ public class ResendEmailVerificationCommandHandler(
             IssuedAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime));
         await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
-        try {
-            await emailSender.SendEmailVerificationAsync(
-                new EmailVerificationMessage(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin),
-                cancellationToken).ConfigureAwait(false);
-        } catch (Exception ex) {
-            logger.LogError(ex, "Email verification dispatch failed.");
-            return Result.Failure(
-                Errors.Validation.Invalid(
-                    "EmailVerification",
-                    "Failed to send verification email."));
-        }
+        EmailVerificationMessage message = new(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin);
+        postCommitActionQueue.Enqueue(async ct => {
+            try {
+                await emailSender.SendEmailVerificationAsync(message, ct).ConfigureAwait(false);
+            } catch (Exception ex) {
+                logger.LogError(ex, "Email verification dispatch failed.");
+            }
+        });
 
         return Result.Success();
     }

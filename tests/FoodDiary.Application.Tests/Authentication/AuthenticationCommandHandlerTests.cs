@@ -14,6 +14,7 @@ using FoodDiary.Application.Authentication.Commands.TelegramLoginWidget;
 using FoodDiary.Application.Authentication.Commands.TelegramVerify;
 using FoodDiary.Application.Authentication.Commands.VerifyEmail;
 using FoodDiary.Application.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
@@ -169,6 +170,7 @@ public sealed class AuthenticationCommandHandlerTests {
             sender,
             new StubDateTimeProvider(),
             tokens,
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -192,6 +194,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubEmailSender(throwOnEmailVerification: true),
             new StubDateTimeProvider(),
             new StubAuthenticationTokenService(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RegisterCommandHandler>.Instance);
 
         Result<AuthenticationModel> result = await handler.Handle(
@@ -243,6 +246,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             sender,
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
         Result result = await handler.Handle(new RequestPasswordResetCommand("missing@example.com"), CancellationToken.None);
@@ -262,6 +266,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             sender,
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
         Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
@@ -279,6 +284,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             sender,
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
         Result result = await handler.Handle(
@@ -299,6 +305,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubEmailSender(throwOnPasswordReset: true),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<RequestPasswordResetCommandHandler>.Instance);
 
         Result result = await handler.Handle(new RequestPasswordResetCommand(user.Email), CancellationToken.None);
@@ -331,6 +338,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -348,6 +356,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -366,6 +375,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -382,6 +392,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -400,6 +411,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -419,6 +431,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             dateTimeProvider,
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier());
 
         Result result = await handler.Handle(
@@ -440,6 +453,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             dateTimeProvider,
+            new ImmediatePostCommitActionQueue(),
             notifier);
 
         Result result = await handler.Handle(
@@ -460,6 +474,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubUserRepository(user),
             new StubPasswordHasher(),
             dateTimeProvider,
+            new ImmediatePostCommitActionQueue(),
             new StubEmailVerificationNotifier(throwOnNotify: true));
 
         Result result = await handler.Handle(
@@ -477,6 +492,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubEmailSender(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
 
         Result result = await handler.Handle(
@@ -521,6 +537,7 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             new StubEmailSender(),
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(Guid.NewGuid()), CancellationToken.None);
@@ -559,15 +576,14 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [Fact]
-    public async Task ResendEmailVerificationHandler_WhenSenderFails_ReturnsValidationFailure() {
+    public async Task ResendEmailVerificationHandler_WhenSenderFails_StillReturnsSuccess() {
         var user = User.Create("send-fails@example.com", "secret");
         ResendEmailVerificationCommandHandler handler = CreateResendEmailVerificationHandler(user, new StubEmailSender(throwOnEmailVerification: true));
 
         Result result = await handler.Handle(new ResendEmailVerificationCommand(user.Id.Value), CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Equal("Validation.Invalid", result.Error.Code);
-        Assert.Contains("Failed to send", result.Error.Message, StringComparison.Ordinal);
+        ResultAssert.Success(result);
+        Assert.NotNull(user.EmailConfirmationTokenHash);
     }
 
     [Fact]
@@ -1244,5 +1260,17 @@ public sealed class AuthenticationCommandHandlerTests {
             new StubPasswordHasher(),
             sender,
             new StubDateTimeProvider(),
+            new ImmediatePostCommitActionQueue(),
             Microsoft.Extensions.Logging.Abstractions.NullLogger<ResendEmailVerificationCommandHandler>.Instance);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public bool HasActions => false;
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
 }

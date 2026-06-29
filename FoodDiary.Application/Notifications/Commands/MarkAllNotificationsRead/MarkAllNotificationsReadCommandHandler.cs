@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -26,10 +27,11 @@ public class MarkAllNotificationsReadCommandHandler(
         }
 
         await notificationRepository.MarkAllReadAsync(userId, cancellationToken).ConfigureAwait(false);
-        postCommitActionQueue.Enqueue(async ct => {
-            await notificationPusher.PushUnreadCountAsync(userId.Value, 0, ct).ConfigureAwait(false);
-            await notificationPusher.PushNotificationsChangedAsync(userId.Value, ct).ConfigureAwait(false);
-        });
+        NotificationPostCommitActions.EnqueueUnreadCountPush(
+            postCommitActionQueue,
+            notificationRepository,
+            notificationPusher,
+            userId);
         return Result.Success();
     }
 }

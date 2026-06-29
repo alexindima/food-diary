@@ -4,6 +4,7 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
@@ -12,6 +13,7 @@ public sealed class VerifyEmailCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     TimeProvider dateTimeProvider,
+    IPostCommitActionQueue postCommitActionQueue,
     IEmailVerificationNotifier emailVerificationNotifier)
     : ICommandHandler<VerifyEmailCommand, Result> {
     public async Task<Result> Handle(VerifyEmailCommand command, CancellationToken cancellationToken) {
@@ -44,11 +46,13 @@ public sealed class VerifyEmailCommandHandler(
         user.CompleteEmailVerification();
         await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
-        try {
-            await emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, cancellationToken).ConfigureAwait(false);
-        } catch {
-            // Notification failures shouldn't block verification.
-        }
+        postCommitActionQueue.Enqueue(async ct => {
+            try {
+                await emailVerificationNotifier.NotifyEmailVerifiedAsync(user.Id.Value, ct).ConfigureAwait(false);
+            } catch {
+                // Notification failures shouldn't block verification.
+            }
+        });
 
         return Result.Success();
     }

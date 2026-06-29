@@ -26,6 +26,7 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
+        // Architecture debt: move storage deletion behind a post-commit outbox/cleanup workflow so object storage and DB state cannot diverge on commit failure.
         try {
             await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         } catch (Exception ex) {

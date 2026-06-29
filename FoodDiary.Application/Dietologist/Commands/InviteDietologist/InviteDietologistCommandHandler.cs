@@ -67,6 +67,7 @@ public class InviteDietologistCommandHandler(
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
         User? registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
+        // Architecture debt: move invitation email delivery to a post-commit outbox/dispatch state so the token is not sent before the invitation is persisted.
         bool emailSent = await TrySendInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
 
         if (!emailSent && registeredDietologist is null) {
