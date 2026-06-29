@@ -343,7 +343,7 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
     }
 
     [RequiresDockerFact]
-    public async Task DeleteImageAsset_BlocksReferencedRecipeAssets_ThenReturnsNotFoundAfterRecipeDeletionAgainstPostgres() {
+    public async Task DeleteImageAsset_BlocksReferencedRecipeAssets_ThenDeletesAfterRecipeDeletionAgainstPostgres() {
         HttpClient client = factory.CreateClient();
         string accessToken = await RegisterAndGetAccessTokenAsync(client);
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -428,12 +428,18 @@ public sealed class PostgresCriticalApiFlowTests(PostgresApiWebApplicationFactor
         HttpResponseMessage deleteRecipeResponse = await client.DeleteAsync($"/api/v1/recipes/{recipe.Id}");
         HttpResponseMessage deleteRecipeAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/v1/images/{recipeAsset.AssetId}");
         HttpResponseMessage deleteStepAssetAfterRecipeDeletion = await client.DeleteAsync($"/api/v1/images/{stepAsset.AssetId}");
-        ErrorPayload? deletedRecipeAssetError = await deleteRecipeAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
-        ErrorPayload? deletedStepAssetError = await deleteStepAssetAfterRecipeDeletion.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        HttpResponseMessage deleteRecipeAssetAgain = await client.DeleteAsync($"/api/v1/images/{recipeAsset.AssetId}");
+        HttpResponseMessage deleteStepAssetAgain = await client.DeleteAsync($"/api/v1/images/{stepAsset.AssetId}");
 
         await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeResponse);
-        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteRecipeAssetAfterRecipeDeletion);
-        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteStepAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteRecipeAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NoContent, deleteStepAssetAfterRecipeDeletion);
+        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteRecipeAssetAgain);
+        await AssertStatusCodeAsync(HttpStatusCode.NotFound, deleteStepAssetAgain);
+
+        ErrorPayload? deletedRecipeAssetError = await deleteRecipeAssetAgain.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+        ErrorPayload? deletedStepAssetError = await deleteStepAssetAgain.Content.ReadFromJsonAsync<ErrorPayload>(JsonOptions);
+
         Assert.NotNull(deletedRecipeAssetError);
         Assert.NotNull(deletedStepAssetError);
         Assert.Equal("Image.NotFound", deletedRecipeAssetError.Error);
