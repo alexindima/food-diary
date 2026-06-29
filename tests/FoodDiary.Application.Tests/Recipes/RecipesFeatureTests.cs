@@ -874,17 +874,18 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
-    public async Task DuplicateRecipeCommandHandler_WhenDuplicatedRecipeCannotBeReloaded_ReturnsInvalidData() {
-        var user = User.Create("duplicate-reload-missing@example.com", "hash");
+    public async Task DuplicateRecipeCommandHandler_ReturnsDuplicatedRecipeWithoutReloadingBeforeCommit() {
+        var user = User.Create("duplicate-no-reload@example.com", "hash");
         var original = Recipe.Create(user.Id, "Original Recipe", servings: 1);
-        var repository = new DuplicateReloadMissingRecipeRepository(original);
+        var repository = new SingleRecipeRepository(original);
         var handler = new DuplicateRecipeCommandHandler(repository);
 
         Result<RecipeModel> result = await handler.Handle(new DuplicateRecipeCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Equal("Recipe.InvalidData", result.Error.Code);
+        ResultAssert.Success(result);
+        Assert.Equal("Original Recipe", result.Value.Name);
         Assert.NotNull(repository.LastAddedRecipe);
+        Assert.NotEqual(original.Id.Value, result.Value.Id);
     }
 
     [Fact]
@@ -1383,53 +1384,6 @@ public class RecipesFeatureTests {
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class DuplicateReloadMissingRecipeRepository(Recipe original) : IRecipeRepository {
-        public Recipe? LastAddedRecipe { get; private set; }
-
-        public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
-            LastAddedRecipe = recipe;
-            return Task.FromResult(recipe);
-        }
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Recipe?> GetByIdAsync(
-            RecipeId id,
-            UserId userId,
-            bool includePublic = true,
-            bool includeSteps = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<Recipe?>(id == original.Id && userId == original.UserId ? original : null);
-
-        public Task<IReadOnlyDictionary<RecipeId, Recipe>> GetByIdsAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
-            UserId userId,
-            bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
         public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
             int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,

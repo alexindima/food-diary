@@ -36,22 +36,9 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
 
         Recipe duplicate = CreateDuplicate(userId, original);
         await recipeRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeRepository, cancellationToken).ConfigureAwait(false);
 
-        Recipe? created = await recipeRepository.GetByIdAsync(
-            duplicate.Id,
-            userId,
-            includePublic: false,
-            includeSteps: true,
-            asTracking: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        if (created is null) {
-            return Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load duplicated recipe."));
-        }
-
-        await RecipeNutritionUpdater.EnsureNutritionAsync(created, recipeRepository, cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(created.ToModel(0, isOwnedByCurrentUser: true));
+        return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
     }
 
     private static Recipe CreateDuplicate(UserId userId, Recipe original) {
@@ -76,6 +63,13 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
     private static void ApplyNutritionSettings(Recipe duplicate, Recipe original) {
         if (original.IsNutritionAutoCalculated) {
             duplicate.EnableAutoNutrition();
+            duplicate.ApplyComputedNutrition(
+                original.TotalCalories,
+                original.TotalProteins,
+                original.TotalFats,
+                original.TotalCarbs,
+                original.TotalFiber,
+                original.TotalAlcohol);
             return;
         }
 

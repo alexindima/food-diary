@@ -49,7 +49,6 @@ public class AddFavoriteProductCommandHandler(
         var favorite = FavoriteProduct.Create(userId, productId, command.Name, command.PreferredPortionAmount ?? product.DefaultPortionAmount);
         await favoriteProductRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        FavoriteProduct? saved = await favoriteProductRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return Result.Success(saved!.ToModel());
+        return Result.Success(favorite.ToModel(product));
     }
 }

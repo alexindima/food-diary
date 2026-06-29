@@ -63,7 +63,7 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(nutritionResult.Error);
         }
 
-        return await SaveAndLoadAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
+        return await SaveAsync(meal, values.UserId, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result<CreateConsumptionValues>> PrepareCreateValuesAsync(
@@ -256,7 +256,7 @@ public class CreateConsumptionCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result<ConsumptionModel>> SaveAndLoadAsync(
+    private async Task<Result<ConsumptionModel>> SaveAsync(
         Meal meal,
         UserId userId,
         CancellationToken cancellationToken) {
@@ -267,15 +267,7 @@ public class CreateConsumptionCommandHandler(
             meal.Items.Where(x => x.RecipeId.HasValue).Select(x => x.RecipeId!.Value).ToList(),
             cancellationToken).ConfigureAwait(false);
 
-        Meal? created = await mealRepository.GetByIdAsync(
-            meal.Id,
-            userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        return created is null
-            ? Result.Failure<ConsumptionModel>(Errors.Consumption.InvalidData("Failed to load created consumption."))
-            : Result.Success(created.ToModel());
+        return Result.Success(meal.ToModel());
     }
 
     private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {

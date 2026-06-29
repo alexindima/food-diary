@@ -46,7 +46,6 @@ public class AddFavoriteMealCommandHandler(
         var favorite = FavoriteMeal.Create(userId, mealId, command.Name);
         await favoriteMealRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        FavoriteMeal? saved = await favoriteMealRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return Result.Success(saved!.ToModel());
+        return Result.Success(favorite.ToModel(meal));
     }
 }

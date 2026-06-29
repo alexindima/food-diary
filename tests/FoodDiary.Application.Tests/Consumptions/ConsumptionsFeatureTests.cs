@@ -915,9 +915,9 @@ public class ConsumptionsFeatureTests {
     }
 
     [Fact]
-    public async Task CreateConsumptionCommandHandler_WhenCreatedMealCannotBeReloaded_ReturnsInvalidData() {
-        var user = User.Create("create-reload-missing@example.com", "hash");
-        var repository = new CreateReloadMissingMealRepository();
+    public async Task CreateConsumptionCommandHandler_ReturnsCreatedMealWithoutReloadingBeforeCommit() {
+        var user = User.Create("create-no-reload@example.com", "hash");
+        var repository = new CreatingMealRepository();
         var handler = new CreateConsumptionCommandHandler(
             repository,
             new NoopMealNutritionService(),
@@ -947,8 +947,8 @@ public class ConsumptionsFeatureTests {
                 4),
             CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Equal("Consumption.InvalidData", result.Error.Code);
+        ResultAssert.Success(result);
+        Assert.Equal("Created", result.Value.Comment);
         Assert.NotNull(repository.StoredMeal);
     }
 
@@ -2421,53 +2421,6 @@ public class ConsumptionsFeatureTests {
             bool asTracking = false,
             CancellationToken cancellationToken = default) =>
             Task.FromResult<Meal?>(StoredMeal is not null && StoredMeal.Id == id && StoredMeal.UserId == userId ? StoredMeal : null);
-
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            int page,
-            int limit,
-            MealQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-            UserId userId,
-            DateTime dateFrom,
-            DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<int> GetTotalMealCountAsync(
-            UserId userId,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
-            UserId userId, DateTime date,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class CreateReloadMissingMealRepository : IMealRepository {
-        public Meal? StoredMeal { get; private set; }
-
-        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) {
-            StoredMeal = meal;
-            return Task.FromResult(meal);
-        }
-
-        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<Meal?> GetByIdAsync(
-            MealId id,
-            UserId userId,
-            bool includeItems = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<Meal?>(null);
 
         public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
             UserId userId,

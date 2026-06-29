@@ -1,22 +1,27 @@
 using FoodDiary.Application.FavoriteRecipes.Models;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
+using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Mappings;
 
 public static class FavoriteRecipeMappings {
     public static FavoriteRecipeModel ToModel(this FavoriteRecipe favorite) {
-        int totalTime = (favorite.Recipe.PrepTime ?? 0) + (favorite.Recipe.CookTime ?? 0);
+        return favorite.ToModel(favorite.Recipe);
+    }
+
+    public static FavoriteRecipeModel ToModel(this FavoriteRecipe favorite, Recipe recipe) {
+        int totalTime = (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0);
 
         return new FavoriteRecipeModel(
             favorite.Id.Value,
             favorite.RecipeId.Value,
             favorite.Name,
             favorite.CreatedAtUtc,
-            favorite.Recipe.Name,
-            favorite.Recipe.ImageUrl,
-            favorite.Recipe.TotalCalories ?? favorite.Recipe.ManualCalories,
-            favorite.Recipe.Servings,
+            recipe.Name,
+            recipe.ImageUrl,
+            recipe.TotalCalories ?? recipe.ManualCalories,
+            recipe.Servings,
             totalTime > 0 ? totalTime : null,
-            favorite.Recipe.Steps.Sum(step => step.Ingredients.Count));
+            recipe.Steps.Sum(step => step.Ingredients.Count));
     }
 }

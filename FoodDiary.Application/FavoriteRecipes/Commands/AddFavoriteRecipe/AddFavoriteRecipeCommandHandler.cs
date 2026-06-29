@@ -50,7 +50,6 @@ public class AddFavoriteRecipeCommandHandler(
         var favorite = FavoriteRecipe.Create(userId, recipeId, command.Name);
         await favoriteRecipeRepository.AddAsync(favorite, cancellationToken).ConfigureAwait(false);
 
-        FavoriteRecipe? saved = await favoriteRecipeRepository.GetByIdAsync(favorite.Id, userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return Result.Success(saved!.ToModel());
+        return Result.Success(favorite.ToModel(recipe));
     }
 }

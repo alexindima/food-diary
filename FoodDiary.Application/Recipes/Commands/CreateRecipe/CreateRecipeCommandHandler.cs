@@ -54,7 +54,7 @@ public class CreateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(nutritionResult.Error);
         }
 
-        return await SaveAndLoadAsync(recipe, values.UserId, cancellationToken).ConfigureAwait(false);
+        return await SaveAsync(recipe, cancellationToken).ConfigureAwait(false);
     }
 
     private async Task<Result<CreateRecipeValues>> PrepareCreateValuesAsync(
@@ -140,24 +140,13 @@ public class CreateRecipeCommandHandler(
         return Result.Success();
     }
 
-    private async Task<Result<RecipeModel>> SaveAndLoadAsync(
+    private async Task<Result<RecipeModel>> SaveAsync(
         Recipe recipe,
-        UserId userId,
         CancellationToken cancellationToken) {
         await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken).ConfigureAwait(false);
 
-        Recipe? created = await recipeRepository.GetByIdAsync(
-            recipe.Id,
-            userId,
-            includePublic: false,
-            includeSteps: true,
-            asTracking: false,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        return created is null
-            ? Result.Failure<RecipeModel>(Errors.Recipe.InvalidData("Failed to load created recipe."))
-            : Result.Success(created.ToModel(0, isOwnedByCurrentUser: true));
+        return Result.Success(recipe.ToModel(0, isOwnedByCurrentUser: true));
     }
 
     private Task<Result> EnsureIngredientsAccessibleAsync(
