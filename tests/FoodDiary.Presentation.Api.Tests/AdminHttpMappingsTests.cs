@@ -2,9 +2,9 @@ using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
-using FoodDiary.Presentation.Api.Services;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 using FoodDiary.Application.Admin.Commands.SendAdminEmailTemplateTest;
@@ -428,7 +428,7 @@ public sealed class AdminHttpMappingsTests {
         DateTime generatedAtUtc = DateTime.UtcNow;
         DateTime lastCheckInAtUtc = generatedAtUtc.AddMinutes(-10);
         DateTime lastEventAtUtc = generatedAtUtc.AddMinutes(-5);
-        var summary = new FastingTelemetrySummarySnapshot(
+        var summary = new FastingTelemetrySummaryModel(
             WindowHours: 168,
             GeneratedAtUtc: generatedAtUtc,
             StartedSessions: 10,
@@ -444,7 +444,7 @@ public sealed class AdminHttpMappingsTests {
             LastCheckInAtUtc: lastCheckInAtUtc,
             LastEventAtUtc: lastEventAtUtc,
             TopPresets: [
-                new FastingTelemetryPresetSnapshot(
+                new FastingTelemetryPresetSummaryModel(
                     PresetId: "morning",
                     SelectionCount: 4,
                     TimingSaveCount: 3,

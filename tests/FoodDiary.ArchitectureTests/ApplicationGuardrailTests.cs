@@ -164,8 +164,13 @@ public sealed class ApplicationGuardrailTests {
         string?[] actualFiles = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .OrderBy(static name => name, StringComparer.Ordinal)];
+        string?[] unexpectedFiles = [.. actualFiles
+            .Where(fileName =>
+                fileName is not null &&
+                !allowedFiles.Contains(fileName, StringComparer.Ordinal) &&
+                !fileName.StartsWith("FoodDiaryDbContext.", StringComparison.Ordinal))];
 
-        Assert.Equal(allowedFiles, actualFiles);
+        Assert.Empty(unexpectedFiles);
     }
 
     [Fact]

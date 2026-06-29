@@ -1,6 +1,6 @@
-namespace FoodDiary.Presentation.Api.Services;
+namespace FoodDiary.Application.Fasting.Models;
 
-public sealed record FastingTelemetrySummarySnapshot(
+public sealed record FastingTelemetrySummaryModel(
     int WindowHours,
     DateTime GeneratedAtUtc,
     int StartedSessions,
@@ -15,4 +15,4 @@ public sealed record FastingTelemetrySummarySnapshot(
     double? AverageCompletedDurationHours,
     DateTime? LastCheckInAtUtc,
     DateTime? LastEventAtUtc,
-    IReadOnlyList<FastingTelemetryPresetSnapshot> TopPresets);
+    IReadOnlyList<FastingTelemetryPresetSummaryModel> TopPresets);

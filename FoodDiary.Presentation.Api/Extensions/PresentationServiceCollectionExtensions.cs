@@ -54,7 +54,6 @@ public static class PresentationServiceCollectionExtensions {
         services.AddScoped<IEmailVerificationNotifier, EmailVerificationNotifier>();
         services.AddScoped<INotificationPusher, NotificationPusher>();
         services.AddSingleton<INotificationTestScheduler, NotificationTestScheduler>();
-        services.AddScoped<IFastingTelemetrySummaryService, FastingTelemetrySummaryService>();
         return services;
     }
 }

@@ -1,10 +1,10 @@
+using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
-using FoodDiary.Presentation.Api.Services;
 
 namespace FoodDiary.Presentation.Api.Features.Admin.Mappings;
 
 public static class AdminTelemetryHttpResponseMappings {
-    public static FastingTelemetrySummaryHttpResponse ToHttpResponse(this FastingTelemetrySummarySnapshot summary) {
+    public static FastingTelemetrySummaryHttpResponse ToHttpResponse(this FastingTelemetrySummaryModel summary) {
         return new FastingTelemetrySummaryHttpResponse(
             summary.WindowHours,
             summary.GeneratedAtUtc,

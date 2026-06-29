@@ -1,8 +1,10 @@
 using System.Text.Json;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
-using FoodDiary.Presentation.Api.Services;
 
 namespace FoodDiary.Presentation.Api.Tests;
 
@@ -11,7 +13,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task GetSummaryAsync_AggregatesTrackedFastingEvents() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
+        GetFastingTelemetrySummaryQueryHandler handler = CreateHandler(repository);
         string timestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
 
         await RecordAsync(repository, CreateRequest("fasting.reminder-preset.selected", timestamp, """
@@ -30,7 +32,8 @@ public sealed class FastingTelemetrySummaryServiceTests {
             {"sessionId":"s1","actualDurationHours":15.5,"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
 
-        FastingTelemetrySummarySnapshot summary = await service.GetSummaryAsync(24, CancellationToken.None);
+        Result<FastingTelemetrySummaryModel> result = await handler.Handle(new GetFastingTelemetrySummaryQuery(24), CancellationToken.None);
+        FastingTelemetrySummaryModel summary = result.Value;
 
         Assert.Equal(1, summary.StartedSessions);
         Assert.Equal(1, summary.CompletedSessions);
@@ -55,8 +58,9 @@ public sealed class FastingTelemetrySummaryServiceTests {
 
         await RecordAsync(repository, CreateRequest("notifications.preference.changed", DateTime.UtcNow.ToString("O")), CancellationToken.None);
 
-        FastingTelemetrySummaryService service = CreateService(repository);
-        FastingTelemetrySummarySnapshot summary = await service.GetSummaryAsync(24, CancellationToken.None);
+        GetFastingTelemetrySummaryQueryHandler handler = CreateHandler(repository);
+        Result<FastingTelemetrySummaryModel> result = await handler.Handle(new GetFastingTelemetrySummaryQuery(24), CancellationToken.None);
+        FastingTelemetrySummaryModel summary = result.Value;
 
         Assert.Equal(0, summary.StartedSessions);
         Assert.Equal(0, summary.ReminderPresetSelections);
@@ -183,8 +187,8 @@ public sealed class FastingTelemetrySummaryServiceTests {
             Details: details);
     }
 
-    private static FastingTelemetrySummaryService CreateService(IFastingTelemetryEventRepository repository) =>
-        new(repository);
+    private static GetFastingTelemetrySummaryQueryHandler CreateHandler(IFastingTelemetryEventRepository repository) =>
+        new(repository, TimeProvider.System);
 
     private static async Task RecordAsync(
         IFastingTelemetryEventRepository repository,

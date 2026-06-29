@@ -29,11 +29,12 @@ using FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 using FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Presentation.Api.Features.Admin;
 using FoodDiary.Presentation.Api.Features.Admin.Requests;
 using FoodDiary.Presentation.Api.Features.Admin.Responses;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -309,22 +310,15 @@ public sealed class AdminControllersCoverageTests {
 
     [Fact]
     public async Task AdminTelemetryController_GetFastingSummary_ReturnsSummaryAndUsesRequestAborted() {
-        var snapshot = new FastingTelemetrySummarySnapshot(24, DateTime.UtcNow, 1, 1, 1, 0, 0, 0, 0, 100, 100, 18, LastCheckInAtUtc: null, LastEventAtUtc: null, TopPresets: []);
-        IFastingTelemetrySummaryService service = Substitute.For<IFastingTelemetrySummaryService>();
-        var controller = new AdminTelemetryController(service) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext(),
-            },
-        };
-        using var cts = new CancellationTokenSource();
-        controller.HttpContext.RequestAborted = cts.Token;
-        service.GetSummaryAsync(48, cts.Token).Returns(Task.FromResult(snapshot));
+        var snapshot = new FastingTelemetrySummaryModel(24, DateTime.UtcNow, 1, 1, 1, 0, 0, 0, 0, 100, 100, 18, LastCheckInAtUtc: null, LastEventAtUtc: null, TopPresets: []);
+        CapturedSender sender = SubstituteSender.Capture(Result.Success(snapshot));
+        AdminTelemetryController controller = CreateController(new AdminTelemetryController(sender));
 
         IActionResult result = await controller.GetFastingSummary(new GetFastingTelemetrySummaryHttpQuery(48));
 
         FastingTelemetrySummaryHttpResponse response = Assert.IsType<FastingTelemetrySummaryHttpResponse>(Assert.IsType<OkObjectResult>(result).Value);
         Assert.Equal(24, response.WindowHours);
-        await service.Received(1).GetSummaryAsync(48, cts.Token);
+        Assert.Equal(48, Assert.IsType<GetFastingTelemetrySummaryQuery>(sender.Request).Hours);
     }
 
     private static TController CreateController<TController>(TController controller)

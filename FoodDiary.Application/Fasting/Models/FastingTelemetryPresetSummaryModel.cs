@@ -1,6 +1,6 @@
-namespace FoodDiary.Presentation.Api.Services;
+namespace FoodDiary.Application.Fasting.Models;
 
-public sealed record FastingTelemetryPresetSnapshot(
+public sealed record FastingTelemetryPresetSummaryModel(
     string PresetId,
     int SelectionCount,
     int TimingSaveCount,
