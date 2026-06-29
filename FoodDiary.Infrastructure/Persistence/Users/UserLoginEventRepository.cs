@@ -10,8 +10,7 @@ public sealed class UserLoginEventRepository(FoodDiaryDbContext context) : IUser
     private const string LikeEscapeCharacter = "\\";
 
     public async Task AddAsync(UserLoginEvent loginEvent, CancellationToken cancellationToken = default) {
-        context.UserLoginEvents.Add(loginEvent);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.UserLoginEvents.AddAsync(loginEvent, cancellationToken).ConfigureAwait(false);
     }
 
     public async Task<(IReadOnlyList<UserLoginEventReadModel> Items, int TotalItems)> GetPagedAsync(

@@ -147,6 +147,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
 
+        // Follow-up: move role membership changes to tracked writes or an explicit role-membership service.
         FormattableString sql = $"""
             INSERT INTO "UserRoles" ("UserId", "RoleId")
             SELECT {user.Id.Value}, "Id"
@@ -161,6 +162,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         ArgumentNullException.ThrowIfNull(user);
         ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
 
+        // Follow-up: align this immediate delete with the role-membership transaction boundary.
         string normalizedRoleName = roleName.Trim();
         await context.UserRoles
             .Where(userRole => userRole.UserId == user.Id && userRole.Role.Name == normalizedRoleName)
@@ -168,14 +170,13 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
     }
 
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
-        context.Users.Add(user);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.Users.AddAsync(user, cancellationToken).ConfigureAwait(false);
         return user;
     }
 
-    public async Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
         context.Users.Update(user);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task UpdateAsync(
@@ -187,7 +188,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
             await context.UserRoleAuditEvents.AddRangeAsync(roleAuditEvents, cancellationToken).ConfigureAwait(false);
         }
 
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await Task.CompletedTask.ConfigureAwait(false);
     }
 
     private static string EscapeLikePattern(string value) {

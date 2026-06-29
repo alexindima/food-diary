@@ -20,9 +20,6 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "RecentItems", "RecentItemRepository.cs"),
             Path.Combine(persistenceRoot, "Tracking", "FastingSessionRepository.cs"),
             Path.Combine(persistenceRoot, "Tracking", "FastingTelemetryEventRepository.cs"),
-            Path.Combine(persistenceRoot, "Users", "RefreshTokenSessionRepository.cs"),
-            Path.Combine(persistenceRoot, "Users", "UserLoginEventRepository.cs"),
-            Path.Combine(persistenceRoot, "Users", "UserRepository.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);

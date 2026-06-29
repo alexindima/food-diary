@@ -454,8 +454,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var repository = new UserRepository(context);
         var added = User.Create($"added-{Guid.NewGuid():N}@example.com", "hash");
         await repository.AddAsync(added);
+        await context.SaveChangesAsync();
         added.UpdateAdminPreferences(new UserAdminPreferenceUpdate(Language: "ru"));
         await repository.UpdateAsync(added);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByEmailAsync(active.Email));
         Assert.NotNull(await repository.GetByEmailIncludingDeletedAsync(deleted.Email));
@@ -475,6 +477,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         var auditEvent = UserRoleAuditEvent.Create(active.Id, premiumRole, UserRoleAuditAction.Added, actorUserId: null, "tests", DateTime.UtcNow);
         active.UpdateAdminPreferences(new UserAdminPreferenceUpdate(Language: "ru"));
         await repository.UpdateAsync(active, [auditEvent]);
+        await context.SaveChangesAsync();
 
         await CoverUserLoginEventRepositoryAsync(context, active.Id);
         await CoverRefreshTokenSessionRepositoryAsync(context, active.Id);
@@ -745,6 +748,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             operatingSystem: null,
             deviceType: null,
             now));
+        await context.SaveChangesAsync();
 
         (IReadOnlyList<Application.Abstractions.Authentication.Models.UserLoginEventReadModel> items, int total) =
             await repository.GetPagedAsync(page: 0, limit: 500, userId.Value, search: "Chrome");
@@ -773,14 +777,17 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             userAgent: "agent",
             now);
         await repository.AddAsync(session);
+        await context.SaveChangesAsync();
         session.Rotate("refresh-hash-2", rememberMe: false, now.AddMinutes(1), TimeSpan.FromMinutes(5));
         await repository.UpdateAsync(session);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByIdAsync(session.Id));
         Assert.Single(await repository.GetActiveByUserIdAsync(userId));
 
         session.Revoke(now.AddMinutes(2));
         await repository.UpdateAsync(session);
+        await context.SaveChangesAsync();
 
         Assert.Empty(await repository.GetActiveByUserIdAsync(userId));
     }

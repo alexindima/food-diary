@@ -21,12 +21,11 @@ public sealed class RefreshTokenSessionRepository(FoodDiaryDbContext context) : 
     }
 
     public async Task AddAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
-        context.UserRefreshTokenSessions.Add(session);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        await context.UserRefreshTokenSessions.AddAsync(session, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(UserRefreshTokenSession session, CancellationToken cancellationToken = default) {
         context.UserRefreshTokenSessions.Update(session);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 }
