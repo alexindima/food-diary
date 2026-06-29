@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -11,7 +12,8 @@ namespace FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 public class MarkNotificationReadCommandHandler(
     INotificationRepository notificationRepository,
     IUserRepository userRepository,
-    INotificationPusher notificationPusher)
+    INotificationPusher notificationPusher,
+    IUnitOfWork unitOfWork)
     : ICommandHandler<MarkNotificationReadCommand, Result> {
     public async Task<Result> Handle(MarkNotificationReadCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -35,6 +37,7 @@ public class MarkNotificationReadCommandHandler(
 
         notification.MarkAsRead();
         await notificationRepository.UpdateAsync(notification, cancellationToken).ConfigureAwait(false);
+        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(userId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushNotificationsChangedAsync(userId.Value, cancellationToken).ConfigureAwait(false);

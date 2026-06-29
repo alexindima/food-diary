@@ -53,7 +53,8 @@ public class NotificationsFeatureTests {
         repo.Seed(notification);
         var pusher = new RecordingNotificationPusher();
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, unitOfWork);
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -63,6 +64,7 @@ public class NotificationsFeatureTests {
         Assert.Equal(userId.Value, pusher.UnreadCountUserId);
         Assert.Equal(0, pusher.UnreadCount);
         Assert.Equal(userId.Value, pusher.NotificationsChangedUserId);
+        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -73,7 +75,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreateUnitOfWork());
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -85,7 +87,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
         var userId = UserId.New();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher(), CreateUnitOfWork());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
@@ -99,7 +101,8 @@ public class NotificationsFeatureTests {
         var handler = new MarkNotificationReadCommandHandler(
             new InMemoryNotificationRepository(),
             new SingleUserRepository(CreateUser()),
-            new RecordingNotificationPusher());
+            new RecordingNotificationPusher(),
+            CreateUnitOfWork());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(UserId: null, Guid.NewGuid()),
@@ -114,7 +117,7 @@ public class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher());
+        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreateUnitOfWork());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),

@@ -823,6 +823,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(tracked);
         tracked.MarkAsRead();
         await repository.UpdateAsync(tracked);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await repository.GetByIdAsync(standard.Id));
         Assert.True(await repository.ExistsAsync(userId, "standard", "two"));
@@ -839,6 +840,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             batchSize: 0);
         transient.MarkAsRead();
         await repository.UpdateAsync(transient);
+        await context.SaveChangesAsync();
         int deleted = await repository.DeleteExpiredBatchAsync(
             ["transient"],
             DateTime.UtcNow.AddDays(1),

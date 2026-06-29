@@ -33,9 +33,9 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
         return notification;
     }
 
-    public async Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) {
         context.Notifications.Update(notification);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 
     public async Task<bool> ExistsAsync(
