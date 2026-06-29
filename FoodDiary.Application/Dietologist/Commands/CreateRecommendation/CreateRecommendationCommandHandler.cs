@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
@@ -21,7 +22,8 @@ public class CreateRecommendationCommandHandler(
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<CreateRecommendationCommand, Result<RecommendationModel>> {
     public async Task<Result<RecommendationModel>> Handle(
         CreateRecommendationCommand command, CancellationToken cancellationToken) {
@@ -65,9 +67,12 @@ public class CreateRecommendationCommandHandler(
             recommendation.Id.Value.ToString());
 
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        int unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(recommendation.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
+        NotificationPostCommitActions.EnqueueUnreadCountPush(
+            postCommitActionQueue,
+            notificationRepository,
+            notificationPusher,
+            recommendation.ClientUserId,
+            pushChanged: false);
     }
 
     private static string ResolveDietologistLabel(User? dietologist) {

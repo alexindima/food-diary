@@ -9,6 +9,8 @@ using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Products.Queries.SearchProductSuggestions;
 using FoodDiary.Application.Products.SearchSuggestions;
+using FoodDiary.Application.OpenFoodFacts.Common;
+using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Presentation.Api.Features.Products.Mappings;
 using FoodDiary.Presentation.Api.Features.Products.Responses;
@@ -76,7 +78,7 @@ public sealed class ProductSearchSuggestionTests {
             cachedProducts,
             out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
         IUnitOfWork unitOfWork = CreateUnitOfWork();
-        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache, unitOfWork);
+        var provider = new OpenFoodFactsProductSearchSuggestionProvider(CreateCachedProductSearch(service, cache, unitOfWork));
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 2, CancellationToken.None);
 
@@ -98,7 +100,7 @@ public sealed class ProductSearchSuggestionTests {
             [CreateOpenFoodFactsProduct("cached-1")],
             out Func<IReadOnlyList<OpenFoodFactsProductModel>> getUpsertedProducts);
         IUnitOfWork unitOfWork = CreateUnitOfWork();
-        var provider = new OpenFoodFactsProductSearchSuggestionProvider(service, cache, unitOfWork);
+        var provider = new OpenFoodFactsProductSearchSuggestionProvider(CreateCachedProductSearch(service, cache, unitOfWork));
 
         IReadOnlyList<ProductSearchSuggestionModel> result = await provider.SearchAsync("fanta", 5, CancellationToken.None);
 
@@ -260,6 +262,12 @@ public sealed class ProductSearchSuggestionTests {
         unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.FromResult(1));
         return unitOfWork;
     }
+
+    private static IOpenFoodFactsCachedProductSearch CreateCachedProductSearch(
+        IOpenFoodFactsService service,
+        IOpenFoodFactsProductCacheRepository cache,
+        IUnitOfWork unitOfWork) =>
+        new OpenFoodFactsCachedProductSearch(service, cache, unitOfWork);
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts,

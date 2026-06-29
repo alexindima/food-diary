@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
 using FoodDiary.Application.Ai.Services;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Ai;
@@ -21,8 +20,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -44,8 +42,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
             CreateUserRepository(user),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -66,8 +63,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
             CreateUserRepository(returnNull: true),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -88,8 +84,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -113,8 +108,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodNutritionModel> result = await service.CalculateNutritionAsync(
             [new FoodVisionItemModel("Apple", NameLocal: null, 100m, "g", 0.9m)],
@@ -134,8 +128,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -159,8 +152,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -183,8 +175,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
             CreateUserRepository(returnNull: true),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -206,8 +197,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(0, 1_000_000)),
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -232,8 +222,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -262,8 +251,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.AnalyzeFoodImageAsync(
             "https://cdn.example.com/meal.webp",
@@ -285,8 +273,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -304,8 +291,7 @@ public sealed class OpenAiFoodServiceTests {
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -325,8 +311,7 @@ public sealed class OpenAiFoodServiceTests {
             usageRepository,
             CreateUserRepository(),
             new StubDateTimeProvider(),
-            CreateAiPromptProvider(),
-            CreateUnitOfWork());
+            CreateAiPromptProvider());
 
         Result<FoodVisionModel> result = await service.ParseFoodTextAsync("apple 100g", "en", UserId.New(), CancellationToken.None);
 
@@ -440,11 +425,5 @@ public sealed class OpenAiFoodServiceTests {
             .Returns(call => Task.FromResult(call.ArgAt<string>(0)));
 
         return provider;
-    }
-
-    private static IUnitOfWork CreateUnitOfWork() {
-        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
-        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        return unitOfWork;
     }
 }

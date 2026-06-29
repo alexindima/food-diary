@@ -391,7 +391,7 @@ public class NotificationsFeatureTests {
     }
 
     [Fact]
-    public async Task GetWebPushSubscriptions_PrunesExpiredSubscriptions() {
+    public async Task GetWebPushSubscriptions_FiltersExpiredSubscriptions() {
         User user = CreateUser();
         var utcNow = new DateTime(2026, 5, 28, 8, 0, 0, DateTimeKind.Utc);
         var active = WebPushSubscription.Create(
@@ -407,20 +407,18 @@ public class NotificationsFeatureTests {
             "auth",
             utcNow.AddMinutes(-1));
         var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
-        IUnitOfWork unitOfWork = CreateUnitOfWork();
         var handler = new GetWebPushSubscriptionsQueryHandler(
             repository,
             new SingleUserRepository(user),
-            new FixedDateTimeProvider(utcNow),
-            unitOfWork);
+            new FixedDateTimeProvider(utcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
 
         ResultAssert.Success(result);
         WebPushSubscriptionModel item = Assert.Single(result.Value);
         Assert.Equal(active.Endpoint, item.Endpoint);
-        Assert.Equal([expired.Endpoint], repository.DeletedEndpoints);
-        await unitOfWork.Received(1).SaveChangesAsync(Arg.Any<CancellationToken>());
+        Assert.Empty(repository.DeletedEndpoints);
+        Assert.Equal(2, repository.Subscriptions.Count);
     }
 
     [Fact]
@@ -428,8 +426,7 @@ public class NotificationsFeatureTests {
         var handler = new GetWebPushSubscriptionsQueryHandler(
             new InMemoryWebPushSubscriptionRepository(),
             new SingleUserRepository(CreateUser()),
-            new FixedDateTimeProvider(DateTime.UtcNow),
-            CreateUnitOfWork());
+            new FixedDateTimeProvider(DateTime.UtcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
 
@@ -443,8 +440,7 @@ public class NotificationsFeatureTests {
         var handler = new GetWebPushSubscriptionsQueryHandler(
             new InMemoryWebPushSubscriptionRepository(),
             new SingleUserRepository(CreateDeletedUser(userId)),
-            new FixedDateTimeProvider(DateTime.UtcNow),
-            CreateUnitOfWork());
+            new FixedDateTimeProvider(DateTime.UtcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
 

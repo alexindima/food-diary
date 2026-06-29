@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Enums;
@@ -15,7 +16,8 @@ public class DeclineInvitationCommandHandler(
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher)
+    INotificationPusher notificationPusher,
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationCommand command, CancellationToken cancellationToken) {
         var invitationId = new DietologistInvitationId(command.InvitationId);
@@ -35,6 +37,7 @@ public class DeclineInvitationCommandHandler(
             notificationWriter,
             notificationRepository,
             notificationPusher,
+            postCommitActionQueue,
             invitation.ClientUserId,
             invitation.DietologistEmail,
             invitation.Id.Value.ToString(),

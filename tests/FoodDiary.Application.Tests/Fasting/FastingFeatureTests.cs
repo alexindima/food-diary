@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
@@ -2110,6 +2111,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2135,6 +2138,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
         MethodInfo? method = typeof(FastingNotificationScheduler).GetMethod(
@@ -2173,6 +2178,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2198,6 +2205,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2228,6 +2237,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2254,6 +2265,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2282,6 +2295,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2309,6 +2324,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2341,6 +2358,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2371,6 +2390,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2400,6 +2421,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2432,6 +2455,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2459,6 +2484,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2492,6 +2519,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2519,6 +2548,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2551,6 +2582,8 @@ public class FastingFeatureTests {
             notificationRepo,
             new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
+            CreateUnitOfWork(),
+            new ImmediatePostCommitActionQueue(),
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2830,6 +2863,23 @@ public class FastingFeatureTests {
             Sent.Add(notification);
             return Task.CompletedTask;
         }
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        return unitOfWork;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public bool HasActions => false;
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

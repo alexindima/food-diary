@@ -1,45 +1,8 @@
-using System.Globalization;
-using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Services;
 
-public sealed class FastingTelemetrySummaryService(
-    IFastingTelemetryEventRepository repository,
-    IUnitOfWork unitOfWork) : IFastingTelemetrySummaryService {
-    public async Task RecordAsync(ClientTelemetryLogHttpRequest request, CancellationToken cancellationToken) {
-        if (!string.Equals(request.Category, "user_action", StringComparison.OrdinalIgnoreCase) ||
-            !request.Name.StartsWith("fasting.", StringComparison.OrdinalIgnoreCase)) {
-            return;
-        }
-
-        IReadOnlyDictionary<string, string> details = ReadDetails(request.Details);
-        var record = new FastingTelemetryEventRecord(
-            request.Name,
-            ParseTimestampUtc(request.Timestamp),
-            ReadString(details, "sessionId"),
-            ReadString(details, "protocol"),
-            ReadString(details, "planType"),
-            ReadString(details, "status"),
-            ReadString(details, "occurrenceKind"),
-            ReadString(details, "reminderPresetId") ?? ReadString(details, "presetId"),
-            ReadString(details, "source"),
-            ReadInt(details, "firstReminderHours"),
-            ReadInt(details, "followUpReminderHours"),
-            ReadInt(details, "plannedDurationHours"),
-            ReadDouble(details, "actualDurationHours"),
-            ReadInt(details, "hungerLevel"),
-            ReadInt(details, "energyLevel"),
-            ReadInt(details, "moodLevel"),
-            ReadInt(details, "symptomsCount"),
-            ReadBool(details, "hadNotes"));
-
-        await repository.AddAsync(record, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-    }
-
+public sealed class FastingTelemetrySummaryService(IFastingTelemetryEventRepository repository) : IFastingTelemetrySummaryService {
     public async Task<FastingTelemetrySummarySnapshot> GetSummaryAsync(int windowHours, CancellationToken cancellationToken) {
         int normalizedWindowHours = Math.Clamp(windowHours, 1, 168);
         DateTime windowStartUtc = DateTime.UtcNow.AddHours(-normalizedWindowHours);
@@ -100,54 +63,4 @@ public sealed class FastingTelemetrySummaryService(
             topPresets);
     }
 
-    private static DateTime ParseTimestampUtc(string? timestamp) {
-        return DateTime.TryParse(
-            timestamp,
-            CultureInfo.InvariantCulture,
-            DateTimeStyles.AssumeUniversal | DateTimeStyles.AdjustToUniversal,
-            out DateTime parsed)
-            ? parsed
-            : DateTime.UtcNow;
-    }
-
-    private static IReadOnlyDictionary<string, string> ReadDetails(JsonElement? details) {
-        if (details is null || details.Value.ValueKind is JsonValueKind.Null or JsonValueKind.Undefined || details.Value.ValueKind != JsonValueKind.Object) {
-            return new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        }
-
-        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
-        foreach (JsonProperty property in details.Value.EnumerateObject()) {
-            string? value = property.Value.ValueKind switch {
-                JsonValueKind.String => property.Value.GetString(),
-                JsonValueKind.Number => property.Value.GetRawText(),
-                JsonValueKind.True => bool.TrueString,
-                JsonValueKind.False => bool.FalseString,
-                _ => null,
-            };
-
-            if (!string.IsNullOrWhiteSpace(value)) {
-                result[property.Name] = value;
-            }
-        }
-
-        return result;
-    }
-
-    private static string? ReadString(IReadOnlyDictionary<string, string> details, string key) =>
-        details.GetValueOrDefault(key);
-
-    private static int? ReadInt(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out string? value) && int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out int parsed)
-            ? parsed
-            : null;
-
-    private static double? ReadDouble(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out string? value) && double.TryParse(value, NumberStyles.Float, CultureInfo.InvariantCulture, out double parsed)
-            ? parsed
-            : null;
-
-    private static bool? ReadBool(IReadOnlyDictionary<string, string> details, string key) =>
-        details.TryGetValue(key, out string? value) && bool.TryParse(value, out bool parsed)
-            ? parsed
-            : null;
 }

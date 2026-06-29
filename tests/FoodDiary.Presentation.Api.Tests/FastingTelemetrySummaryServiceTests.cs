@@ -1,5 +1,5 @@
 using System.Text.Json;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Services;
@@ -14,19 +14,19 @@ public sealed class FastingTelemetrySummaryServiceTests {
         FastingTelemetrySummaryService service = CreateService(repository);
         string timestamp = DateTime.UtcNow.AddHours(-1).ToString("O");
 
-        await service.RecordAsync(CreateRequest("fasting.reminder-preset.selected", timestamp, """
+        await RecordAsync(repository, CreateRequest("fasting.reminder-preset.selected", timestamp, """
             {"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
-        await service.RecordAsync(CreateRequest("fasting.reminder-timing.saved", timestamp, """
+        await RecordAsync(repository, CreateRequest("fasting.reminder-timing.saved", timestamp, """
             {"source":"preset","reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
-        await service.RecordAsync(CreateRequest("fasting.session.started", timestamp, """
+        await RecordAsync(repository, CreateRequest("fasting.session.started", timestamp, """
             {"sessionId":"s1","plannedDurationHours":16,"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
-        await service.RecordAsync(CreateRequest("fasting.check-in.saved", timestamp, """
+        await RecordAsync(repository, CreateRequest("fasting.check-in.saved", timestamp, """
             {"sessionId":"s1","hungerLevel":3,"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
-        await service.RecordAsync(CreateRequest("fasting.session.completed", timestamp, """
+        await RecordAsync(repository, CreateRequest("fasting.session.completed", timestamp, """
             {"sessionId":"s1","actualDurationHours":15.5,"reminderPresetId":"steady","firstReminderHours":16,"followUpReminderHours":24}
             """), CancellationToken.None);
 
@@ -52,40 +52,33 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_IgnoresNonFastingTelemetry() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        RecordingUnitOfWork unitOfWork = new();
-        FastingTelemetrySummaryService service = CreateService(repository, unitOfWork);
 
-        await service.RecordAsync(CreateRequest("notifications.preference.changed", DateTime.UtcNow.ToString("O")), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("notifications.preference.changed", DateTime.UtcNow.ToString("O")), CancellationToken.None);
 
+        FastingTelemetrySummaryService service = CreateService(repository);
         FastingTelemetrySummarySnapshot summary = await service.GetSummaryAsync(24, CancellationToken.None);
 
         Assert.Equal(0, summary.StartedSessions);
         Assert.Equal(0, summary.ReminderPresetSelections);
         Assert.Empty(summary.TopPresets);
-        Assert.Equal(0, unitOfWork.SaveChangesCallCount);
     }
 
     [Fact]
     public async Task RecordAsync_WithInvalidTimestamp_UsesCurrentUtcTimestamp() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        RecordingUnitOfWork unitOfWork = new();
-        FastingTelemetrySummaryService service = CreateService(repository, unitOfWork);
-        DateTime before = DateTime.UtcNow;
+        DateTime fallbackNow = new(2026, 6, 30, 10, 15, 0, DateTimeKind.Utc);
 
-        await service.RecordAsync(CreateRequest("fasting.session.started", "not-a-date", "{}"), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("fasting.session.started", "not-a-date", "{}"), CancellationToken.None, new FixedTimeProvider(fallbackNow));
 
-        DateTime after = DateTime.UtcNow;
         FastingTelemetryEventRecord record = Assert.Single(repository.Events);
-        Assert.InRange(record.OccurredAtUtc, before, after);
-        Assert.Equal(1, unitOfWork.SaveChangesCallCount);
+        Assert.Equal(fallbackNow, record.OccurredAtUtc);
     }
 
     [Fact]
     public async Task RecordAsync_WithNullDetails_RecordsEventWithoutDetailValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
 
-        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O")), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O")), CancellationToken.None);
 
         FastingTelemetryEventRecord record = Assert.Single(repository.Events);
         Assert.Null(record.SessionId);
@@ -96,10 +89,9 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_WithUndefinedDetails_RecordsEventWithoutDetailValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
         JsonElement? details = default(JsonElement);
 
-        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
 
         FastingTelemetryEventRecord record = Assert.Single(repository.Events);
         Assert.Null(record.SessionId);
@@ -110,10 +102,9 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_WithJsonNullDetails_RecordsEventWithoutDetailValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
         JsonElement details = JsonSerializer.Deserialize<JsonElement>("null");
 
-        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
 
         FastingTelemetryEventRecord record = Assert.Single(repository.Events);
         Assert.Null(record.SessionId);
@@ -124,10 +115,9 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_WithNonObjectDetails_RecordsEventWithoutDetailValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
         JsonElement details = JsonSerializer.Deserialize<JsonElement>("\"not-an-object\"");
 
-        await service.RecordAsync(CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
+        await RecordAsync(repository, CreateRequest("fasting.session.started", DateTime.UtcNow.ToString("O"), details), CancellationToken.None);
 
         FastingTelemetryEventRecord record = Assert.Single(repository.Events);
         Assert.Null(record.SessionId);
@@ -138,9 +128,8 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_WithBooleanAndUnsupportedDetails_ParsesBooleansAndIgnoresUnsupportedValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
 
-        await service.RecordAsync(CreateRequest("fasting.check-in.saved", DateTime.UtcNow.ToString("O"), """
+        await RecordAsync(repository, CreateRequest("fasting.check-in.saved", DateTime.UtcNow.ToString("O"), """
             {
                 "hadNotes": true,
                 "protocol": false,
@@ -161,9 +150,8 @@ public sealed class FastingTelemetrySummaryServiceTests {
     [Fact]
     public async Task RecordAsync_WithInvalidNumericAndBooleanDetails_RecordsNullParsedValues() {
         var repository = new InMemoryFastingTelemetryEventRepository();
-        FastingTelemetrySummaryService service = CreateService(repository);
 
-        await service.RecordAsync(CreateRequest("fasting.session.completed", DateTime.UtcNow.ToString("O"), """
+        await RecordAsync(repository, CreateRequest("fasting.session.completed", DateTime.UtcNow.ToString("O"), """
             {
                 "firstReminderHours": "bad",
                 "actualDurationHours": "bad",
@@ -195,20 +183,27 @@ public sealed class FastingTelemetrySummaryServiceTests {
             Details: details);
     }
 
-    private static FastingTelemetrySummaryService CreateService(
+    private static FastingTelemetrySummaryService CreateService(IFastingTelemetryEventRepository repository) =>
+        new(repository);
+
+    private static async Task RecordAsync(
         IFastingTelemetryEventRepository repository,
-        RecordingUnitOfWork? unitOfWork = null) =>
-        new(repository, unitOfWork ?? new RecordingUnitOfWork());
+        ClientTelemetryLogHttpRequest request,
+        CancellationToken cancellationToken,
+        TimeProvider? timeProvider = null) {
+        var handler = new RecordFastingTelemetryCommandHandler(repository, timeProvider ?? TimeProvider.System);
+        await handler.Handle(
+            new RecordFastingTelemetryCommand(
+                request.Category,
+                request.Name,
+                request.Timestamp,
+                request.Details),
+            cancellationToken).ConfigureAwait(false);
+    }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingUnitOfWork : IUnitOfWork {
-        public bool HasPendingChanges => SaveChangesCallCount > 0;
-        public int SaveChangesCallCount { get; private set; }
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
-            SaveChangesCallCount++;
-            return Task.CompletedTask;
-        }
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

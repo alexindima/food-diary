@@ -7,16 +7,15 @@ namespace FoodDiary.Application.Notifications.Services;
 public sealed class NotificationWriter(
     INotificationRepository notificationRepository,
     IWebPushNotificationSender webPushNotificationSender,
-    IUnitOfWork unitOfWork) : INotificationWriter {
+    IPostCommitActionQueue postCommitActionQueue) : INotificationWriter {
     public async Task AddAsync(
         Notification notification,
         bool sendWebPush = false,
         CancellationToken cancellationToken = default) {
         await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         if (sendWebPush) {
-            await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            postCommitActionQueue.Enqueue(ct => webPushNotificationSender.SendAsync(notification, ct));
         }
     }
 }

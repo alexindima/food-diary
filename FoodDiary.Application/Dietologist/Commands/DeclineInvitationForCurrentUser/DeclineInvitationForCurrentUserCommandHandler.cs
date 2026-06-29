@@ -1,4 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
@@ -17,7 +18,8 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
     IUserRepository userRepository,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher)
+    INotificationPusher notificationPusher,
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -57,6 +59,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
             notificationWriter,
             notificationRepository,
             notificationPusher,
+            postCommitActionQueue,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),

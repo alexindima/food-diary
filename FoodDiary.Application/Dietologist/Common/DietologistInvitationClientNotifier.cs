@@ -1,4 +1,5 @@
 using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,6 +11,7 @@ internal static class DietologistInvitationClientNotifier {
         INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
+        IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
@@ -18,6 +20,7 @@ internal static class DietologistInvitationClientNotifier {
             notificationWriter,
             notificationRepository,
             notificationPusher,
+            postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationAccepted(
                 clientUserId,
                 dietologistDisplayName,
@@ -28,6 +31,7 @@ internal static class DietologistInvitationClientNotifier {
         INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
+        IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
@@ -36,6 +40,7 @@ internal static class DietologistInvitationClientNotifier {
             notificationWriter,
             notificationRepository,
             notificationPusher,
+            postCommitActionQueue,
             NotificationFactory.CreateDietologistInvitationDeclined(
                 clientUserId,
                 dietologistDisplayName,
@@ -46,12 +51,14 @@ internal static class DietologistInvitationClientNotifier {
         INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
+        IPostCommitActionQueue postCommitActionQueue,
         Notification notification,
         CancellationToken cancellationToken) {
         await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-
-        int unreadCount = await notificationRepository.GetUnreadCountAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(notification.UserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushNotificationsChangedAsync(notification.UserId.Value, cancellationToken).ConfigureAwait(false);
+        NotificationPostCommitActions.EnqueueUnreadCountPush(
+            postCommitActionQueue,
+            notificationRepository,
+            notificationPusher,
+            notification.UserId);
     }
 }

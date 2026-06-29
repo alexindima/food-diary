@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 using FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentUser;
@@ -123,6 +124,7 @@ public class DietologistFeatureTests {
             new InMemoryNotificationWriter(resolvedNotificationRepository, new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
+            new ImmediatePostCommitActionQueue(),
             dateTimeProvider ?? new StubDateTimeProvider(),
             NullLogger<InviteDietologistCommandHandler>.Instance);
     }
@@ -141,7 +143,8 @@ public class DietologistFeatureTests {
             passwordHasher ?? new StubPasswordHasher(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
-            notificationPusher ?? new FakeNotificationPusher());
+            notificationPusher ?? new FakeNotificationPusher(),
+            new ImmediatePostCommitActionQueue());
     }
 
     private static AcceptInvitationForCurrentUserCommandHandler CreateAcceptCurrentUserHandler(
@@ -156,7 +159,8 @@ public class DietologistFeatureTests {
             userRepository ?? new InMemoryUserRepository(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
-            notificationPusher ?? new FakeNotificationPusher());
+            notificationPusher ?? new FakeNotificationPusher(),
+            new ImmediatePostCommitActionQueue());
     }
 
     private static DeclineInvitationCommandHandler CreateDeclineHandler(
@@ -171,7 +175,8 @@ public class DietologistFeatureTests {
             passwordHasher ?? new StubPasswordHasher(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
-            notificationPusher ?? new FakeNotificationPusher());
+            notificationPusher ?? new FakeNotificationPusher(),
+            new ImmediatePostCommitActionQueue());
     }
 
     private static DeclineInvitationForCurrentUserCommandHandler CreateDeclineCurrentUserHandler(
@@ -186,7 +191,8 @@ public class DietologistFeatureTests {
             userRepository ?? new InMemoryUserRepository(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
-            notificationPusher ?? new FakeNotificationPusher());
+            notificationPusher ?? new FakeNotificationPusher(),
+            new ImmediatePostCommitActionQueue());
     }
 
     private static CreateRecommendationCommandHandler CreateRecommendationHandler(
@@ -202,7 +208,8 @@ public class DietologistFeatureTests {
             new InMemoryNotificationWriter(resolvedNotificationRepository, new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
-            userRepository ?? new InMemoryUserRepository());
+            userRepository ?? new InMemoryUserRepository(),
+            new ImmediatePostCommitActionQueue());
     }
 
     // â”€â”€ InviteDietologist â”€â”€
@@ -2131,7 +2138,8 @@ public class DietologistFeatureTests {
             notifRepo,
             new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
             pusher,
-            userRepo);
+            userRepo,
+            new ImmediatePostCommitActionQueue());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
         await handler.Handle(new NotificationEnvelope<RecommendationCreatedDomainEvent>(domainEvent), CancellationToken.None);
@@ -2155,7 +2163,8 @@ public class DietologistFeatureTests {
             notifRepo,
             new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
             pusher,
-            new InMemoryUserRepository());
+            new InMemoryUserRepository(),
+            new ImmediatePostCommitActionQueue());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
         await handler.Handle(new NotificationEnvelope<RecommendationCreatedDomainEvent>(domainEvent), CancellationToken.None);
@@ -2541,6 +2550,17 @@ public class DietologistFeatureTests {
             PushCalled = true;
             return Task.CompletedTask;
         }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public bool HasActions => false;
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

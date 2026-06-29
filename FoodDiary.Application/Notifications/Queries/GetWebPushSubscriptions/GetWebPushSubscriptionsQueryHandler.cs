@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -14,8 +13,7 @@ namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 public sealed class GetWebPushSubscriptionsQueryHandler(
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
     IUserRepository userRepository,
-    TimeProvider dateTimeProvider,
-    IUnitOfWork unitOfWork)
+    TimeProvider dateTimeProvider)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {
     public async Task<Result<IReadOnlyList<WebPushSubscriptionModel>>> Handle(
         GetWebPushSubscriptionsQuery query,
@@ -31,17 +29,11 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         }
 
         IReadOnlyList<WebPushSubscription> subscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        var expiredSubscriptions = subscriptions
-            .Where(subscription => subscription.ExpirationTimeUtc <= dateTimeProvider.GetUtcNow().UtcDateTime)
-            .ToList();
-
-        if (expiredSubscriptions.Count > 0) {
-            await webPushSubscriptionRepository.DeleteRangeAsync(expiredSubscriptions, cancellationToken).ConfigureAwait(false);
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-            subscriptions = subscriptions.Except(expiredSubscriptions).ToList();
-        }
+        DateTime utcNow = dateTimeProvider.GetUtcNow().UtcDateTime;
+        WebPushSubscription[] activeSubscriptions = [.. subscriptions
+            .Where(subscription => subscription.ExpirationTimeUtc > utcNow)];
 
         return Result.Success<IReadOnlyList<WebPushSubscriptionModel>>(
-            subscriptions.Select(subscription => subscription.ToModel()).ToList());
+            activeSubscriptions.Select(subscription => subscription.ToModel()).ToList());
     }
 }

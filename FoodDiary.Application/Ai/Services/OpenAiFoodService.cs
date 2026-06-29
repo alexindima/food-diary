@@ -1,6 +1,5 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
@@ -15,8 +14,7 @@ public sealed class OpenAiFoodService(
     IAiUsageRepository aiUsageRepository,
     IUserRepository userRepository,
     TimeProvider dateTimeProvider,
-    IAiPromptProvider aiPromptProvider,
-    IUnitOfWork unitOfWork)
+    IAiPromptProvider aiPromptProvider)
     : IOpenAiFoodService {
     public async Task<Result<FoodVisionModel>> AnalyzeFoodImageAsync(
         string imageUrl,
@@ -132,6 +130,5 @@ public sealed class OpenAiFoodService(
             response.Usage.Value.TotalTokens);
 
         await aiUsageRepository.AddAsync(entity, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
     }
 }

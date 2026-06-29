@@ -1,6 +1,8 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Presentation.Api.Features.Logs;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
-using FoodDiary.Presentation.Api.Services;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,9 +19,9 @@ public sealed class LogsControllerTests {
     [InlineData("debug", LogLevel.Information)]
     public async Task Create_MapsClientLogLevelAndRecordsTelemetry(string level, LogLevel expectedLogLevel) {
         var logger = new RecordingLogger();
-        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
-        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        LogsController controller = CreateController(logger, summaryService);
+        IRequest<Result>? sentRequest = null;
+        ISender sender = SubstituteSender.Create(Result.Success(), request => sentRequest = request);
+        LogsController controller = CreateController(logger, sender);
         var request = new ClientTelemetryLogHttpRequest(
             Category: "user_action",
             Name: "fasting.session.started",
@@ -31,15 +33,16 @@ public sealed class LogsControllerTests {
 
         Assert.IsType<NoContentResult>(result);
         Assert.Equal(expectedLogLevel, logger.LogLevel);
-        await summaryService.Received(1).RecordAsync(request, Arg.Any<CancellationToken>());
+        RecordFastingTelemetryCommand command = Assert.IsType<RecordFastingTelemetryCommand>(sentRequest);
+        Assert.Equal(request.Category, command.Category);
+        Assert.Equal(request.Name, command.Name);
+        Assert.Equal(request.Timestamp, command.Timestamp);
     }
 
     [Fact]
     public async Task Create_WithDetails_LogsRawDetails() {
         var logger = new RecordingLogger();
-        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
-        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        LogsController controller = CreateController(logger, summaryService);
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
         JsonElement details = JsonSerializer.Deserialize<JsonElement>("""
             {"source":"test"}
             """);
@@ -59,9 +62,7 @@ public sealed class LogsControllerTests {
     [Fact]
     public async Task Create_WhenLoggerScopeIsNull_ReturnsNoContent() {
         var logger = new RecordingLogger(returnNullScope: true);
-        IFastingTelemetrySummaryService summaryService = Substitute.For<IFastingTelemetrySummaryService>();
-        summaryService.RecordAsync(Arg.Any<ClientTelemetryLogHttpRequest>(), Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        LogsController controller = CreateController(logger, summaryService);
+        LogsController controller = CreateController(logger, SubstituteSender.Create(Result.Success()));
         var request = new ClientTelemetryLogHttpRequest(
             Category: "user_action",
             Name: "fasting.session.started",
@@ -74,8 +75,8 @@ public sealed class LogsControllerTests {
         Assert.Equal(LogLevel.Information, logger.LogLevel);
     }
 
-    private static LogsController CreateController(RecordingLogger logger, IFastingTelemetrySummaryService summaryService) =>
-        new(logger, summaryService) {
+    private static LogsController CreateController(RecordingLogger logger, ISender sender) =>
+        new(logger, sender) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
             },

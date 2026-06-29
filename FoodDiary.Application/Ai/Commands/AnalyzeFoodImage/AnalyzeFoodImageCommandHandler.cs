@@ -16,7 +16,7 @@ public sealed class AnalyzeFoodImageCommandHandler(
     IUserRepository userRepository,
     IOpenAiFoodService openAiFoodService,
     IImageStorageService imageStorageService)
-    : IQueryHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
+    : ICommandHandler<AnalyzeFoodImageCommand, Result<FoodVisionModel>> {
     public async Task<Result<FoodVisionModel>> Handle(
         AnalyzeFoodImageCommand query,
         CancellationToken cancellationToken) {

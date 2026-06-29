@@ -1,6 +1,7 @@
+using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
-using FoodDiary.Presentation.Api.Services;
 using FoodDiary.Presentation.Api.Telemetry;
+using FoodDiary.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,11 +16,17 @@ namespace FoodDiary.Presentation.Api.Features.Logs;
 [SuppressRequestAccessLog]
 public sealed class LogsController(
     ILogger<LogsController> logger,
-    IFastingTelemetrySummaryService fastingTelemetrySummaryService) : ControllerBase {
+    ISender sender) : ControllerBase {
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
-        await fastingTelemetrySummaryService.RecordAsync(request, HttpContext.RequestAborted);
+        await sender.Send(
+            new RecordFastingTelemetryCommand(
+                request.Category,
+                request.Name,
+                request.Timestamp,
+                request.Details),
+            HttpContext.RequestAborted);
 
         string? details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
             ? null

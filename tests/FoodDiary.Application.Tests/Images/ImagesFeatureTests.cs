@@ -274,6 +274,25 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenDeleted_DefersSaveToCaller() {
+        var repo = new FakeImageAssetRepository();
+        var asset = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
+        await repo.AddAsync(asset, CancellationToken.None);
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var service = new ImageAssetCleanupService(
+            repo,
+            CreateImageStorageService(),
+            NullLogger<ImageAssetCleanupService>.Instance,
+            unitOfWork);
+
+        DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
+
+        Assert.True(result.Deleted);
+        Assert.Null(await repo.GetByIdAsync(asset.Id, CancellationToken.None));
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
     public async Task ImageAssetCleanupService_CleanupOrphans_WhenOneDeleteFails_ContinuesWithNextAsset() {
         var repo = new FakeImageAssetRepository();
         var failing = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");

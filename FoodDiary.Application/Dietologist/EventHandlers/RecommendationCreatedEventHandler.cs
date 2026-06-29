@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -12,7 +13,8 @@ public class RecommendationCreatedEventHandler(
     INotificationRepository notificationRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
-    IUserRepository userRepository)
+    IUserRepository userRepository,
+    IPostCommitActionQueue postCommitActionQueue)
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
     public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> envelope, CancellationToken cancellationToken) {
         RecommendationCreatedDomainEvent domainEvent = envelope.Value;
@@ -25,9 +27,12 @@ public class RecommendationCreatedEventHandler(
             domainEvent.RecommendationId.Value.ToString());
 
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        int unreadCount = await notificationRepository.GetUnreadCountAsync(domainEvent.ClientUserId, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(domainEvent.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
+        NotificationPostCommitActions.EnqueueUnreadCountPush(
+            postCommitActionQueue,
+            notificationRepository,
+            notificationPusher,
+            domainEvent.ClientUserId,
+            pushChanged: false);
     }
 
     private static string ResolveDietologistLabel(User? dietologist) {

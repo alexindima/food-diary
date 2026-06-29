@@ -34,7 +34,6 @@ public sealed class ImageAssetCleanupService(
         }
 
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
     }
 

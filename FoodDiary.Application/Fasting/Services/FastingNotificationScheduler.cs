@@ -1,4 +1,5 @@
 using System.Globalization;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -16,6 +17,8 @@ public sealed class FastingNotificationScheduler(
     INotificationRepository notificationRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
+    IUnitOfWork unitOfWork,
+    IPostCommitActionQueue postCommitActionQueue,
     TimeProvider dateTimeProvider,
     ILogger<FastingNotificationScheduler> logger)
     : IFastingNotificationScheduler {
@@ -48,11 +51,19 @@ public sealed class FastingNotificationScheduler(
             };
         }
 
+        if (createdCount > 0) {
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
         foreach (Guid userGuid in usersToPush) {
             var userId = new UserId(userGuid);
             int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userGuid, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userGuid, cancellationToken).ConfigureAwait(false);
+        }
+
+        if (postCommitActionQueue.HasActions) {
+            await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
         }
 
         if (createdCount > 0) {

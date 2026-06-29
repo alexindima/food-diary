@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -169,6 +170,8 @@ public sealed class NotificationTestSchedulerTests {
         services.AddSingleton(sender);
         services.AddSingleton<IWebPushNotificationSender>(sender);
         services.AddSingleton<INotificationWriter>(new RecordingNotificationWriter(repository, sender));
+        services.AddSingleton(CreateUnitOfWork());
+        services.AddSingleton<IPostCommitActionQueue, ImmediatePostCommitActionQueue>();
         return services.BuildServiceProvider();
     }
 
@@ -224,6 +227,23 @@ public sealed class NotificationTestSchedulerTests {
                 await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
             }
         }
+    }
+
+    private static IUnitOfWork CreateUnitOfWork() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
+        return unitOfWork;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public bool HasActions => false;
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

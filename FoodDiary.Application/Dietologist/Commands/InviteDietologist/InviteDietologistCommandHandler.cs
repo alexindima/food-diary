@@ -1,5 +1,6 @@
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -26,6 +27,7 @@ public class InviteDietologistCommandHandler(
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
+    IPostCommitActionQueue postCommitActionQueue,
     TimeProvider dateTimeProvider,
     ILogger<InviteDietologistCommandHandler> logger)
     : ICommandHandler<InviteDietologistCommand, Result> {
@@ -116,9 +118,11 @@ public class InviteDietologistCommandHandler(
             invitation.Id.Value.ToString());
 
         await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
-        int unreadCount = await notificationRepository.GetUnreadCountAsync(registeredDietologist.Id, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushUnreadCountAsync(registeredDietologist.Id.Value, unreadCount, cancellationToken).ConfigureAwait(false);
-        await notificationPusher.PushNotificationsChangedAsync(registeredDietologist.Id.Value, cancellationToken).ConfigureAwait(false);
+        NotificationPostCommitActions.EnqueueUnreadCountPush(
+            postCommitActionQueue,
+            notificationRepository,
+            notificationPusher,
+            registeredDietologist.Id);
     }
 
     private static string ResolveClientName(User user) {

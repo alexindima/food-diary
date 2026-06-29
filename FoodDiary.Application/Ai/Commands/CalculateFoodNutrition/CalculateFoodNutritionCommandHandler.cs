@@ -12,7 +12,7 @@ namespace FoodDiary.Application.Ai.Commands.CalculateFoodNutrition;
 public sealed class CalculateFoodNutritionCommandHandler(
     IOpenAiFoodService openAiFoodService,
     IUserRepository userRepository)
-    : IQueryHandler<CalculateFoodNutritionCommand, Result<FoodNutritionModel>> {
+    : ICommandHandler<CalculateFoodNutritionCommand, Result<FoodNutritionModel>> {
     public async Task<Result<FoodNutritionModel>> Handle(
         CalculateFoodNutritionCommand query,
         CancellationToken cancellationToken) {

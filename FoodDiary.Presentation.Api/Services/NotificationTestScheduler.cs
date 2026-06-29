@@ -1,4 +1,5 @@
 using FoodDiary.Application.Notifications.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -38,6 +39,8 @@ public sealed class NotificationTestScheduler(
             INotificationWriter notificationWriter = scope.ServiceProvider.GetRequiredService<INotificationWriter>();
             INotificationRepository notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
             INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
+            IUnitOfWork unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
+            IPostCommitActionQueue postCommitActionQueue = scope.ServiceProvider.GetRequiredService<IPostCommitActionQueue>();
             var domainUserId = new Domain.ValueObjects.Ids.UserId(userId);
             string referenceId = $"test-notification:{type}:{Guid.NewGuid():N}";
 
@@ -68,9 +71,11 @@ public sealed class NotificationTestScheduler(
             };
 
             await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
+            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
             int unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);
+            await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
         } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
         } catch (Exception ex) {
             logger.LogError(ex, "Failed to deliver scheduled test notification for user {UserId}.", userId);

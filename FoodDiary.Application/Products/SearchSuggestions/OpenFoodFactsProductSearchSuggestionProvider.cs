@@ -1,36 +1,19 @@
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
+using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.Models;
 
 namespace FoodDiary.Application.Products.SearchSuggestions;
 
-public sealed class OpenFoodFactsProductSearchSuggestionProvider(
-    IOpenFoodFactsService openFoodFactsService,
-    IOpenFoodFactsProductCacheRepository productCacheRepository,
-    IUnitOfWork unitOfWork) : IProductSearchSuggestionProvider {
+public sealed class OpenFoodFactsProductSearchSuggestionProvider(IOpenFoodFactsCachedProductSearch cachedProductSearch) : IProductSearchSuggestionProvider {
     public string Source => "openFoodFacts";
 
     public async Task<IReadOnlyList<ProductSearchSuggestionModel>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken) {
-        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
-        if (cachedProducts.Count >= limit) {
-            return cachedProducts.Select(ToSuggestion).ToList();
-        }
-
-        IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
-        if (externalProducts.Count > 0) {
-            await productCacheRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
-            await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        }
-
-        return externalProducts
-            .Concat(cachedProducts)
-            .DistinctBy(product => product.Barcode)
-            .Take(limit)
+        IReadOnlyList<OpenFoodFactsProductModel> products = await cachedProductSearch.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        return products
             .Select(ToSuggestion)
             .ToList();
     }

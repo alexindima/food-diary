@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Users.Common;
@@ -17,7 +18,8 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IUserRepository userRepository,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher)
+    INotificationPusher notificationPusher,
+    IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -66,6 +68,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
             notificationWriter,
             notificationRepository,
             notificationPusher,
+            postCommitActionQueue,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),
