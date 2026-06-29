@@ -1,4 +1,3 @@
-using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
 using FoodDiary.Presentation.Api.Authorization;
 using FoodDiary.Presentation.Api.Controllers;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;
@@ -18,5 +17,5 @@ public sealed class AdminTelemetryController(ISender mediator) : BaseApiControll
     [HttpGet("fasting")]
     [ProducesResponseType<FastingTelemetrySummaryHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetFastingSummary([FromQuery] GetFastingTelemetrySummaryHttpQuery query) =>
-        HandleOk(new GetFastingTelemetrySummaryQuery(query.Hours), static value => value.ToHttpResponse());
+        HandleOk(query.ToQuery(), static value => value.ToHttpResponse());
 }

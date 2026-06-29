@@ -23,7 +23,7 @@ public class DietologistController(ISender mediator) : AuthorizedController(medi
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]
     public Task<IActionResult> RevokeOrDisconnect([FromCurrentUser] Guid userId) =>
-        HandleNoContent(new Application.Dietologist.Commands.RevokeInvitation.RevokeInvitationCommand(userId));
+        HandleNoContent(userId.ToRevokeInvitationCommand());
 
     [HttpPut("permissions")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

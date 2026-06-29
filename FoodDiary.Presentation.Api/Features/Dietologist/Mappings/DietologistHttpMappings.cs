@@ -6,6 +6,7 @@ using FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser
 using FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 using FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 using FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
+using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
@@ -39,6 +40,8 @@ public static class DietologistHttpMappings {
 
     public static UpdateDietologistPermissionsCommand ToCommand(this UpdateDietologistPermissionsHttpRequest request, Guid userId) =>
         new(userId, request.Permissions.ToInput());
+
+    public static RevokeInvitationCommand ToRevokeInvitationCommand(this Guid userId) => new(userId);
 
     public static DisconnectDietologistCommand ToCommand(this DisconnectClientHttpRequest request, Guid userId) =>
         new(userId, request.ClientUserId);

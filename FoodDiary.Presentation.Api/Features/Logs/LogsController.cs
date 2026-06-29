@@ -1,4 +1,4 @@
-using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
+using FoodDiary.Presentation.Api.Features.Logs.Mappings;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 using FoodDiary.Presentation.Api.Telemetry;
 using FoodDiary.Mediator;
@@ -20,13 +20,7 @@ public sealed class LogsController(
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Create([FromBody] ClientTelemetryLogHttpRequest request) {
-        await sender.Send(
-            new RecordFastingTelemetryCommand(
-                request.Category,
-                request.Name,
-                request.Timestamp,
-                request.Details),
-            HttpContext.RequestAborted);
+        await sender.Send(request.ToCommand(), HttpContext.RequestAborted);
 
         string? details = request.Details?.ValueKind is null or System.Text.Json.JsonValueKind.Null
             ? null
