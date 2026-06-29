@@ -632,7 +632,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         await repository.RegisterUsageAsync(userId, [], []);
         await repository.RegisterUsageAsync(userId, [productId, productId], [recipeId]);
+        await context.SaveChangesAsync();
         await repository.RegisterUsageAsync(userId, [productId], [recipeId]);
+        await context.SaveChangesAsync();
 
         IReadOnlyList<RecentProductUsage> products = await repository.GetRecentProductsAsync(userId, limit: 0);
         IReadOnlyList<RecentRecipeUsage> recipes = await repository.GetRecentRecipesAsync(userId, limit: 500);

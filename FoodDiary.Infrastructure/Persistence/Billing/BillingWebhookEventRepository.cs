@@ -21,6 +21,7 @@ public sealed class BillingWebhookEventRepository(FoodDiaryDbContext context) : 
         CancellationToken cancellationToken = default) {
         context.BillingWebhookEvents.Add(webhookEvent);
         try {
+            // Follow-up: move webhook idempotency translation to an explicit transaction boundary.
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         } catch (DbUpdateException ex) when (IsDuplicateWebhookEvent(ex)) {
             context.Entry(webhookEvent).State = EntityState.Detached;

@@ -39,6 +39,7 @@ public sealed class RecentItemRepositoryIntegrationTests(PostgresDatabaseFixture
             [newProductId],
             [],
             CancellationToken.None);
+        await context.SaveChangesAsync();
 
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 

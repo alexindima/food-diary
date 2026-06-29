@@ -13,7 +13,6 @@ public sealed class PersistenceTransactionGuardrailTests {
             Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "Notifications", "NotificationRepository.cs"),
-            Path.Combine(persistenceRoot, "RecentItems", "RecentItemRepository.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);

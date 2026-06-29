@@ -19,6 +19,7 @@ public sealed class BillingPaymentRepository(FoodDiaryDbContext context) : IBill
     public async Task<BillingPayment> AddAsync(BillingPayment payment, CancellationToken cancellationToken = default) {
         context.BillingPayments.Add(payment);
         try {
+            // Follow-up: move billing payment idempotency translation to an explicit transaction boundary.
             await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         } catch (DbUpdateException ex) when (IsDuplicatePayment(ex)) {
             context.Entry(payment).State = EntityState.Detached;

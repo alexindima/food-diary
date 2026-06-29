@@ -38,9 +38,6 @@ public class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateT
             await TouchItemsAsync(userId, RecentItemType.Recipe, distinctRecipeIds, now, cancellationToken).ConfigureAwait(false);
         }
 
-        // Follow-up: move this two-phase touch-and-trim workflow behind an explicit application unit-of-work boundary.
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-
         if (distinctProductIds.Count > 0) {
             await TrimOverflowAsync(userId, RecentItemType.Product, cancellationToken).ConfigureAwait(false);
         }
@@ -106,18 +103,26 @@ public class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateT
         UserId userId,
         RecentItemType itemType,
         CancellationToken cancellationToken) {
-        List<RecentItemId> overflowItemIds = await context.RecentItems
+        List<RecentItem> storedItems = await context.RecentItems
             .Where(x => x.UserId == userId && x.ItemType == itemType)
-            .OrderByDescending(x => x.LastUsedAtUtc)
-            .ThenByDescending(x => x.CreatedOnUtc)
-            .Skip(MaxStoredPerType)
-            .Select(x => x.Id)
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
-        if (overflowItemIds.Count > 0) {
-            await context.RecentItems
-                .Where(x => overflowItemIds.Contains(x.Id))
-                .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
+        RecentItem[] addedItems = [.. context.ChangeTracker
+            .Entries<RecentItem>()
+            .Where(entry =>
+                entry.State == EntityState.Added &&
+                entry.Entity.UserId == userId &&
+                entry.Entity.ItemType == itemType)
+            .Select(entry => entry.Entity)];
+
+        RecentItem[] overflowItems = [.. storedItems
+            .Concat(addedItems)
+            .OrderByDescending(x => x.LastUsedAtUtc)
+            .ThenByDescending(x => x.CreatedOnUtc)
+            .Skip(MaxStoredPerType)];
+
+        if (overflowItems.Length > 0) {
+            context.RecentItems.RemoveRange(overflowItems);
         }
     }
 }
