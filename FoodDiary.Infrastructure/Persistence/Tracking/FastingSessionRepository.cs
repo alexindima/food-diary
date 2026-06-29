@@ -75,7 +75,10 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
     }
 
     public Task UpdateAsync(FastingSession session, CancellationToken cancellationToken = default) {
-        context.FastingSessions.Update(session);
+        if (context.Entry(session).State == EntityState.Detached) {
+            context.FastingSessions.Update(session);
+        }
+
         return Task.CompletedTask;
     }
 }
