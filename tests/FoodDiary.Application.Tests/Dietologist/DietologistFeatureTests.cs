@@ -344,7 +344,7 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task InviteDietologist_WhenEmailDispatchFailsForUnregisteredDietologist_ReturnsFailure() {
+    public async Task InviteDietologist_WhenEmailDispatchFailsForUnregisteredDietologist_StillCreatesInvitation() {
         var userId = UserId.New();
         User user = CreateUser(userId);
         var userRepo = new InMemoryUserRepository();
@@ -360,8 +360,8 @@ public class DietologistFeatureTests {
             new InviteDietologistCommand(userId.Value, "diet@example.com", AllPermissions),
             CancellationToken.None);
 
-        ResultAssert.Failure(result);
-        Assert.Empty(invitationRepo.Added);
+        ResultAssert.Success(result);
+        Assert.Single(invitationRepo.Added);
     }
 
     [Fact]

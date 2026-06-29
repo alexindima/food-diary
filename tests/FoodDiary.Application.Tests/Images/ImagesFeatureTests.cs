@@ -158,6 +158,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
@@ -177,6 +178,7 @@ public class ImagesFeatureTests {
             repository,
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
@@ -196,6 +198,7 @@ public class ImagesFeatureTests {
             repository,
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
@@ -217,6 +220,7 @@ public class ImagesFeatureTests {
             repo,
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -231,6 +235,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
@@ -245,6 +250,7 @@ public class ImagesFeatureTests {
             new FakeImageAssetRepository(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
@@ -254,7 +260,7 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
-    public async Task ImageAssetCleanupService_WhenStorageDeleteFails_ReturnsStorageErrorWithoutDeletingRepositoryAsset() {
+    public async Task ImageAssetCleanupService_WhenPostCommitStorageDeleteFails_StillDeletesRepositoryAsset() {
         var repo = new FakeImageAssetRepository();
         var asset = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
@@ -263,14 +269,15 @@ public class ImagesFeatureTests {
             repo,
             CreateThrowingImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
         ImageAsset? storedAsset = await repo.GetByIdAsync(asset.Id, CancellationToken.None);
 
-        Assert.False(result.Deleted);
-        Assert.Equal("storage_error", result.ErrorCode);
-        Assert.NotNull(storedAsset);
+        Assert.True(result.Deleted);
+        Assert.Null(result.ErrorCode);
+        Assert.Null(storedAsset);
     }
 
     [Fact]
@@ -283,6 +290,7 @@ public class ImagesFeatureTests {
             repo,
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             unitOfWork);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -303,6 +311,7 @@ public class ImagesFeatureTests {
             repo,
             CreateSelectivelyThrowingImageStorageService("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance,
+            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
@@ -440,6 +449,17 @@ public class ImagesFeatureTests {
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
         return unitOfWork;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
+        public bool HasActions => false;
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+            action(CancellationToken.None).GetAwaiter().GetResult();
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

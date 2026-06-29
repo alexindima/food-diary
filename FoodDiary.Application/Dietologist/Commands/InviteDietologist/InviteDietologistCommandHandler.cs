@@ -67,16 +67,8 @@ public class InviteDietologistCommandHandler(
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
         User? registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
-        // Architecture debt: move invitation email delivery to a post-commit outbox/dispatch state so the token is not sent before the invitation is persisted.
-        bool emailSent = await TrySendInvitationEmailAsync(normalizedEmail, invitation, rawToken, user, cancellationToken).ConfigureAwait(false);
-
-        if (!emailSent && registeredDietologist is null) {
-            return Result.Failure(Errors.Validation.Invalid(
-                nameof(command.DietologistEmail),
-                "Failed to deliver dietologist invitation email."));
-        }
-
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
+        EnqueueInvitationEmail(normalizedEmail, invitation, rawToken, user);
 
         if (registeredDietologist is not null) {
             await NotifyRegisteredDietologistAsync(registeredDietologist, user, invitation, cancellationToken).ConfigureAwait(false);
@@ -85,27 +77,26 @@ public class InviteDietologistCommandHandler(
         return Result.Success();
     }
 
-    private async Task<bool> TrySendInvitationEmailAsync(
+    private void EnqueueInvitationEmail(
         string normalizedEmail,
         DietologistInvitation invitation,
         string rawToken,
-        User user,
-        CancellationToken cancellationToken) {
-        try {
-            await emailSender.SendDietologistInvitationAsync(
-                new DietologistInvitationMessage(
-                    normalizedEmail,
-                    invitation.Id.Value,
-                    rawToken,
-                    user.FirstName,
-                    user.LastName,
-                    user.Language),
-                cancellationToken).ConfigureAwait(false);
-            return true;
-        } catch (Exception ex) {
-            logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
-            return false;
-        }
+        User user) {
+        DietologistInvitationMessage message = new(
+            normalizedEmail,
+            invitation.Id.Value,
+            rawToken,
+            user.FirstName,
+            user.LastName,
+            user.Language);
+
+        postCommitActionQueue.Enqueue(async ct => {
+            try {
+                await emailSender.SendDietologistInvitationAsync(message, ct).ConfigureAwait(false);
+            } catch (Exception ex) {
+                logger.LogWarning(ex, "Dietologist invitation email dispatch failed for {DietologistEmail}", normalizedEmail);
+            }
+        });
     }
 
     private async Task NotifyRegisteredDietologistAsync(

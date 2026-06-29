@@ -10,6 +10,7 @@ public sealed class ImageAssetCleanupService(
     IImageAssetRepository imageAssetRepository,
     IImageStorageService imageStorageService,
     ILogger<ImageAssetCleanupService> logger,
+    IPostCommitActionQueue postCommitActionQueue,
     IUnitOfWork unitOfWork) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
@@ -26,16 +27,19 @@ public sealed class ImageAssetCleanupService(
             return new DeleteImageAssetResult(Deleted: false, "in_use");
         }
 
-        // Architecture debt: move storage deletion behind a post-commit outbox/cleanup workflow so object storage and DB state cannot diverge on commit failure.
-        try {
-            await imageStorageService.DeleteAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
-        } catch (Exception ex) {
-            logger.LogError(ex, "Failed to delete image object {ObjectKey}", asset.ObjectKey);
-            return new DeleteImageAssetResult(Deleted: false, "storage_error");
-        }
-
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
+        EnqueueStorageDelete(asset.ObjectKey);
         return new DeleteImageAssetResult(Deleted: true);
+    }
+
+    private void EnqueueStorageDelete(string objectKey) {
+        postCommitActionQueue.Enqueue(async cancellationToken => {
+            try {
+                await imageStorageService.DeleteAsync(objectKey, cancellationToken).ConfigureAwait(false);
+            } catch (Exception ex) {
+                logger.LogError(ex, "Failed to delete image object {ObjectKey}", objectKey);
+            }
+        });
     }
 
     public async Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {
