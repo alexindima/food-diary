@@ -175,7 +175,7 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
     }
 
     public Task UpdateAsync(User user, CancellationToken cancellationToken = default) {
-        context.Users.Update(user);
+        TrackForUpdate(user);
         return Task.CompletedTask;
     }
 
@@ -183,12 +183,18 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         User user,
         IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
         CancellationToken cancellationToken = default) {
-        context.Users.Update(user);
+        TrackForUpdate(user);
         if (roleAuditEvents.Count > 0) {
             await context.UserRoleAuditEvents.AddRangeAsync(roleAuditEvents, cancellationToken).ConfigureAwait(false);
         }
 
         await Task.CompletedTask.ConfigureAwait(false);
+    }
+
+    private void TrackForUpdate(User user) {
+        if (context.Entry(user).State == EntityState.Detached) {
+            context.Users.Update(user);
+        }
     }
 
     private static string EscapeLikePattern(string value) {
