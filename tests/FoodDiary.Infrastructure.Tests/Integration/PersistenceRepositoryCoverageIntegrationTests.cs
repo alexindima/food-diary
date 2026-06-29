@@ -552,9 +552,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> usage = await repository.GetByIdsWithUsageAsync([searchable.Id], userId);
 
         await CoverCachedProductRepositoryAsync(repository, searchable.Id, userId);
-        await repository.DeleteAsync(privateProduct);
-        await context.SaveChangesAsync();
-        await repository.DeleteAsync(privateProduct);
+        await DeleteExistingProductAsync(context, repository, privateProduct.Id, userId);
 
         Assert.Single(searchedItems);
         Assert.Equal(1, searchedTotal);
@@ -564,6 +562,19 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Equal(2, byIds.Count);
         Assert.Empty(emptyUsage);
         Assert.Equal(1, usage[searchable.Id].UsageCount);
+    }
+
+    private static async Task DeleteExistingProductAsync(
+        FoodDiaryDbContext context,
+        ProductRepository repository,
+        ProductId productId,
+        UserId userId) {
+        context.ChangeTracker.Clear();
+        Product? product = await repository.GetByIdForUpdateAsync(productId, userId, includePublic: false);
+        Assert.NotNull(product);
+        await repository.DeleteAsync(product);
+        await context.SaveChangesAsync();
+        await repository.DeleteAsync(product);
     }
 
     private static async Task CoverCachedProductRepositoryAsync(
