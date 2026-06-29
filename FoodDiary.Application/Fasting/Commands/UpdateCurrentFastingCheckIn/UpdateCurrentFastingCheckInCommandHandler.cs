@@ -1,5 +1,4 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
@@ -15,8 +14,7 @@ public class UpdateCurrentFastingCheckInCommandHandler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IFastingCheckInRepository fastingCheckInRepository,
     IUserRepository userRepository,
-    TimeProvider dateTimeProvider,
-    IUnitOfWork unitOfWork)
+    TimeProvider dateTimeProvider)
     : ICommandHandler<UpdateCurrentFastingCheckInCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(
         UpdateCurrentFastingCheckInCommand command, CancellationToken cancellationToken) {
@@ -60,7 +58,6 @@ public class UpdateCurrentFastingCheckInCommandHandler(
 
         await fastingCheckInRepository.AddAsync(checkIn, cancellationToken).ConfigureAwait(false);
         await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
-        await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
         return Result.Success(current.ToModel(current.Plan, [checkIn]));
     }

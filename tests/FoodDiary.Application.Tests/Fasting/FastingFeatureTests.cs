@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Fasting.Commands.EndFasting;
 using FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 using FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
@@ -40,7 +39,7 @@ public class FastingFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -59,7 +58,7 @@ public class FastingFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "CustomIntermittent", PlanType: null, 17, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -76,7 +75,7 @@ public class FastingFeatureTests {
         var user = User.Create("extended-start@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F36_0", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, "extended notes"),
@@ -100,7 +99,7 @@ public class FastingFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "CustomIntermittent", PlanType: null, duration, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -114,7 +113,7 @@ public class FastingFeatureTests {
         var existingPlan = FastingPlan.CreateIntermittent(user.Id, FastingProtocol.F16_8, 16, 8, FixedNow);
         var planRepo = new InMemoryFastingPlanRepository(active: existingPlan);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F18_6", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -127,7 +126,7 @@ public class FastingFeatureTests {
     public async Task StartFasting_WithInvalidProtocol_ReturnsFailure() {
         var user = User.Create("user@example.com", "hash");
         var handler = new StartFastingCommandHandler(
-            new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+            new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "InvalidProtocol", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -142,8 +141,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, Protocol: null, PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -162,8 +160,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "   ", "Intermittent", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -184,8 +181,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "not-a-protocol", "Intermittent", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -206,8 +202,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "InvalidPlanType", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -227,8 +222,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "999", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -249,8 +243,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "not-a-protocol", "Extended", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -272,8 +265,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -288,7 +280,7 @@ public class FastingFeatureTests {
     [Fact]
     public async Task StartFasting_WithNullUserId_ReturnsFailure() {
         var handler = new StartFastingCommandHandler(
-            new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(user: null), new FixedDateTimeProvider(), new StubUnitOfWork());
+            new InMemoryFastingPlanRepository(), new InMemoryFastingOccurrenceRepository(), new StubUserRepository(user: null), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(UserId: null, "F16_8", PlanType: null, PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null), CancellationToken.None);
@@ -301,7 +293,7 @@ public class FastingFeatureTests {
         var user = User.Create("user@example.com", "hash");
         var planRepo = new InMemoryFastingPlanRepository();
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
-        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider(), new StubUnitOfWork());
+        var handler = new StartFastingCommandHandler(planRepo, occurrenceRepo, new StubUserRepository(user), new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, Protocol: null, "Cyclic", PlannedDurationHours: null, 1, 3, 16, 8, Notes: null), CancellationToken.None);
@@ -322,8 +314,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, Protocol: null, "Cyclic", PlannedDurationHours: null, 0, 3, 16, 8, Notes: null),
@@ -344,8 +335,7 @@ public class FastingFeatureTests {
             planRepo,
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new StartFastingCommand(user.Id.Value, "F16_8", "Extended", PlannedDurationHours: null, CyclicFastDays: null, CyclicEatDays: null, CyclicEatDayFastHours: null, CyclicEatDayEatingWindowHours: null, Notes: null),
@@ -561,8 +551,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
@@ -582,8 +571,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
@@ -609,8 +597,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
@@ -631,8 +618,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
@@ -649,8 +635,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(userId.Value), CancellationToken.None);
@@ -665,8 +650,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             new StubUserRepository(user: null),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(UserId: null), CancellationToken.None);
 
@@ -682,8 +666,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
 
@@ -701,8 +684,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new EndFastingCommand(userId.Value), CancellationToken.None);
 
@@ -721,8 +703,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new EndFastingCommand(user.Id.Value), CancellationToken.None);
@@ -739,8 +720,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
@@ -756,8 +736,7 @@ public class FastingFeatureTests {
         var userId = UserId.New();
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
@@ -773,8 +752,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(new ExtendActiveFastingCommand(userId.Value, 0), CancellationToken.None);
 
@@ -787,8 +765,7 @@ public class FastingFeatureTests {
     public async Task ExtendActiveFasting_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
-            new StubUserRepository(user: null),
-            new StubUnitOfWork());
+            new StubUserRepository(user: null));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(Guid.Empty, 24), CancellationToken.None);
@@ -803,8 +780,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(FastingPlanId.New(), userId, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
@@ -821,8 +797,7 @@ public class FastingFeatureTests {
         occurrence.Complete(FixedNow.AddHours(1));
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
@@ -838,8 +813,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastDay, FixedNow, 1, targetHours: null);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 24), CancellationToken.None);
@@ -856,8 +830,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 72);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            new StubUserRepository(user),
-            new StubUnitOfWork());
+            new StubUserRepository(user));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(user.Id.Value, 24), CancellationToken.None);
@@ -874,8 +847,7 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow, 1, 16);
         var handler = new ExtendActiveFastingCommandHandler(new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
-            CreateUserRepository(userId),
-            new StubUnitOfWork());
+            CreateUserRepository(userId));
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ExtendActiveFastingCommand(userId.Value, 4),
@@ -895,8 +867,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
@@ -918,8 +889,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
@@ -940,8 +910,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(user.Id.Value, 8), CancellationToken.None);
@@ -959,8 +928,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
 
@@ -977,8 +945,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 12),
@@ -995,8 +962,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             new StubUserRepository(user: null),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(Guid.Empty, 8), CancellationToken.None);
@@ -1013,8 +979,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
@@ -1032,8 +997,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 0), CancellationToken.None);
@@ -1052,8 +1016,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new ReduceActiveFastingTargetCommand(userId.Value, 8), CancellationToken.None);
@@ -1073,8 +1036,7 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             checkInRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 3, 3, 3, ["good"], "steady"),
@@ -1092,8 +1054,7 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             new StubUserRepository(user: null),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(UserId: null, 3, 3, 3, ["good"], "steady"),
@@ -1111,8 +1072,7 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(),
             checkInRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 3, 3, 3, ["good"], "steady"),
@@ -1133,8 +1093,7 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             checkInRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 0, 3, 3, ["good"], "steady"),
@@ -1153,13 +1112,11 @@ public class FastingFeatureTests {
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow.AddHours(-1), 1, 36);
         AttachNavigation(occurrence, plan, user);
         var checkInRepo = new InMemoryFastingCheckInRepository();
-        var unitOfWork = new StubUnitOfWork();
         var handler = new UpdateCurrentFastingCheckInCommandHandler(
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             checkInRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            unitOfWork);
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new UpdateCurrentFastingCheckInCommand(user.Id.Value, 4, 5, 3, ["tired", "focused"], "steady"),
@@ -1168,7 +1125,6 @@ public class FastingFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(FixedNow, occurrence.CheckInAtUtc);
         Assert.Single(checkInRepo.Stored);
-        Assert.Equal(1, unitOfWork.SaveChangesCallCount);
         Assert.Equal(4, result.Value.HungerLevel);
         Assert.Equal(5, result.Value.EnergyLevel);
         Assert.Equal(["tired", "focused"], result.Value.Symptoms);
@@ -1185,8 +1141,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1210,8 +1165,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1236,8 +1190,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new SkipCyclicDayCommand(user.Id.Value), CancellationToken.None);
@@ -1254,8 +1207,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(UserId.New()),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(Guid.Empty), CancellationToken.None);
 
@@ -1271,8 +1223,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1288,8 +1239,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1306,8 +1256,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1325,8 +1274,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new PassthroughCurrentFastingOccurrenceRepository(occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new SkipCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1345,8 +1293,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1368,8 +1315,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1393,8 +1339,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1418,8 +1363,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
@@ -1444,8 +1388,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             occurrenceRepo,
             new StubUserRepository(user),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(
             new PostponeCyclicDayCommand(user.Id.Value), CancellationToken.None);
@@ -1462,8 +1405,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(UserId.New()),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(Guid.Empty), CancellationToken.None);
 
@@ -1479,8 +1421,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1496,8 +1437,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1514,8 +1454,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1533,8 +1472,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new PassthroughCurrentFastingOccurrenceRepository(occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider());
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -1553,8 +1491,7 @@ public class FastingFeatureTests {
             new InMemoryFastingPlanRepository(active: plan),
             new InMemoryFastingOccurrenceRepository(current: occurrence),
             CreateUserRepository(userId),
-            new FixedDateTimeProvider(now),
-            new StubUnitOfWork());
+            new FixedDateTimeProvider(now));
 
         Result<FastingSessionModel> result = await handler.Handle(new PostponeCyclicDayCommand(userId.Value), CancellationToken.None);
 
@@ -2891,17 +2828,6 @@ public class FastingFeatureTests {
 
         public Task SendAsync(Notification notification, CancellationToken cancellationToken = default) {
             Sent.Add(notification);
-            return Task.CompletedTask;
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StubUnitOfWork : IUnitOfWork {
-        public bool HasPendingChanges => false;
-        public int SaveChangesCallCount { get; private set; }
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken = default) {
-            SaveChangesCallCount++;
             return Task.CompletedTask;
         }
     }
