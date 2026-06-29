@@ -46,10 +46,7 @@ export type CycleTrackingMode =
     | typeof CYCLE_TRACKING_MODE_PERIMENOPAUSE
     | typeof CYCLE_TRACKING_MODE_NO_PERIOD;
 export type CycleConfidence =
-    | typeof CYCLE_CONFIDENCE_LEARNING
-    | typeof CYCLE_CONFIDENCE_LOW
-    | typeof CYCLE_CONFIDENCE_MEDIUM
-    | typeof CYCLE_CONFIDENCE_HIGH;
+    typeof CYCLE_CONFIDENCE_LEARNING | typeof CYCLE_CONFIDENCE_LOW | typeof CYCLE_CONFIDENCE_MEDIUM | typeof CYCLE_CONFIDENCE_HIGH;
 export type BleedingType = typeof BLEEDING_TYPE_BLEEDING | typeof BLEEDING_TYPE_SPOTTING;
 export type CycleFlowLevel = typeof CYCLE_FLOW_NONE | typeof CYCLE_FLOW_LIGHT | typeof CYCLE_FLOW_MEDIUM | typeof CYCLE_FLOW_HEAVY;
 export type CycleSymptomCategory =
@@ -67,9 +64,7 @@ export type CycleSymptomCategory =
     | typeof CYCLE_SYMPTOM_CATEGORY_LIBIDO
     | typeof CYCLE_SYMPTOM_CATEGORY_OTHER;
 export type OvulationTestResult =
-    | typeof OVULATION_TEST_RESULT_NEGATIVE
-    | typeof OVULATION_TEST_RESULT_POSITIVE
-    | typeof OVULATION_TEST_RESULT_UNKNOWN;
+    typeof OVULATION_TEST_RESULT_NEGATIVE | typeof OVULATION_TEST_RESULT_POSITIVE | typeof OVULATION_TEST_RESULT_UNKNOWN;
 export type CycleFactorType =
     | typeof CYCLE_FACTOR_TYPE_PREGNANCY
     | typeof CYCLE_FACTOR_TYPE_LACTATION

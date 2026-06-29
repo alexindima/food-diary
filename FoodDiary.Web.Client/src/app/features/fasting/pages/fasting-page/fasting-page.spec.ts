@@ -180,8 +180,7 @@ describe('FastingPageComponent check-in history', () => {
         expect(component['canViewSessionCheckInChart'](multiCheckInSession)).toBe(true);
         expect(dialogService.open).toHaveBeenCalledTimes(1);
         const call = dialogService.open.mock.calls[0] as
-            | [unknown, { size?: string; panelClass?: string; data?: FastingCheckInChartDialogData }]
-            | undefined;
+            [unknown, { size?: string; panelClass?: string; data?: FastingCheckInChartDialogData }] | undefined;
         const options = call?.[1];
 
         expect(options?.size).toBe('lg');

@@ -42,19 +42,18 @@ export class AdminModerationActionDialogComponent {
     protected readonly adminNote = signal('');
     protected readonly isSubmitting = signal(false);
 
-    protected readonly viewState = computed(
-        (): AdminModerationActionDialogViewState =>
-            this.data.action === 'review'
-                ? {
-                      title: 'Review Report',
-                      confirmVariant: 'danger',
-                      confirmLabel: 'Review & Remove',
-                  }
-                : {
-                      title: 'Dismiss Report',
-                      confirmVariant: 'secondary',
-                      confirmLabel: 'Dismiss',
-                  },
+    protected readonly viewState = computed((): AdminModerationActionDialogViewState =>
+        this.data.action === 'review'
+            ? {
+                  title: 'Review Report',
+                  confirmVariant: 'danger',
+                  confirmLabel: 'Review & Remove',
+              }
+            : {
+                  title: 'Dismiss Report',
+                  confirmVariant: 'secondary',
+                  confirmLabel: 'Dismiss',
+              },
     );
 
     protected onConfirm(): void {

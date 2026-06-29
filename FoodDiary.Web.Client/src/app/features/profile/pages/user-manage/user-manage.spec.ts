@@ -373,8 +373,7 @@ describe('UserManageComponent profile normalization and intents', () => {
 
         expect(facade.openChangePasswordDialog).toHaveBeenCalledTimes(1);
         const navigateOptions = router.navigate.mock.calls[0]?.[1] as
-            | { queryParams?: Record<string, unknown>; queryParamsHandling?: string; replaceUrl?: boolean }
-            | undefined;
+            { queryParams?: Record<string, unknown>; queryParamsHandling?: string; replaceUrl?: boolean } | undefined;
         if (navigateOptions === undefined) {
             throw new Error('Expected router navigation options.');
         }

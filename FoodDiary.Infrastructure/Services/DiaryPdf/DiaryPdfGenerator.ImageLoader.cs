@@ -9,6 +9,7 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator {
     private const int MaxDataUrlBase64Length = ((MaxMealImageBytes + 2) / 3) * 4;
+    private static readonly SKSamplingOptions MealImageSamplingOptions = new(SKFilterMode.Linear, SKMipmapMode.Linear);
 
     private async Task<IReadOnlyDictionary<MealId, byte[]>> LoadMealImagesAsync(
         IReadOnlyList<Meal> meals,
@@ -268,7 +269,7 @@ internal sealed partial class DiaryPdfGenerator {
 
                         CollageSlot slot = slots[index];
                         using SKBitmap resizedTile = CreateCroppedBitmap(tile, slot.Width, slot.Height);
-                        skCanvas.DrawBitmap(resizedTile, slot.X, slot.Y);
+                        skCanvas.DrawBitmap(resizedTile, slot.X, slot.Y, MealImageSamplingOptions);
                     }
 
                     return EncodeMealImage(canvas);
@@ -312,7 +313,7 @@ internal sealed partial class DiaryPdfGenerator {
 
         using var canvas = new SKCanvas(bitmap);
         canvas.Clear(SKColors.Transparent);
-        canvas.DrawBitmap(source, destination);
+        canvas.DrawBitmap(source, destination, MealImageSamplingOptions);
 
         return bitmap;
     }

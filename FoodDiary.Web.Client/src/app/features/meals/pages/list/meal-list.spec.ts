@@ -438,9 +438,10 @@ function registerFavoriteTests(context: TestContext): void {
         it('should normalize favorite meal type translation keys', () => {
             context
                 .component()
-                [
-                    'favorites'
-                ].set([createFavorite({ id: 'favorite-dinner', mealType: 'Dinner' }), createFavorite({ id: 'favorite-unknown', mealType: null })]);
+                ['favorites'].set([
+                    createFavorite({ id: 'favorite-dinner', mealType: 'Dinner' }),
+                    createFavorite({ id: 'favorite-unknown', mealType: null }),
+                ]);
 
             expect(
                 context
