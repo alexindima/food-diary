@@ -848,6 +848,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             DateTime.UtcNow.AddDays(1),
             DateTime.UtcNow.AddDays(1),
             batchSize: 10);
+        await context.SaveChangesAsync();
 
         await repository.MarkAllReadAsync(userId);
 

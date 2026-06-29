@@ -741,9 +741,11 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task NotificationCleanup_WithNonPositiveBatchSize_DoesNotCallRepository() {
         var repository = new InMemoryNotificationRepository();
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
         var service = new NotificationCleanupService(
             repository,
-            new FixedDateTimeProvider(new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc)),
+            unitOfWork);
 
         int deleted = await service.CleanupExpiredNotificationsAsync(
             new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 0),
@@ -751,6 +753,7 @@ public class NotificationsFeatureTests {
 
         Assert.Equal(0, deleted);
         Assert.False(repository.DeleteExpiredBatchCalled);
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
     }
 
     [Fact]
@@ -758,7 +761,8 @@ public class NotificationsFeatureTests {
         using var cts = new CancellationTokenSource();
         var repository = new InMemoryNotificationRepository { DeleteExpiredBatchResult = 7 };
         var utcNow = new DateTime(2026, 5, 6, 12, 0, 0, DateTimeKind.Utc);
-        var service = new NotificationCleanupService(repository, new FixedDateTimeProvider(utcNow));
+        IUnitOfWork unitOfWork = CreateUnitOfWork();
+        var service = new NotificationCleanupService(repository, new FixedDateTimeProvider(utcNow), unitOfWork);
 
         int deleted = await service.CleanupExpiredNotificationsAsync(
             new NotificationCleanupPolicy(["Fast"], 3, 4, 30, 60, 25),
@@ -773,6 +777,7 @@ public class NotificationsFeatureTests {
         Assert.Equal(utcNow.AddDays(-60), repository.StandardUnreadOlderThanUtc);
         Assert.Equal(25, repository.BatchSize);
         Assert.Equal(cts.Token, repository.DeleteExpiredBatchCancellationToken);
+        await unitOfWork.Received(1).SaveChangesAsync(cts.Token);
     }
 
     [ExcludeFromCodeCoverage]

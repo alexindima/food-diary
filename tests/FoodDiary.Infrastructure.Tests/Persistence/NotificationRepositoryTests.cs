@@ -34,6 +34,7 @@ public sealed class NotificationRepositoryTests {
             standardReadOlderThanUtc: RetentionCutoff,
             standardUnreadOlderThanUtc: RetentionCutoff,
             batchSize: 10);
+        await context.SaveChangesAsync();
 
         Assert.Equal(0, deleted);
         Assert.True(await context.Notifications.AnyAsync(n => n.Id == notification.Id));
@@ -63,6 +64,7 @@ public sealed class NotificationRepositoryTests {
             standardReadOlderThanUtc: RetentionCutoff,
             standardUnreadOlderThanUtc: RetentionCutoff,
             batchSize: 10);
+        await context.SaveChangesAsync();
 
         Assert.Equal(1, deleted);
         Assert.False(await context.Notifications.AnyAsync(n => n.Id == notification.Id));

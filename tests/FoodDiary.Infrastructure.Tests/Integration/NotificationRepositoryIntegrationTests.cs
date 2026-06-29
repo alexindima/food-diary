@@ -39,6 +39,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             standardReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             standardUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             batchSize: 10);
+        await context.SaveChangesAsync();
 
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
@@ -71,6 +72,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             standardReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             standardUnreadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
             batchSize: 10);
+        await context.SaveChangesAsync();
 
         await using FoodDiaryDbContext verificationContext = CreateVerificationContext(context);
 
