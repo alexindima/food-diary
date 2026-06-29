@@ -9,8 +9,8 @@ public sealed class PersistenceTransactionGuardrailTests {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [
             Path.Combine(persistenceRoot, "Billing", "BillingPaymentRepository.cs"),
-            Path.Combine(persistenceRoot, "Billing", "BillingSubscriptionRepository.cs"),
             Path.Combine(persistenceRoot, "Billing", "BillingWebhookEventRepository.cs"),
+            Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
             Path.Combine(persistenceRoot, "Notifications", "NotificationRepository.cs"),
             Path.Combine(persistenceRoot, "RecentItems", "RecentItemRepository.cs"),

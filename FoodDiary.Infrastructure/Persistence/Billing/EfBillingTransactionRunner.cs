@@ -11,6 +11,7 @@ public sealed class EfBillingTransactionRunner(FoodDiaryDbContext context) : IBi
             IDbContextTransaction transaction = await context.Database.BeginTransactionAsync(cancellationToken).ConfigureAwait(false);
             await using (transaction.ConfigureAwait(false)) {
                 await operation(cancellationToken).ConfigureAwait(false);
+                await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
                 await transaction.CommitAsync(cancellationToken).ConfigureAwait(false);
             }
         }).ConfigureAwait(false);

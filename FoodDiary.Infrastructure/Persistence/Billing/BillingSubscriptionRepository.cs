@@ -61,16 +61,15 @@ public sealed class BillingSubscriptionRepository(FoodDiaryDbContext context) : 
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<BillingSubscription> AddAsync(
+    public Task<BillingSubscription> AddAsync(
         BillingSubscription subscription,
         CancellationToken cancellationToken = default) {
         context.BillingSubscriptions.Add(subscription);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return subscription;
+        return Task.FromResult(subscription);
     }
 
-    public async Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) {
+    public Task UpdateAsync(BillingSubscription subscription, CancellationToken cancellationToken = default) {
         context.BillingSubscriptions.Update(subscription);
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        return Task.CompletedTask;
     }
 }

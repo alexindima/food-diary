@@ -262,6 +262,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         var subscriptionRepository = new BillingSubscriptionRepository(context);
         BillingSubscription subscription = CreateActiveSubscription(target);
         await subscriptionRepository.AddAsync(subscription);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await subscriptionRepository.GetByUserIdAsync(target.Id));
         Assert.NotNull(await subscriptionRepository.GetByExternalCustomerIdAsync(BillingProviderNames.Stripe, "customer-1"));

@@ -913,6 +913,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             webhookEventId: "evt_snapshot",
             syncedAtUtc: now);
         await subscriptionRepository.AddAsync(subscription);
+        await context.SaveChangesAsync();
 
         Assert.NotNull(await subscriptionRepository.GetByUserIdAsync(userId));
         Assert.NotNull(await subscriptionRepository.GetByExternalCustomerIdAsync(BillingProviderNames.Stripe, "cus_test"));
@@ -922,6 +923,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         subscription.MarkPremiumRoleManagedByBilling(value: true, changedAtUtc: now);
         await subscriptionRepository.UpdateAsync(subscription);
+        await context.SaveChangesAsync();
 
         var paymentRepository = new BillingPaymentRepository(context);
         BillingPayment payment = CreateBillingPayment(userId, subscription.Id, "pay_test", "evt_pay", now);
