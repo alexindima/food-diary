@@ -18,6 +18,7 @@ namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 public class CreateRecommendationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IRecommendationRepository recommendationRepository,
+    INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
     IUserRepository userRepository)
@@ -63,7 +64,7 @@ public class CreateRecommendationCommandHandler(
             ResolveDietologistLabel(dietologist),
             recommendation.Id.Value.ToString());
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         int unreadCount = await notificationRepository.GetUnreadCountAsync(recommendation.ClientUserId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(recommendation.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);

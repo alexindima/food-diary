@@ -27,11 +27,9 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
         return await query.FirstOrDefaultAsync(n => n.Id == id, cancellationToken).ConfigureAwait(false);
     }
 
-    public async Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
+    public Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default) {
         context.Notifications.Add(notification);
-        // Follow-up: move notification creation commits behind an explicit notification writer/service boundary.
-        await context.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
-        return notification;
+        return Task.FromResult(notification);
     }
 
     public Task UpdateAsync(Notification notification, CancellationToken cancellationToken = default) {

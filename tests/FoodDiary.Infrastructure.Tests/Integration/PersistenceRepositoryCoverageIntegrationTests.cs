@@ -820,6 +820,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Notification transient = await repository.AddAsync(Notification.Create(userId, "transient", "{}", "one"));
         Notification standard = await repository.AddAsync(Notification.Create(userId, "standard", "{}", "two"));
         await repository.AddAsync(Notification.Create(userId, "standard", "{}", "three"));
+        await context.SaveChangesAsync();
 
         Notification? tracked = await repository.GetByIdAsync(standard.Id, asTracking: true);
         Assert.NotNull(tracked);
@@ -927,13 +928,30 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await subscriptionRepository.UpdateAsync(subscription);
         await context.SaveChangesAsync();
 
-        var paymentRepository = new BillingPaymentRepository(context);
-        BillingPayment payment = CreateBillingPayment(userId, subscription.Id, "pay_test", "evt_pay", now);
-        await paymentRepository.AddAsync(payment);
-        Assert.NotNull(await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "pay_test"));
-        await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(
-            () => paymentRepository.AddAsync(CreateBillingPayment(userId, subscription.Id, "pay_test", "evt_pay_duplicate", now)));
+        await CoverBillingPaymentRepositoryAsync(context, userId, subscription.Id, now);
+        await CoverBillingWebhookEventRepositoryAsync(context, now);
+    }
 
+    private static async Task CoverBillingPaymentRepositoryAsync(
+        FoodDiaryDbContext context,
+        UserId userId,
+        Guid subscriptionId,
+        DateTime now) {
+        var paymentRepository = new BillingPaymentRepository(context);
+        BillingPayment payment = CreateBillingPayment(userId, subscriptionId, "pay_test", "evt_pay", now);
+        await paymentRepository.AddAsync(payment);
+        await context.SaveChangesAsync();
+        Assert.NotNull(await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "pay_test"));
+        var billingTransactionRunner = new EfBillingTransactionRunner(context);
+
+        await Assert.ThrowsAsync<BillingPaymentAlreadyExistsException>(
+            () => billingTransactionRunner.ExecuteAsync(
+                ct => paymentRepository.AddAsync(
+                    CreateBillingPayment(userId, subscriptionId, "pay_test", "evt_pay_duplicate", now),
+                    ct)));
+    }
+
+    private static async Task CoverBillingWebhookEventRepositoryAsync(FoodDiaryDbContext context, DateTime now) {
         var webhookRepository = new BillingWebhookEventRepository(context);
         var webhookEvent = BillingWebhookEvent.CreateProcessed(
             BillingProviderNames.Stripe,
@@ -943,15 +961,21 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
             now,
             "{}");
         await webhookRepository.AddAsync(webhookEvent);
+        await context.SaveChangesAsync();
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "evt_test"));
+        var billingTransactionRunner = new EfBillingTransactionRunner(context);
+
         await Assert.ThrowsAsync<BillingWebhookEventAlreadyProcessedException>(
-            () => webhookRepository.AddAsync(BillingWebhookEvent.CreateProcessed(
-                BillingProviderNames.Stripe,
-                "evt_test",
-                "invoice.paid",
-                "invoice_test_2",
-                now,
-                "{}")));
+            () => billingTransactionRunner.ExecuteAsync(
+                ct => webhookRepository.AddAsync(
+                    BillingWebhookEvent.CreateProcessed(
+                        BillingProviderNames.Stripe,
+                        "evt_test",
+                        "invoice.paid",
+                        "invoice_test_2",
+                        now,
+                        "{}"),
+                    ct)));
     }
 
     private static async Task CoverRecommendationRepositoryAsync(

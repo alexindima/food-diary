@@ -168,6 +168,7 @@ public sealed class NotificationTestSchedulerTests {
         services.AddSingleton<INotificationPusher>(pusher);
         services.AddSingleton(sender);
         services.AddSingleton<IWebPushNotificationSender>(sender);
+        services.AddSingleton<INotificationWriter>(new RecordingNotificationWriter(repository, sender));
         return services.BuildServiceProvider();
     }
 
@@ -207,6 +208,22 @@ public sealed class NotificationTestSchedulerTests {
             DateTime standardUnreadOlderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationWriter(
+        INotificationRepository notificationRepository,
+        IWebPushNotificationSender webPushNotificationSender) : INotificationWriter {
+        public async Task AddAsync(
+            Notification notification,
+            bool sendWebPush = false,
+            CancellationToken cancellationToken = default) {
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+
+            if (sendWebPush) {
+                await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     [ExcludeFromCodeCoverage]

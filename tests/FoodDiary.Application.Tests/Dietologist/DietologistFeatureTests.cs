@@ -113,16 +113,19 @@ public class DietologistFeatureTests {
         IDietologistEmailSender? emailSender = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        TimeProvider? dateTimeProvider = null) =>
-        new(
+        TimeProvider? dateTimeProvider = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             userRepository ?? new InMemoryUserRepository(),
             passwordHasher ?? new StubPasswordHasher(),
             emailSender ?? new FakeEmailSender(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
+            new InMemoryNotificationWriter(resolvedNotificationRepository, new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
             dateTimeProvider ?? new StubDateTimeProvider(),
             NullLogger<InviteDietologistCommandHandler>.Instance);
+    }
 
     private static AcceptInvitationCommandHandler CreateAcceptHandler(
         IDietologistInvitationRepository? invitationRepository = null,
@@ -130,66 +133,77 @@ public class DietologistFeatureTests {
         IPasswordHasher? passwordHasher = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IWebPushNotificationSender? webPushNotificationSender = null) =>
-        new(
+        IWebPushNotificationSender? webPushNotificationSender = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             userRepository ?? new InMemoryUserRepository(),
             passwordHasher ?? new StubPasswordHasher(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
-            notificationPusher ?? new FakeNotificationPusher(),
-            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+            new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
+            notificationPusher ?? new FakeNotificationPusher());
+    }
 
     private static AcceptInvitationForCurrentUserCommandHandler CreateAcceptCurrentUserHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IUserRepository? userRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IWebPushNotificationSender? webPushNotificationSender = null) =>
-        new(
+        IWebPushNotificationSender? webPushNotificationSender = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             userRepository ?? new InMemoryUserRepository(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
-            notificationPusher ?? new FakeNotificationPusher(),
-            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+            new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
+            notificationPusher ?? new FakeNotificationPusher());
+    }
 
     private static DeclineInvitationCommandHandler CreateDeclineHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IPasswordHasher? passwordHasher = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IWebPushNotificationSender? webPushNotificationSender = null) =>
-        new(
+        IWebPushNotificationSender? webPushNotificationSender = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             passwordHasher ?? new StubPasswordHasher(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
-            notificationPusher ?? new FakeNotificationPusher(),
-            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+            new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
+            notificationPusher ?? new FakeNotificationPusher());
+    }
 
     private static DeclineInvitationForCurrentUserCommandHandler CreateDeclineCurrentUserHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IUserRepository? userRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IWebPushNotificationSender? webPushNotificationSender = null) =>
-        new(
+        IWebPushNotificationSender? webPushNotificationSender = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             userRepository ?? new InMemoryUserRepository(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
-            notificationPusher ?? new FakeNotificationPusher(),
-            webPushNotificationSender ?? new FakeWebPushNotificationSender());
+            new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
+            notificationPusher ?? new FakeNotificationPusher());
+    }
 
     private static CreateRecommendationCommandHandler CreateRecommendationHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IRecommendationRepository? recommendationRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IUserRepository? userRepository = null) =>
-        new(
+        IUserRepository? userRepository = null) {
+        INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             recommendationRepository ?? new InMemoryRecommendationRepository(),
-            notificationRepository ?? new InMemoryNotificationRepository(),
+            new InMemoryNotificationWriter(resolvedNotificationRepository, new FakeWebPushNotificationSender()),
+            resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
             userRepository ?? new InMemoryUserRepository());
+    }
 
     // â”€â”€ InviteDietologist â”€â”€
 
@@ -2115,6 +2129,7 @@ public class DietologistFeatureTests {
 
         var handler = new RecommendationCreatedEventHandler(
             notifRepo,
+            new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
             pusher,
             userRepo);
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
@@ -2137,7 +2152,10 @@ public class DietologistFeatureTests {
         var pusher = new FakeNotificationPusher();
 
         var handler = new RecommendationCreatedEventHandler(
-            notifRepo, pusher, new InMemoryUserRepository());
+            notifRepo,
+            new InMemoryNotificationWriter(notifRepo, new FakeWebPushNotificationSender()),
+            pusher,
+            new InMemoryUserRepository());
         var domainEvent = new RecommendationCreatedDomainEvent(recId, dietologistId, clientId);
 
         await handler.Handle(new NotificationEnvelope<RecommendationCreatedDomainEvent>(domainEvent), CancellationToken.None);
@@ -2465,6 +2483,22 @@ public class DietologistFeatureTests {
             int batchSize,
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemoryNotificationWriter(
+        INotificationRepository notificationRepository,
+        IWebPushNotificationSender webPushNotificationSender) : INotificationWriter {
+        public async Task AddAsync(
+            Notification notification,
+            bool sendWebPush = false,
+            CancellationToken cancellationToken = default) {
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+
+            if (sendWebPush) {
+                await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     [ExcludeFromCodeCoverage]

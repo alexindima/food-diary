@@ -15,9 +15,9 @@ namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentU
 public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IUserRepository userRepository,
+    INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher,
-    IWebPushNotificationSender webPushNotificationSender)
+    INotificationPusher notificationPusher)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationForCurrentUserCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -63,9 +63,9 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
 
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
+            notificationWriter,
             notificationRepository,
             notificationPusher,
-            webPushNotificationSender,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),

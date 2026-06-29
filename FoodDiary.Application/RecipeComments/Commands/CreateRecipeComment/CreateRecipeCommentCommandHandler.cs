@@ -15,7 +15,7 @@ namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 public class CreateRecipeCommentCommandHandler(
     IRecipeCommentRepository commentRepository,
     IRecipeRepository recipeRepository,
-    INotificationRepository notificationRepository)
+    INotificationWriter notificationWriter)
     : ICommandHandler<CreateRecipeCommentCommand, Result<RecipeCommentModel>> {
     public async Task<Result<RecipeCommentModel>> Handle(
         CreateRecipeCommentCommand command,
@@ -53,7 +53,7 @@ public class CreateRecipeCommentCommandHandler(
         Notification notification = NotificationFactory.CreateNewComment(
             recipe.UserId,
             recipe.Id.Value.ToString());
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new RecipeCommentModel(
             comment.Id.Value,

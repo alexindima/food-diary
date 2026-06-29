@@ -934,9 +934,11 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task GoogleLoginHandler_WhenCredentialValidationFails_ReturnsFailure() {
         var tokenService = new StubAuthenticationTokenService();
+        var notificationRepository = new StubNotificationRepository();
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(),
-            new StubNotificationRepository(),
+            notificationRepository,
+            new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(
                 new GoogleIdentityPayload("google@example.com", "Alex", "User", "en"),
                 validateFailure: true),
@@ -959,6 +961,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
             notificationRepository,
+            new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
             new StubPasswordHasher(),
             tokenService);
@@ -978,6 +981,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
             notificationRepository,
+            new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload(user.Email, "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
@@ -994,6 +998,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(),
             notificationRepository,
+            new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
@@ -1014,6 +1019,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var handler = new GoogleLoginCommandHandler(
             new StubUserRepository(user),
             notificationRepository,
+            new StubNotificationWriter(notificationRepository),
             new StubGoogleTokenValidator(new GoogleIdentityPayload("google@example.com", "Alex", "User", "en")),
             new StubPasswordHasher(),
             new StubAuthenticationTokenService());
@@ -1147,6 +1153,15 @@ public sealed class AuthenticationCommandHandlerTests {
             DateTime standardUnreadOlderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class StubNotificationWriter(INotificationRepository notificationRepository) : INotificationWriter {
+        public async Task AddAsync(
+            Notification notification,
+            bool sendWebPush = false,
+            CancellationToken cancellationToken = default) =>
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
     }
 
     [ExcludeFromCodeCoverage]

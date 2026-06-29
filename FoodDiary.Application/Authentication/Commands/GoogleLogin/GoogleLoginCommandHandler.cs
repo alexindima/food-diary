@@ -18,6 +18,7 @@ namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 public sealed class GoogleLoginCommandHandler(
     IUserRepository userRepository,
     INotificationRepository notificationRepository,
+    INotificationWriter notificationWriter,
     IGoogleTokenValidator googleTokenValidator,
     IPasswordHasher passwordHasher,
     IAuthenticationTokenService authenticationTokenService)
@@ -44,7 +45,7 @@ public sealed class GoogleLoginCommandHandler(
             await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         }
 
-        await EnsurePasswordSetupReminderAsync(user, notificationRepository, cancellationToken).ConfigureAwait(false);
+        await EnsurePasswordSetupReminderAsync(user, notificationRepository, notificationWriter, cancellationToken).ConfigureAwait(false);
 
         IssuedAuthenticationTokens tokens = await authenticationTokenService
             .IssueAndStoreAsync(user, cancellationToken, command.ClientContext, command.RememberMe)
@@ -86,6 +87,7 @@ public sealed class GoogleLoginCommandHandler(
     private static async Task EnsurePasswordSetupReminderAsync(
         User user,
         INotificationRepository notificationRepository,
+        INotificationWriter notificationWriter,
         CancellationToken cancellationToken) {
         if (user.HasPassword) {
             return;
@@ -98,6 +100,6 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         Notification notification = NotificationFactory.CreatePasswordSetupSuggested(user.Id, referenceId);
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
     }
 }

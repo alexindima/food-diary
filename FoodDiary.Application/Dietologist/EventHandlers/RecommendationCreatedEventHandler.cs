@@ -10,6 +10,7 @@ namespace FoodDiary.Application.Dietologist.EventHandlers;
 
 public class RecommendationCreatedEventHandler(
     INotificationRepository notificationRepository,
+    INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
     IUserRepository userRepository)
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
@@ -23,7 +24,7 @@ public class RecommendationCreatedEventHandler(
             dietologistName,
             domainEvent.RecommendationId.Value.ToString());
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         int unreadCount = await notificationRepository.GetUnreadCountAsync(domainEvent.ClientUserId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(domainEvent.ClientUserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);

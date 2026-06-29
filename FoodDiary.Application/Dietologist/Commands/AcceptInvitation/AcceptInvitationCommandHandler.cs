@@ -17,9 +17,9 @@ public class AcceptInvitationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
+    INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher,
-    IWebPushNotificationSender webPushNotificationSender)
+    INotificationPusher notificationPusher)
     : ICommandHandler<AcceptInvitationCommand, Result> {
     public async Task<Result> Handle(AcceptInvitationCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -68,9 +68,9 @@ public class AcceptInvitationCommandHandler(
 
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyAcceptedAsync(
+            notificationWriter,
             notificationRepository,
             notificationPusher,
-            webPushNotificationSender,
             invitation.ClientUserId,
             ResolveDietologistDisplayName(user),
             invitation.Id.Value.ToString(),

@@ -13,9 +13,9 @@ namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 public class DeclineInvitationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IPasswordHasher passwordHasher,
+    INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
-    INotificationPusher notificationPusher,
-    IWebPushNotificationSender webPushNotificationSender)
+    INotificationPusher notificationPusher)
     : ICommandHandler<DeclineInvitationCommand, Result> {
     public async Task<Result> Handle(DeclineInvitationCommand command, CancellationToken cancellationToken) {
         var invitationId = new DietologistInvitationId(command.InvitationId);
@@ -32,9 +32,9 @@ public class DeclineInvitationCommandHandler(
         invitation.Decline();
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);
         await DietologistInvitationClientNotifier.NotifyDeclinedAsync(
+            notificationWriter,
             notificationRepository,
             notificationPusher,
-            webPushNotificationSender,
             invitation.ClientUserId,
             invitation.DietologistEmail,
             invitation.Id.Value.ToString(),

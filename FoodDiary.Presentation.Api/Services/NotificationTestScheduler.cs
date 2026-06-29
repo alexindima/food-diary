@@ -35,9 +35,9 @@ public sealed class NotificationTestScheduler(
             await Task.Delay(TimeSpan.FromSeconds(delaySeconds), cancellationToken).ConfigureAwait(false);
 
             using IServiceScope scope = serviceScopeFactory.CreateScope();
+            INotificationWriter notificationWriter = scope.ServiceProvider.GetRequiredService<INotificationWriter>();
             INotificationRepository notificationRepository = scope.ServiceProvider.GetRequiredService<INotificationRepository>();
             INotificationPusher notificationPusher = scope.ServiceProvider.GetRequiredService<INotificationPusher>();
-            IWebPushNotificationSender webPushNotificationSender = scope.ServiceProvider.GetRequiredService<IWebPushNotificationSender>();
             var domainUserId = new Domain.ValueObjects.Ids.UserId(userId);
             string referenceId = $"test-notification:{type}:{Guid.NewGuid():N}";
 
@@ -67,8 +67,7 @@ public sealed class NotificationTestScheduler(
                     referenceId),
             };
 
-            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-            await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
             int unreadCount = await notificationRepository.GetUnreadCountAsync(domainUserId, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushUnreadCountAsync(userId, unreadCount, cancellationToken).ConfigureAwait(false);
             await notificationPusher.PushNotificationsChangedAsync(userId, cancellationToken).ConfigureAwait(false);

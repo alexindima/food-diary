@@ -272,11 +272,13 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
 
         var paymentRepository = new BillingPaymentRepository(context);
         BillingPayment payment = await paymentRepository.AddAsync(CreatePayment(target, subscription.Id));
+        await context.SaveChangesAsync();
 
         Assert.Same(payment, await paymentRepository.GetByExternalPaymentIdAsync(BillingProviderNames.Stripe, "payment-1"));
 
         var webhookRepository = new BillingWebhookEventRepository(context);
         await webhookRepository.AddAsync(CreateWebhookEvent());
+        await context.SaveChangesAsync();
 
         Assert.True(await webhookRepository.ExistsAsync(BillingProviderNames.Stripe, "event-1"));
     }

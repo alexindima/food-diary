@@ -14,8 +14,8 @@ public sealed class FastingNotificationScheduler(
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IFastingCheckInRepository fastingCheckInRepository,
     INotificationRepository notificationRepository,
+    INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
-    IWebPushNotificationSender webPushNotificationSender,
     TimeProvider dateTimeProvider,
     ILogger<FastingNotificationScheduler> logger)
     : IFastingNotificationScheduler {
@@ -131,8 +131,7 @@ public sealed class FastingNotificationScheduler(
             occurrence.Kind.ToString(),
             referenceId);
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }
@@ -152,8 +151,7 @@ public sealed class FastingNotificationScheduler(
 
         Notification notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }
@@ -230,8 +228,7 @@ public sealed class FastingNotificationScheduler(
             _ => throw new InvalidOperationException($"Unsupported fasting notification type '{notificationType}'."),
         };
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
         usersToPush.Add(occurrence.UserId.Value);
         return 1;
     }

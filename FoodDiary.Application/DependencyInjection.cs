@@ -43,6 +43,7 @@ public static class DependencyInjection {
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
+        services.AddScoped<INotificationWriter, NotificationWriter>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();

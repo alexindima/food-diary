@@ -2171,8 +2171,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2189,12 +2189,15 @@ public class FastingFeatureTests {
         var user = User.Create("fasting-unsupported-notification@example.com", "hash");
         var plan = FastingPlan.CreateCyclic(user.Id, fastDays: 1, eatDays: 1, eatDayFastHours: 16, eatDayEatingWindowHours: 8, FixedNow, FixedNow);
         var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
+        var notificationRepo = new InMemorySchedulerNotificationRepository();
+        var notificationPusher = new RecordingNotificationPusher();
+        var webPushSender = new RecordingWebPushNotificationSender();
         var scheduler = new FastingNotificationScheduler(
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
-            new InMemorySchedulerNotificationRepository(),
-            new RecordingNotificationPusher(),
-            new RecordingWebPushNotificationSender(),
+            notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
+            notificationPusher,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
         MethodInfo? method = typeof(FastingNotificationScheduler).GetMethod(
@@ -2231,8 +2234,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2256,8 +2259,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2286,8 +2289,8 @@ public class FastingFeatureTests {
             occurrenceRepo,
             checkInRepo,
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2312,8 +2315,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2340,8 +2343,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2367,8 +2370,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2399,8 +2402,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2429,8 +2432,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2458,8 +2461,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2490,8 +2493,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2517,8 +2520,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2550,8 +2553,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2577,8 +2580,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2609,8 +2612,8 @@ public class FastingFeatureTests {
             new InMemoryFastingOccurrenceRepository(occurrence),
             new InMemoryFastingCheckInRepository(),
             notificationRepo,
+            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
             notificationPusher,
-            webPushSender,
             new FixedDateTimeProvider(),
             NullLogger<FastingNotificationScheduler>.Instance);
 
@@ -2848,6 +2851,22 @@ public class FastingFeatureTests {
             DateTime standardUnreadOlderThanUtc,
             int batchSize,
             CancellationToken cancellationToken = default) => Task.FromResult(0);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class InMemorySchedulerNotificationWriter(
+        InMemorySchedulerNotificationRepository notificationRepository,
+        RecordingWebPushNotificationSender webPushNotificationSender) : INotificationWriter {
+        public async Task AddAsync(
+            Notification notification,
+            bool sendWebPush = false,
+            CancellationToken cancellationToken = default) {
+            await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+
+            if (sendWebPush) {
+                await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+            }
+        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -23,12 +23,12 @@ public class RecipeCommentsFeatureTests {
         var ownerId = UserId.New();
         var recipe = Recipe.Create(ownerId, "Pasta", 1);
         var commentRepo = new InMemoryRecipeCommentRepository();
-        INotificationRepository notificationRepository = CreateNotificationRepository(out List<Notification> addedNotifications);
+        INotificationWriter notificationWriter = CreateNotificationWriter(out List<Notification> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             commentRepo,
             CreateRecipeRepository(recipe),
-            notificationRepository);
+            notificationWriter);
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "Delicious!"),
             CancellationToken.None);
@@ -43,12 +43,12 @@ public class RecipeCommentsFeatureTests {
     public async Task CreateRecipeComment_OnOwnRecipe_DoesNotCreateNotification() {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Pasta", 1);
-        INotificationRepository notificationRepository = CreateNotificationRepository(out List<Notification> addedNotifications);
+        INotificationWriter notificationWriter = CreateNotificationWriter(out List<Notification> addedNotifications);
 
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeRepository(recipe),
-            notificationRepository);
+            notificationWriter);
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(userId.Value, recipe.Id.Value, "My note"),
             CancellationToken.None);
@@ -62,7 +62,7 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeRepository(recipe: null),
-            CreateNotificationRepository());
+            CreateNotificationWriter());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.NewGuid(), Guid.NewGuid(), "Text"),
@@ -76,7 +76,7 @@ public class RecipeCommentsFeatureTests {
         var handler = new CreateRecipeCommentCommandHandler(
             new InMemoryRecipeCommentRepository(),
             CreateRecipeRepository(Recipe.Create(UserId.New(), "Pasta", 1)),
-            CreateNotificationRepository());
+            CreateNotificationWriter());
 
         Result<RecipeCommentModel> result = await handler.Handle(
             new CreateRecipeCommentCommand(Guid.Empty, Guid.NewGuid(), "Text"),
@@ -301,29 +301,18 @@ public class RecipeCommentsFeatureTests {
         }
     }
 
-    private static INotificationRepository CreateNotificationRepository() =>
-        CreateNotificationRepository(out _);
+    private static INotificationWriter CreateNotificationWriter() =>
+        CreateNotificationWriter(out _);
 
-    private static INotificationRepository CreateNotificationRepository(out List<Notification> addedNotifications) {
+    private static INotificationWriter CreateNotificationWriter(out List<Notification> addedNotifications) {
         addedNotifications = [];
         List<Notification> capturedNotifications = addedNotifications;
 
-        INotificationRepository repository = Substitute.For<INotificationRepository>();
-        repository
-            .AddAsync(Arg.Do<Notification>(capturedNotifications.Add), Arg.Any<CancellationToken>())
-            .Returns(call => Task.FromResult(call.Arg<Notification>()));
-        repository
-            .ExistsAsync(Arg.Any<UserId>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId userId = call.ArgAt<UserId>(0);
-                string type = call.ArgAt<string>(1);
-                string referenceId = call.ArgAt<string>(2);
-                return Task.FromResult(capturedNotifications.Any(notification =>
-                    notification.UserId == userId &&
-                    string.Equals(notification.Type, type, StringComparison.Ordinal) &&
-                    string.Equals(notification.ReferenceId, referenceId, StringComparison.Ordinal)));
-            });
-        return repository;
+        INotificationWriter writer = Substitute.For<INotificationWriter>();
+        writer
+            .AddAsync(Arg.Do<Notification>(capturedNotifications.Add), Arg.Any<bool>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return writer;
     }
 
     private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {

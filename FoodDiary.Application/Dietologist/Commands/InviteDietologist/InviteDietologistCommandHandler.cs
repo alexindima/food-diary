@@ -23,6 +23,7 @@ public class InviteDietologistCommandHandler(
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     IDietologistEmailSender emailSender,
+    INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
     TimeProvider dateTimeProvider,
@@ -114,7 +115,7 @@ public class InviteDietologistCommandHandler(
             ResolveClientName(client),
             invitation.Id.Value.ToString());
 
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, cancellationToken: cancellationToken).ConfigureAwait(false);
         int unreadCount = await notificationRepository.GetUnreadCountAsync(registeredDietologist.Id, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(registeredDietologist.Id.Value, unreadCount, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushNotificationsChangedAsync(registeredDietologist.Id.Value, cancellationToken).ConfigureAwait(false);

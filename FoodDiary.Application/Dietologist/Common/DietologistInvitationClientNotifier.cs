@@ -7,17 +7,17 @@ namespace FoodDiary.Application.Dietologist.Common;
 
 internal static class DietologistInvitationClientNotifier {
     public static Task NotifyAcceptedAsync(
+        INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
-        IWebPushNotificationSender webPushNotificationSender,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
         CancellationToken cancellationToken) =>
         NotifyAsync(
+            notificationWriter,
             notificationRepository,
             notificationPusher,
-            webPushNotificationSender,
             NotificationFactory.CreateDietologistInvitationAccepted(
                 clientUserId,
                 dietologistDisplayName,
@@ -25,17 +25,17 @@ internal static class DietologistInvitationClientNotifier {
             cancellationToken);
 
     public static Task NotifyDeclinedAsync(
+        INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
-        IWebPushNotificationSender webPushNotificationSender,
         UserId clientUserId,
         string dietologistDisplayName,
         string invitationReferenceId,
         CancellationToken cancellationToken) =>
         NotifyAsync(
+            notificationWriter,
             notificationRepository,
             notificationPusher,
-            webPushNotificationSender,
             NotificationFactory.CreateDietologistInvitationDeclined(
                 clientUserId,
                 dietologistDisplayName,
@@ -43,13 +43,12 @@ internal static class DietologistInvitationClientNotifier {
             cancellationToken);
 
     private static async Task NotifyAsync(
+        INotificationWriter notificationWriter,
         INotificationRepository notificationRepository,
         INotificationPusher notificationPusher,
-        IWebPushNotificationSender webPushNotificationSender,
         Notification notification,
         CancellationToken cancellationToken) {
-        await notificationRepository.AddAsync(notification, cancellationToken).ConfigureAwait(false);
-        await webPushNotificationSender.SendAsync(notification, cancellationToken).ConfigureAwait(false);
+        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
 
         int unreadCount = await notificationRepository.GetUnreadCountAsync(notification.UserId, cancellationToken).ConfigureAwait(false);
         await notificationPusher.PushUnreadCountAsync(notification.UserId.Value, unreadCount, cancellationToken).ConfigureAwait(false);
