@@ -128,6 +128,20 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
     }
 
     [RequiresDockerFact]
+    public async Task Outbox_WhenPublishFailsAtMaxAttempts_IsMarkedFailedAndNotClaimedAgain() {
+        fixture.EnsureAvailable();
+        await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();
+        MailRelayQueueStore store = CreateStore(dataSource);
+        await store.EnqueueAsync(CreateRequest(), CancellationToken.None);
+        MailRelayOutboxMessage outboxMessage = (await store.ClaimOutboxBatchAsync(CancellationToken.None)).Single();
+
+        await store.MarkOutboxFailedAsync(outboxMessage.Id, attemptCount: 2, "publish failed", CancellationToken.None);
+
+        Assert.Equal("failed", await GetScalarAsync<string>(dataSource, "select status from mailrelay_outbox_messages where id = @id", outboxMessage.Id));
+        Assert.Empty(await store.ClaimOutboxBatchAsync(CancellationToken.None));
+    }
+
+    [RequiresDockerFact]
     public async Task InboxClaim_WhenMessageIsProcessed_ReturnsDuplicateOnSecondClaim() {
         fixture.EnsureAvailable();
         await using NpgsqlDataSource dataSource = await CreateDataSourceAsync();

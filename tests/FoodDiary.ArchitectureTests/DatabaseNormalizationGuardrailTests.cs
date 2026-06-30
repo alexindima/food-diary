@@ -55,7 +55,7 @@ public sealed class DatabaseNormalizationGuardrailTests {
 
     private static readonly HashSet<string> AllowedRawSqlDocumentColumns = new(StringComparer.Ordinal) {
         "MailInbox/FoodDiary.MailInbox.Infrastructure/Services/NpgsqlInboundMailStore.cs:to_recipients_json",
-        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueStore.cs:to_recipients_json",
+        "MailRelay/FoodDiary.MailRelay.Infrastructure/Services/MailRelayQueueSchema.cs:to_recipients_json",
     };
 
     private static readonly BusinessKeyExpectation[] ExpectedBusinessKeys = [

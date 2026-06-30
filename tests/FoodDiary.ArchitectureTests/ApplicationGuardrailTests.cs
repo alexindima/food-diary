@@ -1,4 +1,7 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 namespace FoodDiary.ArchitectureTests;
 
@@ -212,6 +215,28 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DomainEventHandlers_DoNotDependOnDirectExternalSideEffectDispatchers() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] forbiddenParameterTypes = [
+            "IEmailSender",
+            "IDietologistEmailSender",
+            "IEmailTransport",
+            "IWebPushNotificationSender",
+        ];
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .SelectMany(path => ReadDomainEventHandlerConstructorParameters(path)
+                .Where(parameter => forbiddenParameterTypes.Contains(parameter.TypeName, StringComparer.Ordinal))
+                .Select(parameter => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, parameter.Path)}:{parameter.Line} {parameter.ClassName} depends on {parameter.TypeName}")))
+            .OrderBy(static value => value, StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotDependOnOptionsOrConfiguration() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -264,4 +289,50 @@ public sealed class ApplicationGuardrailTests {
             .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
             .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))];
     }
+
+    private static IReadOnlyList<ConstructorParameter> ReadDomainEventHandlerConstructorParameters(string path) {
+        string source = File.ReadAllText(path);
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(source);
+        CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
+
+        return [.. root.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Where(IsDomainEventHandler)
+            .SelectMany(classDeclaration => GetConstructorParameters(classDeclaration)
+                .Select(parameter => new ConstructorParameter(
+                    path,
+                    tree.GetLineSpan(parameter.Span).StartLinePosition.Line + 1,
+                    classDeclaration.Identifier.ValueText,
+                    GetUnqualifiedTypeName(parameter.Type))))];
+    }
+
+    private static bool IsDomainEventHandler(ClassDeclarationSyntax classDeclaration) =>
+        classDeclaration.BaseList?.Types.Any(static baseType =>
+            baseType.Type.ToString().Contains(
+                "INotificationHandler<NotificationEnvelope<",
+                StringComparison.Ordinal)) == true;
+
+    private static IEnumerable<ParameterSyntax> GetConstructorParameters(ClassDeclarationSyntax classDeclaration) {
+        if (classDeclaration.ParameterList is not null) {
+            foreach (ParameterSyntax parameter in classDeclaration.ParameterList.Parameters) {
+                yield return parameter;
+            }
+        }
+
+        foreach (ConstructorDeclarationSyntax constructor in classDeclaration.Members.OfType<ConstructorDeclarationSyntax>()) {
+            foreach (ParameterSyntax parameter in constructor.ParameterList.Parameters) {
+                yield return parameter;
+            }
+        }
+    }
+
+    private static string GetUnqualifiedTypeName(TypeSyntax? typeSyntax) {
+        string typeName = typeSyntax?.ToString().TrimEnd('?') ?? string.Empty;
+        int lastDot = typeName.LastIndexOf('.');
+
+        return lastDot < 0 ? typeName : typeName[(lastDot + 1)..];
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed record ConstructorParameter(string Path, int Line, string ClassName, string TypeName);
 }

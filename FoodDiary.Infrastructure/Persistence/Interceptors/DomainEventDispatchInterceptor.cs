@@ -9,6 +9,8 @@ namespace FoodDiary.Infrastructure.Persistence.Interceptors;
 internal sealed class DomainEventDispatchInterceptor(
     IDomainEventPublisher publisher,
     ILogger<DomainEventDispatchInterceptor> logger) : SaveChangesInterceptor {
+    // Domain event handlers run inside SaveChanges so they can add transactional state.
+    // Non-transactional side effects must enqueue IPostCommitActionQueue actions instead.
     public override async ValueTask<InterceptionResult<int>> SavingChangesAsync(
         DbContextEventData eventData,
         InterceptionResult<int> result,
