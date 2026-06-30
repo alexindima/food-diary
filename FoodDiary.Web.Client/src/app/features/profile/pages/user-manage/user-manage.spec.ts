@@ -11,6 +11,7 @@ import { provideTranslateTesting } from '../../../../../testing/translate-testin
 import { AuthService } from '../../../../services/auth.service';
 import { FrontendObservabilityService } from '../../../../services/frontend-observability.service';
 import { LocalizationService } from '../../../../shared/i18n/localization.service';
+import { FASTING_REMINDER_PRESETS } from '../../../../shared/lib/fasting-reminder-presets';
 import type { DietologistRelationship } from '../../../../shared/models/dietologist.data';
 import { Gender, type User } from '../../../../shared/models/user.data';
 import { NotificationService, type WebPushSubscriptionItem } from '../../../../shared/notifications/notification.service';
@@ -19,6 +20,11 @@ import { DietologistFacade } from '../../../dietologist/lib/dietologist.facade';
 import { PremiumBillingFacade } from '../../../premium/lib/premium-billing.facade';
 import { ProfileManageFacade } from '../../lib/profile-manage.facade';
 import { UserManageComponent } from './user-manage';
+import {
+    DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS,
+    DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS,
+} from './user-manage-lib/user-manage.config';
+import { UserManageNotificationsFacade } from './user-manage-lib/user-manage-notifications.facade';
 
 let fixture: ComponentFixture<UserManageComponent>;
 let component: UserManageComponent;
@@ -27,6 +33,7 @@ let facade: ProfileManageFacadeMock;
 let dialogService: { open: ReturnType<typeof vi.fn> };
 let router: { navigate: ReturnType<typeof vi.fn> };
 let notificationService: NotificationServiceMock;
+let notificationsFacade: UserManageNotificationsFacadeMock;
 
 describe('UserManageComponent dietologist invite state', () => {
     it('keeps invite mode when no dietologist relationship exists', async () => {
@@ -397,6 +404,35 @@ type NotificationServiceMock = {
     notificationsChangedVersion: ReturnType<typeof signal<number>>;
 };
 
+type UserManageNotificationsFacadeMock = {
+    notificationPermission: ReturnType<typeof signal<NotificationPermission | 'unsupported'>>;
+    notificationsChangedVersion: ReturnType<typeof signal<number>>;
+    isUpdatingNotifications: ReturnType<typeof signal<boolean>>;
+    isSchedulingTestNotification: ReturnType<typeof signal<boolean>>;
+    pushNotificationsEnabled: ReturnType<typeof signal<boolean>>;
+    fastingPushNotificationsEnabled: ReturnType<typeof signal<boolean>>;
+    socialPushNotificationsEnabled: ReturnType<typeof signal<boolean>>;
+    fastingCheckInReminderHours: ReturnType<typeof signal<number>>;
+    fastingCheckInFollowUpReminderHours: ReturnType<typeof signal<number>>;
+    fastingReminderPresets: typeof FASTING_REMINDER_PRESETS;
+    pushNotificationsSupported: ReturnType<typeof signal<boolean>>;
+    pushNotificationsSubscribed: ReturnType<typeof signal<boolean>>;
+    pushNotificationsBusy: ReturnType<typeof signal<boolean>>;
+    currentSubscriptionEndpoint: ReturnType<typeof signal<string | null>>;
+    connectedDeviceItems: ReturnType<typeof signal<[]>>;
+    isLoadingConnectedDevices: ReturnType<typeof signal<boolean>>;
+    removingConnectedDeviceEndpoint: ReturnType<typeof signal<string | null>>;
+    syncFromUser: ReturnType<typeof vi.fn>;
+    togglePushNotificationsAsync: ReturnType<typeof vi.fn>;
+    toggleFastingPushNotificationsAsync: ReturnType<typeof vi.fn>;
+    toggleSocialPushNotificationsAsync: ReturnType<typeof vi.fn>;
+    applyFastingReminderPreset: ReturnType<typeof vi.fn>;
+    onFastingReminderHoursChange: ReturnType<typeof vi.fn>;
+    saveFastingReminderHoursAsync: ReturnType<typeof vi.fn>;
+    scheduleTestNotification: ReturnType<typeof vi.fn>;
+    removeConnectedDeviceAsync: ReturnType<typeof vi.fn>;
+};
+
 type ProfileManageFacadeMock = {
     user: WritableSignal<User | null>;
     globalError: ReturnType<typeof signal<string | null>>;
@@ -438,14 +474,20 @@ async function createComponentAsync(
         scheduleTestNotification: vi.fn().mockReturnValue(of(void 0)),
         notificationsChangedVersion: signal(0),
     };
+    notificationsFacade = createUserManageNotificationsFacadeMock(notificationService.notificationsChangedVersion);
 
     await TestBed.configureTestingModule({
         imports: [UserManageComponent],
         providers: [...createTestingProviders(queryParams), provideTranslateTesting()],
     })
         .overrideComponent(UserManageComponent, {
-            remove: { providers: [ProfileManageFacade] },
-            add: { providers: [{ provide: ProfileManageFacade, useValue: facade }] },
+            remove: { providers: [ProfileManageFacade, UserManageNotificationsFacade] },
+            add: {
+                providers: [
+                    { provide: ProfileManageFacade, useValue: facade },
+                    { provide: UserManageNotificationsFacade, useValue: notificationsFacade },
+                ],
+            },
         })
         .compileComponents();
 
@@ -542,6 +584,39 @@ function createPushNotificationServiceMock(): {
         currentSubscriptionEndpoint: signal<string | null>(null),
         ensureSubscriptionAsync: vi.fn().mockResolvedValue('unsupported'),
         removeSubscriptionAsync: vi.fn().mockResolvedValue(true),
+    };
+}
+
+function createUserManageNotificationsFacadeMock(
+    notificationsChangedVersion: ReturnType<typeof signal<number>>,
+): UserManageNotificationsFacadeMock {
+    return {
+        notificationPermission: signal('unsupported'),
+        notificationsChangedVersion,
+        isUpdatingNotifications: signal(false),
+        isSchedulingTestNotification: signal(false),
+        pushNotificationsEnabled: signal(false),
+        fastingPushNotificationsEnabled: signal(true),
+        socialPushNotificationsEnabled: signal(true),
+        fastingCheckInReminderHours: signal(DEFAULT_FASTING_CHECK_IN_REMINDER_HOURS),
+        fastingCheckInFollowUpReminderHours: signal(DEFAULT_FASTING_CHECK_IN_FOLLOW_UP_REMINDER_HOURS),
+        fastingReminderPresets: FASTING_REMINDER_PRESETS,
+        pushNotificationsSupported: signal(false),
+        pushNotificationsSubscribed: signal(false),
+        pushNotificationsBusy: signal(false),
+        currentSubscriptionEndpoint: signal<string | null>(null),
+        connectedDeviceItems: signal([]),
+        isLoadingConnectedDevices: signal(false),
+        removingConnectedDeviceEndpoint: signal<string | null>(null),
+        syncFromUser: vi.fn(),
+        togglePushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
+        toggleFastingPushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
+        toggleSocialPushNotificationsAsync: vi.fn().mockResolvedValue(void 0),
+        applyFastingReminderPreset: vi.fn(),
+        onFastingReminderHoursChange: vi.fn(),
+        saveFastingReminderHoursAsync: vi.fn().mockResolvedValue(void 0),
+        scheduleTestNotification: vi.fn(),
+        removeConnectedDeviceAsync: vi.fn().mockResolvedValue(void 0),
     };
 }
 
