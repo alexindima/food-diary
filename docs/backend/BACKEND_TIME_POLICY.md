@@ -10,18 +10,18 @@ Keep backend time-dependent behavior deterministic, testable, and consistent acr
 
 ### Application
 
-- Use `IDateTimeProvider` for current UTC time.
+- Use .NET `TimeProvider` for current UTC time.
 - Do not call `DateTime.UtcNow` directly in handlers, services, or validators.
 
 ### Presentation
 
 - Do not call `DateTime.UtcNow` directly in controllers or HTTP mappings.
-- Use a presentation-local clock abstraction that delegates to `IDateTimeProvider`.
-- Keep controllers free from direct references to application-layer clock types.
+- Inject `TimeProvider` when presentation code needs current UTC time.
+- Keep controllers and HTTP mappings deterministic in tests by using a fixed `TimeProvider`.
 
 ### Infrastructure
 
-- Use `IDateTimeProvider` for operational timestamps, expirations, quota windows, and repository-side defaults.
+- Use `TimeProvider` for operational timestamps, expirations, quota windows, and repository-side defaults.
 - Direct `DateTime.UtcNow` is allowed only in generated EF migration snapshots or other generated artifacts.
 
 ### Domain
@@ -33,8 +33,8 @@ Keep backend time-dependent behavior deterministic, testable, and consistent acr
 
 ## Approved Exceptions
 
-- `SystemDateTimeProvider` may use `DateTime.UtcNow`.
-- Generated migration files may contain fixed or generated UTC timestamps.
+- Generated files may contain fixed or generated UTC timestamps.
+- Tests may use `DateTime.UtcNow` when they are explicitly testing relative current-time behavior, but fixed `TimeProvider` implementations are preferred for deterministic behavior.
 
 ## Immediate Migration Order
 

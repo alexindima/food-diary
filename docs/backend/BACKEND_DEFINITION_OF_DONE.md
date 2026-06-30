@@ -50,7 +50,7 @@ Mark each item deliberately for every backend PR or local task.
 
 - Use focused commands and queries.
 - Propagate `CancellationToken`.
-- Use `IDateTimeProvider` for current UTC time.
+- Use .NET `TimeProvider` for current UTC time.
 - Add or update handler/service tests.
 
 ### Infrastructure Changes
