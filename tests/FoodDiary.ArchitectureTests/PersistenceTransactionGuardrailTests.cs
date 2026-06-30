@@ -5,6 +5,18 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class PersistenceTransactionGuardrailTests {
     [Fact]
+    public void PersistenceRepositories_UseTimeProviderInsteadOfDirectUtcNow() {
+        string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(persistenceRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PersistenceSaveChangesAsyncUsage_StaysInsideCurrentExplicitAllowlist() {
         string persistenceRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "Persistence");
         string[] allowedFiles = [

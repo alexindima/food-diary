@@ -24,6 +24,8 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
     [RequiresDockerFact]
     public async Task WearableRepositories_AddUpdateAndQueryConnectionsAndSyncEntries() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -74,7 +76,7 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
     [RequiresDockerFact]
     public async Task OpenFoodFactsRepository_UpsertsSearchesAndEscapesLikePattern() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
-        var repository = new OpenFoodFactsProductCacheRepository(context);
+        var repository = new OpenFoodFactsProductCacheRepository(context, FixedTime);
         var product = new OpenFoodFactsProductModel(
             Barcode: "123",
             Name: "100% Cocoa",
@@ -153,6 +155,11 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         Assert.True(nutrientMap.ContainsKey(1001));
         Assert.Empty(emptyMap);
         Assert.True(referenceValues.ContainsKey(1));
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 5, 21, 0, 0, 0, TimeSpan.Zero);
     }
 
     [RequiresDockerFact]

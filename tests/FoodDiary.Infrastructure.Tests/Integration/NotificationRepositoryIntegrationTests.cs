@@ -31,7 +31,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, readAfterRetentionCutoff));
 
-        var repository = new NotificationRepository(context);
+        var repository = new NotificationRepository(context, FixedTime);
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -64,7 +64,7 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
                 .SetProperty(n => n.IsRead, valueExpression: true)
                 .SetProperty(n => n.ReadAtUtc, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc)));
 
-        var repository = new NotificationRepository(context);
+        var repository = new NotificationRepository(context, FixedTime);
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
             transientReadOlderThanUtc: new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc),
@@ -89,5 +89,12 @@ public sealed class NotificationRepositoryIntegrationTests(PostgresDatabaseFixtu
             .Options;
 
         return new FoodDiaryDbContext(options);
+    }
+
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 5, 21, 0, 0, 0, TimeSpan.Zero);
     }
 }

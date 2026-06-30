@@ -49,6 +49,9 @@ namespace FoodDiary.Infrastructure.Tests.Integration;
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
 public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDatabaseFixture databaseFixture) {
+    private static readonly DateTime FixedNow = new(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly TimeProvider FixedTime = new FixedDateTimeProvider(FixedNow);
+
     [RequiresDockerFact]
     public async Task NutritionLessonRepository_CoversFilteredTrackingProgressAndDeletePaths() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
@@ -816,7 +819,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     }
 
     private static async Task CoverNotificationRepositoryAsync(FoodDiaryDbContext context, UserId userId) {
-        var repository = new NotificationRepository(context);
+        var repository = new NotificationRepository(context, FixedTime);
         Notification transient = await repository.AddAsync(Notification.Create(userId, "transient", "{}", "one"));
         Notification standard = await repository.AddAsync(Notification.Create(userId, "standard", "{}", "two"));
         await repository.AddAsync(Notification.Create(userId, "standard", "{}", "three"));
@@ -1167,22 +1170,22 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         FoodDiaryDbContext context,
         UserId userId,
         DateTime now) {
-        var repository = new FastingSessionRepository(context);
+        var repository = new FastingSessionRepository(context, FixedTime);
         Assert.Equal(0, await repository.GetCurrentStreakAsync(UserId.New()));
         FastingSession currentSession = await repository.AddAsync(FastingSession.Create(userId, FastingProtocol.F16_8, 16, now.AddHours(-2)));
         FastingSession completedSession = await repository.AddAsync(FastingSession.Create(userId, FastingProtocol.F24_0, 24, now.AddDays(-2)));
         completedSession.End(now.AddDays(-1));
         await repository.UpdateAsync(completedSession);
         await context.SaveChangesAsync();
-        var yesterdaySession = FastingSession.Create(userId, FastingProtocol.F16_8, 16, DateTime.UtcNow.Date.AddDays(-1).AddHours(1));
-        yesterdaySession.End(DateTime.UtcNow.Date.AddHours(1));
+        var yesterdaySession = FastingSession.Create(userId, FastingProtocol.F16_8, 16, FixedNow.Date.AddDays(-1).AddHours(1));
+        yesterdaySession.End(FixedNow.Date.AddHours(1));
         await repository.AddAsync(yesterdaySession);
         await context.SaveChangesAsync();
         var oldStreakUser = User.Create($"old-streak-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(oldStreakUser);
         await context.SaveChangesAsync();
-        var oldSession = FastingSession.Create(oldStreakUser.Id, FastingProtocol.F16_8, 16, DateTime.UtcNow.Date.AddDays(-5).AddHours(1));
-        oldSession.End(DateTime.UtcNow.Date.AddDays(-4).AddHours(1));
+        var oldSession = FastingSession.Create(oldStreakUser.Id, FastingProtocol.F16_8, 16, FixedNow.Date.AddDays(-5).AddHours(1));
+        oldSession.End(FixedNow.Date.AddDays(-4).AddHours(1));
         await repository.AddAsync(oldSession);
         await context.SaveChangesAsync();
 

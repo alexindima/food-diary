@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSessionRepository {
+public class FastingSessionRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IFastingSessionRepository {
     public async Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.FastingSessions
             .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsCompleted, cancellationToken).ConfigureAwait(false);
@@ -55,7 +55,7 @@ public class FastingSessionRepository(FoodDiaryDbContext context) : IFastingSess
         }
 
         int streak = 0;
-        DateTime expectedDate = DateTime.UtcNow.Date;
+        DateTime expectedDate = timeProvider.GetUtcNow().UtcDateTime.Date;
 
         foreach (DateTime sessionDate in recentSessions.Select(session => session.StartedAtUtc.Date)) {
             if (sessionDate == expectedDate || sessionDate == expectedDate.AddDays(-1)) {

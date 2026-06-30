@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.OpenFoodFacts;
 
-internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext context) : IOpenFoodFactsProductCacheRepository {
+internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IOpenFoodFactsProductCacheRepository {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
@@ -60,7 +60,7 @@ internal sealed class OpenFoodFactsProductCacheRepository(FoodDiaryDbContext con
         Dictionary<string, OpenFoodFactsProduct> existingProducts = await context.OpenFoodFactsProducts
             .Where(product => barcodes.Contains(product.Barcode))
             .ToDictionaryAsync(product => product.Barcode, cancellationToken).ConfigureAwait(false);
-        DateTime now = DateTime.UtcNow;
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
 
         foreach (OpenFoodFactsProductModel product in candidates) {
             string barcode = product.Barcode.Trim();

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Notifications;
 
-public class NotificationRepository(FoodDiaryDbContext context) : INotificationRepository {
+public class NotificationRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : INotificationRepository {
     public async Task<IReadOnlyList<Notification>> GetByUserAsync(
         UserId userId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Notifications
@@ -62,12 +62,14 @@ public class NotificationRepository(FoodDiaryDbContext context) : INotificationR
     }
 
     public async Task MarkAllReadAsync(UserId userId, CancellationToken cancellationToken = default) {
+        DateTime now = timeProvider.GetUtcNow().UtcDateTime;
+
         await context.Notifications
             .Where(n => n.UserId == userId && !n.IsRead)
             .ExecuteUpdateAsync(s => s
                 .SetProperty(n => n.IsRead, valueExpression: true)
-                .SetProperty(n => n.ReadAtUtc, DateTime.UtcNow)
-                .SetProperty(n => n.ModifiedOnUtc, DateTime.UtcNow),
+                .SetProperty(n => n.ReadAtUtc, now)
+                .SetProperty(n => n.ModifiedOnUtc, now),
                 cancellationToken).ConfigureAwait(false);
     }
 

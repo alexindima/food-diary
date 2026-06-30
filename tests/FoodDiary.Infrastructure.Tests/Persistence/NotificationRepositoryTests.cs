@@ -25,7 +25,7 @@ public sealed class NotificationRepositoryTests {
         context.Notifications.Add(notification);
         await context.SaveChangesAsync();
 
-        var repository = new NotificationRepository(context);
+        var repository = new NotificationRepository(context, FixedTime);
 
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
@@ -55,7 +55,7 @@ public sealed class NotificationRepositoryTests {
         context.Notifications.Add(notification);
         await context.SaveChangesAsync();
 
-        var repository = new NotificationRepository(context);
+        var repository = new NotificationRepository(context, FixedTime);
 
         int deleted = await repository.DeleteExpiredBatchAsync(
             [],
@@ -71,6 +71,12 @@ public sealed class NotificationRepositoryTests {
     }
 
     private static DateTime RetentionCutoff => new(2026, 5, 1, 0, 0, 0, DateTimeKind.Utc);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 5, 21, 0, 0, 0, TimeSpan.Zero);
+    }
 
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
