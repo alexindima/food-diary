@@ -63,6 +63,47 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task ImageCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "images.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingImageCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new ImageCleanupJob(
+            cleanupService,
+            Options.Create(new ImageCleanupOptions { BatchSize = 1, OlderThanHours = 12 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<ImageCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.BatchSizes);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("images.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
     public async Task UserCleanupJob_RecordsFailureMetric_AndRethrows() {
         long? executionCount = null;
         string? outcome = null;
@@ -478,6 +519,49 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task BillingRenewalJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "billing.renewal",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new BillingRenewalJob(
+            null!,
+            Options.Create(new BillingRenewalOptions {
+                Enabled = true,
+                Provider = "YooKassa",
+                BatchSize = 10,
+            }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<BillingRenewalJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("billing.renewal");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
     public async Task RecurringJobsHostedService_StartAsync_RegistersExpectedJobs_AndVerifiesThem() {
         var recurringJobManager = new RecordingRecurringJobManager();
         var verifier = new RecordingRecurringJobRegistrationVerifier();
@@ -559,6 +643,10 @@ public sealed class JobsTests {
         AssertExecutionPolicy(billingRenewalMethod!);
         AssertExecutionPolicy(notificationMethod!);
         AssertExecutionPolicy(userMethod!);
+        AssertCancellationTokenParameter(imageMethod!);
+        AssertCancellationTokenParameter(billingRenewalMethod!);
+        AssertCancellationTokenParameter(notificationMethod!);
+        AssertCancellationTokenParameter(userMethod!);
     }
 
     private static BillingRenewalJob CreateBillingRenewalJob() =>
@@ -568,6 +656,13 @@ public sealed class JobsTests {
             new FixedDateTimeProvider(DateTime.UtcNow),
             new JobExecutionStateTracker(),
             NullLogger<BillingRenewalJob>.Instance);
+
+    private static void AssertCancellationTokenParameter(MethodInfo method) {
+        ParameterInfo parameter = Assert.Single(method.GetParameters());
+
+        Assert.Equal(typeof(CancellationToken), parameter.ParameterType);
+        Assert.True(parameter.HasDefaultValue);
+    }
 
     private static BillingRenewalService CreateBillingRenewalServiceWithoutGateways(DateTime utcNow) =>
         new(

@@ -24,7 +24,8 @@ public sealed class ImageCleanupJob(
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         try {
-            while (!cancellationToken.IsCancellationRequested) {
+            while (true) {
+                cancellationToken.ThrowIfCancellationRequested();
                 int deleted = await cleanupService.CleanupOrphansAsync(olderThanUtc, batchSize, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
@@ -45,6 +46,13 @@ public sealed class ImageCleanupJob(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
             executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            logger.LogInformation("Image cleanup job was canceled after processing {DeletedCount} items.", totalDeleted);
+            JobManagerTelemetry.JobExecutionCounter.Add(
+                1,
+                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
+                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Image cleanup job failed after processing {DeletedCount} items so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(

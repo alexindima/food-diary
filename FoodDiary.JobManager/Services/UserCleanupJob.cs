@@ -23,14 +23,11 @@ public sealed class UserCleanupJob(
         const string jobName = "users.cleanup";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
-        Guid? reassignUserId = null;
-        if (!string.IsNullOrWhiteSpace(settings.ReassignUserId)
-            && Guid.TryParse(settings.ReassignUserId, out Guid parsed)) {
-            reassignUserId = parsed;
-        }
+        Guid? reassignUserId = ParseReassignUserId(settings);
 
         try {
-            while (!cancellationToken.IsCancellationRequested) {
+            while (true) {
+                cancellationToken.ThrowIfCancellationRequested();
                 int deleted = await cleanupService.CleanupDeletedUsersAsync(
                     olderThanUtc,
                     batchSize,
@@ -56,6 +53,9 @@ public sealed class UserCleanupJob(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
             executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            RecordCanceled(totalDeleted);
+            throw;
         } catch (Exception ex) {
             logger.LogError(ex, "User cleanup job failed after processing {DeletedCount} users so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
@@ -70,5 +70,20 @@ public sealed class UserCleanupJob(
                 stopwatch.Elapsed.TotalMilliseconds,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
         }
+    }
+
+    private void RecordCanceled(int totalDeleted) {
+        logger.LogInformation("User cleanup job was canceled after processing {DeletedCount} users.", totalDeleted);
+        JobManagerTelemetry.JobExecutionCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.job.name", "users.cleanup"),
+            new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+    }
+
+    private static Guid? ParseReassignUserId(UserCleanupOptions settings) {
+        return !string.IsNullOrWhiteSpace(settings.ReassignUserId)
+            && Guid.TryParse(settings.ReassignUserId, out Guid parsed)
+            ? parsed
+            : null;
     }
 }

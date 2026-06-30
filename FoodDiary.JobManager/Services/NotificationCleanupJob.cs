@@ -20,16 +20,11 @@ public sealed class NotificationCleanupJob(
         const string jobName = "notifications.cleanup";
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
-        var policy = new NotificationCleanupPolicy(
-            settings.TransientTypes,
-            settings.TransientReadRetentionDays,
-            settings.TransientUnreadRetentionDays,
-            settings.StandardReadRetentionDays,
-            settings.StandardUnreadRetentionDays,
-            settings.BatchSize);
+        NotificationCleanupPolicy policy = CreatePolicy(settings);
 
         try {
-            while (!cancellationToken.IsCancellationRequested) {
+            while (true) {
+                cancellationToken.ThrowIfCancellationRequested();
                 int deleted = await notificationCleanupService.CleanupExpiredNotificationsAsync(policy, cancellationToken).ConfigureAwait(false);
                 totalDeleted += deleted;
 
@@ -56,6 +51,9 @@ public sealed class NotificationCleanupJob(
                 totalDeleted,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
             executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            RecordCanceled(totalDeleted);
+            throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Notification cleanup job failed after deleting {DeletedCount} notifications so far.", totalDeleted);
             JobManagerTelemetry.JobExecutionCounter.Add(
@@ -71,4 +69,21 @@ public sealed class NotificationCleanupJob(
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName));
         }
     }
+
+    private void RecordCanceled(int totalDeleted) {
+        logger.LogInformation("Notification cleanup job was canceled after deleting {DeletedCount} notifications.", totalDeleted);
+        JobManagerTelemetry.JobExecutionCounter.Add(
+            1,
+            new KeyValuePair<string, object?>("fooddiary.job.name", "notifications.cleanup"),
+            new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+    }
+
+    private static NotificationCleanupPolicy CreatePolicy(NotificationCleanupOptions settings) =>
+        new(
+            settings.TransientTypes,
+            settings.TransientReadRetentionDays,
+            settings.TransientUnreadRetentionDays,
+            settings.StandardReadRetentionDays,
+            settings.StandardUnreadRetentionDays,
+            settings.BatchSize);
 }

@@ -21,6 +21,8 @@ public sealed class BillingRenewalJob(
         executionStateTracker.RecordStarted(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
 
         try {
+            cancellationToken.ThrowIfCancellationRequested();
+
             if (!settings.Enabled) {
                 JobManagerTelemetry.JobExecutionCounter.Add(
                     1,
@@ -49,6 +51,13 @@ public sealed class BillingRenewalJob(
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "success"));
             executionStateTracker.RecordSuccess(jobName, dateTimeProvider.GetUtcNow().UtcDateTime);
+        } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {
+            logger.LogInformation("Billing renewal job was canceled.");
+            JobManagerTelemetry.JobExecutionCounter.Add(
+                1,
+                new KeyValuePair<string, object?>("fooddiary.job.name", jobName),
+                new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
+            throw;
         } catch (Exception ex) {
             logger.LogError(ex, "Billing renewal job failed.");
             JobManagerTelemetry.JobExecutionCounter.Add(
