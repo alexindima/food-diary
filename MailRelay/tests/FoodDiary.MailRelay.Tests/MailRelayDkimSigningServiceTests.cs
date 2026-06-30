@@ -10,7 +10,7 @@ namespace FoodDiary.MailRelay.Tests;
 public sealed class MailRelayDkimSigningServiceTests {
     [Fact]
     public void Sign_WhenDisabled_DoesNotAddDkimSignature() {
-        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions()));
+        DkimSigningService service = CreateService(new MailRelayDkimOptions());
         MimeMessage message = CreateMessage();
 
         service.Sign(message);
@@ -21,12 +21,12 @@ public sealed class MailRelayDkimSigningServiceTests {
     [Fact]
     public void Sign_WhenEnabled_AddsDkimSignatureAndMessageId() {
         using var rsa = RSA.Create(1024);
-        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+        DkimSigningService service = CreateService(new MailRelayDkimOptions {
             Enabled = true,
             Domain = "example.com",
             Selector = "mail",
             PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem(),
-        }));
+        });
         MimeMessage message = CreateMessage();
         message.Date = DateTimeOffset.MinValue;
         message.Headers.Remove(HeaderId.MessageId);
@@ -35,6 +35,7 @@ public sealed class MailRelayDkimSigningServiceTests {
 
         Assert.True(message.Headers.Contains("DKIM-Signature"));
         Assert.False(string.IsNullOrWhiteSpace(message.MessageId));
+        Assert.Equal(FixedNow, message.Date);
     }
 
     [Fact]
@@ -42,12 +43,12 @@ public sealed class MailRelayDkimSigningServiceTests {
         using var rsa = RSA.Create(1024);
         string privateKeyPath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid():N}.pem");
         File.WriteAllText(privateKeyPath, rsa.ExportPkcs8PrivateKeyPem());
-        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+        DkimSigningService service = CreateService(new MailRelayDkimOptions {
             Enabled = true,
             Domain = "example.com",
             Selector = "mail",
             PrivateKeyPath = privateKeyPath,
-        }));
+        });
         MimeMessage message = CreateMessage();
         DateTimeOffset date = new(2026, 1, 2, 3, 4, 5, TimeSpan.Zero);
         message.Date = date;
@@ -66,16 +67,16 @@ public sealed class MailRelayDkimSigningServiceTests {
 
     [Fact]
     public void Sign_WhenDomainOrSelectorIsMissing_ThrowsConfigurationError() {
-        var missingDomain = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+        DkimSigningService missingDomain = CreateService(new MailRelayDkimOptions {
             Enabled = true,
             Selector = "mail",
             PrivateKeyPem = "invalid",
-        }));
-        var missingSelector = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+        });
+        DkimSigningService missingSelector = CreateService(new MailRelayDkimOptions {
             Enabled = true,
             Domain = "example.com",
             PrivateKeyPem = "invalid",
-        }));
+        });
 
         Assert.Throws<InvalidOperationException>(() => missingDomain.Sign(CreateMessage()));
         Assert.Throws<InvalidOperationException>(() => missingSelector.Sign(CreateMessage()));
@@ -83,11 +84,11 @@ public sealed class MailRelayDkimSigningServiceTests {
 
     [Fact]
     public void Sign_WhenPrivateKeyIsMissing_ThrowsConfigurationError() {
-        var service = new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+        DkimSigningService service = CreateService(new MailRelayDkimOptions {
             Enabled = true,
             Domain = "example.com",
             Selector = "mail",
-        }));
+        });
 
         InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() => service.Sign(CreateMessage()));
 
@@ -101,5 +102,16 @@ public sealed class MailRelayDkimSigningServiceTests {
         message.Subject = "Subject";
         message.Body = new TextPart("plain") { Text = "Body" };
         return message;
+    }
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    private static DkimSigningService CreateService(MailRelayDkimOptions options) =>
+        new(Options.Create(options), FixedTime);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
     }
 }

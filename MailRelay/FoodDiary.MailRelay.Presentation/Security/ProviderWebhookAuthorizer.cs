@@ -10,6 +10,7 @@ namespace FoodDiary.MailRelay.Presentation.Security;
 public sealed class ProviderWebhookAuthorizer(
     IOptions<MailRelayOptions> relayOptions,
     HttpClient httpClient,
+    TimeProvider timeProvider,
     Func<X509Certificate2, bool>? certificateChainValidator = null) {
     private static readonly TimeSpan MailgunTimestampTolerance = TimeSpan.FromMinutes(15);
     private readonly MailRelayOptions _options = relayOptions.Value;
@@ -24,7 +25,7 @@ public sealed class ProviderWebhookAuthorizer(
             return false;
         }
 
-        if (!TryValidateMailgunTimestamp(request.Signature.Timestamp)) {
+        if (!TryValidateMailgunTimestamp(request.Signature.Timestamp, timeProvider.GetUtcNow())) {
             return false;
         }
 
@@ -195,7 +196,7 @@ public sealed class ProviderWebhookAuthorizer(
                CryptographicOperations.FixedTimeEquals(expectedBytes, actualBytes);
     }
 
-    private static bool TryValidateMailgunTimestamp(string timestamp) {
+    private static bool TryValidateMailgunTimestamp(string timestamp, DateTimeOffset now) {
         if (!long.TryParse(timestamp, CultureInfo.InvariantCulture, out long unixSeconds)) {
             return false;
         }
@@ -207,7 +208,7 @@ public sealed class ProviderWebhookAuthorizer(
             return false;
         }
 
-        TimeSpan age = DateTimeOffset.UtcNow - receivedAt;
+        TimeSpan age = now - receivedAt;
         return age.Duration() <= MailgunTimestampTolerance;
     }
 }

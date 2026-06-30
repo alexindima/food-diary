@@ -24,7 +24,8 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 User = "relay-user",
                 Password = "relay-password",
             }),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())));
+            CreateDkimSigningService(),
+            FixedTime);
 
         await transport.SendAsync(new RelayEmailMessageRequest(
             "sender@example.com",
@@ -39,6 +40,7 @@ public sealed class SmtpRelayDeliveryTransportTests {
         Assert.Contains("From: Sender <sender@example.com>", data, StringComparison.Ordinal);
         Assert.Contains("To: recipient@example.com", data, StringComparison.Ordinal);
         Assert.Contains("Subject: Subject", data, StringComparison.Ordinal);
+        Assert.Contains("Date: Wed, 01 Jul 2026", data, StringComparison.Ordinal);
         Assert.Contains("Hello", data, StringComparison.Ordinal);
         Assert.Contains("world", data, StringComparison.Ordinal);
     }
@@ -54,12 +56,13 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 Port = server.Port,
                 UseSsl = false,
             }),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions {
+            CreateDkimSigningService(new MailRelayDkimOptions {
                 Enabled = true,
                 Domain = "example.com",
                 Selector = "mail",
                 PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem(),
-            })));
+            }),
+            FixedTime);
 
         await transport.SendAsync(CreateRequest(textBody: "Hello"), CancellationToken.None);
 
@@ -78,7 +81,8 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 Port = server.Port,
                 UseSsl = false,
             }),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())));
+            CreateDkimSigningService(),
+            FixedTime);
 
         await transport.SendAsync(CreateRequest(htmlBody: " ", textBody: null), CancellationToken.None);
 
@@ -96,7 +100,8 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 Port = server.Port,
                 UseSsl = false,
             }),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())));
+            CreateDkimSigningService(),
+            FixedTime);
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport,
             CreateDirectMxTransport("127.0.0.1"),
@@ -118,7 +123,8 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 Port = 25,
                 UseSsl = false,
             }),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())));
+            CreateDkimSigningService(),
+            FixedTime);
         var transport = new ConfigurableRelayDeliveryTransport(
             smtpTransport,
             CreateDirectMxTransport("127.0.0.1"),
@@ -137,7 +143,8 @@ public sealed class SmtpRelayDeliveryTransportTests {
         var transport = new ConfigurableRelayDeliveryTransport(
             new SmtpRelayDeliveryTransport(
                 Options.Create(new MailRelaySmtpOptions()),
-                new DkimSigningService(Options.Create(new MailRelayDkimOptions()))),
+                CreateDkimSigningService(),
+                FixedTime),
             CreateDirectMxTransport("127.0.0.1"),
             Options.Create(new MailRelayDeliveryOptions {
                 Mode = "unsupported",
@@ -166,8 +173,20 @@ public sealed class SmtpRelayDeliveryTransportTests {
                 UseStartTlsWhenAvailable = false,
             }),
             new StubMxResolver([new MxRecord(mxHost, 0)]),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())),
+            CreateDkimSigningService(),
+            FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance);
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    private static DkimSigningService CreateDkimSigningService(MailRelayDkimOptions? options = null) =>
+        new(Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class StubMxResolver(IReadOnlyList<MxRecord> records) : IMxResolver {

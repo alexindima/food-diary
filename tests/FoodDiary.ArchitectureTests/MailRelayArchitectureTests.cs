@@ -327,6 +327,32 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayInfrastructure_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string root = GetRepositoryRoot();
+        string infrastructureRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(infrastructureRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MailRelayPresentation_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PrimaryApiAndInfrastructure_DoNotOwnSmtpDeliveryConfiguration() {
         string root = GetRepositoryRoot();
         string[] sourceRoots = [

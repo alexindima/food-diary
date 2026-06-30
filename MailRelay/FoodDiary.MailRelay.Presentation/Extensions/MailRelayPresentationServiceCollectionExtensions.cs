@@ -8,6 +8,7 @@ namespace FoodDiary.MailRelay.Presentation.Extensions;
 
 public static class MailRelayPresentationServiceCollectionExtensions {
     public static IServiceCollection AddMailRelayPresentation(this IServiceCollection services) {
+        services.AddSingleton(TimeProvider.System);
         services.AddScoped<MailRelayTelemetryActionFilter>();
         services.AddScoped<RelayApiKeyAuthorizationFilter>();
         services.AddHttpClient<ProviderWebhookAuthorizer>();

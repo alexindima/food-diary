@@ -158,7 +158,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunSignatureMatches_AllowsRequest() {
         ProviderWebhookAuthorizer authorizer = CreateProviderWebhookAuthorizer("mailgun-secret");
-        string timestamp = DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        string timestamp = FixedNow.ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         const string token = "token";
         string signature = CreateMailgunSignature("mailgun-secret", timestamp, token);
         var request = new MailgunWebhookHttpRequest(
@@ -181,7 +181,7 @@ public sealed class MailRelayPresentationTests {
     [Fact]
     public void ProviderWebhookAuthorizer_WhenMailgunTimestampIsExpired_RejectsRequest() {
         ProviderWebhookAuthorizer authorizer = CreateProviderWebhookAuthorizer("mailgun-secret");
-        string timestamp = DateTimeOffset.UtcNow.AddHours(-1).ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
+        string timestamp = FixedNow.AddHours(-1).ToUnixTimeSeconds().ToString(CultureInfo.InvariantCulture);
         const string token = "token";
         string signature = CreateMailgunSignature("mailgun-secret", timestamp, token);
         var request = new MailgunWebhookHttpRequest(
@@ -197,7 +197,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = false,
             }),
-            new HttpClient(new RecordingHttpMessageHandler()));
+            new HttpClient(new RecordingHttpMessageHandler()),
+            FixedTime);
 
         Assert.True(authorizer.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com"),
@@ -210,7 +211,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireMailgunWebhookSignature = true,
             }),
-            new HttpClient(new RecordingHttpMessageHandler()));
+            new HttpClient(new RecordingHttpMessageHandler()),
+            FixedTime);
         ProviderWebhookAuthorizer validKey = CreateProviderWebhookAuthorizer("mailgun-secret");
 
         Assert.False(missingKey.IsMailgunAuthorized(new MailgunWebhookHttpRequest(
@@ -237,7 +239,8 @@ public sealed class MailRelayPresentationTests {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
             Options.Create(new MailRelayOptions()),
-            new HttpClient(handler));
+            new HttpClient(handler),
+            FixedTime);
         var request = new AwsSesSnsWebhookHttpRequest(
             Type: "Notification",
             Message: "{}",
@@ -258,7 +261,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions {
                 RequireAwsSesSnsSignature = false,
             }),
-            new HttpClient(new RecordingHttpMessageHandler()));
+            new HttpClient(new RecordingHttpMessageHandler()),
+            FixedTime);
 
         Assert.True(await authorizer.IsAwsSesSnsAuthorizedAsync(new AwsSesSnsWebhookHttpRequest(
             Type: "",
@@ -269,7 +273,8 @@ public sealed class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsRequiredFieldsAreMissing_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
             Options.Create(new MailRelayOptions()),
-            new HttpClient(new RecordingHttpMessageHandler()));
+            new HttpClient(new RecordingHttpMessageHandler()),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(new AwsSesSnsWebhookHttpRequest(
             Type: "Notification",
@@ -281,7 +286,8 @@ public sealed class MailRelayPresentationTests {
         var handler = new RecordingHttpMessageHandler();
         var authorizer = new ProviderWebhookAuthorizer(
             Options.Create(new MailRelayOptions()),
-            new HttpClient(handler));
+            new HttpClient(handler),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
             signature: "not-base64",
@@ -293,7 +299,8 @@ public sealed class MailRelayPresentationTests {
     public async Task ProviderWebhookAuthorizer_WhenAwsSnsCertificateDownloadFails_RejectsRequest() {
         var authorizer = new ProviderWebhookAuthorizer(
             Options.Create(new MailRelayOptions()),
-            new HttpClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("download failed"))));
+            new HttpClient(new RecordingHttpMessageHandler(_ => throw new HttpRequestException("download failed"))),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
@@ -306,7 +313,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
-            })));
+            })),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
@@ -333,6 +341,7 @@ public sealed class MailRelayPresentationTests {
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
+            FixedTime,
             _ => true);
 
         Assert.True(await authorizer.IsAwsSesSnsAuthorizedAsync(request, CancellationToken.None));
@@ -348,6 +357,7 @@ public sealed class MailRelayPresentationTests {
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
             })),
+            FixedTime,
             _ => true);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
@@ -363,7 +373,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent(certificate.ExportCertificatePem()),
-            })));
+            })),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
@@ -376,7 +387,8 @@ public sealed class MailRelayPresentationTests {
             Options.Create(new MailRelayOptions()),
             new HttpClient(new RecordingHttpMessageHandler(_ => new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
                 Content = new StringContent("not a pem"),
-            })));
+            })),
+            FixedTime);
 
         Assert.False(await authorizer.IsAwsSesSnsAuthorizedAsync(CreateSignedAwsSnsRequest(
             signature: Convert.ToBase64String(Encoding.UTF8.GetBytes("invalid")),
@@ -425,7 +437,7 @@ public sealed class MailRelayPresentationTests {
             "TryValidateMailgunTimestamp",
             BindingFlags.NonPublic | BindingFlags.Static)!;
 
-        bool actual = (bool)method.Invoke(null, [long.MaxValue.ToString(CultureInfo.InvariantCulture)])!;
+        bool actual = (bool)method.Invoke(null, [long.MaxValue.ToString(CultureInfo.InvariantCulture), FixedNow])!;
 
         Assert.False(actual);
     }
@@ -450,7 +462,8 @@ public sealed class MailRelayPresentationTests {
                     RequireMailgunWebhookSignature = true,
                     MailgunWebhookSigningKey = "mailgun-secret",
                 }),
-                new HttpClient(new RecordingHttpMessageHandler())));
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
 
         IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com"),
@@ -473,7 +486,8 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireMailgunWebhookSignature = false,
                 }),
-                new HttpClient(new RecordingHttpMessageHandler())));
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
 
         IActionResult result = await controller.IngestMailgun(new MailgunWebhookHttpRequest(
             new MailgunEventDataHttpRequest("failed", "user@example.com", Id: "provider-id", Severity: "permanent"),
@@ -494,7 +508,8 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = true,
                 }),
-                new HttpClient(new RecordingHttpMessageHandler())));
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
 
         IActionResult result = await controller.IngestAwsSesSns(new AwsSesSnsWebhookHttpRequest(
             Type: "Notification",
@@ -517,7 +532,8 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
-                new HttpClient(new RecordingHttpMessageHandler())));
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
 
         const string message = """
                                {
@@ -550,7 +566,8 @@ public sealed class MailRelayPresentationTests {
                 Options.Create(new MailRelayOptions {
                     RequireAwsSesSnsSignature = false,
                 }),
-                new HttpClient(new RecordingHttpMessageHandler())));
+                new HttpClient(new RecordingHttpMessageHandler()),
+                FixedTime));
 
         IActionResult result = await controller.IngestAwsSesSns(new AwsSesSnsWebhookHttpRequest(
             Type: "SubscriptionConfirmation",
@@ -798,7 +815,16 @@ public sealed class MailRelayPresentationTests {
                 RequireMailgunWebhookSignature = true,
                 MailgunWebhookSigningKey = mailgunSigningKey,
             }),
-            new HttpClient(new RecordingHttpMessageHandler()));
+            new HttpClient(new RecordingHttpMessageHandler()),
+            FixedTime);
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
 
     private static string CreateMailgunSignature(string signingKey, string timestamp, string token) {
         byte[] keyBytes = Encoding.UTF8.GetBytes(signingKey);

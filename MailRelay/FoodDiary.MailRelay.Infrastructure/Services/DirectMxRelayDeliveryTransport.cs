@@ -12,6 +12,7 @@ public sealed class DirectMxRelayDeliveryTransport(
     IOptions<DirectMxOptions> options,
     IMxResolver mxResolver,
     DkimSigningService dkimSigningService,
+    TimeProvider timeProvider,
     ILogger<DirectMxRelayDeliveryTransport> logger,
     IDirectMxEndpointConnector? endpointConnector = null,
     IDirectMxSmtpClientFactory? smtpClientFactory = null) : IRelayDeliveryTransport {
@@ -88,7 +89,7 @@ public sealed class DirectMxRelayDeliveryTransport(
         message.Subject = request.Subject;
         message.To.AddRange(recipients);
         message.Body = CreateBody(request);
-        message.Date = DateTimeOffset.UtcNow;
+        message.Date = timeProvider.GetUtcNow();
         message.MessageId = MimeUtils.GenerateMessageId();
 
         if (dkimSigningService.IsEnabled) {

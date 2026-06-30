@@ -10,7 +10,8 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 
 public sealed class SmtpRelayDeliveryTransport(
     IOptions<MailRelaySmtpOptions> options,
-    DkimSigningService dkimSigningService) : IRelayDeliveryTransport {
+    DkimSigningService dkimSigningService,
+    TimeProvider timeProvider) : IRelayDeliveryTransport {
     private static readonly TimeSpan HtmlToTextRegexTimeout = TimeSpan.FromSeconds(1);
     private readonly MailRelaySmtpOptions _options = options.Value;
 
@@ -24,7 +25,7 @@ public sealed class SmtpRelayDeliveryTransport(
         }
 
         message.Body = CreateBody(request);
-        message.Date = DateTimeOffset.UtcNow;
+        message.Date = timeProvider.GetUtcNow();
         message.MessageId = MimeUtils.GenerateMessageId();
 
         if (dkimSigningService.IsEnabled) {

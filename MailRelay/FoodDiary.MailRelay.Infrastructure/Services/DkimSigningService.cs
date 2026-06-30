@@ -5,7 +5,7 @@ using Microsoft.Extensions.Options;
 
 namespace FoodDiary.MailRelay.Infrastructure.Services;
 
-public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options) {
+public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options, TimeProvider timeProvider) {
     private static readonly string[] HeadersToSign = ["From", "To", "Subject", "Date", "Message-Id", "MIME-Version", "Content-Type"];
     private readonly MailRelayDkimOptions _options = options.Value;
 
@@ -20,7 +20,7 @@ public sealed class DkimSigningService(IOptions<MailRelayDkimOptions> options) {
         string selector = _options.Selector ?? throw new InvalidOperationException("MailRelayDkim selector is not configured.");
 
         if (message.Date == DateTimeOffset.MinValue) {
-            message.Date = DateTimeOffset.UtcNow;
+            message.Date = timeProvider.GetUtcNow();
         }
 
         if (string.IsNullOrWhiteSpace(message.MessageId)) {

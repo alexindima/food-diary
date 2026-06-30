@@ -22,7 +22,8 @@ public sealed class DirectMxRelayDeliveryTransportTests {
                 UseStartTlsWhenAvailable = false,
             }),
             new StubMxResolver([new MxRecord("127.0.0.1", 0)]),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())),
+            CreateDkimSigningService(),
+            FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance);
         var request = new RelayEmailMessageRequest(
             "sender@example.com",
@@ -47,7 +48,8 @@ public sealed class DirectMxRelayDeliveryTransportTests {
                 UseStartTlsWhenAvailable = false,
             }),
             new StubMxResolver([]),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())),
+            CreateDkimSigningService(),
+            FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance);
         var request = new RelayEmailMessageRequest(
             "sender@example.com",
@@ -75,7 +77,8 @@ public sealed class DirectMxRelayDeliveryTransportTests {
                 LocalDomain = "relay.example.com",
             }),
             new StubMxResolver([new MxRecord("mx.example.com", 10)]),
-            new DkimSigningService(Options.Create(new MailRelayDkimOptions())),
+            CreateDkimSigningService(),
+            FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance,
             connector,
             new StubDirectMxSmtpClientFactory(smtpClient));
@@ -137,7 +140,7 @@ public sealed class DirectMxRelayDeliveryTransportTests {
 
     [Fact]
     public void CreateMessage_WhenTextBodyIsMissing_CreatesMultipartAlternativeWithTextFallback() {
-        DirectMxRelayDeliveryTransport transport = CreateTransport(new DkimSigningService(Options.Create(new MailRelayDkimOptions())));
+        DirectMxRelayDeliveryTransport transport = CreateTransport(CreateDkimSigningService());
         RelayEmailMessageRequest request = CreateRequest(textBody: null);
 
         MimeMessage message = InvokeCreateMessage(transport, request);
@@ -147,18 +150,19 @@ public sealed class DirectMxRelayDeliveryTransportTests {
         Assert.True(message.Body is MultipartAlternative);
         Assert.Contains("Hello & welcome", message.TextBody, StringComparison.Ordinal);
         Assert.Equal("<p>Hello &amp; welcome</p>", message.HtmlBody);
+        Assert.Equal(FixedNow, message.Date);
         Assert.False(message.Headers.Contains("DKIM-Signature"));
     }
 
     [Fact]
     public void CreateMessage_WhenDkimIsEnabled_AddsDkimSignature() {
         using var rsa = RSA.Create(1024);
-        DkimSigningService dkimSigningService = new(Options.Create(new MailRelayDkimOptions {
+        DkimSigningService dkimSigningService = CreateDkimSigningService(new MailRelayDkimOptions {
             Enabled = true,
             Domain = "example.com",
             Selector = "mail",
             PrivateKeyPem = rsa.ExportPkcs8PrivateKeyPem(),
-        }));
+        });
         DirectMxRelayDeliveryTransport transport = CreateTransport(dkimSigningService);
 
         MimeMessage message = InvokeCreateMessage(transport, CreateRequest(textBody: "Plain text"));
@@ -201,7 +205,19 @@ public sealed class DirectMxRelayDeliveryTransportTests {
             }),
             new StubMxResolver([]),
             dkimSigningService,
+            FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance);
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    private static DkimSigningService CreateDkimSigningService(MailRelayDkimOptions? options = null) =>
+        new(Options.Create(options ?? new MailRelayDkimOptions()), FixedTime);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
 
     private static RelayEmailMessageRequest CreateRequest(string? textBody) =>
         new(
