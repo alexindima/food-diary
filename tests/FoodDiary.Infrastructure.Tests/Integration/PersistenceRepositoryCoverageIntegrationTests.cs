@@ -314,8 +314,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Single(await planRepository.GetByUserAsync(user.Id, FastingPlanType.Intermittent, FastingPlanStatus.Active));
 
         await CoverFastingOccurrenceAndCheckInsAsync(context, user.Id, plan.Id, now);
-        FastingSession currentSession = await CoverFastingSessionsAsync(context, user.Id, now);
-        await CoverFastingTelemetryAsync(context, currentSession.Id, now);
+        FastingSession currentSession = await CoverFastingSessionsAsync(context, user.Id, FixedNow);
+        await CoverFastingTelemetryAsync(context, currentSession.Id, FixedNow);
     }
 
     [RequiresDockerFact]
