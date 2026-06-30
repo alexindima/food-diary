@@ -141,7 +141,7 @@ public sealed class DietologistClientsControllerTests {
     }
 
     private static DietologistClientsController CreateController(ISender sender) =>
-        new(sender) {
+        new(sender, TimeProvider.System) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext(),
             },

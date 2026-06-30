@@ -3,7 +3,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 
 namespace FoodDiary.Web.Api.HealthChecks;
 
-public sealed class DistributedCacheHealthCheck(IDistributedCache cache) : IHealthCheck {
+public sealed class DistributedCacheHealthCheck(IDistributedCache cache, TimeProvider timeProvider) : IHealthCheck {
     private const string ProbeKey = "health:distributed-cache";
 
     public async Task<HealthCheckResult> CheckHealthAsync(
@@ -12,7 +12,7 @@ public sealed class DistributedCacheHealthCheck(IDistributedCache cache) : IHeal
         try {
             await cache.SetStringAsync(
                 ProbeKey,
-                DateTimeOffset.UtcNow.ToUnixTimeSeconds().ToString(System.Globalization.CultureInfo.InvariantCulture),
+                timeProvider.GetUtcNow().ToUnixTimeSeconds().ToString(System.Globalization.CultureInfo.InvariantCulture),
                 new DistributedCacheEntryOptions {
                     AbsoluteExpirationRelativeToNow = TimeSpan.FromSeconds(30),
                 },

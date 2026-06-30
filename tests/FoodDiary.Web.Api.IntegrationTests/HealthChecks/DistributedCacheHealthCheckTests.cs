@@ -9,7 +9,7 @@ public sealed class DistributedCacheHealthCheckTests {
     [Fact]
     public async Task CheckHealthAsync_WhenCacheProbeSucceeds_ReturnsHealthyAndRemovesProbeKey() {
         var cache = new CapturingDistributedCache();
-        var check = new DistributedCacheHealthCheck(cache);
+        var check = new DistributedCacheHealthCheck(cache, FixedTime);
 
         HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext(), CancellationToken.None);
 
@@ -17,6 +17,7 @@ public sealed class DistributedCacheHealthCheckTests {
         Assert.Equal("health:distributed-cache", cache.SetKey);
         Assert.Equal("health:distributed-cache", cache.RemovedKey);
         Assert.NotNull(cache.SetValue);
+        Assert.Equal("1773651600", System.Text.Encoding.UTF8.GetString(cache.SetValue));
         Assert.Equal(TimeSpan.FromSeconds(30), cache.Options?.AbsoluteExpirationRelativeToNow);
     }
 
@@ -26,7 +27,7 @@ public sealed class DistributedCacheHealthCheckTests {
         var cache = new CapturingDistributedCache {
             SetAsyncHandler = (_, _, _, _) => throw exception,
         };
-        var check = new DistributedCacheHealthCheck(cache);
+        var check = new DistributedCacheHealthCheck(cache, FixedTime);
 
         HealthCheckResult result = await check.CheckHealthAsync(new HealthCheckContext(), CancellationToken.None);
 
@@ -34,6 +35,13 @@ public sealed class DistributedCacheHealthCheckTests {
         Assert.Equal("Distributed cache probe failed.", result.Description);
         Assert.Same(exception, result.Exception);
         Assert.Null(cache.RemovedKey);
+    }
+
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 3, 16, 9, 0, 0, TimeSpan.Zero);
     }
 
     [ExcludeFromCodeCoverage]

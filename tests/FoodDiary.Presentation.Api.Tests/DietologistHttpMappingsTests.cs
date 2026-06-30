@@ -75,7 +75,7 @@ public sealed class DietologistHttpMappingsTests {
         var date = new DateTime(2026, 4, 1);
         var httpQuery = new GetClientDashboardHttpQuery(date, Page: 2, PageSize: 20, Locale: "ru", TrendDays: 14);
 
-        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
+        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
         Assert.Equal(userId, query.UserId);
         Assert.Equal(clientUserId, query.ClientUserId);
@@ -102,7 +102,7 @@ public sealed class DietologistHttpMappingsTests {
             Locale: "en",
             TrendDays: 7);
 
-        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId);
+        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
         Assert.Equal(dateFrom, query.Date);
         Assert.Equal(dateTo, query.DateTo);
@@ -147,6 +147,18 @@ public sealed class DietologistHttpMappingsTests {
         DeclineInvitationForCurrentUserCommand declineCurrent = invitationId.ToCurrentUserDeclineCommand(userId);
         Assert.Equal(userId, declineCurrent.UserId);
         Assert.Equal(invitationId, declineCurrent.InvitationId);
+    }
+
+    [Fact]
+    public void GetClientDashboardQuery_WhenDateIsMissing_UsesProvidedToday() {
+        var userId = Guid.NewGuid();
+        var clientUserId = Guid.NewGuid();
+        var httpQuery = new GetClientDashboardHttpQuery();
+
+        GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
+
+        Assert.Equal(TodayUtc.Date, query.Date);
+        Assert.Null(query.DateTo);
     }
 
     [Fact]
@@ -207,6 +219,8 @@ public sealed class DietologistHttpMappingsTests {
         Assert.Equal(createdAtUtc, response.CreatedAtUtc);
         Assert.Equal(expiresAtUtc, response.ExpiresAtUtc);
     }
+
+    private static readonly DateTime TodayUtc = new(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
 
     [Fact]
     public void DietologistResponseMappings_MapRelationshipInfoClientInvitationRecommendation() {

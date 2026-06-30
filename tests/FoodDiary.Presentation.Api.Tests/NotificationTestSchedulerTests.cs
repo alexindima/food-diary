@@ -21,6 +21,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
         var userId = Guid.NewGuid();
 
@@ -28,6 +29,7 @@ public sealed class NotificationTestSchedulerTests {
 
         Assert.Equal(NotificationTypes.FastingCompleted, response.Type);
         Assert.Equal(1, response.DelaySeconds);
+        Assert.Equal(FixedUtcNow.AddSeconds(1), response.ScheduledAtUtc);
 
         await sender.WaitAsync();
 
@@ -49,6 +51,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
 
         ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.EatingWindowStarted, CancellationToken.None);
@@ -71,6 +74,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
 
         ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, NotificationTypes.FastingCompleted, CancellationToken.None);
@@ -97,6 +101,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
         var userId = Guid.NewGuid();
 
@@ -127,6 +132,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
 
         ScheduledNotificationData response = await scheduler.ScheduleAsync(Guid.NewGuid(), 1, type, CancellationToken.None);
@@ -144,6 +150,7 @@ public sealed class NotificationTestSchedulerTests {
         var scheduler = new NotificationTestScheduler(
             serviceProvider.GetRequiredService<IServiceScopeFactory>(),
             lifetime,
+            FixedTime,
             NullLogger<NotificationTestScheduler>.Instance);
         System.Reflection.MethodInfo method = typeof(NotificationTestScheduler).GetMethod(
             "RunScheduledAsync",
@@ -173,6 +180,14 @@ public sealed class NotificationTestSchedulerTests {
         services.AddSingleton(CreateUnitOfWork());
         services.AddSingleton<IPostCommitActionQueue, ImmediatePostCommitActionQueue>();
         return services.BuildServiceProvider();
+    }
+
+    private static readonly DateTime FixedUtcNow = new(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider(FixedUtcNow);
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider(DateTime utcNow) : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(utcNow);
     }
 
     [ExcludeFromCodeCoverage]

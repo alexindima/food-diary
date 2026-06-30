@@ -178,7 +178,8 @@ public static class ApiServiceCollectionExtensions {
             services.AddSingleton(static serviceProvider => {
                 ApiBuildInfoOptions options = serviceProvider.GetRequiredService<IOptions<ApiBuildInfoOptions>>().Value;
                 IHostEnvironment environment = serviceProvider.GetRequiredService<IHostEnvironment>();
-                return ApiBuildInfo.Create(options, environment.EnvironmentName);
+                TimeProvider timeProvider = serviceProvider.GetRequiredService<TimeProvider>();
+                return ApiBuildInfo.Create(options, environment.EnvironmentName, timeProvider);
             });
             services.AddCors(static _ => { });
 

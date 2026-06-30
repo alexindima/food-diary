@@ -58,8 +58,8 @@ public static class DietologistHttpMappings {
         new(userId, invitationId);
 
     public static GetClientDashboardQuery ToClientDashboardQuery(
-        this GetClientDashboardHttpQuery query, Guid userId, Guid clientUserId) {
-        DateTime dateFrom = query.DateFrom ?? query.Date ?? DateTime.UtcNow.Date;
+        this GetClientDashboardHttpQuery query, Guid userId, Guid clientUserId, DateTime todayUtc) {
+        DateTime dateFrom = query.DateFrom ?? query.Date ?? todayUtc.Date;
         DateTime? dateTo = query.DateTo ?? query.Date;
 
         return new(userId, clientUserId, dateFrom, dateTo, query.Page, query.PageSize, query.Locale, query.TrendDays);

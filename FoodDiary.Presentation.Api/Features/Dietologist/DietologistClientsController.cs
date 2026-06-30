@@ -18,7 +18,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 [ApiController]
 [Authorize(Roles = PresentationRoleNames.Dietologist)]
 [Route("api/v{version:apiVersion}/dietologist/clients")]
-public class DietologistClientsController(ISender mediator) : AuthorizedController(mediator) {
+public class DietologistClientsController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<ClientSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetMyClients([FromCurrentUser] Guid userId) =>
@@ -37,7 +37,9 @@ public class DietologistClientsController(ISender mediator) : AuthorizedControll
         Guid clientUserId,
         [FromCurrentUser] Guid userId,
         [FromQuery] GetClientDashboardHttpQuery query) =>
-        HandleOk(query.ToClientDashboardQuery(userId, clientUserId), static value => value.ToHttpResponse());
+        HandleOk(
+            query.ToClientDashboardQuery(userId, clientUserId, timeProvider.GetUtcNow().UtcDateTime),
+            static value => value.ToHttpResponse());
 
     [HttpGet("{clientUserId:guid}/goals")]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]

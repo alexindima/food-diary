@@ -52,7 +52,22 @@ public sealed class HostCompositionBoundaryTests {
     public void PrimaryWebApiHost_UsesTimeProviderInsteadOfDateTimeUtcNow() {
         string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(hostRoot, ["DateTime.UtcNow"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(hostRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PresentationApi_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string presentationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Presentation.Api");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
 
         Assert.Empty(violations);
     }

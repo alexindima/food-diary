@@ -9,7 +9,7 @@ public sealed record ApiBuildInfo(
     string Environment,
     string ApplicationVersion,
     DateTimeOffset StartedAtUtc) {
-    public static ApiBuildInfo Create(ApiBuildInfoOptions options, string environmentName) {
+    public static ApiBuildInfo Create(ApiBuildInfoOptions options, string environmentName, TimeProvider timeProvider) {
         string applicationVersion = typeof(Program).Assembly
                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
                                      .InformationalVersion
@@ -21,6 +21,6 @@ public sealed record ApiBuildInfo(
             string.IsNullOrWhiteSpace(options.ImageTag) ? "unknown" : options.ImageTag,
             string.IsNullOrWhiteSpace(environmentName) ? "unknown" : environmentName,
             applicationVersion,
-            DateTimeOffset.UtcNow);
+            timeProvider.GetUtcNow());
     }
 }

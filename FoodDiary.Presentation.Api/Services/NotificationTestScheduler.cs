@@ -10,6 +10,7 @@ namespace FoodDiary.Presentation.Api.Services;
 public sealed class NotificationTestScheduler(
     IServiceScopeFactory serviceScopeFactory,
     IHostApplicationLifetime applicationLifetime,
+    TimeProvider timeProvider,
     ILogger<NotificationTestScheduler> logger)
     : INotificationTestScheduler {
     public Task<ScheduledNotificationData> ScheduleAsync(
@@ -21,7 +22,7 @@ public sealed class NotificationTestScheduler(
 
         int normalizedDelaySeconds = Math.Clamp(delaySeconds, 1, 3600);
         string normalizedType = NormalizeType(type);
-        DateTime scheduledAtUtc = DateTime.UtcNow.AddSeconds(normalizedDelaySeconds);
+        DateTime scheduledAtUtc = timeProvider.GetUtcNow().UtcDateTime.AddSeconds(normalizedDelaySeconds);
 
         _ = RunScheduledAsync(userId, normalizedDelaySeconds, normalizedType, applicationLifetime.ApplicationStopping);
 
