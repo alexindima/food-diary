@@ -23,6 +23,8 @@ bin/
 obj/
 [Ll]og/
 [Ll]ogs/
+!/FoodDiary.Presentation.Api/Features/Logs/
+!/FoodDiary.Presentation.Api/Features/Logs/**
 .vs/
 *.suo
 *.user
