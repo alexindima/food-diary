@@ -534,7 +534,15 @@ public sealed class DashboardSnapshotBuilderTests {
             return Task.FromResult<IReadOnlyList<WeightEntry>>(filtered.ToList());
         }
 
-        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WeightEntry>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WeightEntry>>([.. entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
+                .OrderBy(entry => entry.Date)]);
     }
 
     [ExcludeFromCodeCoverage]
@@ -567,7 +575,15 @@ public sealed class DashboardSnapshotBuilderTests {
             return Task.FromResult<IReadOnlyList<WaistEntry>>(filtered.ToList());
         }
 
-        public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(UserId userId, DateTime dateFrom, DateTime dateTo, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<WaistEntry>> GetByPeriodAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<WaistEntry>>([.. entries
+                .Where(entry => entry.UserId == userId)
+                .Where(entry => entry.Date.Date >= dateFrom.Date && entry.Date.Date <= dateTo.Date)
+                .OrderBy(entry => entry.Date)]);
     }
 
     [ExcludeFromCodeCoverage]
