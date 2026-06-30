@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -303,6 +304,26 @@ public sealed class MailRelayArchitectureTests {
             Directory.Exists(servicesRoot) &&
             Directory.EnumerateFileSystemEntries(servicesRoot).Any(),
             "FoodDiary.MailRelay.Application should stay organized by feature/purpose folders instead of a flat Services folder.");
+    }
+
+    [Fact]
+    public void MailRelayQueueStore_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string root = GetRepositoryRoot();
+        string servicesRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Services");
+
+        string[] violations = [.. SourceScanner.SourceFiles(servicesRoot)
+            .Where(static path => Path.GetFileName(path).StartsWith("MailRelayQueueStore", StringComparison.Ordinal))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(static entry =>
+                entry.line.Contains("DateTime.UtcNow", StringComparison.Ordinal) ||
+                entry.line.Contains("DateTimeOffset.UtcNow", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .OrderBy(static value => value, StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
     }
 
     [Fact]

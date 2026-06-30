@@ -8,7 +8,7 @@ public sealed partial class MailRelayQueueStore {
         CancellationToken cancellationToken) {
         string normalizedEmail = MailRelayQueueRowMapper.NormalizeEmail(request.Email)
                               ?? throw new InvalidOperationException("Delivery event email must be provided.");
-        DateTimeOffset occurredAtUtc = request.OccurredAtUtc ?? DateTimeOffset.UtcNow;
+        DateTimeOffset occurredAtUtc = request.OccurredAtUtc ?? timeProvider.GetUtcNow();
         var id = Guid.NewGuid();
 
         const string sql = """

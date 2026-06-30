@@ -62,6 +62,7 @@ public static class MailRelayServiceCollectionExtensions {
             });
 
             services.AddSingleton<MailRelayQueueStore>();
+            services.AddSingleton(TimeProvider.System);
             services.AddSingleton<IMailRelayQueueStore>(sp => sp.GetRequiredService<MailRelayQueueStore>());
             services.AddSingleton<IMailRelaySchemaInitializer>(sp => sp.GetRequiredService<MailRelayQueueStore>());
             services.AddSingleton<IMailRelayReadinessChecker, MailRelayReadinessChecker>();

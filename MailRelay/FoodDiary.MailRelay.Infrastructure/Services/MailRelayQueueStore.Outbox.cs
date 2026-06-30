@@ -56,7 +56,7 @@ public sealed partial class MailRelayQueueStore {
     public async Task MarkOutboxFailedAsync(Guid id, int attemptCount, string error, CancellationToken cancellationToken) {
         bool shouldRetry = attemptCount < _queueOptions.MaxAttempts;
         DateTimeOffset? nextAvailableAt = shouldRetry
-            ? DateTimeOffset.UtcNow.Add(ComputeBackoff(attemptCount))
+            ? timeProvider.GetUtcNow().Add(ComputeBackoff(attemptCount))
             : null;
 
         const string sql = """

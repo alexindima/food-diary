@@ -283,7 +283,14 @@ public sealed class MailRelayQueueStoreIntegrationTests(MailRelayEnvironmentFixt
             MaxRetryDelaySeconds = 1,
             LockTimeoutSeconds = 1,
             PollIntervalSeconds = 1,
-        }));
+        }), FixedTime);
+
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 4, 10, 13, 0, 0, TimeSpan.Zero);
+    }
 
     private static RelayEmailMessageRequest CreateRequest() =>
         new(

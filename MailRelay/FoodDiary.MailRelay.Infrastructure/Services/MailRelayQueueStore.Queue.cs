@@ -106,7 +106,7 @@ public sealed partial class MailRelayQueueStore {
 
         var emailId = Guid.NewGuid();
         var outboxId = Guid.NewGuid();
-        DateTimeOffset now = DateTimeOffset.UtcNow;
+        DateTimeOffset now = timeProvider.GetUtcNow();
 
         return await _executor.InTransactionAsync(
             async (connection, transaction, token) => {
@@ -345,7 +345,7 @@ public sealed partial class MailRelayQueueStore {
     public async Task<DateTimeOffset?> MarkFailedAttemptAsync(QueuedEmailFailureDecision decision, CancellationToken cancellationToken) {
         DateTimeOffset? nextAvailableAt = decision.IsTerminalFailure
             ? (DateTimeOffset?)null
-            : DateTimeOffset.UtcNow.Add(ComputeBackoff(decision.AttemptCount));
+            : timeProvider.GetUtcNow().Add(ComputeBackoff(decision.AttemptCount));
 
         const string sql = """
                            update mailrelay_outbound_emails

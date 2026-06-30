@@ -6,7 +6,8 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 
 public sealed partial class MailRelayQueueStore(
     NpgsqlDataSource dataSource,
-    IOptions<MailRelayQueueOptions> queueOptions) : IMailRelayQueueStore, IMailRelaySchemaInitializer {
+    IOptions<MailRelayQueueOptions> queueOptions,
+    TimeProvider timeProvider) : IMailRelayQueueStore, IMailRelaySchemaInitializer {
     private static readonly System.Text.Json.JsonSerializerOptions JsonOptions = new(System.Text.Json.JsonSerializerDefaults.Web);
     private readonly NpgsqlDataSource _dataSource = dataSource;
     private readonly MailRelayPostgresExecutor _executor = new(dataSource);
