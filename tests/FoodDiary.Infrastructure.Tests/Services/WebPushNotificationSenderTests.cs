@@ -124,7 +124,7 @@ public sealed class WebPushNotificationSenderTests {
             "https://push.example.com/subscriptions/active",
             "p256",
             "auth",
-            DateTime.UtcNow.AddMinutes(30),
+            FixedNow.AddMinutes(30),
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([activeSubscription]);
@@ -150,7 +150,7 @@ public sealed class WebPushNotificationSenderTests {
             "https://push.example.com/subscriptions/expired",
             "p256",
             "auth",
-            DateTime.UtcNow.AddMinutes(-5),
+            FixedNow.AddMinutes(-5),
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([expiredSubscription]);
@@ -275,6 +275,7 @@ public sealed class WebPushNotificationSenderTests {
                 DefaultUrl = "/",
             }),
             new StubWebPushClientAdapter(),
+            FixedTime,
             NullLogger<WebPushNotificationSender>.Instance);
     }
 
@@ -289,7 +290,7 @@ public sealed class WebPushNotificationSenderTests {
             "https://push.example.com/subscriptions/expired",
             "p256",
             "auth",
-            DateTime.UtcNow.AddMinutes(30),
+            FixedNow.AddMinutes(30),
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([activeSubscription]);
@@ -309,6 +310,7 @@ public sealed class WebPushNotificationSenderTests {
                 DefaultUrl = "/",
             }),
             webPushClient,
+            FixedTime,
             NullLogger<WebPushNotificationSender>.Instance);
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
@@ -330,7 +332,7 @@ public sealed class WebPushNotificationSenderTests {
             "https://push.example.com/subscriptions/active",
             "p256",
             "auth",
-            DateTime.UtcNow.AddMinutes(30),
+            FixedNow.AddMinutes(30),
             "en",
             "Chrome");
         var subscriptionRepository = new RecordingSubscriptionRepository([activeSubscription]);
@@ -347,6 +349,7 @@ public sealed class WebPushNotificationSenderTests {
                 DefaultUrl = "/",
             }),
             webPushClient,
+            FixedTime,
             NullLogger<WebPushNotificationSender>.Instance);
         var notification = Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}");
 
@@ -361,6 +364,14 @@ public sealed class WebPushNotificationSenderTests {
             methodName,
             System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
         return (T)method.Invoke(instance, args)!;
+    }
+
+    private static readonly DateTime FixedNow = new(2026, 7, 1, 8, 0, 0, DateTimeKind.Utc);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(FixedNow);
     }
 
     private static T InvokePrivateStatic<T>(string methodName, params object[] args) {

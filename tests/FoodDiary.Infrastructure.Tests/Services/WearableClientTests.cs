@@ -19,6 +19,7 @@ public sealed class WearableClientTests {
                 ClientId = "fitbit-client",
                 RedirectUri = "https://app.example/auth/callback?provider=fitbit",
             }),
+            FixedTime,
             NullLogger<FitbitClient>.Instance);
 
         string url = client.GetAuthorizationUrl("state value/1");
@@ -48,6 +49,7 @@ public sealed class WearableClientTests {
                 ClientSecret = "secret",
                 RedirectUri = "https://app.example/fitbit",
             }),
+            FixedTime,
             NullLogger<FitbitClient>.Instance);
 
         WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
@@ -56,6 +58,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access", result.AccessToken);
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("fitbit-user", result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
         Assert.Equal("Basic", handler.Requests.Single().Headers.Authorization?.Scheme);
         Assert.Contains("grant_type=authorization_code", handler.RequestBodies.Single(), StringComparison.Ordinal);
         Assert.Contains("code=auth-code", handler.RequestBodies.Single(), StringComparison.Ordinal);
@@ -90,6 +93,7 @@ public sealed class WearableClientTests {
         var client = new FitbitClient(
             new HttpClient(handler),
             MsOptions.Create(new FitbitOptions { ClientId = "client", ClientSecret = "secret" }),
+            FixedTime,
             NullLogger<FitbitClient>.Instance);
 
         IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
@@ -113,6 +117,7 @@ public sealed class WearableClientTests {
                 ClientId = "google-client",
                 RedirectUri = "https://app.example/auth/google-fit",
             }),
+            FixedTime,
             NullLogger<GoogleFitClient>.Instance);
 
         string url = client.GetAuthorizationUrl("state value/1");
@@ -144,6 +149,7 @@ public sealed class WearableClientTests {
                 ClientSecret = "secret",
                 RedirectUri = "https://app.example/google-fit",
             }),
+            FixedTime,
             NullLogger<GoogleFitClient>.Instance);
 
         WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
@@ -152,6 +158,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access", result.AccessToken);
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("google-user", result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
         Assert.Contains("grant_type=authorization_code", handler.RequestBodies[0], StringComparison.Ordinal);
         Assert.Contains("code=auth-code", handler.RequestBodies[0], StringComparison.Ordinal);
     }
@@ -189,6 +196,7 @@ public sealed class WearableClientTests {
         var client = new GoogleFitClient(
             new HttpClient(handler),
             MsOptions.Create(new GoogleFitOptions { ClientId = "client", ClientSecret = "secret" }),
+            FixedTime,
             NullLogger<GoogleFitClient>.Instance);
 
         IReadOnlyList<WearableDataPoint> result = await client.FetchDailyDataAsync(
@@ -208,6 +216,14 @@ public sealed class WearableClientTests {
 
     private static HttpResponseMessage JsonResponse(string json) =>
         new(HttpStatusCode.OK) { Content = JsonContent(json) };
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingHttpMessageHandler(HttpResponseMessage? response = null) : HttpMessageHandler {

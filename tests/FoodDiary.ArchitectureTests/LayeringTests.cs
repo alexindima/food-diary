@@ -66,6 +66,18 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void IntegrationsProject_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(integrationsRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void InfrastructureProject_DoesNotReferenceExternalProviderPackages() {
         HashSet<string> packages = GetPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
 

@@ -14,6 +14,7 @@ namespace FoodDiary.Integrations.Services;
 internal sealed class OpenFoodFactsService(
     HttpClient httpClient,
     IOptions<OpenFoodFactsApiOptions> options,
+    TimeProvider timeProvider,
     ILogger<OpenFoodFactsService> logger) : IOpenFoodFactsService {
     private const string ProviderName = "open_food_facts";
     private const string BarcodeLookupOperation = "barcode_lookup";
@@ -112,7 +113,7 @@ internal sealed class OpenFoodFactsService(
                 outcome = "empty";
             }
 
-            SearchCache[cacheKey] = new CachedSearchResult(DateTimeOffset.UtcNow, products);
+            SearchCache[cacheKey] = new CachedSearchResult(timeProvider.GetUtcNow(), products);
             return products;
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or System.Text.Json.JsonException) {
             outcome = ResolveFailureOutcome(ex, cancellationToken);
@@ -167,12 +168,12 @@ internal sealed class OpenFoodFactsService(
     private static string GetSearchCacheKey(string query, int limit) =>
         string.Create(CultureInfo.InvariantCulture, $"{query.Trim().ToLowerInvariant()}:{limit}");
 
-    private static bool TryGetCachedSearch(
+    private bool TryGetCachedSearch(
         string cacheKey,
         TimeSpan maxAge,
         out IReadOnlyList<OpenFoodFactsProductModel> products) {
         if (SearchCache.TryGetValue(cacheKey, out CachedSearchResult? cached) &&
-            DateTimeOffset.UtcNow - cached.CachedAt <= maxAge) {
+            timeProvider.GetUtcNow() - cached.CachedAt <= maxAge) {
             products = cached.Products;
             return true;
         }

@@ -234,6 +234,7 @@ public sealed class ExternalFoodServiceTests {
             MsOptions.Create(new OpenFoodFactsApiOptions {
                 BaseUrl = "https://off.test",
             }),
+            FixedTime,
             NullLogger<OpenFoodFactsService>.Instance);
     }
 
@@ -246,8 +247,16 @@ public sealed class ExternalFoodServiceTests {
         object cached = cache.GetType().GetMethod("get_Item")!.Invoke(cache, [cacheKey])!;
         Type cachedType = cached.GetType();
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
-        object stale = Activator.CreateInstance(cachedType, DateTimeOffset.UtcNow - age, products)!;
+        object stale = Activator.CreateInstance(cachedType, FixedNow - age, products)!;
         cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
+    }
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
     }
 
     private static HttpResponseMessage JsonResponse(string json) =>

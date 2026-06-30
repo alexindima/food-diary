@@ -16,6 +16,7 @@ namespace FoodDiary.Integrations.Wearables;
 internal sealed class FitbitClient(
     HttpClient httpClient,
     IOptions<FitbitOptions> options,
+    TimeProvider timeProvider,
     ILogger<FitbitClient> logger) : IWearableClient {
     private static readonly JsonSerializerOptions JsonOptions = new() {
         PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
@@ -59,7 +60,7 @@ internal sealed class FitbitClient(
                 token.AccessToken,
                 token.RefreshToken,
                 token.UserId,
-                DateTime.UtcNow.AddSeconds(token.ExpiresIn));
+                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Fitbit token exchange failed");
             return null;
@@ -90,7 +91,7 @@ internal sealed class FitbitClient(
                 token.AccessToken,
                 token.RefreshToken,
                 token.UserId,
-                DateTime.UtcNow.AddSeconds(token.ExpiresIn));
+                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Fitbit token refresh failed");
             return null;

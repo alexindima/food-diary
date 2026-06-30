@@ -15,6 +15,7 @@ namespace FoodDiary.Integrations.Wearables;
 internal sealed class GoogleFitClient(
     HttpClient httpClient,
     IOptions<GoogleFitOptions> options,
+    TimeProvider timeProvider,
     ILogger<GoogleFitClient> logger) : IWearableClient {
     public WearableProvider Provider => WearableProvider.GoogleFit;
 
@@ -57,7 +58,7 @@ internal sealed class GoogleFitClient(
                 token.AccessToken,
                 token.RefreshToken,
                 userId,
-                DateTime.UtcNow.AddSeconds(token.ExpiresIn));
+                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Google Fit token exchange failed");
             return null;
@@ -85,7 +86,7 @@ internal sealed class GoogleFitClient(
                 token.AccessToken,
                 token.RefreshToken ?? refreshToken,
                 string.Empty,
-                DateTime.UtcNow.AddSeconds(token.ExpiresIn));
+                timeProvider.GetUtcNow().UtcDateTime.AddSeconds(token.ExpiresIn));
         } catch (Exception ex) when (ex is HttpRequestException or TaskCanceledException or JsonException) {
             logger.LogWarning(ex, "Google Fit token refresh failed");
             return null;

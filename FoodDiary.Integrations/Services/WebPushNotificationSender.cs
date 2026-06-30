@@ -16,6 +16,7 @@ public sealed class WebPushNotificationSender(
     INotificationTextRenderer notificationTextRenderer,
     IOptions<WebPushOptions> optionsAccessor,
     IWebPushClientAdapter webPushClient,
+    TimeProvider timeProvider,
     ILogger<WebPushNotificationSender> logger)
     : IWebPushNotificationSender, IWebPushConfigurationProvider {
     private readonly WebPushOptions options = optionsAccessor.Value;
@@ -118,7 +119,7 @@ public sealed class WebPushNotificationSender(
         Notification notification,
         IReadOnlyCollection<WebPushSubscription> subscriptions,
         CancellationToken cancellationToken) {
-        DateTime utcNow = DateTime.UtcNow;
+        DateTime utcNow = timeProvider.GetUtcNow().UtcDateTime;
         var expiredSubscriptions = subscriptions
             .Where(subscription => subscription.ExpirationTimeUtc <= utcNow)
             .ToList();

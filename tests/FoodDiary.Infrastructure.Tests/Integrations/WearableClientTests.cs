@@ -75,6 +75,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access", result.AccessToken);
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("google-user", result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
     }
 
     [Fact]
@@ -89,6 +90,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access-next", result.AccessToken);
         Assert.Equal("existing-refresh", result.RefreshToken);
         Assert.Equal(string.Empty, result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
     }
 
     [Fact]
@@ -249,6 +251,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access", result.AccessToken);
         Assert.Equal("refresh", result.RefreshToken);
         Assert.Equal("fitbit-user", result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
     }
 
     [Fact]
@@ -266,6 +269,7 @@ public sealed class WearableClientTests {
         Assert.Equal("access-next", result.AccessToken);
         Assert.Equal("refresh-next", result.RefreshToken);
         Assert.Equal("fitbit-user", result.ExternalUserId);
+        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
     }
 
     [Fact]
@@ -334,6 +338,7 @@ public sealed class WearableClientTests {
                 ClientSecret = "google-secret",
                 RedirectUri = "https://app.test/google",
             }),
+            FixedTime,
             NullLogger<GoogleFitClient>.Instance);
     }
 
@@ -345,7 +350,16 @@ public sealed class WearableClientTests {
                 ClientSecret = "fitbit-secret",
                 RedirectUri = "https://app.test/fitbit",
             }),
+            FixedTime,
             NullLogger<FitbitClient>.Instance);
+    }
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
     }
 
     private static HttpResponseMessage JsonResponse(string json) =>
