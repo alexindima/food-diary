@@ -1,6 +1,6 @@
 using System.Reflection;
-using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Common;
+using FoodDiary.MailRelay.Domain.DeliveryEvents;
 using FoodDiary.MailRelay.Domain.Emails;
 using System.Runtime.CompilerServices;
 
@@ -171,15 +171,6 @@ public sealed class MailRelayDomainTests {
         var aggregate = new TestAggregate();
 
         Assert.Empty(aggregate.DomainEvents);
-    }
-
-    [Fact]
-    public void DomainTime_UtcNow_ReturnsCurrentUtcTime() {
-        DateTimeOffset before = DateTimeOffset.UtcNow;
-        DateTimeOffset now = DomainTime.UtcNow;
-        DateTimeOffset after = DateTimeOffset.UtcNow;
-
-        Assert.InRange(now, before, after);
     }
 
     [ExcludeFromCodeCoverage]

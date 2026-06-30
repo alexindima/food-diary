@@ -21,7 +21,7 @@ internal sealed partial class DiaryPdfGenerator {
                 });
             });
 
-            row.ConstantItem(150).AlignRight().Text(DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm 'UTC'", CultureInfo.InvariantCulture))
+            row.ConstantItem(150).AlignRight().Text(report.GeneratedAtUtc.ToString("yyyy-MM-dd HH:mm 'UTC'", CultureInfo.InvariantCulture))
                 .FontSize(8).FontColor(MutedTextColor);
         });
     }

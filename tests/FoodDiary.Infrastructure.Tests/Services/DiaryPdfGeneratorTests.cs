@@ -813,8 +813,11 @@ public sealed class DiaryPdfGeneratorTests {
             CreateReportTexts(cultureName),
             timeZoneOffsetMinutes,
             "fooddiary.club",
+            FixedGeneratedAtUtc,
         ])!;
     }
+
+    private static readonly DateTime FixedGeneratedAtUtc = new(2026, 7, 1, 8, 0, 0, DateTimeKind.Utc);
 
     private static DiaryPdfReportTexts CreateReportTexts(string cultureName) =>
         new(

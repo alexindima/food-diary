@@ -31,4 +31,27 @@ public sealed class CSharpStyleGuardrailTests {
             Environment.NewLine +
             string.Join(Environment.NewLine, violations));
     }
+
+    [Fact]
+    public void ProductionCode_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string[] productionRoots = [.. ProjectReferenceReader.ReadProductionProjectNames()
+            .Select(ProjectFolderFromProjectName)
+            .Select(static folder => ArchitectureTestPaths.FromRoot(folder))];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(productionRoots, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.True(
+            violations.Length == 0,
+            "Inject TimeProvider instead of reading system UTC time directly in production code. Violations:" +
+            Environment.NewLine +
+            string.Join(Environment.NewLine, violations));
+    }
+
+    private static string ProjectFolderFromProjectName(string projectName) =>
+        string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
+            ? Path.Combine("Shared", "FoodDiary.Mediator")
+            : projectName;
 }

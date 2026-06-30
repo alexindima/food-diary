@@ -18,7 +18,8 @@ internal sealed partial class DiaryPdfGenerator {
         IReadOnlyDictionary<MealId, byte[]> MealImages,
         bool UseCompactMealsMode,
         DiaryPdfReportTexts Texts,
-        CultureInfo Culture) {
+        CultureInfo Culture,
+        DateTime GeneratedAtUtc) {
         public int MealCount => Meals.Count;
         public int DayCount => Math.Max(1, Days.Count);
         public double TotalCalories => Days.Sum(day => day.Calories);
@@ -58,7 +59,8 @@ internal sealed partial class DiaryPdfGenerator {
             bool useCompactMealsMode,
             DiaryPdfReportTexts texts,
             int? timeZoneOffsetMinutes,
-            string reportHost) {
+            string reportHost,
+            DateTime generatedAtUtc) {
             DateTime normalizedFrom = EnsureUtc(dateFrom);
             DateTime normalizedTo = EnsureUtc(dateTo);
             if (normalizedTo < normalizedFrom) {
@@ -86,7 +88,8 @@ internal sealed partial class DiaryPdfGenerator {
                 mealImages,
                 useCompactMealsMode,
                 texts,
-                culture);
+                culture,
+                EnsureUtc(generatedAtUtc));
         }
 
         private static IReadOnlyList<DiaryDay> BuildDays(

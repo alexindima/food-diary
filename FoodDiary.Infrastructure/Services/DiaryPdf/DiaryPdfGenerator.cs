@@ -9,13 +9,14 @@ namespace FoodDiary.Infrastructure.Services.DiaryPdf;
 
 internal sealed partial class DiaryPdfGenerator(
     HttpClient httpClient,
-    IDiaryPdfReportTextProvider textProvider) : IDiaryPdfGenerator {
+    IDiaryPdfReportTextProvider textProvider,
+    TimeProvider timeProvider) : IDiaryPdfGenerator {
     internal DiaryPdfGenerator()
-        : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }, new DefaultDiaryPdfReportTextProvider()) {
+        : this(new HttpClient { Timeout = TimeSpan.FromSeconds(5) }, new DefaultDiaryPdfReportTextProvider(), TimeProvider.System) {
     }
 
     internal DiaryPdfGenerator(HttpClient httpClient)
-        : this(httpClient, new DefaultDiaryPdfReportTextProvider()) {
+        : this(httpClient, new DefaultDiaryPdfReportTextProvider(), TimeProvider.System) {
     }
 
     public async Task<byte[]> GenerateAsync(
@@ -41,7 +42,8 @@ internal sealed partial class DiaryPdfGenerator(
             useCompactMealsMode,
             texts,
             timeZoneOffsetMinutes,
-            ResolveReportHost(reportOrigin));
+            ResolveReportHost(reportOrigin),
+            timeProvider.GetUtcNow().UtcDateTime);
 
         var document = Document.Create(container => {
             container.Page(page => {

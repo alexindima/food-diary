@@ -393,7 +393,16 @@ public sealed class TelegramBotWorkerTests {
             botClient,
             Options.Create(options),
             logger ?? NullLogger<TelegramBotWorker>.Instance,
-            httpClientFactory);
+            httpClientFactory,
+            FixedTime);
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
+    }
 
     private static Update CreateMessageUpdate(string text, long telegramUserId) =>
         new() {

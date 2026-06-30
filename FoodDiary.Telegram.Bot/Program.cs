@@ -16,6 +16,7 @@ builder.Services.AddOptions<TelegramBotOptions>()
     .ValidateOnStart();
 
 builder.Services.AddHttpClient();
+builder.Services.AddSingleton(TimeProvider.System);
 
 builder.Services.AddSingleton<ITelegramBotClient>(sp => {
     TelegramBotOptions options = sp.GetRequiredService<IOptions<TelegramBotOptions>>().Value;

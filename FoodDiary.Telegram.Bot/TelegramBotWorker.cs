@@ -14,7 +14,8 @@ public sealed class TelegramBotWorker(
     ITelegramBotClient botClient,
     IOptions<TelegramBotOptions> options,
     ILogger<TelegramBotWorker> logger,
-    IHttpClientFactory httpClientFactory)
+    IHttpClientFactory httpClientFactory,
+    TimeProvider timeProvider)
     : BackgroundService {
     private readonly TelegramBotOptions _options = options.Value;
 
@@ -210,7 +211,7 @@ public sealed class TelegramBotWorker(
         client.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", accessToken);
 
-        var request = new CreateHydrationRequest(DateTime.UtcNow, amountMl);
+        var request = new CreateHydrationRequest(timeProvider.GetUtcNow().UtcDateTime, amountMl);
         HttpResponseMessage response = await client.PostAsJsonAsync("/api/hydrations", request, cancellationToken).ConfigureAwait(false);
         return response.IsSuccessStatusCode;
     }

@@ -16,6 +16,7 @@ public static class DependencyInjection {
             cfg.AddOpenBehavior(typeof(MailRelayValidationBehavior<,>));
         });
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
+        services.AddSingleton(TimeProvider.System);
         services.AddSingleton<MailRelayDeliveryEventIngestionService>();
         services.AddSingleton<MailRelayEmailUseCases>();
         services.AddSingleton<IMailRelayDeliveryPolicy, NoOpMailRelayDeliveryPolicy>();

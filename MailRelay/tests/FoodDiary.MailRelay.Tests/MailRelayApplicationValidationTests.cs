@@ -101,6 +101,19 @@ public sealed class MailRelayApplicationValidationTests {
     }
 
     [Fact]
+    public void CreateSuppressionValidator_UsesTimeProviderForExpiresAtValidation() {
+        var validator = new CreateMailRelaySuppressionCommandValidator(FixedTime);
+
+        FluentValidation.Results.ValidationResult pastResult = validator.Validate(new CreateMailRelaySuppressionCommand(
+            new CreateSuppressionRequest("user@example.com", "manual", "test", FixedNow.AddMinutes(-1))));
+        FluentValidation.Results.ValidationResult futureResult = validator.Validate(new CreateMailRelaySuppressionCommand(
+            new CreateSuppressionRequest("user@example.com", "manual", "test", FixedNow.AddMinutes(1))));
+
+        Assert.False(pastResult.IsValid);
+        Assert.True(futureResult.IsValid);
+    }
+
+    [Fact]
     public async Task CheckReadinessQueryHandler_WhenCheckerSucceeds_ReturnsSuccess() {
         var checker = new RecordingReadinessChecker();
         var handler = new CheckMailRelayReadinessQueryHandler(checker);
@@ -118,6 +131,14 @@ public sealed class MailRelayApplicationValidationTests {
         services.AddSingleton<IMailRelayDispatchNotifier, NoOpDispatchNotifier>();
         services.AddMailRelayApplication();
         return services.BuildServiceProvider();
+    }
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
     }
 
     [ExcludeFromCodeCoverage]
