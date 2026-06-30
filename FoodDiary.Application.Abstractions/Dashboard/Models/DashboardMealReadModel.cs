@@ -1,0 +1,28 @@
+namespace FoodDiary.Application.Abstractions.Dashboard.Models;
+
+public sealed record DashboardMealReadModel(
+    Guid Id,
+    DateTime Date,
+    string? MealType,
+    string? Comment,
+    string? ImageUrl,
+    Guid? ImageAssetId,
+    double TotalCalories,
+    double TotalProteins,
+    double TotalFats,
+    double TotalCarbs,
+    double TotalFiber,
+    double TotalAlcohol,
+    bool IsNutritionAutoCalculated,
+    double? ManualCalories,
+    double? ManualProteins,
+    double? ManualFats,
+    double? ManualCarbs,
+    double? ManualFiber,
+    double? ManualAlcohol,
+    int PreMealSatietyLevel,
+    int PostMealSatietyLevel,
+    bool IsFavorite,
+    Guid? FavoriteMealId,
+    IReadOnlyList<DashboardMealItemReadModel> Items,
+    IReadOnlyList<DashboardMealAiSessionReadModel> AiSessions);

@@ -62,7 +62,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToStatisticsModel_WhenResponseIsNull_ReturnsEmptyModel() {
-        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel(response: null, user: null);
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel((AggregatedStatisticsModel?)null, user: null);
 
         Assert.Equal(0, dto.TotalCalories);
         Assert.Equal(0, dto.AverageProteins);
@@ -131,7 +131,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWeightModel_WithNoEntries_ReturnsEmptyPoints() {
-        DashboardWeightModel dto = DashboardMapping.ToWeightModel([], desired: null);
+        DashboardWeightModel dto = DashboardMapping.ToWeightModel(Array.Empty<WeightEntry>(), desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
@@ -159,7 +159,7 @@ public class DashboardFeatureTests {
 
     [Fact]
     public void DashboardMapping_ToWaistModel_WithNoEntries_ReturnsEmptyPoints() {
-        DashboardWaistModel dto = DashboardMapping.ToWaistModel([], desired: null);
+        DashboardWaistModel dto = DashboardMapping.ToWaistModel(Array.Empty<WaistEntry>(), desired: null);
 
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);

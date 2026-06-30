@@ -19,6 +19,7 @@ using FluentValidation;
 using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Application.Products.Common;
@@ -43,7 +44,14 @@ public static class DependencyInjection {
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
-        services.AddScoped<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>();
+        services.AddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
+        services.AddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
+        services.AddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
+        services.AddScoped<IDashboardSectionDataLoader, DashboardSectionDataLoader>();
+        services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>
+            new DashboardSnapshotBuilder(
+                serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
+                serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();

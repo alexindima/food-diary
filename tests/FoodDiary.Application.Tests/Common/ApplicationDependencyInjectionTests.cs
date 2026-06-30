@@ -21,7 +21,10 @@ public sealed class ApplicationDependencyInjectionTests {
         DependencyInjection.AddApplication(services);
 
         Assert.Contains(services, ServiceDescriptorMatches<IMealNutritionService, MealNutritionService>(ServiceLifetime.Scoped));
-        Assert.Contains(services, ServiceDescriptorMatches<IDashboardSnapshotBuilder, DashboardSnapshotBuilder>(ServiceLifetime.Scoped));
+        Assert.Contains(services, descriptor =>
+            descriptor.ServiceType == typeof(IDashboardSnapshotBuilder) &&
+            descriptor.ImplementationFactory is not null &&
+            descriptor.Lifetime == ServiceLifetime.Scoped);
         Assert.Contains(services, ServiceDescriptorMatches<IPostCommitActionQueue, PostCommitActionQueue>(ServiceLifetime.Scoped));
         Assert.Contains(services, ServiceDescriptorMatches<INotificationCleanupService, NotificationCleanupService>(ServiceLifetime.Scoped));
         Assert.Contains(services, ServiceDescriptorMatches<IAuthenticationTokenService, AuthenticationTokenService>(ServiceLifetime.Scoped));
