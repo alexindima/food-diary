@@ -181,7 +181,14 @@ public sealed class NpgsqlInboundMailStoreIntegrationTests(MailInboxPostgresFixt
     }
 
     private static NpgsqlInboundMailStore CreateStore(NpgsqlDataSource dataSource) =>
-        new(dataSource, new DmarcReportParser());
+        new(dataSource, new DmarcReportParser(), FixedTime);
+
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => new(2026, 6, 18, 12, 0, 0, TimeSpan.Zero);
+    }
 
     private static InboundMailMessage CreateMessage(string subject, DateTimeOffset receivedAtUtc) =>
         InboundMailMessage.Receive(

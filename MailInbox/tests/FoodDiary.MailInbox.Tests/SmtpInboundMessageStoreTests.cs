@@ -17,7 +17,7 @@ public sealed class SmtpInboundMessageStoreTests {
     [Fact]
     public async Task SaveAsync_WhenMessageHasToRecipients_StoresEnvelopeRecipients() {
         var store = new RecordingInboundMailStore();
-        var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
+        var messageStore = new SmtpInboundMessageStore(store, FixedTime, NullLogger<SmtpInboundMessageStore>.Instance);
         string rawMime = CreateRawMime(includeToHeader: true);
 
         SmtpResponse response = await messageStore.SaveAsync(
@@ -33,12 +33,13 @@ public sealed class SmtpInboundMessageStoreTests {
         Assert.Equal("Hello", store.LastSaved.Subject);
         Assert.Contains("plain text", store.LastSaved.TextBody, StringComparison.Ordinal);
         Assert.Equal(rawMime, store.LastSaved.RawMime);
+        Assert.Equal(FixedNow, store.LastSaved.ReceivedAtUtc);
     }
 
     [Fact]
     public async Task SaveAsync_WhenMessageHasNoToRecipients_UsesTransactionRecipients() {
         var store = new RecordingInboundMailStore();
-        var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
+        var messageStore = new SmtpInboundMessageStore(store, FixedTime, NullLogger<SmtpInboundMessageStore>.Instance);
         string rawMime = CreateRawMime(includeToHeader: false);
 
         await messageStore.SaveAsync(
@@ -54,7 +55,7 @@ public sealed class SmtpInboundMessageStoreTests {
     [Fact]
     public async Task SaveAsync_WhenTransactionRecipientsAreEmpty_UsesMimeToHeaderRecipients() {
         var store = new RecordingInboundMailStore();
-        var messageStore = new SmtpInboundMessageStore(store, NullLogger<SmtpInboundMessageStore>.Instance);
+        var messageStore = new SmtpInboundMessageStore(store, FixedTime, NullLogger<SmtpInboundMessageStore>.Instance);
         string rawMime = CreateRawMime(includeToHeader: true);
 
         await messageStore.SaveAsync(
@@ -66,6 +67,9 @@ public sealed class SmtpInboundMessageStoreTests {
         Assert.NotNull(store.LastSaved);
         Assert.Equal(["admin@fooddiary.club"], store.LastSaved.ToRecipients);
     }
+
+    private static readonly DateTimeOffset FixedNow = new(2026, 6, 18, 11, 30, 0, TimeSpan.Zero);
+    private static readonly TimeProvider FixedTime = new FixedTimeProvider();
 
     private static string CreateRawMime(bool includeToHeader) {
         var message = new MimeMessage();
@@ -83,6 +87,11 @@ public sealed class SmtpInboundMessageStoreTests {
         using var stream = new MemoryStream();
         message.WriteTo(stream);
         return Encoding.UTF8.GetString(stream.ToArray());
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FixedTimeProvider : TimeProvider {
+        public override DateTimeOffset GetUtcNow() => FixedNow;
     }
 
     [ExcludeFromCodeCoverage]

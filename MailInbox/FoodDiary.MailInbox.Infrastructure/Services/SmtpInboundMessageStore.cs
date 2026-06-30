@@ -12,6 +12,7 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class SmtpInboundMessageStore(
     IInboundMailStore store,
+    TimeProvider timeProvider,
     ILogger<SmtpInboundMessageStore> logger) : MessageStore {
     public override async Task<SmtpResponse> SaveAsync(
         ISessionContext context,
@@ -39,7 +40,7 @@ public sealed class SmtpInboundMessageStore(
             message.TextBody,
             message.HtmlBody,
             rawMime,
-            DateTimeOffset.UtcNow);
+            timeProvider.GetUtcNow());
 
         Guid id = await store.SaveAsync(inboundMessage, cancellationToken).ConfigureAwait(false);
 

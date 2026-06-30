@@ -32,6 +32,7 @@ public sealed class MailInboxHostedServiceTests {
     public async Task SmtpHostedService_WhenDisabled_CompletesWithoutStartingListener() {
         var messageStore = new SmtpInboundMessageStore(
             new ThrowingInboundMailStore(),
+            TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
         var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(
@@ -51,6 +52,7 @@ public sealed class MailInboxHostedServiceTests {
         int port = GetFreeTcpPort();
         var messageStore = new SmtpInboundMessageStore(
             new ThrowingInboundMailStore(),
+            TimeProvider.System,
             NullLogger<SmtpInboundMessageStore>.Instance);
         var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
         var service = new MailInboxSmtpHostedService(

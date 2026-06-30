@@ -221,6 +221,19 @@ public sealed class MailInboxArchitectureTests {
     }
 
     [Fact]
+    public void MailInboxInfrastructure_UsesTimeProviderInsteadOfDirectUtcNow() {
+        string root = GetRepositoryRoot();
+        string infrastructureRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Infrastructure");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(infrastructureRoot, [
+            "DateTime.UtcNow",
+            "DateTimeOffset.UtcNow",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailInboxRuntimeConfiguration_UsesSeparateDatabase() {
         string root = GetRepositoryRoot();
         string appsettingsPath = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.WebApi", "appsettings.json");

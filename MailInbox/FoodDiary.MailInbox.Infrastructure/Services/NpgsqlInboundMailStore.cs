@@ -8,7 +8,8 @@ namespace FoodDiary.MailInbox.Infrastructure.Services;
 
 public sealed class NpgsqlInboundMailStore(
     NpgsqlDataSource dataSource,
-    DmarcReportParser dmarcReportParser) : IInboundMailStore, IMailInboxSchemaInitializer {
+    DmarcReportParser dmarcReportParser,
+    TimeProvider timeProvider) : IInboundMailStore, IMailInboxSchemaInitializer {
     private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web);
     private static readonly MailInboxSchemaMigration[] SchemaMigrations = [
         new(
@@ -41,6 +42,7 @@ public sealed class NpgsqlInboundMailStore(
                 where read_at_utc is null;
             """),
     ];
+    private readonly TimeProvider _timeProvider = timeProvider;
 
     public async Task EnsureSchemaAsync(CancellationToken cancellationToken) {
         NpgsqlConnection connection = await dataSource.OpenConnectionAsync(cancellationToken).ConfigureAwait(false);
@@ -255,7 +257,7 @@ public sealed class NpgsqlInboundMailStore(
         }
     }
 
-    private static async Task ApplyMigrationAsync(
+    private async Task ApplyMigrationAsync(
         NpgsqlConnection connection,
         MailInboxSchemaMigration migration,
         CancellationToken cancellationToken) {
@@ -274,7 +276,7 @@ public sealed class NpgsqlInboundMailStore(
             var insertCommand = new NpgsqlCommand(insertSql, connection, transaction);
             await using (insertCommand.ConfigureAwait(false)) {
                 insertCommand.Parameters.AddWithValue("name", migration.Name);
-                insertCommand.Parameters.AddWithValue("applied_at_utc", DateTimeOffset.UtcNow);
+                insertCommand.Parameters.AddWithValue("applied_at_utc", _timeProvider.GetUtcNow());
                 await insertCommand.ExecuteNonQueryAsync(cancellationToken).ConfigureAwait(false);
             }
 
