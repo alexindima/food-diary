@@ -48,12 +48,18 @@ public class CreateConsumptionCommandHandler(
             values.ImageAssetId);
         meal.UpdateSatietyLevels(command.PreMealSatietyLevel, command.PostMealSatietyLevel);
 
-        Result itemsResult = AddManualItems(meal, command.Items);
+        Result itemsResult = ConsumptionManualItemAppender.Add(meal, command.Items);
         if (itemsResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(itemsResult.Error);
         }
 
-        Result aiSessionsResult = await AddAiSessionsAsync(meal, command.AiSessions, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result aiSessionsResult = await ConsumptionAiSessionAppender.AddAsync(
+            meal,
+            command.AiSessions,
+            values.UserId,
+            imageAssetAccessService,
+            dateTimeProvider,
+            cancellationToken).ConfigureAwait(false);
         if (aiSessionsResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(aiSessionsResult.Error);
         }
@@ -105,100 +111,6 @@ public class CreateConsumptionCommandHandler(
             mealTypeResult.Value,
             imageAssetIdResult.Value,
             imageAssetResult.Value));
-    }
-
-    private static Result AddManualItems(Meal meal, IEnumerable<ConsumptionItemInput> items) {
-        foreach (ConsumptionItemInput item in items) {
-            Result validation = ConsumptionItemValidator.Validate(item);
-            if (validation.IsFailure) {
-                return validation;
-            }
-
-            Result itemIdValidation = ValidateItemIdentifiers(item);
-            if (itemIdValidation.IsFailure) {
-                return itemIdValidation;
-            }
-
-            if (item.ProductId.HasValue) {
-                MealItem mealItem = meal.AddProduct(new ProductId(item.ProductId.Value), item.Amount);
-                Result sourceResult = ApplySource(mealItem, item);
-                if (sourceResult.IsFailure) {
-                    return sourceResult;
-                }
-            } else if (item.RecipeId.HasValue) {
-                MealItem mealItem = meal.AddRecipe(new RecipeId(item.RecipeId.Value), item.Amount);
-                Result sourceResult = ApplySource(mealItem, item);
-                if (sourceResult.IsFailure) {
-                    return sourceResult;
-                }
-            }
-        }
-
-        return Result.Success();
-    }
-
-    private async Task<Result> AddAiSessionsAsync(
-        Meal meal,
-        IEnumerable<ConsumptionAiSessionInput> sessions,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        foreach (ConsumptionAiSessionInput session in sessions) {
-            Result sessionResult = await AddAiSessionAsync(meal, session, userId, cancellationToken).ConfigureAwait(false);
-            if (sessionResult.IsFailure) {
-                return sessionResult;
-            }
-        }
-
-        return Result.Success();
-    }
-
-    private async Task<Result> AddAiSessionAsync(
-        Meal meal,
-        ConsumptionAiSessionInput session,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        Result<ImageAssetId?> sessionImageAssetIdResult = ImageAssetIdParser.ParseOptional(session.ImageAssetId, nameof(session.ImageAssetId));
-        if (sessionImageAssetIdResult.IsFailure) {
-            return sessionImageAssetIdResult;
-        }
-
-        Result<ImageAsset?> sessionImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-            sessionImageAssetIdResult.Value,
-            userId,
-            cancellationToken).ConfigureAwait(false);
-        if (sessionImageAssetResult.IsFailure) {
-            return sessionImageAssetResult;
-        }
-
-        Result<List<MealAiItemData>> sessionItemsResult = CreateAiSessionItems(session);
-        if (sessionItemsResult.IsFailure) {
-            return sessionItemsResult;
-        }
-
-        if (!TryParseAiRecognitionSource(session.Source, out AiRecognitionSource sessionSource)) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(session.Source), "Unknown AI recognition source value."));
-        }
-
-        DateTime recognizedAtUtc = session.RecognizedAtUtc ?? dateTimeProvider.GetUtcNow().UtcDateTime;
-        if (recognizedAtUtc.Kind == DateTimeKind.Unspecified) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(session.RecognizedAtUtc), "RecognizedAtUtc timestamp kind must be specified."));
-        }
-
-        if (session.Notes is { Length: > 2048 }) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(session.Notes), "Notes must be at most 2048 characters."));
-        }
-
-        meal.AddAiSession(
-            sessionImageAssetIdResult.Value,
-            sessionSource,
-            recognizedAtUtc,
-            session.Notes,
-            sessionItemsResult.Value);
-
-        return Result.Success();
     }
 
     private async Task<Result> ApplyNutritionAsync(
@@ -270,100 +182,4 @@ public class CreateConsumptionCommandHandler(
         return Result.Success(meal.ToModel());
     }
 
-    private static Result ValidateItemIdentifiers(ConsumptionItemInput item) {
-        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.ProductId, nameof(item.ProductId), "Product id");
-        if (productIdResult.IsFailure) {
-            return productIdResult;
-        }
-
-        Result recipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(item.RecipeId, nameof(item.RecipeId), "Recipe id");
-        if (recipeIdResult.IsFailure) {
-            return recipeIdResult;
-        }
-
-        return Result.Success();
-    }
-
-    private static Result ApplySource(MealItem mealItem, ConsumptionItemInput item) {
-        if (!TryParseMealItemOrigin(item.Origin, out MealItemOrigin origin)) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(item.Origin), "Unknown meal item origin value."));
-        }
-
-        if (item.SourceAiItemId == Guid.Empty) {
-            return Result.Failure(
-                Errors.Validation.Invalid(nameof(item.SourceAiItemId), "Source AI item id must not be empty."));
-        }
-
-        try {
-            MealAiItemId? sourceAiItemId = item.SourceAiItemId.HasValue
-                ? new MealAiItemId(item.SourceAiItemId.Value)
-                : null;
-            mealItem.ApplySource(sourceAiItemId, origin);
-        } catch (ArgumentException ex) {
-            return Result.Failure(Errors.Validation.Invalid("Items", ex.Message));
-        }
-
-        return Result.Success();
-    }
-
-    private static bool TryParseMealItemOrigin(string? origin, out MealItemOrigin result) {
-        if (string.IsNullOrWhiteSpace(origin)) {
-            result = MealItemOrigin.Manual;
-            return true;
-        }
-
-        return Enum.TryParse(origin, ignoreCase: true, out result);
-    }
-
-    private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
-        if (string.IsNullOrWhiteSpace(source)) {
-            result = AiRecognitionSource.Text;
-            return true;
-        }
-
-        return Enum.TryParse(source, ignoreCase: true, out result);
-    }
-
-    private static Result<List<MealAiItemData>> CreateAiSessionItems(ConsumptionAiSessionInput session) {
-        var items = new List<MealAiItemData>(session.Items.Count);
-        foreach (ConsumptionAiItemInput aiItem in session.Items) {
-            if (!TryParseAiItemResolution(aiItem.Resolution, out MealAiItemResolution resolution)) {
-                return Result.Failure<List<MealAiItemData>>(
-                    Errors.Validation.Invalid(nameof(aiItem.Resolution), "Unknown AI item resolution value."));
-            }
-
-            if (!MealAiItemData.TryCreate(
-                    aiItem.NameEn,
-                    aiItem.NameLocal,
-                    aiItem.Amount,
-                    aiItem.Unit,
-                    aiItem.Calories,
-                    aiItem.Proteins,
-                    aiItem.Fats,
-                    aiItem.Carbs,
-                    aiItem.Fiber,
-                    aiItem.Alcohol,
-                    aiItem.Confidence ?? 1,
-                    resolution,
-                    out MealAiItemData? data,
-                    out string? error)) {
-                return Result.Failure<List<MealAiItemData>>(
-                    Errors.Validation.Invalid("AiSessions", error ?? "AI item is invalid."));
-            }
-
-            items.Add(data!);
-        }
-
-        return Result.Success(items);
-    }
-
-    private static bool TryParseAiItemResolution(string? resolution, out MealAiItemResolution result) {
-        if (string.IsNullOrWhiteSpace(resolution)) {
-            result = MealAiItemResolution.Accepted;
-            return true;
-        }
-
-        return Enum.TryParse(resolution, ignoreCase: true, out result);
-    }
 }

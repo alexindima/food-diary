@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
+namespace FoodDiary.Application.Consumptions.Services;
 
 internal static class ConsumptionAiSessionAppender {
     public static async Task<Result> AddAsync(
