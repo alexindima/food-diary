@@ -7,13 +7,11 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
-using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -64,7 +62,12 @@ public class CreateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(aiSessionsResult.Error);
         }
 
-        Result nutritionResult = await ApplyNutritionAsync(meal, command, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result nutritionResult = await ConsumptionNutritionApplier.ApplyAsync(
+            meal,
+            values.UserId,
+            mealNutritionService,
+            CreateNutritionInput(command),
+            cancellationToken).ConfigureAwait(false);
         if (nutritionResult.IsFailure) {
             return Result.Failure<ConsumptionModel>(nutritionResult.Error);
         }
@@ -113,60 +116,15 @@ public class CreateConsumptionCommandHandler(
             imageAssetResult.Value));
     }
 
-    private async Task<Result> ApplyNutritionAsync(
-        Meal meal,
-        CreateConsumptionCommand command,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        if (!command.IsNutritionAutoCalculated) {
-            return ApplyManualNutrition(meal, command);
-        }
-
-        Result<MealNutritionSummary> nutritionResult = await mealNutritionService.CalculateAsync(meal, userId, cancellationToken).ConfigureAwait(false);
-        if (nutritionResult.IsFailure) {
-            return nutritionResult;
-        }
-
-        meal.ApplyNutrition(new MealNutritionUpdate(
-            nutritionResult.Value.Calories,
-            nutritionResult.Value.Proteins,
-            nutritionResult.Value.Fats,
-            nutritionResult.Value.Carbs,
-            nutritionResult.Value.Fiber,
-            nutritionResult.Value.Alcohol,
-            IsAutoCalculated: true));
-        return Result.Success();
-    }
-
-    private static Result ApplyManualNutrition(Meal meal, CreateConsumptionCommand command) {
-        Result<ManualNutritionInput> manualNutritionResult = ManualNutritionValidator.Validate(
+    private static ConsumptionNutritionInput CreateNutritionInput(CreateConsumptionCommand command) =>
+        new(
+            command.IsNutritionAutoCalculated,
             command.ManualCalories,
             command.ManualProteins,
             command.ManualFats,
             command.ManualCarbs,
             command.ManualFiber,
             command.ManualAlcohol);
-        if (manualNutritionResult.IsFailure) {
-            return manualNutritionResult;
-        }
-
-        ManualNutritionInput manual = manualNutritionResult.Value;
-        meal.ApplyNutrition(new MealNutritionUpdate(
-            manual.Calories,
-            manual.Proteins,
-            manual.Fats,
-            manual.Carbs,
-            manual.Fiber,
-            manual.Alcohol,
-            IsAutoCalculated: false,
-            ManualCalories: manual.Calories,
-            ManualProteins: manual.Proteins,
-            ManualFats: manual.Fats,
-            ManualCarbs: manual.Carbs,
-            ManualFiber: manual.Fiber,
-            ManualAlcohol: manual.Alcohol));
-        return Result.Success();
-    }
 
     private async Task<Result<ConsumptionModel>> SaveAsync(
         Meal meal,
