@@ -64,7 +64,11 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(updatedResult.Error);
         }
 
-        await CleanupAssetsAsync(command, values, cancellationToken).ConfigureAwait(false);
+        await RecipeUpdateAssetCleanup.DeleteUnusedAsync(
+            command,
+            values,
+            imageAssetCleanupService,
+            cancellationToken).ConfigureAwait(false);
         Recipe updated = updatedResult.Value;
         return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, isOwnedByCurrentUser: true));
     }
@@ -89,33 +93,6 @@ public class UpdateRecipeCommandHandler(
 
         await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken).ConfigureAwait(false);
         return Result.Success(updated);
-    }
-
-    private async Task CleanupAssetsAsync(
-        UpdateRecipeCommand command,
-        UpdateRecipeValues values,
-        CancellationToken cancellationToken) {
-        bool imageAssetChanged = command.ClearImageAssetId ||
-                                (command.ImageAssetId.HasValue &&
-                                 (!values.OldAssetId.HasValue || values.OldAssetId.Value.Value != command.ImageAssetId.Value));
-
-        if (values.OldAssetId.HasValue && imageAssetChanged) {
-            await imageAssetCleanupService.DeleteIfUnusedAsync(values.OldAssetId.Value, cancellationToken).ConfigureAwait(false);
-        }
-
-        if (values.OldStepAssetIds.Count > 0) {
-            var newStepAssetIds = values.Steps
-                .Select(step => step.ImageAssetId)
-                .Where(id => id.HasValue)
-                .Select(id => new ImageAssetId(id!.Value))
-                .ToHashSet();
-
-            foreach (ImageAssetId assetId in values.OldStepAssetIds) {
-                if (!newStepAssetIds.Contains(assetId)) {
-                    await imageAssetCleanupService.DeleteIfUnusedAsync(assetId, cancellationToken).ConfigureAwait(false);
-                }
-            }
-        }
     }
 
 }
