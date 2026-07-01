@@ -45,7 +45,7 @@ public class UpdateRecipeCommandHandler(
         UpdateRecipeValues values = valuesResult.Value;
         ApplyRecipeUpdates(values.Recipe, command, values);
 
-        Result stepsResult = await RecipeStepReplacer.ReplaceAsync(
+        Result stepsResult = await RecipeStepAppender.ReplaceAsync(
             values.Recipe,
             values.Steps,
             values.UserId,

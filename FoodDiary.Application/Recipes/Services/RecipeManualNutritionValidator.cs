@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Nutrition;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Services;
 
 internal static class RecipeManualNutritionValidator {
     public static Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> Validate(

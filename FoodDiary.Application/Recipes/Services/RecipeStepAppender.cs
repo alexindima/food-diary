@@ -6,16 +6,36 @@ using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
+namespace FoodDiary.Application.Recipes.Services;
 
-internal static class RecipeStepReplacer {
-    public static async Task<Result> ReplaceAsync(
+internal static class RecipeStepAppender {
+    public static Task<Result> AddAsync(
         Recipe recipe,
         IReadOnlyList<RecipeStepInput> steps,
         UserId userId,
         IImageAssetAccessService imageAssetAccessService,
+        CancellationToken cancellationToken) =>
+        AppendAsync(recipe, steps, userId, imageAssetAccessService, clearExistingSteps: false, cancellationToken);
+
+    public static Task<Result> ReplaceAsync(
+        Recipe recipe,
+        IReadOnlyList<RecipeStepInput> steps,
+        UserId userId,
+        IImageAssetAccessService imageAssetAccessService,
+        CancellationToken cancellationToken) =>
+        AppendAsync(recipe, steps, userId, imageAssetAccessService, clearExistingSteps: true, cancellationToken);
+
+    private static async Task<Result> AppendAsync(
+        Recipe recipe,
+        IReadOnlyList<RecipeStepInput> steps,
+        UserId userId,
+        IImageAssetAccessService imageAssetAccessService,
+        bool clearExistingSteps,
         CancellationToken cancellationToken) {
-        recipe.ClearSteps();
+        if (clearExistingSteps) {
+            recipe.ClearSteps();
+        }
+
         var orderedSteps = steps
             .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
             .OrderBy(x => x.Order)
