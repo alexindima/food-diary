@@ -1,8 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.MailRelay.Application.Abstractions;
 using FoodDiary.MailRelay.Initializer;
-using FoodDiary.MailRelay.Infrastructure.Options;
-using FoodDiary.MailRelay.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -47,14 +45,7 @@ if (string.IsNullOrWhiteSpace(connectionString)) {
     return 1;
 }
 
-builder.Services.AddOptions<MailRelayQueueOptions>()
-    .Bind(builder.Configuration.GetSection(MailRelayQueueOptions.SectionName))
-    .Validate(MailRelayQueueOptions.HasValidConfiguration,
-        "MailRelayQueue configuration requires positive poll interval, batch size, retry delays, and lock timeout.")
-    .ValidateOnStart();
-builder.Services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString).Build());
-builder.Services.AddSingleton<MailRelayQueueStore>();
-builder.Services.AddSingleton<IMailRelaySchemaInitializer>(sp => sp.GetRequiredService<MailRelayQueueStore>());
+builder.Services.AddMailRelayInitializerServices(builder.Configuration, connectionString);
 
 using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
@@ -82,7 +73,7 @@ static async Task ExecuteAsync(
             break;
         case "update":
             Console.WriteLine("Updating MailRelay schema...");
-            await schemaInitializer.EnsureSchemaAsync(cancellationToken).ConfigureAwait(false);
+            await schemaInitializer.EnsureSchemaAsync(cancellationToken: cancellationToken).ConfigureAwait(false);
             Console.WriteLine("MailRelay schema update completed.");
             break;
         default:

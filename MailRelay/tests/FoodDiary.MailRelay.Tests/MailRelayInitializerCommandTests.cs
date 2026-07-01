@@ -1,5 +1,8 @@
 extern alias Initializer;
 
+using FoodDiary.MailRelay.Application.Abstractions;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Initializer::FoodDiary.MailRelay.Initializer;
 
 namespace FoodDiary.MailRelay.Tests;
@@ -55,5 +58,27 @@ public sealed class MailRelayInitializerCommandTests {
         var command = InitializerCommand.Parse(["--connection-string", "Host=localhost"]);
 
         Assert.Null(command);
+    }
+
+    [Fact]
+    public void AddMailRelayInitializerServices_ResolvesSchemaInitializer() {
+        IConfigurationRoot configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(new Dictionary<string, string?>(StringComparer.Ordinal) {
+                ["MailRelayQueue:PollIntervalSeconds"] = "1",
+                ["MailRelayQueue:BatchSize"] = "2",
+                ["MailRelayQueue:MaxAttempts"] = "3",
+                ["MailRelayQueue:BaseRetryDelaySeconds"] = "5",
+                ["MailRelayQueue:MaxRetryDelaySeconds"] = "10",
+                ["MailRelayQueue:LockTimeoutSeconds"] = "20",
+            })
+            .Build();
+        var services = new ServiceCollection();
+
+        services.AddMailRelayInitializerServices(
+            configuration,
+            "Host=localhost;Database=fooddiary;Username=test;Password=test");
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<IMailRelaySchemaInitializer>());
     }
 }
