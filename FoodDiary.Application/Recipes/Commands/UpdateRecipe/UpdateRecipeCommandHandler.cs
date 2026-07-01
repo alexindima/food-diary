@@ -34,7 +34,7 @@ public class UpdateRecipeCommandHandler(
         }
 
         UpdateRecipeValues values = valuesResult.Value;
-        ApplyRecipeUpdates(values.Recipe, command, values);
+        RecipeUpdateApplier.Apply(values.Recipe, command, values);
 
         Result stepsResult = await RecipeStepAppender.ReplaceAsync(
             values.Recipe,
@@ -46,7 +46,15 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(stepsResult.Error);
         }
 
-        Result nutritionResult = ApplyNutrition(values.Recipe, command);
+        Result nutritionResult = RecipeNutritionApplier.Apply(
+            values.Recipe,
+            command.CalculateNutritionAutomatically,
+            command.ManualCalories,
+            command.ManualProteins,
+            command.ManualFats,
+            command.ManualCarbs,
+            command.ManualFiber,
+            command.ManualAlcohol);
         if (nutritionResult.IsFailure) {
             return Result.Failure<RecipeModel>(nutritionResult.Error);
         }
@@ -59,61 +67,6 @@ public class UpdateRecipeCommandHandler(
         await CleanupAssetsAsync(command, values, cancellationToken).ConfigureAwait(false);
         Recipe updated = updatedResult.Value;
         return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, isOwnedByCurrentUser: true));
-    }
-
-    private static void ApplyRecipeUpdates(
-        Recipe recipe,
-        UpdateRecipeCommand command,
-        UpdateRecipeValues values) {
-        recipe.UpdateIdentity(
-            name: command.Name,
-            description: command.Description,
-            clearDescription: command.ClearDescription,
-            comment: command.Comment,
-            clearComment: command.ClearComment,
-            category: command.Category,
-            clearCategory: command.ClearCategory);
-        recipe.UpdateMedia(
-            imageUrl: values.ImageAsset?.Url ?? command.ImageUrl,
-            clearImageUrl: values.ImageAsset is null && command.ClearImageUrl,
-            imageAssetId: values.ImageAssetId,
-            clearImageAssetId: command.ClearImageAssetId);
-        recipe.UpdateTimingAndServings(
-            prepTime: command.PrepTime,
-            cookTime: command.CookTime,
-            servings: command.Servings);
-
-        if (values.Visibility.HasValue) {
-            recipe.ChangeVisibility(values.Visibility.Value);
-        }
-    }
-
-    private static Result ApplyNutrition(Recipe recipe, UpdateRecipeCommand command) {
-        if (command.CalculateNutritionAutomatically) {
-            recipe.EnableAutoNutrition();
-            return Result.Success();
-        }
-
-        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> manualNutritionResult = RecipeManualNutritionValidator.Validate(
-            command.ManualCalories,
-            command.ManualProteins,
-            command.ManualFats,
-            command.ManualCarbs,
-            command.ManualFiber,
-            command.ManualAlcohol);
-        if (manualNutritionResult.IsFailure) {
-            return manualNutritionResult;
-        }
-
-        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) = manualNutritionResult.Value;
-        recipe.SetManualNutrition(
-            Calories,
-            Proteins,
-            Fats,
-            Carbs,
-            Fiber,
-            Alcohol);
-        return Result.Success();
     }
 
     private async Task<Result<Recipe>> SaveAndReloadAsync(

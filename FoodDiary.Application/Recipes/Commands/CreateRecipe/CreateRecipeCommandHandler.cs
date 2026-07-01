@@ -53,7 +53,15 @@ public class CreateRecipeCommandHandler(
             return Result.Failure<RecipeModel>(ingredientsResult.Error);
         }
 
-        Result nutritionResult = ApplyNutrition(recipe, command);
+        Result nutritionResult = RecipeNutritionApplier.Apply(
+            recipe,
+            command.CalculateNutritionAutomatically,
+            command.ManualCalories,
+            command.ManualProteins,
+            command.ManualFats,
+            command.ManualCarbs,
+            command.ManualFiber,
+            command.ManualAlcohol);
         if (nutritionResult.IsFailure) {
             return Result.Failure<RecipeModel>(nutritionResult.Error);
         }
@@ -115,34 +123,6 @@ public class CreateRecipeCommandHandler(
             command.PrepTime ?? 0,
             command.CookTime,
             values.Visibility);
-
-    private static Result ApplyNutrition(Recipe recipe, CreateRecipeCommand command) {
-        if (command.CalculateNutritionAutomatically) {
-            recipe.EnableAutoNutrition();
-            return Result.Success();
-        }
-
-        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> manualNutritionResult = RecipeManualNutritionValidator.Validate(
-            command.ManualCalories,
-            command.ManualProteins,
-            command.ManualFats,
-            command.ManualCarbs,
-            command.ManualFiber,
-            command.ManualAlcohol);
-        if (manualNutritionResult.IsFailure) {
-            return manualNutritionResult;
-        }
-
-        (double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol) = manualNutritionResult.Value;
-        recipe.SetManualNutrition(
-            Calories,
-            Proteins,
-            Fats,
-            Carbs,
-            Fiber,
-            Alcohol);
-        return Result.Success();
-    }
 
     private async Task<Result<RecipeModel>> SaveAsync(
         Recipe recipe,
