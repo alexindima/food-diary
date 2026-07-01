@@ -1740,11 +1740,11 @@ public sealed class BillingFeatureTests {
         return new ProcessBillingWebhookCommandHandler(
             new FakeBillingProviderGatewayAccessor(gateway, gateway),
             subscriptionRepository,
-            paymentRepository,
             webhookEventRepository,
             new NoOpBillingTransactionRunner(),
             userRepository,
             new BillingAccessService(userRepository, subscriptionRepository, dateTimeProvider),
+            new BillingWebhookPaymentRecorder(paymentRepository),
             dateTimeProvider);
     }
 
