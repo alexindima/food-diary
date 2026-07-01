@@ -1,3 +1,6 @@
+using FoodDiary.MailInbox.Application.Abstractions;
+using FoodDiary.MailInbox.Initializer;
+using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace FoodDiary.MailInbox.Tests;
@@ -47,6 +50,16 @@ public sealed class MailInboxInitializerCommandTests {
         TargetInvocationException exception = Assert.Throws<TargetInvocationException>(() => Parse("status", "unexpected"));
 
         Assert.IsType<InvalidOperationException>(exception.InnerException);
+    }
+
+    [Fact]
+    public void AddMailInboxInitializerServices_ResolvesSchemaInitializer() {
+        var services = new ServiceCollection();
+
+        services.AddMailInboxInitializerServices("Host=localhost;Database=fooddiary_mailinbox;Username=test;Password=test");
+        using ServiceProvider provider = services.BuildServiceProvider();
+
+        Assert.NotNull(provider.GetRequiredService<IMailInboxSchemaInitializer>());
     }
 
     private static object? Parse(params string[] args) {

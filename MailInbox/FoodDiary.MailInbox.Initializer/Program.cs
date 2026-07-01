@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using FoodDiary.MailInbox.Application.Abstractions;
 using FoodDiary.MailInbox.Initializer;
-using FoodDiary.MailInbox.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -46,10 +45,7 @@ if (string.IsNullOrWhiteSpace(connectionString)) {
     return 1;
 }
 
-builder.Services.AddSingleton(_ => new NpgsqlDataSourceBuilder(connectionString).Build());
-builder.Services.AddSingleton<DmarcReportParser>();
-builder.Services.AddSingleton<NpgsqlInboundMailStore>();
-builder.Services.AddSingleton<IMailInboxSchemaInitializer>(sp => sp.GetRequiredService<NpgsqlInboundMailStore>());
+builder.Services.AddMailInboxInitializerServices(connectionString);
 
 using IHost host = builder.Build();
 AsyncServiceScope scope = host.Services.CreateAsyncScope();
