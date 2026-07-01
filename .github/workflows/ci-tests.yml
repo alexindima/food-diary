@@ -20,7 +20,7 @@ jobs:
           : > "${RUNNER_TEMP}/ci-test-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -193,7 +193,7 @@ jobs:
           : > "${RUNNER_TEMP}/postgres-critical-flow-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -354,7 +354,7 @@ jobs:
           : > "${RUNNER_TEMP}/dependency-audit-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup .NET
         uses: actions/setup-dotnet@v5
@@ -504,7 +504,7 @@ jobs:
           : > "${RUNNER_TEMP}/frontend-checks-logs/failure-meta.env"
 
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
         uses: actions/setup-node@v6
@@ -876,7 +876,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           ref: ${{ github.sha }}
 
