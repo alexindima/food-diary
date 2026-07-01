@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
-using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
@@ -46,7 +45,12 @@ public class UpdateRecipeCommandHandler(
         UpdateRecipeValues values = valuesResult.Value;
         ApplyRecipeUpdates(values.Recipe, command, values);
 
-        Result stepsResult = await ReplaceStepsAsync(values.Recipe, values.Steps, values.UserId, cancellationToken).ConfigureAwait(false);
+        Result stepsResult = await RecipeStepReplacer.ReplaceAsync(
+            values.Recipe,
+            values.Steps,
+            values.UserId,
+            imageAssetAccessService,
+            cancellationToken).ConfigureAwait(false);
         if (stepsResult.IsFailure) {
             return Result.Failure<RecipeModel>(stepsResult.Error);
         }
@@ -214,61 +218,13 @@ public class UpdateRecipeCommandHandler(
         }
     }
 
-    private async Task<Result> ReplaceStepsAsync(
-        Recipe recipe,
-        IReadOnlyList<RecipeStepInput> steps,
-        UserId userId,
-        CancellationToken cancellationToken) {
-        recipe.ClearSteps();
-        var orderedSteps = steps
-            .Select((step, index) => new { Step = step, Order = step.Order > 0 ? step.Order : index + 1 })
-            .OrderBy(x => x.Order)
-            .ToList();
-
-        foreach (var entry in orderedSteps) {
-            Result<ImageAssetId?> stepImageAssetIdResult = ImageAssetIdParser.ParseOptional(entry.Step.ImageAssetId, nameof(entry.Step.ImageAssetId));
-            if (stepImageAssetIdResult.IsFailure) {
-                return stepImageAssetIdResult;
-            }
-
-            Result<ImageAsset?> stepImageAssetResult = await imageAssetAccessService.ResolveOptionalAsync(
-                stepImageAssetIdResult.Value,
-                userId,
-                cancellationToken).ConfigureAwait(false);
-            if (stepImageAssetResult.IsFailure) {
-                return stepImageAssetResult;
-            }
-
-            RecipeStep step = recipe.AddStep(
-                entry.Order,
-                entry.Step.Description,
-                entry.Step.Title,
-                stepImageAssetResult.Value?.Url ?? entry.Step.ImageUrl,
-                stepImageAssetIdResult.Value);
-            foreach (RecipeIngredientInput ingredient in entry.Step.Ingredients) {
-                Result ingredientIdResult = ValidateIngredientIdentifiers(ingredient);
-                if (ingredientIdResult.IsFailure) {
-                    return ingredientIdResult;
-                }
-
-                if (ingredient.ProductId.HasValue) {
-                    step.AddProductIngredient(new ProductId(ingredient.ProductId.Value), ingredient.Amount);
-                } else if (ingredient.NestedRecipeId.HasValue) {
-                    step.AddNestedRecipeIngredient(new RecipeId(ingredient.NestedRecipeId.Value), ingredient.Amount);
-                }
-            }
-        }
-
-        return Result.Success();
-    }
-
     private static Result ApplyNutrition(Recipe recipe, UpdateRecipeCommand command) {
         if (command.CalculateNutritionAutomatically) {
             recipe.EnableAutoNutrition();
             return Result.Success();
         }
 
-        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> manualNutritionResult = ValidateManualNutrition(
+        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> manualNutritionResult = RecipeManualNutritionValidator.Validate(
             command.ManualCalories,
             command.ManualProteins,
             command.ManualFats,
@@ -339,65 +295,4 @@ public class UpdateRecipeCommandHandler(
         }
     }
 
-    private static Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> ValidateManualNutrition(
-        double? calories,
-        double? proteins,
-        double? fats,
-        double? carbs,
-        double? fiber,
-        double? alcohol) {
-        if (calories is null) {
-            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(calories)));
-        }
-
-        if (proteins is null) {
-            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(proteins)));
-        }
-
-        if (fats is null) {
-            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(fats)));
-        }
-
-        if (carbs is null) {
-            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(carbs)));
-        }
-
-        if (fiber is null) {
-            return Result.Failure<(double, double, double, double, double, double)>(Errors.Validation.Required(nameof(fiber)));
-        }
-
-        if (calories < 0 || proteins < 0 || fats < 0 || carbs < 0 || fiber < 0 || alcohol < 0) {
-            return Result.Failure<(double, double, double, double, double, double)>(
-                Errors.Validation.Invalid("ManualNutrition", "Manual nutrition values must be greater than or equal to 0."));
-        }
-
-        if (calories > ManualNutritionLimits.MaxCalories) {
-            return Result.Failure<(double, double, double, double, double, double)>(
-                Errors.Validation.Invalid(nameof(calories), ManualNutritionLimits.MaxCaloriesErrorMessage));
-        }
-
-        if (proteins > ManualNutritionLimits.MaxNutrient ||
-            fats > ManualNutritionLimits.MaxNutrient ||
-            carbs > ManualNutritionLimits.MaxNutrient ||
-            fiber > ManualNutritionLimits.MaxNutrient ||
-            alcohol > ManualNutritionLimits.MaxNutrient) {
-            return Result.Failure<(double, double, double, double, double, double)>(
-                Errors.Validation.Invalid("ManualNutrition", ManualNutritionLimits.MaxNutrientErrorMessage));
-        }
-
-        return Result.Success((calories.Value, proteins.Value, fats.Value, carbs.Value, fiber.Value, alcohol ?? 0));
-    }
-
-    private static Result ValidateIngredientIdentifiers(RecipeIngredientInput ingredient) {
-        Result productIdResult = OptionalEntityIdValidator.EnsureNotEmpty(ingredient.ProductId, nameof(ingredient.ProductId), "Product id");
-        if (productIdResult.IsFailure) {
-            return productIdResult;
-        }
-
-        Result nestedRecipeIdResult = OptionalEntityIdValidator.EnsureNotEmpty(
-            ingredient.NestedRecipeId,
-            nameof(ingredient.NestedRecipeId),
-            "Nested recipe id");
-        return nestedRecipeIdResult.IsFailure ? nestedRecipeIdResult : Result.Success();
-    }
 }

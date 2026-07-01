@@ -116,6 +116,24 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationAbstractionsErrorsRoot_StaysAsThinPartialFacade() {
+        string root = GetRepositoryRoot();
+        string resultsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Abstractions", "Results");
+        string errorsRootPath = Path.Combine(resultsRoot, "Errors.cs");
+
+        string source = File.ReadAllText(errorsRootPath);
+        Assert.DoesNotContain("public static class ", source, StringComparison.Ordinal);
+
+        string[] featureErrorFiles = [.. Directory.GetFiles(resultsRoot, "Errors.*.cs", SearchOption.TopDirectoryOnly)
+            .Select(Path.GetFileName)
+            .Where(static fileName => fileName is not null)
+            .Select(static fileName => fileName!)
+            .OrderBy(static fileName => fileName, StringComparer.Ordinal)];
+
+        Assert.NotEmpty(featureErrorFiles);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_UseFullProductRepositoryOnlyInsideProductsSlice() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -237,6 +255,34 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DomainEventHandlers_DoNotInvokeExternalSideEffectsDirectly() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] forbiddenPatterns = [
+            ".SendAsync(",
+            ".PushUnreadCountAsync(",
+            ".PushNotificationsChangedAsync(",
+            ".UploadAsync(",
+            ".DeleteAsync(",
+            ".ChargeAsync(",
+            ".CreateCheckout",
+            ".CreateCustomerPortal",
+        ];
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(IsDomainEventHandlerSourceFile)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
+            .OrderBy(static value => value, StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotDependOnOptionsOrConfiguration() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -311,6 +357,16 @@ public sealed class ApplicationGuardrailTests {
             baseType.Type.ToString().Contains(
                 "INotificationHandler<NotificationEnvelope<",
                 StringComparison.Ordinal)) == true;
+
+    private static bool IsDomainEventHandlerSourceFile(string path) {
+        string source = File.ReadAllText(path);
+        SyntaxTree tree = CSharpSyntaxTree.ParseText(source);
+        CompilationUnitSyntax root = tree.GetCompilationUnitRoot();
+
+        return root.DescendantNodes()
+            .OfType<ClassDeclarationSyntax>()
+            .Any(IsDomainEventHandler);
+    }
 
     private static IEnumerable<ParameterSyntax> GetConstructorParameters(ClassDeclarationSyntax classDeclaration) {
         if (classDeclaration.ParameterList is not null) {
