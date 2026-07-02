@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Meals;
@@ -41,7 +41,7 @@ public class TdeeFeatureTests {
         var userId = UserId.New();
         var user = User.Create("disappearing-tdee-user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
-        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: CreateDisappearingUserRepository(user));
+        GetTdeeInsightQueryHandler handler = CreateHandler(profileService: CreateFailingProfileService(Errors.User.NotFound()));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -56,7 +56,7 @@ public class TdeeFeatureTests {
         var user = User.Create("user@test.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        GetTdeeInsightQueryHandler handler = CreateHandler(userRepo: CreateUserRepository(user));
+        GetTdeeInsightQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
 
         Result<TdeeInsightModel> result = await handler.Handle(
             new GetTdeeInsightQuery(userId.Value), CancellationToken.None);
@@ -66,31 +66,44 @@ public class TdeeFeatureTests {
     }
 
     private static GetTdeeInsightQueryHandler CreateHandler(
-        IUserRepository? userRepo = null) =>
+        ITdeeUserProfileService? profileService = null) =>
         new(
-            userRepo ?? CreateUserRepository(user: null),
+            profileService ?? CreateProfileService(user: null),
             CreateWeightEntryRepository(),
             CreateMealRepository(),
             CreateExerciseEntryRepository(),
             new StubDateTimeProvider());
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static ITdeeUserProfileService CreateProfileService(User? user) {
+        ITdeeUserProfileService service = Substitute.For<ITdeeUserProfileService>();
+        service
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
+                if (user is null || user.Id != id) {
+                    return Task.FromResult(Result.Failure<TdeeUserProfile>(Errors.Authentication.InvalidToken));
+                }
+
+                if (user.DeletedAt is not null) {
+                    return Task.FromResult(Result.Failure<TdeeUserProfile>(Errors.Authentication.AccountDeleted));
+                }
+
+                return Task.FromResult(Result.Success(new TdeeUserProfile(
+                    user.CalculateBmr(),
+                    user.CalculateEstimatedTdee(),
+                    user.Weight,
+                    user.DesiredWeight,
+                    user.DailyCalorieTarget)));
             });
-        return repository;
+        return service;
     }
 
-    private static IUserRepository CreateDisappearingUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user), Task.FromResult<User?>(null));
-        return repository;
+    private static ITdeeUserProfileService CreateFailingProfileService(Error error) {
+        ITdeeUserProfileService service = Substitute.For<ITdeeUserProfileService>();
+        service
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<TdeeUserProfile>(error)));
+        return service;
     }
 
     private static IWeightEntryRepository CreateWeightEntryRepository() {

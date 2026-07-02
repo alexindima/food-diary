@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Hydration.Mappings;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Validators;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -14,7 +13,7 @@ namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
 public class UpdateHydrationEntryCommandHandler(
     IHydrationEntryRepository repository,
-    IUserRepository userRepository) : ICommandHandler<UpdateHydrationEntryCommand, Result<HydrationEntryModel>> {
+    ICurrentUserAccessService currentUserAccessService) : ICommandHandler<UpdateHydrationEntryCommand, Result<HydrationEntryModel>> {
     public async Task<Result<HydrationEntryModel>> Handle(
         UpdateHydrationEntryCommand command,
         CancellationToken cancellationToken) {
@@ -28,7 +27,7 @@ public class UpdateHydrationEntryCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<HydrationEntryModel>(accessError);
         }

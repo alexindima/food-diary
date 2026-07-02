@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 using FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 using FoodDiary.Application.Consumptions.Commands.CreateConsumption;
@@ -185,7 +185,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             cleanup,
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -225,7 +225,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -264,7 +264,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(420, 28, 16, 38, 6, 0)),
             recentItems,
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -309,7 +309,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -327,7 +327,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -346,7 +346,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             imageAccess);
 
@@ -366,7 +366,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -404,7 +404,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -442,7 +442,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -479,7 +479,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -498,7 +498,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -519,7 +519,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -543,7 +543,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -567,7 +567,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -591,7 +591,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -615,7 +615,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -637,7 +637,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -677,7 +677,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -704,7 +704,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -728,7 +728,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             new FailingNonNullImageAssetAccessService());
 
@@ -751,7 +751,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -774,7 +774,7 @@ public class ConsumptionsFeatureTests {
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -798,7 +798,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -839,7 +839,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -880,7 +880,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(120, 8, 3, 16, 2, 0)),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -922,7 +922,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -960,7 +960,7 @@ public class ConsumptionsFeatureTests {
             repository,
             new FailingMealNutritionService(),
             new RecordingRecentItemRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1003,7 +1003,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1047,7 +1047,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1144,7 +1144,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1186,7 +1186,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1232,7 +1232,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             cleanup,
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1271,7 +1271,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1311,7 +1311,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1353,7 +1353,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1396,7 +1396,7 @@ public class ConsumptionsFeatureTests {
             new FailingMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1437,7 +1437,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1487,7 +1487,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             recentItems,
             cleanup,
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -1571,7 +1571,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsQueryHandler(
             new CreatingMealRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
@@ -1587,7 +1587,7 @@ public class ConsumptionsFeatureTests {
         var repository = new RecordingMealPageRepository();
         var handler = new GetConsumptionsQueryHandler(
             repository,
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
         var userId = UserId.New();
         var from = new DateTime(2026, 4, 4, 20, 0, 0, DateTimeKind.Utc);
@@ -1615,7 +1615,7 @@ public class ConsumptionsFeatureTests {
         SetFavoriteMealNavigation(favorite, dinner);
         var handler = new GetConsumptionsQueryHandler(
             new RecordingMealPageRepository([lunch, dinner], totalItems: 2),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubFavoriteMealRepository([favorite]));
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
@@ -1645,7 +1645,7 @@ public class ConsumptionsFeatureTests {
         var repository = new RecordingMealPageRepository([breakfast, dinner], totalItems: 2);
         var handler = new GetConsumptionsOverviewQueryHandler(
             repository,
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubFavoriteMealRepository([favorite]));
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
@@ -1671,7 +1671,7 @@ public class ConsumptionsFeatureTests {
         var handler = new RepeatMealCommandHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),
-            new StubUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 0, 0, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
@@ -1723,7 +1723,7 @@ public class ConsumptionsFeatureTests {
         var handler = new RepeatMealCommandHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(0, 0, 0, 0, 0, 0)),
-            new StubUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, sourceMeal.Id.Value, new DateTime(2026, 3, 27, 19, 30, 0, DateTimeKind.Utc), MealType.Dinner.ToString()),
@@ -2085,7 +2085,7 @@ public class ConsumptionsFeatureTests {
         var handler = new RepeatMealCommandHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
-            new StubUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(UserId: null, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
@@ -2102,7 +2102,7 @@ public class ConsumptionsFeatureTests {
         var handler = new RepeatMealCommandHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
-            new StubUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
@@ -2118,7 +2118,7 @@ public class ConsumptionsFeatureTests {
         var handler = new RepeatMealCommandHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
-            new StubUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ConsumptionModel> result = await handler.Handle(
             new RepeatMealCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow, MealType.Lunch.ToString()),
@@ -2156,7 +2156,7 @@ public class ConsumptionsFeatureTests {
     public async Task GetConsumptionsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetConsumptionsOverviewQueryHandler(
             new RecordingMealPageRepository(),
-            new StubUserRepository(User.Create("user@example.com", "hash")),
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")),
             new StubFavoriteMealRepository());
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
@@ -2173,7 +2173,7 @@ public class ConsumptionsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetConsumptionsOverviewQueryHandler(
             new RecordingMealPageRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubFavoriteMealRepository());
 
         Result<ConsumptionOverviewModel> result = await handler.Handle(
@@ -2273,7 +2273,7 @@ public class ConsumptionsFeatureTests {
             new NoopMealNutritionService(),
             recentItems ?? new RecordingRecentItemRepository(),
             new RecordingCleanupService(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubDateTimeProvider(),
             imageAccess ?? FoodDiary.Application.Tests.AllowImageAssetAccessService.Instance);
 
@@ -2597,7 +2597,7 @@ public class ConsumptionsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetConsumptionsQueryHandler(
             new CreatingMealRepository(),
-            new StubUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new StubFavoriteMealRepository());
 
         Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
@@ -2608,19 +2608,19 @@ public class ConsumptionsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) =>
+        new StubCurrentUserAccessService(user);
+
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubCurrentUserAccessService(User user) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Error? error = user switch {
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                _ => null,
+            };
+
+            return Task.FromResult(error);
+        }
     }
 
     [ExcludeFromCodeCoverage]

@@ -70,11 +70,16 @@ public static partial class DependencyInjection {
         services.AddScoped<IProductLookupService, ProductLookupService>();
         services.AddScoped<IRecipeRepository, RecipeRepository>();
         services.AddScoped<IRecipeLookupService, RecipeLookupService>();
+        services.AddScoped<IRecipeAccessService, RecipeAccessService>();
         services.AddScoped<IRecentItemRepository, RecentItemRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
-        services.AddScoped<IDashboardStatisticsReadService, DashboardStatisticsReadService>();
-        services.AddScoped<IDashboardBodyReadService, DashboardBodyReadService>();
-        services.AddScoped<IDashboardMealsReadService, DashboardMealsReadService>();
+        services.AddScoped<DashboardStatisticsReadService>();
+        services.AddScoped<IDashboardStatisticsReadService>(static provider => provider.GetRequiredService<DashboardStatisticsReadService>());
+        services.AddScoped<DashboardBodyReadService>();
+        services.AddScoped<IDashboardBodyReadService>(static provider => provider.GetRequiredService<DashboardBodyReadService>());
+        services.AddScoped<DashboardMealsReadService>();
+        services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());
+        services.AddScoped<IDashboardReadService, DashboardReadService>();
         services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
         services.AddScoped<IWaistEntryRepository, WaistEntryRepository>();
@@ -82,12 +87,16 @@ public static partial class DependencyInjection {
         services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
+        services.AddScoped<IImageObjectDeletionOutbox, ImageObjectDeletionOutbox>();
+        services.AddScoped<IImageObjectDeletionOutboxProcessor, ImageObjectDeletionOutboxProcessor>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
         services.AddScoped<IAiPromptTemplateRepository, AiPromptTemplateRepository>();
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IRecommendationRepository, RecommendationRepository>();
         services.AddScoped<INotificationRepository, NotificationRepository>();
+        services.AddScoped<INotificationWebPushOutbox, NotificationWebPushOutbox>();
+        services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
         services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();
         services.AddScoped<IOpenFoodFactsProductCacheRepository, OpenFoodFactsProductCacheRepository>();
         services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
@@ -105,6 +114,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecipeLikeRepository, RecipeLikeRepository>();
         services.AddScoped<IContentReportRepository, ContentReportRepository>();
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
+        services.AddScoped<IUsdaProductLinkRepository, UsdaProductLinkRepository>();
 
         return services;
     }

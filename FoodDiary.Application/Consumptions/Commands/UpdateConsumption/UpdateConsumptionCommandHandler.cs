@@ -1,14 +1,13 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
@@ -21,7 +20,7 @@ public class UpdateConsumptionCommandHandler(
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateConsumptionCommand, Result<ConsumptionModel>> {
@@ -125,7 +124,7 @@ public class UpdateConsumptionCommandHandler(
         UpdateConsumptionCommand command,
         UserId userId,
         CancellationToken cancellationToken) {
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<Meal>(accessError);
         }

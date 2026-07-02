@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -10,7 +9,7 @@ using FoodDiary.Domain.Entities.Usda;
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
 public class LinkProductToUsdaFoodCommandHandler(
-    IProductRepository productRepository,
+    IUsdaProductLinkRepository productLinkRepository,
     IUsdaFoodRepository usdaFoodRepository)
     : ICommandHandler<LinkProductToUsdaFoodCommand, Result> {
     public async Task<Result> Handle(
@@ -22,8 +21,8 @@ public class LinkProductToUsdaFoodCommandHandler(
         }
 
         var productId = (ProductId)command.ProductId;
-        Product? product = await productRepository.GetByIdForUpdateAsync(
-            productId, userIdResult.Value, includePublic: false, cancellationToken).ConfigureAwait(false);
+        Product? product = await productLinkRepository.GetForLinkUpdateAsync(
+            productId, userIdResult.Value, cancellationToken).ConfigureAwait(false);
 
         if (product is null) {
             return Result.Failure(Errors.Product.NotAccessible(command.ProductId));
@@ -35,7 +34,7 @@ public class LinkProductToUsdaFoodCommandHandler(
         }
 
         product.LinkToUsdaFood(command.FdcId);
-        await productRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
+        await productLinkRepository.UpdateAsync(product, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

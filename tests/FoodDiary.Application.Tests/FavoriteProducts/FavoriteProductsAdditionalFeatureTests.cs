@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
@@ -25,7 +26,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             favoriteRepository,
             new SingleProductRepository(product),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Breakfast", 125),
@@ -45,7 +46,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(),
             new SingleProductRepository(product: null),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", PreferredPortionAmount: null),
@@ -64,7 +65,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(product, [existing]),
             new SingleProductRepository(product),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(user.Id.Value, product.Id.Value, "Again", PreferredPortionAmount: null),
@@ -79,7 +80,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(),
             new SingleProductRepository(product: null),
-            new SingleUserRepository(User.Create("invalid-add-favorite-product@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-add-favorite-product@example.com", "hash")));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", PreferredPortionAmount: null),
@@ -95,7 +96,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var handler = new AddFavoriteProductCommandHandler(
             new InMemoryFavoriteProductRepository(product),
             new SingleProductRepository(product),
-            new SingleUserRepository(user: null));
+            CreateCurrentUserAccessService(user: null));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new AddFavoriteProductCommand(Guid.NewGuid(), product.Id.Value, "Snack", PreferredPortionAmount: null),
@@ -113,7 +114,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         SetProductNavigation(favorite, product);
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(product, [favorite]),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
 
@@ -127,7 +128,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task GetFavoriteProducts_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(User.Create("invalid-get-favorite-products@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-get-favorite-products@example.com", "hash")));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.Empty), CancellationToken.None);
 
@@ -139,7 +140,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task GetFavoriteProducts_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(user: null));
+            CreateCurrentUserAccessService(user: null));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(Guid.NewGuid()), CancellationToken.None);
 
@@ -153,7 +154,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetFavoriteProductsQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<FavoriteProductModel>> result = await handler.Handle(new GetFavoriteProductsQuery(user.Id.Value), CancellationToken.None);
 
@@ -166,7 +167,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var user = User.Create("is-favorite-product@example.com", "hash");
         var handler = new IsProductFavoriteQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
             new IsProductFavoriteQuery(user.Id.Value, Guid.NewGuid()),
@@ -182,7 +183,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new IsProductFavoriteQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<bool> result = await handler.Handle(
             new IsProductFavoriteQuery(user.Id.Value, Guid.NewGuid()),
@@ -196,7 +197,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task IsProductFavorite_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new IsProductFavoriteQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(User.Create("invalid-is-favorite-product@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-is-favorite-product@example.com", "hash")));
 
         Result<bool> result = await handler.Handle(
             new IsProductFavoriteQuery(Guid.Empty, Guid.NewGuid()),
@@ -210,7 +211,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task IsProductFavorite_WhenUserMissing_ReturnsInvalidToken() {
         var handler = new IsProductFavoriteQueryHandler(
             new InMemoryFavoriteProductRepository(),
-            new SingleUserRepository(user: null));
+            CreateCurrentUserAccessService(user: null));
 
         Result<bool> result = await handler.Handle(
             new IsProductFavoriteQuery(Guid.NewGuid(), Guid.NewGuid()),
@@ -227,7 +228,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Snack");
         SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new RemoveFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteProductCommand(user.Id.Value, favorite.Id.Value),
@@ -244,7 +245,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Old name", 100);
         SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Evening snack", 180),
@@ -260,7 +261,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task UpdateFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-update-favorite-product@example.com", "hash");
         var repository = new InMemoryFavoriteProductRepository();
-        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, Guid.NewGuid(), "Missing", 120),
@@ -276,7 +277,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var repository = new InMemoryFavoriteProductRepository();
         var handler = new UpdateFavoriteProductCommandHandler(
             repository,
-            new SingleUserRepository(User.Create("invalid-update-favorite-product@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-update-favorite-product@example.com", "hash")));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(Guid.Empty, Guid.NewGuid(), "Invalid", 120),
@@ -295,7 +296,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var favorite = FavoriteProduct.Create(user.Id, product.Id, "Snack");
         SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new UpdateFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new UpdateFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<FavoriteProductModel> result = await handler.Handle(
             new UpdateFavoriteProductCommand(user.Id.Value, favorite.Id.Value, "Updated", 120),
@@ -310,7 +311,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     public async Task RemoveFavoriteProduct_WhenFavoriteMissing_ReturnsNotFound() {
         var user = User.Create("missing-remove-favorite-product@example.com", "hash");
         var repository = new InMemoryFavoriteProductRepository();
-        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(user));
+        var handler = new RemoveFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new RemoveFavoriteProductCommand(user.Id.Value, Guid.NewGuid()),
@@ -326,7 +327,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var repository = new InMemoryFavoriteProductRepository();
         var handler = new RemoveFavoriteProductCommandHandler(
             repository,
-            new SingleUserRepository(User.Create("invalid-remove-favorite-product@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("invalid-remove-favorite-product@example.com", "hash")));
 
         Result result = await handler.Handle(
             new RemoveFavoriteProductCommand(Guid.Empty, Guid.NewGuid()),
@@ -344,7 +345,7 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         var favorite = FavoriteProduct.Create(new UserId(userId), product.Id, "Snack");
         SetProductNavigation(favorite, product);
         var repository = new InMemoryFavoriteProductRepository(product, [favorite]);
-        var handler = new RemoveFavoriteProductCommandHandler(repository, new SingleUserRepository(user: null));
+        var handler = new RemoveFavoriteProductCommandHandler(repository, CreateCurrentUserAccessService(user: null));
 
         Result result = await handler.Handle(
             new RemoveFavoriteProductCommand(userId, favorite.Id.Value),
@@ -435,19 +436,22 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
-    [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User? user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult(user is not null && user.Id == id ? user : null);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                Error? error = user switch {
+                    null => Errors.Authentication.InvalidToken,
+                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    _ => null,
+                };
+                return Task.FromResult(error);
+            });
+
+        return service;
     }
 
     private static void SetProductNavigation(FavoriteProduct favorite, Product product) {

@@ -1,17 +1,16 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Services;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 
 public class GetFastingHistoryQueryHandler(
     IFastingAnalyticsService fastingAnalyticsService,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetFastingHistoryQuery, Result<PagedResponse<FastingSessionModel>>> {
     public async Task<Result<PagedResponse<FastingSessionModel>>> Handle(
         GetFastingHistoryQuery query, CancellationToken cancellationToken) {
@@ -20,7 +19,7 @@ public class GetFastingHistoryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<FastingSessionModel>>(accessError);
         }

@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Products.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
@@ -24,7 +24,7 @@ namespace FoodDiary.Application.Tests.ShoppingLists;
 public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(UserId: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -35,7 +35,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetCurrentShoppingListQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-current-shopping@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
 
@@ -45,7 +45,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -54,7 +54,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -66,7 +66,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-shopping-by-id@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
@@ -77,7 +77,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WhenListMissing_ReturnsNotFound() {
         var user = User.Create("shopping-by-id-missing@example.com", "hash");
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
         var shoppingListId = Guid.NewGuid();
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
@@ -91,7 +91,7 @@ public class ShoppingListsFeatureTests {
         var user = User.Create("shopping-by-id-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
         list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
-        var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), CreateUserRepository(user));
+        var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
 
@@ -102,7 +102,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(UserId: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -114,7 +114,7 @@ public class ShoppingListsFeatureTests {
         var user = User.Create("shopping-lists-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
         list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
-        var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), CreateUserRepository(user));
+        var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
@@ -127,7 +127,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task DeleteShoppingListCommandHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -137,7 +137,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task DeleteShoppingListCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
@@ -149,7 +149,7 @@ public class ShoppingListsFeatureTests {
     public async Task DeleteShoppingListCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-shopping-delete@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
@@ -160,7 +160,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task DeleteShoppingListCommandHandler_WhenListMissing_ReturnsNotFound() {
         var user = User.Create("shopping-delete-missing@example.com", "hash");
-        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new DeleteShoppingListCommandHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
         var shoppingListId = Guid.NewGuid();
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, shoppingListId), CancellationToken.None);
@@ -174,7 +174,7 @@ public class ShoppingListsFeatureTests {
         var user = User.Create("shopping-delete-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
         var repository = new SingleShoppingListRepository(list);
-        var handler = new DeleteShoppingListCommandHandler(repository, CreateUserRepository(user));
+        var handler = new DeleteShoppingListCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(new DeleteShoppingListCommand(user.Id.Value, list.Id.Value), CancellationToken.None);
 
@@ -187,7 +187,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             new NoopShoppingListRepository(),
             new NoopProductLookupService(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.Empty, "Weekly", Items: null),
             CancellationToken.None);
@@ -202,7 +202,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             new NoopShoppingListRepository(),
             new NoopProductLookupService(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(UserId: null, Guid.NewGuid(), "Weekly", Items: null),
@@ -217,7 +217,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             new NoopShoppingListRepository(),
             new NoopProductLookupService(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(Guid.NewGuid(), Guid.NewGuid(), Name: null, Items: null),
@@ -230,14 +230,15 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task UpdateShoppingListCommandHandler_WhenListIsMissing_ReturnsNotFound() {
+        var user = User.Create("shopping-list-missing@example.com", "hash");
         var handler = new UpdateShoppingListCommandHandler(
             new NoopShoppingListRepository(),
             new NoopProductLookupService(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(user));
 
         var shoppingListId = Guid.NewGuid();
         Result<ShoppingListModel> result = await handler.Handle(
-            new UpdateShoppingListCommand(Guid.NewGuid(), shoppingListId, "Weekly", Items: null),
+            new UpdateShoppingListCommand(user.Id.Value, shoppingListId, "Weekly", Items: null),
             CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -252,7 +253,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             new SingleShoppingListRepository(list),
             new NoopProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(
@@ -288,7 +289,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             repository,
             new ProductLookupService(product),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(
@@ -336,7 +337,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             repository,
             new NoopProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(
@@ -372,7 +373,7 @@ public class ShoppingListsFeatureTests {
         var handler = new UpdateShoppingListCommandHandler(
             repository,
             CreateThrowingProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new UpdateShoppingListCommand(user.Id.Value, list.Id.Value, "New", Items: null),
@@ -389,7 +390,7 @@ public class ShoppingListsFeatureTests {
         var handler = new CreateShoppingListCommandHandler(
             new RecordingShoppingListRepository(),
             CreateThrowingProductLookupService(),
-            CreateUserRepository(User.Create("shopping-create@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("shopping-create@example.com", "hash")));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(UserId: null, "Weekly", []),
@@ -406,7 +407,7 @@ public class ShoppingListsFeatureTests {
         var handler = new CreateShoppingListCommandHandler(
             new RecordingShoppingListRepository(),
             CreateThrowingProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new CreateShoppingListCommand(user.Id.Value, "Weekly", []), CancellationToken.None);
 
@@ -420,7 +421,7 @@ public class ShoppingListsFeatureTests {
         var handler = new CreateShoppingListCommandHandler(
             new RecordingShoppingListRepository(),
             CreateThrowingProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(user.Id.Value, " ", []),
@@ -436,7 +437,7 @@ public class ShoppingListsFeatureTests {
         var handler = new CreateShoppingListCommandHandler(
             new RecordingShoppingListRepository(),
             new NoopProductLookupService(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(
@@ -469,7 +470,7 @@ public class ShoppingListsFeatureTests {
         var handler = new CreateShoppingListCommandHandler(
             repository,
             new ProductLookupService(product),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(
             new CreateShoppingListCommand(
@@ -801,7 +802,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-shopping@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateUserRepository(user));
+        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
@@ -809,15 +810,20 @@ public class ShoppingListsFeatureTests {
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
     }
 
-    private static IUserRepository CreateUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                Error? error = user switch {
+                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    _ => null,
+                };
+                return Task.FromResult(error);
+            });
 
-        return repository;
+        return service;
     }
 }

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -10,7 +10,7 @@ namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 
 public class DeleteRecipeCommentCommandHandler(
     IRecipeCommentRepository commentRepository,
-    IRecipeRepository recipeRepository)
+    IRecipeAccessService recipeAccessService)
     : ICommandHandler<DeleteRecipeCommentCommand, Result> {
     public async Task<Result> Handle(
         DeleteRecipeCommentCommand command,
@@ -31,7 +31,7 @@ public class DeleteRecipeCommentCommandHandler(
         // Author or recipe owner can delete
         bool isAuthor = comment.UserId == userIdResult.Value;
         if (!isAuthor) {
-            Recipe? recipe = await recipeRepository.GetByIdAsync(
+            Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
                 recipeId, userIdResult.Value, includePublic: false, cancellationToken: cancellationToken).ConfigureAwait(false);
 
             if (recipe is null) {

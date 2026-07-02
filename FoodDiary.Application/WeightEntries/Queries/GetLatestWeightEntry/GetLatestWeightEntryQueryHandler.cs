@@ -1,8 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Mappings;
 using FoodDiary.Application.WeightEntries.Models;
@@ -13,7 +12,7 @@ namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
 public class GetLatestWeightEntryQueryHandler(
     IWeightEntryRepository weightEntryRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryModel?>> {
     public async Task<Result<WeightEntryModel?>> Handle(
         GetLatestWeightEntryQuery query,
@@ -24,7 +23,7 @@ public class GetLatestWeightEntryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WeightEntryModel?>(accessError);
         }

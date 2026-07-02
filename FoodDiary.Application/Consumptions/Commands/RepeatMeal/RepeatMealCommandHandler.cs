@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -17,7 +16,7 @@ namespace FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 public class RepeatMealCommandHandler(
     IMealRepository mealRepository,
     IMealNutritionService mealNutritionService,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RepeatMealCommand, Result<ConsumptionModel>> {
     private sealed record RepeatMealValues(
         UserId UserId,
@@ -50,7 +49,7 @@ public class RepeatMealCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RepeatMealValues>(accessError);
         }

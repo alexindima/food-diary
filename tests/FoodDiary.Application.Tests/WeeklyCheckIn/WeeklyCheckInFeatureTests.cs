@@ -1,7 +1,7 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Meals;
@@ -43,7 +43,7 @@ public class WeeklyCheckInFeatureTests {
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        GetWeeklyCheckInQueryHandler handler = CreateHandler(userRepo: CreateUserRepository(user));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
 
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
@@ -61,7 +61,7 @@ public class WeeklyCheckInFeatureTests {
         var user = User.Create("user@example.com", "hashed");
         typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
 
-        GetWeeklyCheckInQueryHandler handler = CreateHandler(userRepo: CreateUserRepository(user));
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(profileService: CreateProfileService(user));
 
         Result<WeeklyCheckInModel> result = await handler.Handle(
             new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
@@ -76,13 +76,13 @@ public class WeeklyCheckInFeatureTests {
         IWeightEntryRepository? weightRepo = null,
         IWaistEntryRepository? waistRepo = null,
         IHydrationEntryRepository? hydrationRepo = null,
-        IUserRepository? userRepo = null) =>
+        IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             mealRepo ?? CreateMealRepository(),
             weightRepo ?? CreateWeightEntryRepository(),
             waistRepo ?? CreateWaistEntryRepository(),
             hydrationRepo ?? CreateHydrationEntryRepository(),
-            userRepo ?? CreateUserRepository(user: null),
+            profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
     private static IMealRepository CreateMealRepository() {
@@ -117,15 +117,23 @@ public class WeeklyCheckInFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static IWeeklyCheckInUserProfileService CreateProfileService(User? user) {
+        IWeeklyCheckInUserProfileService service = Substitute.For<IWeeklyCheckInUserProfileService>();
+        service
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
+                if (user is null || user.Id != id) {
+                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.InvalidToken));
+                }
+
+                if (user.DeletedAt is not null) {
+                    return Task.FromResult(Result.Failure<WeeklyCheckInUserProfile>(Errors.Authentication.AccountDeleted));
+                }
+
+                return Task.FromResult(Result.Success(new WeeklyCheckInUserProfile(user.DailyCalorieTarget)));
             });
-        return repository;
+        return service;
     }
 
     [ExcludeFromCodeCoverage]

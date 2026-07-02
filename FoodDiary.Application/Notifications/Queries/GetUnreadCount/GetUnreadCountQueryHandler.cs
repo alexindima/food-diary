@@ -1,16 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 
 public class GetUnreadCountQueryHandler(
     INotificationRepository notificationRepository,
-    IUserRepository userRepository)
+    INotificationUserContextService notificationUserContextService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {
     public async Task<Result<int>> Handle(GetUnreadCountQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -18,14 +16,13 @@ public class GetUnreadCountQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<int>(accessError);
+        Result<NotificationUserContext> contextResult = await notificationUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure<int>(contextResult.Error);
         }
 
         int count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user?.HasPassword == true) {
+        if (contextResult.Value.HasPassword) {
             count -= await notificationRepository.GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken).ConfigureAwait(false);
         }
 

@@ -12,9 +12,14 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Fasting.Services;
+using FoodDiary.Application.Gamification.Common;
+using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Hydration.Services;
 using FoodDiary.Application.Images.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Services;
 using FluentValidation;
 using System.Reflection;
@@ -25,6 +30,12 @@ using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Application.Products.Common;
 using FoodDiary.Application.Products.SearchSuggestions;
+using FoodDiary.Application.Tdee.Common;
+using FoodDiary.Application.Tdee.Services;
+using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.WeeklyCheckIn.Common;
+using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Mediator;
 
 namespace FoodDiary.Application;
@@ -47,6 +58,7 @@ public static class DependencyInjection {
         services.AddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.AddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
         services.AddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
+        services.AddScoped<IDashboardReadService, ComposedDashboardReadService>();
         services.AddScoped<IDashboardSectionDataLoader, DashboardSectionDataLoader>();
         services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>
             new DashboardSnapshotBuilder(
@@ -54,10 +66,14 @@ public static class DependencyInjection {
                 serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
+        services.AddScoped<IHydrationGoalService, HydrationGoalService>();
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
+        services.AddScoped<INotificationPreferencesService, NotificationPreferencesService>();
+        services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();
+        services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
@@ -69,6 +85,9 @@ public static class DependencyInjection {
         services.AddScoped<IOpenFoodFactsCachedProductSearch, OpenFoodFactsCachedProductSearch>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
+        services.AddScoped<ICurrentUserAccessService, CurrentUserAccessService>();
+        services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
+        services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
 
         return services;
     }

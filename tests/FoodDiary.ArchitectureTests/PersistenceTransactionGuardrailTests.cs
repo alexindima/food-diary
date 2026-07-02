@@ -22,6 +22,8 @@ public sealed class PersistenceTransactionGuardrailTests {
         string[] allowedFiles = [
             Path.Combine(persistenceRoot, "Billing", "EfBillingTransactionRunner.cs"),
             Path.Combine(persistenceRoot, "EfUnitOfWork.cs"),
+            Path.Combine(persistenceRoot, "Images", "ImageObjectDeletionOutboxProcessor.cs"),
+            Path.Combine(persistenceRoot, "Notifications", "NotificationWebPushOutboxProcessor.cs"),
         ];
 
         HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);

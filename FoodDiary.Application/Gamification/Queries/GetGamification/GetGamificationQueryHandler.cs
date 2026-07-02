@@ -1,20 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Models;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Gamification.Queries.GetGamification;
 
 public class GetGamificationQueryHandler(
     IMealRepository mealRepository,
-    IUserRepository userRepository,
+    IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetGamificationQuery, Result<GamificationModel>> {
     public async Task<Result<GamificationModel>> Handle(
@@ -26,12 +24,11 @@ public class GetGamificationQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<GamificationModel>(accessError);
+        Result<IGamificationUserProfile> userProfileResult =
+            await userProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userProfileResult.IsFailure) {
+            return Result.Failure<GamificationModel>(userProfileResult.Error);
         }
-
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
 
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime streakFrom = today.AddDays(-365);
@@ -43,8 +40,9 @@ public class GetGamificationQueryHandler(
 
         DateTime weekStart = today.AddDays(-6);
         IReadOnlyList<Meal> weekMeals = await mealRepository.GetByPeriodAsync(userId, weekStart, today, cancellationToken).ConfigureAwait(false);
+        IGamificationUserProfile userProfile = userProfileResult.Value;
         double weeklyAdherence = GamificationCalculator.CalculateWeeklyAdherence(
-            weekMeals, date => user?.GetCalorieTargetForDate(date), today);
+            weekMeals, userProfile.GetCalorieTargetForDate, today);
 
         IReadOnlyList<BadgeModel> badges = GamificationCalculator.CalculateBadges(longestStreak, totalMeals);
         int healthScore = GamificationCalculator.CalculateHealthScore(currentStreak, weeklyAdherence, totalMeals);

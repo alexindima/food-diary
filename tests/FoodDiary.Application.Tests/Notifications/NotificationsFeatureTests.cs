@@ -5,6 +5,7 @@ using FoodDiary.Application.Notifications.Commands.ScheduleTestNotification;
 using FoodDiary.Application.Notifications.Commands.UpdateNotificationPreferences;
 using FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Queries.GetWebPushConfiguration;
@@ -14,6 +15,7 @@ using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -56,7 +58,7 @@ public class NotificationsFeatureTests {
         var pusher = new RecordingNotificationPusher();
 
         RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, postCommitActionQueue);
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), pusher, postCommitActionQueue);
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -81,7 +83,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
 
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(otherUserId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(otherUserId.Value, notification.Id.Value),
             CancellationToken.None);
@@ -93,7 +95,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WhenNotFound_ReturnsFailure() {
         var repo = new InMemoryNotificationRepository();
         var userId = UserId.New();
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, Guid.NewGuid()),
@@ -106,7 +108,7 @@ public class NotificationsFeatureTests {
     public async Task MarkNotificationRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkNotificationReadCommandHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new RecordingNotificationPusher(),
             CreatePostCommitActionQueue());
 
@@ -123,7 +125,7 @@ public class NotificationsFeatureTests {
         var notification = Notification.Create(userId, "info", "{}");
         var repo = new InMemoryNotificationRepository();
         repo.Seed(notification);
-        var handler = new MarkNotificationReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkNotificationReadCommandHandler(repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkNotificationReadCommand(userId.Value, notification.Id.Value),
@@ -142,7 +144,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         var pusher = new RecordingNotificationPusher();
         RecordingPostCommitActionQueue postCommitActionQueue = CreatePostCommitActionQueue();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateUser(userId)), pusher, postCommitActionQueue);
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, CreateCurrentUserAccessService(CreateUser(userId)), pusher, postCommitActionQueue);
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -164,7 +166,7 @@ public class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkAllNotificationsReadCommandHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new RecordingNotificationPusher(),
             CreatePostCommitActionQueue());
 
@@ -179,7 +181,7 @@ public class NotificationsFeatureTests {
     public async Task MarkAllNotificationsRead_WhenUserDeleted_ReturnsFailure() {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
-        var handler = new MarkAllNotificationsReadCommandHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
+        var handler = new MarkAllNotificationsReadCommandHandler(repo, CreateCurrentUserAccessService(CreateDeletedUser(userId)), new RecordingNotificationPusher(), CreatePostCommitActionQueue());
 
         Result result = await handler.Handle(
             new MarkAllNotificationsReadCommand(userId.Value),
@@ -197,7 +199,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         repo.Seed(Notification.Create(userId, "info", "{}"));
 
-        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateUser(userId)));
+        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(CreateUser(userId)));
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
@@ -210,7 +212,7 @@ public class NotificationsFeatureTests {
     public async Task GetUnreadCount_WithNullUserId_ReturnsInvalidToken() {
         var handler = new GetUnreadCountQueryHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()));
+            CreateNotificationUserContextService(CreateUser()));
 
         Result<int> result = await handler.Handle(new GetUnreadCountQuery(UserId: null), CancellationToken.None);
 
@@ -225,7 +227,7 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, NotificationTypes.PasswordSetupSuggested, "{}"));
         repo.Seed(Notification.Create(userId, NotificationTypes.FastingCompleted, "{}"));
-        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(user));
+        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(user));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -240,7 +242,7 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, "info", "{}"));
-        var handler = new GetUnreadCountQueryHandler(repo, new SingleUserRepository(CreateDeletedUser(userId)));
+        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(CreateDeletedUser(userId)));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -253,9 +255,8 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task UpdateNotificationPreferences_UpdatesUserAndWritesAuditLog() {
         User user = CreateUser(email: "notifications@example.com");
-        var userRepository = new SingleUserRepository(user);
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpdateNotificationPreferencesCommandHandler(userRepository, auditLogger);
+        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: false, SocialPushNotificationsEnabled: true, 12, 20),
@@ -280,7 +281,7 @@ public class NotificationsFeatureTests {
     public async Task UpdateNotificationPreferences_WhenPartialReminderUpdateWouldInvertOrder_ReturnsValidationFailure() {
         User user = CreateUser(email: "partial-reminders@example.com");
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpdateNotificationPreferencesCommandHandler(new SingleUserRepository(user), auditLogger);
+        var handler = new UpdateNotificationPreferencesCommandHandler(CreateNotificationPreferencesService(user), auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
             new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: null, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, 20, FastingCheckInFollowUpReminderHours: null),
@@ -296,7 +297,7 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task UpdateNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpdateNotificationPreferencesCommandHandler(
-            new SingleUserRepository(CreateUser()),
+            CreateNotificationPreferencesService(CreateUser()),
             new RecordingAuditLogger());
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
@@ -312,7 +313,7 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var auditLogger = new RecordingAuditLogger();
         var handler = new UpdateNotificationPreferencesCommandHandler(
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateNotificationPreferencesService(CreateDeletedUser(userId)),
             auditLogger);
 
         Result<NotificationPreferencesModel> result = await handler.Handle(
@@ -328,7 +329,7 @@ public class NotificationsFeatureTests {
     public async Task GetNotificationPreferences_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(email: "deleted-notifications@example.com");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(user));
+        var handler = new GetNotificationPreferencesQueryHandler(CreateNotificationPreferencesService(user));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(user.Id.Value), CancellationToken.None);
 
@@ -338,7 +339,7 @@ public class NotificationsFeatureTests {
 
     [Fact]
     public async Task GetNotificationPreferences_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetNotificationPreferencesQueryHandler(new SingleUserRepository(CreateUser()));
+        var handler = new GetNotificationPreferencesQueryHandler(CreateNotificationPreferencesService(CreateUser()));
 
         Result<NotificationPreferencesModel> result = await handler.Handle(new GetNotificationPreferencesQuery(Guid.Empty), CancellationToken.None);
 
@@ -350,7 +351,7 @@ public class NotificationsFeatureTests {
     public async Task GetNotifications_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetNotificationsQueryHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateUser()),
+            CreateNotificationUserContextService(CreateUser()),
             new RecordingNotificationTextRenderer());
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
@@ -364,7 +365,7 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var handler = new GetNotificationsQueryHandler(
             new InMemoryNotificationRepository(),
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateNotificationUserContextService(CreateDeletedUser(userId)),
             new RecordingNotificationTextRenderer());
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
@@ -380,7 +381,7 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(user.Id, NotificationTypes.PasswordSetupSuggested, "{}"));
         repo.Seed(Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"));
         var renderer = new RecordingNotificationTextRenderer();
-        var handler = new GetNotificationsQueryHandler(repo, new SingleUserRepository(user), renderer);
+        var handler = new GetNotificationsQueryHandler(repo, CreateNotificationUserContextService(user), renderer);
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
 
@@ -409,7 +410,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
         var handler = new GetWebPushSubscriptionsQueryHandler(
             repository,
-            new SingleUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new FixedDateTimeProvider(utcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(user.Id.Value), CancellationToken.None);
@@ -425,7 +426,7 @@ public class NotificationsFeatureTests {
     public async Task GetWebPushSubscriptions_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWebPushSubscriptionsQueryHandler(
             new InMemoryWebPushSubscriptionRepository(),
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(Guid.Empty), CancellationToken.None);
@@ -439,7 +440,7 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var handler = new GetWebPushSubscriptionsQueryHandler(
             new InMemoryWebPushSubscriptionRepository(),
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
         Result<IReadOnlyList<WebPushSubscriptionModel>> result = await handler.Handle(new GetWebPushSubscriptionsQuery(userId.Value), CancellationToken.None);
@@ -465,7 +466,7 @@ public class NotificationsFeatureTests {
         User user = CreateUser();
         var repository = new InMemoryWebPushSubscriptionRepository();
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, CreateCurrentUserAccessService(user), auditLogger);
 
         Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
@@ -491,7 +492,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new UpsertWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -515,7 +516,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new UpsertWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -547,7 +548,7 @@ public class NotificationsFeatureTests {
             "OldBrowser");
         var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
         var auditLogger = new RecordingAuditLogger();
-        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+        var handler = new UpsertWebPushSubscriptionCommandHandler(repository, CreateCurrentUserAccessService(user), auditLogger);
 
         Result result = await handler.Handle(
             new UpsertWebPushSubscriptionCommand(
@@ -582,7 +583,7 @@ public class NotificationsFeatureTests {
             "auth");
         var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
         var auditLogger = new RecordingAuditLogger();
-        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, CreateCurrentUserAccessService(user), auditLogger);
 
         Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, subscription.Endpoint),
@@ -599,7 +600,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new RemoveWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -617,7 +618,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new RemoveWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -634,7 +635,7 @@ public class NotificationsFeatureTests {
         User user = CreateUser();
         var repository = new InMemoryWebPushSubscriptionRepository();
         var auditLogger = new RecordingAuditLogger();
-        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, new SingleUserRepository(user), auditLogger);
+        var handler = new RemoveWebPushSubscriptionCommandHandler(repository, CreateCurrentUserAccessService(user), auditLogger);
 
         Result result = await handler.Handle(
             new RemoveWebPushSubscriptionCommand(user.Id.Value, "   "),
@@ -651,7 +652,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository();
         var handler = new RemoveWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -673,7 +674,7 @@ public class NotificationsFeatureTests {
         var repository = new InMemoryWebPushSubscriptionRepository([subscription]);
         var handler = new RemoveWebPushSubscriptionCommandHandler(
             repository,
-            new SingleUserRepository(user),
+            CreateCurrentUserAccessService(user),
             new RecordingAuditLogger());
 
         Result result = await handler.Handle(
@@ -694,7 +695,7 @@ public class NotificationsFeatureTests {
         var auditLogger = new RecordingAuditLogger();
         var handler = new ScheduleTestNotificationCommandHandler(
             scheduler,
-            new SingleUserRepository(user),
+            CreateCurrentUserAccessService(user),
             auditLogger);
 
         Result<ScheduledNotificationModel> result = await handler.Handle(
@@ -717,7 +718,7 @@ public class NotificationsFeatureTests {
             new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, DateTime.UtcNow));
         var handler = new ScheduleTestNotificationCommandHandler(
             scheduler,
-            new SingleUserRepository(CreateDeletedUser(userId)),
+            CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new RecordingAuditLogger());
 
         Result<ScheduledNotificationModel> result = await handler.Handle(
@@ -735,7 +736,7 @@ public class NotificationsFeatureTests {
             new ScheduledNotificationData(NotificationTypes.FastingCompleted, 15, DateTime.UtcNow));
         var handler = new ScheduleTestNotificationCommandHandler(
             scheduler,
-            new SingleUserRepository(CreateUser()),
+            CreateCurrentUserAccessService(CreateUser()),
             new RecordingAuditLogger());
 
         Result<ScheduledNotificationModel> result = await handler.Handle(
@@ -789,9 +790,23 @@ public class NotificationsFeatureTests {
         await unitOfWork.Received(1).SaveChangesAsync(cts.Token);
     }
 
+    [Fact]
+    public async Task NotificationWriter_WhenWebPushRequested_EnqueuesOutboxMessage() {
+        var repository = new InMemoryNotificationRepository();
+        var outbox = new RecordingNotificationWebPushOutbox();
+        var writer = new NotificationWriter(repository, outbox);
+        var notification = Notification.Create(UserId.New(), "info", "{}");
+
+        await writer.AddAsync(notification, sendWebPush: true, CancellationToken.None);
+
+        Assert.Same(notification, Assert.Single(repository.Notifications));
+        Assert.Equal(notification.Id, Assert.Single(outbox.NotificationIds));
+    }
+
     [ExcludeFromCodeCoverage]
     private sealed class InMemoryNotificationRepository : INotificationRepository {
         private readonly List<Notification> _notifications = [];
+        public IReadOnlyList<Notification> Notifications => _notifications;
         public bool MarkAllReadCalled { get; private set; }
         public bool DeleteExpiredBatchCalled { get; private set; }
         public IReadOnlyCollection<string> TransientTypes { get; private set; } = [];
@@ -855,6 +870,16 @@ public class NotificationsFeatureTests {
             BatchSize = batchSize;
             DeleteExpiredBatchCancellationToken = cancellationToken;
             return Task.FromResult(DeleteExpiredBatchResult);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingNotificationWebPushOutbox : INotificationWebPushOutbox {
+        public List<NotificationId> NotificationIds { get; } = [];
+
+        public Task EnqueueAsync(NotificationId notificationId, CancellationToken cancellationToken = default) {
+            NotificationIds.Add(notificationId);
+            return Task.CompletedTask;
         }
     }
 
@@ -973,6 +998,24 @@ public class NotificationsFeatureTests {
     private sealed class StaticWebPushConfigurationProvider(WebPushClientConfiguration configuration) : IWebPushConfigurationProvider {
         public WebPushClientConfiguration GetClientConfiguration() => configuration;
     }
+
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId id = call.Arg<UserId>();
+                return Task.FromResult(user.Id == id ? error : Errors.Authentication.InvalidToken);
+            });
+        return service;
+    }
+
+    private static INotificationPreferencesService CreateNotificationPreferencesService(User user) =>
+        new NotificationPreferencesService(new SingleUserRepository(user));
+
+    private static INotificationUserContextService CreateNotificationUserContextService(User user) =>
+        new NotificationUserContextService(new SingleUserRepository(user));
 
     [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository {

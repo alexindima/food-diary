@@ -1,12 +1,11 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
@@ -17,7 +16,7 @@ namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 public class GetCycleNutritionSummaryQueryHandler(
     ICycleRepository cycleRepository,
     IMealRepository mealRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {
     private const int MaxSummaryRangeDays = 366;
     private const int MinComparisonDaysPerGroup = 2;
@@ -43,7 +42,7 @@ public class GetCycleNutritionSummaryQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CycleNutritionSummaryModel?>(accessError);
         }

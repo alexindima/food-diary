@@ -1,8 +1,8 @@
 using System.Reflection;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Domain.Entities.Content;
@@ -97,7 +97,7 @@ public class DailyAdvicesFeatureTests {
 
     [Fact]
     public async Task GetDailyAdvice_WithInvalidUserId_ReturnsInvalidToken() {
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(User.Create("advice@example.com", "hash")));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(User.Create("advice@example.com", "hash")));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(Guid.Empty, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -109,7 +109,7 @@ public class DailyAdvicesFeatureTests {
     public async Task GetDailyAdvice_WhenUserDeleted_ReturnsAccountDeleted() {
         var user = User.Create("deleted-advice@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -125,7 +125,7 @@ public class DailyAdvicesFeatureTests {
                 ["en"] = [DailyAdvice.Create("Hydrate", "en", weight: 1)],
             },
             out List<string> requestedLocales);
-        var handler = new GetDailyAdviceQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "de-DE"), CancellationToken.None);
 
@@ -137,7 +137,7 @@ public class DailyAdvicesFeatureTests {
     [Fact]
     public async Task GetDailyAdvice_WhenNoAdviceExists_ReturnsNotFound() {
         var user = User.Create("missing-advice@example.com", "hash");
-        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(CreateDailyAdviceRepository(), CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "ru"), CancellationToken.None);
 
@@ -152,7 +152,7 @@ public class DailyAdvicesFeatureTests {
             new Dictionary<string, IReadOnlyList<DailyAdvice>>(StringComparer.OrdinalIgnoreCase) {
                 ["en"] = [DailyAdvice.Create("Russian advice", "ru", weight: 1)],
             });
-        var handler = new GetDailyAdviceQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetDailyAdviceQueryHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<DailyAdviceModel> result = await handler.Handle(new GetDailyAdviceQuery(user.Id.Value, DateTime.UtcNow, "en"), CancellationToken.None);
 
@@ -214,20 +214,15 @@ public class DailyAdvicesFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
+                return Task.FromResult(user.Id == id ? error : Errors.Authentication.InvalidToken);
             });
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
-            });
-        return repository;
+        return service;
     }
 }

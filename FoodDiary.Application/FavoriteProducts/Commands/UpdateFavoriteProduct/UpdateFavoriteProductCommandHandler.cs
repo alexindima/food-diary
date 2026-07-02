@@ -1,11 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.FavoriteProducts.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,7 +12,7 @@ namespace FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 
 public class UpdateFavoriteProductCommandHandler(
     IFavoriteProductRepository favoriteProductRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateFavoriteProductCommand, Result<FavoriteProductModel>> {
     public async Task<Result<FavoriteProductModel>> Handle(
         UpdateFavoriteProductCommand command,
@@ -24,7 +23,7 @@ public class UpdateFavoriteProductCommandHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FavoriteProductModel>(accessError);
         }

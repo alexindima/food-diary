@@ -106,6 +106,18 @@ public static class ApiOptionsServiceCollectionExtensions {
                 .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
                     "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
                 .ValidateOnStart();
+            services
+                .AddOptions<ImageObjectDeletionOutboxOptions>()
+                .BindConfiguration(ImageObjectDeletionOutboxOptions.SectionName)
+                .Validate(ImageObjectDeletionOutboxOptions.HasValidConfiguration,
+                    "ImageObjectDeletionOutbox requires positive BatchSize and PollIntervalSeconds when enabled.")
+                .ValidateOnStart();
+            services
+                .AddOptions<NotificationWebPushOutboxOptions>()
+                .BindConfiguration(NotificationWebPushOutboxOptions.SectionName)
+                .Validate(NotificationWebPushOutboxOptions.HasValidConfiguration,
+                    "NotificationWebPushOutbox requires positive BatchSize and PollIntervalSeconds when enabled.")
+                .ValidateOnStart();
 
             return services;
         }

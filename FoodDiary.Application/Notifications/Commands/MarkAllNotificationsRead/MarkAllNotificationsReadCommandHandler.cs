@@ -1,17 +1,16 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 
 public class MarkAllNotificationsReadCommandHandler(
     INotificationRepository notificationRepository,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<MarkAllNotificationsReadCommand, Result> {
@@ -21,7 +20,7 @@ public class MarkAllNotificationsReadCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }

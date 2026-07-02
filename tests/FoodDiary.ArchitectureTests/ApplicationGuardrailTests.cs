@@ -140,7 +140,6 @@ public sealed class ApplicationGuardrailTests {
         string[] allowedDirectories = [
             Path.Combine(applicationRoot, "Products"),
             Path.Combine(applicationRoot, "FavoriteProducts"),
-            Path.Combine(applicationRoot, "Usda"),
         ];
 
         string[] violations = FindRepositoryReferenceViolations(
@@ -158,9 +157,6 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] allowedDirectories = [
             Path.Combine(applicationRoot, "Recipes"),
-            Path.Combine(applicationRoot, "FavoriteRecipes"),
-            Path.Combine(applicationRoot, "RecipeComments"),
-            Path.Combine(applicationRoot, "RecipeLikes"),
         ];
 
         string[] violations = FindRepositoryReferenceViolations(
@@ -168,6 +164,69 @@ public sealed class ApplicationGuardrailTests {
             applicationRoot,
             "IRecipeRepository",
             allowedDirectories);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_UseFullUserRepositoryOnlyOutsideMigratedUserSlices() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedDirectories = [
+            Path.Combine(applicationRoot, "Consumptions"),
+            Path.Combine(applicationRoot, "Cycles"),
+            Path.Combine(applicationRoot, "DailyAdvices"),
+            Path.Combine(applicationRoot, "FavoriteProducts"),
+            Path.Combine(applicationRoot, "FavoriteRecipes"),
+            Path.Combine(applicationRoot, "FavoriteMeals"),
+            Path.Combine(applicationRoot, "Fasting"),
+            Path.Combine(applicationRoot, "Gamification"),
+            Path.Combine(applicationRoot, "Hydration"),
+            Path.Combine(applicationRoot, "ShoppingLists"),
+            Path.Combine(applicationRoot, "Statistics"),
+            Path.Combine(applicationRoot, "Tdee"),
+            Path.Combine(applicationRoot, "WaistEntries"),
+            Path.Combine(applicationRoot, "WeeklyCheckIn"),
+            Path.Combine(applicationRoot, "WeightEntries"),
+        ];
+
+        string[] violations = [.. migratedDirectories.SelectMany(directory =>
+            FindRepositoryReferenceViolations(
+                root,
+                directory,
+                "IUserRepository",
+                [
+                    Path.Combine(applicationRoot, "Gamification", "Services"),
+                    Path.Combine(applicationRoot, "Hydration", "Services"),
+                    Path.Combine(applicationRoot, "Tdee", "Services"),
+                    Path.Combine(applicationRoot, "WeeklyCheckIn", "Services"),
+                ]))];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MigratedNotificationHandlers_DoNotUseFullUserRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Notifications", "Commands", "MarkAllNotificationsRead", "MarkAllNotificationsReadCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Commands", "MarkNotificationRead", "MarkNotificationReadCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Commands", "RemoveWebPushSubscription", "RemoveWebPushSubscriptionCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Commands", "ScheduleTestNotification", "ScheduleTestNotificationCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Commands", "UpdateNotificationPreferences", "UpdateNotificationPreferencesCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Commands", "UpsertWebPushSubscription", "UpsertWebPushSubscriptionCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Notifications", "Queries", "GetWebPushSubscriptions", "GetWebPushSubscriptionsQueryHandler.cs"),
+        ];
+
+        string[] violations = [.. migratedFiles
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => entry.line.Contains("IUserRepository", StringComparison.Ordinal))
+                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
 
         Assert.Empty(violations);
     }
@@ -192,6 +251,17 @@ public sealed class ApplicationGuardrailTests {
                 !fileName.StartsWith("FoodDiaryDbContext.", StringComparison.Ordinal))];
 
         Assert.Empty(unexpectedFiles);
+    }
+
+    [Fact]
+    public void DashboardRuntimeReadPath_UsesDedicatedInfrastructureReadService() {
+        string root = GetRepositoryRoot();
+        string dashboardPlanPath = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Dashboard-Query-Plan.md");
+        Assert.False(File.Exists(dashboardPlanPath), "Dashboard migration plan should not be kept after the dedicated read path is implemented.");
+
+        string repositoryRegistrationPath = Path.Combine(root, "FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
+        string registrationSource = File.ReadAllText(repositoryRegistrationPath);
+        Assert.Contains("AddScoped<IDashboardReadService, DashboardReadService>", registrationSource, StringComparison.Ordinal);
     }
 
     [Fact]

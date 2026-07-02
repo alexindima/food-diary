@@ -27,6 +27,8 @@ public static class ApiHostServiceCollectionExtensions {
             services.AddHostedService<FastingNotificationHostedService>();
             services.AddHostedService<InitialAdminHostedService>();
             services.AddHostedService<UserLoginEventCleanupHostedService>();
+            services.AddHostedService<ImageObjectDeletionOutboxHostedService>();
+            services.AddHostedService<NotificationWebPushOutboxHostedService>();
 
             return services;
         }

@@ -1,10 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 
 public sealed class GetWebPushSubscriptionsQueryHandler(
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {
     public async Task<Result<IReadOnlyList<WebPushSubscriptionModel>>> Handle(
@@ -23,7 +22,7 @@ public sealed class GetWebPushSubscriptionsQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<WebPushSubscriptionModel>>(accessError);
         }

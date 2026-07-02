@@ -1,16 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Hydration.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -21,7 +19,7 @@ public class GetWeeklyCheckInQueryHandler(
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
     IHydrationEntryRepository hydrationEntryRepository,
-    IUserRepository userRepository,
+    IWeeklyCheckInUserProfileService weeklyCheckInUserProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWeeklyCheckInQuery, Result<WeeklyCheckInModel>> {
     public async Task<Result<WeeklyCheckInModel>> Handle(
@@ -33,12 +31,12 @@ public class GetWeeklyCheckInQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<WeeklyCheckInModel>(accessError);
+        Result<WeeklyCheckInUserProfile> profileResult = await weeklyCheckInUserProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<WeeklyCheckInModel>(profileResult.Error);
         }
 
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        WeeklyCheckInUserProfile profile = profileResult.Value;
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime thisWeekStart = today.AddDays(-6);
         DateTime lastWeekStart = thisWeekStart.AddDays(-7);
@@ -60,7 +58,7 @@ public class GetWeeklyCheckInQueryHandler(
         WeekSummaryModel lastWeekSummary = WeeklyCheckInCalculator.BuildSummary(lastWeekMeals, lastWeekWeights, lastWeekWaists, lastWeekHydration, 7);
 
         WeekTrendModel trends = WeeklyCheckInCalculator.BuildTrends(thisWeekSummary, lastWeekSummary);
-        IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(thisWeekSummary, trends, user?.DailyCalorieTarget);
+        IReadOnlyList<string> suggestions = WeeklyCheckInCalculator.GenerateSuggestions(thisWeekSummary, trends, profile.DailyCalorieTarget);
 
         return Result.Success(new WeeklyCheckInModel(thisWeekSummary, lastWeekSummary, trends, suggestions));
     }

@@ -1,9 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -11,7 +10,7 @@ namespace FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription
 
 public sealed class UpsertWebPushSubscriptionCommandHandler(
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     IAuditLogger auditLogger)
     : ICommandHandler<UpsertWebPushSubscriptionCommand, Result> {
     public async Task<Result> Handle(UpsertWebPushSubscriptionCommand command, CancellationToken cancellationToken) {
@@ -20,7 +19,7 @@ public sealed class UpsertWebPushSubscriptionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }

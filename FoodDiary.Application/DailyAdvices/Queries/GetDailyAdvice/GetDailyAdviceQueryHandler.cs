@@ -1,20 +1,18 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
 public class GetDailyAdviceQueryHandler(
     IDailyAdviceRepository adviceRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {
     public async Task<Result<DailyAdviceModel>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
@@ -23,8 +21,7 @@ public class GetDailyAdviceQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<DailyAdviceModel>(accessError);
         }

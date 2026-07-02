@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WaistEntries.Mappings;
 using FoodDiary.Application.WaistEntries.Models;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
 public class GetLatestWaistEntryQueryHandler(
     IWaistEntryRepository waistEntryRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryModel?>> {
     public async Task<Result<WaistEntryModel?>> Handle(
         GetLatestWaistEntryQuery query,
@@ -22,7 +21,7 @@ public class GetLatestWaistEntryQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<WaistEntryModel?>(accessError);
         }

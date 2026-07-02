@@ -9,17 +9,16 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace FoodDiary.Infrastructure.Migrations
-{
-    [DbContext(typeof(FoodDiaryDbContext))]
-    [ExcludeFromCodeCoverage]
-    partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot
-    {
+namespace FoodDiary.Infrastructure.Migrations;
+
+[DbContext(typeof(FoodDiaryDbContext))]
+[ExcludeFromCodeCoverage]
+partial class FoodDiaryDbContextModelSnapshot : ModelSnapshot {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "10.0.8")
+                .HasAnnotation("ProductVersion", "10.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "pg_trgm");
@@ -3385,6 +3384,74 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.ToTable("WearableSyncEntries");
                 });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Images.ImageObjectDeletionOutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<DateTime>("NextAttemptOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("ObjectKey")
+                        .IsRequired()
+                        .HasMaxLength(1024)
+                        .HasColumnType("character varying(1024)");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc");
+
+                    b.ToTable("ImageObjectDeletionOutbox", (string)null);
+                });
+
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Notifications.NotificationWebPushOutboxMessage", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("AttemptCount")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("CreatedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("LastError")
+                        .HasMaxLength(2048)
+                        .HasColumnType("character varying(2048)");
+
+                    b.Property<DateTime>("NextAttemptOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("NotificationId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime?>("ProcessedOnUtc")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NotificationId");
+
+                    b.HasIndex("ProcessedOnUtc", "NextAttemptOnUtc");
+
+                    b.ToTable("NotificationWebPushOutbox", (string)null);
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.Admin.AdminImpersonationSession", b =>
                 {
                     b.HasOne("FoodDiary.Domain.Entities.Users.User", null)
@@ -4134,6 +4201,17 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("FoodDiary.Infrastructure.Persistence.Notifications.NotificationWebPushOutboxMessage", b =>
+                {
+                    b.HasOne("FoodDiary.Domain.Entities.Notifications.Notification", "Notification")
+                        .WithMany()
+                        .HasForeignKey("NotificationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Notification");
+                });
+
             modelBuilder.Entity("FoodDiary.Domain.Entities.MealPlans.MealPlan", b =>
                 {
                     b.Navigation("Days");
@@ -4231,6 +4309,5 @@ namespace FoodDiary.Infrastructure.Migrations
                     b.Navigation("WeightEntries");
                 });
 #pragma warning restore 612, 618
-        }
     }
 }

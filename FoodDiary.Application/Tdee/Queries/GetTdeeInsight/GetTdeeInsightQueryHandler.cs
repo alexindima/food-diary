@@ -1,22 +1,20 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
 public class GetTdeeInsightQueryHandler(
-    IUserRepository userRepository,
+    ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryRepository weightEntryRepository,
     IMealRepository mealRepository,
     IExerciseEntryRepository exerciseEntryRepository,
@@ -33,15 +31,12 @@ public class GetTdeeInsightQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<TdeeInsightModel>(accessError);
+        Result<TdeeUserProfile> profileResult = await tdeeUserProfileService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (profileResult.IsFailure) {
+            return Result.Failure<TdeeInsightModel>(profileResult.Error);
         }
 
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure<TdeeInsightModel>(Errors.User.NotFound());
-        }
+        TdeeUserProfile profile = profileResult.Value;
 
         DateTime today = dateTimeProvider.GetUtcNow().UtcDateTime.Date;
         DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
@@ -50,25 +45,25 @@ public class GetTdeeInsightQueryHandler(
         IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
         IReadOnlyList<ExerciseEntry> exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
 
-        double? bmr = user.CalculateBmr();
-        double? estimatedTdee = user.CalculateEstimatedTdee();
+        double? bmr = profile.Bmr;
+        double? estimatedTdee = profile.EstimatedTdee;
 
         AdaptiveTdeeResult adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays, exercises);
 
         double? effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
         double? suggestedTarget = effectiveTdee.HasValue
-            ? TdeeCalculator.SuggestCalorieTarget(effectiveTdee.Value, user.Weight, user.DesiredWeight)
+            ? TdeeCalculator.SuggestCalorieTarget(effectiveTdee.Value, profile.Weight, profile.DesiredWeight)
             : null;
 
         string? hint = TdeeCalculator.GetGoalAdjustmentHint(
-            effectiveTdee, user.DailyCalorieTarget, user.Weight, user.DesiredWeight);
+            effectiveTdee, profile.DailyCalorieTarget, profile.Weight, profile.DesiredWeight);
 
         return Result.Success(new TdeeInsightModel(
             EstimatedTdee: estimatedTdee,
             AdaptiveTdee: adaptiveResult.AdaptiveTdee,
             Bmr: bmr,
             SuggestedCalorieTarget: suggestedTarget,
-            CurrentCalorieTarget: user.DailyCalorieTarget,
+            CurrentCalorieTarget: profile.DailyCalorieTarget,
             WeightTrendPerWeek: adaptiveResult.WeightTrendPerWeek,
             Confidence: adaptiveResult.HasData ? adaptiveResult.Confidence : TdeeConfidence.None,
             DataDaysUsed: adaptiveResult.DataDaysUsed,

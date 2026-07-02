@@ -1,6 +1,6 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
@@ -18,9 +18,9 @@ public class RecipeLikesFeatureTests {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Pasta", 1);
         var repo = new InMemoryRecipeLikeRepository();
-        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
+        IRecipeAccessService recipeAccessService = CreateRecipeAccessService(recipe);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
@@ -35,9 +35,9 @@ public class RecipeLikesFeatureTests {
         var recipe = Recipe.Create(userId, "Pasta", 1);
         var repo = new InMemoryRecipeLikeRepository();
         repo.Seed(RecipeLike.Create(userId, recipe.Id));
-        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe);
+        IRecipeAccessService recipeAccessService = CreateRecipeAccessService(recipe);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(userId.Value, recipe.Id.Value), CancellationToken.None);
 
@@ -49,9 +49,9 @@ public class RecipeLikesFeatureTests {
     [Fact]
     public async Task ToggleRecipeLike_WhenRecipeNotFound_ReturnsFailure() {
         var repo = new InMemoryRecipeLikeRepository();
-        IRecipeRepository recipeRepo = CreateRecipeRepository(recipe: null);
+        IRecipeAccessService recipeAccessService = CreateRecipeAccessService(recipe: null);
 
-        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeRepo);
+        var handler = new ToggleRecipeLikeCommandHandler(repo, recipeAccessService);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
@@ -63,7 +63,7 @@ public class RecipeLikesFeatureTests {
     public async Task ToggleRecipeLike_WithNullUserId_ReturnsFailure() {
         var handler = new ToggleRecipeLikeCommandHandler(
             new InMemoryRecipeLikeRepository(),
-            CreateRecipeRepository(recipe: null));
+            CreateRecipeAccessService(recipe: null));
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new ToggleRecipeLikeCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -133,17 +133,16 @@ public class RecipeLikesFeatureTests {
             Task.FromResult(_likes.Count(l => l.RecipeId == recipeId));
     }
 
-    private static IRecipeRepository CreateRecipeRepository(Recipe? recipe) {
-        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
-        repository
-            .GetByIdAsync(
+    private static IRecipeAccessService CreateRecipeAccessService(Recipe? recipe) {
+        IRecipeAccessService service = Substitute.For<IRecipeAccessService>();
+        service
+            .GetAccessibleByIdAsync(
                 Arg.Any<RecipeId>(),
                 Arg.Any<UserId>(),
                 Arg.Any<bool>(),
                 Arg.Any<bool>(),
-                Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(recipe));
-        return repository;
+        return service;
     }
 }

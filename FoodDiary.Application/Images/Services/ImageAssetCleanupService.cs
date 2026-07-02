@@ -8,9 +8,9 @@ namespace FoodDiary.Application.Images.Services;
 
 public sealed class ImageAssetCleanupService(
     IImageAssetRepository imageAssetRepository,
+    IImageObjectDeletionOutbox imageObjectDeletionOutbox,
     IImageStorageService imageStorageService,
     ILogger<ImageAssetCleanupService> logger,
-    IPostCommitActionQueue postCommitActionQueue,
     IUnitOfWork unitOfWork) : IImageAssetCleanupService {
     public async Task<DeleteImageAssetResult> DeleteIfUnusedAsync(ImageAssetId assetId, CancellationToken cancellationToken = default) {
         if (assetId == ImageAssetId.Empty) {
@@ -28,18 +28,8 @@ public sealed class ImageAssetCleanupService(
         }
 
         await imageAssetRepository.DeleteAsync(asset, cancellationToken).ConfigureAwait(false);
-        EnqueueStorageDelete(asset.ObjectKey);
+        await imageObjectDeletionOutbox.EnqueueAsync(asset.ObjectKey, cancellationToken).ConfigureAwait(false);
         return new DeleteImageAssetResult(Deleted: true);
-    }
-
-    private void EnqueueStorageDelete(string objectKey) {
-        postCommitActionQueue.Enqueue(async cancellationToken => {
-            try {
-                await imageStorageService.DeleteAsync(objectKey, cancellationToken).ConfigureAwait(false);
-            } catch (Exception ex) {
-                logger.LogError(ex, "Failed to delete image object {ObjectKey}", objectKey);
-            }
-        });
     }
 
     public async Task<int> CleanupOrphansAsync(DateTime olderThanUtc, int batchSize, CancellationToken cancellationToken = default) {

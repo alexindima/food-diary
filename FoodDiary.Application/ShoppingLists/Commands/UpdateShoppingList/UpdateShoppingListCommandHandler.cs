@@ -1,12 +1,11 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Shopping;
 
@@ -15,7 +14,7 @@ namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 public class UpdateShoppingListCommandHandler(
     IShoppingListRepository shoppingListRepository,
     IProductLookupService productLookupService,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
         UpdateShoppingListCommand command,
@@ -74,7 +73,7 @@ public class UpdateShoppingListCommandHandler(
             return userResult;
         }
 
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userResult.Value, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userResult.Value, cancellationToken).ConfigureAwait(false);
         return accessError is null
             ? userResult
             : Result.Failure<UserId>(accessError);

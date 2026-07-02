@@ -1,6 +1,7 @@
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Hydration.Common;
@@ -10,8 +11,11 @@ using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Fasting.Mappings;
+using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Users.Models;
+using FoodDiary.Application.WaistEntries.Models;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
@@ -45,9 +49,10 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
                 userRepository,
                 fastingOccurrenceRepository,
                 exerciseEntryRepository,
-                new MediatorDashboardStatisticsReadService(sender),
-                new RepositoryDashboardBodyReadService(weightEntryRepository, waistEntryRepository, hydrationEntryRepository),
-                new MediatorDashboardMealsReadService(sender)),
+                new ComposedDashboardReadService(
+                    new MediatorDashboardStatisticsReadService(sender),
+                    new RepositoryDashboardBodyReadService(weightEntryRepository, waistEntryRepository, hydrationEntryRepository),
+                    new MediatorDashboardMealsReadService(sender))),
             logger) {
     }
 
@@ -60,17 +65,12 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         }
 
         DashboardBuildContext context = contextResult.Value;
-        Result<DashboardStatisticsSection> statisticsResult = await _dataLoader.LoadStatisticsAsync(request, context, cancellationToken).ConfigureAwait(false);
-        if (statisticsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotModel>(statisticsResult.Error);
+        Result<DashboardReadModel> readResult = await _dataLoader.LoadDashboardDataAsync(context, cancellationToken).ConfigureAwait(false);
+        if (readResult.IsFailure) {
+            return Result.Failure<DashboardSnapshotModel>(readResult.Error);
         }
 
-        Result<DashboardMealsModel> mealsResult = await _dataLoader.LoadMealsAsync(request, context, cancellationToken).ConfigureAwait(false);
-        if (mealsResult.IsFailure) {
-            return Result.Failure<DashboardSnapshotModel>(mealsResult.Error);
-        }
-
-        DashboardBodySection body = await _dataLoader.LoadBodyAsync(context, cancellationToken).ConfigureAwait(false);
+        DashboardReadModel readModel = readResult.Value;
         Result<DailyAdviceModel>? adviceResult = await _dataLoader.LoadAdviceAsync(context, cancellationToken).ConfigureAwait(false);
         FastingOccurrence? fastingSession = await _dataLoader.LoadFastingAsync(context, cancellationToken).ConfigureAwait(false);
         DashboardLayoutModel? layout = context.Sections.IncludeLayout
@@ -85,20 +85,62 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
             context.DayEndStart,
             context.CurrentUser.GetCalorieTargetForDate(request.Date) ?? 0,
             context.CurrentUser.GetWeeklyCalorieTarget(),
-            statisticsResult.Value.Statistics,
-            statisticsResult.Value.WeeklyCalories,
-            body.Weight,
-            body.Waist,
-            mealsResult.Value,
-            body.Hydration,
+            BuildStatistics(readModel.Statistics, context),
+            DashboardMapping.ToWeeklyCalories(readModel.WeeklyStatistics),
+            BuildWeight(readModel.Body, context),
+            BuildWaist(readModel.Body, context),
+            DashboardMapping.ToMealsModel(readModel.Meals),
+            BuildHydration(readModel.Body, context),
             adviceResult?.IsSuccess == true ? adviceResult.Value : null,
             fastingSession?.ToModel(),
-            body.WeightTrend,
-            body.WaistTrend,
+            BuildWeightTrend(readModel.Body, context),
+            BuildWaistTrend(readModel.Body, context),
             layout,
             Math.Round(caloriesBurned, 1, MidpointRounding.ToEven),
             tdeeInsightResult?.IsSuccess == true ? tdeeInsightResult.Value : null,
             currentCycleResult?.IsSuccess == true ? currentCycleResult.Value : null));
+    }
+
+    private static DashboardStatisticsModel BuildStatistics(DashboardReadModel readModel, DashboardBuildContext context) =>
+        BuildStatistics(readModel.Statistics, context);
+
+    private static DashboardStatisticsModel BuildStatistics(
+        IReadOnlyList<DashboardStatisticsBucketReadModel> statistics,
+        DashboardBuildContext context) {
+        if (!context.Sections.IncludeStatistics) {
+            return new DashboardStatisticsModel(0, 0, 0, 0, 0, ProteinGoal: null, FatGoal: null, CarbGoal: null, FiberGoal: null);
+        }
+
+        DashboardStatisticsBucketReadModel? first = statistics.Count > 0 ? statistics[0] : null;
+        return DashboardMapping.ToStatisticsModel(first, context.CurrentUser);
+    }
+
+    private static DashboardWeightModel BuildWeight(DashboardBodyReadModel body, DashboardBuildContext context) =>
+        context.Sections.IncludeWeight
+            ? DashboardMapping.ToWeightModel(body.LatestWeightEntries, context.CurrentUser.DesiredWeight)
+            : new DashboardWeightModel(Latest: null, Previous: null, Desired: null);
+
+    private static DashboardWaistModel BuildWaist(DashboardBodyReadModel body, DashboardBuildContext context) =>
+        context.Sections.IncludeWaist
+            ? DashboardMapping.ToWaistModel(body.LatestWaistEntries, context.CurrentUser.DesiredWaist)
+            : new DashboardWaistModel(Latest: null, Previous: null, Desired: null);
+
+    private static IReadOnlyList<WeightEntrySummaryModel> BuildWeightTrend(DashboardBodyReadModel body, DashboardBuildContext context) =>
+        context.Sections.IncludeWeight ? DashboardMapping.ToWeightTrend(body.WeightTrend) : [];
+
+    private static IReadOnlyList<WaistEntrySummaryModel> BuildWaistTrend(DashboardBodyReadModel body, DashboardBuildContext context) =>
+        context.Sections.IncludeWaist ? DashboardMapping.ToWaistTrend(body.WaistTrend) : [];
+
+    private static HydrationDailyModel? BuildHydration(DashboardBodyReadModel body, DashboardBuildContext context) {
+        if (!context.Sections.IncludeHydration) {
+            return null;
+        }
+
+        double? dailyGoal = context.CurrentUser.HydrationGoal ?? context.CurrentUser.WaterGoal;
+        return new HydrationDailyModel(
+            context.DayStart,
+            body.HydrationTotalMl,
+            dailyGoal is null ? null : dailyGoal * context.PeriodDays);
     }
 
     private DashboardLayoutModel? ParseDashboardLayout(string? json, UserId userId) {

@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,7 +14,7 @@ namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 
 public class CreateRecipeCommentCommandHandler(
     IRecipeCommentRepository commentRepository,
-    IRecipeRepository recipeRepository,
+    IRecipeAccessService recipeAccessService,
     INotificationWriter notificationWriter)
     : ICommandHandler<CreateRecipeCommentCommand, Result<RecipeCommentModel>> {
     public async Task<Result<RecipeCommentModel>> Handle(
@@ -26,7 +26,7 @@ public class CreateRecipeCommentCommandHandler(
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        Recipe? recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {

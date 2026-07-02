@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Cycles.Commands.CreateCycle;
 using FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 using FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
@@ -64,7 +64,7 @@ public class CyclesFeatureTests {
     public async Task UpsertCycleDayCommandHandler_WithEmptyCycleId_ReturnsValidationFailure() {
         var handler = new UpsertCycleDayCommandHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-empty@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-empty@example.com", "hash")));
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -84,7 +84,7 @@ public class CyclesFeatureTests {
     public async Task CreateCycleCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-cycle@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var handler = new CreateCycleCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new CreateCycleCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(CreateCommand(user.Id.Value), CancellationToken.None);
 
@@ -96,7 +96,7 @@ public class CyclesFeatureTests {
     public async Task CreateCycleCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new CreateCycleCommandHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-create-empty-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-create-empty-user@example.com", "hash")));
 
         Result<CycleModel> result = await handler.Handle(CreateCommand(Guid.Empty), CancellationToken.None);
 
@@ -112,7 +112,7 @@ public class CyclesFeatureTests {
             new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc),
             notes: "old");
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new CreateCycleCommandHandler(repository, CreateUserRepository(user));
+        var handler = new CreateCycleCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new CreateCycleCommand(
@@ -141,7 +141,7 @@ public class CyclesFeatureTests {
     public async Task GetCurrentCycleQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-current-deleted@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var handler = new GetCurrentCycleQueryHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new GetCurrentCycleQueryHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
 
@@ -153,7 +153,7 @@ public class CyclesFeatureTests {
     public async Task GetCurrentCycleQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetCurrentCycleQueryHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-current-empty@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-current-empty@example.com", "hash")));
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(Guid.Empty), CancellationToken.None);
 
@@ -165,7 +165,7 @@ public class CyclesFeatureTests {
     public async Task UpsertCycleDayCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpsertCycleDayCommandHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-day-empty-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-day-empty-user@example.com", "hash")));
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -187,7 +187,7 @@ public class CyclesFeatureTests {
         user.MarkDeleted(DateTime.UtcNow);
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new UpsertCycleDayCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -207,7 +207,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleDayCommandHandler_WhenProfileMissing_ReturnsNotFound() {
         var user = User.Create("cycle-day-missing@example.com", "hash");
-        var handler = new UpsertCycleDayCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new UpsertCycleDayCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -228,7 +228,7 @@ public class CyclesFeatureTests {
         var user = User.Create("cycle-day-success@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new UpsertCycleDayCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
         DateTime date = new(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc);
 
         Result<CycleLogDayModel> result = await handler.Handle(
@@ -254,7 +254,7 @@ public class CyclesFeatureTests {
         DateTime date = new(2026, 4, 3, 0, 0, 0, DateTimeKind.Utc);
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new UpsertCycleDayCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpsertCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<CycleLogDayModel> result = await handler.Handle(
             new UpsertCycleDayCommand(
@@ -292,7 +292,7 @@ public class CyclesFeatureTests {
         profile.UpsertSymptomEntry(date, CycleSymptomCategory.Craving, 7, ["sweet"], note: null);
         profile.UpsertFertilitySignal(date, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new ClearCycleDayCommandHandler(repository, CreateUserRepository(user));
+        var handler = new ClearCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, date),
@@ -309,7 +309,7 @@ public class CyclesFeatureTests {
     public async Task ClearCycleDayCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new ClearCycleDayCommandHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-clear-empty-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-clear-empty-user@example.com", "hash")));
 
         Result result = await handler.Handle(
             new ClearCycleDayCommand(Guid.Empty, Guid.NewGuid(), DateTime.UtcNow),
@@ -322,7 +322,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task ClearCycleDayCommandHandler_WithEmptyProfileId_ReturnsValidationFailure() {
         var user = User.Create("cycle-clear-empty-profile@example.com", "hash");
-        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new ClearCycleDayCommand(user.Id.Value, Guid.Empty, DateTime.UtcNow),
@@ -338,7 +338,7 @@ public class CyclesFeatureTests {
         user.MarkDeleted(DateTime.UtcNow);
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new ClearCycleDayCommandHandler(repository, CreateUserRepository(user));
+        var handler = new ClearCycleDayCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new ClearCycleDayCommand(user.Id.Value, profile.Id.Value, DateTime.UtcNow),
@@ -352,7 +352,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task ClearCycleDayCommandHandler_WhenProfileMissing_ReturnsNotFound() {
         var user = User.Create("cycle-clear-missing-profile@example.com", "hash");
-        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new ClearCycleDayCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new ClearCycleDayCommand(user.Id.Value, Guid.NewGuid(), DateTime.UtcNow),
@@ -366,7 +366,7 @@ public class CyclesFeatureTests {
     public async Task UpsertCycleFactorCommandHandler_WithInvalidType_ReturnsValidationFailure() {
         var user = User.Create("cycle-factor-invalid@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
-        var handler = new UpsertCycleFactorCommandHandler(new InMemoryCycleRepository(profile), CreateUserRepository(user));
+        var handler = new UpsertCycleFactorCommandHandler(new InMemoryCycleRepository(profile), CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -387,7 +387,7 @@ public class CyclesFeatureTests {
     public async Task UpsertCycleFactorCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new UpsertCycleFactorCommandHandler(
             new NoopCycleRepository(),
-            CreateUserRepository(User.Create("cycle-factor-empty-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-factor-empty-user@example.com", "hash")));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -407,7 +407,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleFactorCommandHandler_WithEmptyProfileId_ReturnsValidationFailure() {
         var user = User.Create("cycle-factor-empty-profile@example.com", "hash");
-        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -430,7 +430,7 @@ public class CyclesFeatureTests {
         user.MarkDeleted(DateTime.UtcNow);
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new UpsertCycleFactorCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpsertCycleFactorCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -451,7 +451,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task UpsertCycleFactorCommandHandler_WhenProfileMissing_ReturnsNotFound() {
         var user = User.Create("cycle-factor-missing-profile@example.com", "hash");
-        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), CreateUserRepository(user));
+        var handler = new UpsertCycleFactorCommandHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -473,7 +473,7 @@ public class CyclesFeatureTests {
         var user = User.Create("cycle-factor-success@example.com", "hash");
         var profile = CycleProfile.Create(user.Id, new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc));
         var repository = new InMemoryCycleRepository(profile);
-        var handler = new UpsertCycleFactorCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpsertCycleFactorCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<CycleModel> result = await handler.Handle(
             new UpsertCycleFactorCommand(
@@ -504,7 +504,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new InMemoryCycleRepository(profile),
             CreateMealRepository([bleedingMeal, nonBleedingMeal]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
@@ -540,7 +540,7 @@ public class CyclesFeatureTests {
                 CreateMeal(user.Id, startDate.AddDays(2), calories: 1800, fiber: 28),
                 CreateMeal(user.Id, startDate.AddDays(3), calories: 1900, fiber: 26),
             ]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(4)),
@@ -557,7 +557,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new NoopCycleRepository(),
             CreateMealRepository([]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
@@ -572,7 +572,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new NoopCycleRepository(),
             CreateMealRepository([]),
-            CreateUserRepository(User.Create("cycle-nutrition-empty-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("cycle-nutrition-empty-user@example.com", "hash")));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(Guid.Empty, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
@@ -588,7 +588,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new NoopCycleRepository(),
             CreateMealRepository([]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow, DateTime.UtcNow.AddDays(-1)),
@@ -606,7 +606,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new NoopCycleRepository(),
             CreateMealRepository([]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, from, from.AddDays(367)),
@@ -624,7 +624,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new NoopCycleRepository(),
             CreateMealRepository([]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow),
@@ -643,7 +643,7 @@ public class CyclesFeatureTests {
         var handler = new GetCycleNutritionSummaryQueryHandler(
             new InMemoryCycleRepository(profile),
             CreateMealRepository([CreateMeal(user.Id, startDate.AddDays(1), calories: 1900, fiber: 22)]),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<CycleNutritionSummaryModel?> result = await handler.Handle(
             new GetCycleNutritionSummaryQuery(user.Id.Value, startDate, startDate.AddDays(2)),
@@ -860,41 +860,21 @@ public class CyclesFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByEmailAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(user));
-        repository
-            .GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(user));
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                UserId id = call.ArgAt<UserId>(0);
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
+                UserId userId = call.Arg<UserId>();
+                Error? error = user switch {
+                    null => Errors.Authentication.InvalidToken,
+                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    _ => null,
+                };
+                return Task.FromResult(error);
             });
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId id = call.ArgAt<UserId>(0);
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
-            });
-        repository
-            .GetPagedAsync(Arg.Any<string?>(), Arg.Any<int>(), Arg.Any<int>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult(((IReadOnlyList<User>)(user is null ? [] : [user]), user is null ? 0 : 1)));
-        repository
-            .GetAdminDashboardSummaryAsync(Arg.Any<int>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult((user is null ? 0 : 1, user is { IsActive: true } ? 1 : 0, 0, user?.DeletedAt is null ? 0 : 1, (IReadOnlyList<User>)(user is null ? [] : [user]))));
-        repository
-            .GetRolesByNamesAsync(Arg.Any<IReadOnlyList<string>>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<Role>>([]));
-        repository
-            .AddAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
-            .Returns(call => Task.FromResult(call.ArgAt<User>(0)));
-        repository
-            .UpdateAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
-            .Returns(Task.CompletedTask);
-        return repository;
+
+        return service;
     }
 }

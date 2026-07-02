@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.RecipeLikes.Models;
 using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,7 +12,7 @@ namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public class ToggleRecipeLikeCommandHandler(
     IRecipeLikeRepository likeRepository,
-    IRecipeRepository recipeRepository)
+    IRecipeAccessService recipeAccessService)
     : ICommandHandler<ToggleRecipeLikeCommand, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         ToggleRecipeLikeCommand command,
@@ -23,7 +23,7 @@ public class ToggleRecipeLikeCommandHandler(
         }
 
         var recipeId = (RecipeId)command.RecipeId;
-        Recipe? recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeAccessService.GetAccessibleByIdAsync(
             recipeId, userIdResult.Value, includePublic: true, cancellationToken: cancellationToken).ConfigureAwait(false);
 
         if (recipe is null) {

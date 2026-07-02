@@ -156,9 +156,9 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_CleanupOrphans_WithNonPositiveBatch_ReturnsZero() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(DateTime.UtcNow, 0, CancellationToken.None);
@@ -176,9 +176,9 @@ public class ImagesFeatureTests {
         repository.InUseIds.Add(inUse.Id);
         var service = new ImageAssetCleanupService(
             repository,
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
@@ -196,9 +196,9 @@ public class ImagesFeatureTests {
         var repository = new FakeImageAssetRepository();
         var service = new ImageAssetCleanupService(
             repository,
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
         var localCutoff = new DateTime(2026, 5, 20, 12, 30, 0, DateTimeKind.Local);
 
@@ -218,9 +218,9 @@ public class ImagesFeatureTests {
 
         var service = new ImageAssetCleanupService(
             repo,
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -233,9 +233,9 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_DeleteIfUnused_WithEmptyAssetId_ReturnsInvalid() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.Empty, CancellationToken.None);
@@ -248,9 +248,9 @@ public class ImagesFeatureTests {
     public async Task ImageAssetCleanupService_DeleteIfUnused_WhenAssetMissing_ReturnsNotFound() {
         var service = new ImageAssetCleanupService(
             new FakeImageAssetRepository(),
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(ImageAssetId.New(), CancellationToken.None);
@@ -260,16 +260,17 @@ public class ImagesFeatureTests {
     }
 
     [Fact]
-    public async Task ImageAssetCleanupService_WhenPostCommitStorageDeleteFails_StillDeletesRepositoryAsset() {
+    public async Task ImageAssetCleanupService_DeleteIfUnused_WhenDeleted_EnqueuesObjectDeletion() {
         var repo = new FakeImageAssetRepository();
-        var asset = ImageAsset.Create(UserId.New(), "images/fail.jpg", "https://cdn/fail.jpg");
+        var outbox = new FakeImageObjectDeletionOutbox();
+        var asset = ImageAsset.Create(UserId.New(), "images/removable.jpg", "https://cdn/removable.jpg");
         await repo.AddAsync(asset, CancellationToken.None);
 
         var service = new ImageAssetCleanupService(
             repo,
-            CreateThrowingImageStorageService(),
+            outbox,
+            CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -278,6 +279,7 @@ public class ImagesFeatureTests {
         Assert.True(result.Deleted);
         Assert.Null(result.ErrorCode);
         Assert.Null(storedAsset);
+        Assert.Equal(["images/removable.jpg"], outbox.ObjectKeys);
     }
 
     [Fact]
@@ -288,9 +290,9 @@ public class ImagesFeatureTests {
         IUnitOfWork unitOfWork = CreateUnitOfWork();
         var service = new ImageAssetCleanupService(
             repo,
+            new FakeImageObjectDeletionOutbox(),
             CreateImageStorageService(),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             unitOfWork);
 
         DeleteImageAssetResult result = await service.DeleteIfUnusedAsync(asset.Id, CancellationToken.None);
@@ -309,9 +311,9 @@ public class ImagesFeatureTests {
         await repo.AddAsync(removable, CancellationToken.None);
         var service = new ImageAssetCleanupService(
             repo,
+            new FakeImageObjectDeletionOutbox(),
             CreateSelectivelyThrowingImageStorageService("images/fail.jpg"),
             NullLogger<ImageAssetCleanupService>.Instance,
-            new ImmediatePostCommitActionQueue(),
             CreateUnitOfWork());
 
         int removed = await service.CleanupOrphansAsync(
@@ -452,14 +454,13 @@ public class ImagesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class ImmediatePostCommitActionQueue : IPostCommitActionQueue {
-        public bool HasActions => false;
+    private sealed class FakeImageObjectDeletionOutbox : IImageObjectDeletionOutbox {
+        public List<string> ObjectKeys { get; } = [];
 
-        public void Enqueue(Func<CancellationToken, Task> action) {
-            action(CancellationToken.None).GetAwaiter().GetResult();
+        public Task EnqueueAsync(string objectKey, CancellationToken cancellationToken = default) {
+            ObjectKeys.Add(objectKey);
+            return Task.CompletedTask;
         }
-
-        public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
     }
 
     [ExcludeFromCodeCoverage]

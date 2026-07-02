@@ -1,7 +1,6 @@
 using FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 using FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 using FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
@@ -11,6 +10,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.WeightEntries.Models;
 
 namespace FoodDiary.Application.Tests.WeightEntries;
@@ -50,7 +50,7 @@ public class WeightEntriesFeatureTests {
     [Fact]
     public async Task CreateWeightEntryCommandHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var repository = new InMemoryWeightEntryRepository();
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new CreateWeightEntryCommand(Guid.Empty, DateTime.UtcNow, 82),
@@ -64,7 +64,7 @@ public class WeightEntriesFeatureTests {
     public async Task CreateWeightEntryCommandHandler_NormalizesDateToUtcForDuplicateLookup() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight@example.com", "hash");
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
         UserId userId = user.Id;
         var localDate = new DateTime(2026, 2, 23, 23, 30, 0, DateTimeKind.Local);
         DateTime expectedDate = NormalizeUtcDate(localDate);
@@ -82,7 +82,7 @@ public class WeightEntriesFeatureTests {
     public async Task CreateWeightEntryCommandHandler_WithDateOnlyValue_PreservesRequestedCalendarDate() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-dateonly@example.com", "hash");
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
@@ -99,7 +99,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         var query = new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 7);
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -112,7 +112,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("weight-summary-missing-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("weight-summary-missing-user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
             new GetWeightSummariesQuery(UserId: null, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 7),
@@ -126,7 +126,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithNonPositiveQuantization_ReturnsValidationError() {
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("weight-summary-invalid-step@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("weight-summary-invalid-step@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
             new GetWeightSummariesQuery(Guid.NewGuid(), DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 0),
@@ -140,7 +140,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightSummariesQueryHandler_WithDateOnlyValues_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-summary@example.com", "hash");
-        var handler = new GetWeightSummariesQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetWeightSummariesQueryHandler(repository, CreateCurrentUserAccessService(user));
         var from = new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Unspecified);
 
@@ -159,7 +159,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("weight-summary-average@example.com", "hash");
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 20, 0, 0, 0, DateTimeKind.Utc), 80.23));
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc), 81.78));
-        var handler = new GetWeightSummariesQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetWeightSummariesQueryHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
             new GetWeightSummariesQuery(
@@ -182,7 +182,7 @@ public class WeightEntriesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetWeightSummariesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntrySummaryModel>> result = await handler.Handle(
             new GetWeightSummariesQuery(user.Id.Value, DateTime.UtcNow.AddDays(-7), DateTime.UtcNow, 1),
@@ -196,7 +196,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightEntriesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWeightEntriesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
             new GetWeightEntriesQuery(Guid.Empty, DateFrom: null, DateTo: null, 10, Descending: true),
@@ -210,7 +210,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetWeightEntriesQueryHandler_WithDateOnlyRange_PreservesRequestedCalendarDates() {
         var repository = new InMemoryWeightEntryRepository();
         var user = User.Create("weight-list-dateonly@example.com", "hash");
-        var handler = new GetWeightEntriesQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetWeightEntriesQueryHandler(repository, CreateCurrentUserAccessService(user));
         var from = new DateTime(2026, 5, 1, 0, 0, 0, DateTimeKind.Unspecified);
         var to = new DateTime(2026, 5, 31, 0, 0, 0, DateTimeKind.Unspecified);
 
@@ -236,7 +236,7 @@ public class WeightEntriesFeatureTests {
             new DateTime(2026, 5, 21, 0, 0, 0, DateTimeKind.Utc),
             81));
         await repository.AddAsync(WeightEntry.Create(UserId.New(), newer.Date.AddDays(1), 79));
-        var handler = new GetWeightEntriesQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetWeightEntriesQueryHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
             new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
@@ -259,7 +259,7 @@ public class WeightEntriesFeatureTests {
     public async Task DeleteWeightEntryCommandHandler_WithEmptyWeightEntryId_ReturnsValidationFailure() {
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result result = await handler.Handle(
             new DeleteWeightEntryCommand(Guid.NewGuid(), Guid.Empty),
@@ -274,7 +274,7 @@ public class WeightEntriesFeatureTests {
     public async Task DeleteWeightEntryCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("delete-weight-missing-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("delete-weight-missing-user@example.com", "hash")));
 
         Result result = await handler.Handle(
             new DeleteWeightEntryCommand(UserId: null, WeightEntryId.New().Value),
@@ -290,7 +290,7 @@ public class WeightEntriesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new DeleteWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value),
@@ -305,7 +305,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("delete-weight-missing-entry@example.com", "hash");
         var handler = new DeleteWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new DeleteWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value),
@@ -320,7 +320,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("delete-weight-success@example.com", "hash");
         var repository = new InMemoryWeightEntryRepository();
         WeightEntry entry = await repository.AddAsync(WeightEntry.Create(user.Id, DateTime.UtcNow.Date, 82));
-        var handler = new DeleteWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new DeleteWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result result = await handler.Handle(
             new DeleteWeightEntryCommand(user.Id.Value, entry.Id.Value),
@@ -336,7 +336,7 @@ public class WeightEntriesFeatureTests {
         var entry = WeightEntry.Create(user.Id, new DateTime(2026, 5, 26, 0, 0, 0, DateTimeKind.Utc), 82);
         var repository = new InMemoryWeightEntryRepository();
         await repository.AddAsync(entry);
-        var handler = new UpdateWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpdateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
         var dateOnly = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Unspecified);
         var expectedDate = new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc);
 
@@ -353,7 +353,7 @@ public class WeightEntriesFeatureTests {
     public async Task UpdateWeightEntryCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new UpdateWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("weight-update-missing-user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("weight-update-missing-user@example.com", "hash")));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new UpdateWeightEntryCommand(UserId: null, WeightEntryId.New().Value, DateTime.UtcNow, 82),
@@ -369,7 +369,7 @@ public class WeightEntriesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new UpdateWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
@@ -384,7 +384,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("weight-update-missing-entry@example.com", "hash");
         var handler = new UpdateWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new UpdateWeightEntryCommand(user.Id.Value, WeightEntryId.New().Value, DateTime.UtcNow, 82),
@@ -406,7 +406,7 @@ public class WeightEntriesFeatureTests {
             user.Id,
             new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc),
             81));
-        var handler = new UpdateWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new UpdateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new UpdateWeightEntryCommand(user.Id.Value, entry.Id.Value, duplicate.Date, 80),
@@ -420,7 +420,7 @@ public class WeightEntriesFeatureTests {
     public async Task UpdateWeightEntryCommandHandler_WithEmptyWeightEntryId_ReturnsValidationFailure() {
         var handler = new UpdateWeightEntryCommandHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("user@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new UpdateWeightEntryCommand(Guid.NewGuid(), Guid.Empty, DateTime.UtcNow, 82),
@@ -437,7 +437,7 @@ public class WeightEntriesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetWeightEntriesQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<WeightEntryModel>> result = await handler.Handle(
             new GetWeightEntriesQuery(user.Id.Value, DateFrom: null, DateTo: null, 10, Descending: true),
@@ -452,7 +452,7 @@ public class WeightEntriesFeatureTests {
         var user = User.Create("deleted-create-weight@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var repository = new InMemoryWeightEntryRepository();
-        var handler = new CreateWeightEntryCommandHandler(repository, CreateUserRepository(user));
+        var handler = new CreateWeightEntryCommandHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel> result = await handler.Handle(
             new CreateWeightEntryCommand(user.Id.Value, DateTime.UtcNow, 82),
@@ -467,7 +467,7 @@ public class WeightEntriesFeatureTests {
     public async Task GetLatestWeightEntryQueryHandler_WithInvalidUserId_ReturnsInvalidToken() {
         var handler = new GetLatestWeightEntryQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(User.Create("latest-weight@example.com", "hash")));
+            CreateCurrentUserAccessService(User.Create("latest-weight@example.com", "hash")));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(Guid.Empty), CancellationToken.None);
 
@@ -481,7 +481,7 @@ public class WeightEntriesFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetLatestWeightEntryQueryHandler(
             new InMemoryWeightEntryRepository(),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
 
@@ -496,7 +496,7 @@ public class WeightEntriesFeatureTests {
         await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 25, 0, 0, 0, DateTimeKind.Utc), 82));
         WeightEntry latest = await repository.AddAsync(WeightEntry.Create(user.Id, new DateTime(2026, 5, 27, 0, 0, 0, DateTimeKind.Utc), 81));
         await repository.AddAsync(WeightEntry.Create(UserId.New(), new DateTime(2026, 5, 28, 0, 0, 0, DateTimeKind.Utc), 79));
-        var handler = new GetLatestWeightEntryQueryHandler(repository, CreateUserRepository(user));
+        var handler = new GetLatestWeightEntryQueryHandler(repository, CreateCurrentUserAccessService(user));
 
         Result<WeightEntryModel?> result = await handler.Handle(new GetLatestWeightEntryQuery(user.Id.Value), CancellationToken.None);
 
@@ -595,20 +595,15 @@ public class WeightEntriesFeatureTests {
         }
     }
 
-    private static IUserRepository CreateUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        Error? error = user.DeletedAt is null ? null : Errors.Authentication.AccountDeleted;
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
+                return Task.FromResult(user.Id == id ? error : Errors.Authentication.InvalidToken);
             });
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
-            });
-        return repository;
+        return service;
     }
 }
