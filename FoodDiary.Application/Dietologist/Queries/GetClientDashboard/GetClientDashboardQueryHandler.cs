@@ -1,11 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -14,7 +13,7 @@ namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 public class GetClientDashboardQueryHandler(
     IDietologistInvitationRepository invitationRepository,
     IDashboardSnapshotBuilder snapshotBuilder,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetClientDashboardQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(
         GetClientDashboardQuery query, CancellationToken cancellationToken) {
@@ -23,8 +22,7 @@ public class GetClientDashboardQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
-        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Error? currentUserAccessError = await currentUserAccessService.EnsureCanAccessAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
         if (currentUserAccessError is not null) {
             return Result.Failure<DashboardSnapshotModel>(currentUserAccessError);
         }

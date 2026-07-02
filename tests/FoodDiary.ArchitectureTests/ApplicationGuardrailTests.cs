@@ -239,6 +239,32 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedDietologistAccessOnlyHandlers_DoNotUseFullUserRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "DisconnectDietologist", "DisconnectDietologistCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "MarkRecommendationRead", "MarkRecommendationReadCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "RevokeInvitation", "RevokeInvitationCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "UpdateDietologistPermissions", "UpdateDietologistPermissionsCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientDashboard", "GetClientDashboardQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologist", "GetMyDietologistQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
+        ];
+
+        string[] violations = [.. migratedFiles
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => entry.line.Contains("IUserRepository", StringComparison.Ordinal))
+                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void InfrastructurePersistenceRoot_StayLimitedToSharedEfInfrastructureFiles() {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");

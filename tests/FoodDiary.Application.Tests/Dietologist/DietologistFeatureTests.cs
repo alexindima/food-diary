@@ -37,6 +37,7 @@ using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Dietologist;
@@ -2342,7 +2343,7 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository {
+    private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService {
         private readonly List<User> _users = [];
         private readonly List<Role> _roles = [];
 
@@ -2356,6 +2357,17 @@ public class DietologistFeatureTests {
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
             Task.FromResult(_users.FirstOrDefault(u => u.Id == id));
+
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            User? user = _users.FirstOrDefault(u => u.Id == userId);
+            Error? error = user switch {
+                null => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error);
+        }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
             Task.FromResult(_users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)));

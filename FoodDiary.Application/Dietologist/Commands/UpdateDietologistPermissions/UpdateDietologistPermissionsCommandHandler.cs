@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Mappings;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermission
 
 public class UpdateDietologistPermissionsCommandHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateDietologistPermissionsCommand, Result> {
     public async Task<Result> Handle(UpdateDietologistPermissionsCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -20,7 +19,7 @@ public class UpdateDietologistPermissionsCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure(accessError);
         }

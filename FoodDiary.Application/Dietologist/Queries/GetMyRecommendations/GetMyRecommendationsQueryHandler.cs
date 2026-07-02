@@ -1,9 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Domain.Entities.Dietologist;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 
 public class GetMyRecommendationsQueryHandler(
     IRecommendationRepository recommendationRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMyRecommendationsQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(
         GetMyRecommendationsQuery query, CancellationToken cancellationToken) {
@@ -21,7 +20,7 @@ public class GetMyRecommendationsQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessError);
         }
