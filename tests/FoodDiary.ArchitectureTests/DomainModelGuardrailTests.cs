@@ -8,6 +8,47 @@ public class DomainModelGuardrailTests {
     private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
 
     [Fact]
+    public void DomainSourceFiles_DoNotReferenceInfrastructurePersistenceOrTransportConcerns() {
+        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+        string[] forbiddenPatterns = [
+            "Microsoft.EntityFrameworkCore",
+            "Microsoft.AspNetCore",
+            "System.Net.Http",
+            "IConfiguration",
+            "IOptions<",
+            "HttpContext",
+            "IActionResult",
+            "ControllerBase",
+            "DbContext",
+            "DbSet<",
+            "Npgsql",
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DomainSourceFiles_DoNotReferenceApplicationOrAdapterNamespaces() {
+        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+        string[] forbiddenPatterns = [
+            "FoodDiary.Application",
+            "FoodDiary.Infrastructure",
+            "FoodDiary.Integrations",
+            "FoodDiary.Presentation.Api",
+            "FoodDiary.Web.Api",
+            "FoodDiary.Resources",
+            "FoodDiary.MailInbox",
+            "FoodDiary.MailRelay",
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
         string[] violations = [.. typeof(AggregateRoot<>).Assembly
             .GetTypes()
