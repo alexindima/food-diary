@@ -336,6 +336,32 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void UserProfileFeatureSlices_UseUserRepositoryOnlyThroughDedicatedProfileServices() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        (string Slice, string AllowedRelativePath)[] slices = [
+            ("Ai", Path.Combine("Services", "AiUserContextService.cs")),
+            ("Dashboard", Path.Combine("Services", "DashboardUserContextService.cs")),
+            ("Gamification", Path.Combine("Services", "GamificationUserProfileService.cs")),
+            ("Hydration", Path.Combine("Services", "HydrationGoalService.cs")),
+            ("Tdee", Path.Combine("Services", "TdeeUserProfileService.cs")),
+            ("WeeklyCheckIn", Path.Combine("Services", "WeeklyCheckInUserProfileService.cs")),
+        ];
+
+        string[] violations = [.. slices.SelectMany(slice => {
+            string sliceRoot = Path.Combine(applicationRoot, slice.Slice);
+            string allowedPath = Path.Combine(sliceRoot, slice.AllowedRelativePath);
+            string[] files = [.. SourceScanner.SourceFiles(sliceRoot)
+                .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
+
+            return FindReferencesInFiles(root, files, "IUserRepository")
+                .Concat(FindReferencesInFiles(root, files, "CurrentUserAccessPolicy"));
+        })];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MigratedUserHandlers_DoNotUseFullUserRepositoryOrAccessPolicy() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
