@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
@@ -11,17 +10,16 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 
-public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepository)
+public sealed class UpdateUserAppearanceCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateUserAppearanceCommand, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(UpdateUserAppearanceCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<UserModel>(Errors.Authentication.InvalidToken);
         }
 
-        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<UserModel>(accessError);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(new UserId(command.UserId.Value), cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<UserModel>(userResult.Error);
         }
 
         Result<string?> themeResult = StringCodeParser.ParseOptionalTheme(
@@ -40,11 +38,12 @@ public sealed class UpdateUserAppearanceCommandHandler(IUserRepository userRepos
             return Result.Failure<UserModel>(uiStyleResult.Error);
         }
 
-        user!.UpdatePreferences(new UserPreferenceUpdate(
+        User user = userResult.Value;
+        user.UpdatePreferences(new UserPreferenceUpdate(
             Theme: themeResult.Value,
             UiStyle: uiStyleResult.Value));
 
-        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(user, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(user.ToModel());
     }

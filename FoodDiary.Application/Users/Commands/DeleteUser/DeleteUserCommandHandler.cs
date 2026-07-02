@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -9,7 +8,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
 public class DeleteUserCommandHandler(
-    IUserRepository userRepository,
+    IUserContextService userContextService,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)
     : ICommandHandler<DeleteUserCommand, Result> {
@@ -19,16 +18,15 @@ public class DeleteUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
-        User currentUser = user!;
+        User currentUser = userResult.Value;
 
         currentUser.DeleteAccount(dateTimeProvider.GetUtcNow().UtcDateTime);
-        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         auditLogger.Log("user.delete", userId, "User", userId.Value.ToString());
 

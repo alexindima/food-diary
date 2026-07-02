@@ -295,10 +295,20 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void MigratedUserQueryHandlers_DoNotUseFullUserRepository() {
+    public void MigratedUserHandlers_DoNotUseFullUserRepositoryOrAccessPolicy() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Users", "Commands", "AcceptAiConsent", "AcceptAiConsentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "ChangePassword", "ChangePasswordCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "DeleteUser", "DeleteUserCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "RevokeAiConsent", "RevokeAiConsentCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "SetPassword", "SetPasswordCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWaist", "UpdateDesiredWaistCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateDesiredWeight", "UpdateDesiredWeightCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateGoals", "UpdateGoalsCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUser", "UpdateUserCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Commands", "UpdateUserAppearance", "UpdateUserAppearanceCommandHandler.cs"),
             Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
             Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
             Path.Combine(applicationRoot, "Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
@@ -306,7 +316,10 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
         ];
 
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+        string[] violations = [
+            .. FindReferencesInFiles(root, migratedFiles, "IUserRepository"),
+            .. FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy"),
+        ];
 
         Assert.Empty(violations);
     }

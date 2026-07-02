@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Common;
@@ -16,7 +15,7 @@ using FoodDiary.Domain.Entities.Assets;
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
 public class UpdateUserCommandHandler(
-    IUserRepository userRepository,
+    IUserContextService userContextService,
     IImageAssetCleanupService imageAssetCleanupService,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateUserCommand, Result<UserModel>> {
@@ -53,7 +52,7 @@ public class UpdateUserCommandHandler(
         ImageAssetId? oldAssetId = values.User.ProfileImageAssetId;
         ApplyUpdates(values.User, command, values);
 
-        await userRepository.UpdateAsync(values.User, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(values.User, cancellationToken).ConfigureAwait(false);
         await CleanupOldProfileImageAssetAsync(oldAssetId, values.ProfileImageAssetId, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(values.User.ToModel());
@@ -67,13 +66,12 @@ public class UpdateUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<UpdateUserValues>(accessError);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<UpdateUserValues>(userResult.Error);
         }
 
-        User currentUser = user!;
+        User currentUser = userResult.Value;
         Result<ParsedUserPreferences> preferencesResult = ParsePreferences(command);
         if (preferencesResult.IsFailure) {
             return Result.Failure<UpdateUserValues>(preferencesResult.Error);

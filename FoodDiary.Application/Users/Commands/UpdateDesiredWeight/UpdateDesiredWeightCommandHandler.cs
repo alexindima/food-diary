@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -8,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 
-public class UpdateDesiredWeightCommandHandler(IUserRepository userRepository)
+public class UpdateDesiredWeightCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateDesiredWeightCommand, Result<UserDesiredWeightModel>> {
     public async Task<Result<UserDesiredWeightModel>> Handle(
         UpdateDesiredWeightCommand command,
@@ -18,15 +17,14 @@ public class UpdateDesiredWeightCommandHandler(IUserRepository userRepository)
         }
 
         var userId = new UserId(command.UserId!.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<UserDesiredWeightModel>(accessError);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<UserDesiredWeightModel>(userResult.Error);
         }
 
-        User currentUser = user!;
+        User currentUser = userResult.Value;
         currentUser.UpdateDesiredWeight(command.DesiredWeight);
-        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new UserDesiredWeightModel(currentUser.DesiredWeight));
     }

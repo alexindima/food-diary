@@ -1,8 +1,8 @@
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Users.Commands.UpdateUser;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -323,24 +323,20 @@ public sealed class UpdateUserCommandHandlerTests {
             DashboardLayout: null,
             IsActive: isActive);
 
-    private static IUserRepository CreateUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static IUserContextService CreateUserRepository(User user) {
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
+                User? foundUser = user.Id == id ? user : null;
+                Error? error = CurrentUserAccessPolicy.EnsureCanAccess(foundUser);
+                return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
             });
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId id = call.Arg<UserId>();
-                return Task.FromResult<User?>(user.Id == id ? user : null);
-            });
-        repository
-            .UpdateAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
+        userContextService
+            .UpdateUserAsync(Arg.Any<User>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
-        return repository;
+        return userContextService;
     }
 
     private static IImageAssetCleanupService CreateImageAssetCleanupService(string? errorCode = null) =>
