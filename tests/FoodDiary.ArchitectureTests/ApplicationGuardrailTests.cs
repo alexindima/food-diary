@@ -295,6 +295,23 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedUserQueryHandlers_DoNotUseFullUserRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWaist", "GetDesiredWaistQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetDesiredWeight", "GetDesiredWeightQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetProfileOverview", "GetProfileOverviewQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetUserById", "GetUserByIdQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void InfrastructurePersistenceRoot_StayLimitedToSharedEfInfrastructureFiles() {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "FoodDiary.Infrastructure", "Persistence");
@@ -467,6 +484,14 @@ public sealed class ApplicationGuardrailTests {
                 .Select((line, index) => new { path, index, line }))
             .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
             .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))];
+    }
+
+    private static string[] FindReferencesInFiles(string repositoryRoot, IReadOnlyCollection<string> files, string typeName) {
+        return [.. files
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => entry.line.Contains(typeName, StringComparison.Ordinal))
+                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}")))];
     }
 
     private static IReadOnlyList<ConstructorParameter> ReadDomainEventHandlerConstructorParameters(string path) {

@@ -11,6 +11,7 @@ using FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 using FoodDiary.Application.Users.Commands.UpdateDesiredWeight;
 using FoodDiary.Application.Users.Commands.UpdateUserAppearance;
 using FoodDiary.Application.Users.Commands.UpdateGoals;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Application.Users.Queries.GetProfileOverview;
@@ -765,12 +766,18 @@ public class UsersFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
+    private sealed class SingleUserRepository(User user) : IUserRepository, IUserContextService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? foundUser = user.Id == userId ? user : null;
+            Error? error = CurrentUserAccessPolicy.EnsureCanAccess(foundUser);
+            return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(foundUser!));
+        }
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
 
@@ -798,6 +805,9 @@ public class UsersFeatureTests {
             UpdatedUser = userToUpdate;
             return Task.CompletedTask;
         }
+
+        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) =>
+            UpdateAsync(userToUpdate, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Abstractions.Notifications.Common;
@@ -18,7 +17,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
 
 public sealed class GetProfileOverviewQueryHandler(
-    IUserRepository userRepository,
+    IUserContextService userContextService,
     IWebPushSubscriptionRepository webPushSubscriptionRepository,
     IDietologistInvitationRepository dietologistInvitationRepository)
     : IQueryHandler<GetProfileOverviewQuery, Result<ProfileOverviewModel>> {
@@ -28,23 +27,23 @@ public sealed class GetProfileOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<ProfileOverviewModel>(accessError);
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<ProfileOverviewModel>(userResult.Error);
         }
 
+        User user = userResult.Value;
         IReadOnlyList<WebPushSubscription> webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
         DietologistInvitation? acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
         DietologistInvitation? pendingRelationship = acceptedRelationship is null
             ? await dietologistInvitationRepository.GetByClientAndStatusAsync(
                 userId,
                 DietologistInvitationStatus.Pending,
-                cancellationToken: cancellationToken)
-.ConfigureAwait(false) : null;
+                cancellationToken: cancellationToken).ConfigureAwait(false)
+            : null;
 
         var notificationPreferences = new NotificationPreferencesModel(
-            user!.PushNotificationsEnabled,
+            user.PushNotificationsEnabled,
             user.FastingPushNotificationsEnabled,
             user.SocialPushNotificationsEnabled,
             user.FastingCheckInReminderHours,

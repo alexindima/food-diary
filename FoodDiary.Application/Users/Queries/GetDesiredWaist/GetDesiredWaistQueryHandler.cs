@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
@@ -9,7 +8,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWaist;
 
-public class GetDesiredWaistQueryHandler(IUserRepository userRepository)
+public class GetDesiredWaistQueryHandler(IUserContextService userContextService)
     : IQueryHandler<GetDesiredWaistQuery, Result<UserDesiredWaistModel>> {
     public async Task<Result<UserDesiredWaistModel>> Handle(
         GetDesiredWaistQuery query,
@@ -20,10 +19,9 @@ public class GetDesiredWaistQueryHandler(IUserRepository userRepository)
         }
 
         UserId userId = userIdResult.Value;
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        return accessError is not null
-            ? Result.Failure<UserDesiredWaistModel>(accessError)
-            : Result.Success(new UserDesiredWaistModel(user!.DesiredWaist));
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        return userResult.IsFailure
+            ? Result.Failure<UserDesiredWaistModel>(userResult.Error)
+            : Result.Success(new UserDesiredWaistModel(userResult.Value.DesiredWaist));
     }
 }
