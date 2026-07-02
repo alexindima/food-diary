@@ -1,11 +1,11 @@
 using FoodDiary.Application.Abstractions.Export.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
 using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
@@ -34,7 +34,7 @@ public class ExportFeatureTests {
         CreateHandler(CreateMealRepository(meals));
 
     private static ExportDiaryQueryHandler CreateHandler(IMealRepository repository) =>
-        new(repository, CreateUserRepository(), CreatePdfGenerator(out _));
+        new(repository, CreateCurrentUserAccessService(), CreatePdfGenerator(out _));
 
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
@@ -58,7 +58,7 @@ public class ExportFeatureTests {
         var userId = UserId.New();
         Meal[] meals = [CreateMeal(userId)];
         IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
-        var handler = new ExportDiaryQueryHandler(CreateMealRepository(meals), CreateUserRepository(), pdfGenerator);
+        var handler = new ExportDiaryQueryHandler(CreateMealRepository(meals), CreateCurrentUserAccessService(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
@@ -77,7 +77,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithUnsafeReportOrigin_DropsOriginBeforePdfGeneration() {
         var userId = UserId.New();
         IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
-        var handler = new ExportDiaryQueryHandler(CreateMealRepository([]), CreateUserRepository(), pdfGenerator);
+        var handler = new ExportDiaryQueryHandler(CreateMealRepository([]), CreateCurrentUserAccessService(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
@@ -220,7 +220,7 @@ public class ExportFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new ExportDiaryQueryHandler(
             CreateMealRepository([]),
-            CreateUserRepository(user),
+            CreateCurrentUserAccessService(user),
             CreatePdfGenerator(out _));
 
         Result<FileExportResult> result = await handler.Handle(
@@ -239,7 +239,7 @@ public class ExportFeatureTests {
         profile.UpsertSymptomEntry(TestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
         profile.UpsertFertilitySignal(TestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
         profile.UpsertFactor(CycleFactorType.HormonalContraception, TestDate.AddDays(-1), endDate: null, notes: "pill");
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -261,7 +261,7 @@ public class ExportFeatureTests {
     public async Task ExportCycle_WithValidTimeZoneOffset_UsesOffsetForFileName() {
         var userId = UserId.New();
         var profile = CycleProfile.Create(userId, TestDate);
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(
@@ -278,7 +278,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithNoCurrentProfile_ReturnsNotFound() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -290,7 +290,7 @@ public class ExportFeatureTests {
 
     [Fact]
     public async Task ExportCycle_WithNullUserId_ReturnsFailure() {
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
@@ -306,7 +306,7 @@ public class ExportFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new ExportCycleQueryHandler(
             CreateCycleRepository(profile: null),
-            CreateUserRepository(user));
+            CreateCurrentUserAccessService(user));
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(user.Id.Value, TestDate, TestDate.AddDays(1)),
@@ -319,7 +319,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithDateFromAfterDateTo_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate.AddDays(1), TestDate),
@@ -332,7 +332,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithRangeOverOneYear_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateUserRepository());
+        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(367)),
@@ -488,16 +488,22 @@ public class ExportFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User? user = null) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user = null) {
+        ICurrentUserAccessService service = Substitute.For<ICurrentUserAccessService>();
+        service
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
-                UserId id = call.ArgAt<UserId>(0);
-                return Task.FromResult<User?>(user is null || user.Id == id ? user ?? User.Create("export-user@example.com", "hash") : null);
+                UserId userId = call.Arg<UserId>();
+                Error? error = user switch {
+                    null => null,
+                    { Id: var id } when id != userId => Errors.Authentication.InvalidToken,
+                    { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                    _ => null,
+                };
+                return Task.FromResult(error);
             });
 
-        return repository;
+        return service;
     }
 
     private static ICycleRepository CreateCycleRepository(CycleProfile? profile) {

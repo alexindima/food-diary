@@ -176,6 +176,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Consumptions"),
             Path.Combine(applicationRoot, "Cycles"),
             Path.Combine(applicationRoot, "DailyAdvices"),
+            Path.Combine(applicationRoot, "Export"),
             Path.Combine(applicationRoot, "FavoriteProducts"),
             Path.Combine(applicationRoot, "FavoriteRecipes"),
             Path.Combine(applicationRoot, "FavoriteMeals"),

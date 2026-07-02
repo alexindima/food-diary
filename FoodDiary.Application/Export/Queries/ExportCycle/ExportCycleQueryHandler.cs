@@ -1,13 +1,12 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -15,7 +14,7 @@ namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public class ExportCycleQueryHandler(
     ICycleRepository cycleRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
     private const int MaxExportRangeDays = 366;
 
@@ -28,7 +27,7 @@ public class ExportCycleQueryHandler(
         }
 
         UserId userId = userIdResult.Value;
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<FileExportResult>(accessError);
         }
