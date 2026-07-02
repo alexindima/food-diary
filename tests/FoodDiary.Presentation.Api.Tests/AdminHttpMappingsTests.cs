@@ -415,12 +415,55 @@ public sealed class AdminHttpMappingsTests {
         AdminBillingWebhookEventHttpResponse webhookResponse = webhook.ToHttpResponse();
 
         Assert.Equal(subscriptionId, subscriptionResponse.Id);
+        Assert.Equal(userId, subscriptionResponse.UserId);
+        Assert.Equal("user@example.com", subscriptionResponse.UserEmail);
+        Assert.Equal("stripe", subscriptionResponse.Provider);
         Assert.Equal("customer", subscriptionResponse.ExternalCustomerId);
+        Assert.Equal("subscription", subscriptionResponse.ExternalSubscriptionId);
+        Assert.Equal("payment-method", subscriptionResponse.ExternalPaymentMethodId);
+        Assert.Equal("price", subscriptionResponse.ExternalPriceId);
+        Assert.Equal("premium", subscriptionResponse.Plan);
+        Assert.Equal("active", subscriptionResponse.Status);
+        Assert.Equal(now.AddDays(-1), subscriptionResponse.CurrentPeriodStartUtc);
+        Assert.Equal(now.AddDays(30), subscriptionResponse.CurrentPeriodEndUtc);
         Assert.True(subscriptionResponse.CancelAtPeriodEnd);
+        Assert.Equal(now.AddDays(29), subscriptionResponse.NextBillingAttemptUtc);
+        Assert.Equal("event-1", subscriptionResponse.LastWebhookEventId);
+        Assert.Equal(now, subscriptionResponse.LastSyncedAtUtc);
+        Assert.Equal(now, subscriptionResponse.CreatedOnUtc);
+        Assert.Null(subscriptionResponse.ModifiedOnUtc);
+        Assert.NotEqual(Guid.Empty, paymentResponse.Id);
+        Assert.Equal(userId, paymentResponse.UserId);
+        Assert.Equal("user@example.com", paymentResponse.UserEmail);
+        Assert.Equal(subscriptionId, paymentResponse.BillingSubscriptionId);
+        Assert.Equal("stripe", paymentResponse.Provider);
+        Assert.Equal("payment", paymentResponse.ExternalPaymentId);
+        Assert.Equal("customer", paymentResponse.ExternalCustomerId);
+        Assert.Equal("subscription", paymentResponse.ExternalSubscriptionId);
+        Assert.Equal("payment-method", paymentResponse.ExternalPaymentMethodId);
+        Assert.Equal("price", paymentResponse.ExternalPriceId);
+        Assert.Equal("premium", paymentResponse.Plan);
+        Assert.Equal("succeeded", paymentResponse.Status);
         Assert.Equal(12.5m, paymentResponse.Amount);
+        Assert.Equal("USD", paymentResponse.Currency);
+        Assert.Equal(now.AddDays(-1), paymentResponse.CurrentPeriodStartUtc);
+        Assert.Equal(now.AddDays(30), paymentResponse.CurrentPeriodEndUtc);
         Assert.Equal("invoice", paymentResponse.Kind);
+        Assert.Equal("event-2", paymentResponse.WebhookEventId);
+        Assert.Equal("{}", paymentResponse.ProviderMetadataJson);
+        Assert.Equal(now, paymentResponse.CreatedOnUtc);
+        Assert.Null(paymentResponse.ModifiedOnUtc);
+        Assert.NotEqual(Guid.Empty, webhookResponse.Id);
+        Assert.Equal("stripe", webhookResponse.Provider);
+        Assert.Equal("event-3", webhookResponse.EventId);
         Assert.Equal("invoice.paid", webhookResponse.EventType);
+        Assert.Equal("invoice-1", webhookResponse.ExternalObjectId);
         Assert.Equal("processed", webhookResponse.Status);
+        Assert.Equal(now, webhookResponse.ProcessedAtUtc);
+        Assert.Equal("{}", webhookResponse.PayloadJson);
+        Assert.Null(webhookResponse.ErrorMessage);
+        Assert.Equal(now, webhookResponse.CreatedOnUtc);
+        Assert.Null(webhookResponse.ModifiedOnUtc);
     }
 
     [Fact]

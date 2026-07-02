@@ -1,6 +1,8 @@
 using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
+using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -70,6 +72,29 @@ public class GamificationFeatureTests {
         Assert.Equal(0, result.Value.TotalMealsLogged);
     }
 
+    [Fact]
+    public async Task GamificationUserProfileService_WithAccessibleUser_ReturnsProfile() {
+        var user = User.Create("profile@example.com", "hashed");
+        user.UpdateGoals(dailyCalorieTarget: 2100);
+        IUserRepository repository = CreateUserRepository(user);
+        var service = new GamificationUserProfileService(repository);
+
+        Result<IGamificationUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
+
+        IGamificationUserProfile profile = ResultAssert.Success(result);
+        Assert.Equal(2100, profile.GetCalorieTargetForDate(Today));
+    }
+
+    [Fact]
+    public async Task GamificationUserProfileService_WithMissingUser_ReturnsInvalidToken() {
+        IUserRepository repository = CreateUserRepository(user: null);
+        var service = new GamificationUserProfileService(repository);
+
+        Result<IGamificationUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<DateTime>? distinctDates = null,
         int totalMealCount = 0) {
@@ -83,6 +108,17 @@ public class GamificationFeatureTests {
         repository
             .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
+        return repository;
+    }
+
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == userId ? user : null);
+            });
         return repository;
     }
 

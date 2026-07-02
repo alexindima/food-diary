@@ -1,7 +1,9 @@
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
+using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.Entities.Meals;
@@ -71,6 +73,29 @@ public class WeeklyCheckInFeatureTests {
         Assert.Equal(0, result.Value.ThisWeek.MealsLogged);
     }
 
+    [Fact]
+    public async Task WeeklyCheckInUserProfileService_WithAccessibleUser_ReturnsDailyCalorieTarget() {
+        var user = User.Create("weekly-profile@example.com", "hashed");
+        user.UpdateGoals(dailyCalorieTarget: 2200);
+        IUserRepository repository = CreateUserRepository(user);
+        var service = new WeeklyCheckInUserProfileService(repository);
+
+        Result<WeeklyCheckInUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
+
+        WeeklyCheckInUserProfile profile = ResultAssert.Success(result);
+        Assert.Equal(2200, profile.DailyCalorieTarget);
+    }
+
+    [Fact]
+    public async Task WeeklyCheckInUserProfileService_WithMissingUser_ReturnsInvalidToken() {
+        IUserRepository repository = CreateUserRepository(user: null);
+        var service = new WeeklyCheckInUserProfileService(repository);
+
+        Result<WeeklyCheckInUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
     private static GetWeeklyCheckInQueryHandler CreateHandler(
         IMealRepository? mealRepo = null,
         IWeightEntryRepository? weightRepo = null,
@@ -114,6 +139,17 @@ public class WeeklyCheckInFeatureTests {
         repository
             .GetDailyTotalsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<IReadOnlyList<(DateTime Date, int TotalMl)>>([]));
+        return repository;
+    }
+
+    private static IUserRepository CreateUserRepository(User? user) {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                UserId userId = call.Arg<UserId>();
+                return Task.FromResult(user is not null && user.Id == userId ? user : null);
+            });
         return repository;
     }
 

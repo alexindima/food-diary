@@ -243,6 +243,47 @@ public sealed class JobsTests {
     }
 
     [Fact]
+    public async Task UserCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "users.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingUserCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new UserCleanupJob(
+            cleanupService,
+            Options.Create(new UserCleanupOptions { BatchSize = 1, RetentionDays = 30 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<UserCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.BatchSizes);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("users.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
+    }
+
+    [Fact]
     public async Task NotificationCleanupJob_RecordsSuccessMetrics_AndBuildsExpectedPolicy() {
         long? executionCount = null;
         string? outcome = null;
@@ -329,6 +370,47 @@ public sealed class JobsTests {
         Assert.True(duration >= 0);
         Assert.Equal(1, tracker.GetSnapshot("notifications.cleanup")?.ConsecutiveFailures);
         Assert.Equal(now, tracker.GetSnapshot("notifications.cleanup")?.LastFailedAtUtc);
+    }
+
+    [Fact]
+    public async Task NotificationCleanupJob_WhenCanceledBeforeWork_RecordsCanceledMetricAndRethrows() {
+        long? executionCount = null;
+        string? outcome = null;
+        double? duration = null;
+
+        using MeterListener listener = CreateJobManagerListener(
+            expectedJobName: "notifications.cleanup",
+            onExecution: (value, tags) => {
+                executionCount = value;
+                outcome = GetTagValue(tags, "fooddiary.job.outcome");
+            },
+            onDeletedItems: null,
+            onDuration: (value, _) => duration = value);
+
+        var cleanupService = new RecordingNotificationCleanupService([1]);
+        var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
+        var tracker = new JobExecutionStateTracker();
+        var job = new NotificationCleanupJob(
+            cleanupService,
+            Options.Create(new NotificationCleanupOptions { TransientTypes = ["Test"], BatchSize = 1 }),
+            new FixedDateTimeProvider(now),
+            tracker,
+            NullLogger<NotificationCleanupJob>.Instance);
+        using var cts = new CancellationTokenSource();
+        await cts.CancelAsync();
+
+        await Assert.ThrowsAsync<OperationCanceledException>(() => job.Execute(cts.Token));
+
+        Assert.Equal(1, executionCount);
+        Assert.Equal("canceled", outcome);
+        Assert.NotNull(duration);
+        Assert.Empty(cleanupService.Policies);
+        JobExecutionStateSnapshot? snapshot = tracker.GetSnapshot("notifications.cleanup");
+        Assert.NotNull(snapshot);
+        Assert.Equal(now, snapshot.Value.LastStartedAtUtc);
+        Assert.Null(snapshot.Value.LastSucceededAtUtc);
+        Assert.Null(snapshot.Value.LastFailedAtUtc);
+        Assert.Equal(0, snapshot.Value.ConsecutiveFailures);
     }
 
     [Fact]

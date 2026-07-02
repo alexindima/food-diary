@@ -26,6 +26,32 @@ public sealed class MediatorTests {
     }
 
     [Fact]
+    public async Task Mediator_WithObjectRequestAndNotification_UsesCombinedInterface() {
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        IMediator mediator = provider.GetRequiredService<IMediator>();
+        NotificationLog.Entries.Clear();
+
+        object? response = await mediator.Send((object)new EchoQuery("mediator-object"));
+        await mediator.Publish((object)new SampleNotification("mediator-object"));
+
+        EchoResponse echoResponse = Assert.IsType<EchoResponse>(response);
+        Assert.Equal("handled:mediator-object", echoResponse.Value);
+        Assert.Equal(["first:mediator-object", "second:mediator-object"], NotificationLog.Entries.Order(StringComparer.Ordinal));
+    }
+
+    [Fact]
+    public async Task Send_WithObjectUnitRequest_InvokesHandlerAndReturnsUnit() {
+        await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
+        ISender sender = provider.GetRequiredService<ISender>();
+        UnitCommandHandler.Handled = false;
+
+        object? response = await sender.Send((object)new UnitCommand());
+
+        Assert.IsType<Unit>(response);
+        Assert.True(UnitCommandHandler.Handled);
+    }
+
+    [Fact]
     public async Task Send_WithUnitRequest_InvokesHandlerAndReturnsTask() {
         await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         ISender sender = provider.GetRequiredService<ISender>();
@@ -148,6 +174,15 @@ public sealed class MediatorTests {
     }
 
     [Fact]
+    public async Task Publish_WhenNoHandlersRegistered_Completes() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+
+        await publisher.Publish(new UnhandledNotification());
+        await publisher.Publish((object)new UnhandledNotification());
+    }
+
+    [Fact]
     public async Task Publish_WithNonNotificationObject_ThrowsInvalidOperationException() {
         await using ServiceProvider provider = CreateProvider(configuration => configuration.RegisterServicesFromAssembly(typeof(MediatorTests).Assembly));
         IPublisher publisher = provider.GetRequiredService<IPublisher>();
@@ -155,6 +190,22 @@ public sealed class MediatorTests {
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => publisher.Publish(new object()));
 
         Assert.Contains("does not implement INotification", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Publish_WithNullTypedNotification_ThrowsArgumentNullException() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() => publisher.Publish<SampleNotification>(null!));
+    }
+
+    [Fact]
+    public async Task Publish_WithNullObjectNotification_ThrowsArgumentNullException() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        IPublisher publisher = provider.GetRequiredService<IPublisher>();
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() => publisher.Publish(null!));
     }
 
     [Fact]
@@ -173,6 +224,22 @@ public sealed class MediatorTests {
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => sender.Send(new object()));
 
         Assert.Contains("does not implement IRequest<TResponse>", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task Send_WithNullTypedRequest_ThrowsArgumentNullException() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() => sender.Send<EchoResponse>(null!));
+    }
+
+    [Fact]
+    public async Task Send_WithNullObjectRequest_ThrowsArgumentNullException() {
+        await using ServiceProvider provider = CreateProvider(static _ => { });
+        ISender sender = provider.GetRequiredService<ISender>();
+
+        await Assert.ThrowsAsync<ArgumentNullException>(() => sender.Send(null!));
     }
 
     [Fact]
@@ -310,6 +377,9 @@ public sealed class MediatorTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record SampleNotification(string Value) : INotification;
+
+    [ExcludeFromCodeCoverage]
+    private sealed record UnhandledNotification : INotification;
 
     [ExcludeFromCodeCoverage]
     private sealed class FirstNotificationHandler : INotificationHandler<SampleNotification> {

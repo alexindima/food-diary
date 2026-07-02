@@ -239,6 +239,35 @@ public sealed class BillingFeatureTests {
     }
 
     [Fact]
+    public async Task BillingUserContextService_WithAccessibleUser_ForwardsRepositoryOperations() {
+        var user = User.Create("billing-context@example.com", "hash");
+        var repository = new FakeUserRepository(user);
+        var service = new BillingUserContextService(repository);
+
+        Result<User> accessible = await service.GetAccessibleUserAsync(user.Id, CancellationToken.None);
+        User? includingDeleted = await service.GetUserIncludingDeletedAsync(user.Id, CancellationToken.None);
+        bool canAccess = await service.CanAccessUserAsync(user, CancellationToken.None);
+        await service.EnsurePremiumRoleAsync(user, CancellationToken.None);
+        await service.RemovePremiumRoleAsync(user, CancellationToken.None);
+        await service.UpdateUserAsync(user, CancellationToken.None);
+
+        Assert.Same(user, ResultAssert.Success(accessible));
+        Assert.Same(user, includingDeleted);
+        Assert.True(canAccess);
+        Assert.DoesNotContain(RoleNames.Premium, user.GetRoleNames());
+        Assert.Equal(3, repository.UpdateCount);
+    }
+
+    [Fact]
+    public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
+        var service = new BillingUserContextService(new FakeUserRepository());
+
+        Result<User> result = await service.GetAccessibleUserAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result, "Authentication.InvalidToken");
+    }
+
+    [Fact]
     public async Task ProcessBillingWebhook_ForNewEvent_StoresSubscriptionPaymentWebhookAndAddsPremiumRole() {
         var user = User.Create("premium@example.com", "hash");
         var userRepository = new FakeUserRepository(user);

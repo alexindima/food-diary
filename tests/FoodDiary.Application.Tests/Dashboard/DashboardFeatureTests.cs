@@ -1,6 +1,11 @@
 using FluentValidation.Results;
+using System.Globalization;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Consumptions.Models;
+using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
@@ -10,6 +15,7 @@ using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
+using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 
 namespace FoodDiary.Application.Tests.Dashboard;
@@ -167,6 +173,107 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public void DashboardMapping_ToMealsModel_MapsNestedMealsAndOrdersChildren() {
+        var mealId = Guid.Parse("10000000-0000-0000-0000-000000000001");
+        var itemA = Guid.Parse("10000000-0000-0000-0000-000000000002");
+        var itemB = Guid.Parse("10000000-0000-0000-0000-000000000003");
+        var sessionA = Guid.Parse("10000000-0000-0000-0000-000000000004");
+        var sessionB = Guid.Parse("10000000-0000-0000-0000-000000000005");
+        var aiItemA = Guid.Parse("10000000-0000-0000-0000-000000000006");
+        var aiItemB = Guid.Parse("10000000-0000-0000-0000-000000000007");
+        DashboardMealReadModel meal = CreateDashboardMealReadModel(mealId, [
+            CreateDashboardMealItemReadModel(itemB, mealId, amount: 2),
+            CreateDashboardMealItemReadModel(itemA, mealId, amount: 1),
+        ], [
+            CreateDashboardMealAiSessionReadModel(sessionB, mealId, new DateTime(2026, 3, 2, 10, 0, 0, DateTimeKind.Utc), [
+                CreateDashboardMealAiItemReadModel(aiItemB, sessionB, "later"),
+            ]),
+            CreateDashboardMealAiSessionReadModel(sessionA, mealId, new DateTime(2026, 3, 1, 10, 0, 0, DateTimeKind.Utc), [
+                CreateDashboardMealAiItemReadModel(aiItemB, sessionA, "second"),
+                CreateDashboardMealAiItemReadModel(aiItemA, sessionA, "first"),
+            ]),
+        ]);
+
+        DashboardMealsModel model = DashboardMapping.ToMealsModel(new DashboardMealsReadModel([meal], Page: 1, Limit: 10, TotalPages: 1, TotalItems: 1));
+
+        ConsumptionModel mappedMeal = Assert.Single(model.Items);
+        Assert.Equal(1, model.Total);
+        Assert.Equal(mealId, mappedMeal.Id);
+        Assert.Equal(["manual", "ai"], mappedMeal.Items.Select(item => item.Origin));
+        Assert.Equal([itemA, itemB], mappedMeal.Items.Select(item => item.Id));
+        Assert.Equal([sessionA, sessionB], mappedMeal.AiSessions.Select(session => session.Id));
+        Assert.Equal([aiItemA, aiItemB], mappedMeal.AiSessions[0].Items.Select(item => item.Id));
+        Assert.Equal("first", mappedMeal.AiSessions[0].Items[0].NameEn);
+    }
+
+    [Fact]
+    public async Task MediatorDashboardMealsReadService_WhenQuerySucceeds_MapsPagedMeals() {
+        var userId = Guid.NewGuid();
+        var mealId = Guid.NewGuid();
+        ConsumptionModel meal = CreateConsumptionModel(mealId, [
+            CreateConsumptionItemModel(Guid.NewGuid(), mealId, amount: 150, origin: "Manual"),
+        ], [
+            CreateConsumptionAiSessionModel(Guid.NewGuid(), mealId, [
+                CreateConsumptionAiItemModel(Guid.NewGuid(), Guid.NewGuid(), "toast"),
+            ]),
+        ]);
+        ISender sender = CreateConsumptionSender(
+            Result.Success(new PagedResponse<ConsumptionModel>([meal], Page: 2, Limit: 5, TotalPages: 3, TotalItems: 11)),
+            out Func<GetConsumptionsQuery?> getLastQuery,
+            out Func<CancellationToken> getLastCancellationToken);
+        var service = new MediatorDashboardMealsReadService(sender);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var dateFrom = new DateTime(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
+        var dateTo = new DateTime(2026, 4, 7, 0, 0, 0, DateTimeKind.Utc);
+
+        Result<DashboardMealsReadModel> result = await service.GetMealsAsync(
+            new UserId(userId),
+            page: 2,
+            limit: 5,
+            dateFrom,
+            dateTo,
+            cancellationTokenSource.Token);
+
+        DashboardMealsReadModel model = ResultAssert.Success(result);
+        Assert.Equal(2, model.Page);
+        Assert.Equal(5, model.Limit);
+        Assert.Equal(3, model.TotalPages);
+        Assert.Equal(11, model.TotalItems);
+        DashboardMealReadModel mappedMeal = Assert.Single(model.Items);
+        Assert.Equal(meal.Id, mappedMeal.Id);
+        Assert.Equal(meal.Items[0].ProductName, mappedMeal.Items[0].ProductName);
+        Assert.Equal(meal.AiSessions[0].Items[0].NameEn, mappedMeal.AiSessions[0].Items[0].NameEn);
+        GetConsumptionsQuery query = Assert.IsType<GetConsumptionsQuery>(getLastQuery());
+        Assert.Equal(userId, query.UserId);
+        Assert.Equal(2, query.Page);
+        Assert.Equal(5, query.Limit);
+        Assert.Equal(dateFrom, query.DateFrom);
+        Assert.Equal(dateTo, query.DateTo);
+        Assert.Equal(cancellationTokenSource.Token, getLastCancellationToken());
+    }
+
+    [Fact]
+    public async Task MediatorDashboardMealsReadService_WhenQueryFails_ReturnsFailure() {
+        Error error = Errors.Validation.Invalid("dashboard", "Could not read meals.");
+        ISender sender = CreateConsumptionSender(
+            Result.Failure<PagedResponse<ConsumptionModel>>(error),
+            out _,
+            out _);
+        var service = new MediatorDashboardMealsReadService(sender);
+
+        Result<DashboardMealsReadModel> result = await service.GetMealsAsync(
+            UserId.New(),
+            page: 1,
+            limit: 10,
+            DateTime.UtcNow.Date,
+            DateTime.UtcNow.Date,
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+    }
+
+    [Fact]
     public async Task GetDashboardSnapshotQueryHandler_ForwardsRequestToBuilder() {
         var userId = UserId.New();
         var date = new DateTime(2026, 5, 6, 0, 0, 0, DateTimeKind.Utc);
@@ -302,4 +409,212 @@ public class DashboardFeatureTests {
             });
         return repository;
     }
+
+    private static ISender CreateConsumptionSender(
+        Result<PagedResponse<ConsumptionModel>> result,
+        out Func<GetConsumptionsQuery?> getLastQuery,
+        out Func<CancellationToken> getLastCancellationToken) {
+        ISender sender = Substitute.For<ISender>();
+        GetConsumptionsQuery? lastQuery = null;
+        CancellationToken lastCancellationToken = default;
+        sender
+            .Send(
+                Arg.Do<IRequest<Result<PagedResponse<ConsumptionModel>>>>(request => lastQuery = Assert.IsType<GetConsumptionsQuery>(request)),
+                Arg.Do<CancellationToken>(cancellationToken => lastCancellationToken = cancellationToken))
+            .Returns(Task.FromResult(result));
+        getLastQuery = () => lastQuery;
+        getLastCancellationToken = () => lastCancellationToken;
+        return sender;
+    }
+
+    private static ConsumptionModel CreateConsumptionModel(
+        Guid mealId,
+        IReadOnlyList<ConsumptionItemModel> items,
+        IReadOnlyList<ConsumptionAiSessionModel> sessions) =>
+        new(
+            mealId,
+            new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc),
+            "Breakfast",
+            "Comment",
+            "https://example.test/meal.webp",
+            Guid.NewGuid(),
+            500,
+            30,
+            20,
+            40,
+            8,
+            0,
+            IsNutritionAutoCalculated: false,
+            ManualCalories: 510,
+            ManualProteins: 31,
+            ManualFats: 21,
+            ManualCarbs: 41,
+            ManualFiber: 9,
+            ManualAlcohol: 0,
+            PreMealSatietyLevel: 3,
+            PostMealSatietyLevel: 8,
+            QualityScore: 90,
+            QualityGrade: "excellent",
+            IsFavorite: true,
+            FavoriteMealId: Guid.NewGuid(),
+            items,
+            sessions);
+
+    private static ConsumptionItemModel CreateConsumptionItemModel(Guid itemId, Guid mealId, double amount, string origin) =>
+        new(
+            itemId,
+            mealId,
+            amount,
+            ProductId: Guid.NewGuid(),
+            ProductName: $"Product {amount.ToString(CultureInfo.InvariantCulture)}",
+            ProductImageUrl: "https://example.test/product.webp",
+            ProductBaseUnit: "g",
+            ProductBaseAmount: 100,
+            ProductCaloriesPerBase: 200,
+            ProductProteinsPerBase: 10,
+            ProductFatsPerBase: 5,
+            ProductCarbsPerBase: 25,
+            ProductFiberPerBase: 3,
+            ProductAlcoholPerBase: 0,
+            RecipeId: Guid.NewGuid(),
+            RecipeName: "Recipe",
+            RecipeImageUrl: "https://example.test/recipe.webp",
+            RecipeServings: 2,
+            RecipeTotalCalories: 400,
+            RecipeTotalProteins: 20,
+            RecipeTotalFats: 10,
+            RecipeTotalCarbs: 50,
+            RecipeTotalFiber: 6,
+            RecipeTotalAlcohol: 0,
+            ProductQualityScore: 80,
+            ProductQualityGrade: "good",
+            SourceAiItemId: Guid.NewGuid(),
+            origin);
+
+    private static ConsumptionAiSessionModel CreateConsumptionAiSessionModel(
+        Guid sessionId,
+        Guid mealId,
+        IReadOnlyList<ConsumptionAiItemModel> items) =>
+        new(
+            sessionId,
+            mealId,
+            ImageAssetId: Guid.NewGuid(),
+            ImageUrl: "https://example.test/ai.webp",
+            Source: "Vision",
+            Status: "Reviewed",
+            RecognizedAtUtc: new DateTime(2026, 3, 3, 12, 5, 0, DateTimeKind.Utc),
+            Notes: "looks right",
+            items);
+
+    private static ConsumptionAiItemModel CreateConsumptionAiItemModel(Guid itemId, Guid sessionId, string name) =>
+        new(
+            itemId,
+            sessionId,
+            name,
+            NameLocal: "local",
+            Amount: 1,
+            Unit: "portion",
+            Calories: 120,
+            Proteins: 4,
+            Fats: 3,
+            Carbs: 20,
+            Fiber: 2,
+            Alcohol: 0,
+            Confidence: 0.8,
+            Resolution: "Accepted");
+
+    private static DashboardMealReadModel CreateDashboardMealReadModel(
+        Guid mealId,
+        IReadOnlyList<DashboardMealItemReadModel> items,
+        IReadOnlyList<DashboardMealAiSessionReadModel> sessions) =>
+        new(
+            mealId,
+            new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc),
+            "Lunch",
+            "Read comment",
+            "https://example.test/read-meal.webp",
+            Guid.NewGuid(),
+            600,
+            35,
+            25,
+            55,
+            10,
+            0,
+            IsNutritionAutoCalculated: true,
+            ManualCalories: null,
+            ManualProteins: null,
+            ManualFats: null,
+            ManualCarbs: null,
+            ManualFiber: null,
+            ManualAlcohol: null,
+            PreMealSatietyLevel: 2,
+            PostMealSatietyLevel: 7,
+            IsFavorite: false,
+            FavoriteMealId: null,
+            items,
+            sessions);
+
+    private static DashboardMealItemReadModel CreateDashboardMealItemReadModel(Guid itemId, Guid mealId, double amount) =>
+        new(
+            itemId,
+            mealId,
+            amount,
+            ProductId: Guid.NewGuid(),
+            ProductName: $"Read product {amount.ToString(CultureInfo.InvariantCulture)}",
+            ProductImageUrl: "https://example.test/read-product.webp",
+            ProductBaseUnit: "g",
+            ProductBaseAmount: 100,
+            ProductCaloriesPerBase: 200,
+            ProductProteinsPerBase: 10,
+            ProductFatsPerBase: 5,
+            ProductCarbsPerBase: 25,
+            ProductFiberPerBase: 3,
+            ProductAlcoholPerBase: 0,
+            ProductQualityScore: 82,
+            ProductQualityGrade: "good",
+            RecipeId: Guid.NewGuid(),
+            RecipeName: "Read recipe",
+            RecipeImageUrl: "https://example.test/read-recipe.webp",
+            RecipeServings: 2,
+            RecipeTotalCalories: 400,
+            RecipeTotalProteins: 20,
+            RecipeTotalFats: 10,
+            RecipeTotalCarbs: 50,
+            RecipeTotalFiber: 6,
+            RecipeTotalAlcohol: 0,
+            SourceAiItemId: Guid.NewGuid(),
+            Origin: amount == 1 ? "manual" : "ai");
+
+    private static DashboardMealAiSessionReadModel CreateDashboardMealAiSessionReadModel(
+        Guid sessionId,
+        Guid mealId,
+        DateTime recognizedAtUtc,
+        IReadOnlyList<DashboardMealAiItemReadModel> items) =>
+        new(
+            sessionId,
+            mealId,
+            ImageAssetId: Guid.NewGuid(),
+            ImageUrl: "https://example.test/read-ai.webp",
+            Source: "Vision",
+            Status: "Reviewed",
+            recognizedAtUtc,
+            Notes: "read notes",
+            items);
+
+    private static DashboardMealAiItemReadModel CreateDashboardMealAiItemReadModel(Guid itemId, Guid sessionId, string name) =>
+        new(
+            itemId,
+            sessionId,
+            name,
+            NameLocal: "local",
+            Amount: 1,
+            Unit: "portion",
+            Calories: 120,
+            Proteins: 4,
+            Fats: 3,
+            Carbs: 20,
+            Fiber: 2,
+            Alcohol: 0,
+            Confidence: 0.9,
+            Resolution: "Accepted");
 }

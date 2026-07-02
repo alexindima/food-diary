@@ -458,6 +458,54 @@ string.Equals(instrument.Name, "fooddiary.api.output_cache.events", StringCompar
         Assert.Contains("HTTP POST /api/v1/logs responded 500", message, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task Middleware_WhenNextThrows_RecordsExceptionMetricAndActivityError() {
+        long? exceptionCount = null;
+        string? exceptionPath = null;
+        Activity? capturedActivity = null;
+
+        using var activityListener = new ActivityListener {
+            ShouldListenTo = source => string.Equals(source.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal),
+            Sample = static (ref ActivityCreationOptions<ActivityContext> _) => ActivitySamplingResult.AllData,
+            SampleUsingParentId = static (ref ActivityCreationOptions<string> _) => ActivitySamplingResult.AllData,
+            ActivityStopped = activity => {
+                if (string.Equals(activity.GetTagItem("url.path")?.ToString(), "/api/v1/auth/*", StringComparison.Ordinal)) {
+                    capturedActivity = activity;
+                }
+            },
+        };
+        ActivitySource.AddActivityListener(activityListener);
+
+        using var meterListener = new MeterListener();
+        meterListener.InstrumentPublished = (instrument, listener) => {
+            if (string.Equals(instrument.Meter.Name, ApiTelemetry.TelemetryName, StringComparison.Ordinal) &&
+                string.Equals(instrument.Name, "fooddiary.api.request.exceptions", StringComparison.Ordinal)) {
+                listener.EnableMeasurementEvents(instrument);
+            }
+        };
+        meterListener.SetMeasurementEventCallback<long>((_, value, tags, _) => {
+            exceptionCount = value;
+            exceptionPath = GetTagValue(tags, "url.path");
+        });
+        meterListener.Start();
+
+        var middleware = new RequestObservabilityMiddleware(
+            next: _ => throw new InvalidOperationException("boom"),
+            logger: NullLogger<RequestObservabilityMiddleware>.Instance);
+        var httpContext = new DefaultHttpContext();
+        httpContext.Request.Method = HttpMethods.Post;
+        httpContext.Request.Path = "/api/v1/auth/login";
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() => middleware.InvokeAsync(httpContext));
+
+        Assert.Equal("boom", ex.Message);
+        Assert.Equal(1, exceptionCount);
+        Assert.Equal("/api/v1/auth/*", exceptionPath);
+        Assert.NotNull(capturedActivity);
+        Assert.Equal(ActivityStatusCode.Error, capturedActivity!.Status);
+        Assert.Equal(typeof(InvalidOperationException).FullName, capturedActivity.GetTagItem("error.type"));
+    }
+
     private static string? GetTagValue(ReadOnlySpan<KeyValuePair<string, object?>> tags, string key) {
         foreach (KeyValuePair<string, object?> tag in tags) {
             if (string.Equals(tag.Key, key, StringComparison.Ordinal)) {

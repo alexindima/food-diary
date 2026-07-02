@@ -210,6 +210,124 @@ public sealed class MailRelayHostedServiceTests {
         Assert.True(channelProxy.NackRequeue);
     }
 
+    [Fact]
+    public async Task RabbitMqConsumer_WhenPayloadIsInvalid_AcksDelivery() {
+        var store = new RecordingQueueStore();
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(CreateRabbitOptions()),
+            CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        var channelProxy = RabbitMqChannelProxy.Create();
+
+        await InvokeHandleDeliveryAsync(service, channelProxy.Channel, CreateDelivery("not-a-guid"), CancellationToken.None);
+
+        Assert.True(channelProxy.Acked);
+        Assert.Equal(42UL, channelProxy.AckedDeliveryTag);
+        Assert.False(store.MessageClaimed);
+    }
+
+    [Fact]
+    public async Task RabbitMqConsumer_WhenMessageCannotBeClaimed_AcksDelivery() {
+        var store = new RecordingQueueStore();
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(CreateRabbitOptions()),
+            CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        var channelProxy = RabbitMqChannelProxy.Create();
+        var emailId = Guid.NewGuid();
+
+        await InvokeHandleDeliveryAsync(service, channelProxy.Channel, CreateDelivery(emailId), CancellationToken.None);
+
+        Assert.True(channelProxy.Acked);
+        Assert.Equal(42UL, channelProxy.AckedDeliveryTag);
+        Assert.True(store.MessageClaimed);
+        Assert.Equal(emailId, store.ClaimedMessageId);
+    }
+
+    [Fact]
+    public async Task RabbitMqConsumer_WhenClaimedMessageSucceeds_AcksDeliveryAndMarksSent() {
+        var store = new RecordingQueueStore {
+            ClaimedMessage = CreateQueuedMessage(),
+        };
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(CreateRabbitOptions()),
+            CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        var channelProxy = RabbitMqChannelProxy.Create();
+
+        await InvokeHandleDeliveryAsync(service, channelProxy.Channel, CreateDelivery(store.ClaimedMessage.Id), CancellationToken.None);
+
+        Assert.True(channelProxy.Acked);
+        Assert.Equal(store.ClaimedMessage.Id, store.SentMessageId);
+    }
+
+    [Fact]
+    public async Task RabbitMqConsumer_WhenClaimedMessageIsSuppressed_AcksDeliveryAndMarksSuppressed() {
+        var store = new RecordingQueueStore {
+            ClaimedMessage = CreateQueuedMessage(),
+            SuppressedRecipients = ["recipient@example.com"],
+        };
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(CreateRabbitOptions()),
+            CreateBroker(new MailRelayBrokerOptions { Backend = MailRelayBrokerOptions.PostgresPollingBackend }),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        var channelProxy = RabbitMqChannelProxy.Create();
+
+        await InvokeHandleDeliveryAsync(service, channelProxy.Channel, CreateDelivery(store.ClaimedMessage.Id), CancellationToken.None);
+
+        Assert.True(channelProxy.Acked);
+        Assert.Equal(store.ClaimedMessage.Id, store.SuppressedMessageId);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task RabbitMqConsumer_DelayBeforeRetry_ReturnsExpectedResultForCancellation(bool cancelBeforeDelay) {
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
+        var store = new RecordingQueueStore();
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(options),
+            CreateBroker(options),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        if (cancelBeforeDelay) {
+            await cancellationTokenSource.CancelAsync();
+        }
+
+        bool delayed = await InvokeDelayBeforeRetryAsync(service, cancellationTokenSource.Token);
+
+        Assert.Equal(!cancelBeforeDelay, delayed);
+    }
+
+    [Theory]
+    [InlineData(true)]
+    [InlineData(false)]
+    public async Task RabbitMqBootstrap_DelayBeforeRetry_ReturnsExpectedResultForCancellation(bool cancelBeforeDelay) {
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            CreateBroker(options),
+            Options.Create(options),
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        if (cancelBeforeDelay) {
+            await cancellationTokenSource.CancelAsync();
+        }
+
+        bool delayed = await InvokeDelayBeforeRetryAsync(service, cancellationTokenSource.Token);
+
+        Assert.Equal(!cancelBeforeDelay, delayed);
+    }
+
     [Theory]
     [InlineData(true)]
     [InlineData(false)]
@@ -279,6 +397,9 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     private static BasicDeliverEventArgs CreateDelivery(Guid emailId) =>
+        CreateDelivery(emailId.ToString("D"));
+
+    private static BasicDeliverEventArgs CreateDelivery(string body) =>
         new(
             consumerTag: "consumer",
             deliveryTag: 42,
@@ -286,7 +407,25 @@ public sealed class MailRelayHostedServiceTests {
             exchange: string.Empty,
             routingKey: string.Empty,
             properties: new BasicProperties(),
-            body: Encoding.UTF8.GetBytes(emailId.ToString("D")));
+            body: Encoding.UTF8.GetBytes(body));
+
+    private static QueuedEmailMessage CreateQueuedMessage() =>
+        new(
+            Guid.NewGuid(),
+            "sender@example.com",
+            "Sender",
+            ["recipient@example.com"],
+            "Subject",
+            "<p>Hello</p>",
+            "Hello",
+            CorrelationId: null,
+            AttemptCount: 1,
+            MaxAttempts: 3);
+
+    private static async Task<bool> InvokeDelayBeforeRetryAsync(object service, CancellationToken cancellationToken) {
+        MethodInfo method = service.GetType().GetMethod("DelayBeforeRetryAsync", BindingFlags.Instance | BindingFlags.NonPublic)!;
+        return await ((Task<bool>)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
+    }
 
     private sealed class NoopRelayDeliveryTransport : IRelayDeliveryTransport {
         public Task SendAsync(RelayEmailMessageRequest request, CancellationToken cancellationToken) =>
@@ -303,9 +442,15 @@ public sealed class MailRelayHostedServiceTests {
         public bool ThrowCancellationOnQueueClaim { get; init; }
         public bool ThrowCancellationOnOutboxClaim { get; init; }
         public bool ThrowCancellationOnMessageClaim { get; init; }
+        public QueuedEmailMessage? ClaimedMessage { get; init; }
+        public IReadOnlyList<string> SuppressedRecipients { get; init; } = [];
         public IReadOnlyList<MailRelayOutboxMessage> OutboxBatch { get; init; } = [];
         public bool QueueClaimed { get; private set; }
         public bool OutboxClaimed { get; private set; }
+        public bool MessageClaimed { get; private set; }
+        public Guid? ClaimedMessageId { get; private set; }
+        public Guid? SentMessageId { get; private set; }
+        public Guid? SuppressedMessageId { get; private set; }
         public int? FailedOutboxAttemptCount { get; private set; }
         public string FailedOutboxError { get; private set; } = string.Empty;
 
@@ -330,10 +475,13 @@ public sealed class MailRelayHostedServiceTests {
                 : Task.FromException<IReadOnlyList<QueuedEmailMessage>>(ClaimQueueException);
         }
 
-        public Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) =>
-            ThrowCancellationOnMessageClaim
+        public Task<QueuedEmailMessage?> TryClaimMessageByIdAsync(Guid id, CancellationToken cancellationToken) {
+            MessageClaimed = true;
+            ClaimedMessageId = id;
+            return ThrowCancellationOnMessageClaim
                 ? Task.FromException<QueuedEmailMessage?>(new OperationCanceledException(cancellationToken))
-                : Task.FromResult<QueuedEmailMessage?>(null);
+                : Task.FromResult(ClaimedMessage);
+        }
 
         public Task<IReadOnlyList<MailRelayOutboxMessage>> ClaimOutboxBatchAsync(CancellationToken cancellationToken) {
             OutboxClaimed = true;
@@ -366,10 +514,15 @@ public sealed class MailRelayHostedServiceTests {
 
         public Task MarkInboxFailedAsync(Guid id, string error, CancellationToken cancellationToken) => Task.CompletedTask;
 
-        public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) => Task.CompletedTask;
+        public Task MarkSentAsync(Guid id, CancellationToken cancellationToken) {
+            SentMessageId = id;
+            return Task.CompletedTask;
+        }
 
-        public Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) =>
-            Task.CompletedTask;
+        public Task MarkSuppressedAsync(Guid id, IReadOnlyCollection<string> recipients, CancellationToken cancellationToken) {
+            SuppressedMessageId = id;
+            return Task.CompletedTask;
+        }
 
         public Task<IReadOnlyList<MailRelaySuppressionEntry>> GetSuppressionsAsync(string? email, CancellationToken cancellationToken) =>
             Task.FromResult<IReadOnlyList<MailRelaySuppressionEntry>>([]);
@@ -400,7 +553,7 @@ public sealed class MailRelayHostedServiceTests {
         public Task<IReadOnlyList<string>> GetSuppressedRecipientsAsync(
             IReadOnlyCollection<string> recipients,
             CancellationToken cancellationToken) =>
-            Task.FromResult<IReadOnlyList<string>>([]);
+            Task.FromResult(SuppressedRecipients);
 
         public Task<MailRelayQueueStats> GetStatsAsync(CancellationToken cancellationToken) =>
             Task.FromResult(new MailRelayQueueStats(0, 0, 0, 0, 0, 0));
@@ -421,6 +574,8 @@ public sealed class MailRelayHostedServiceTests {
         public bool Consumed { get; private set; }
         public bool Canceled { get; private set; }
         public string? CanceledConsumerTag { get; private set; }
+        public bool Acked { get; private set; }
+        public ulong AckedDeliveryTag { get; private set; }
         public bool Nacked { get; private set; }
         public ulong NackedDeliveryTag { get; private set; }
         public bool NackRequeue { get; private set; }
@@ -459,6 +614,12 @@ public sealed class MailRelayHostedServiceTests {
             if (string.Equals(targetMethod.Name, nameof(IChannel.BasicCancelAsync), StringComparison.Ordinal)) {
                 Canceled = true;
                 CanceledConsumerTag = (string)args![0]!;
+                return CreateCompletedAsyncResult(targetMethod);
+            }
+
+            if (string.Equals(targetMethod.Name, nameof(IChannel.BasicAckAsync), StringComparison.Ordinal)) {
+                Acked = true;
+                AckedDeliveryTag = (ulong)args![0]!;
                 return CreateCompletedAsyncResult(targetMethod);
             }
 
