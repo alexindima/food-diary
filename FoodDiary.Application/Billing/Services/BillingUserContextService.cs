@@ -15,4 +15,7 @@ internal sealed class BillingUserContextService(IUserRepository userRepository) 
             ? Result.Failure<User>(accessError)
             : Result.Success(user!);
     }
+
+    public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
+        userRepository.UpdateAsync(user, cancellationToken);
 }

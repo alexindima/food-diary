@@ -1877,6 +1877,9 @@ public sealed class BillingFeatureTests {
                 : Result.Success(user));
         }
 
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
+            UpdateAsync(user, cancellationToken);
+
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
 

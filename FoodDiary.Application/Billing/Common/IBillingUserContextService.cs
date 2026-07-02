@@ -6,4 +6,5 @@ namespace FoodDiary.Application.Billing.Common;
 
 public interface IBillingUserContextService {
     Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken);
+    Task UpdateUserAsync(User user, CancellationToken cancellationToken);
 }

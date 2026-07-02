@@ -281,6 +281,7 @@ public sealed class ApplicationGuardrailTests {
         string[] migratedFiles = [
             Path.Combine(applicationRoot, "Billing", "Commands", "CreateCheckoutSession", "CreateCheckoutSessionCommandHandler.cs"),
             Path.Combine(applicationRoot, "Billing", "Commands", "CreatePortalSession", "CreatePortalSessionCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Billing", "Commands", "StartPremiumTrial", "StartPremiumTrialCommandHandler.cs"),
             Path.Combine(applicationRoot, "Billing", "Queries", "GetBillingOverview", "GetBillingOverviewQueryHandler.cs"),
         ];
 
