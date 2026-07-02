@@ -93,8 +93,9 @@ public static class DependencyInjection {
         services.AddScoped<IOpenFoodFactsCachedProductSearch, OpenFoodFactsCachedProductSearch>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();
-        services.AddScoped<ICurrentUserAccessService, CurrentUserAccessService>();
-        services.AddScoped<IUserContextService, UserContextService>();
+        services.AddScoped<UserContextService>();
+        services.AddScoped<ICurrentUserAccessService>(static provider => provider.GetRequiredService<UserContextService>());
+        services.AddScoped<IUserContextService>(static provider => provider.GetRequiredService<UserContextService>());
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
 

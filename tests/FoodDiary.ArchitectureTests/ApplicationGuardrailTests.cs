@@ -223,6 +223,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void UsersSlice_DoesNotRegrowStandaloneCurrentUserAccessService() {
+        string root = GetRepositoryRoot();
+        string usersCommonRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Common");
+        string servicePath = Path.Combine(usersCommonRoot, "CurrentUserAccessService.cs");
+
+        Assert.False(File.Exists(servicePath), "UserContextService should remain the single IUserRepository-backed current-user access implementation.");
+    }
+
+    [Fact]
     public void MigratedNotificationHandlers_DoNotUseFullUserRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
