@@ -12,6 +12,7 @@ using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Gamification.Common;
@@ -88,6 +89,7 @@ public static class DependencyInjection {
         services.AddScoped<BillingRenewalService>();
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<IDietologistUserContextService, DietologistUserContextService>();
         services.AddScoped<IOpenFoodFactsCachedProductSearch, OpenFoodFactsCachedProductSearch>();
         services.AddScoped<IProductSearchSuggestionProvider, OpenFoodFactsProductSearchSuggestionProvider>();
         services.AddScoped<IProductSearchSuggestionProvider, UsdaProductSearchSuggestionProvider>();

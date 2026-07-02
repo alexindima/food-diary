@@ -1,11 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -15,7 +13,7 @@ namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrent
 
 public sealed class DeclineInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository,
+    IDietologistUserContextService dietologistUserContextService,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
@@ -27,16 +25,12 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
+        User user = userResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
             new DietologistInvitationId(command.InvitationId),
             asTracking: true,

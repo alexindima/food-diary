@@ -1,9 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -14,7 +12,7 @@ namespace FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 
 public class GetClientGoalsQueryHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository)
+    IDietologistUserContextService dietologistUserContextService)
     : IQueryHandler<GetClientGoalsQuery, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(
         GetClientGoalsQuery query, CancellationToken cancellationToken) {
@@ -23,10 +21,9 @@ public class GetClientGoalsQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
-        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (currentUserAccessError is not null) {
-            return Result.Failure<UserModel>(currentUserAccessError);
+        Result<User> dietologistResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        if (dietologistResult.IsFailure) {
+            return Result.Failure<UserModel>(dietologistResult.Error);
         }
 
         var clientUserId = new UserId(query.ClientUserId);
@@ -43,7 +40,7 @@ public class GetClientGoalsQueryHandler(
             return Result.Failure<UserModel>(permissionError);
         }
 
-        User? user = await userRepository.GetByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
+        User? user = await dietologistUserContextService.GetUserByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
         return user is null ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied) : Result.Success(user.ToModel());
     }
 }

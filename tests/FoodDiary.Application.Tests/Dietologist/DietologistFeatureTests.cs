@@ -13,6 +13,7 @@ using FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 using FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Services;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.EventHandlers;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
@@ -110,7 +111,7 @@ public class DietologistFeatureTests {
 
     private static InviteDietologistCommandHandler CreateInviteHandler(
         IDietologistInvitationRepository? invitationRepository = null,
-        IUserRepository? userRepository = null,
+        IDietologistUserContextService? userRepository = null,
         IPasswordHasher? passwordHasher = null,
         IDietologistEmailSender? emailSender = null,
         INotificationRepository? notificationRepository = null,
@@ -132,15 +133,18 @@ public class DietologistFeatureTests {
 
     private static AcceptInvitationCommandHandler CreateAcceptHandler(
         IDietologistInvitationRepository? invitationRepository = null,
-        IUserRepository? userRepository = null,
+        IDietologistUserContextService? userRepository = null,
         IPasswordHasher? passwordHasher = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
         IWebPushNotificationSender? webPushNotificationSender = null) {
         INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        IDietologistUserContextService resolvedUserContext = userRepository ?? new InMemoryUserRepository();
+        IUserRepository resolvedUserRepository = resolvedUserContext as IUserRepository ?? new InMemoryUserRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
-            userRepository ?? new InMemoryUserRepository(),
+            resolvedUserContext,
+            resolvedUserRepository,
             passwordHasher ?? new StubPasswordHasher(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
@@ -150,14 +154,17 @@ public class DietologistFeatureTests {
 
     private static AcceptInvitationForCurrentUserCommandHandler CreateAcceptCurrentUserHandler(
         IDietologistInvitationRepository? invitationRepository = null,
-        IUserRepository? userRepository = null,
+        IDietologistUserContextService? userRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
         IWebPushNotificationSender? webPushNotificationSender = null) {
         INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
+        IDietologistUserContextService resolvedUserContext = userRepository ?? new InMemoryUserRepository();
+        IUserRepository resolvedUserRepository = resolvedUserContext as IUserRepository ?? new InMemoryUserRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
-            userRepository ?? new InMemoryUserRepository(),
+            resolvedUserContext,
+            resolvedUserRepository,
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
@@ -182,7 +189,7 @@ public class DietologistFeatureTests {
 
     private static DeclineInvitationForCurrentUserCommandHandler CreateDeclineCurrentUserHandler(
         IDietologistInvitationRepository? invitationRepository = null,
-        IUserRepository? userRepository = null,
+        IDietologistUserContextService? userRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
         IWebPushNotificationSender? webPushNotificationSender = null) {
@@ -201,7 +208,7 @@ public class DietologistFeatureTests {
         IRecommendationRepository? recommendationRepository = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
-        IUserRepository? userRepository = null) {
+        IDietologistUserContextService? userRepository = null) {
         INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
@@ -634,7 +641,7 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task AcceptInvitationForCurrentUser_WhenUserDisappearsAfterAccessCheck_ReturnsFailure() {
+    public async Task AcceptInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
         User user = CreateUser(dietologistId, "diet@example.com");
         var userRepo = new SequenceUserRepository(user, null);
@@ -646,7 +653,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
     [Fact]
@@ -782,7 +789,7 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task GetInvitationForCurrentUser_WhenUserDisappearsAfterAccessCheck_ReturnsFailure() {
+    public async Task GetInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
         var handler = new GetInvitationForCurrentUserQueryHandler(
             new InMemoryInvitationRepository(),
@@ -793,7 +800,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
     [Fact]
@@ -956,7 +963,7 @@ public class DietologistFeatureTests {
     }
 
     [Fact]
-    public async Task DeclineInvitationForCurrentUser_WhenUserDisappearsAfterAccessCheck_ReturnsFailure() {
+    public async Task DeclineInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
         DeclineInvitationForCurrentUserCommandHandler handler = CreateDeclineCurrentUserHandler(
             userRepository: new SequenceUserRepository(CreateUser(dietologistId, "diet@example.com"), null));
@@ -966,7 +973,7 @@ public class DietologistFeatureTests {
             CancellationToken.None);
 
         ResultAssert.Failure(result);
-        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+        Assert.Equal("Dietologist.InvitationNotFound", result.Error.Code);
     }
 
     [Fact]
@@ -1364,7 +1371,7 @@ public class DietologistFeatureTests {
         ResultAssert.Success(result);
         NewRecommendationNotificationPayload? payload = NotificationPayloadSerializer.Deserialize<NewRecommendationNotificationPayload>(
             Assert.Single(notificationRepo.Added).PayloadJson);
-        Assert.Equal(string.Empty, payload?.DietologistName);
+        Assert.Equal("diet@example.com", payload?.DietologistName);
     }
 
     [Fact]
@@ -2343,7 +2350,7 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService {
+    private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService, IDietologistUserContextService {
         private readonly List<User> _users = [];
         private readonly List<Role> _roles = [];
 
@@ -2368,6 +2375,23 @@ public class DietologistFeatureTests {
             };
             return Task.FromResult(error);
         }
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(u => u.Id == userId);
+            Error? error = user switch {
+                null => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
+        }
+
+        public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
+            GetByEmailAsync(email, cancellationToken);
+
+        public Task<User?> GetUserByIdAsync(UserId userId, CancellationToken cancellationToken) =>
+            GetByIdAsync(userId, cancellationToken);
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
             Task.FromResult(_users.FirstOrDefault(u => string.Equals(u.Email, email, StringComparison.OrdinalIgnoreCase)));
@@ -2399,11 +2423,28 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SequenceUserRepository(params User?[] users) : IUserRepository {
+    private sealed class SequenceUserRepository(params User?[] users) : IUserRepository, IDietologistUserContextService {
         private readonly Queue<User?> _users = new(users);
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>
             Task.FromResult(_users.Count > 0 ? _users.Dequeue() : null);
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = _users.Count > 0 ? _users.Dequeue() : null;
+            Error? error = user switch {
+                null => Errors.Authentication.InvalidToken,
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
+        }
+
+        public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
+            GetByEmailAsync(email, cancellationToken);
+
+        public Task<User?> GetUserByIdAsync(UserId userId, CancellationToken cancellationToken) =>
+            GetByIdAsync(userId, cancellationToken);
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken ct = default) =>
             throw new NotSupportedException();

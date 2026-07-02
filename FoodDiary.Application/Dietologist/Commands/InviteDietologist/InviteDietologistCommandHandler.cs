@@ -2,12 +2,11 @@ using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -21,7 +20,7 @@ namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 
 public class InviteDietologistCommandHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository,
+    IDietologistUserContextService dietologistUserContextService,
     IPasswordHasher passwordHasher,
     IDietologistEmailSender emailSender,
     INotificationWriter notificationWriter,
@@ -37,12 +36,12 @@ public class InviteDietologistCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
-        User user = (await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false))!;
+        User user = userResult.Value;
         string normalizedEmail = command.DietologistEmail.Trim().ToLowerInvariant();
 
         if (string.Equals(user.Email, normalizedEmail, StringComparison.OrdinalIgnoreCase)) {
@@ -66,7 +65,7 @@ public class InviteDietologistCommandHandler(
         DietologistPermissions permissions = command.Permissions.ToPermissions();
 
         var invitation = DietologistInvitation.Create(userId, normalizedEmail, tokenHash, expiresAt, permissions);
-        User? registeredDietologist = await userRepository.GetByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
+        User? registeredDietologist = await dietologistUserContextService.GetAccessibleUserByEmailAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
         await invitationRepository.AddAsync(invitation, cancellationToken).ConfigureAwait(false);
         EnqueueInvitationEmail(normalizedEmail, invitation, rawToken, user);
 

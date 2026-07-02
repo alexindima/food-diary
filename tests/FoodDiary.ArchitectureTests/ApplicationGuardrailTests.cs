@@ -213,6 +213,16 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotUseLegacyCurrentUserAccessLoader() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CurrentUserAccessLoader"]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MigratedNotificationHandlers_DoNotUseFullUserRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

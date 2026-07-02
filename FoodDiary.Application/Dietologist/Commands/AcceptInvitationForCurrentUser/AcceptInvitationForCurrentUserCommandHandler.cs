@@ -5,7 +5,6 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Users;
@@ -15,6 +14,7 @@ namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitationForCurrentU
 
 public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
+    IDietologistUserContextService dietologistUserContextService,
     IUserRepository userRepository,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
@@ -27,16 +27,12 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
-        User? user = await userRepository.GetByIdAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure(Errors.Authentication.InvalidToken);
-        }
-
+        User user = userResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
             new DietologistInvitationId(command.InvitationId),
             asTracking: true,

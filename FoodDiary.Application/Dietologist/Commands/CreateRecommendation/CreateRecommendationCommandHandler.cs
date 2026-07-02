@@ -5,9 +5,7 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Application.Notifications.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,7 +20,7 @@ public class CreateRecommendationCommandHandler(
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
     INotificationPusher notificationPusher,
-    IUserRepository userRepository,
+    IDietologistUserContextService dietologistUserContextService,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<CreateRecommendationCommand, Result<RecommendationModel>> {
     public async Task<Result<RecommendationModel>> Handle(
@@ -32,10 +30,9 @@ public class CreateRecommendationCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        Error? currentUserAccessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(
-            userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (currentUserAccessError is not null) {
-            return Result.Failure<RecommendationModel>(currentUserAccessError);
+        Result<User> dietologistResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        if (dietologistResult.IsFailure) {
+            return Result.Failure<RecommendationModel>(dietologistResult.Error);
         }
 
         var clientUserId = new UserId(command.ClientUserId);
@@ -54,13 +51,12 @@ public class CreateRecommendationCommandHandler(
 
         var recommendation = Recommendation.Create(dietologistUserId, clientUserId, command.Text);
         await recommendationRepository.AddAsync(recommendation, cancellationToken).ConfigureAwait(false);
-        await NotifyClientAsync(recommendation, cancellationToken).ConfigureAwait(false);
+        await NotifyClientAsync(recommendation, dietologistResult.Value, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(recommendation.ToModel());
     }
 
-    private async Task NotifyClientAsync(Recommendation recommendation, CancellationToken cancellationToken) {
-        User? dietologist = await userRepository.GetByIdAsync(recommendation.DietologistUserId, cancellationToken).ConfigureAwait(false);
+    private async Task NotifyClientAsync(Recommendation recommendation, User dietologist, CancellationToken cancellationToken) {
         Notification notification = NotificationFactory.CreateNewRecommendation(
             recommendation.ClientUserId,
             ResolveDietologistLabel(dietologist),
@@ -75,11 +71,7 @@ public class CreateRecommendationCommandHandler(
             pushChanged: false);
     }
 
-    private static string ResolveDietologistLabel(User? dietologist) {
-        if (dietologist is null) {
-            return string.Empty;
-        }
-
+    private static string ResolveDietologistLabel(User dietologist) {
         string fullName = $"{dietologist.FirstName} {dietologist.LastName}".Trim();
         return string.IsNullOrWhiteSpace(fullName)
             ? dietologist.Email

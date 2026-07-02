@@ -5,7 +5,6 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -16,6 +15,7 @@ namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
 public class AcceptInvitationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
+    IDietologistUserContextService dietologistUserContextService,
     IUserRepository userRepository,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
@@ -29,9 +29,9 @@ public class AcceptInvitationCommandHandler(
         }
 
         var dietologistUserId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, dietologistUserId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
         var invitationId = new DietologistInvitationId(command.InvitationId);
@@ -53,7 +53,7 @@ public class AcceptInvitationCommandHandler(
             return Result.Failure(Errors.Dietologist.InvitationInvalidToken);
         }
 
-        User user = (await userRepository.GetByIdAsync(dietologistUserId, cancellationToken).ConfigureAwait(false))!;
+        User user = userResult.Value;
         if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure(Errors.Dietologist.InvitationNotFound);
         }
