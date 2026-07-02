@@ -1,9 +1,8 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 
 public sealed class CreateCheckoutSessionCommandHandler(
-    IUserRepository userRepository,
+    IBillingUserContextService billingUserContextService,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
@@ -26,14 +25,14 @@ public sealed class CreateCheckoutSessionCommandHandler(
         }
 
         var userId = new UserId(command.UserId.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<BillingCheckoutSessionModel>(accessError);
+        Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<BillingCheckoutSessionModel>(userResult.Error);
         }
 
+        User user = userResult.Value;
         BillingSubscription? existingSubscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user!.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
+        if (user.HasRole(RoleNames.Premium) || IsPaidPremiumActive(existingSubscription, dateTimeProvider.GetUtcNow().UtcDateTime)) {
             return Result.Failure<BillingCheckoutSessionModel>(Errors.Billing.SubscriptionAlreadyActive);
         }
 

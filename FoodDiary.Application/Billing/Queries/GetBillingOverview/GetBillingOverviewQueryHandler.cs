@@ -1,9 +1,8 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,7 @@ using FoodDiary.Application.Abstractions.Billing.Models;
 namespace FoodDiary.Application.Billing.Queries.GetBillingOverview;
 
 public sealed class GetBillingOverviewQueryHandler(
-    IUserRepository userRepository,
+    IBillingUserContextService billingUserContextService,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
@@ -26,15 +25,15 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<BillingOverviewModel>(accessError);
+        Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<BillingOverviewModel>(userResult.Error);
         }
 
+        User user = userResult.Value;
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        bool isTrialActive = user!.HasActivePremiumTrial(nowUtc);
+        bool isTrialActive = user.HasActivePremiumTrial(nowUtc);
         bool hasPaidPremium = user.HasRole(RoleNames.Premium);
         bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
         bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;

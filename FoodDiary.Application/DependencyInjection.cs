@@ -4,6 +4,7 @@ using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Behaviors;
@@ -81,6 +82,7 @@ public static class DependencyInjection {
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
+        services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingWebhookPaymentRecorder>();
         services.AddScoped<BillingRenewalService>();

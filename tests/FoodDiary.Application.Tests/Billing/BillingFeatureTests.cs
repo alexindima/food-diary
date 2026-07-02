@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.CreatePortalSession;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
@@ -1851,7 +1852,7 @@ public sealed class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository {
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IBillingUserContextService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -1868,6 +1869,13 @@ public sealed class BillingFeatureTests {
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<User>(Errors.Authentication.InvalidToken)
+                : Result.Success(user));
+        }
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => user.Id == id));
