@@ -304,6 +304,22 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void BillingSlice_UsesUserRepositoryOnlyThroughBillingUserContextService() {
+        string root = GetRepositoryRoot();
+        string billingRoot = Path.Combine(root, "FoodDiary.Application", "Billing");
+        string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserContextService.cs");
+        string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)
+            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, billingFiles, "IUserRepository"),
+            .. FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MigratedUserHandlers_DoNotUseFullUserRepositoryOrAccessPolicy() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

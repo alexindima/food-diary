@@ -1877,6 +1877,18 @@ public sealed class BillingFeatureTests {
                 : Result.Success(user));
         }
 
+        public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            GetByIdIncludingDeletedAsync(userId, cancellationToken);
+
+        public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
+            Task.FromResult(IsAccessible(user));
+
+        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
+            ((IUserRepository)this).EnsureRoleAsync(user, RoleNames.Premium, cancellationToken);
+
+        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
+            ((IUserRepository)this).RemoveRoleAsync(user, RoleNames.Premium, cancellationToken);
+
         public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
             UpdateAsync(user, cancellationToken);
 

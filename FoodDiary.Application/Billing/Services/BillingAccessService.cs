@@ -1,5 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -7,7 +7,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Billing.Services;
 
 public sealed class BillingAccessService(
-    IUserRepository userRepository,
+    IBillingUserContextService billingUserContextService,
     IBillingSubscriptionRepository billingSubscriptionRepository,
     TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
@@ -33,7 +33,7 @@ public sealed class BillingAccessService(
 
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         if (shouldHavePremium) {
-            await userRepository.EnsureRoleAsync(user, RoleNames.Premium, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.EnsurePremiumRoleAsync(user, cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: true, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         } else {
@@ -41,7 +41,7 @@ public sealed class BillingAccessService(
                 return;
             }
 
-            await userRepository.RemoveRoleAsync(user, RoleNames.Premium, cancellationToken).ConfigureAwait(false);
+            await billingUserContextService.RemovePremiumRoleAsync(user, cancellationToken).ConfigureAwait(false);
             subscription.MarkPremiumRoleManagedByBilling(value: false, nowUtc);
             await billingSubscriptionRepository.UpdateAsync(subscription, cancellationToken).ConfigureAwait(false);
         }

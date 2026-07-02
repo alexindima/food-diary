@@ -1,13 +1,12 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.ValueObjects.Ids;
 using User = FoodDiary.Domain.Entities.Users.User;
 using FoodDiary.Application.Abstractions.Billing.Models;
-using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
@@ -16,7 +15,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingWebhookEventRepository billingWebhookEventRepository,
     IBillingTransactionRunner billingTransactionRunner,
-    IUserRepository userRepository,
+    IBillingUserContextService billingUserContextService,
     BillingAccessService billingAccessService,
     BillingWebhookPaymentRecorder billingWebhookPaymentRecorder,
     TimeProvider dateTimeProvider)
@@ -200,14 +199,14 @@ public sealed class ProcessBillingWebhookCommandHandler(
         Guid? webhookUserId,
         CancellationToken cancellationToken) {
         if (subscription is not null) {
-            return await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+            return await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
         }
 
         if (!webhookUserId.HasValue || webhookUserId == Guid.Empty) {
             return null;
         }
 
-        return await userRepository.GetByIdIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken).ConfigureAwait(false);
+        return await billingUserContextService.GetUserIncludingDeletedAsync(new UserId(webhookUserId.Value), cancellationToken).ConfigureAwait(false);
     }
 
     private async Task SyncPremiumRoleAsync(
@@ -215,7 +214,7 @@ public sealed class ProcessBillingWebhookCommandHandler(
         BillingSubscription subscription,
         bool shouldHavePremium,
         CancellationToken cancellationToken) {
-        bool canAccess = CurrentUserAccessPolicy.EnsureCanAccess(user) is null;
+        bool canAccess = await billingUserContextService.CanAccessUserAsync(user, cancellationToken).ConfigureAwait(false);
         if (canAccess) {
             await billingAccessService.EnsurePremiumRoleAsync(user, subscription, shouldHavePremium, cancellationToken).ConfigureAwait(false);
             return;

@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
@@ -831,7 +832,7 @@ public sealed class JobsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository {
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IBillingUserContextService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
@@ -846,6 +847,28 @@ public sealed class JobsTests {
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => IsAccessible(user) && user.Id == id));
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<User>(Errors.Authentication.InvalidToken)
+                : Result.Success(user));
+        }
+
+        public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            GetByIdIncludingDeletedAsync(userId, cancellationToken);
+
+        public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
+            Task.FromResult(IsAccessible(user));
+
+        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
+            ((IUserRepository)this).EnsureRoleAsync(user, RoleNames.Premium, cancellationToken);
+
+        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
+            ((IUserRepository)this).RemoveRoleAsync(user, RoleNames.Premium, cancellationToken);
+
+        public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
+            UpdateAsync(user, cancellationToken);
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user => user.Id == id));

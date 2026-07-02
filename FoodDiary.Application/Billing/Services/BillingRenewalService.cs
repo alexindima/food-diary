@@ -2,9 +2,8 @@ using System.Globalization;
 using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using User = FoodDiary.Domain.Entities.Users.User;
 
@@ -13,7 +12,7 @@ namespace FoodDiary.Application.Billing.Services;
 public sealed class BillingRenewalService(
     IBillingSubscriptionRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
-    IUserRepository userRepository,
+    IBillingUserContextService billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,
     BillingAccessService billingAccessService,
@@ -88,8 +87,8 @@ public sealed class BillingRenewalService(
             return RenewalOutcome.Failed;
         }
 
-        User? user = await userRepository.GetByIdIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
-        if (CurrentUserAccessPolicy.EnsureCanAccess(user) is not null) {
+        User? user = await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, cancellationToken).ConfigureAwait(false);
+        if (user is null || !await billingUserContextService.CanAccessUserAsync(user, cancellationToken).ConfigureAwait(false)) {
             await SkipRenewalForInaccessibleUserAsync(subscription, now, cancellationToken).ConfigureAwait(false);
             return RenewalOutcome.Failed;
         }
@@ -105,7 +104,7 @@ public sealed class BillingRenewalService(
                 subscription,
                 renewalResult.Value,
                 recurringGateway.Provider,
-                user!,
+                user,
                 now,
                 cancellationToken).ConfigureAwait(false);
         } catch (BillingPaymentAlreadyExistsException) {
@@ -246,8 +245,8 @@ public sealed class BillingRenewalService(
                 reason);
             await billingSubscriptionRepository.UpdateAsync(subscription, ct).ConfigureAwait(false);
 
-            User? failedRenewalUser = await userRepository.GetByIdAsync(subscription.UserId, ct).ConfigureAwait(false);
-            if (failedRenewalUser is not null) {
+            User? failedRenewalUser = await billingUserContextService.GetUserIncludingDeletedAsync(subscription.UserId, ct).ConfigureAwait(false);
+            if (failedRenewalUser is not null && await billingUserContextService.CanAccessUserAsync(failedRenewalUser, ct).ConfigureAwait(false)) {
                 bool shouldHavePremium = billingAccessService.ShouldHavePremiumAccess(
                     subscription.Status,
                     subscription.CurrentPeriodEndUtc);
