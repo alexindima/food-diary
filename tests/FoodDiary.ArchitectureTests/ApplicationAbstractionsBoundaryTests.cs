@@ -28,7 +28,7 @@ public sealed class ApplicationAbstractionsBoundaryTests {
                     : !allowedPurposeFolders.Contains(segments[^1]);
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

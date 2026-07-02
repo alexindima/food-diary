@@ -64,7 +64,7 @@ public sealed class CycleSymptomEntry : Entity<CycleSymptomEntryId> {
             .Select(tag => tag.Trim())
             .Where(tag => !string.IsNullOrWhiteSpace(tag))
             .Distinct(StringComparer.OrdinalIgnoreCase)
-            .OrderBy(tag => tag, StringComparer.OrdinalIgnoreCase),
+            .Order(StringComparer.OrdinalIgnoreCase),
         ];
 
         return JsonSerializer.Serialize(normalized);

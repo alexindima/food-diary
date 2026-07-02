@@ -165,7 +165,7 @@ public sealed class MailInboxArchitectureTests {
                        !allowedControllerFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -190,7 +190,7 @@ public sealed class MailInboxArchitectureTests {
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
                 .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
                 .Select(path => Path.GetRelativePath(root, path)))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

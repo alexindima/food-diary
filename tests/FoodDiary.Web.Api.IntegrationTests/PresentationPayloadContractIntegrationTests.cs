@@ -381,11 +381,11 @@ public sealed class PresentationPayloadContractIntegrationTests(
     private static JsonObject BuildAdminUsersSnapshot(JsonElement root) {
         JsonElement data = root.GetProperty("data");
         string[] firstUserKeys = data.GetArrayLength() > 0
-            ? [.. data[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)]
+            ? [.. data[0].EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)]
             : [];
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["dataCount"] = data.GetArrayLength(),
             ["firstUserKeys"] = ToJsonArray(firstUserKeys),
         };
@@ -397,23 +397,23 @@ public sealed class PresentationPayloadContractIntegrationTests(
         JsonElement ingredients = firstStep.GetProperty("ingredients");
         string[] firstIngredientKeys = [.. ingredients[0].EnumerateObject()
             .Select(property => property.Name)
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["name"] = root.GetProperty("name").GetString(),
             ["servings"] = root.GetProperty("servings").GetInt32(),
             ["visibility"] = root.GetProperty("visibility").GetString(),
             ["isOwnedByCurrentUser"] = root.GetProperty("isOwnedByCurrentUser").GetBoolean(),
             ["stepsCount"] = steps.GetArrayLength(),
-            ["stepKeys"] = ToJsonArray(firstStep.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["stepKeys"] = ToJsonArray(firstStep.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["firstIngredientKeys"] = ToJsonArray(firstIngredientKeys),
         };
     }
 
     private static JsonObject BuildStatisticsSnapshot(JsonElement root) {
         string[] firstItemKeys = root.GetArrayLength() > 0
-            ? [.. root[0].EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)]
+            ? [.. root[0].EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)]
             : [];
 
         return new JsonObject {
@@ -428,10 +428,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         JsonElement firstItem = items[0];
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["name"] = root.GetProperty("name").GetString(),
             ["itemsCount"] = items.GetArrayLength(),
-            ["itemKeys"] = ToJsonArray(firstItem.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["itemKeys"] = ToJsonArray(firstItem.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
         };
     }
 
@@ -439,7 +439,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         JsonElement predictions = root.GetProperty("predictions");
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["averageCycleLength"] = root.GetProperty("averageCycleLength").GetInt32(),
             ["averagePeriodLength"] = root.GetProperty("averagePeriodLength").GetInt32(),
             ["lutealLength"] = root.GetProperty("lutealLength").GetInt32(),
@@ -447,18 +447,18 @@ public sealed class PresentationPayloadContractIntegrationTests(
             ["symptomsCount"] = root.GetProperty("symptoms").GetArrayLength(),
             ["factorsCount"] = root.GetProperty("factors").GetArrayLength(),
             ["fertilitySignalsCount"] = root.GetProperty("fertilitySignals").GetArrayLength(),
-            ["predictionKeys"] = ToJsonArray(predictions.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["predictionKeys"] = ToJsonArray(predictions.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
         };
     }
 
     private static JsonObject BuildDashboardSnapshot(JsonElement root) {
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["weeklyCaloriesCount"] = root.GetProperty("weeklyCalories").GetArrayLength(),
-            ["statisticsKeys"] = ToJsonArray(root.GetProperty("statistics").EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["mealsKeys"] = ToJsonArray(root.GetProperty("meals").EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["weightKeys"] = ToJsonArray(root.GetProperty("weight").EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["waistKeys"] = ToJsonArray(root.GetProperty("waist").EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["statisticsKeys"] = ToJsonArray(root.GetProperty("statistics").EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["mealsKeys"] = ToJsonArray(root.GetProperty("meals").EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["weightKeys"] = ToJsonArray(root.GetProperty("weight").EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["waistKeys"] = ToJsonArray(root.GetProperty("waist").EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
         };
     }
 
@@ -467,13 +467,13 @@ public sealed class PresentationPayloadContractIntegrationTests(
         string email = root.GetProperty("email").GetString() ?? string.Empty;
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["emailDomain"] = email.Contains('@', StringComparison.Ordinal) ? email.Split('@')[1] : string.Empty,
             ["language"] = root.TryGetProperty("language", out JsonElement language) ? language.GetString() : null,
             ["isActive"] = root.GetProperty("isActive").GetBoolean(),
             ["isEmailConfirmed"] = root.GetProperty("isEmailConfirmed").GetBoolean(),
             ["dashboardLayoutKeys"] = dashboardLayout.ValueKind == JsonValueKind.Object
-                ? ToJsonArray(dashboardLayout.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal))
+                ? ToJsonArray(dashboardLayout.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal))
                 : [],
         };
     }
@@ -485,10 +485,10 @@ public sealed class PresentationPayloadContractIntegrationTests(
         JsonElement dietologistRelationship = root.GetProperty("dietologistRelationship");
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
-            ["userKeys"] = ToJsonArray(user.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
+            ["userKeys"] = ToJsonArray(user.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["notificationPreferenceKeys"] = ToJsonArray(
-                notificationPreferences.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+                notificationPreferences.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["webPushSubscriptionsCount"] = webPushSubscriptions.GetArrayLength(),
             ["dietologistRelationshipIsNull"] = dietologistRelationship.ValueKind == JsonValueKind.Null,
         };
@@ -496,7 +496,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     private static JsonObject BuildHydrationDailySnapshot(JsonElement root) {
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["dateUtc"] = root.GetProperty("dateUtc").GetDateTime().ToString("O"),
             ["totalMl"] = root.GetProperty("totalMl").GetInt32(),
             ["hasGoalMl"] = root.TryGetProperty("goalMl", out JsonElement goal) && goal.ValueKind is not JsonValueKind.Null,
@@ -505,7 +505,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     private static JsonObject BuildAiUsageSnapshot(JsonElement root) {
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["inputLimit"] = root.GetProperty("inputLimit").GetInt64(),
             ["outputLimit"] = root.GetProperty("outputLimit").GetInt64(),
             ["inputUsed"] = root.GetProperty("inputUsed").GetInt64(),
@@ -516,7 +516,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
 
     private static JsonObject BuildDesiredMetricSnapshot(JsonElement root, string propertyName) {
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             [propertyName] = root.GetProperty(propertyName).GetDouble(),
         };
     }
@@ -526,7 +526,7 @@ public sealed class PresentationPayloadContractIntegrationTests(
         string fileUrl = root.GetProperty("fileUrl").GetString() ?? string.Empty;
 
         return new JsonObject {
-            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).OrderBy(static name => name, StringComparer.Ordinal)),
+            ["keys"] = ToJsonArray(root.EnumerateObject().Select(property => property.Name).Order(StringComparer.Ordinal)),
             ["uploadUrlHost"] = Uri.TryCreate(uploadUrl, UriKind.Absolute, out Uri? uploadUri) ? uploadUri.Host : string.Empty,
             ["uploadUrlHasSignature"] = uploadUrl.Contains("X-Amz-Signature=", StringComparison.Ordinal),
             ["fileUrlHost"] = Uri.TryCreate(fileUrl, UriKind.Absolute, out Uri? fileUri) ? fileUri.Host : string.Empty,

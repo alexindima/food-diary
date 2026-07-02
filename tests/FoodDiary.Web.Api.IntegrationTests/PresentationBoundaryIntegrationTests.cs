@@ -640,7 +640,7 @@ public sealed class PresentationBoundaryIntegrationTests(
                 operation.Value.TryGetProperty("responses", out JsonElement responses)
                     ? [.. responses.EnumerateObject()
                         .Select(response => response.Name)
-                        .OrderBy(code => code, StringComparer.Ordinal)]
+                        .Order(StringComparer.Ordinal)]
                     : Array.Empty<string>()))
             .OrderBy(operation => operation.Method, StringComparer.Ordinal)];
 

@@ -51,7 +51,7 @@ public sealed class AsyncMethodGuardrailTests {
             .Where(method => !AllowedNonAsyncSuffixNames.Contains(method.Name))
             .Where(method => !IsControllerAction(method))
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -68,7 +68,7 @@ public sealed class AsyncMethodGuardrailTests {
             .Where(method => method.Name.EndsWith("Async", StringComparison.Ordinal))
             .Where(method => !IsFrameworkAsyncHook(method))
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
@@ -85,7 +85,7 @@ public sealed class AsyncMethodGuardrailTests {
             .Where(static method => !method.Parameters.Contains("CancellationToken", StringComparison.Ordinal))
             .Where(method => !IsCancellationTokenProvidedByFramework(method))
             .Select(method => method.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,

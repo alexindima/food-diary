@@ -19,7 +19,7 @@ public sealed class MigrationSafetyIntegrationTests(PostgresDatabaseFixture data
             .Where(static type => typeof(Migration).IsAssignableFrom(type) || typeof(ModelSnapshot).IsAssignableFrom(type))
             .Where(static type => type.GetCustomAttributes(typeof(ExcludeFromCodeCoverageAttribute), inherit: false).Length == 0)
             .Select(static type => type.FullName)
-            .OrderBy(static typeName => typeName, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(migrationTypesMissingAttribute);
     }

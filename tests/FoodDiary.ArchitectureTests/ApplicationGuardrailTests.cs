@@ -61,7 +61,7 @@ public sealed class ApplicationGuardrailTests {
 
         string?[] actualFiles = [.. GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Equal(allowedFiles, actualFiles);
     }
@@ -90,7 +90,7 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [.. forbiddenFiles
             .Where(actualFiles.Contains)
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -110,7 +110,7 @@ public sealed class ApplicationGuardrailTests {
 
         string?[] actualFiles = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Equal(allowedFiles, actualFiles);
     }
@@ -128,7 +128,7 @@ public sealed class ApplicationGuardrailTests {
             .Select(Path.GetFileName)
             .Where(static fileName => fileName is not null)
             .Select(static fileName => fileName!)
-            .OrderBy(static fileName => fileName, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.NotEmpty(featureErrorFiles);
     }
@@ -403,7 +403,7 @@ public sealed class ApplicationGuardrailTests {
 
         string?[] actualFiles = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
         string?[] unexpectedFiles = [.. actualFiles
             .Where(fileName =>
                 fileName is not null &&
@@ -479,7 +479,7 @@ public sealed class ApplicationGuardrailTests {
                 .Select(parameter => string.Create(
                     CultureInfo.InvariantCulture,
                     $"{Path.GetRelativePath(root, parameter.Path)}:{parameter.Line} {parameter.ClassName} depends on {parameter.TypeName}")))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -507,7 +507,7 @@ public sealed class ApplicationGuardrailTests {
                 .Select(entry => string.Create(
                     CultureInfo.InvariantCulture,
                     $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

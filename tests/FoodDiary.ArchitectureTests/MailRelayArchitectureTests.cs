@@ -167,7 +167,7 @@ public sealed class MailRelayArchitectureTests {
             .Where(static path => !IsGeneratedPath(path))
             .Where(path => !File.ReadAllText(path).Contains(": AuthorizedMailRelayController", StringComparison.Ordinal))
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -203,7 +203,7 @@ public sealed class MailRelayArchitectureTests {
                        !allowedControllerFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -228,7 +228,7 @@ public sealed class MailRelayArchitectureTests {
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
                 .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
                 .Select(path => Path.GetRelativePath(root, path)))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -276,7 +276,7 @@ public sealed class MailRelayArchitectureTests {
             .Where(path => !path.StartsWith(Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure", "Options"), StringComparison.OrdinalIgnoreCase))
             .Where(path => !allowedOptionFiles.Contains(Path.GetRelativePath(root, path)))
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -321,7 +321,7 @@ public sealed class MailRelayArchitectureTests {
             .Select(entry => string.Create(
                 CultureInfo.InvariantCulture,
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

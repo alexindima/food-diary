@@ -8,13 +8,13 @@ internal static class ProjectReferenceReader {
         ReadProductionProjectPaths()
             .ToDictionary(
                 GetProjectNameFromPath,
-                path => ReadProjectReferences(path).OrderBy(static name => name, StringComparer.Ordinal).ToArray(),
+                path => ReadProjectReferences(path).Order(StringComparer.Ordinal).ToArray(),
                 StringComparer.Ordinal);
 
     public static IReadOnlyList<string> ReadProductionProjectNames() =>
         ReadProductionProjectPaths()
             .Select(GetProjectNameFromPath)
-            .OrderBy(static name => name, StringComparer.Ordinal)
+            .Order(StringComparer.Ordinal)
             .ToArray();
 
     public static string[] ReadProjectReferences(string relativeProjectPath) {
@@ -26,14 +26,14 @@ internal static class ProjectReferenceReader {
             .Select(node => node.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => GetProjectNameFromReference(value!))
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
     }
 
     private static IEnumerable<string> ReadProductionProjectPaths() =>
         Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
-            .OrderBy(static path => path, StringComparer.Ordinal);
+            .Order(StringComparer.Ordinal);
 
     private static string GetProjectNameFromPath(string projectPath) =>
         Path.GetFileNameWithoutExtension(projectPath);

@@ -171,7 +171,7 @@ public sealed class ControllerConventionsTests {
                 .OfType<InvocationExpressionSyntax>()
                 .Any(static invocation => invocation.Expression is IdentifierNameSyntax { Identifier.ValueText: "Send" }))
             .Select(static tree => Path.GetFileName(tree.FilePath))
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -238,7 +238,7 @@ public sealed class ControllerConventionsTests {
             .Where(static tree => !IsAllowedApplicationAbstractionReference(tree.FilePath))
             .Where(static tree => ReferencesApplicationTypes(tree))
             .Select(static tree => Path.GetFileName(tree.FilePath))
-            .OrderBy(static name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -255,7 +255,7 @@ public sealed class ControllerConventionsTests {
         string[] violations = [.. Directory.GetFiles(Path.Combine(presentationRoot, "Features"), filePattern, SearchOption.AllDirectories)
             .Where(path => !string.Equals(Path.GetFileName(Path.GetDirectoryName(path)), expectedFolderName, StringComparison.Ordinal))
             .Select(static path => Path.GetRelativePath(GetPresentationRoot(), path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -282,7 +282,7 @@ public sealed class ControllerConventionsTests {
                 and not "PagedHttpResponseMappings.cs"
                 and not "EnumerableHttpResponseMappings.cs")
             .Select(path => Path.GetRelativePath(presentationRoot, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

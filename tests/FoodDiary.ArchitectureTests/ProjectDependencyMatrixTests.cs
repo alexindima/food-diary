@@ -96,7 +96,7 @@ public sealed class ProjectDependencyMatrixTests {
     [Fact]
     public void AllProductionProjects_AreCoveredByDependencyMatrix() {
         IReadOnlyList<string> actualProjects = ProjectReferenceReader.ReadProductionProjectNames();
-        string[] expectedProjects = [.. AllowedProductionProjectReferences.Keys.OrderBy(static name => name, StringComparer.Ordinal)];
+        string[] expectedProjects = [.. AllowedProductionProjectReferences.Keys.Order(StringComparer.Ordinal)];
 
         Assert.Equal(expectedProjects, actualProjects);
     }
@@ -111,7 +111,7 @@ public sealed class ProjectDependencyMatrixTests {
                 $"Project '{projectName}' is missing from discovered production projects.");
 
             Assert.Equal(
-                expectedReferences.OrderBy(static name => name, StringComparer.Ordinal).ToArray(),
+                expectedReferences.Order(StringComparer.Ordinal).ToArray(),
                 actualReferences);
         }
     }
@@ -135,7 +135,7 @@ public sealed class ProjectDependencyMatrixTests {
                 .Where(reference => !allowedMailClientReferences.Contains(reference) ||
                                     !string.Equals(projectName, "FoodDiary.Integrations", StringComparison.Ordinal))
                 .Select(reference => $"{projectName} -> {reference}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

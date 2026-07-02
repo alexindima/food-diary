@@ -58,7 +58,7 @@ public class DomainModelGuardrailTests {
                 .Where(method => method.GetParameters().Length > 8)
                 .Where(method => !AllowedWideMutators.Contains($"{method.DeclaringType!.FullName}.{method.Name}"))
                 .Select(method => $"{method.DeclaringType!.FullName}.{method.Name}({method.GetParameters().Length} params)"))
-            .OrderBy(name => name, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,

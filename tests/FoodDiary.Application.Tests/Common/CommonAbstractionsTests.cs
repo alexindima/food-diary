@@ -38,7 +38,7 @@ public class CommonAbstractionsTests {
             .Where(path => !allowedFiles.Contains(path))
             .Where(ContainsAdHocErrorConstruction)
             .Select(path => Path.GetRelativePath(applicationRoot, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -74,7 +74,7 @@ public class CommonAbstractionsTests {
             .SelectMany(path => GetReferencedStringErrorCodes(path)
                 .Where(code => !knownCodes.Contains(code))
                 .Select(code => $"{Path.GetRelativePath(applicationRoot, path)}: {code}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

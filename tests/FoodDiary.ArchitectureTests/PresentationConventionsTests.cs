@@ -84,7 +84,7 @@ public class PresentationConventionsTests {
             .Select(entry => string.Create(
                 CultureInfo.InvariantCulture,
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

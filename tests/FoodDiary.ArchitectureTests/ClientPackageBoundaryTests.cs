@@ -51,7 +51,7 @@ public sealed class ClientPackageBoundaryTests {
                        !allowedRootFiles.Contains(relative);
             })
             .Select(path => Path.GetRelativePath(root, path))
-            .OrderBy(static path => path, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }

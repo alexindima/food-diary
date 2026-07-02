@@ -23,7 +23,7 @@ public sealed class CSharpStyleGuardrailTests {
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .SelectMany(CSharpSyntaxReader.ReadTargetTypedNewInvocationArguments)
             .Select(location => location.Format(root))
-            .OrderBy(static value => value, StringComparer.Ordinal)];
+            .Order(StringComparer.Ordinal)];
 
         Assert.True(
             violations.Length == 0,
