@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
+using FoodDiary.Application.Common.Services;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -75,45 +76,7 @@ public class BehaviorTests {
     }
 
     [Fact]
-    public async Task UnitOfWorkBehavior_WhenPendingChanges_SavesAfterHandler() {
-        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
-        unitOfWork.HasPendingChanges.Returns(returnThis: true);
-        unitOfWork.SaveChangesAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        var behavior = new UnitOfWorkBehavior<TestCommand, Result<string>>(unitOfWork);
-
-        Result<string> result = await behavior.Handle(
-            new TestCommand(),
-            ct => Task.FromResult(Result.Success("saved")),
-            CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.Equal("saved", result.Value);
-        await unitOfWork.Received(requiredNumberOfCalls: 1).SaveChangesAsync(CancellationToken.None);
-    }
-
-    [Fact]
-    public async Task PostCommitBehavior_WhenPostCommitActionsExist_FlushesAfterHandler() {
-        IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
-        postCommitActionQueue.HasActions.Returns(returnThis: true);
-        postCommitActionQueue.FlushAsync(Arg.Any<CancellationToken>()).Returns(Task.CompletedTask);
-        var behavior = new PostCommitBehavior<TestCommand, Result<string>>(postCommitActionQueue);
-        bool handlerCalled = false;
-
-        Result<string> result = await behavior.Handle(
-            new TestCommand(),
-            ct => {
-                handlerCalled = true;
-                return Task.FromResult(Result.Success("saved"));
-            },
-            CancellationToken.None);
-
-        ResultAssert.Success(result);
-        Assert.True(handlerCalled);
-        await postCommitActionQueue.Received(requiredNumberOfCalls: 1).FlushAsync(CancellationToken.None);
-    }
-
-    [Fact]
-    public async Task PostCommitAndUnitOfWorkBehaviors_WhenComposed_FlushAfterSuccessfulSaveChanges() {
+    public async Task CommandTransactionBehavior_WhenHandlerSucceeds_SavesThenFlushesPostCommitActions() {
         var callOrder = new List<string>();
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
@@ -131,18 +94,14 @@ public class BehaviorTests {
                 callOrder.Add("flush");
                 return Task.CompletedTask;
             });
-        var postCommitBehavior = new PostCommitBehavior<TestCommand, Result<string>>(postCommitActionQueue);
-        var unitOfWorkBehavior = new UnitOfWorkBehavior<TestCommand, Result<string>>(unitOfWork);
+        var behavior = new CommandTransactionBehavior<TestCommand, Result<string>>(unitOfWork, postCommitActionQueue);
 
-        Result<string> result = await postCommitBehavior.Handle(
+        Result<string> result = await behavior.Handle(
             new TestCommand(),
-            ct => unitOfWorkBehavior.Handle(
-                new TestCommand(),
-                _ => {
-                    callOrder.Add("handler");
-                    return Task.FromResult(Result.Success("saved"));
-                },
-                ct),
+            _ => {
+                callOrder.Add("handler");
+                return Task.FromResult(Result.Success("saved"));
+            },
             CancellationToken.None);
 
         ResultAssert.Success(result);
@@ -150,25 +109,62 @@ public class BehaviorTests {
     }
 
     [Fact]
-    public async Task PostCommitAndUnitOfWorkBehaviors_WhenSaveChangesFails_DoNotFlushPostCommitActions() {
+    public async Task CommandTransactionBehavior_WhenSaveChangesFails_DoesNotFlushPostCommitActions() {
         IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
         unitOfWork.HasPendingChanges.Returns(returnThis: true);
         unitOfWork
             .SaveChangesAsync(Arg.Any<CancellationToken>())
             .Returns(_ => throw new InvalidOperationException("commit failed"));
         IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
-        var postCommitBehavior = new PostCommitBehavior<TestCommand, Result<string>>(postCommitActionQueue);
-        var unitOfWorkBehavior = new UnitOfWorkBehavior<TestCommand, Result<string>>(unitOfWork);
+        postCommitActionQueue.HasActions.Returns(returnThis: true);
+        var behavior = new CommandTransactionBehavior<TestCommand, Result<string>>(unitOfWork, postCommitActionQueue);
 
-        await Assert.ThrowsAsync<InvalidOperationException>(() => postCommitBehavior.Handle(
+        await Assert.ThrowsAsync<InvalidOperationException>(() => behavior.Handle(
             new TestCommand(),
-            ct => unitOfWorkBehavior.Handle(
-                new TestCommand(),
-                _ => Task.FromResult(Result.Success("saved")),
-                ct),
+            _ => Task.FromResult(Result.Success("saved")),
             CancellationToken.None));
 
         await postCommitActionQueue.DidNotReceive().FlushAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task CommandTransactionBehavior_WhenHandlerReturnsFailure_DoesNotSaveOrFlushPostCommitActions() {
+        IUnitOfWork unitOfWork = Substitute.For<IUnitOfWork>();
+        unitOfWork.HasPendingChanges.Returns(returnThis: true);
+        IPostCommitActionQueue postCommitActionQueue = Substitute.For<IPostCommitActionQueue>();
+        postCommitActionQueue.HasActions.Returns(returnThis: true);
+        var error = new Error("Test.Failed", "The command failed.");
+        var behavior = new CommandTransactionBehavior<TestCommand, Result<string>>(unitOfWork, postCommitActionQueue);
+
+        Result<string> result = await behavior.Handle(
+            new TestCommand(),
+            _ => Task.FromResult(Result.Failure<string>(error)),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+        await unitOfWork.DidNotReceive().SaveChangesAsync(Arg.Any<CancellationToken>());
+        await postCommitActionQueue.DidNotReceive().FlushAsync(Arg.Any<CancellationToken>());
+    }
+
+    [Fact]
+    public async Task PostCommitActionQueue_FlushAsync_DrainsActionsEnqueuedDuringFlush() {
+        var postCommitActionQueue = new PostCommitActionQueue();
+        var callOrder = new List<string>();
+        postCommitActionQueue.Enqueue(_ => {
+            callOrder.Add("first");
+            postCommitActionQueue.Enqueue(_ => {
+                callOrder.Add("second");
+                return Task.CompletedTask;
+            });
+
+            return Task.CompletedTask;
+        });
+
+        await postCommitActionQueue.FlushAsync(CancellationToken.None);
+
+        Assert.Equal(["first", "second"], callOrder);
+        Assert.False(postCommitActionQueue.HasActions);
     }
 
     [ExcludeFromCodeCoverage]

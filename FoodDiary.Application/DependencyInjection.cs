@@ -37,8 +37,7 @@ public static class DependencyInjection {
             cfg.RegisterServicesFromAssembly(assembly);
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            cfg.AddOpenBehavior(typeof(PostCommitBehavior<,>));
-            cfg.AddOpenBehavior(typeof(UnitOfWorkBehavior<,>));
+            cfg.AddOpenBehavior(typeof(CommandTransactionBehavior<,>));
         });
 
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
