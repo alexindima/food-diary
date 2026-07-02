@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Models;
@@ -1057,14 +1058,16 @@ public class UpdateRecipeCommandHandlerTests {
         return recipe;
     }
 
-    private static IUserRepository CreateUserRepository(User user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
+    private static ICurrentUserAccessService CreateUserRepository(User user) {
+        ICurrentUserAccessService repository = Substitute.For<ICurrentUserAccessService>();
+        Error? error = user switch {
+            { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+            { IsActive: false } => Errors.Authentication.InvalidToken,
+            _ => null,
+        };
         repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(user));
+            .EnsureCanAccessAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(error));
 
         return repository;
     }

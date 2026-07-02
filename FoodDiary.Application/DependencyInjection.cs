@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
@@ -26,6 +27,7 @@ using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Application.Products.Common;
@@ -54,11 +56,13 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
+        services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.AddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.AddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
         services.AddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
         services.AddScoped<IDashboardReadService, ComposedDashboardReadService>();
+        services.AddScoped<IDashboardUserContextService, DashboardUserContextService>();
         services.AddScoped<IDashboardSectionDataLoader, DashboardSectionDataLoader>();
         services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>
             new DashboardSnapshotBuilder(

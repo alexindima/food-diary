@@ -1,10 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -12,7 +12,7 @@ namespace FoodDiary.Application.Products.Queries.GetProducts;
 
 public class GetProductsQueryHandler(
     IProductRepository productRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductModel>>> {
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
         GetProductsQuery query,
@@ -24,7 +24,7 @@ public class GetProductsQueryHandler(
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }

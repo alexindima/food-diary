@@ -1,6 +1,5 @@
 using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
@@ -9,6 +8,7 @@ using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.DailyAdvices.Models;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Hydration.Models;
@@ -36,7 +36,7 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
 
     public DashboardSnapshotBuilder(
         ISender sender,
-        IUserRepository userRepository,
+        IDashboardUserContextService dashboardUserContextService,
         IWeightEntryRepository weightEntryRepository,
         IWaistEntryRepository waistEntryRepository,
         IHydrationEntryRepository hydrationEntryRepository,
@@ -46,7 +46,7 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         : this(
             new DashboardSectionDataLoader(
                 sender,
-                userRepository,
+                dashboardUserContextService,
                 fastingOccurrenceRepository,
                 exerciseEntryRepository,
                 new ComposedDashboardReadService(

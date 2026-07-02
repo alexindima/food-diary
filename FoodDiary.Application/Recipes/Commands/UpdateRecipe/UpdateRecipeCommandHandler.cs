@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
@@ -15,7 +16,7 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 public class UpdateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService,
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService)
@@ -24,7 +25,7 @@ public class UpdateRecipeCommandHandler(
         Result<UpdateRecipeValues> valuesResult = await UpdateRecipeValuePreparer.PrepareAsync(
             command,
             recipeRepository,
-            userRepository,
+            currentUserAccessService,
             imageAssetAccessService,
             productLookupService,
             recipeLookupService,

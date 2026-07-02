@@ -1,8 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 internal static class CreateRecipeValuePreparer {
     public static async Task<Result<CreateRecipeValues>> PrepareAsync(
         CreateRecipeCommand command,
-        IUserRepository userRepository,
+        ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -25,7 +24,7 @@ internal static class CreateRecipeValuePreparer {
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CreateRecipeValues>(accessError);
         }

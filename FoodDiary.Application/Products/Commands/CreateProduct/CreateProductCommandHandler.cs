@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public class CreateProductCommandHandler(
     IProductRepository productRepository,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {
     private sealed record CreateProductValues(
@@ -47,7 +47,7 @@ public class CreateProductCommandHandler(
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<CreateProductValues>(accessError);
         }

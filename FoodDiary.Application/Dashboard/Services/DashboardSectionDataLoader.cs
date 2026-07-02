@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Exercises.Common;
@@ -11,7 +10,7 @@ using FoodDiary.Application.DailyAdvices.Models;
 using FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -21,7 +20,7 @@ namespace FoodDiary.Application.Dashboard.Services;
 
 internal sealed class DashboardSectionDataLoader(
     ISender sender,
-    IUserRepository userRepository,
+    IDashboardUserContextService dashboardUserContextService,
     IFastingOccurrenceRepository fastingOccurrenceRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
@@ -47,10 +46,9 @@ internal sealed class DashboardSectionDataLoader(
         }
 
         var userId = new UserId(request.UserId);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure<DashboardBuildContext>(accessError);
+        Result<User> userResult = await dashboardUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<DashboardBuildContext>(userResult.Error);
         }
 
         int trendDays = Math.Clamp(request.TrendDays <= 0 ? DefaultTrendDays : request.TrendDays, 1, MaxTrendDays);
@@ -66,7 +64,7 @@ internal sealed class DashboardSectionDataLoader(
             trendDays,
             dayStart.AddDays(-(trendDays - 1)),
             request.Sections ?? DashboardSnapshotSections.All,
-            user!));
+            userResult.Value));
     }
 
     public Task<Result<DashboardReadModel>> LoadDashboardDataAsync(

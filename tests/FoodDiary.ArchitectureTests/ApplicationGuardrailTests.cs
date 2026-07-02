@@ -173,9 +173,11 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedDirectories = [
+            Path.Combine(applicationRoot, "Ai"),
             Path.Combine(applicationRoot, "Consumptions"),
             Path.Combine(applicationRoot, "Cycles"),
             Path.Combine(applicationRoot, "DailyAdvices"),
+            Path.Combine(applicationRoot, "Dashboard"),
             Path.Combine(applicationRoot, "Export"),
             Path.Combine(applicationRoot, "FavoriteProducts"),
             Path.Combine(applicationRoot, "FavoriteRecipes"),
@@ -183,6 +185,8 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Fasting"),
             Path.Combine(applicationRoot, "Gamification"),
             Path.Combine(applicationRoot, "Hydration"),
+            Path.Combine(applicationRoot, "Products"),
+            Path.Combine(applicationRoot, "Recipes"),
             Path.Combine(applicationRoot, "ShoppingLists"),
             Path.Combine(applicationRoot, "Statistics"),
             Path.Combine(applicationRoot, "Tdee"),
@@ -197,6 +201,8 @@ public sealed class ApplicationGuardrailTests {
                 directory,
                 "IUserRepository",
                 [
+                    Path.Combine(applicationRoot, "Ai", "Services"),
+                    Path.Combine(applicationRoot, "Dashboard", "Services"),
                     Path.Combine(applicationRoot, "Gamification", "Services"),
                     Path.Combine(applicationRoot, "Hydration", "Services"),
                     Path.Combine(applicationRoot, "Tdee", "Services"),

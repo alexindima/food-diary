@@ -3,10 +3,10 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Services;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
@@ -18,7 +18,7 @@ internal static class UpdateRecipeValuePreparer {
     public static async Task<Result<UpdateRecipeValues>> PrepareAsync(
         UpdateRecipeCommand command,
         IRecipeRepository recipeRepository,
-        IUserRepository userRepository,
+        ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         IProductLookupService productLookupService,
         IRecipeLookupService recipeLookupService,
@@ -34,7 +34,7 @@ internal static class UpdateRecipeValuePreparer {
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<UpdateRecipeValues>(accessError);
         }

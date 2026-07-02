@@ -1,8 +1,8 @@
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 using FoodDiary.Application.Dashboard.Services;
@@ -290,19 +290,15 @@ public class DashboardFeatureTests {
         return emailSender;
     }
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
+    private static IDashboardUserContextService CreateUserRepository(User? user) {
+        IDashboardUserContextService repository = Substitute.For<IDashboardUserContextService>();
         repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId id = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
-            });
-        repository
-            .GetByIdIncludingDeletedAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(call => {
-                UserId id = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == id ? user : null);
+                return Task.FromResult(user is not null && user.Id == id
+                    ? Result.Success(user)
+                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
             });
         return repository;
     }

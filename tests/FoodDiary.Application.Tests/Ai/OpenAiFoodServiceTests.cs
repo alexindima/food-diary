@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Ai.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -18,7 +18,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -40,7 +40,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateUserRepository(user),
+            CreateAiUserContextService(user),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -61,7 +61,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateUserRepository(returnNull: true),
+            CreateAiUserContextService(returnNull: true),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -82,7 +82,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -106,7 +106,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -126,7 +126,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             new RecordingOpenAiFoodClient(),
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -150,7 +150,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -173,7 +173,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 0)),
-            CreateUserRepository(returnNull: true),
+            CreateAiUserContextService(returnNull: true),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -195,7 +195,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(0, 1_000_000)),
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -220,7 +220,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -249,7 +249,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -271,7 +271,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -289,7 +289,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             new RecordingAiUsageRepository(new AiUsageTotals(5_000_000, 0)),
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -309,7 +309,7 @@ public sealed class OpenAiFoodServiceTests {
         var service = new OpenAiFoodService(
             client,
             usageRepository,
-            CreateUserRepository(),
+            CreateAiUserContextService(),
             new StubDateTimeProvider(),
             CreateAiPromptProvider());
 
@@ -403,14 +403,28 @@ public sealed class OpenAiFoodServiceTests {
             Task.FromResult(totals);
     }
 
-    private static IUserRepository CreateUserRepository(User? user = null, bool returnNull = false) {
+    private static IAiUserContextService CreateAiUserContextService(User? user = null, bool returnNull = false) {
         User resolvedUser = user ?? User.Create("ai-tests@example.com", "hash");
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(returnNull ? null : resolvedUser));
+        IAiUserContextService service = Substitute.For<IAiUserContextService>();
+        service
+            .GetAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(_ => {
+                if (returnNull) {
+                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.User.NotFound()));
+                }
 
-        return repository;
+                if (!resolvedUser.IsActive || resolvedUser.DeletedAt is not null) {
+                    return Task.FromResult(Result.Failure<AiUserContext>(Errors.Authentication.InvalidToken));
+                }
+
+                return Task.FromResult(Result.Success(new AiUserContext(
+                    resolvedUser.Id,
+                    resolvedUser.Language,
+                    resolvedUser.AiInputTokenLimit,
+                    resolvedUser.AiOutputTokenLimit)));
+            });
+
+        return service;
     }
 
     [ExcludeFromCodeCoverage]

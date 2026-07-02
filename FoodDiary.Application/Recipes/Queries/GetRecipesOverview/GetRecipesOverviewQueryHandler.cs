@@ -7,6 +7,7 @@ using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Recipe = FoodDiary.Domain.Entities.Recipes.Recipe;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
@@ -16,7 +17,8 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 public sealed class GetRecipesOverviewQueryHandler(
     IRecipeRepository recipeRepository,
     IRecentItemRepository recentItemRepository,
-    IFavoriteRecipeRepository favoriteRecipeRepository)
+    IFavoriteRecipeRepository favoriteRecipeRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesOverviewQuery, Result<RecipeOverviewModel>> {
     private sealed record RecipeOverviewOptions(
         UserId UserId,
@@ -38,7 +40,13 @@ public sealed class GetRecipesOverviewQueryHandler(
             return Result.Failure<RecipeOverviewModel>(Errors.Authentication.InvalidToken);
         }
 
-        RecipeOverviewOptions options = CreateOptions(query);
+        var userId = new UserId(query.UserId.Value);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (accessError is not null) {
+            return Result.Failure<RecipeOverviewModel>(accessError);
+        }
+
+        RecipeOverviewOptions options = CreateOptions(query, userId);
 
         (IReadOnlyList<(Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetPagedAsync(
             options.UserId,
@@ -77,9 +85,9 @@ public sealed class GetRecipesOverviewQueryHandler(
         return Result.Success(new RecipeOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
 
-    private static RecipeOverviewOptions CreateOptions(GetRecipesOverviewQuery query) =>
+    private static RecipeOverviewOptions CreateOptions(GetRecipesOverviewQuery query, UserId userId) =>
         new(
-            new UserId(query.UserId!.Value),
+            userId,
             Math.Max(query.Page, 1),
             Math.Max(query.Limit, 1),
             Math.Clamp(query.RecentLimit, 1, 50),

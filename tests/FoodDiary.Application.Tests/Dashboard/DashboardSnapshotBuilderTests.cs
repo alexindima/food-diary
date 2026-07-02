@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
@@ -33,7 +33,7 @@ public sealed class DashboardSnapshotBuilderTests {
     public async Task BuildAsync_WithEmptyUserId_ReturnsValidationFailure() {
         var builder = new DashboardSnapshotBuilder(
             new StubSender(),
-            new StubUserRepository(),
+            new MissingUserContextService(),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
@@ -62,7 +62,7 @@ public sealed class DashboardSnapshotBuilderTests {
         var user = User.Create("dashboard-date-range@example.com", "hash");
         var builder = new DashboardSnapshotBuilder(
             new StubSender(),
-            new AccessibleUserRepository(user),
+            new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
@@ -91,7 +91,7 @@ public sealed class DashboardSnapshotBuilderTests {
         var existingUser = User.Create("dashboard-existing@example.com", "hash");
         var builder = new DashboardSnapshotBuilder(
             new StubSender(),
-            new AccessibleUserRepository(existingUser),
+            new AccessibleUserContextService(existingUser),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
@@ -120,7 +120,7 @@ public sealed class DashboardSnapshotBuilderTests {
         user.UpdatePreferences(new UserPreferenceUpdate(DashboardLayoutJson: "{"));
         var builder = new DashboardSnapshotBuilder(
             new StubSender(),
-            new AccessibleUserRepository(user),
+            new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
@@ -175,7 +175,7 @@ public sealed class DashboardSnapshotBuilderTests {
         ]);
         var builder = new DashboardSnapshotBuilder(
             new EmptyTrendSender(),
-            new AccessibleUserRepository(user),
+            new AccessibleUserContextService(user),
             weightRepository,
             waistRepository,
             new StubHydrationEntryRepository(),
@@ -221,7 +221,7 @@ public sealed class DashboardSnapshotBuilderTests {
         var sender = new RecordingConsumptionsSender();
         var builder = new DashboardSnapshotBuilder(
             sender,
-            new AccessibleUserRepository(user),
+            new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             new StubHydrationEntryRepository(),
@@ -340,7 +340,7 @@ public sealed class DashboardSnapshotBuilderTests {
         IHydrationEntryRepository? hydrationEntryRepository = null) =>
         new(
             sender,
-            new AccessibleUserRepository(user),
+            new AccessibleUserContextService(user),
             new StubWeightEntryRepository(),
             new StubWaistEntryRepository(),
             hydrationEntryRepository ?? new StubHydrationEntryRepository(),
@@ -490,18 +490,11 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class AccessibleUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class AccessibleUserContextService(User user) : IDashboardUserContextService {
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult(user.Id == userId
+                ? Result.Success(user)
+                : Result.Failure<User>(Errors.Authentication.InvalidToken));
     }
 
     [ExcludeFromCodeCoverage]
@@ -606,18 +599,9 @@ public sealed class DashboardSnapshotBuilderTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class MissingUserContextService : IDashboardUserContextService {
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
+            Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken));
     }
 
     [ExcludeFromCodeCoverage]

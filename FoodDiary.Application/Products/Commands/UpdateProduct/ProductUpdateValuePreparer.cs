@@ -1,8 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -12,10 +11,10 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 internal static class ProductUpdateValuePreparer {
     public static async Task<Result<ProductUpdateValues>> PrepareAsync(
         UpdateProductCommand command,
-        IUserRepository userRepository,
+        ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         CancellationToken cancellationToken) {
-        Result<UserId> userIdResult = await ResolveUserIdAsync(command, userRepository, cancellationToken).ConfigureAwait(false);
+        Result<UserId> userIdResult = await ResolveUserIdAsync(command, currentUserAccessService, cancellationToken).ConfigureAwait(false);
         if (userIdResult.IsFailure) {
             return Result.Failure<ProductUpdateValues>(userIdResult.Error);
         }
@@ -65,7 +64,7 @@ internal static class ProductUpdateValuePreparer {
 
     private static async Task<Result<UserId>> ResolveUserIdAsync(
         UpdateProductCommand command,
-        IUserRepository userRepository,
+        ICurrentUserAccessService currentUserAccessService,
         CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
             return Result.Failure<UserId>(Errors.Authentication.InvalidToken);
@@ -77,7 +76,7 @@ internal static class ProductUpdateValuePreparer {
         }
 
         var userId = new UserId(command.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         return accessError is null
             ? Result.Success(userId)
             : Result.Failure<UserId>(accessError);

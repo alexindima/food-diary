@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -15,7 +16,7 @@ namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandHandler(
     IRecipeRepository recipeRepository,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService,
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService)
@@ -23,7 +24,7 @@ public class CreateRecipeCommandHandler(
     public async Task<Result<RecipeModel>> Handle(CreateRecipeCommand command, CancellationToken cancellationToken) {
         Result<CreateRecipeValues> valuesResult = await CreateRecipeValuePreparer.PrepareAsync(
             command,
-            userRepository,
+            currentUserAccessService,
             imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {

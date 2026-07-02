@@ -1,8 +1,7 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Domain.Entities.Users;
@@ -10,18 +9,19 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Dashboard.Commands.SendDashboardTestEmail;
 
 public sealed class SendDashboardTestEmailCommandHandler(
-    IUserRepository userRepository,
+    IDashboardUserContextService dashboardUserContextService,
     IEmailSender emailSender,
     ILogger<SendDashboardTestEmailCommandHandler> logger) : ICommandHandler<SendDashboardTestEmailCommand, Result> {
     public async Task<Result> Handle(SendDashboardTestEmailCommand command, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await dashboardUserContextService
+            .GetAccessibleUserAsync(new UserId(command.UserId), cancellationToken)
+            .ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure(userResult.Error);
         }
 
         try {
-            await emailSender.SendTestEmailAsync(new TestEmailMessage(user!.Email, user.Language), cancellationToken).ConfigureAwait(false);
+            await emailSender.SendTestEmailAsync(new TestEmailMessage(userResult.Value.Email, userResult.Value.Language), cancellationToken).ConfigureAwait(false);
             return Result.Success();
         } catch (Exception ex) {
             logger.LogWarning(ex, "Dashboard test email dispatch failed for user {UserId}.", command.UserId);

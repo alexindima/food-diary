@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 using FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
@@ -893,7 +894,8 @@ public class RecipesFeatureTests {
         var handler = new GetRecipesOverviewQueryHandler(
             new OverviewRecipeRepository(),
             new StubRecentItemRepository([]),
-            new StubFavoriteRecipeRepository([]));
+            new StubFavoriteRecipeRepository([]),
+            new StubUserRepository(User.Create("overview-missing-user@example.com", "hash")));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -934,7 +936,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
-        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
+        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -960,7 +962,8 @@ public class RecipesFeatureTests {
         var handler = new GetRecipesOverviewQueryHandler(
             new OverviewRecipeRepository(pagedItems: [(recipe, 1)]),
             recentRepository,
-            new StubFavoriteRecipeRepository([]));
+            new StubFavoriteRecipeRepository([]),
+            new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -987,7 +990,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(recipe.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([]);
-        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository);
+        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1806,18 +1809,15 @@ public class RecipesFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubUserRepository(User user) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Error? error = user switch {
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error);
+        }
     }
 
     private static void SetFavoriteRecipeNavigation(FavoriteRecipe favorite, Recipe recipe) {

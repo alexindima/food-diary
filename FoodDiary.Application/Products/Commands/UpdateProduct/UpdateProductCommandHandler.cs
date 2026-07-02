@@ -1,6 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -12,14 +13,14 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 public class UpdateProductCommandHandler(
     IProductRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService,
-    IUserRepository userRepository,
+    ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<UpdateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>>
         Handle(UpdateProductCommand command, CancellationToken cancellationToken) {
         Result<ProductUpdateValues> valuesResult = await ProductUpdateValuePreparer.PrepareAsync(
             command,
-            userRepository,
+            currentUserAccessService,
             imageAssetAccessService,
             cancellationToken).ConfigureAwait(false);
         if (valuesResult.IsFailure) {

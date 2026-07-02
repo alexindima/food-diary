@@ -1,9 +1,9 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
 public class GetRecipeByIdQueryHandler(
     IRecipeRepository recipeRepository,
-    IUserRepository userRepository)
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {
@@ -23,7 +23,7 @@ public class GetRecipeByIdQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await CurrentUserAccessLoader.EnsureCanAccessAsync(userRepository, userId, cancellationToken).ConfigureAwait(false);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accessError is not null) {
             return Result.Failure<RecipeModel>(accessError);
         }

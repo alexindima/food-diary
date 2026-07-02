@@ -1,9 +1,10 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -17,7 +18,8 @@ namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 public sealed class GetProductsOverviewQueryHandler(
     IProductRepository productRepository,
     IRecentItemRepository recentItemRepository,
-    IFavoriteProductRepository favoriteProductRepository)
+    IFavoriteProductRepository favoriteProductRepository,
+    ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsOverviewQuery, Result<ProductOverviewModel>> {
     private sealed record ProductOverviewOptions(
         UserId UserId,
@@ -43,7 +45,13 @@ public sealed class GetProductsOverviewQueryHandler(
             return Result.Failure<ProductOverviewModel>(Errors.Authentication.InvalidToken);
         }
 
-        ProductOverviewOptions options = CreateOptions(query);
+        var userId = new UserId(query.UserId.Value);
+        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (accessError is not null) {
+            return Result.Failure<ProductOverviewModel>(accessError);
+        }
+
+        ProductOverviewOptions options = CreateOptions(query, userId);
 
         (IReadOnlyList<(Product Product, int UsageCount)> items, int totalItems) = await productRepository.GetPagedAsync(
             options.UserId,
@@ -87,7 +95,7 @@ public sealed class GetProductsOverviewQueryHandler(
         return Result.Success(new ProductOverviewModel(recentResponses, allPaged, favoriteItems, allFavorites.Count));
     }
 
-    private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query) {
+    private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query, UserId userId) {
         ProductType[]? productTypes = query.ProductTypes?
             .Select(type => Enum.TryParse(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
             .OfType<ProductType>()
@@ -95,7 +103,7 @@ public sealed class GetProductsOverviewQueryHandler(
             .ToArray();
 
         return new ProductOverviewOptions(
-            new UserId(query.UserId!.Value),
+            userId,
             Math.Max(query.Page, 1),
             Math.Max(query.Limit, 1),
             Math.Clamp(query.RecentLimit, 1, 50),

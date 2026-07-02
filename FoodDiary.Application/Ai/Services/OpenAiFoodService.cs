@@ -1,10 +1,8 @@
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Ai.Models;
+using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
-using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Services;
@@ -12,7 +10,7 @@ namespace FoodDiary.Application.Ai.Services;
 public sealed class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
     IAiUsageRepository aiUsageRepository,
-    IUserRepository userRepository,
+    IAiUserContextService aiUserContextService,
     TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider)
     : IOpenAiFoodService {
@@ -89,22 +87,18 @@ public sealed class OpenAiFoodService(
     }
 
     private async Task<Result> EnsureMonthlyQuotaAsync(UserId userId, string operation, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (user is null) {
-            return Result.Failure(Errors.User.NotFound(userId.Value));
+        Result<AiUserContext> contextResult = await aiUserContextService.GetAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (contextResult.IsFailure) {
+            return Result.Failure(contextResult.Error);
         }
 
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
-        }
-
+        AiUserContext context = contextResult.Value;
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
         var monthStartUtc = new DateTime(nowUtc.Year, nowUtc.Month, 1, 0, 0, 0, DateTimeKind.Utc);
         DateTime monthEndUtc = monthStartUtc.AddMonths(1);
         AiUsageTotals totals = await aiUsageRepository.GetUserTotalsAsync(userId, monthStartUtc, monthEndUtc, cancellationToken).ConfigureAwait(false);
 
-        if (totals.InputTokens < user.AiInputTokenLimit && totals.OutputTokens < user.AiOutputTokenLimit) {
+        if (totals.InputTokens < context.InputTokenLimit && totals.OutputTokens < context.OutputTokenLimit) {
             return Result.Success();
         }
 

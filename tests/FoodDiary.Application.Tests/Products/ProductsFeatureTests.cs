@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
@@ -1144,7 +1145,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([favorite]);
-        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
+        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1183,7 +1184,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(product.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([]);
-        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository);
+        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1199,7 +1200,8 @@ public class ProductsFeatureTests {
         var handler = new GetProductsOverviewQueryHandler(
             new OverviewProductRepository(),
             new StubRecentItemRepository([]),
-            new StubFavoriteProductRepository([]));
+            new StubFavoriteProductRepository([]),
+            new StubUserRepository(User.Create("overview-missing-user@example.com", "hash")));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(UserId: null, 1, 10, Search: null, IncludePublic: true),
@@ -1229,7 +1231,8 @@ public class ProductsFeatureTests {
         var handler = new GetProductsOverviewQueryHandler(
             new OverviewProductRepository(pagedItems: [(product, 1)]),
             recentRepository,
-            new StubFavoriteProductRepository([]));
+            new StubFavoriteProductRepository([]),
+            new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1274,7 +1277,8 @@ public class ProductsFeatureTests {
         var handler = new GetProductsOverviewQueryHandler(
             new OverviewProductRepository(pagedItems: [(dairy, 3), (fruit, 2)]),
             new StubRecentItemRepository([]),
-            new StubFavoriteProductRepository([]));
+            new StubFavoriteProductRepository([]),
+            new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(
@@ -1578,18 +1582,15 @@ public class ProductsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User user) : IUserRepository {
-        public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user);
-        public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User addedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(User updatedUser, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class StubUserRepository(User user) : ICurrentUserAccessService {
+        public Task<Error?> EnsureCanAccessAsync(UserId userId, CancellationToken cancellationToken = default) {
+            Error? error = user switch {
+                { DeletedAt: not null } => Errors.Authentication.AccountDeleted,
+                { IsActive: false } => Errors.Authentication.InvalidToken,
+                _ => null,
+            };
+            return Task.FromResult(error);
+        }
     }
 
     private static void SetFavoriteProductNavigation(FavoriteProduct favorite, Product product) {
