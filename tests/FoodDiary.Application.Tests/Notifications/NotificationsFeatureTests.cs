@@ -1018,10 +1018,24 @@ public class NotificationsFeatureTests {
         new NotificationUserContextService(new SingleUserRepository(user));
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleUserRepository(User user) : IUserRepository {
+    private sealed class SingleUserRepository(User user) : IUserRepository, INotificationUserAccessService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? foundUser = user.Id == userId ? user : null;
+            if (foundUser is null) {
+                return Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken));
+            }
+
+            if (foundUser.DeletedAt is not null) {
+                return Task.FromResult(Result.Failure<User>(Errors.Authentication.AccountDeleted));
+            }
+
+            return Task.FromResult(Result.Success(foundUser));
+        }
+
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1030,6 +1044,9 @@ public class NotificationsFeatureTests {
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) =>
+            UpdateAsync(userToUpdate, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

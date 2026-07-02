@@ -76,6 +76,7 @@ public static class DependencyInjection {
         services.AddScoped<IImageAssetAccessService, ImageAssetAccessService>();
         services.AddScoped<IImageAssetCleanupService, ImageAssetCleanupService>();
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
+        services.AddScoped<INotificationUserAccessService, NotificationUserAccessService>();
         services.AddScoped<INotificationPreferencesService, NotificationPreferencesService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();

@@ -320,6 +320,22 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void NotificationsSlice_UsesUserRepositoryOnlyThroughNotificationUserAccessService() {
+        string root = GetRepositoryRoot();
+        string notificationsRoot = Path.Combine(root, "FoodDiary.Application", "Notifications");
+        string allowedPath = Path.Combine(notificationsRoot, "Services", "NotificationUserAccessService.cs");
+        string[] notificationFiles = [.. SourceScanner.SourceFiles(notificationsRoot)
+            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, notificationFiles, "IUserRepository"),
+            .. FindReferencesInFiles(root, notificationFiles, "CurrentUserAccessPolicy"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MigratedUserHandlers_DoNotUseFullUserRepositoryOrAccessPolicy() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
