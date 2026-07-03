@@ -40,6 +40,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Dietologist;
@@ -116,7 +117,8 @@ public class DietologistFeatureTests {
         IUserRepository repository = Substitute.For<IUserRepository>();
         repository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<User?>(user));
-        var service = new DietologistUserContextService(repository);
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        var service = new DietologistUserContextService(userContextService, repository);
 
         User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
 

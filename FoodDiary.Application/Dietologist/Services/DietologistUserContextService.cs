@@ -7,14 +7,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
 
-internal sealed class DietologistUserContextService(IUserRepository userRepository) : IDietologistUserContextService {
-    public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        return accessError is not null
-            ? Result.Failure<User>(accessError)
-            : Result.Success(user!);
-    }
+internal sealed class DietologistUserContextService(
+    IUserContextService userContextService,
+    IUserRepository userRepository) : IDietologistUserContextService {
+    public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
+        userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
     public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
         userRepository.GetByEmailAsync(email, cancellationToken);

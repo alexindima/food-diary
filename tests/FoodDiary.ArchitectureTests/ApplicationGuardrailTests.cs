@@ -301,6 +301,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DietologistUserContextService_UsesSharedCurrentUserAccessPolicyThroughUserContextService() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Dietologist",
+            "Services",
+            "DietologistUserContextService.cs");
+        string source = File.ReadAllText(servicePath);
+
+        Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void MigratedBillingUserContextHandlers_DoNotUseFullUserRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
