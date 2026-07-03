@@ -150,17 +150,17 @@ public class DietologistFeatureTests {
     private static AcceptInvitationCommandHandler CreateAcceptHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IDietologistUserContextService? userRepository = null,
+        IUserRoleMembershipService? userRoleMembershipService = null,
         IPasswordHasher? passwordHasher = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
         IWebPushNotificationSender? webPushNotificationSender = null) {
         INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
         IDietologistUserContextService resolvedUserContext = userRepository ?? new InMemoryUserRepository();
-        IUserRepository resolvedUserRepository = resolvedUserContext as IUserRepository ?? new InMemoryUserRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             resolvedUserContext,
-            resolvedUserRepository,
+            userRoleMembershipService ?? new RecordingUserRoleMembershipService(),
             passwordHasher ?? new StubPasswordHasher(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
@@ -171,16 +171,16 @@ public class DietologistFeatureTests {
     private static AcceptInvitationForCurrentUserCommandHandler CreateAcceptCurrentUserHandler(
         IDietologistInvitationRepository? invitationRepository = null,
         IDietologistUserContextService? userRepository = null,
+        IUserRoleMembershipService? userRoleMembershipService = null,
         INotificationRepository? notificationRepository = null,
         INotificationPusher? notificationPusher = null,
         IWebPushNotificationSender? webPushNotificationSender = null) {
         INotificationRepository resolvedNotificationRepository = notificationRepository ?? new InMemoryNotificationRepository();
         IDietologistUserContextService resolvedUserContext = userRepository ?? new InMemoryUserRepository();
-        IUserRepository resolvedUserRepository = resolvedUserContext as IUserRepository ?? new InMemoryUserRepository();
         return new(
             invitationRepository ?? new InMemoryInvitationRepository(),
             resolvedUserContext,
-            resolvedUserRepository,
+            userRoleMembershipService ?? new RecordingUserRoleMembershipService(),
             new InMemoryNotificationWriter(resolvedNotificationRepository, webPushNotificationSender ?? new FakeWebPushNotificationSender()),
             resolvedNotificationRepository,
             notificationPusher ?? new FakeNotificationPusher(),
@@ -530,10 +530,12 @@ public class DietologistFeatureTests {
         var notificationRepo = new InMemoryNotificationRepository();
         var notificationPusher = new FakeNotificationPusher();
         var webPushSender = new FakeWebPushNotificationSender();
+        var userRoleMembershipService = new RecordingUserRoleMembershipService();
 
         AcceptInvitationCommandHandler handler = CreateAcceptHandler(
             invitationRepository: invRepo,
             userRepository: userRepo,
+            userRoleMembershipService: userRoleMembershipService,
             notificationRepository: notificationRepo,
             notificationPusher: notificationPusher,
             webPushNotificationSender: webPushSender);
@@ -547,6 +549,7 @@ public class DietologistFeatureTests {
         Notification notification = Assert.Single(notificationRepo.Added);
         Assert.Equal(NotificationTypes.DietologistInvitationAccepted, notification.Type);
         Assert.Equal(clientId, notification.UserId);
+        Assert.Equal([dietologistId], userRoleMembershipService.EnsureRoleUserIds);
         Assert.True(notificationPusher.PushCalled);
         Assert.True(webPushSender.SendCalled);
     }
@@ -609,10 +612,12 @@ public class DietologistFeatureTests {
         var notificationRepo = new InMemoryNotificationRepository();
         var notificationPusher = new FakeNotificationPusher();
         var webPushSender = new FakeWebPushNotificationSender();
+        var userRoleMembershipService = new RecordingUserRoleMembershipService();
 
         AcceptInvitationForCurrentUserCommandHandler handler = CreateAcceptCurrentUserHandler(
             invitationRepository: invRepo,
             userRepository: userRepo,
+            userRoleMembershipService: userRoleMembershipService,
             notificationRepository: notificationRepo,
             notificationPusher: notificationPusher,
             webPushNotificationSender: webPushSender);
@@ -624,6 +629,7 @@ public class DietologistFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal(DietologistInvitationStatus.Accepted, invitation.Status);
         Assert.Contains(notificationRepo.Added, x => string.Equals(x.Type, NotificationTypes.DietologistInvitationAccepted, StringComparison.Ordinal) && x.UserId == clientId);
+        Assert.Equal([dietologistId], userRoleMembershipService.EnsureRoleUserIds);
         Assert.True(notificationPusher.PushCalled);
         Assert.True(webPushSender.SendCalled);
     }
@@ -2362,6 +2368,22 @@ public class DietologistFeatureTests {
         }
 
         public Task UpdateAsync(DietologistInvitation invitation, CancellationToken ct = default) =>
+            Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingUserRoleMembershipService : IUserRoleMembershipService {
+        public List<UserId> EnsureRoleUserIds { get; } = [];
+
+        public Task EnsureRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
+            if (string.Equals(roleName, RoleNames.Dietologist, StringComparison.Ordinal)) {
+                EnsureRoleUserIds.Add(userId);
+            }
+
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) =>
             Task.CompletedTask;
     }
 

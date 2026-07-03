@@ -1,5 +1,5 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -13,12 +13,12 @@ public class RecommendationCreatedEventHandler(
     INotificationRepository notificationRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
-    IUserRepository userRepository,
+    IDietologistUserLookupService userLookupService,
     IPostCommitActionQueue postCommitActionQueue)
     : INotificationHandler<NotificationEnvelope<RecommendationCreatedDomainEvent>> {
     public async Task Handle(NotificationEnvelope<RecommendationCreatedDomainEvent> envelope, CancellationToken cancellationToken) {
         RecommendationCreatedDomainEvent domainEvent = envelope.Value;
-        User? dietologist = await userRepository.GetByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
+        User? dietologist = await userLookupService.GetUserByIdAsync(domainEvent.DietologistUserId, cancellationToken).ConfigureAwait(false);
         string dietologistName = ResolveDietologistLabel(dietologist);
 
         Notification notification = NotificationFactory.CreateNewRecommendation(

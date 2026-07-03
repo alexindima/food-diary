@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
@@ -16,7 +16,7 @@ namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 public class AcceptInvitationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
-    IUserRepository userRepository,
+    IUserRoleMembershipService userRoleMembershipService,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
     INotificationRepository notificationRepository,
@@ -61,11 +61,7 @@ public class AcceptInvitationCommandHandler(
         invitation.Accept(dietologistUserId);
 
         if (!user.HasRole(RoleNames.Dietologist)) {
-            var roles = user.GetRoleNames().ToList();
-            roles.Add(RoleNames.Dietologist);
-            IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(roles, cancellationToken).ConfigureAwait(false);
-            user.ReplaceRoles(roleEntities);
-            await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+            await userRoleMembershipService.EnsureRoleAsync(user.Id, RoleNames.Dietologist, cancellationToken).ConfigureAwait(false);
         }
 
         await invitationRepository.UpdateAsync(invitation, cancellationToken).ConfigureAwait(false);

@@ -279,10 +279,13 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "DisconnectDietologist", "DisconnectDietologistCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "MarkRecommendationRead", "MarkRecommendationReadCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "RevokeInvitation", "RevokeInvitationCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "UpdateDietologistPermissions", "UpdateDietologistPermissionsCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "EventHandlers", "RecommendationCreatedEventHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientDashboard", "GetClientDashboardQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
