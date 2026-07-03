@@ -19,14 +19,15 @@ public class AdminInvariantTests {
             actorUserAgent: "  Browser  ",
             startedAtLocal);
 
-        Assert.NotEqual(Guid.Empty, session.Id);
-        Assert.Equal(actorUserId, session.ActorUserId);
-        Assert.Equal(targetUserId, session.TargetUserId);
-        Assert.Equal("Support investigation", session.Reason);
-        Assert.Equal("127.0.0.1", session.ActorIpAddress);
-        Assert.Equal("Browser", session.ActorUserAgent);
-        Assert.Equal(startedAtLocal.ToUniversalTime(), session.StartedAtUtc);
-        Assert.Equal(startedAtLocal.ToUniversalTime(), session.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, session.Id),
+            () => Assert.Equal(actorUserId, session.ActorUserId),
+            () => Assert.Equal(targetUserId, session.TargetUserId),
+            () => Assert.Equal("Support investigation", session.Reason),
+            () => Assert.Equal("127.0.0.1", session.ActorIpAddress),
+            () => Assert.Equal("Browser", session.ActorUserAgent),
+            () => Assert.Equal(startedAtLocal.ToUniversalTime(), session.StartedAtUtc),
+            () => Assert.Equal(startedAtLocal.ToUniversalTime(), session.CreatedOnUtc));
     }
 
     [Fact]

@@ -20,10 +20,11 @@ public sealed class FavoriteProductHttpMappingsTests {
 
         AddFavoriteProductCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(productId, command.ProductId);
-        Assert.Equal("Breakfast", command.Name);
-        Assert.Equal(120, command.PreferredPortionAmount);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(productId, command.ProductId),
+            () => Assert.Equal("Breakfast", command.Name),
+            () => Assert.Equal(120, command.PreferredPortionAmount));
     }
 
     [Fact]
@@ -34,10 +35,11 @@ public sealed class FavoriteProductHttpMappingsTests {
 
         UpdateFavoriteProductCommand command = request.ToCommand(userId, favoriteProductId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(favoriteProductId, command.FavoriteProductId);
-        Assert.Equal("Breakfast", command.Name);
-        Assert.Equal(150, command.PreferredPortionAmount);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(favoriteProductId, command.FavoriteProductId),
+            () => Assert.Equal("Breakfast", command.Name),
+            () => Assert.Equal(150, command.PreferredPortionAmount));
     }
 
     [Fact]
@@ -50,11 +52,12 @@ public sealed class FavoriteProductHttpMappingsTests {
         GetFavoriteProductsQuery query = userId.ToQuery();
         IsProductFavoriteQuery favoriteQuery = productId.ToIsFavoriteQuery(userId);
 
-        Assert.Equal(userId, delete.UserId);
-        Assert.Equal(favoriteProductId, delete.FavoriteProductId);
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(userId, favoriteQuery.UserId);
-        Assert.Equal(productId, favoriteQuery.ProductId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, delete.UserId),
+            () => Assert.Equal(favoriteProductId, delete.FavoriteProductId),
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(userId, favoriteQuery.UserId),
+            () => Assert.Equal(productId, favoriteQuery.ProductId));
     }
 
     [Fact]
@@ -85,26 +88,27 @@ public sealed class FavoriteProductHttpMappingsTests {
 
         FavoriteProductHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(model.Id, response.Id);
-        Assert.Equal(model.ProductId, response.ProductId);
-        Assert.Equal("Breakfast", response.Name);
-        Assert.Equal(createdAtUtc, response.CreatedAtUtc);
-        Assert.Equal("Milk", response.ProductName);
-        Assert.Equal("Brand", response.Brand);
-        Assert.Equal("1234567890123", response.Barcode);
-        Assert.Equal("Fresh", response.Comment);
-        Assert.Equal("https://cdn.example/milk.png", response.ImageUrl);
-        Assert.Equal(60, response.CaloriesPerBase);
-        Assert.Equal(3, response.ProteinsPerBase);
-        Assert.Equal(2, response.FatsPerBase);
-        Assert.Equal(5, response.CarbsPerBase);
-        Assert.Equal(1, response.FiberPerBase);
-        Assert.Equal(0, response.AlcoholPerBase);
-        Assert.Equal(78, response.QualityScore);
-        Assert.Equal("green", response.QualityGrade);
-        Assert.True(response.IsOwnedByCurrentUser);
-        Assert.Equal("100g", response.BaseUnit);
-        Assert.Equal(150, response.PreferredPortionAmount);
-        Assert.Equal(100, response.DefaultPortionAmount);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, response.Id),
+            () => Assert.Equal(model.ProductId, response.ProductId),
+            () => Assert.Equal("Breakfast", response.Name),
+            () => Assert.Equal(createdAtUtc, response.CreatedAtUtc),
+            () => Assert.Equal("Milk", response.ProductName),
+            () => Assert.Equal("Brand", response.Brand),
+            () => Assert.Equal("1234567890123", response.Barcode),
+            () => Assert.Equal("Fresh", response.Comment),
+            () => Assert.Equal("https://cdn.example/milk.png", response.ImageUrl),
+            () => Assert.Equal(60, response.CaloriesPerBase),
+            () => Assert.Equal(3, response.ProteinsPerBase),
+            () => Assert.Equal(2, response.FatsPerBase),
+            () => Assert.Equal(5, response.CarbsPerBase),
+            () => Assert.Equal(1, response.FiberPerBase),
+            () => Assert.Equal(0, response.AlcoholPerBase),
+            () => Assert.Equal(78, response.QualityScore),
+            () => Assert.Equal("green", response.QualityGrade),
+            () => Assert.True(response.IsOwnedByCurrentUser),
+            () => Assert.Equal("100g", response.BaseUnit),
+            () => Assert.Equal(150, response.PreferredPortionAmount),
+            () => Assert.Equal(100, response.DefaultPortionAmount));
     }
 }

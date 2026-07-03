@@ -48,14 +48,15 @@ public class ContentInvariantTests {
             "  Vitamins  ", "  Body needs vitamins  ", "  Short summary  ", "  EN  ",
             LessonCategory.Micronutrients, LessonDifficulty.Intermediate, 10, 3);
 
-        Assert.Equal("Vitamins", lesson.Title);
-        Assert.Equal("Body needs vitamins", lesson.Content);
-        Assert.Equal("Short summary", lesson.Summary);
-        Assert.Equal("en", lesson.Locale);
-        Assert.Equal(LessonCategory.Micronutrients, lesson.Category);
-        Assert.Equal(LessonDifficulty.Intermediate, lesson.Difficulty);
-        Assert.Equal(10, lesson.EstimatedReadMinutes);
-        Assert.Equal(3, lesson.SortOrder);
+        Assert.Multiple(
+            () => Assert.Equal("Vitamins", lesson.Title),
+            () => Assert.Equal("Body needs vitamins", lesson.Content),
+            () => Assert.Equal("Short summary", lesson.Summary),
+            () => Assert.Equal("en", lesson.Locale),
+            () => Assert.Equal(LessonCategory.Micronutrients, lesson.Category),
+            () => Assert.Equal(LessonDifficulty.Intermediate, lesson.Difficulty),
+            () => Assert.Equal(10, lesson.EstimatedReadMinutes),
+            () => Assert.Equal(3, lesson.SortOrder));
     }
 
     [Fact]
@@ -142,14 +143,15 @@ public class ContentInvariantTests {
             estimatedReadMinutes: 0,
             sortOrder: -1);
 
-        Assert.Equal("New title", lesson.Title);
-        Assert.Equal("New content", lesson.Content);
-        Assert.Equal("New summary", lesson.Summary);
-        Assert.Equal("ru", lesson.Locale);
-        Assert.Equal(LessonCategory.Micronutrients, lesson.Category);
-        Assert.Equal(LessonDifficulty.Advanced, lesson.Difficulty);
-        Assert.Equal(1, lesson.EstimatedReadMinutes);
-        Assert.Equal(0, lesson.SortOrder);
+        Assert.Multiple(
+            () => Assert.Equal("New title", lesson.Title),
+            () => Assert.Equal("New content", lesson.Content),
+            () => Assert.Equal("New summary", lesson.Summary),
+            () => Assert.Equal("ru", lesson.Locale),
+            () => Assert.Equal(LessonCategory.Micronutrients, lesson.Category),
+            () => Assert.Equal(LessonDifficulty.Advanced, lesson.Difficulty),
+            () => Assert.Equal(1, lesson.EstimatedReadMinutes),
+            () => Assert.Equal(0, lesson.SortOrder));
         Assert.NotNull(lesson.ModifiedOnUtc);
     }
 
@@ -175,12 +177,13 @@ public class ContentInvariantTests {
     public void DailyAdvice_Create_NormalizesValuesAndClampsWeight() {
         var advice = DailyAdvice.Create("  Drink water  ", "  ru-RU  ", weight: 0, tag: "  hydration  ");
 
-        Assert.NotEqual(DailyAdviceId.Empty, advice.Id);
-        Assert.Equal("Drink water", advice.Value);
-        Assert.Equal("ru", advice.Locale);
-        Assert.Equal(1, advice.Weight);
-        Assert.Equal("hydration", advice.Tag);
-        Assert.NotEqual(default, advice.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(DailyAdviceId.Empty, advice.Id),
+            () => Assert.Equal("Drink water", advice.Value),
+            () => Assert.Equal("ru", advice.Locale),
+            () => Assert.Equal(1, advice.Weight),
+            () => Assert.Equal("hydration", advice.Tag),
+            () => Assert.NotEqual(default, advice.CreatedOnUtc));
     }
 
     [Fact]
@@ -207,10 +210,11 @@ public class ContentInvariantTests {
 
         advice.Update(value: "  New advice  ", locale: "ru", weight: 0, tag: "  new-tag  ");
 
-        Assert.Equal("New advice", advice.Value);
-        Assert.Equal("ru", advice.Locale);
-        Assert.Equal(1, advice.Weight);
-        Assert.Equal("new-tag", advice.Tag);
+        Assert.Multiple(
+            () => Assert.Equal("New advice", advice.Value),
+            () => Assert.Equal("ru", advice.Locale),
+            () => Assert.Equal(1, advice.Weight),
+            () => Assert.Equal("new-tag", advice.Tag));
         Assert.NotNull(advice.ModifiedOnUtc);
     }
 

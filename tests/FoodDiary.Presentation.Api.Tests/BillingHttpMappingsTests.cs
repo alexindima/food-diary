@@ -18,9 +18,10 @@ public sealed class BillingHttpMappingsTests {
 
         CreateCheckoutSessionCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("premium", command.Plan);
-        Assert.Equal("stripe", command.Provider);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("premium", command.Plan),
+            () => Assert.Equal("stripe", command.Provider));
     }
 
     [Fact]
@@ -31,9 +32,10 @@ public sealed class BillingHttpMappingsTests {
         var trialCommand = userId.ToStartPremiumTrialCommand();
         GetBillingOverviewQuery overviewQuery = userId.ToBillingOverviewQuery();
 
-        Assert.Equal(userId, portalCommand.UserId);
-        Assert.Equal(userId, trialCommand.UserId);
-        Assert.Equal(userId, overviewQuery.UserId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, portalCommand.UserId),
+            () => Assert.Equal(userId, trialCommand.UserId),
+            () => Assert.Equal(userId, overviewQuery.UserId));
     }
 
     [Fact]
@@ -65,24 +67,25 @@ public sealed class BillingHttpMappingsTests {
 
         BillingOverviewHttpResponse response = model.ToHttpResponse();
 
-        Assert.True(response.IsPremium);
-        Assert.Equal("active", response.SubscriptionStatus);
-        Assert.Equal("premium", response.Plan);
-        Assert.Equal("stripe", response.SubscriptionProvider);
-        Assert.Equal(periodStart, response.CurrentPeriodStartUtc);
-        Assert.Equal(periodEnd, response.CurrentPeriodEndUtc);
-        Assert.Equal(nextAttempt, response.NextBillingAttemptUtc);
-        Assert.True(response.CancelAtPeriodEnd);
-        Assert.False(response.RenewalEnabled);
-        Assert.True(response.ManageBillingAvailable);
-        Assert.Equal(trialStart, response.PremiumTrialStartUtc);
-        Assert.Equal(trialEnd, response.PremiumTrialEndUtc);
-        Assert.True(response.PremiumTrialActive);
-        Assert.True(response.PremiumTrialUsed);
-        Assert.False(response.CanStartPremiumTrial);
-        Assert.Equal("paddle", response.Provider);
-        Assert.Equal("client-token", response.PaddleClientToken);
-        Assert.Equal(["paddle", "stripe"], response.AvailableProviders);
+        Assert.Multiple(
+            () => Assert.True(response.IsPremium),
+            () => Assert.Equal("active", response.SubscriptionStatus),
+            () => Assert.Equal("premium", response.Plan),
+            () => Assert.Equal("stripe", response.SubscriptionProvider),
+            () => Assert.Equal(periodStart, response.CurrentPeriodStartUtc),
+            () => Assert.Equal(periodEnd, response.CurrentPeriodEndUtc),
+            () => Assert.Equal(nextAttempt, response.NextBillingAttemptUtc),
+            () => Assert.True(response.CancelAtPeriodEnd),
+            () => Assert.False(response.RenewalEnabled),
+            () => Assert.True(response.ManageBillingAvailable),
+            () => Assert.Equal(trialStart, response.PremiumTrialStartUtc),
+            () => Assert.Equal(trialEnd, response.PremiumTrialEndUtc),
+            () => Assert.True(response.PremiumTrialActive),
+            () => Assert.True(response.PremiumTrialUsed),
+            () => Assert.False(response.CanStartPremiumTrial),
+            () => Assert.Equal("paddle", response.Provider),
+            () => Assert.Equal("client-token", response.PaddleClientToken),
+            () => Assert.Equal(["paddle", "stripe"], response.AvailableProviders));
     }
 
     [Fact]
@@ -98,9 +101,10 @@ public sealed class BillingHttpMappingsTests {
         CheckoutSessionHttpResponse checkoutResponse = checkout.ToHttpResponse();
         PortalSessionHttpResponse portalResponse = portal.ToHttpResponse();
 
-        Assert.Equal("session-1", checkoutResponse.SessionId);
-        Assert.Equal("https://checkout.example", checkoutResponse.Url);
-        Assert.Equal("premium", checkoutResponse.Plan);
-        Assert.Equal("https://portal.example", portalResponse.Url);
+        Assert.Multiple(
+            () => Assert.Equal("session-1", checkoutResponse.SessionId),
+            () => Assert.Equal("https://checkout.example", checkoutResponse.Url),
+            () => Assert.Equal("premium", checkoutResponse.Plan),
+            () => Assert.Equal("https://portal.example", portalResponse.Url));
     }
 }

@@ -77,9 +77,10 @@ public sealed class ShoppingListHttpMappingsTests {
         Assert.Equal(userId, command.UserId);
         Assert.Equal("Groceries", command.Name);
         Assert.Single(command.Items);
-        Assert.Equal(productId, command.Items[0].ProductId);
-        Assert.Equal("Milk", command.Items[0].Name);
-        Assert.Equal(2.0, command.Items[0].Amount);
+        Assert.Multiple(
+            () => Assert.Equal(productId, command.Items[0].ProductId),
+            () => Assert.Equal("Milk", command.Items[0].Name),
+            () => Assert.Equal(2.0, command.Items[0].Amount));
     }
 
     [Fact]
@@ -113,9 +114,10 @@ public sealed class ShoppingListHttpMappingsTests {
 
         UpdateShoppingListCommand command = request.ToCommand(userId, listId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(listId, command.ShoppingListId);
-        Assert.Equal("Updated Name", command.Name);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(listId, command.ShoppingListId),
+            () => Assert.Equal("Updated Name", command.Name));
         Assert.NotNull(command.Items);
         Assert.Single(command.Items!);
     }
@@ -128,10 +130,11 @@ public sealed class ShoppingListHttpMappingsTests {
 
         ShoppingListSummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal("Weekly", response.Name);
-        Assert.Equal(createdAt, response.CreatedAt);
-        Assert.Equal(5, response.ItemsCount);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal("Weekly", response.Name),
+            () => Assert.Equal(createdAt, response.CreatedAt),
+            () => Assert.Equal(5, response.ItemsCount));
     }
 
     [Fact]
@@ -163,9 +166,10 @@ public sealed class ShoppingListHttpMappingsTests {
         Assert.Equal(listId, response.Id);
         Assert.Equal("Shopping", response.Name);
         Assert.Single(response.Items);
-        Assert.Equal(itemId, response.Items[0].Id);
-        Assert.Equal(productId, response.Items[0].ProductId);
-        Assert.Equal("Bread", response.Items[0].Name);
+        Assert.Multiple(
+            () => Assert.Equal(itemId, response.Items[0].Id),
+            () => Assert.Equal(productId, response.Items[0].ProductId),
+            () => Assert.Equal("Bread", response.Items[0].Name));
     }
 
     [Fact]
@@ -207,15 +211,16 @@ public sealed class ShoppingListHttpMappingsTests {
         ShoppingListHttpResponse response = model.ToHttpResponse();
 
         ShoppingListItemSourceHttpResponse mappedSource = Assert.Single(Assert.Single(response.Items).Sources);
-        Assert.Equal(sourceId, mappedSource.Id);
-        Assert.Equal("meal-plan", mappedSource.SourceType);
-        Assert.Equal(mealPlanId, mappedSource.MealPlanId);
-        Assert.Equal(mealPlanMealId, mappedSource.MealPlanMealId);
-        Assert.Equal(recipeId, mappedSource.RecipeId);
-        Assert.Equal("Breakfast", mappedSource.Label);
-        Assert.Equal(2, mappedSource.DayNumber);
-        Assert.Equal("breakfast", mappedSource.MealType);
-        Assert.Equal(150, mappedSource.Amount);
-        Assert.Equal("g", mappedSource.Unit);
+        Assert.Multiple(
+            () => Assert.Equal(sourceId, mappedSource.Id),
+            () => Assert.Equal("meal-plan", mappedSource.SourceType),
+            () => Assert.Equal(mealPlanId, mappedSource.MealPlanId),
+            () => Assert.Equal(mealPlanMealId, mappedSource.MealPlanMealId),
+            () => Assert.Equal(recipeId, mappedSource.RecipeId),
+            () => Assert.Equal("Breakfast", mappedSource.Label),
+            () => Assert.Equal(2, mappedSource.DayNumber),
+            () => Assert.Equal("breakfast", mappedSource.MealType),
+            () => Assert.Equal(150, mappedSource.Amount),
+            () => Assert.Equal("g", mappedSource.Unit));
     }
 }

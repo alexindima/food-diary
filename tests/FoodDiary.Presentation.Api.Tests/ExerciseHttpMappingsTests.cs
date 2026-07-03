@@ -19,13 +19,14 @@ public sealed class ExerciseHttpMappingsTests {
 
         CreateExerciseEntryCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal("Running", command.ExerciseType);
-        Assert.Equal(30, command.DurationMinutes);
-        Assert.Equal(250.5, command.CaloriesBurned);
-        Assert.Equal("Morning jog", command.Name);
-        Assert.Equal("Easy pace", command.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal("Running", command.ExerciseType),
+            () => Assert.Equal(30, command.DurationMinutes),
+            () => Assert.Equal(250.5, command.CaloriesBurned),
+            () => Assert.Equal("Morning jog", command.Name),
+            () => Assert.Equal("Easy pace", command.Notes));
     }
 
     [Fact]
@@ -36,12 +37,13 @@ public sealed class ExerciseHttpMappingsTests {
 
         UpdateExerciseEntryCommand command = request.ToCommand(userId, entryId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(entryId, command.EntryId);
-        Assert.Equal("Swimming", command.ExerciseType);
-        Assert.Equal(45, command.DurationMinutes);
-        Assert.True(command.ClearName);
-        Assert.Equal("Pool", command.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(entryId, command.EntryId),
+            () => Assert.Equal("Swimming", command.ExerciseType),
+            () => Assert.Equal(45, command.DurationMinutes),
+            () => Assert.True(command.ClearName),
+            () => Assert.Equal("Pool", command.Notes));
     }
 
     [Fact]
@@ -52,9 +54,10 @@ public sealed class ExerciseHttpMappingsTests {
 
         GetExerciseEntriesQuery query = userId.ToQuery(from, to);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo));
     }
 
     [Fact]
@@ -76,13 +79,14 @@ public sealed class ExerciseHttpMappingsTests {
 
         ExerciseEntryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(entryId, response.Id);
-        Assert.Equal(date, response.Date);
-        Assert.Equal("Running", response.ExerciseType);
-        Assert.Equal("Morning jog", response.Name);
-        Assert.Equal(30, response.DurationMinutes);
-        Assert.Equal(250.5, response.CaloriesBurned);
-        Assert.Equal("Easy pace", response.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(entryId, response.Id),
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal("Running", response.ExerciseType),
+            () => Assert.Equal("Morning jog", response.Name),
+            () => Assert.Equal(30, response.DurationMinutes),
+            () => Assert.Equal(250.5, response.CaloriesBurned),
+            () => Assert.Equal("Easy pace", response.Notes));
     }
 
     [Fact]
@@ -94,8 +98,9 @@ public sealed class ExerciseHttpMappingsTests {
 
         IReadOnlyList<ExerciseEntryHttpResponse> response = models.ToHttpResponse();
 
-        Assert.Equal(2, response.Count);
-        Assert.Equal("Running", response[0].ExerciseType);
-        Assert.Equal("Yoga", response[1].ExerciseType);
+        Assert.Multiple(
+            () => Assert.Equal(2, response.Count),
+            () => Assert.Equal("Running", response[0].ExerciseType),
+            () => Assert.Equal("Yoga", response[1].ExerciseType));
     }
 }

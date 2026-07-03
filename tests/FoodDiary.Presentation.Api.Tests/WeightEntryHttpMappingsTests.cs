@@ -21,9 +21,10 @@ public sealed class WeightEntryHttpMappingsTests {
 
         CreateWeightEntryCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal(75.5, command.Weight);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal(75.5, command.Weight));
     }
 
     [Fact]
@@ -35,10 +36,11 @@ public sealed class WeightEntryHttpMappingsTests {
 
         UpdateWeightEntryCommand command = request.ToCommand(userId, entryId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(entryId, command.WeightEntryId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal(74.8, command.Weight);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(entryId, command.WeightEntryId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal(74.8, command.Weight));
     }
 
     [Fact]
@@ -70,11 +72,12 @@ public sealed class WeightEntryHttpMappingsTests {
 
         GetWeightEntriesQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(10, query.Limit);
-        Assert.False(query.Descending);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(10, query.Limit),
+            () => Assert.False(query.Descending));
     }
 
     [Fact]
@@ -96,10 +99,11 @@ public sealed class WeightEntryHttpMappingsTests {
 
         GetWeightSummariesQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(7, query.QuantizationDays);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(7, query.QuantizationDays));
     }
 
     [Fact]
@@ -111,10 +115,11 @@ public sealed class WeightEntryHttpMappingsTests {
 
         WeightEntryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal(userId, response.UserId);
-        Assert.Equal(date, response.Date);
-        Assert.Equal(75.5, response.Weight);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal(userId, response.UserId),
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal(75.5, response.Weight));
     }
 
     [Fact]
@@ -125,8 +130,9 @@ public sealed class WeightEntryHttpMappingsTests {
 
         WeightEntrySummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(from, response.StartDate);
-        Assert.Equal(to, response.EndDate);
-        Assert.Equal(75.2, response.AverageWeight);
+        Assert.Multiple(
+            () => Assert.Equal(from, response.StartDate),
+            () => Assert.Equal(to, response.EndDate),
+            () => Assert.Equal(75.2, response.AverageWeight));
     }
 }

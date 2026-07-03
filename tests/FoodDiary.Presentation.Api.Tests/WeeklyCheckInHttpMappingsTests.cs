@@ -26,19 +26,21 @@ public sealed class WeeklyCheckInHttpMappingsTests {
 
         WeeklyCheckInHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(14000, response.ThisWeek.TotalCalories);
-        Assert.Equal(2000, response.ThisWeek.AvgDailyCalories);
-        Assert.Equal(120, response.ThisWeek.AvgProteins);
-        Assert.Equal(7, response.ThisWeek.DaysLogged);
-        Assert.Equal(75.0, response.ThisWeek.WeightStart);
-        Assert.Equal(14000, response.ThisWeek.TotalHydrationMl);
+        Assert.Multiple(
+            () => Assert.Equal(14000, response.ThisWeek.TotalCalories),
+            () => Assert.Equal(2000, response.ThisWeek.AvgDailyCalories),
+            () => Assert.Equal(120, response.ThisWeek.AvgProteins),
+            () => Assert.Equal(7, response.ThisWeek.DaysLogged),
+            () => Assert.Equal(75.0, response.ThisWeek.WeightStart),
+            () => Assert.Equal(14000, response.ThisWeek.TotalHydrationMl));
 
         Assert.Equal(13000, response.LastWeek.TotalCalories);
         Assert.Equal(6, response.LastWeek.DaysLogged);
 
-        Assert.Equal(1000, response.Trends.CalorieChange);
-        Assert.Equal(-0.5, response.Trends.WeightChange);
-        Assert.Equal(2000, response.Trends.HydrationChange);
+        Assert.Multiple(
+            () => Assert.Equal(1000, response.Trends.CalorieChange),
+            () => Assert.Equal(-0.5, response.Trends.WeightChange),
+            () => Assert.Equal(2000, response.Trends.HydrationChange));
 
         Assert.Equal(2, response.Suggestions.Count);
     }
@@ -51,9 +53,10 @@ public sealed class WeeklyCheckInHttpMappingsTests {
 
         WeeklyCheckInHttpResponse response = model.ToHttpResponse();
 
-        Assert.Null(response.ThisWeek.WeightStart);
-        Assert.Null(response.ThisWeek.WaistEnd);
-        Assert.Null(response.Trends.WeightChange);
+        Assert.Multiple(
+            () => Assert.Null(response.ThisWeek.WeightStart),
+            () => Assert.Null(response.ThisWeek.WaistEnd),
+            () => Assert.Null(response.Trends.WeightChange));
         Assert.Empty(response.Suggestions);
     }
 }

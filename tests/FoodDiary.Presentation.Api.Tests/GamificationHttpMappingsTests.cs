@@ -26,15 +26,16 @@ public sealed class GamificationHttpMappingsTests {
 
         GamificationHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(5, response.CurrentStreak);
-        Assert.Equal(12, response.LongestStreak);
-        Assert.Equal(85, response.TotalMealsLogged);
-        Assert.Equal(72, response.HealthScore);
-        Assert.Equal(0.85, response.WeeklyAdherence);
-        Assert.Equal(2, response.Badges.Count);
-        Assert.Equal("streak_7", response.Badges[0].Key);
-        Assert.True(response.Badges[0].IsEarned);
-        Assert.False(response.Badges[1].IsEarned);
+        Assert.Multiple(
+            () => Assert.Equal(5, response.CurrentStreak),
+            () => Assert.Equal(12, response.LongestStreak),
+            () => Assert.Equal(85, response.TotalMealsLogged),
+            () => Assert.Equal(72, response.HealthScore),
+            () => Assert.Equal(0.85, response.WeeklyAdherence),
+            () => Assert.Equal(2, response.Badges.Count),
+            () => Assert.Equal("streak_7", response.Badges[0].Key),
+            () => Assert.True(response.Badges[0].IsEarned),
+            () => Assert.False(response.Badges[1].IsEarned));
     }
 
     [Fact]

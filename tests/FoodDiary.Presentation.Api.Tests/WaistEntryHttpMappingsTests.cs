@@ -21,9 +21,10 @@ public sealed class WaistEntryHttpMappingsTests {
 
         CreateWaistEntryCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal(80.5, command.Circumference);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal(80.5, command.Circumference));
     }
 
     [Fact]
@@ -35,10 +36,11 @@ public sealed class WaistEntryHttpMappingsTests {
 
         UpdateWaistEntryCommand command = request.ToCommand(userId, entryId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(entryId, command.WaistEntryId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal(79.8, command.Circumference);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(entryId, command.WaistEntryId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal(79.8, command.Circumference));
     }
 
     [Fact]
@@ -70,11 +72,12 @@ public sealed class WaistEntryHttpMappingsTests {
 
         GetWaistEntriesQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(10, query.Limit);
-        Assert.False(query.Descending);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(10, query.Limit),
+            () => Assert.False(query.Descending));
     }
 
     [Fact]
@@ -96,10 +99,11 @@ public sealed class WaistEntryHttpMappingsTests {
 
         GetWaistSummariesQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(7, query.QuantizationDays);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(7, query.QuantizationDays));
     }
 
     [Fact]
@@ -111,10 +115,11 @@ public sealed class WaistEntryHttpMappingsTests {
 
         WaistEntryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal(userId, response.UserId);
-        Assert.Equal(date, response.Date);
-        Assert.Equal(80.5, response.Circumference);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal(userId, response.UserId),
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal(80.5, response.Circumference));
     }
 
     [Fact]
@@ -125,8 +130,9 @@ public sealed class WaistEntryHttpMappingsTests {
 
         WaistEntrySummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(from, response.StartDate);
-        Assert.Equal(to, response.EndDate);
-        Assert.Equal(80.2, response.AverageCircumference);
+        Assert.Multiple(
+            () => Assert.Equal(from, response.StartDate),
+            () => Assert.Equal(to, response.EndDate),
+            () => Assert.Equal(80.2, response.AverageCircumference));
     }
 }

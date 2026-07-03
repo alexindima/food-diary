@@ -15,9 +15,10 @@ public sealed class LessonHttpMappingsTests {
 
         GetLessonsQuery query = userId.ToQuery("ru", "nutrition");
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal("ru", query.Locale);
-        Assert.Equal("nutrition", query.Category);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal("ru", query.Locale),
+            () => Assert.Equal("nutrition", query.Category));
     }
 
     [Fact]
@@ -51,11 +52,12 @@ public sealed class LessonHttpMappingsTests {
 
         IReadOnlyList<LessonSummaryHttpResponse> responses = models.ToHttpResponse();
 
-        Assert.Equal(2, responses.Count);
-        Assert.Equal("Basics of Nutrition", responses[0].Title);
-        Assert.False(responses[0].IsRead);
-        Assert.True(responses[1].IsRead);
-        Assert.Null(responses[1].Summary);
+        Assert.Multiple(
+            () => Assert.Equal(2, responses.Count),
+            () => Assert.Equal("Basics of Nutrition", responses[0].Title),
+            () => Assert.False(responses[0].IsRead),
+            () => Assert.True(responses[1].IsRead),
+            () => Assert.Null(responses[1].Summary));
     }
 
     [Fact]
@@ -65,10 +67,11 @@ public sealed class LessonHttpMappingsTests {
 
         LessonDetailHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal("Title", response.Title);
-        Assert.Equal("Full content", response.Content);
-        Assert.Equal("Summary", response.Summary);
-        Assert.True(response.IsRead);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal("Title", response.Title),
+            () => Assert.Equal("Full content", response.Content),
+            () => Assert.Equal("Summary", response.Summary),
+            () => Assert.True(response.IsRead));
     }
 }

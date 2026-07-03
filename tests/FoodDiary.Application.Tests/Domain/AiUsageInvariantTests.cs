@@ -105,12 +105,13 @@ public class AiUsageInvariantTests {
             outputTokens: 5,
             totalTokens: 20);
 
-        Assert.Equal("meal_scan", usage.Operation);
-        Assert.Equal("gpt-4.1-mini", usage.Model);
-        Assert.Equal(10, usage.InputTokens);
-        Assert.Equal(5, usage.OutputTokens);
-        Assert.Equal(20, usage.TotalTokens);
-        Assert.NotEqual(Guid.Empty, usage.Id);
-        Assert.NotEqual(default, usage.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal("meal_scan", usage.Operation),
+            () => Assert.Equal("gpt-4.1-mini", usage.Model),
+            () => Assert.Equal(10, usage.InputTokens),
+            () => Assert.Equal(5, usage.OutputTokens),
+            () => Assert.Equal(20, usage.TotalTokens),
+            () => Assert.NotEqual(Guid.Empty, usage.Id),
+            () => Assert.NotEqual(default, usage.CreatedOnUtc));
     }
 }

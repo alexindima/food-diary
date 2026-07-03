@@ -20,12 +20,13 @@ public class FastingOccurrenceInvariantTests {
             targetHours: 24,
             notes: "  Long fast  ");
 
-        Assert.Equal(FastingOccurrenceStatus.Active, occurrence.Status);
-        Assert.Equal(24, occurrence.InitialTargetHours);
-        Assert.Equal(0, occurrence.AddedTargetHours);
-        Assert.Equal(24, occurrence.TargetHours);
-        Assert.Equal("Long fast", occurrence.Notes);
-        Assert.Equal(startedAtUtc, occurrence.StartedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(FastingOccurrenceStatus.Active, occurrence.Status),
+            () => Assert.Equal(24, occurrence.InitialTargetHours),
+            () => Assert.Equal(0, occurrence.AddedTargetHours),
+            () => Assert.Equal(24, occurrence.TargetHours),
+            () => Assert.Equal("Long fast", occurrence.Notes),
+            () => Assert.Equal(startedAtUtc, occurrence.StartedAtUtc));
     }
 
     [Fact]
@@ -40,9 +41,10 @@ public class FastingOccurrenceInvariantTests {
 
         occurrence.Extend(12);
 
-        Assert.Equal(24, occurrence.InitialTargetHours);
-        Assert.Equal(12, occurrence.AddedTargetHours);
-        Assert.Equal(36, occurrence.TargetHours);
+        Assert.Multiple(
+            () => Assert.Equal(24, occurrence.InitialTargetHours),
+            () => Assert.Equal(12, occurrence.AddedTargetHours),
+            () => Assert.Equal(36, occurrence.TargetHours));
     }
 
     [Fact]
@@ -57,9 +59,10 @@ public class FastingOccurrenceInvariantTests {
 
         occurrence.Reduce(8);
 
-        Assert.Equal(36, occurrence.InitialTargetHours);
-        Assert.Equal(-8, occurrence.AddedTargetHours);
-        Assert.Equal(28, occurrence.TargetHours);
+        Assert.Multiple(
+            () => Assert.Equal(36, occurrence.InitialTargetHours),
+            () => Assert.Equal(-8, occurrence.AddedTargetHours),
+            () => Assert.Equal(28, occurrence.TargetHours));
     }
 
     [Fact]
@@ -78,9 +81,10 @@ public class FastingOccurrenceInvariantTests {
 
         occurrence.Postpone(postponedAtUtc, nextScheduledForUtc);
 
-        Assert.Equal(FastingOccurrenceStatus.Postponed, occurrence.Status);
-        Assert.Equal(postponedAtUtc, occurrence.EndedAtUtc);
-        Assert.Equal(nextScheduledForUtc, occurrence.ScheduledForUtc);
+        Assert.Multiple(
+            () => Assert.Equal(FastingOccurrenceStatus.Postponed, occurrence.Status),
+            () => Assert.Equal(postponedAtUtc, occurrence.EndedAtUtc),
+            () => Assert.Equal(nextScheduledForUtc, occurrence.ScheduledForUtc));
     }
 
     [Fact]
@@ -148,10 +152,11 @@ public class FastingOccurrenceInvariantTests {
             sequenceNumber: 2,
             notes: "  Eat day  ");
 
-        Assert.Equal(FastingOccurrenceStatus.Scheduled, occurrence.Status);
-        Assert.Equal(scheduledForUtc, occurrence.ScheduledForUtc);
-        Assert.Equal(scheduledForUtc, occurrence.StartedAtUtc);
-        Assert.Equal("Eat day", occurrence.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(FastingOccurrenceStatus.Scheduled, occurrence.Status),
+            () => Assert.Equal(scheduledForUtc, occurrence.ScheduledForUtc),
+            () => Assert.Equal(scheduledForUtc, occurrence.StartedAtUtc),
+            () => Assert.Equal("Eat day", occurrence.Notes));
     }
 
     [Fact]
@@ -166,9 +171,10 @@ public class FastingOccurrenceInvariantTests {
 
         occurrence.Start(startedAtUtc);
 
-        Assert.Equal(FastingOccurrenceStatus.Active, occurrence.Status);
-        Assert.Equal(startedAtUtc, occurrence.StartedAtUtc);
-        Assert.Null(occurrence.EndedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(FastingOccurrenceStatus.Active, occurrence.Status),
+            () => Assert.Equal(startedAtUtc, occurrence.StartedAtUtc),
+            () => Assert.Null(occurrence.EndedAtUtc));
         Assert.NotNull(occurrence.ModifiedOnUtc);
     }
 
@@ -282,12 +288,13 @@ public class FastingOccurrenceInvariantTests {
             checkInNotes: "  ok  ",
             checkedInAtUtc);
 
-        Assert.Equal(1, occurrence.HungerLevel);
-        Assert.Equal(2, occurrence.EnergyLevel);
-        Assert.Equal(3, occurrence.MoodLevel);
-        Assert.Equal("headache,tired", occurrence.Symptoms);
-        Assert.Equal("ok", occurrence.CheckInNotes);
-        Assert.Equal(checkedInAtUtc, occurrence.CheckInAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(1, occurrence.HungerLevel),
+            () => Assert.Equal(2, occurrence.EnergyLevel),
+            () => Assert.Equal(3, occurrence.MoodLevel),
+            () => Assert.Equal("headache,tired", occurrence.Symptoms),
+            () => Assert.Equal("ok", occurrence.CheckInNotes),
+            () => Assert.Equal(checkedInAtUtc, occurrence.CheckInAtUtc));
     }
 
     [Fact]

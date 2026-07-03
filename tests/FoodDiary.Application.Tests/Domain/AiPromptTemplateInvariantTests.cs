@@ -44,9 +44,10 @@ public class AiPromptTemplateInvariantTests {
     public void Create_NormalizesKeyAndLocaleToLowerTrimmed() {
         var template = AiPromptTemplate.Create("  MEAL_SCAN  ", "  EN  ", "  Prompt text  ");
 
-        Assert.Equal("meal_scan", template.Key);
-        Assert.Equal("en", template.Locale);
-        Assert.Equal("Prompt text", template.PromptText);
+        Assert.Multiple(
+            () => Assert.Equal("meal_scan", template.Key),
+            () => Assert.Equal("en", template.Locale),
+            () => Assert.Equal("Prompt text", template.PromptText));
     }
 
     [Fact]

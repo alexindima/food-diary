@@ -28,9 +28,10 @@ public sealed class WearableHttpMappingsTests {
 
         GetWearableAuthUrlQuery query = WearableHttpMappings.ToAuthUrlQuery(userId, "fitbit", "state123");
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal("fitbit", query.Provider);
-        Assert.Equal("state123", query.State);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal("fitbit", query.Provider),
+            () => Assert.Equal("state123", query.State));
     }
 
     [Fact]
@@ -51,10 +52,11 @@ public sealed class WearableHttpMappingsTests {
 
         ConnectWearableCommand command = request.ToCommand(userId, "fitbit");
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("fitbit", command.Provider);
-        Assert.Equal("auth-code-123", command.Code);
-        Assert.Equal("state-123", command.State);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("fitbit", command.Provider),
+            () => Assert.Equal("auth-code-123", command.Code),
+            () => Assert.Equal("state-123", command.State));
     }
 
     [Fact]
@@ -74,9 +76,10 @@ public sealed class WearableHttpMappingsTests {
 
         SyncWearableDataCommand command = WearableHttpMappings.ToSyncCommand(userId, "fitbit", date);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("fitbit", command.Provider);
-        Assert.Equal(date, command.Date);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("fitbit", command.Provider),
+            () => Assert.Equal(date, command.Date));
     }
 
     [Fact]
@@ -87,11 +90,12 @@ public sealed class WearableHttpMappingsTests {
 
         WearableConnectionHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal("fitbit", response.Provider);
-        Assert.Equal("ext-user-1", response.ExternalUserId);
-        Assert.True(response.IsActive);
-        Assert.Equal(syncedAt, response.LastSyncedAtUtc);
-        Assert.Equal(connectedAt, response.ConnectedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("fitbit", response.Provider),
+            () => Assert.Equal("ext-user-1", response.ExternalUserId),
+            () => Assert.True(response.IsActive),
+            () => Assert.Equal(syncedAt, response.LastSyncedAtUtc),
+            () => Assert.Equal(connectedAt, response.ConnectedAtUtc));
     }
 
     [Fact]
@@ -103,9 +107,10 @@ public sealed class WearableHttpMappingsTests {
 
         IReadOnlyList<WearableConnectionHttpResponse> responses = models.ToHttpResponse();
 
-        Assert.Equal(2, responses.Count);
-        Assert.Equal("fitbit", responses[0].Provider);
-        Assert.Equal("googlefit", responses[1].Provider);
+        Assert.Multiple(
+            () => Assert.Equal(2, responses.Count),
+            () => Assert.Equal("fitbit", responses[0].Provider),
+            () => Assert.Equal("googlefit", responses[1].Provider));
     }
 
     [Fact]
@@ -115,11 +120,12 @@ public sealed class WearableHttpMappingsTests {
 
         WearableDailySummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(date, response.Date);
-        Assert.Equal(8500, response.Steps);
-        Assert.Equal(72, response.HeartRate);
-        Assert.Equal(350, response.CaloriesBurned);
-        Assert.Equal(45, response.ActiveMinutes);
-        Assert.Equal(420, response.SleepMinutes);
+        Assert.Multiple(
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal(8500, response.Steps),
+            () => Assert.Equal(72, response.HeartRate),
+            () => Assert.Equal(350, response.CaloriesBurned),
+            () => Assert.Equal(45, response.ActiveMinutes),
+            () => Assert.Equal(420, response.SleepMinutes));
     }
 }

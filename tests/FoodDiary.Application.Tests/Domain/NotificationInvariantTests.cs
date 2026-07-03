@@ -95,15 +95,16 @@ public class NotificationInvariantTests {
             locale: "  en-US  ",
             userAgent: "  Browser  ");
 
-        Assert.NotEqual(WebPushSubscriptionId.Empty, subscription.Id);
-        Assert.Equal(userId, subscription.UserId);
-        Assert.Equal("https://push.example.com/device", subscription.Endpoint);
-        Assert.Equal("p256", subscription.P256Dh);
-        Assert.Equal("auth", subscription.Auth);
-        Assert.Equal(expiresAtLocal.ToUniversalTime(), subscription.ExpirationTimeUtc);
-        Assert.Equal("en-US", subscription.Locale);
-        Assert.Equal("Browser", subscription.UserAgent);
-        Assert.NotEqual(default, subscription.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(WebPushSubscriptionId.Empty, subscription.Id),
+            () => Assert.Equal(userId, subscription.UserId),
+            () => Assert.Equal("https://push.example.com/device", subscription.Endpoint),
+            () => Assert.Equal("p256", subscription.P256Dh),
+            () => Assert.Equal("auth", subscription.Auth),
+            () => Assert.Equal(expiresAtLocal.ToUniversalTime(), subscription.ExpirationTimeUtc),
+            () => Assert.Equal("en-US", subscription.Locale),
+            () => Assert.Equal("Browser", subscription.UserAgent),
+            () => Assert.NotEqual(default, subscription.CreatedOnUtc));
     }
 
     [Fact]
@@ -117,9 +118,10 @@ public class NotificationInvariantTests {
             locale: " ",
             userAgent: " ");
 
-        Assert.Null(subscription.ExpirationTimeUtc);
-        Assert.Null(subscription.Locale);
-        Assert.Null(subscription.UserAgent);
+        Assert.Multiple(
+            () => Assert.Null(subscription.ExpirationTimeUtc),
+            () => Assert.Null(subscription.Locale),
+            () => Assert.Null(subscription.UserAgent));
     }
 
     [Fact]
@@ -141,13 +143,14 @@ public class NotificationInvariantTests {
             locale: "  ru  ",
             userAgent: "  Mobile  ");
 
-        Assert.Equal(nextUserId, subscription.UserId);
-        Assert.Equal("https://push.example.com/device", subscription.Endpoint);
-        Assert.Equal("new-p256", subscription.P256Dh);
-        Assert.Equal("new-auth", subscription.Auth);
-        Assert.Equal(expiresAtLocal.ToUniversalTime(), subscription.ExpirationTimeUtc);
-        Assert.Equal("ru", subscription.Locale);
-        Assert.Equal("Mobile", subscription.UserAgent);
+        Assert.Multiple(
+            () => Assert.Equal(nextUserId, subscription.UserId),
+            () => Assert.Equal("https://push.example.com/device", subscription.Endpoint),
+            () => Assert.Equal("new-p256", subscription.P256Dh),
+            () => Assert.Equal("new-auth", subscription.Auth),
+            () => Assert.Equal(expiresAtLocal.ToUniversalTime(), subscription.ExpirationTimeUtc),
+            () => Assert.Equal("ru", subscription.Locale),
+            () => Assert.Equal("Mobile", subscription.UserAgent));
         Assert.NotNull(subscription.ModifiedOnUtc);
     }
 

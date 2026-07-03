@@ -117,10 +117,11 @@ public class MiscDomainInvariantTests {
 
         advice.Update(value: "  Sleep  ", locale: " RU ", weight: 0, tag: "   ");
 
-        Assert.Equal("Sleep", advice.Value);
-        Assert.Equal("ru", advice.Locale);
-        Assert.Equal(1, advice.Weight);
-        Assert.Null(advice.Tag);
+        Assert.Multiple(
+            () => Assert.Equal("Sleep", advice.Value),
+            () => Assert.Equal("ru", advice.Locale),
+            () => Assert.Equal(1, advice.Weight),
+            () => Assert.Null(advice.Tag));
     }
 
     [Fact]

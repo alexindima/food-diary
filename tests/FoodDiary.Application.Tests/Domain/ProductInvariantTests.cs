@@ -125,12 +125,13 @@ public class ProductInvariantTests {
             comment: "   ",
             imageUrl: "   ");
 
-        Assert.Null(product.Barcode);
-        Assert.Null(product.Brand);
-        Assert.Null(product.Category);
-        Assert.Null(product.Description);
-        Assert.Null(product.Comment);
-        Assert.Null(product.ImageUrl);
+        Assert.Multiple(
+            () => Assert.Null(product.Barcode),
+            () => Assert.Null(product.Brand),
+            () => Assert.Null(product.Category),
+            () => Assert.Null(product.Description),
+            () => Assert.Null(product.Comment),
+            () => Assert.Null(product.ImageUrl));
     }
 
     [Fact]
@@ -159,17 +160,18 @@ public class ProductInvariantTests {
             imageAssetId,
             visibility: Visibility.Private);
 
-        Assert.Equal("Yogurt", product.Name);
-        Assert.Equal("123456789", product.Barcode);
-        Assert.Equal("Dairy Co", product.Brand);
-        Assert.Equal(ProductType.Dairy, product.ProductType);
-        Assert.Equal("Dairy", product.Category);
-        Assert.Equal("Plain yogurt", product.Description);
-        Assert.Equal("Breakfast", product.Comment);
-        Assert.Equal("https://img.example/yogurt.jpg", product.ImageUrl);
-        Assert.Equal(imageAssetId, product.ImageAssetId);
-        Assert.Equal(Visibility.Private, product.Visibility);
-        Assert.Equal(125d, product.DefaultPortionAmount);
+        Assert.Multiple(
+            () => Assert.Equal("Yogurt", product.Name),
+            () => Assert.Equal("123456789", product.Barcode),
+            () => Assert.Equal("Dairy Co", product.Brand),
+            () => Assert.Equal(ProductType.Dairy, product.ProductType),
+            () => Assert.Equal("Dairy", product.Category),
+            () => Assert.Equal("Plain yogurt", product.Description),
+            () => Assert.Equal("Breakfast", product.Comment),
+            () => Assert.Equal("https://img.example/yogurt.jpg", product.ImageUrl),
+            () => Assert.Equal(imageAssetId, product.ImageAssetId),
+            () => Assert.Equal(Visibility.Private, product.Visibility),
+            () => Assert.Equal(125d, product.DefaultPortionAmount));
     }
 
     [Fact]
@@ -386,9 +388,10 @@ public class ProductInvariantTests {
 
         product.UpdateCoreIdentity(clearBarcode: true, clearBrand: true, productType: ProductType.Fruit);
 
-        Assert.Null(product.Barcode);
-        Assert.Null(product.Brand);
-        Assert.Equal(ProductType.Fruit, product.ProductType);
+        Assert.Multiple(
+            () => Assert.Null(product.Barcode),
+            () => Assert.Null(product.Brand),
+            () => Assert.Equal(ProductType.Fruit, product.ProductType));
         Assert.NotNull(product.ModifiedOnUtc);
     }
 
@@ -479,9 +482,10 @@ public class ProductInvariantTests {
 
         product.UpdateDescriptiveIdentity(comment: " seasonal ");
 
-        Assert.Equal("Fruit", product.Category);
-        Assert.Equal("Fresh", product.Description);
-        Assert.Equal("seasonal", product.Comment);
+        Assert.Multiple(
+            () => Assert.Equal("Fruit", product.Category),
+            () => Assert.Equal("Fresh", product.Description),
+            () => Assert.Equal("seasonal", product.Comment));
     }
 
     [Fact]
@@ -515,9 +519,10 @@ public class ProductInvariantTests {
 
         product.UpdateDescriptiveIdentity(clearCategory: true, clearDescription: true, clearComment: true);
 
-        Assert.Null(product.Category);
-        Assert.Null(product.Description);
-        Assert.Null(product.Comment);
+        Assert.Multiple(
+            () => Assert.Null(product.Category),
+            () => Assert.Null(product.Description),
+            () => Assert.Null(product.Comment));
         Assert.NotNull(product.ModifiedOnUtc);
     }
 
@@ -664,12 +669,13 @@ public class ProductInvariantTests {
 
         product.UpdateNutrition(proteinsPerBase: 1.5);
 
-        Assert.Equal(52d, product.CaloriesPerBase);
-        Assert.Equal(1.5, product.ProteinsPerBase);
-        Assert.Equal(0.2, product.FatsPerBase);
-        Assert.Equal(14d, product.CarbsPerBase);
-        Assert.Equal(2.4, product.FiberPerBase);
-        Assert.Equal(0d, product.AlcoholPerBase);
+        Assert.Multiple(
+            () => Assert.Equal(52d, product.CaloriesPerBase),
+            () => Assert.Equal(1.5, product.ProteinsPerBase),
+            () => Assert.Equal(0.2, product.FatsPerBase),
+            () => Assert.Equal(14d, product.CarbsPerBase),
+            () => Assert.Equal(2.4, product.FiberPerBase),
+            () => Assert.Equal(0d, product.AlcoholPerBase));
     }
 
     [Fact]

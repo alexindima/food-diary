@@ -180,11 +180,12 @@ public class ShoppingListInvariantTests {
             isChecked: true,
             sortOrder: 0);
 
-        Assert.Equal("Milk", item.Name);
-        Assert.Null(item.Amount);
-        Assert.Equal(MeasurementUnit.Ml, item.Unit);
-        Assert.Equal("Dairy", item.Category);
-        Assert.True(item.IsChecked);
+        Assert.Multiple(
+            () => Assert.Equal("Milk", item.Name),
+            () => Assert.Null(item.Amount),
+            () => Assert.Equal(MeasurementUnit.Ml, item.Unit),
+            () => Assert.Equal("Dairy", item.Category),
+            () => Assert.True(item.IsChecked));
         Assert.NotNull(list.ModifiedOnUtc);
     }
 
@@ -326,16 +327,17 @@ public class ShoppingListInvariantTests {
             checkedOnUtc: checkedAt,
             sortOrder: 2);
 
-        Assert.Equal(productId, item.ProductId);
-        Assert.Equal("Eggs", item.Name);
-        Assert.Equal(12, item.Amount);
-        Assert.Equal(MeasurementUnit.Pcs, item.Unit);
-        Assert.Equal("Protein", item.Category);
-        Assert.Equal("A1", item.Aisle);
-        Assert.Equal("organic", item.Note);
-        Assert.True(item.IsChecked);
-        Assert.Equal(checkedAt, item.CheckedOnUtc);
-        Assert.Equal(2, item.SortOrder);
+        Assert.Multiple(
+            () => Assert.Equal(productId, item.ProductId),
+            () => Assert.Equal("Eggs", item.Name),
+            () => Assert.Equal(12, item.Amount),
+            () => Assert.Equal(MeasurementUnit.Pcs, item.Unit),
+            () => Assert.Equal("Protein", item.Category),
+            () => Assert.Equal("A1", item.Aisle),
+            () => Assert.Equal("organic", item.Note),
+            () => Assert.True(item.IsChecked),
+            () => Assert.Equal(checkedAt, item.CheckedOnUtc),
+            () => Assert.Equal(2, item.SortOrder));
         Assert.NotNull(item.ModifiedOnUtc);
     }
 
@@ -456,13 +458,14 @@ public class ShoppingListInvariantTests {
             amount: 3,
             unit: MeasurementUnit.Pcs);
 
-        Assert.Equal(ShoppingListItemSourceType.MealPlan, source.SourceType);
-        Assert.Equal("Dinner prep", source.Label);
-        Assert.Equal(2, source.DayNumber);
-        Assert.Null(source.MealType);
-        Assert.Equal(3, source.Amount);
-        Assert.Equal(MeasurementUnit.Pcs, source.Unit);
-        Assert.NotEqual(ShoppingListItemSourceId.Empty, source.Id);
+        Assert.Multiple(
+            () => Assert.Equal(ShoppingListItemSourceType.MealPlan, source.SourceType),
+            () => Assert.Equal("Dinner prep", source.Label),
+            () => Assert.Equal(2, source.DayNumber),
+            () => Assert.Null(source.MealType),
+            () => Assert.Equal(3, source.Amount),
+            () => Assert.Equal(MeasurementUnit.Pcs, source.Unit),
+            () => Assert.NotEqual(ShoppingListItemSourceId.Empty, source.Id));
     }
 
     [Fact]
@@ -573,9 +576,10 @@ public class ShoppingListInvariantTests {
         list.UpdateName("Monthly");
 
         ShoppingListNameUpdatedDomainEvent evt = Assert.Single(list.DomainEvents.OfType<ShoppingListNameUpdatedDomainEvent>());
-        Assert.Equal(list.Id, evt.ShoppingListId);
-        Assert.Equal("Weekly", evt.PreviousName);
-        Assert.Equal("Monthly", evt.CurrentName);
+        Assert.Multiple(
+            () => Assert.Equal(list.Id, evt.ShoppingListId),
+            () => Assert.Equal("Weekly", evt.PreviousName),
+            () => Assert.Equal("Monthly", evt.CurrentName));
     }
 
     [Fact]
@@ -592,11 +596,12 @@ public class ShoppingListInvariantTests {
             sortOrder: 1);
 
         ShoppingListItemAddedDomainEvent evt = Assert.Single(list.DomainEvents.OfType<ShoppingListItemAddedDomainEvent>());
-        Assert.Equal(list.Id, evt.ShoppingListId);
-        Assert.Equal(item.Id, evt.ShoppingListItemId);
-        Assert.Equal("Milk", evt.Name);
-        Assert.Equal("Dairy", evt.Category);
-        Assert.Equal(1, evt.SortOrder);
+        Assert.Multiple(
+            () => Assert.Equal(list.Id, evt.ShoppingListId),
+            () => Assert.Equal(item.Id, evt.ShoppingListItemId),
+            () => Assert.Equal("Milk", evt.Name),
+            () => Assert.Equal("Dairy", evt.Category),
+            () => Assert.Equal(1, evt.SortOrder));
     }
 
     [Fact]

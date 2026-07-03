@@ -61,16 +61,17 @@ public sealed class MealPlanHttpMappingsTests {
 
         IReadOnlyList<MealPlanSummaryHttpResponse> responses = models.ToHttpResponse();
 
-        Assert.Equal(2, responses.Count);
-        Assert.Equal(models[0].Id, responses[0].Id);
-        Assert.Equal("Balanced", responses[0].Name);
-        Assert.Equal("Description", responses[0].Description);
-        Assert.Equal("Balanced", responses[0].DietType);
-        Assert.Equal(7, responses[0].DurationDays);
-        Assert.Equal(2200, responses[0].TargetCaloriesPerDay);
-        Assert.True(responses[0].IsCurated);
-        Assert.Equal(12, responses[0].TotalRecipes);
-        Assert.Null(responses[1].TargetCaloriesPerDay);
+        Assert.Multiple(
+            () => Assert.Equal(2, responses.Count),
+            () => Assert.Equal(models[0].Id, responses[0].Id),
+            () => Assert.Equal("Balanced", responses[0].Name),
+            () => Assert.Equal("Description", responses[0].Description),
+            () => Assert.Equal("Balanced", responses[0].DietType),
+            () => Assert.Equal(7, responses[0].DurationDays),
+            () => Assert.Equal(2200, responses[0].TargetCaloriesPerDay),
+            () => Assert.True(responses[0].IsCurated),
+            () => Assert.Equal(12, responses[0].TotalRecipes),
+            () => Assert.Null(responses[1].TargetCaloriesPerDay));
     }
 
     [Fact]
@@ -105,16 +106,18 @@ public sealed class MealPlanHttpMappingsTests {
 
         MealPlanHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(model.Id, response.Id);
-        Assert.Equal("Plan", response.Name);
-        Assert.Equal(2100, response.TargetCaloriesPerDay);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, response.Id),
+            () => Assert.Equal("Plan", response.Name),
+            () => Assert.Equal(2100, response.TargetCaloriesPerDay));
         MealPlanDayHttpResponse day = Assert.Single(response.Days);
         Assert.Equal(1, day.DayNumber);
         MealPlanMealHttpResponse meal = Assert.Single(day.Meals);
-        Assert.Equal(mealId, meal.Id);
-        Assert.Equal(recipeId, meal.RecipeId);
-        Assert.Equal("Oats", meal.RecipeName);
-        Assert.Equal(300, meal.Calories);
-        Assert.Equal(40, meal.Carbs);
+        Assert.Multiple(
+            () => Assert.Equal(mealId, meal.Id),
+            () => Assert.Equal(recipeId, meal.RecipeId),
+            () => Assert.Equal("Oats", meal.RecipeName),
+            () => Assert.Equal(300, meal.Calories),
+            () => Assert.Equal(40, meal.Carbs));
     }
 }

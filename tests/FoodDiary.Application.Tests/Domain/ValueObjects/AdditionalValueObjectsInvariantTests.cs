@@ -63,9 +63,10 @@ public class AdditionalValueObjectsInvariantTests {
         var state = MealAiItemState.Create(
             "  Chicken  ", "  ÐšÑƒÑ€Ð¸Ñ†Ð°  ", 100, "  g  ", 165, 31, 3.6, 0, 0, 0);
 
-        Assert.Equal("Chicken", state.NameEn);
-        Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", state.NameLocal);
-        Assert.Equal("g", state.Unit);
+        Assert.Multiple(
+            () => Assert.Equal("Chicken", state.NameEn),
+            () => Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", state.NameLocal),
+            () => Assert.Equal("g", state.Unit));
     }
 
     [Fact]
@@ -166,11 +167,12 @@ public class AdditionalValueObjectsInvariantTests {
             new Dictionary<int, double>(),
             new Dictionary<int, double>());
 
-        Assert.Equal(HealthAreaGrade.Unknown, result.Heart.Grade);
-        Assert.Equal(HealthAreaGrade.Unknown, result.Bone.Grade);
-        Assert.Equal(HealthAreaGrade.Unknown, result.Immune.Grade);
-        Assert.Equal(HealthAreaGrade.Unknown, result.Energy.Grade);
-        Assert.Equal(HealthAreaGrade.Unknown, result.Antioxidant.Grade);
+        Assert.Multiple(
+            () => Assert.Equal(HealthAreaGrade.Unknown, result.Heart.Grade),
+            () => Assert.Equal(HealthAreaGrade.Unknown, result.Bone.Grade),
+            () => Assert.Equal(HealthAreaGrade.Unknown, result.Immune.Grade),
+            () => Assert.Equal(HealthAreaGrade.Unknown, result.Energy.Grade),
+            () => Assert.Equal(HealthAreaGrade.Unknown, result.Antioxidant.Grade));
     }
 
     [Fact]
@@ -336,26 +338,28 @@ public class AdditionalValueObjectsInvariantTests {
     public void UserAccountState_CreateInitial_ReturnsActiveState() {
         var state = UserAccountState.CreateInitial();
 
-        Assert.True(state.IsActive);
-        Assert.Null(state.TelegramUserId);
-        Assert.Null(state.DeletedAt);
+        Assert.Multiple(
+            () => Assert.True(state.IsActive),
+            () => Assert.Null(state.TelegramUserId),
+            () => Assert.Null(state.DeletedAt));
     }
 
     [Fact]
     public void UserProfileState_CreateInitial_ExposesProjectionStates() {
         var state = UserProfileState.CreateInitial();
 
-        Assert.Equal(ActivityLevel.Moderate, state.ActivityLevel);
-        Assert.Equal(ThemeCode.Default.Value, state.Theme);
-        Assert.Equal(UiStyleCode.Default.Value, state.UiStyle);
-        Assert.False(state.PushNotificationsEnabled);
-        Assert.True(state.FastingPushNotificationsEnabled);
-        Assert.True(state.SocialPushNotificationsEnabled);
-        Assert.Equal(12, state.FastingCheckInReminderHours);
-        Assert.Equal(20, state.FastingCheckInFollowUpReminderHours);
-        Assert.Equal(state.Username, state.PersonalInfo.Username);
-        Assert.Equal(state.ProfileImage, state.Media.ProfileImage);
-        Assert.Equal(state.DashboardLayoutJson, state.Preferences.DashboardLayoutJson);
+        Assert.Multiple(
+            () => Assert.Equal(ActivityLevel.Moderate, state.ActivityLevel),
+            () => Assert.Equal(ThemeCode.Default.Value, state.Theme),
+            () => Assert.Equal(UiStyleCode.Default.Value, state.UiStyle),
+            () => Assert.False(state.PushNotificationsEnabled),
+            () => Assert.True(state.FastingPushNotificationsEnabled),
+            () => Assert.True(state.SocialPushNotificationsEnabled),
+            () => Assert.Equal(12, state.FastingCheckInReminderHours),
+            () => Assert.Equal(20, state.FastingCheckInFollowUpReminderHours),
+            () => Assert.Equal(state.Username, state.PersonalInfo.Username),
+            () => Assert.Equal(state.ProfileImage, state.Media.ProfileImage),
+            () => Assert.Equal(state.DashboardLayoutJson, state.Preferences.DashboardLayoutJson));
     }
 
     [Fact]
@@ -445,12 +449,13 @@ public class AdditionalValueObjectsInvariantTests {
     public void UserSecurityState_CreateInitial_SetsPasswordAndDefaults() {
         var state = UserSecurityState.CreateInitial("hashed-password");
 
-        Assert.Equal("hashed-password", state.Password);
-        Assert.Null(state.RefreshToken);
-        Assert.False(state.IsEmailConfirmed);
-        Assert.Null(state.EmailConfirmationTokenHash);
-        Assert.Null(state.PasswordResetTokenHash);
-        Assert.Null(state.LastLoginAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("hashed-password", state.Password),
+            () => Assert.Null(state.RefreshToken),
+            () => Assert.False(state.IsEmailConfirmed),
+            () => Assert.Null(state.EmailConfirmationTokenHash),
+            () => Assert.Null(state.PasswordResetTokenHash),
+            () => Assert.Null(state.LastLoginAtUtc));
     }
 
     [Fact]
@@ -487,10 +492,11 @@ public class AdditionalValueObjectsInvariantTests {
             .WithEmailConfirmationToken("token-hash", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .AsEmailConfirmed(isConfirmed: true);
 
-        Assert.True(state.IsEmailConfirmed);
-        Assert.Null(state.EmailConfirmationTokenHash);
-        Assert.Null(state.EmailConfirmationTokenExpiresAtUtc);
-        Assert.Null(state.EmailConfirmationSentAtUtc);
+        Assert.Multiple(
+            () => Assert.True(state.IsEmailConfirmed),
+            () => Assert.Null(state.EmailConfirmationTokenHash),
+            () => Assert.Null(state.EmailConfirmationTokenExpiresAtUtc),
+            () => Assert.Null(state.EmailConfirmationSentAtUtc));
     }
 
     [Fact]
@@ -500,9 +506,10 @@ public class AdditionalValueObjectsInvariantTests {
         UserSecurityState state = UserSecurityState.CreateInitial("hash")
             .WithPasswordResetToken("reset-hash", expires, now);
 
-        Assert.Equal("reset-hash", state.PasswordResetTokenHash);
-        Assert.Equal(expires, state.PasswordResetTokenExpiresAtUtc);
-        Assert.Equal(now, state.PasswordResetSentAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("reset-hash", state.PasswordResetTokenHash),
+            () => Assert.Equal(expires, state.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Equal(now, state.PasswordResetSentAtUtc));
     }
 
     [Fact]
@@ -511,9 +518,10 @@ public class AdditionalValueObjectsInvariantTests {
             .WithPasswordResetToken("hash", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithoutPasswordResetToken();
 
-        Assert.Null(state.PasswordResetTokenHash);
-        Assert.Null(state.PasswordResetTokenExpiresAtUtc);
-        Assert.Null(state.PasswordResetSentAtUtc);
+        Assert.Multiple(
+            () => Assert.Null(state.PasswordResetTokenHash),
+            () => Assert.Null(state.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Null(state.PasswordResetSentAtUtc));
     }
 
     [Fact]
@@ -524,13 +532,14 @@ public class AdditionalValueObjectsInvariantTests {
             .WithPasswordResetToken("reset", DateTime.UtcNow.AddHours(1), DateTime.UtcNow)
             .WithoutTransientTokens();
 
-        Assert.Null(state.RefreshToken);
-        Assert.Null(state.EmailConfirmationTokenHash);
-        Assert.Null(state.EmailConfirmationTokenExpiresAtUtc);
-        Assert.Null(state.EmailConfirmationSentAtUtc);
-        Assert.Null(state.PasswordResetTokenHash);
-        Assert.Null(state.PasswordResetTokenExpiresAtUtc);
-        Assert.Null(state.PasswordResetSentAtUtc);
+        Assert.Multiple(
+            () => Assert.Null(state.RefreshToken),
+            () => Assert.Null(state.EmailConfirmationTokenHash),
+            () => Assert.Null(state.EmailConfirmationTokenExpiresAtUtc),
+            () => Assert.Null(state.EmailConfirmationSentAtUtc),
+            () => Assert.Null(state.PasswordResetTokenHash),
+            () => Assert.Null(state.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Null(state.PasswordResetSentAtUtc));
     }
 
     // --- ProductNutrition.With ---
@@ -541,12 +550,13 @@ public class AdditionalValueObjectsInvariantTests {
 
         ProductNutrition updated = original.With(caloriesPerBase: 200);
 
-        Assert.Equal(200, updated.CaloriesPerBase);
-        Assert.Equal(10, updated.ProteinsPerBase);
-        Assert.Equal(5, updated.FatsPerBase);
-        Assert.Equal(20, updated.CarbsPerBase);
-        Assert.Equal(3, updated.FiberPerBase);
-        Assert.Equal(0, updated.AlcoholPerBase);
+        Assert.Multiple(
+            () => Assert.Equal(200, updated.CaloriesPerBase),
+            () => Assert.Equal(10, updated.ProteinsPerBase),
+            () => Assert.Equal(5, updated.FatsPerBase),
+            () => Assert.Equal(20, updated.CarbsPerBase),
+            () => Assert.Equal(3, updated.FiberPerBase),
+            () => Assert.Equal(0, updated.AlcoholPerBase));
     }
 
     [Fact]
@@ -586,12 +596,13 @@ public class AdditionalValueObjectsInvariantTests {
     public void RecipeNutrition_Create_WithValidValues_StoresAll() {
         var nutrition = RecipeNutrition.Create(500, 30, 20, 50, 5, 0);
 
-        Assert.Equal(500, nutrition.Calories);
-        Assert.Equal(30, nutrition.Proteins);
-        Assert.Equal(20, nutrition.Fats);
-        Assert.Equal(50, nutrition.Carbs);
-        Assert.Equal(5, nutrition.Fiber);
-        Assert.Equal(0, nutrition.Alcohol);
+        Assert.Multiple(
+            () => Assert.Equal(500, nutrition.Calories),
+            () => Assert.Equal(30, nutrition.Proteins),
+            () => Assert.Equal(20, nutrition.Fats),
+            () => Assert.Equal(50, nutrition.Carbs),
+            () => Assert.Equal(5, nutrition.Fiber),
+            () => Assert.Equal(0, nutrition.Alcohol));
     }
 
     [Theory]
@@ -689,28 +700,30 @@ public class AdditionalValueObjectsInvariantTests {
     public void DietologistPermissions_AllEnabled_AllFieldsTrue() {
         DietologistPermissions perms = DietologistPermissions.AllEnabled;
 
-        Assert.True(perms.ShareMeals);
-        Assert.True(perms.ShareStatistics);
-        Assert.True(perms.ShareWeight);
-        Assert.True(perms.ShareWaist);
-        Assert.True(perms.ShareGoals);
-        Assert.True(perms.ShareHydration);
-        Assert.True(perms.ShareProfile);
-        Assert.True(perms.ShareFasting);
+        Assert.Multiple(
+            () => Assert.True(perms.ShareMeals),
+            () => Assert.True(perms.ShareStatistics),
+            () => Assert.True(perms.ShareWeight),
+            () => Assert.True(perms.ShareWaist),
+            () => Assert.True(perms.ShareGoals),
+            () => Assert.True(perms.ShareHydration),
+            () => Assert.True(perms.ShareProfile),
+            () => Assert.True(perms.ShareFasting));
     }
 
     [Fact]
     public void DietologistPermissions_WithSelectiveDisable_PreservesOthers() {
         var perms = new DietologistPermissions(ShareMeals: false, ShareWeight: false);
 
-        Assert.False(perms.ShareMeals);
-        Assert.True(perms.ShareStatistics);
-        Assert.False(perms.ShareWeight);
-        Assert.True(perms.ShareWaist);
-        Assert.True(perms.ShareGoals);
-        Assert.True(perms.ShareHydration);
-        Assert.True(perms.ShareProfile);
-        Assert.True(perms.ShareFasting);
+        Assert.Multiple(
+            () => Assert.False(perms.ShareMeals),
+            () => Assert.True(perms.ShareStatistics),
+            () => Assert.False(perms.ShareWeight),
+            () => Assert.True(perms.ShareWaist),
+            () => Assert.True(perms.ShareGoals),
+            () => Assert.True(perms.ShareHydration),
+            () => Assert.True(perms.ShareProfile),
+            () => Assert.True(perms.ShareFasting));
     }
 
     // --- Simple code value objects ---
@@ -721,9 +734,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void LanguageCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
         bool parsed = LanguageCode.TryParse(value, out LanguageCode language);
 
-        Assert.True(parsed);
-        Assert.Equal(expected, language.Value);
-        Assert.Equal(expected, language.ToString());
+        Assert.Multiple(
+            () => Assert.True(parsed),
+            () => Assert.Equal(expected, language.Value),
+            () => Assert.Equal(expected, language.ToString()));
     }
 
     [Theory]
@@ -755,9 +769,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void GenderCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
         bool parsed = GenderCode.TryParse(value, out GenderCode gender);
 
-        Assert.True(parsed);
-        Assert.Equal(expected, gender.Value);
-        Assert.Equal(expected, gender.ToString());
+        Assert.Multiple(
+            () => Assert.True(parsed),
+            () => Assert.Equal(expected, gender.Value),
+            () => Assert.Equal(expected, gender.ToString()));
     }
 
     [Theory]
@@ -778,9 +793,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void ThemeCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
         bool parsed = ThemeCode.TryParse(value, out ThemeCode theme);
 
-        Assert.True(parsed);
-        Assert.Equal(expected, theme.Value);
-        Assert.Equal(expected, theme.ToString());
+        Assert.Multiple(
+            () => Assert.True(parsed),
+            () => Assert.Equal(expected, theme.Value),
+            () => Assert.Equal(expected, theme.ToString()));
     }
 
     [Theory]
@@ -790,9 +806,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void ThemeCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
         bool parsed = ThemeCode.TryParse(value, out ThemeCode theme);
 
-        Assert.False(parsed);
-        Assert.Equal(default, theme);
-        Assert.Equal("ocean", ThemeCode.Default.Value);
+        Assert.Multiple(
+            () => Assert.False(parsed),
+            () => Assert.Equal(default, theme),
+            () => Assert.Equal("ocean", ThemeCode.Default.Value));
     }
 
     [Theory]
@@ -801,9 +818,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void UiStyleCode_TryParse_WithSupportedValues_Normalizes(string value, string expected) {
         bool parsed = UiStyleCode.TryParse(value, out UiStyleCode style);
 
-        Assert.True(parsed);
-        Assert.Equal(expected, style.Value);
-        Assert.Equal(expected, style.ToString());
+        Assert.Multiple(
+            () => Assert.True(parsed),
+            () => Assert.Equal(expected, style.Value),
+            () => Assert.Equal(expected, style.ToString()));
     }
 
     [Theory]
@@ -813,9 +831,10 @@ public class AdditionalValueObjectsInvariantTests {
     public void UiStyleCode_TryParse_WithUnsupportedValues_ReturnsFalse(string? value) {
         bool parsed = UiStyleCode.TryParse(value, out UiStyleCode style);
 
-        Assert.False(parsed);
-        Assert.Equal(default, style);
-        Assert.Equal("classic", UiStyleCode.Default.Value);
+        Assert.Multiple(
+            () => Assert.False(parsed),
+            () => Assert.Equal(default, style),
+            () => Assert.Equal("classic", UiStyleCode.Default.Value));
     }
 
     // --- EmailAddress ---

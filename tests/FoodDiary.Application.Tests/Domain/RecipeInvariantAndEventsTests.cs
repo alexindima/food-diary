@@ -45,10 +45,11 @@ public class RecipeInvariantAndEventsTests {
             category: "   ",
             imageUrl: "   ");
 
-        Assert.Null(recipe.Description);
-        Assert.Null(recipe.Comment);
-        Assert.Null(recipe.Category);
-        Assert.Null(recipe.ImageUrl);
+        Assert.Multiple(
+            () => Assert.Null(recipe.Description),
+            () => Assert.Null(recipe.Comment),
+            () => Assert.Null(recipe.Category),
+            () => Assert.Null(recipe.ImageUrl));
     }
 
     [Fact]
@@ -139,9 +140,10 @@ public class RecipeInvariantAndEventsTests {
             CookTime: 25,
             Visibility: Visibility.Private));
 
-        Assert.Equal(15, recipe.PrepTime);
-        Assert.Equal(25, recipe.CookTime);
-        Assert.Equal(Visibility.Private, recipe.Visibility);
+        Assert.Multiple(
+            () => Assert.Equal(15, recipe.PrepTime),
+            () => Assert.Equal(25, recipe.CookTime),
+            () => Assert.Equal(Visibility.Private, recipe.Visibility));
         Assert.NotNull(recipe.ModifiedOnUtc);
     }
 
@@ -149,10 +151,11 @@ public class RecipeInvariantAndEventsTests {
     public void Create_InitializesDefaultCountersAndNutritionState() {
         var recipe = Recipe.Create(UserId.New(), "Soup", 2);
 
-        Assert.Equal(0, recipe.UsageCount);
-        Assert.True(recipe.IsNutritionAutoCalculated);
-        Assert.Null(recipe.TotalCalories);
-        Assert.Null(recipe.ManualCalories);
+        Assert.Multiple(
+            () => Assert.Equal(0, recipe.UsageCount),
+            () => Assert.True(recipe.IsNutritionAutoCalculated),
+            () => Assert.Null(recipe.TotalCalories),
+            () => Assert.Null(recipe.ManualCalories));
     }
 
     [Fact]
@@ -165,10 +168,11 @@ public class RecipeInvariantAndEventsTests {
             comment: "  ",
             category: "  Main  ");
 
-        Assert.Equal("New Soup", recipe.Name);
-        Assert.Equal("New Desc", recipe.Description);
-        Assert.Null(recipe.Comment);
-        Assert.Equal("Main", recipe.Category);
+        Assert.Multiple(
+            () => Assert.Equal("New Soup", recipe.Name),
+            () => Assert.Equal("New Desc", recipe.Description),
+            () => Assert.Null(recipe.Comment),
+            () => Assert.Equal("Main", recipe.Category));
     }
 
     [Fact]
@@ -183,9 +187,10 @@ public class RecipeInvariantAndEventsTests {
 
         recipe.UpdateIdentity(clearDescription: true, clearComment: true, clearCategory: true);
 
-        Assert.Null(recipe.Description);
-        Assert.Null(recipe.Comment);
-        Assert.Null(recipe.Category);
+        Assert.Multiple(
+            () => Assert.Null(recipe.Description),
+            () => Assert.Null(recipe.Comment),
+            () => Assert.Null(recipe.Category));
     }
 
     [Fact]
@@ -257,9 +262,10 @@ public class RecipeInvariantAndEventsTests {
 
         recipe.UpdateTimingAndServings(servings: 4);
 
-        Assert.Equal(4, recipe.Servings);
-        Assert.Equal(10, recipe.PrepTime);
-        Assert.Equal(20, recipe.CookTime);
+        Assert.Multiple(
+            () => Assert.Equal(4, recipe.Servings),
+            () => Assert.Equal(10, recipe.PrepTime),
+            () => Assert.Equal(20, recipe.CookTime));
     }
 
     [Fact]
@@ -371,9 +377,10 @@ public class RecipeInvariantAndEventsTests {
 
         step.Update("  New instruction  ", "   ", "   ", imageAssetId: null);
 
-        Assert.Equal("New instruction", step.Instruction);
-        Assert.Null(step.Title);
-        Assert.Null(step.ImageUrl);
+        Assert.Multiple(
+            () => Assert.Equal("New instruction", step.Instruction),
+            () => Assert.Null(step.Title),
+            () => Assert.Null(step.ImageUrl));
     }
 
     [Fact]
@@ -384,9 +391,10 @@ public class RecipeInvariantAndEventsTests {
 
         RecipeIngredient ingredient = step.AddNestedRecipeIngredient(nestedRecipeId, 1.5);
 
-        Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId);
-        Assert.Null(ingredient.ProductId);
-        Assert.Equal(1.5, ingredient.Amount);
+        Assert.Multiple(
+            () => Assert.Equal(nestedRecipeId, ingredient.NestedRecipeId),
+            () => Assert.Null(ingredient.ProductId),
+            () => Assert.Equal(1.5, ingredient.Amount));
         Assert.Single(step.Ingredients);
         Assert.NotNull(step.ModifiedOnUtc);
     }
@@ -593,12 +601,13 @@ public class RecipeInvariantAndEventsTests {
 
         recipe.ApplyComputedNutrition(100, 10, 20, 30, 4, 0);
 
-        Assert.Equal(100, recipe.TotalCalories);
-        Assert.Equal(10, recipe.TotalProteins);
-        Assert.Equal(20, recipe.TotalFats);
-        Assert.Equal(30, recipe.TotalCarbs);
-        Assert.Equal(4, recipe.TotalFiber);
-        Assert.Equal(0, recipe.TotalAlcohol);
+        Assert.Multiple(
+            () => Assert.Equal(100, recipe.TotalCalories),
+            () => Assert.Equal(10, recipe.TotalProteins),
+            () => Assert.Equal(20, recipe.TotalFats),
+            () => Assert.Equal(30, recipe.TotalCarbs),
+            () => Assert.Equal(4, recipe.TotalFiber),
+            () => Assert.Equal(0, recipe.TotalAlcohol));
         Assert.NotNull(recipe.ModifiedOnUtc);
     }
 
@@ -621,8 +630,9 @@ public class RecipeInvariantAndEventsTests {
         ICollection<RecipeIngredient> nestedRecipeUsages = Assert.IsAssignableFrom<ICollection<RecipeIngredient>>(recipe.NestedRecipeUsages);
         ICollection<RecipeStep> steps = Assert.IsAssignableFrom<ICollection<RecipeStep>>(recipe.Steps);
 
-        Assert.True(mealItems.IsReadOnly);
-        Assert.True(nestedRecipeUsages.IsReadOnly);
-        Assert.True(steps.IsReadOnly);
+        Assert.Multiple(
+            () => Assert.True(mealItems.IsReadOnly),
+            () => Assert.True(nestedRecipeUsages.IsReadOnly),
+            () => Assert.True(steps.IsReadOnly));
     }
 }

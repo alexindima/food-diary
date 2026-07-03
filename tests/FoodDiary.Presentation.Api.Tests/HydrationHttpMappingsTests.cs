@@ -18,9 +18,10 @@ public sealed class HydrationHttpMappingsTests {
 
         CreateHydrationEntryCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(timestamp, command.TimestampUtc);
-        Assert.Equal(500, command.AmountMl);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(timestamp, command.TimestampUtc),
+            () => Assert.Equal(500, command.AmountMl));
     }
 
     [Fact]
@@ -32,10 +33,11 @@ public sealed class HydrationHttpMappingsTests {
 
         UpdateHydrationEntryCommand command = request.ToCommand(userId, entryId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(entryId, command.HydrationEntryId);
-        Assert.Equal(timestamp, command.TimestampUtc);
-        Assert.Equal(750, command.AmountMl);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(entryId, command.HydrationEntryId),
+            () => Assert.Equal(timestamp, command.TimestampUtc),
+            () => Assert.Equal(750, command.AmountMl));
     }
 
     [Fact]

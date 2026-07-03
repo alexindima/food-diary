@@ -37,12 +37,13 @@ public class MealPlanInvariantTests {
     public void CreateCurated_NormalizesNameAndDescription() {
         var plan = MealPlan.CreateCurated("  Weekly Plan  ", "  Healthy eating  ", DietType.Balanced, 7, 2000);
 
-        Assert.Equal("Weekly Plan", plan.Name);
-        Assert.Equal("Healthy eating", plan.Description);
-        Assert.True(plan.IsCurated);
-        Assert.Null(plan.UserId);
-        Assert.Equal(7, plan.DurationDays);
-        Assert.Equal(2000, plan.TargetCaloriesPerDay);
+        Assert.Multiple(
+            () => Assert.Equal("Weekly Plan", plan.Name),
+            () => Assert.Equal("Healthy eating", plan.Description),
+            () => Assert.True(plan.IsCurated),
+            () => Assert.Null(plan.UserId),
+            () => Assert.Equal(7, plan.DurationDays),
+            () => Assert.Equal(2000, plan.TargetCaloriesPerDay));
     }
 
     [Fact]
@@ -120,9 +121,10 @@ public class MealPlanInvariantTests {
 
         MealPlanMeal meal = day.AddMeal(MealType.Lunch, recipeId, 2);
 
-        Assert.Equal(MealType.Lunch, meal.MealType);
-        Assert.Equal(recipeId, meal.RecipeId);
-        Assert.Equal(2, meal.Servings);
+        Assert.Multiple(
+            () => Assert.Equal(MealType.Lunch, meal.MealType),
+            () => Assert.Equal(recipeId, meal.RecipeId),
+            () => Assert.Equal(2, meal.Servings));
         Assert.Single(day.Meals);
     }
 
@@ -145,15 +147,16 @@ public class MealPlanInvariantTests {
 
         MealPlan adopted = plan.Adopt(userId);
 
-        Assert.NotEqual(plan.Id, adopted.Id);
-        Assert.Equal(userId, adopted.UserId);
-        Assert.False(adopted.IsCurated);
-        Assert.Equal("Plan", adopted.Name);
-        Assert.Equal("Desc", adopted.Description);
-        Assert.Equal(DietType.LowCarb, adopted.DietType);
-        Assert.Equal(3, adopted.DurationDays);
-        Assert.Equal(1800, adopted.TargetCaloriesPerDay);
-        Assert.Equal(2, adopted.Days.Count);
+        Assert.Multiple(
+            () => Assert.NotEqual(plan.Id, adopted.Id),
+            () => Assert.Equal(userId, adopted.UserId),
+            () => Assert.False(adopted.IsCurated),
+            () => Assert.Equal("Plan", adopted.Name),
+            () => Assert.Equal("Desc", adopted.Description),
+            () => Assert.Equal(DietType.LowCarb, adopted.DietType),
+            () => Assert.Equal(3, adopted.DurationDays),
+            () => Assert.Equal(1800, adopted.TargetCaloriesPerDay),
+            () => Assert.Equal(2, adopted.Days.Count));
 
         MealPlanDay adoptedDay1 = adopted.Days.First(d => d.DayNumber == 1);
         Assert.Equal(2, adoptedDay1.Meals.Count);

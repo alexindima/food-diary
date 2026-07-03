@@ -45,14 +45,15 @@ public sealed class AdminHttpMappingsTests {
 
         UpdateAdminUserCommand command = request.ToCommand(userId, actorUserId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.False(command.IsActive);
-        Assert.True(command.IsEmailConfirmed);
-        Assert.Equal(["Admin", "User"], command.Roles);
-        Assert.Equal("ru", command.Language);
-        Assert.Equal(1000, command.AiInputTokenLimit);
-        Assert.Equal(2000, command.AiOutputTokenLimit);
-        Assert.Equal(actorUserId, command.ActorUserId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.False(command.IsActive),
+            () => Assert.True(command.IsEmailConfirmed),
+            () => Assert.Equal(["Admin", "User"], command.Roles),
+            () => Assert.Equal("ru", command.Language),
+            () => Assert.Equal(1000, command.AiInputTokenLimit),
+            () => Assert.Equal(2000, command.AiOutputTokenLimit),
+            () => Assert.Equal(actorUserId, command.ActorUserId));
     }
 
     [Fact]
@@ -81,12 +82,13 @@ public sealed class AdminHttpMappingsTests {
 
         UpsertAdminEmailTemplateCommand command = request.ToCommand("welcome", "en");
 
-        Assert.Equal("welcome", command.Key);
-        Assert.Equal("en", command.Locale);
-        Assert.Equal("Welcome", command.Subject);
-        Assert.Equal("<p>Hello</p>", command.HtmlBody);
-        Assert.Equal("Hello", command.TextBody);
-        Assert.True(command.IsActive);
+        Assert.Multiple(
+            () => Assert.Equal("welcome", command.Key),
+            () => Assert.Equal("en", command.Locale),
+            () => Assert.Equal("Welcome", command.Subject),
+            () => Assert.Equal("<p>Hello</p>", command.HtmlBody),
+            () => Assert.Equal("Hello", command.TextBody),
+            () => Assert.True(command.IsActive));
     }
 
     [Fact]
@@ -100,11 +102,12 @@ public sealed class AdminHttpMappingsTests {
 
         SendAdminEmailTemplateTestCommand command = request.ToCommand();
 
-        Assert.Equal(request.ToEmail, command.ToEmail);
-        Assert.Equal(request.Key, command.Key);
-        Assert.Equal(request.Subject, command.Subject);
-        Assert.Equal(request.HtmlBody, command.HtmlBody);
-        Assert.Equal(request.TextBody, command.TextBody);
+        Assert.Multiple(
+            () => Assert.Equal(request.ToEmail, command.ToEmail),
+            () => Assert.Equal(request.Key, command.Key),
+            () => Assert.Equal(request.Subject, command.Subject),
+            () => Assert.Equal(request.HtmlBody, command.HtmlBody),
+            () => Assert.Equal(request.TextBody, command.TextBody));
     }
 
     [Fact]
@@ -113,10 +116,11 @@ public sealed class AdminHttpMappingsTests {
 
         UpsertAdminAiPromptCommand command = request.ToCommand("meal-analysis", "ru");
 
-        Assert.Equal("meal-analysis", command.Key);
-        Assert.Equal("ru", command.Locale);
-        Assert.Equal("Prompt text", command.PromptText);
-        Assert.True(command.IsActive);
+        Assert.Multiple(
+            () => Assert.Equal("meal-analysis", command.Key),
+            () => Assert.Equal("ru", command.Locale),
+            () => Assert.Equal("Prompt text", command.PromptText),
+            () => Assert.True(command.IsActive));
     }
 
     [Fact]
@@ -127,11 +131,12 @@ public sealed class AdminHttpMappingsTests {
 
         StartAdminImpersonationCommand command = request.ToCommand(actorUserId, targetUserId, "203.0.113.1", "Agent/1.0");
 
-        Assert.Equal(actorUserId, command.ActorUserId);
-        Assert.Equal(targetUserId, command.TargetUserId);
-        Assert.Equal("Support case", command.Reason);
-        Assert.Equal("203.0.113.1", command.ActorIpAddress);
-        Assert.Equal("Agent/1.0", command.ActorUserAgent);
+        Assert.Multiple(
+            () => Assert.Equal(actorUserId, command.ActorUserId),
+            () => Assert.Equal(targetUserId, command.TargetUserId),
+            () => Assert.Equal("Support case", command.Reason),
+            () => Assert.Equal("203.0.113.1", command.ActorIpAddress),
+            () => Assert.Equal("Agent/1.0", command.ActorUserAgent));
     }
 
     [Fact]
@@ -142,10 +147,11 @@ public sealed class AdminHttpMappingsTests {
         ReviewContentReportCommand review = request.ToReviewCommand(reportId);
         DismissContentReportCommand dismiss = request.ToDismissCommand(reportId);
 
-        Assert.Equal(reportId, review.ReportId);
-        Assert.Equal("Reviewed", review.AdminNote);
-        Assert.Equal(reportId, dismiss.ReportId);
-        Assert.Equal("Reviewed", dismiss.AdminNote);
+        Assert.Multiple(
+            () => Assert.Equal(reportId, review.ReportId),
+            () => Assert.Equal("Reviewed", review.AdminNote),
+            () => Assert.Equal(reportId, dismiss.ReportId),
+            () => Assert.Equal("Reviewed", dismiss.AdminNote));
     }
 
     [Fact]
@@ -160,19 +166,20 @@ public sealed class AdminHttpMappingsTests {
         UpdateAdminLessonCommand updateCommand = update.ToUpdateCommand(lessonId);
         DeleteAdminLessonCommand deleteCommand = lessonId.ToDeleteCommand();
 
-        Assert.Equal("Title", createCommand.Title);
-        Assert.Equal("Content", createCommand.Content);
-        Assert.Equal("Summary", createCommand.Summary);
-        Assert.Equal("en", createCommand.Locale);
-        Assert.Equal("nutrition", createCommand.Category);
-        Assert.Equal("beginner", createCommand.Difficulty);
-        Assert.Equal(4, createCommand.EstimatedReadMinutes);
-        Assert.Equal(10, createCommand.SortOrder);
-        Assert.Equal(lessonId, updateCommand.Id);
-        Assert.Equal("Updated", updateCommand.Title);
-        Assert.Null(updateCommand.Summary);
-        Assert.Equal("ru", updateCommand.Locale);
-        Assert.Equal(lessonId, deleteCommand.Id);
+        Assert.Multiple(
+            () => Assert.Equal("Title", createCommand.Title),
+            () => Assert.Equal("Content", createCommand.Content),
+            () => Assert.Equal("Summary", createCommand.Summary),
+            () => Assert.Equal("en", createCommand.Locale),
+            () => Assert.Equal("nutrition", createCommand.Category),
+            () => Assert.Equal("beginner", createCommand.Difficulty),
+            () => Assert.Equal(4, createCommand.EstimatedReadMinutes),
+            () => Assert.Equal(10, createCommand.SortOrder),
+            () => Assert.Equal(lessonId, updateCommand.Id),
+            () => Assert.Equal("Updated", updateCommand.Title),
+            () => Assert.Null(updateCommand.Summary),
+            () => Assert.Equal("ru", updateCommand.Locale),
+            () => Assert.Equal(lessonId, deleteCommand.Id));
     }
 
     [Fact]
@@ -186,10 +193,11 @@ public sealed class AdminHttpMappingsTests {
 
         GetAdminUsersQuery query = httpQuery.ToQuery();
 
-        Assert.Equal(2, query.Page);
-        Assert.Equal(30, query.Limit);
-        Assert.Equal("alex", query.Search);
-        Assert.Equal(UserAccountStatusFilter.Deleted, query.Status);
+        Assert.Multiple(
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(30, query.Limit),
+            () => Assert.Equal("alex", query.Search),
+            () => Assert.Equal(UserAccountStatusFilter.Deleted, query.Status));
     }
 
     [Fact]
@@ -213,21 +221,24 @@ public sealed class AdminHttpMappingsTests {
         Assert.NotNull(AdminHttpQueryMappings.ToEmailTemplatesQuery());
         Assert.NotNull(AdminHttpQueryMappings.ToAiPromptsQuery());
         Assert.NotNull(AdminHttpQueryMappings.ToLessonsQuery());
-        Assert.Equal(userId, userId.ToAdminUserQuery().UserId);
-        Assert.Equal(userId, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).UserId);
-        Assert.Equal(12, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).Limit);
-        Assert.Equal(messageId, messageId.ToMailInboxMessageDetailsQuery().Id);
+        Assert.Multiple(
+            () => Assert.Equal(userId, userId.ToAdminUserQuery().UserId),
+            () => Assert.Equal(userId, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).UserId),
+            () => Assert.Equal(12, new GetAdminUserRoleAuditHttpQuery(12).ToRoleAuditQuery(userId).Limit),
+            () => Assert.Equal(messageId, messageId.ToMailInboxMessageDetailsQuery().Id));
 
         GetAdminUserLoginEventsQuery loginEvents = new GetAdminUserLoginEventsHttpQuery(2, 30, userId, "mail").ToQuery();
-        Assert.Equal(2, loginEvents.Page);
-        Assert.Equal(30, loginEvents.Limit);
-        Assert.Equal(userId, loginEvents.UserId);
-        Assert.Equal("mail", loginEvents.Search);
+        Assert.Multiple(
+            () => Assert.Equal(2, loginEvents.Page),
+            () => Assert.Equal(30, loginEvents.Limit),
+            () => Assert.Equal(userId, loginEvents.UserId),
+            () => Assert.Equal("mail", loginEvents.Search));
 
         GetAdminImpersonationSessionsQuery impersonationSessions = new GetAdminImpersonationSessionsHttpQuery(3, 40, "target@example.com").ToQuery();
-        Assert.Equal(3, impersonationSessions.Page);
-        Assert.Equal(40, impersonationSessions.Limit);
-        Assert.Equal("target@example.com", impersonationSessions.Search);
+        Assert.Multiple(
+            () => Assert.Equal(3, impersonationSessions.Page),
+            () => Assert.Equal(40, impersonationSessions.Limit),
+            () => Assert.Equal("target@example.com", impersonationSessions.Search));
 
         GetAdminUserLoginSummaryQuery loginSummary = new GetAdminUserLoginSummaryHttpQuery(from, to).ToQuery();
         Assert.Equal(from, loginSummary.FromUtc);
@@ -259,16 +270,17 @@ public sealed class AdminHttpMappingsTests {
         GetAdminBillingPaymentsQuery payments = httpQuery.ToPaymentsQuery();
         GetAdminBillingWebhookEventsQuery webhookEvents = httpQuery.ToWebhookEventsQuery();
 
-        Assert.Equal(3, subscriptions.Page);
-        Assert.Equal(50, subscriptions.Limit);
-        Assert.Equal("stripe", subscriptions.Provider);
-        Assert.Equal("active", subscriptions.Status);
-        Assert.Equal("user@example.com", subscriptions.Search);
-        Assert.Equal(from, subscriptions.FromUtc);
-        Assert.Equal(to, subscriptions.ToUtc);
-        Assert.Equal("invoice", payments.Kind);
-        Assert.Equal("stripe", webhookEvents.Provider);
-        Assert.Equal("active", webhookEvents.Status);
+        Assert.Multiple(
+            () => Assert.Equal(3, subscriptions.Page),
+            () => Assert.Equal(50, subscriptions.Limit),
+            () => Assert.Equal("stripe", subscriptions.Provider),
+            () => Assert.Equal("active", subscriptions.Status),
+            () => Assert.Equal("user@example.com", subscriptions.Search),
+            () => Assert.Equal(from, subscriptions.FromUtc),
+            () => Assert.Equal(to, subscriptions.ToUtc),
+            () => Assert.Equal("invoice", payments.Kind),
+            () => Assert.Equal("stripe", webhookEvents.Provider),
+            () => Assert.Equal("active", webhookEvents.Status));
     }
 
     [Theory]
@@ -302,14 +314,15 @@ public sealed class AdminHttpMappingsTests {
 
         Assert.Equal(3, command.Version);
         ImportAdminLessonItem lesson = Assert.Single(command.Lessons);
-        Assert.Equal("Protein basics", lesson.Title);
-        Assert.Equal("Content", lesson.Content);
-        Assert.Null(lesson.Summary);
-        Assert.Equal("en", lesson.Locale);
-        Assert.Equal("nutrition", lesson.Category);
-        Assert.Equal("beginner", lesson.Difficulty);
-        Assert.Equal(4, lesson.EstimatedReadMinutes);
-        Assert.Equal(10, lesson.SortOrder);
+        Assert.Multiple(
+            () => Assert.Equal("Protein basics", lesson.Title),
+            () => Assert.Equal("Content", lesson.Content),
+            () => Assert.Null(lesson.Summary),
+            () => Assert.Equal("en", lesson.Locale),
+            () => Assert.Equal("nutrition", lesson.Category),
+            () => Assert.Equal("beginner", lesson.Difficulty),
+            () => Assert.Equal(4, lesson.EstimatedReadMinutes),
+            () => Assert.Equal(10, lesson.SortOrder));
     }
 
     [Fact]
@@ -326,16 +339,18 @@ public sealed class AdminHttpMappingsTests {
 
         AdminDashboardSummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(10, response.TotalUsers);
-        Assert.Equal(8, response.ActiveUsers);
-        Assert.Equal(2, response.PremiumUsers);
-        Assert.Equal(1, response.DeletedUsers);
-        Assert.Equal(3, response.PendingReportsCount);
+        Assert.Multiple(
+            () => Assert.Equal(10, response.TotalUsers),
+            () => Assert.Equal(8, response.ActiveUsers),
+            () => Assert.Equal(2, response.PremiumUsers),
+            () => Assert.Equal(1, response.DeletedUsers),
+            () => Assert.Equal(3, response.PendingReportsCount));
         AdminUserHttpResponse user = Assert.Single(response.RecentUsers);
-        Assert.Equal(userId, user.Id);
-        Assert.Equal("user@example.com", user.Email);
-        Assert.Equal(["Admin"], user.Roles);
-        Assert.Equal(createdOnUtc, user.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(userId, user.Id),
+            () => Assert.Equal("user@example.com", user.Email),
+            () => Assert.Equal(["Admin"], user.Roles),
+            () => Assert.Equal(createdOnUtc, user.CreatedOnUtc));
     }
 
     [Fact]
@@ -352,16 +367,18 @@ public sealed class AdminHttpMappingsTests {
 
         AdminAiUsageSummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(300, response.TotalTokens);
-        Assert.Equal(100, response.InputTokens);
-        Assert.Equal(200, response.OutputTokens);
-        Assert.Equal(new DateOnly(2026, 4, 6), Assert.Single(response.ByDay).Date);
-        Assert.Equal("meal-analysis", Assert.Single(response.ByOperation).Key);
-        Assert.Equal("gpt-test", Assert.Single(response.ByModel).Key);
+        Assert.Multiple(
+            () => Assert.Equal(300, response.TotalTokens),
+            () => Assert.Equal(100, response.InputTokens),
+            () => Assert.Equal(200, response.OutputTokens),
+            () => Assert.Equal(new DateOnly(2026, 4, 6), Assert.Single(response.ByDay).Date),
+            () => Assert.Equal("meal-analysis", Assert.Single(response.ByOperation).Key),
+            () => Assert.Equal("gpt-test", Assert.Single(response.ByModel).Key));
         AdminAiUsageUserHttpResponse user = Assert.Single(response.ByUser);
-        Assert.Equal(userId, user.Id);
-        Assert.Equal("user@example.com", user.Email);
-        Assert.Equal(150, user.TotalTokens);
+        Assert.Multiple(
+            () => Assert.Equal(userId, user.Id),
+            () => Assert.Equal("user@example.com", user.Email),
+            () => Assert.Equal(150, user.TotalTokens));
     }
 
     [Fact]
@@ -380,19 +397,20 @@ public sealed class AdminHttpMappingsTests {
         var mailSummary = new AdminMailInboxMessageSummaryModel(Guid.NewGuid(), "from@example.com", ["to@example.com"], "Subject", "general", "received", ReadAtUtc: null, offsetNow);
         var mailDetails = new AdminMailInboxMessageDetailsModel(Guid.NewGuid(), "message-id", "from@example.com", ["to@example.com"], "Subject", "Text", "<p>Html</p>", "raw", "general", "received", ReadAtUtc: null, offsetNow);
 
-        Assert.Equal("key", prompt.ToAiPromptHttpResponse().Key);
-        Assert.Equal("Title", lesson.ToLessonHttpResponse().Title);
-        Assert.Equal(1, new AdminLessonsImportModel(1, [lesson]).ToLessonsImportHttpResponse().ImportedCount);
-        Assert.Equal("welcome", template.ToHttpResponse().Key);
-        Assert.Equal("token", impersonationStart.ToHttpResponse().AccessToken);
-        Assert.Equal("actor@example.com", impersonationSession.ToHttpResponse().ActorEmail);
-        Assert.Equal("Chrome", loginEvent.ToHttpResponse().BrowserName);
-        Assert.Equal(3, device.ToHttpResponse().Count);
-        Assert.Equal("Admin", audit.ToHttpResponse().RoleName);
-        Assert.Equal("Spam", report.ToHttpResponse().Reason);
-        Assert.Equal("from@example.com", mailSummary.ToHttpResponse().FromAddress);
-        Assert.Equal("general", mailSummary.ToHttpResponse().Category);
-        Assert.Equal("raw", mailDetails.ToHttpResponse().RawMime);
+        Assert.Multiple(
+            () => Assert.Equal("key", prompt.ToAiPromptHttpResponse().Key),
+            () => Assert.Equal("Title", lesson.ToLessonHttpResponse().Title),
+            () => Assert.Equal(1, new AdminLessonsImportModel(1, [lesson]).ToLessonsImportHttpResponse().ImportedCount),
+            () => Assert.Equal("welcome", template.ToHttpResponse().Key),
+            () => Assert.Equal("token", impersonationStart.ToHttpResponse().AccessToken),
+            () => Assert.Equal("actor@example.com", impersonationSession.ToHttpResponse().ActorEmail),
+            () => Assert.Equal("Chrome", loginEvent.ToHttpResponse().BrowserName),
+            () => Assert.Equal(3, device.ToHttpResponse().Count),
+            () => Assert.Equal("Admin", audit.ToHttpResponse().RoleName),
+            () => Assert.Equal("Spam", report.ToHttpResponse().Reason),
+            () => Assert.Equal("from@example.com", mailSummary.ToHttpResponse().FromAddress),
+            () => Assert.Equal("general", mailSummary.ToHttpResponse().Category),
+            () => Assert.Equal("raw", mailDetails.ToHttpResponse().RawMime));
     }
 
     [Fact]
@@ -414,56 +432,57 @@ public sealed class AdminHttpMappingsTests {
         AdminBillingPaymentHttpResponse paymentResponse = payment.ToHttpResponse();
         AdminBillingWebhookEventHttpResponse webhookResponse = webhook.ToHttpResponse();
 
-        Assert.Equal(subscriptionId, subscriptionResponse.Id);
-        Assert.Equal(userId, subscriptionResponse.UserId);
-        Assert.Equal("user@example.com", subscriptionResponse.UserEmail);
-        Assert.Equal("stripe", subscriptionResponse.Provider);
-        Assert.Equal("customer", subscriptionResponse.ExternalCustomerId);
-        Assert.Equal("subscription", subscriptionResponse.ExternalSubscriptionId);
-        Assert.Equal("payment-method", subscriptionResponse.ExternalPaymentMethodId);
-        Assert.Equal("price", subscriptionResponse.ExternalPriceId);
-        Assert.Equal("premium", subscriptionResponse.Plan);
-        Assert.Equal("active", subscriptionResponse.Status);
-        Assert.Equal(now.AddDays(-1), subscriptionResponse.CurrentPeriodStartUtc);
-        Assert.Equal(now.AddDays(30), subscriptionResponse.CurrentPeriodEndUtc);
-        Assert.True(subscriptionResponse.CancelAtPeriodEnd);
-        Assert.Equal(now.AddDays(29), subscriptionResponse.NextBillingAttemptUtc);
-        Assert.Equal("event-1", subscriptionResponse.LastWebhookEventId);
-        Assert.Equal(now, subscriptionResponse.LastSyncedAtUtc);
-        Assert.Equal(now, subscriptionResponse.CreatedOnUtc);
-        Assert.Null(subscriptionResponse.ModifiedOnUtc);
-        Assert.NotEqual(Guid.Empty, paymentResponse.Id);
-        Assert.Equal(userId, paymentResponse.UserId);
-        Assert.Equal("user@example.com", paymentResponse.UserEmail);
-        Assert.Equal(subscriptionId, paymentResponse.BillingSubscriptionId);
-        Assert.Equal("stripe", paymentResponse.Provider);
-        Assert.Equal("payment", paymentResponse.ExternalPaymentId);
-        Assert.Equal("customer", paymentResponse.ExternalCustomerId);
-        Assert.Equal("subscription", paymentResponse.ExternalSubscriptionId);
-        Assert.Equal("payment-method", paymentResponse.ExternalPaymentMethodId);
-        Assert.Equal("price", paymentResponse.ExternalPriceId);
-        Assert.Equal("premium", paymentResponse.Plan);
-        Assert.Equal("succeeded", paymentResponse.Status);
-        Assert.Equal(12.5m, paymentResponse.Amount);
-        Assert.Equal("USD", paymentResponse.Currency);
-        Assert.Equal(now.AddDays(-1), paymentResponse.CurrentPeriodStartUtc);
-        Assert.Equal(now.AddDays(30), paymentResponse.CurrentPeriodEndUtc);
-        Assert.Equal("invoice", paymentResponse.Kind);
-        Assert.Equal("event-2", paymentResponse.WebhookEventId);
-        Assert.Equal("{}", paymentResponse.ProviderMetadataJson);
-        Assert.Equal(now, paymentResponse.CreatedOnUtc);
-        Assert.Null(paymentResponse.ModifiedOnUtc);
-        Assert.NotEqual(Guid.Empty, webhookResponse.Id);
-        Assert.Equal("stripe", webhookResponse.Provider);
-        Assert.Equal("event-3", webhookResponse.EventId);
-        Assert.Equal("invoice.paid", webhookResponse.EventType);
-        Assert.Equal("invoice-1", webhookResponse.ExternalObjectId);
-        Assert.Equal("processed", webhookResponse.Status);
-        Assert.Equal(now, webhookResponse.ProcessedAtUtc);
-        Assert.Equal("{}", webhookResponse.PayloadJson);
-        Assert.Null(webhookResponse.ErrorMessage);
-        Assert.Equal(now, webhookResponse.CreatedOnUtc);
-        Assert.Null(webhookResponse.ModifiedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(subscriptionId, subscriptionResponse.Id),
+            () => Assert.Equal(userId, subscriptionResponse.UserId),
+            () => Assert.Equal("user@example.com", subscriptionResponse.UserEmail),
+            () => Assert.Equal("stripe", subscriptionResponse.Provider),
+            () => Assert.Equal("customer", subscriptionResponse.ExternalCustomerId),
+            () => Assert.Equal("subscription", subscriptionResponse.ExternalSubscriptionId),
+            () => Assert.Equal("payment-method", subscriptionResponse.ExternalPaymentMethodId),
+            () => Assert.Equal("price", subscriptionResponse.ExternalPriceId),
+            () => Assert.Equal("premium", subscriptionResponse.Plan),
+            () => Assert.Equal("active", subscriptionResponse.Status),
+            () => Assert.Equal(now.AddDays(-1), subscriptionResponse.CurrentPeriodStartUtc),
+            () => Assert.Equal(now.AddDays(30), subscriptionResponse.CurrentPeriodEndUtc),
+            () => Assert.True(subscriptionResponse.CancelAtPeriodEnd),
+            () => Assert.Equal(now.AddDays(29), subscriptionResponse.NextBillingAttemptUtc),
+            () => Assert.Equal("event-1", subscriptionResponse.LastWebhookEventId),
+            () => Assert.Equal(now, subscriptionResponse.LastSyncedAtUtc),
+            () => Assert.Equal(now, subscriptionResponse.CreatedOnUtc),
+            () => Assert.Null(subscriptionResponse.ModifiedOnUtc),
+            () => Assert.NotEqual(Guid.Empty, paymentResponse.Id),
+            () => Assert.Equal(userId, paymentResponse.UserId),
+            () => Assert.Equal("user@example.com", paymentResponse.UserEmail),
+            () => Assert.Equal(subscriptionId, paymentResponse.BillingSubscriptionId),
+            () => Assert.Equal("stripe", paymentResponse.Provider),
+            () => Assert.Equal("payment", paymentResponse.ExternalPaymentId),
+            () => Assert.Equal("customer", paymentResponse.ExternalCustomerId),
+            () => Assert.Equal("subscription", paymentResponse.ExternalSubscriptionId),
+            () => Assert.Equal("payment-method", paymentResponse.ExternalPaymentMethodId),
+            () => Assert.Equal("price", paymentResponse.ExternalPriceId),
+            () => Assert.Equal("premium", paymentResponse.Plan),
+            () => Assert.Equal("succeeded", paymentResponse.Status),
+            () => Assert.Equal(12.5m, paymentResponse.Amount),
+            () => Assert.Equal("USD", paymentResponse.Currency),
+            () => Assert.Equal(now.AddDays(-1), paymentResponse.CurrentPeriodStartUtc),
+            () => Assert.Equal(now.AddDays(30), paymentResponse.CurrentPeriodEndUtc),
+            () => Assert.Equal("invoice", paymentResponse.Kind),
+            () => Assert.Equal("event-2", paymentResponse.WebhookEventId),
+            () => Assert.Equal("{}", paymentResponse.ProviderMetadataJson),
+            () => Assert.Equal(now, paymentResponse.CreatedOnUtc),
+            () => Assert.Null(paymentResponse.ModifiedOnUtc),
+            () => Assert.NotEqual(Guid.Empty, webhookResponse.Id),
+            () => Assert.Equal("stripe", webhookResponse.Provider),
+            () => Assert.Equal("event-3", webhookResponse.EventId),
+            () => Assert.Equal("invoice.paid", webhookResponse.EventType),
+            () => Assert.Equal("invoice-1", webhookResponse.ExternalObjectId),
+            () => Assert.Equal("processed", webhookResponse.Status),
+            () => Assert.Equal(now, webhookResponse.ProcessedAtUtc),
+            () => Assert.Equal("{}", webhookResponse.PayloadJson),
+            () => Assert.Null(webhookResponse.ErrorMessage),
+            () => Assert.Equal(now, webhookResponse.CreatedOnUtc),
+            () => Assert.Null(webhookResponse.ModifiedOnUtc));
     }
 
     [Fact]
@@ -502,31 +521,33 @@ public sealed class AdminHttpMappingsTests {
 
         FastingTelemetrySummaryHttpResponse response = summary.ToHttpResponse();
 
-        Assert.Equal(168, response.WindowHours);
-        Assert.Equal(generatedAtUtc, response.GeneratedAtUtc);
-        Assert.Equal(10, response.StartedSessions);
-        Assert.Equal(7, response.CompletedSessions);
-        Assert.Equal(5, response.SavedCheckIns);
-        Assert.Equal(4, response.ReminderPresetSelections);
-        Assert.Equal(3, response.ReminderTimingSaves);
-        Assert.Equal(2, response.PresetReminderTimingSaves);
-        Assert.Equal(1, response.ManualReminderTimingSaves);
-        Assert.Equal(70, response.CompletionRatePercent);
-        Assert.Equal(50, response.CheckInRatePercent);
-        Assert.Equal(18.5, response.AverageCompletedDurationHours);
-        Assert.Equal(lastCheckInAtUtc, response.LastCheckInAtUtc);
-        Assert.Equal(lastEventAtUtc, response.LastEventAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(168, response.WindowHours),
+            () => Assert.Equal(generatedAtUtc, response.GeneratedAtUtc),
+            () => Assert.Equal(10, response.StartedSessions),
+            () => Assert.Equal(7, response.CompletedSessions),
+            () => Assert.Equal(5, response.SavedCheckIns),
+            () => Assert.Equal(4, response.ReminderPresetSelections),
+            () => Assert.Equal(3, response.ReminderTimingSaves),
+            () => Assert.Equal(2, response.PresetReminderTimingSaves),
+            () => Assert.Equal(1, response.ManualReminderTimingSaves),
+            () => Assert.Equal(70, response.CompletionRatePercent),
+            () => Assert.Equal(50, response.CheckInRatePercent),
+            () => Assert.Equal(18.5, response.AverageCompletedDurationHours),
+            () => Assert.Equal(lastCheckInAtUtc, response.LastCheckInAtUtc),
+            () => Assert.Equal(lastEventAtUtc, response.LastEventAtUtc));
         FastingTelemetryPresetHttpResponse preset = Assert.Single(response.TopPresets);
-        Assert.Equal("morning", preset.PresetId);
-        Assert.Equal(4, preset.SelectionCount);
-        Assert.Equal(3, preset.TimingSaveCount);
-        Assert.Equal(8, preset.FirstReminderHours);
-        Assert.Equal(2, preset.FollowUpReminderHours);
-        Assert.Equal(6, preset.StartedSessions);
-        Assert.Equal(5, preset.CompletedSessions);
-        Assert.Equal(4, preset.SavedCheckIns);
-        Assert.Equal(83.3, preset.CompletionRatePercent);
-        Assert.Equal(66.7, preset.CheckInRatePercent);
+        Assert.Multiple(
+            () => Assert.Equal("morning", preset.PresetId),
+            () => Assert.Equal(4, preset.SelectionCount),
+            () => Assert.Equal(3, preset.TimingSaveCount),
+            () => Assert.Equal(8, preset.FirstReminderHours),
+            () => Assert.Equal(2, preset.FollowUpReminderHours),
+            () => Assert.Equal(6, preset.StartedSessions),
+            () => Assert.Equal(5, preset.CompletedSessions),
+            () => Assert.Equal(4, preset.SavedCheckIns),
+            () => Assert.Equal(83.3, preset.CompletionRatePercent),
+            () => Assert.Equal(66.7, preset.CheckInRatePercent));
     }
 
     [Fact]

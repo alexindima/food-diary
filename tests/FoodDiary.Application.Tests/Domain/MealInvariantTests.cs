@@ -183,12 +183,13 @@ public class MealInvariantTests {
 
         MealItem item = meal.AddRecipe(recipeId, 2);
 
-        Assert.Equal(meal.Id, item.MealId);
-        Assert.Null(item.ProductId);
-        Assert.Equal(recipeId, item.RecipeId);
-        Assert.Equal(2, item.Amount);
-        Assert.False(item.IsProduct);
-        Assert.True(item.IsRecipe);
+        Assert.Multiple(
+            () => Assert.Equal(meal.Id, item.MealId),
+            () => Assert.Null(item.ProductId),
+            () => Assert.Equal(recipeId, item.RecipeId),
+            () => Assert.Equal(2, item.Amount),
+            () => Assert.False(item.IsProduct),
+            () => Assert.True(item.IsRecipe));
         Assert.Contains(item, meal.Items);
         Assert.NotNull(meal.ModifiedOnUtc);
     }
@@ -421,10 +422,11 @@ public class MealInvariantTests {
             ManualFiber: 9,
             ManualAlcohol: 0));
 
-        Assert.False(meal.IsNutritionAutoCalculated);
-        Assert.Equal(500.12, meal.TotalCalories);
-        Assert.Equal(30.57, meal.TotalProteins);
-        Assert.Equal(21, meal.ManualFats);
+        Assert.Multiple(
+            () => Assert.False(meal.IsNutritionAutoCalculated),
+            () => Assert.Equal(500.12, meal.TotalCalories),
+            () => Assert.Equal(30.57, meal.TotalProteins),
+            () => Assert.Equal(21, meal.ManualFats));
         Assert.Single(meal.DomainEvents);
         Assert.IsType<MealNutritionAppliedDomainEvent>(meal.DomainEvents[0]);
     }
@@ -470,13 +472,14 @@ public class MealInvariantTests {
             TotalAlcohol: 0,
             IsAutoCalculated: true));
 
-        Assert.True(meal.IsNutritionAutoCalculated);
-        Assert.Null(meal.ManualCalories);
-        Assert.Null(meal.ManualProteins);
-        Assert.Null(meal.ManualFats);
-        Assert.Null(meal.ManualCarbs);
-        Assert.Null(meal.ManualFiber);
-        Assert.Null(meal.ManualAlcohol);
+        Assert.Multiple(
+            () => Assert.True(meal.IsNutritionAutoCalculated),
+            () => Assert.Null(meal.ManualCalories),
+            () => Assert.Null(meal.ManualProteins),
+            () => Assert.Null(meal.ManualFats),
+            () => Assert.Null(meal.ManualCarbs),
+            () => Assert.Null(meal.ManualFiber),
+            () => Assert.Null(meal.ManualAlcohol));
         Assert.Single(meal.DomainEvents);
         Assert.IsType<MealNutritionAppliedDomainEvent>(meal.DomainEvents[0]);
     }
@@ -509,12 +512,13 @@ public class MealInvariantTests {
             ManualFiber: 9,
             ManualAlcohol: 1));
 
-        Assert.Equal(510, meal.ManualCalories);
-        Assert.Equal(31, meal.ManualProteins);
-        Assert.Equal(21, meal.ManualFats);
-        Assert.Equal(41, meal.ManualCarbs);
-        Assert.Equal(9, meal.ManualFiber);
-        Assert.Equal(1, meal.ManualAlcohol);
+        Assert.Multiple(
+            () => Assert.Equal(510, meal.ManualCalories),
+            () => Assert.Equal(31, meal.ManualProteins),
+            () => Assert.Equal(21, meal.ManualFats),
+            () => Assert.Equal(41, meal.ManualCarbs),
+            () => Assert.Equal(9, meal.ManualFiber),
+            () => Assert.Equal(1, meal.ManualAlcohol));
         Assert.Single(meal.DomainEvents);
     }
 
@@ -657,10 +661,11 @@ public class MealInvariantTests {
             ]);
 
         MealAiItem aiItem = Assert.Single(session.Items);
-        Assert.Equal("Apple", aiItem.NameEn);
-        Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", aiItem.NameLocal);
-        Assert.Equal("g", aiItem.Unit);
-        Assert.Equal(session.Id, aiItem.MealAiSessionId);
+        Assert.Multiple(
+            () => Assert.Equal("Apple", aiItem.NameEn),
+            () => Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", aiItem.NameLocal),
+            () => Assert.Equal("g", aiItem.Unit),
+            () => Assert.Equal(session.Id, aiItem.MealAiSessionId));
     }
 
     [Fact]
@@ -758,9 +763,10 @@ public class MealInvariantTests {
             data: out MealAiItemData? data,
             error: out string? error);
 
-        Assert.False(success);
-        Assert.Null(data);
-        Assert.False(string.IsNullOrWhiteSpace(error));
+        Assert.Multiple(
+            () => Assert.False(success),
+            () => Assert.Null(data),
+            () => Assert.False(string.IsNullOrWhiteSpace(error)));
     }
 
     [Fact]
@@ -777,10 +783,11 @@ public class MealInvariantTests {
             fiber: 2.4,
             alcohol: 0);
 
-        Assert.Equal("Apple", data.NameEn);
-        Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", data.NameLocal);
-        Assert.Equal("g", data.Unit);
-        Assert.Equal(100, data.Amount);
+        Assert.Multiple(
+            () => Assert.Equal("Apple", data.NameEn),
+            () => Assert.Equal("Ð¯Ð±Ð»Ð¾ÐºÐ¾", data.NameLocal),
+            () => Assert.Equal("g", data.Unit),
+            () => Assert.Equal(100, data.Amount));
     }
 
     [Fact]

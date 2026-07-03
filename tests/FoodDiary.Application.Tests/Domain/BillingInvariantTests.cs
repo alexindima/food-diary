@@ -29,16 +29,17 @@ public sealed class BillingInvariantTests {
             processedAtLocal,
             payloadJson: " {\"id\":\"evt_1\"} ");
 
-        Assert.NotEqual(Guid.Empty, webhookEvent.Id);
-        Assert.Equal(BillingProviderNames.Stripe, webhookEvent.Provider);
-        Assert.Equal("evt_1", webhookEvent.EventId);
-        Assert.Equal("subscription.updated", webhookEvent.EventType);
-        Assert.Equal("sub_1", webhookEvent.ExternalObjectId);
-        Assert.Equal("processed", webhookEvent.Status);
-        Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.ProcessedAtUtc);
-        Assert.Equal("{\"id\":\"evt_1\"}", webhookEvent.PayloadJson);
-        Assert.Null(webhookEvent.ErrorMessage);
-        Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, webhookEvent.Id),
+            () => Assert.Equal(BillingProviderNames.Stripe, webhookEvent.Provider),
+            () => Assert.Equal("evt_1", webhookEvent.EventId),
+            () => Assert.Equal("subscription.updated", webhookEvent.EventType),
+            () => Assert.Equal("sub_1", webhookEvent.ExternalObjectId),
+            () => Assert.Equal("processed", webhookEvent.Status),
+            () => Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.ProcessedAtUtc),
+            () => Assert.Equal("{\"id\":\"evt_1\"}", webhookEvent.PayloadJson),
+            () => Assert.Null(webhookEvent.ErrorMessage),
+            () => Assert.Equal(processedAtLocal.ToUniversalTime(), webhookEvent.CreatedOnUtc));
     }
 
     [Fact]
@@ -51,9 +52,10 @@ public sealed class BillingInvariantTests {
             Now,
             payloadJson: " ");
 
-        Assert.Equal(BillingProviderNames.Paddle, webhookEvent.Provider);
-        Assert.Null(webhookEvent.ExternalObjectId);
-        Assert.Null(webhookEvent.PayloadJson);
+        Assert.Multiple(
+            () => Assert.Equal(BillingProviderNames.Paddle, webhookEvent.Provider),
+            () => Assert.Null(webhookEvent.ExternalObjectId),
+            () => Assert.Null(webhookEvent.PayloadJson));
     }
 
     [Fact]
@@ -77,13 +79,14 @@ public sealed class BillingInvariantTests {
             " price_1 ",
             " monthly ");
 
-        Assert.NotEqual(Guid.Empty, subscription.Id);
-        Assert.Equal(BillingProviderNames.Paddle, subscription.Provider);
-        Assert.Equal("customer_1", subscription.ExternalCustomerId);
-        Assert.Equal("price_1", subscription.ExternalPriceId);
-        Assert.Equal("monthly", subscription.Plan);
-        Assert.Equal(BillingSubscription.PendingCheckoutStatus, subscription.Status);
-        Assert.NotEqual(default, subscription.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, subscription.Id),
+            () => Assert.Equal(BillingProviderNames.Paddle, subscription.Provider),
+            () => Assert.Equal("customer_1", subscription.ExternalCustomerId),
+            () => Assert.Equal("price_1", subscription.ExternalPriceId),
+            () => Assert.Equal("monthly", subscription.Plan),
+            () => Assert.Equal(BillingSubscription.PendingCheckoutStatus, subscription.Status),
+            () => Assert.NotEqual(default, subscription.CreatedOnUtc));
     }
 
     [Fact]
@@ -110,10 +113,11 @@ public sealed class BillingInvariantTests {
 
         subscription.UpdateCheckoutContext(" yookassa ", " customer_2 ", " price_2 ", " annual ");
 
-        Assert.Equal(BillingProviderNames.YooKassa, subscription.Provider);
-        Assert.Equal("customer_2", subscription.ExternalCustomerId);
-        Assert.Equal("price_2", subscription.ExternalPriceId);
-        Assert.Equal("annual", subscription.Plan);
+        Assert.Multiple(
+            () => Assert.Equal(BillingProviderNames.YooKassa, subscription.Provider),
+            () => Assert.Equal("customer_2", subscription.ExternalCustomerId),
+            () => Assert.Equal("price_2", subscription.ExternalPriceId),
+            () => Assert.Equal("annual", subscription.Plan));
         Assert.NotNull(subscription.ModifiedOnUtc);
     }
 
@@ -143,9 +147,10 @@ public sealed class BillingInvariantTests {
             Now,
             "{\"provider\":\"yookassa\"}");
 
-        Assert.Equal(Now.AddMonths(1), subscription.NextBillingAttemptUtc);
-        Assert.Equal("pm_1", subscription.ExternalPaymentMethodId);
-        Assert.Equal("{\"provider\":\"yookassa\"}", subscription.ProviderMetadataJson);
+        Assert.Multiple(
+            () => Assert.Equal(Now.AddMonths(1), subscription.NextBillingAttemptUtc),
+            () => Assert.Equal("pm_1", subscription.ExternalPaymentMethodId),
+            () => Assert.Equal("{\"provider\":\"yookassa\"}", subscription.ProviderMetadataJson));
     }
 
     [Fact]
@@ -199,12 +204,13 @@ public sealed class BillingInvariantTests {
             Now,
             " {} ");
 
-        Assert.Equal(Now.AddMonths(1), subscription.NextBillingAttemptUtc);
-        Assert.Equal(Now, subscription.TrialStartUtc);
-        Assert.Equal(Now.AddDays(7), subscription.TrialEndUtc);
-        Assert.Equal("{}", subscription.ProviderMetadataJson);
-        Assert.Equal(Now, subscription.LastSyncedAtUtc);
-        Assert.Equal(Now, subscription.ModifiedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(Now.AddMonths(1), subscription.NextBillingAttemptUtc),
+            () => Assert.Equal(Now, subscription.TrialStartUtc),
+            () => Assert.Equal(Now.AddDays(7), subscription.TrialEndUtc),
+            () => Assert.Equal("{}", subscription.ProviderMetadataJson),
+            () => Assert.Equal(Now, subscription.LastSyncedAtUtc),
+            () => Assert.Equal(Now, subscription.ModifiedOnUtc));
     }
 
     [Fact]
@@ -293,12 +299,13 @@ public sealed class BillingInvariantTests {
 
         subscription.MarkRenewalFailed(Now.AddDays(1), " evt_failed ", Now, " {\"retry\":true} ");
 
-        Assert.Equal("past_due", subscription.Status);
-        Assert.Equal(Now.AddDays(1), subscription.NextBillingAttemptUtc);
-        Assert.Equal("evt_failed", subscription.LastWebhookEventId);
-        Assert.Equal(Now, subscription.LastSyncedAtUtc);
-        Assert.Equal("{\"retry\":true}", subscription.ProviderMetadataJson);
-        Assert.Equal(Now, subscription.ModifiedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal("past_due", subscription.Status),
+            () => Assert.Equal(Now.AddDays(1), subscription.NextBillingAttemptUtc),
+            () => Assert.Equal("evt_failed", subscription.LastWebhookEventId),
+            () => Assert.Equal(Now, subscription.LastSyncedAtUtc),
+            () => Assert.Equal("{\"retry\":true}", subscription.ProviderMetadataJson),
+            () => Assert.Equal(Now, subscription.ModifiedOnUtc));
     }
 
     [Fact]
@@ -307,13 +314,14 @@ public sealed class BillingInvariantTests {
 
         subscription.MarkRenewalSkippedForInaccessibleUser(" evt_skipped ", Now, " {\"reason\":\"deleted\"} ");
 
-        Assert.Equal("canceled", subscription.Status);
-        Assert.False(subscription.CancelAtPeriodEnd);
-        Assert.Equal(Now, subscription.CanceledAtUtc);
-        Assert.Null(subscription.NextBillingAttemptUtc);
-        Assert.Equal("evt_skipped", subscription.LastWebhookEventId);
-        Assert.Equal(Now, subscription.LastSyncedAtUtc);
-        Assert.Equal("{\"reason\":\"deleted\"}", subscription.ProviderMetadataJson);
+        Assert.Multiple(
+            () => Assert.Equal("canceled", subscription.Status),
+            () => Assert.False(subscription.CancelAtPeriodEnd),
+            () => Assert.Equal(Now, subscription.CanceledAtUtc),
+            () => Assert.Null(subscription.NextBillingAttemptUtc),
+            () => Assert.Equal("evt_skipped", subscription.LastWebhookEventId),
+            () => Assert.Equal(Now, subscription.LastSyncedAtUtc),
+            () => Assert.Equal("{\"reason\":\"deleted\"}", subscription.ProviderMetadataJson));
     }
 
     [Fact]
@@ -337,18 +345,19 @@ public sealed class BillingInvariantTests {
             " evt_1 ",
             "{\"object\":\"payment\"}");
 
-        Assert.Equal(BillingProviderNames.YooKassa, payment.Provider);
-        Assert.Equal("payment_1", payment.ExternalPaymentId);
-        Assert.Equal("customer_1", payment.ExternalCustomerId);
-        Assert.Equal("subscription_1", payment.ExternalSubscriptionId);
-        Assert.Equal("pm_1", payment.ExternalPaymentMethodId);
-        Assert.Equal("price_monthly", payment.ExternalPriceId);
-        Assert.Equal("monthly", payment.Plan);
-        Assert.Equal("active", payment.Status);
-        Assert.Equal(7.99m, payment.Amount);
-        Assert.Equal("USD", payment.Currency);
-        Assert.Equal("evt_1", payment.WebhookEventId);
-        Assert.Equal("{\"object\":\"payment\"}", payment.ProviderMetadataJson);
+        Assert.Multiple(
+            () => Assert.Equal(BillingProviderNames.YooKassa, payment.Provider),
+            () => Assert.Equal("payment_1", payment.ExternalPaymentId),
+            () => Assert.Equal("customer_1", payment.ExternalCustomerId),
+            () => Assert.Equal("subscription_1", payment.ExternalSubscriptionId),
+            () => Assert.Equal("pm_1", payment.ExternalPaymentMethodId),
+            () => Assert.Equal("price_monthly", payment.ExternalPriceId),
+            () => Assert.Equal("monthly", payment.Plan),
+            () => Assert.Equal("active", payment.Status),
+            () => Assert.Equal(7.99m, payment.Amount),
+            () => Assert.Equal("USD", payment.Currency),
+            () => Assert.Equal("evt_1", payment.WebhookEventId),
+            () => Assert.Equal("{\"object\":\"payment\"}", payment.ProviderMetadataJson));
     }
 
     [Fact]
@@ -396,18 +405,19 @@ public sealed class BillingInvariantTests {
             webhookEventId: " ",
             providerMetadataJson: " ");
 
-        Assert.Null(payment.BillingSubscriptionId);
-        Assert.Null(payment.ExternalCustomerId);
-        Assert.Null(payment.ExternalSubscriptionId);
-        Assert.Null(payment.ExternalPaymentMethodId);
-        Assert.Null(payment.ExternalPriceId);
-        Assert.Null(payment.Plan);
-        Assert.Null(payment.Amount);
-        Assert.Null(payment.Currency);
-        Assert.Null(payment.CurrentPeriodStartUtc);
-        Assert.Null(payment.CurrentPeriodEndUtc);
-        Assert.Null(payment.WebhookEventId);
-        Assert.Null(payment.ProviderMetadataJson);
+        Assert.Multiple(
+            () => Assert.Null(payment.BillingSubscriptionId),
+            () => Assert.Null(payment.ExternalCustomerId),
+            () => Assert.Null(payment.ExternalSubscriptionId),
+            () => Assert.Null(payment.ExternalPaymentMethodId),
+            () => Assert.Null(payment.ExternalPriceId),
+            () => Assert.Null(payment.Plan),
+            () => Assert.Null(payment.Amount),
+            () => Assert.Null(payment.Currency),
+            () => Assert.Null(payment.CurrentPeriodStartUtc),
+            () => Assert.Null(payment.CurrentPeriodEndUtc),
+            () => Assert.Null(payment.WebhookEventId),
+            () => Assert.Null(payment.ProviderMetadataJson));
     }
 
     [Fact]

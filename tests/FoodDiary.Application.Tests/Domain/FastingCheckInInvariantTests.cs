@@ -22,16 +22,17 @@ public class FastingCheckInInvariantTests {
             notes: "  Feeling okay  ",
             checkedInAtLocal);
 
-        Assert.NotEqual(FastingCheckInId.Empty, checkIn.Id);
-        Assert.Equal(occurrenceId, checkIn.OccurrenceId);
-        Assert.Equal(userId, checkIn.UserId);
-        Assert.Equal(checkedInAtLocal.ToUniversalTime(), checkIn.CheckedInAtUtc);
-        Assert.Equal(2, checkIn.HungerLevel);
-        Assert.Equal(3, checkIn.EnergyLevel);
-        Assert.Equal(4, checkIn.MoodLevel);
-        Assert.Equal("headache,tired", checkIn.Symptoms);
-        Assert.Equal("Feeling okay", checkIn.Notes);
-        Assert.Equal(checkedInAtLocal.ToUniversalTime(), checkIn.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(FastingCheckInId.Empty, checkIn.Id),
+            () => Assert.Equal(occurrenceId, checkIn.OccurrenceId),
+            () => Assert.Equal(userId, checkIn.UserId),
+            () => Assert.Equal(checkedInAtLocal.ToUniversalTime(), checkIn.CheckedInAtUtc),
+            () => Assert.Equal(2, checkIn.HungerLevel),
+            () => Assert.Equal(3, checkIn.EnergyLevel),
+            () => Assert.Equal(4, checkIn.MoodLevel),
+            () => Assert.Equal("headache,tired", checkIn.Symptoms),
+            () => Assert.Equal("Feeling okay", checkIn.Notes),
+            () => Assert.Equal(checkedInAtLocal.ToUniversalTime(), checkIn.CreatedOnUtc));
     }
 
     [Fact]

@@ -122,10 +122,11 @@ public class CycleProfileInvariantTests {
 
         Assert.Same(first, second);
         Assert.Single(profile.BleedingEntries);
-        Assert.Equal(CycleFlowLevel.Heavy, second.Flow);
-        Assert.Equal(4, second.PainImpact);
-        Assert.Equal("updated", second.Notes);
-        Assert.Equal(new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), second.Date);
+        Assert.Multiple(
+            () => Assert.Equal(CycleFlowLevel.Heavy, second.Flow),
+            () => Assert.Equal(4, second.PainImpact),
+            () => Assert.Equal("updated", second.Notes),
+            () => Assert.Equal(new DateTime(2026, 4, 2, 0, 0, 0, DateTimeKind.Utc), second.Date));
     }
 
     [Fact]
@@ -180,9 +181,10 @@ public class CycleProfileInvariantTests {
 
         entry.Update(CycleFlowLevel.Medium, painImpact: 3, notes: null, clearNotes: true);
 
-        Assert.Null(entry.Notes);
-        Assert.Equal(CycleFlowLevel.Medium, entry.Flow);
-        Assert.Equal(3, entry.PainImpact);
+        Assert.Multiple(
+            () => Assert.Null(entry.Notes),
+            () => Assert.Equal(CycleFlowLevel.Medium, entry.Flow),
+            () => Assert.Equal(3, entry.PainImpact));
         Assert.NotNull(entry.ModifiedOnUtc);
     }
 
@@ -260,10 +262,11 @@ public class CycleProfileInvariantTests {
             note: null,
             clearNote: true);
 
-        Assert.Same(entry, updated);
-        Assert.Equal(4, updated.Intensity);
-        Assert.Equal(["mild"], updated.Tags);
-        Assert.Null(updated.Note);
+        Assert.Multiple(
+            () => Assert.Same(entry, updated),
+            () => Assert.Equal(4, updated.Intensity),
+            () => Assert.Equal(["mild"], updated.Tags),
+            () => Assert.Null(updated.Note));
     }
 
     [Fact]
@@ -324,9 +327,10 @@ public class CycleProfileInvariantTests {
 
         CycleFactor updated = profile.UpsertFactor(CycleFactorType.NonHormonalContraception, startDate, endDate: startDate.AddDays(2), notes: "updated");
 
-        Assert.Same(first, updated);
-        Assert.Equal(startDate.AddDays(2), updated.EndDate);
-        Assert.Equal("updated", updated.Notes);
+        Assert.Multiple(
+            () => Assert.Same(first, updated),
+            () => Assert.Equal(startDate.AddDays(2), updated.EndDate),
+            () => Assert.Equal("updated", updated.Notes));
         Assert.NotNull(profile.ModifiedOnUtc);
     }
 
@@ -426,12 +430,13 @@ public class CycleProfileInvariantTests {
             hadSex: true,
             notes: "updated");
 
-        Assert.Same(first, updated);
-        Assert.Equal(36.8, updated.BasalBodyTemperatureCelsius);
-        Assert.Equal(OvulationTestResult.Positive, updated.OvulationTestResult);
-        Assert.Equal("egg white", updated.CervicalFluid);
-        Assert.True(updated.HadSex);
-        Assert.Equal("updated", updated.Notes);
+        Assert.Multiple(
+            () => Assert.Same(first, updated),
+            () => Assert.Equal(36.8, updated.BasalBodyTemperatureCelsius),
+            () => Assert.Equal(OvulationTestResult.Positive, updated.OvulationTestResult),
+            () => Assert.Equal("egg white", updated.CervicalFluid),
+            () => Assert.True(updated.HadSex),
+            () => Assert.Equal("updated", updated.Notes));
         Assert.NotNull(profile.ModifiedOnUtc);
     }
 

@@ -19,10 +19,11 @@ public sealed class DomainEventInvariantTests {
             clientUserId,
             occurredOnUtc);
 
-        Assert.Equal(recommendationId, domainEvent.RecommendationId);
-        Assert.Equal(dietologistUserId, domainEvent.DietologistUserId);
-        Assert.Equal(clientUserId, domainEvent.ClientUserId);
-        Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(recommendationId, domainEvent.RecommendationId),
+            () => Assert.Equal(dietologistUserId, domainEvent.DietologistUserId),
+            () => Assert.Equal(clientUserId, domainEvent.ClientUserId),
+            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 
     [Fact]
@@ -41,15 +42,16 @@ public sealed class DomainEventInvariantTests {
             totalAlcohol: 0,
             occurredOnUtc);
 
-        Assert.Equal(mealId, domainEvent.MealId);
-        Assert.True(domainEvent.IsAutoCalculated);
-        Assert.Equal(500, domainEvent.TotalCalories);
-        Assert.Equal(30, domainEvent.TotalProteins);
-        Assert.Equal(20, domainEvent.TotalFats);
-        Assert.Equal(50, domainEvent.TotalCarbs);
-        Assert.Equal(5, domainEvent.TotalFiber);
-        Assert.Equal(0, domainEvent.TotalAlcohol);
-        Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(mealId, domainEvent.MealId),
+            () => Assert.True(domainEvent.IsAutoCalculated),
+            () => Assert.Equal(500, domainEvent.TotalCalories),
+            () => Assert.Equal(30, domainEvent.TotalProteins),
+            () => Assert.Equal(20, domainEvent.TotalFats),
+            () => Assert.Equal(50, domainEvent.TotalCarbs),
+            () => Assert.Equal(5, domainEvent.TotalFiber),
+            () => Assert.Equal(0, domainEvent.TotalAlcohol),
+            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 
     [Fact]
@@ -65,10 +67,11 @@ public sealed class DomainEventInvariantTests {
             dietologistUserId,
             occurredOnUtc);
 
-        Assert.Equal(invitationId, domainEvent.InvitationId);
-        Assert.Equal(clientUserId, domainEvent.ClientUserId);
-        Assert.Equal(dietologistUserId, domainEvent.DietologistUserId);
-        Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, domainEvent.InvitationId),
+            () => Assert.Equal(clientUserId, domainEvent.ClientUserId),
+            () => Assert.Equal(dietologistUserId, domainEvent.DietologistUserId),
+            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 
     [Fact]
@@ -83,10 +86,11 @@ public sealed class DomainEventInvariantTests {
             "dietologist@example.com",
             occurredOnUtc);
 
-        Assert.Equal(invitationId, domainEvent.InvitationId);
-        Assert.Equal(clientUserId, domainEvent.ClientUserId);
-        Assert.Equal("dietologist@example.com", domainEvent.DietologistEmail);
-        Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, domainEvent.InvitationId),
+            () => Assert.Equal(clientUserId, domainEvent.ClientUserId),
+            () => Assert.Equal("dietologist@example.com", domainEvent.DietologistEmail),
+            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 
     [Fact]
@@ -111,15 +115,16 @@ public sealed class DomainEventInvariantTests {
             sortOrder: 2,
             occurredOnUtc);
 
-        Assert.Equal(shoppingListId, domainEvent.ShoppingListId);
-        Assert.Equal(itemId, domainEvent.ShoppingListItemId);
-        Assert.Equal(productId, domainEvent.ProductId);
-        Assert.Equal("Milk", domainEvent.Name);
-        Assert.Equal(1.5, domainEvent.Amount);
-        Assert.Equal(MeasurementUnit.Ml, domainEvent.Unit);
-        Assert.Equal("Dairy", domainEvent.Category);
-        Assert.True(domainEvent.IsChecked);
-        Assert.Equal(2, domainEvent.SortOrder);
-        Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(shoppingListId, domainEvent.ShoppingListId),
+            () => Assert.Equal(itemId, domainEvent.ShoppingListItemId),
+            () => Assert.Equal(productId, domainEvent.ProductId),
+            () => Assert.Equal("Milk", domainEvent.Name),
+            () => Assert.Equal(1.5, domainEvent.Amount),
+            () => Assert.Equal(MeasurementUnit.Ml, domainEvent.Unit),
+            () => Assert.Equal("Dairy", domainEvent.Category),
+            () => Assert.True(domainEvent.IsChecked),
+            () => Assert.Equal(2, domainEvent.SortOrder),
+            () => Assert.Equal(occurredOnUtc, domainEvent.OccurredOnUtc));
     }
 }

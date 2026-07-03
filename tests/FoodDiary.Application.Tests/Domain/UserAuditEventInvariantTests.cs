@@ -22,17 +22,18 @@ public class UserAuditEventInvariantTests {
             deviceType: "  Desktop  ",
             loggedInAtLocal);
 
-        Assert.NotEqual(Guid.Empty, loginEvent.Id);
-        Assert.Equal(userId, loginEvent.UserId);
-        Assert.Equal("Password", loginEvent.AuthProvider);
-        Assert.Equal("127.0.0.1", loginEvent.IpAddress);
-        Assert.Equal("Browser", loginEvent.UserAgent);
-        Assert.Equal("Chrome", loginEvent.BrowserName);
-        Assert.Equal("123", loginEvent.BrowserVersion);
-        Assert.Equal("Windows", loginEvent.OperatingSystem);
-        Assert.Equal("Desktop", loginEvent.DeviceType);
-        Assert.Equal(loggedInAtLocal.ToUniversalTime(), loginEvent.LoggedInAtUtc);
-        Assert.Equal(loggedInAtLocal.ToUniversalTime(), loginEvent.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, loginEvent.Id),
+            () => Assert.Equal(userId, loginEvent.UserId),
+            () => Assert.Equal("Password", loginEvent.AuthProvider),
+            () => Assert.Equal("127.0.0.1", loginEvent.IpAddress),
+            () => Assert.Equal("Browser", loginEvent.UserAgent),
+            () => Assert.Equal("Chrome", loginEvent.BrowserName),
+            () => Assert.Equal("123", loginEvent.BrowserVersion),
+            () => Assert.Equal("Windows", loginEvent.OperatingSystem),
+            () => Assert.Equal("Desktop", loginEvent.DeviceType),
+            () => Assert.Equal(loggedInAtLocal.ToUniversalTime(), loginEvent.LoggedInAtUtc),
+            () => Assert.Equal(loggedInAtLocal.ToUniversalTime(), loginEvent.CreatedOnUtc));
     }
 
     [Fact]
@@ -48,12 +49,13 @@ public class UserAuditEventInvariantTests {
             deviceType: " ",
             DateTime.UtcNow);
 
-        Assert.Null(loginEvent.IpAddress);
-        Assert.Null(loginEvent.UserAgent);
-        Assert.Null(loginEvent.BrowserName);
-        Assert.Null(loginEvent.BrowserVersion);
-        Assert.Null(loginEvent.OperatingSystem);
-        Assert.Null(loginEvent.DeviceType);
+        Assert.Multiple(
+            () => Assert.Null(loginEvent.IpAddress),
+            () => Assert.Null(loginEvent.UserAgent),
+            () => Assert.Null(loginEvent.BrowserName),
+            () => Assert.Null(loginEvent.BrowserVersion),
+            () => Assert.Null(loginEvent.OperatingSystem),
+            () => Assert.Null(loginEvent.DeviceType));
     }
 
     [Fact]
@@ -69,13 +71,14 @@ public class UserAuditEventInvariantTests {
             deviceType: new string('d', 33),
             DateTime.UtcNow);
 
-        Assert.Equal(64, loginEvent.AuthProvider.Length);
-        Assert.Equal(128, loginEvent.IpAddress!.Length);
-        Assert.Equal(512, loginEvent.UserAgent!.Length);
-        Assert.Equal(64, loginEvent.BrowserName!.Length);
-        Assert.Equal(64, loginEvent.BrowserVersion!.Length);
-        Assert.Equal(64, loginEvent.OperatingSystem!.Length);
-        Assert.Equal(32, loginEvent.DeviceType!.Length);
+        Assert.Multiple(
+            () => Assert.Equal(64, loginEvent.AuthProvider.Length),
+            () => Assert.Equal(128, loginEvent.IpAddress!.Length),
+            () => Assert.Equal(512, loginEvent.UserAgent!.Length),
+            () => Assert.Equal(64, loginEvent.BrowserName!.Length),
+            () => Assert.Equal(64, loginEvent.BrowserVersion!.Length),
+            () => Assert.Equal(64, loginEvent.OperatingSystem!.Length),
+            () => Assert.Equal(32, loginEvent.DeviceType!.Length));
     }
 
     [Fact]
@@ -103,15 +106,16 @@ public class UserAuditEventInvariantTests {
             source: "  Admin  ",
             occurredAtLocal);
 
-        Assert.NotEqual(Guid.Empty, auditEvent.Id);
-        Assert.Equal(userId, auditEvent.UserId);
-        Assert.Equal(role.Id, auditEvent.RoleId);
-        Assert.Equal("Premium", auditEvent.RoleName);
-        Assert.Equal(UserRoleAuditAction.Added, auditEvent.Action);
-        Assert.Equal(actorUserId, auditEvent.ActorUserId);
-        Assert.Equal("Admin", auditEvent.Source);
-        Assert.Equal(occurredAtLocal.ToUniversalTime(), auditEvent.OccurredAtUtc);
-        Assert.Equal(occurredAtLocal.ToUniversalTime(), auditEvent.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(Guid.Empty, auditEvent.Id),
+            () => Assert.Equal(userId, auditEvent.UserId),
+            () => Assert.Equal(role.Id, auditEvent.RoleId),
+            () => Assert.Equal("Premium", auditEvent.RoleName),
+            () => Assert.Equal(UserRoleAuditAction.Added, auditEvent.Action),
+            () => Assert.Equal(actorUserId, auditEvent.ActorUserId),
+            () => Assert.Equal("Admin", auditEvent.Source),
+            () => Assert.Equal(occurredAtLocal.ToUniversalTime(), auditEvent.OccurredAtUtc),
+            () => Assert.Equal(occurredAtLocal.ToUniversalTime(), auditEvent.CreatedOnUtc));
     }
 
     [Fact]

@@ -16,10 +16,11 @@ public sealed class ContentReportHttpMappingsTests {
 
         CreateContentReportCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("Recipe", command.TargetType);
-        Assert.Equal(targetId, command.TargetId);
-        Assert.Equal("Spam content", command.Reason);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("Recipe", command.TargetType),
+            () => Assert.Equal(targetId, command.TargetId),
+            () => Assert.Equal("Spam content", command.Reason));
     }
 
     [Fact]
@@ -33,13 +34,14 @@ public sealed class ContentReportHttpMappingsTests {
 
         ContentReportHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal(reporterId, response.ReporterId);
-        Assert.Equal("Comment", response.TargetType);
-        Assert.Equal(targetId, response.TargetId);
-        Assert.Equal("Offensive", response.Reason);
-        Assert.Equal("Pending", response.Status);
-        Assert.Null(response.AdminNote);
-        Assert.Equal(createdAt, response.CreatedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal(reporterId, response.ReporterId),
+            () => Assert.Equal("Comment", response.TargetType),
+            () => Assert.Equal(targetId, response.TargetId),
+            () => Assert.Equal("Offensive", response.Reason),
+            () => Assert.Equal("Pending", response.Status),
+            () => Assert.Null(response.AdminNote),
+            () => Assert.Equal(createdAt, response.CreatedAtUtc));
     }
 }

@@ -17,10 +17,11 @@ public sealed class StatisticsHttpMappingsTests {
 
         GetStatisticsQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(7, query.QuantizationDays);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(7, query.QuantizationDays));
     }
 
     [Fact]
@@ -31,16 +32,17 @@ public sealed class StatisticsHttpMappingsTests {
 
         AggregatedStatisticsHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(from, response.DateFrom);
-        Assert.Equal(to, response.DateTo);
-        Assert.Equal(14000, response.TotalCalories);
-        Assert.Equal(120, response.AverageProteins);
-        Assert.Equal(80, response.AverageFats);
-        Assert.Equal(250, response.AverageCarbs);
-        Assert.Equal(25, response.AverageFiber);
-        Assert.Equal(840, response.TotalProteins);
-        Assert.Equal(560, response.TotalFats);
-        Assert.Equal(1750, response.TotalCarbs);
-        Assert.Equal(175, response.TotalFiber);
+        Assert.Multiple(
+            () => Assert.Equal(from, response.DateFrom),
+            () => Assert.Equal(to, response.DateTo),
+            () => Assert.Equal(14000, response.TotalCalories),
+            () => Assert.Equal(120, response.AverageProteins),
+            () => Assert.Equal(80, response.AverageFats),
+            () => Assert.Equal(250, response.AverageCarbs),
+            () => Assert.Equal(25, response.AverageFiber),
+            () => Assert.Equal(840, response.TotalProteins),
+            () => Assert.Equal(560, response.TotalFats),
+            () => Assert.Equal(1750, response.TotalCarbs),
+            () => Assert.Equal(175, response.TotalFiber));
     }
 }

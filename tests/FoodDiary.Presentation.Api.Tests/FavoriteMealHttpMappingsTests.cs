@@ -19,9 +19,10 @@ public sealed class FavoriteMealHttpMappingsTests {
 
         AddFavoriteMealCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(mealId, command.MealId);
-        Assert.Equal("My favorite breakfast", command.Name);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(mealId, command.MealId),
+            () => Assert.Equal("My favorite breakfast", command.Name));
     }
 
     [Fact]
@@ -65,16 +66,17 @@ public sealed class FavoriteMealHttpMappingsTests {
 
         FavoriteMealHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal(mealId, response.MealId);
-        Assert.Equal("Breakfast", response.Name);
-        Assert.Equal(createdAt, response.CreatedAtUtc);
-        Assert.Equal(mealDate, response.MealDate);
-        Assert.Equal("Breakfast", response.MealType);
-        Assert.Equal(450, response.TotalCalories);
-        Assert.Equal(30, response.TotalProteins);
-        Assert.Equal(15, response.TotalFats);
-        Assert.Equal(55, response.TotalCarbs);
-        Assert.Equal(3, response.ItemCount);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal(mealId, response.MealId),
+            () => Assert.Equal("Breakfast", response.Name),
+            () => Assert.Equal(createdAt, response.CreatedAtUtc),
+            () => Assert.Equal(mealDate, response.MealDate),
+            () => Assert.Equal("Breakfast", response.MealType),
+            () => Assert.Equal(450, response.TotalCalories),
+            () => Assert.Equal(30, response.TotalProteins),
+            () => Assert.Equal(15, response.TotalFats),
+            () => Assert.Equal(55, response.TotalCarbs),
+            () => Assert.Equal(3, response.ItemCount));
     }
 }

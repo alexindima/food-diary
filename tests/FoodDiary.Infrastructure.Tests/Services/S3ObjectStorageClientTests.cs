@@ -27,11 +27,12 @@ public sealed class S3ObjectStorageClientTests {
 
         Assert.Equal("https://s3.example.com/upload", url);
         Assert.NotNull(capturedRequest);
-        Assert.Equal("bucket", capturedRequest.BucketName);
-        Assert.Equal("images/key.webp", capturedRequest.Key);
-        Assert.Equal(HttpVerb.PUT, capturedRequest.Verb);
-        Assert.Equal(expiresAt, capturedRequest.Expires);
-        Assert.Equal("image/webp", capturedRequest.ContentType);
+        Assert.Multiple(
+            () => Assert.Equal("bucket", capturedRequest.BucketName),
+            () => Assert.Equal("images/key.webp", capturedRequest.Key),
+            () => Assert.Equal(HttpVerb.PUT, capturedRequest.Verb),
+            () => Assert.Equal(expiresAt, capturedRequest.Expires),
+            () => Assert.Equal("image/webp", capturedRequest.ContentType));
     }
 
     [Fact]

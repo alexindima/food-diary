@@ -34,10 +34,11 @@ public sealed class ProductHttpMappingsTests {
         DeleteProductCommand deleteCommand = productId.ToDeleteCommand(userId);
         DuplicateProductCommand duplicateCommand = productId.ToDuplicateCommand(userId);
 
-        Assert.Equal(userId, deleteCommand.UserId);
-        Assert.Equal(productId, deleteCommand.ProductId);
-        Assert.Equal(userId, duplicateCommand.UserId);
-        Assert.Equal(productId, duplicateCommand.ProductId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, deleteCommand.UserId),
+            () => Assert.Equal(productId, deleteCommand.ProductId),
+            () => Assert.Equal(userId, duplicateCommand.UserId),
+            () => Assert.Equal(productId, duplicateCommand.ProductId));
     }
 
     [Fact]
@@ -59,18 +60,19 @@ public sealed class ProductHttpMappingsTests {
         IReadOnlyList<ProductSearchSuggestionHttpResponse> response = new[] { model }.ToHttpResponse();
 
         ProductSearchSuggestionHttpResponse item = Assert.Single(response);
-        Assert.Equal(model.Source, item.Source);
-        Assert.Equal(model.Name, item.Name);
-        Assert.Equal(model.Brand, item.Brand);
-        Assert.Equal(model.Category, item.Category);
-        Assert.Equal(model.Barcode, item.Barcode);
-        Assert.Equal(model.UsdaFdcId, item.UsdaFdcId);
-        Assert.Equal(model.ImageUrl, item.ImageUrl);
-        Assert.Equal(model.CaloriesPer100G, item.CaloriesPer100G);
-        Assert.Equal(model.ProteinsPer100G, item.ProteinsPer100G);
-        Assert.Equal(model.FatsPer100G, item.FatsPer100G);
-        Assert.Equal(model.CarbsPer100G, item.CarbsPer100G);
-        Assert.Equal(model.FiberPer100G, item.FiberPer100G);
+        Assert.Multiple(
+            () => Assert.Equal(model.Source, item.Source),
+            () => Assert.Equal(model.Name, item.Name),
+            () => Assert.Equal(model.Brand, item.Brand),
+            () => Assert.Equal(model.Category, item.Category),
+            () => Assert.Equal(model.Barcode, item.Barcode),
+            () => Assert.Equal(model.UsdaFdcId, item.UsdaFdcId),
+            () => Assert.Equal(model.ImageUrl, item.ImageUrl),
+            () => Assert.Equal(model.CaloriesPer100G, item.CaloriesPer100G),
+            () => Assert.Equal(model.ProteinsPer100G, item.ProteinsPer100G),
+            () => Assert.Equal(model.FatsPer100G, item.FatsPer100G),
+            () => Assert.Equal(model.CarbsPer100G, item.CarbsPer100G),
+            () => Assert.Equal(model.FiberPer100G, item.FiberPer100G));
     }
 
     [Fact]
@@ -85,12 +87,13 @@ public sealed class ProductHttpMappingsTests {
 
         GetProductsQuery query = request.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(1, query.Page);
-        Assert.Equal(100, query.Limit);
-        Assert.Equal("yogurt", query.Search);
-        Assert.True(query.IncludePublic);
-        Assert.Equal(["Food", "Drink"], query.ProductTypes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(1, query.Page),
+            () => Assert.Equal(100, query.Limit),
+            () => Assert.Equal("yogurt", query.Search),
+            () => Assert.True(query.IncludePublic),
+            () => Assert.Equal(["Food", "Drink"], query.ProductTypes));
     }
 
     [Fact]
@@ -104,10 +107,11 @@ public sealed class ProductHttpMappingsTests {
 
         GetProductsQuery query = request.ToQuery(Guid.NewGuid());
 
-        Assert.Equal(2, query.Page);
-        Assert.Equal(20, query.Limit);
-        Assert.Null(query.Search);
-        Assert.Null(query.ProductTypes);
+        Assert.Multiple(
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(20, query.Limit),
+            () => Assert.Null(query.Search),
+            () => Assert.Null(query.ProductTypes));
     }
 
     [Fact]
@@ -124,14 +128,15 @@ public sealed class ProductHttpMappingsTests {
 
         GetProductsOverviewQuery query = request.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(1, query.Page);
-        Assert.Equal(1, query.Limit);
-        Assert.Equal("bar", query.Search);
-        Assert.True(query.IncludePublic);
-        Assert.Equal(50, query.RecentLimit);
-        Assert.Equal(1, query.FavoriteLimit);
-        Assert.Equal(["Custom", "Food"], query.ProductTypes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(1, query.Page),
+            () => Assert.Equal(1, query.Limit),
+            () => Assert.Equal("bar", query.Search),
+            () => Assert.True(query.IncludePublic),
+            () => Assert.Equal(50, query.RecentLimit),
+            () => Assert.Equal(1, query.FavoriteLimit),
+            () => Assert.Equal(["Custom", "Food"], query.ProductTypes));
     }
 
     [Fact]
@@ -141,9 +146,10 @@ public sealed class ProductHttpMappingsTests {
 
         GetRecentProductsQuery query = request.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(50, query.Limit);
-        Assert.True(query.IncludePublic);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(50, query.Limit),
+            () => Assert.True(query.IncludePublic));
     }
 
     [Fact]
@@ -184,26 +190,27 @@ public sealed class ProductHttpMappingsTests {
 
         CreateProductCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(request.Barcode, command.Barcode);
-        Assert.Equal(request.Name, command.Name);
-        Assert.Equal(request.Brand, command.Brand);
-        Assert.Equal(request.ProductType, command.ProductType);
-        Assert.Equal(request.Category, command.Category);
-        Assert.Equal(request.Description, command.Description);
-        Assert.Equal(request.Comment, command.Comment);
-        Assert.Equal(request.ImageUrl, command.ImageUrl);
-        Assert.Equal(request.ImageAssetId, command.ImageAssetId);
-        Assert.Equal(request.BaseUnit, command.BaseUnit);
-        Assert.Equal(request.BaseAmount, command.BaseAmount);
-        Assert.Equal(request.DefaultPortionAmount, command.DefaultPortionAmount);
-        Assert.Equal(request.CaloriesPerBase, command.CaloriesPerBase);
-        Assert.Equal(request.ProteinsPerBase, command.ProteinsPerBase);
-        Assert.Equal(request.FatsPerBase, command.FatsPerBase);
-        Assert.Equal(request.CarbsPerBase, command.CarbsPerBase);
-        Assert.Equal(request.FiberPerBase, command.FiberPerBase);
-        Assert.Equal(request.AlcoholPerBase, command.AlcoholPerBase);
-        Assert.Equal(request.Visibility, command.Visibility);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(request.Barcode, command.Barcode),
+            () => Assert.Equal(request.Name, command.Name),
+            () => Assert.Equal(request.Brand, command.Brand),
+            () => Assert.Equal(request.ProductType, command.ProductType),
+            () => Assert.Equal(request.Category, command.Category),
+            () => Assert.Equal(request.Description, command.Description),
+            () => Assert.Equal(request.Comment, command.Comment),
+            () => Assert.Equal(request.ImageUrl, command.ImageUrl),
+            () => Assert.Equal(request.ImageAssetId, command.ImageAssetId),
+            () => Assert.Equal(request.BaseUnit, command.BaseUnit),
+            () => Assert.Equal(request.BaseAmount, command.BaseAmount),
+            () => Assert.Equal(request.DefaultPortionAmount, command.DefaultPortionAmount),
+            () => Assert.Equal(request.CaloriesPerBase, command.CaloriesPerBase),
+            () => Assert.Equal(request.ProteinsPerBase, command.ProteinsPerBase),
+            () => Assert.Equal(request.FatsPerBase, command.FatsPerBase),
+            () => Assert.Equal(request.CarbsPerBase, command.CarbsPerBase),
+            () => Assert.Equal(request.FiberPerBase, command.FiberPerBase),
+            () => Assert.Equal(request.AlcoholPerBase, command.AlcoholPerBase),
+            () => Assert.Equal(request.Visibility, command.Visibility));
     }
 
     [Fact]
@@ -241,34 +248,35 @@ public sealed class ProductHttpMappingsTests {
 
         UpdateProductCommand command = request.ToCommand(userId, productId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(productId, command.ProductId);
-        Assert.Equal(request.Barcode, command.Barcode);
-        Assert.Equal(request.ClearBarcode, command.ClearBarcode);
-        Assert.Equal(request.Name, command.Name);
-        Assert.Equal(request.Brand, command.Brand);
-        Assert.Equal(request.ClearBrand, command.ClearBrand);
-        Assert.Equal(request.ProductType, command.ProductType);
-        Assert.Equal(request.Category, command.Category);
-        Assert.Equal(request.ClearCategory, command.ClearCategory);
-        Assert.Equal(request.Description, command.Description);
-        Assert.Equal(request.ClearDescription, command.ClearDescription);
-        Assert.Equal(request.Comment, command.Comment);
-        Assert.Equal(request.ClearComment, command.ClearComment);
-        Assert.Equal(request.ImageUrl, command.ImageUrl);
-        Assert.Equal(request.ClearImageUrl, command.ClearImageUrl);
-        Assert.Equal(request.ImageAssetId, command.ImageAssetId);
-        Assert.Equal(request.ClearImageAssetId, command.ClearImageAssetId);
-        Assert.Equal(request.BaseUnit, command.BaseUnit);
-        Assert.Equal(request.BaseAmount, command.BaseAmount);
-        Assert.Equal(request.DefaultPortionAmount, command.DefaultPortionAmount);
-        Assert.Equal(request.CaloriesPerBase, command.CaloriesPerBase);
-        Assert.Equal(request.ProteinsPerBase, command.ProteinsPerBase);
-        Assert.Equal(request.FatsPerBase, command.FatsPerBase);
-        Assert.Equal(request.CarbsPerBase, command.CarbsPerBase);
-        Assert.Equal(request.FiberPerBase, command.FiberPerBase);
-        Assert.Equal(request.AlcoholPerBase, command.AlcoholPerBase);
-        Assert.Equal(request.Visibility, command.Visibility);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(productId, command.ProductId),
+            () => Assert.Equal(request.Barcode, command.Barcode),
+            () => Assert.Equal(request.ClearBarcode, command.ClearBarcode),
+            () => Assert.Equal(request.Name, command.Name),
+            () => Assert.Equal(request.Brand, command.Brand),
+            () => Assert.Equal(request.ClearBrand, command.ClearBrand),
+            () => Assert.Equal(request.ProductType, command.ProductType),
+            () => Assert.Equal(request.Category, command.Category),
+            () => Assert.Equal(request.ClearCategory, command.ClearCategory),
+            () => Assert.Equal(request.Description, command.Description),
+            () => Assert.Equal(request.ClearDescription, command.ClearDescription),
+            () => Assert.Equal(request.Comment, command.Comment),
+            () => Assert.Equal(request.ClearComment, command.ClearComment),
+            () => Assert.Equal(request.ImageUrl, command.ImageUrl),
+            () => Assert.Equal(request.ClearImageUrl, command.ClearImageUrl),
+            () => Assert.Equal(request.ImageAssetId, command.ImageAssetId),
+            () => Assert.Equal(request.ClearImageAssetId, command.ClearImageAssetId),
+            () => Assert.Equal(request.BaseUnit, command.BaseUnit),
+            () => Assert.Equal(request.BaseAmount, command.BaseAmount),
+            () => Assert.Equal(request.DefaultPortionAmount, command.DefaultPortionAmount),
+            () => Assert.Equal(request.CaloriesPerBase, command.CaloriesPerBase),
+            () => Assert.Equal(request.ProteinsPerBase, command.ProteinsPerBase),
+            () => Assert.Equal(request.FatsPerBase, command.FatsPerBase),
+            () => Assert.Equal(request.CarbsPerBase, command.CarbsPerBase),
+            () => Assert.Equal(request.FiberPerBase, command.FiberPerBase),
+            () => Assert.Equal(request.AlcoholPerBase, command.AlcoholPerBase),
+            () => Assert.Equal(request.Visibility, command.Visibility));
     }
 
     [Fact]
@@ -306,11 +314,12 @@ public sealed class ProductHttpMappingsTests {
 
         ProductHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(model.Id, response.Id);
-        Assert.True(response.IsFavorite);
-        Assert.Equal(favoriteProductId, response.FavoriteProductId);
-        Assert.Equal(model.QualityScore, response.QualityScore);
-        Assert.Equal(model.QualityGrade, response.QualityGrade);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, response.Id),
+            () => Assert.True(response.IsFavorite),
+            () => Assert.Equal(favoriteProductId, response.FavoriteProductId),
+            () => Assert.Equal(model.QualityScore, response.QualityScore),
+            () => Assert.Equal(model.QualityGrade, response.QualityGrade));
     }
 
     [Fact]
@@ -377,9 +386,10 @@ public sealed class ProductHttpMappingsTests {
         Assert.Single(response.RecentItems);
         Assert.Single(response.AllProducts.Data);
         Assert.Single(response.FavoriteItems);
-        Assert.Equal(1, response.FavoriteTotalCount);
-        Assert.Equal(product.Id, response.AllProducts.Data[0].Id);
-        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
-        Assert.Equal(favorite.PreferredPortionAmount, response.FavoriteItems[0].PreferredPortionAmount);
+        Assert.Multiple(
+            () => Assert.Equal(1, response.FavoriteTotalCount),
+            () => Assert.Equal(product.Id, response.AllProducts.Data[0].Id),
+            () => Assert.Equal(favorite.Id, response.FavoriteItems[0].Id),
+            () => Assert.Equal(favorite.PreferredPortionAmount, response.FavoriteItems[0].PreferredPortionAmount));
     }
 }

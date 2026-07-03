@@ -30,16 +30,17 @@ public sealed class DietologistHttpMappingsTests {
 
         InviteDietologistCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("diet@example.com", command.DietologistEmail);
-        Assert.True(command.Permissions.ShareMeals);
-        Assert.False(command.Permissions.ShareStatistics);
-        Assert.True(command.Permissions.ShareWeight);
-        Assert.False(command.Permissions.ShareWaist);
-        Assert.True(command.Permissions.ShareGoals);
-        Assert.False(command.Permissions.ShareHydration);
-        Assert.True(command.Permissions.ShareProfile);
-        Assert.False(command.Permissions.ShareFasting);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("diet@example.com", command.DietologistEmail),
+            () => Assert.True(command.Permissions.ShareMeals),
+            () => Assert.False(command.Permissions.ShareStatistics),
+            () => Assert.True(command.Permissions.ShareWeight),
+            () => Assert.False(command.Permissions.ShareWaist),
+            () => Assert.True(command.Permissions.ShareGoals),
+            () => Assert.False(command.Permissions.ShareHydration),
+            () => Assert.True(command.Permissions.ShareProfile),
+            () => Assert.False(command.Permissions.ShareFasting));
     }
 
     [Fact]
@@ -50,9 +51,10 @@ public sealed class DietologistHttpMappingsTests {
 
         AcceptInvitationCommand command = request.ToCommand(userId);
 
-        Assert.Equal(invitationId, command.InvitationId);
-        Assert.Equal("token-value", command.Token);
-        Assert.Equal(userId, command.UserId);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, command.InvitationId),
+            () => Assert.Equal("token-value", command.Token),
+            () => Assert.Equal(userId, command.UserId));
     }
 
     [Fact]
@@ -63,9 +65,10 @@ public sealed class DietologistHttpMappingsTests {
 
         CreateRecommendationCommand command = request.ToCommand(userId, clientUserId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(clientUserId, command.ClientUserId);
-        Assert.Equal("Eat more protein", command.Text);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(clientUserId, command.ClientUserId),
+            () => Assert.Equal("Eat more protein", command.Text));
     }
 
     [Fact]
@@ -77,13 +80,14 @@ public sealed class DietologistHttpMappingsTests {
 
         GetClientDashboardQuery query = httpQuery.ToClientDashboardQuery(userId, clientUserId, TodayUtc);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(clientUserId, query.ClientUserId);
-        Assert.Equal(date, query.Date);
-        Assert.Equal(2, query.Page);
-        Assert.Equal(20, query.PageSize);
-        Assert.Equal("ru", query.Locale);
-        Assert.Equal(14, query.TrendDays);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(clientUserId, query.ClientUserId),
+            () => Assert.Equal(date, query.Date),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(20, query.PageSize),
+            () => Assert.Equal("ru", query.Locale),
+            () => Assert.Equal(14, query.TrendDays));
     }
 
     [Fact]
@@ -115,10 +119,11 @@ public sealed class DietologistHttpMappingsTests {
         var invitationId = Guid.NewGuid();
         var recommendationId = Guid.NewGuid();
 
-        Assert.Equal(userId, userId.ToMyDietologistQuery().UserId);
-        Assert.Equal(userId, userId.ToMyDietologistRelationshipQuery().UserId);
-        Assert.Equal(userId, userId.ToMyClientsQuery().UserId);
-        Assert.Equal(userId, userId.ToMyRecommendationsQuery().UserId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, userId.ToMyDietologistQuery().UserId),
+            () => Assert.Equal(userId, userId.ToMyDietologistRelationshipQuery().UserId),
+            () => Assert.Equal(userId, userId.ToMyClientsQuery().UserId),
+            () => Assert.Equal(userId, userId.ToMyRecommendationsQuery().UserId));
 
         GetInvitationByTokenQuery invitationQuery = invitationId.ToInvitationQuery(userId);
         Assert.Equal(userId, invitationQuery.UserId);
@@ -180,16 +185,17 @@ public sealed class DietologistHttpMappingsTests {
         UpdateDietologistPermissionsCommand updatePermissions = new UpdateDietologistPermissionsHttpRequest(permissions).ToCommand(userId);
         DisconnectDietologistCommand disconnect = new DisconnectClientHttpRequest(clientUserId).ToCommand(userId);
 
-        Assert.Equal(invitationId, decline.InvitationId);
-        Assert.Equal("decline-token", decline.Token);
-        Assert.Equal(userId, decline.UserId);
-        Assert.Equal(userId, updatePermissions.UserId);
-        Assert.True(updatePermissions.Permissions.ShareStatistics);
-        Assert.True(updatePermissions.Permissions.ShareWaist);
-        Assert.True(updatePermissions.Permissions.ShareHydration);
-        Assert.True(updatePermissions.Permissions.ShareFasting);
-        Assert.Equal(userId, disconnect.UserId);
-        Assert.Equal(clientUserId, disconnect.ClientUserId);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, decline.InvitationId),
+            () => Assert.Equal("decline-token", decline.Token),
+            () => Assert.Equal(userId, decline.UserId),
+            () => Assert.Equal(userId, updatePermissions.UserId),
+            () => Assert.True(updatePermissions.Permissions.ShareStatistics),
+            () => Assert.True(updatePermissions.Permissions.ShareWaist),
+            () => Assert.True(updatePermissions.Permissions.ShareHydration),
+            () => Assert.True(updatePermissions.Permissions.ShareFasting),
+            () => Assert.Equal(userId, disconnect.UserId),
+            () => Assert.Equal(clientUserId, disconnect.ClientUserId));
     }
 
     [Fact]
@@ -210,14 +216,15 @@ public sealed class DietologistHttpMappingsTests {
 
         DietologistInvitationForCurrentUserHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(invitationId, response.InvitationId);
-        Assert.Equal(clientUserId, response.ClientUserId);
-        Assert.Equal("client@example.com", response.ClientEmail);
-        Assert.Equal("Client", response.ClientFirstName);
-        Assert.Equal("User", response.ClientLastName);
-        Assert.Equal("Pending", response.Status);
-        Assert.Equal(createdAtUtc, response.CreatedAtUtc);
-        Assert.Equal(expiresAtUtc, response.ExpiresAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, response.InvitationId),
+            () => Assert.Equal(clientUserId, response.ClientUserId),
+            () => Assert.Equal("client@example.com", response.ClientEmail),
+            () => Assert.Equal("Client", response.ClientFirstName),
+            () => Assert.Equal("User", response.ClientLastName),
+            () => Assert.Equal("Pending", response.Status),
+            () => Assert.Equal(createdAtUtc, response.CreatedAtUtc),
+            () => Assert.Equal(expiresAtUtc, response.ExpiresAtUtc));
     }
 
     private static readonly DateTime TodayUtc = new(2026, 4, 10, 13, 0, 0, DateTimeKind.Utc);
@@ -290,13 +297,14 @@ public sealed class DietologistHttpMappingsTests {
             createdAtUtc,
             acceptedAtUtc).ToHttpResponse();
 
-        Assert.Equal(invitationId, relationship.InvitationId);
-        Assert.True(relationship.Permissions.ShareMeals);
-        Assert.Equal(dietologistUserId, info.DietologistUserId);
-        Assert.Equal(clientUserId, client.UserId);
-        Assert.Equal("Pending", invitation.Status);
-        Assert.Equal(recommendationId, recommendation.Id);
-        Assert.Equal("Eat more fiber", recommendation.Text);
-        Assert.True(recommendation.IsRead);
+        Assert.Multiple(
+            () => Assert.Equal(invitationId, relationship.InvitationId),
+            () => Assert.True(relationship.Permissions.ShareMeals),
+            () => Assert.Equal(dietologistUserId, info.DietologistUserId),
+            () => Assert.Equal(clientUserId, client.UserId),
+            () => Assert.Equal("Pending", invitation.Status),
+            () => Assert.Equal(recommendationId, recommendation.Id),
+            () => Assert.Equal("Eat more fiber", recommendation.Text),
+            () => Assert.True(recommendation.IsRead));
     }
 }

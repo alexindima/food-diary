@@ -58,10 +58,11 @@ public class SocialInvariantTests {
         var report = ContentReport.Create(
             UserId.New(), ReportTargetType.Recipe, Guid.NewGuid(), "  spam content  ");
 
-        Assert.Equal("spam content", report.Reason);
-        Assert.Equal(ReportStatus.Pending, report.Status);
-        Assert.Null(report.AdminNote);
-        Assert.Null(report.ReviewedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("spam content", report.Reason),
+            () => Assert.Equal(ReportStatus.Pending, report.Status),
+            () => Assert.Null(report.AdminNote),
+            () => Assert.Null(report.ReviewedAtUtc));
     }
 
     [Fact]

@@ -81,12 +81,13 @@ public class DietologistInvitationInvariantTests {
             DateTime.UtcNow.AddDays(7),
             perms);
 
-        Assert.True(invitation.ShareMeals);
-        Assert.False(invitation.ShareStatistics);
-        Assert.True(invitation.ShareWeight);
-        Assert.False(invitation.ShareWaist);
-        Assert.True(invitation.ShareGoals);
-        Assert.False(invitation.ShareHydration);
+        Assert.Multiple(
+            () => Assert.True(invitation.ShareMeals),
+            () => Assert.False(invitation.ShareStatistics),
+            () => Assert.True(invitation.ShareWeight),
+            () => Assert.False(invitation.ShareWaist),
+            () => Assert.True(invitation.ShareGoals),
+            () => Assert.False(invitation.ShareHydration));
     }
 
     [Fact]

@@ -27,9 +27,10 @@ public sealed class TrackingEntryInvariantTests {
 
         var entry = HydrationEntry.Create(UserId.New(), localTimestamp, 250);
 
-        Assert.Equal(localTimestamp.ToUniversalTime(), entry.Timestamp);
-        Assert.Equal(250, entry.AmountMl);
-        Assert.NotEqual(HydrationEntryId.Empty, entry.Id);
+        Assert.Multiple(
+            () => Assert.Equal(localTimestamp.ToUniversalTime(), entry.Timestamp),
+            () => Assert.Equal(250, entry.AmountMl),
+            () => Assert.NotEqual(HydrationEntryId.Empty, entry.Id));
     }
 
     [Fact]
@@ -78,10 +79,11 @@ public sealed class TrackingEntryInvariantTests {
             name: "  Run  ",
             notes: "  Easy pace  ");
 
-        Assert.Equal(localDate.ToUniversalTime().Date, entry.Date);
-        Assert.Equal(123.4, entry.CaloriesBurned);
-        Assert.Equal("Run", entry.Name);
-        Assert.Equal("Easy pace", entry.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(localDate.ToUniversalTime().Date, entry.Date),
+            () => Assert.Equal(123.4, entry.CaloriesBurned),
+            () => Assert.Equal("Run", entry.Name),
+            () => Assert.Equal("Easy pace", entry.Notes));
     }
 
     [Fact]
@@ -146,12 +148,13 @@ public sealed class TrackingEntryInvariantTests {
             notes: "  Heavy  ",
             date: newDate);
 
-        Assert.Equal(ExerciseType.Strength, entry.ExerciseType);
-        Assert.Equal(45, entry.DurationMinutes);
-        Assert.Equal(150.3, entry.CaloriesBurned);
-        Assert.Equal("Lift", entry.Name);
-        Assert.Equal("Heavy", entry.Notes);
-        Assert.Equal(newDate.ToUniversalTime().Date, entry.Date);
+        Assert.Multiple(
+            () => Assert.Equal(ExerciseType.Strength, entry.ExerciseType),
+            () => Assert.Equal(45, entry.DurationMinutes),
+            () => Assert.Equal(150.3, entry.CaloriesBurned),
+            () => Assert.Equal("Lift", entry.Name),
+            () => Assert.Equal("Heavy", entry.Notes),
+            () => Assert.Equal(newDate.ToUniversalTime().Date, entry.Date));
         Assert.NotNull(entry.ModifiedOnUtc);
     }
 

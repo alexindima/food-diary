@@ -35,13 +35,14 @@ public class WearableInvariantTests {
         var conn = WearableConnection.Create(
             userId, WearableProvider.GoogleFit, "ext-456", "access-token", "refresh-token", expires);
 
-        Assert.Equal(userId, conn.UserId);
-        Assert.Equal(WearableProvider.GoogleFit, conn.Provider);
-        Assert.Equal("ext-456", conn.ExternalUserId);
-        Assert.Equal("access-token", conn.AccessToken);
-        Assert.Equal("refresh-token", conn.RefreshToken);
-        Assert.Equal(expires, conn.TokenExpiresAtUtc);
-        Assert.True(conn.IsActive);
+        Assert.Multiple(
+            () => Assert.Equal(userId, conn.UserId),
+            () => Assert.Equal(WearableProvider.GoogleFit, conn.Provider),
+            () => Assert.Equal("ext-456", conn.ExternalUserId),
+            () => Assert.Equal("access-token", conn.AccessToken),
+            () => Assert.Equal("refresh-token", conn.RefreshToken),
+            () => Assert.Equal(expires, conn.TokenExpiresAtUtc),
+            () => Assert.True(conn.IsActive));
     }
 
     [Fact]
@@ -58,9 +59,10 @@ public class WearableInvariantTests {
 
         conn.UpdateTokens("new-token", "new-refresh", newExpires);
 
-        Assert.Equal("new-token", conn.AccessToken);
-        Assert.Equal("new-refresh", conn.RefreshToken);
-        Assert.Equal(newExpires, conn.TokenExpiresAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("new-token", conn.AccessToken),
+            () => Assert.Equal("new-refresh", conn.RefreshToken),
+            () => Assert.Equal(newExpires, conn.TokenExpiresAtUtc));
     }
 
     [Fact]
@@ -88,10 +90,11 @@ public class WearableInvariantTests {
 
         conn.Deactivate();
 
-        Assert.False(conn.IsActive);
-        Assert.Equal(string.Empty, conn.AccessToken);
-        Assert.Null(conn.RefreshToken);
-        Assert.Null(conn.TokenExpiresAtUtc);
+        Assert.Multiple(
+            () => Assert.False(conn.IsActive),
+            () => Assert.Equal(string.Empty, conn.AccessToken),
+            () => Assert.Null(conn.RefreshToken),
+            () => Assert.Null(conn.TokenExpiresAtUtc));
     }
 
     [Fact]

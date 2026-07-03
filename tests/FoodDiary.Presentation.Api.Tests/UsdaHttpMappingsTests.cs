@@ -35,9 +35,10 @@ public sealed class UsdaHttpMappingsTests {
 
         LinkProductToUsdaFoodCommand command = request.ToCommand(userId, productId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(productId, command.ProductId);
-        Assert.Equal(54321, command.FdcId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(productId, command.ProductId),
+            () => Assert.Equal(54321, command.FdcId));
     }
 
     [Fact]
@@ -68,9 +69,10 @@ public sealed class UsdaHttpMappingsTests {
 
         UsdaFoodHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(12345, response.FdcId);
-        Assert.Equal("Chicken breast", response.Description);
-        Assert.Equal("Poultry", response.FoodCategory);
+        Assert.Multiple(
+            () => Assert.Equal(12345, response.FdcId),
+            () => Assert.Equal("Chicken breast", response.Description),
+            () => Assert.Equal("Poultry", response.FoodCategory));
     }
 
     [Fact]
@@ -82,9 +84,10 @@ public sealed class UsdaHttpMappingsTests {
 
         IReadOnlyList<UsdaFoodHttpResponse> responses = models.ToHttpResponse();
 
-        Assert.Equal(2, responses.Count);
-        Assert.Equal("Apple", responses[0].Description);
-        Assert.Null(responses[1].FoodCategory);
+        Assert.Multiple(
+            () => Assert.Equal(2, responses.Count),
+            () => Assert.Equal("Apple", responses[0].Description),
+            () => Assert.Null(responses[1].FoodCategory));
     }
 
     [Fact]
@@ -124,9 +127,10 @@ public sealed class UsdaHttpMappingsTests {
 
         DailyMicronutrientSummaryHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(date, response.Date);
-        Assert.Equal(5, response.LinkedProductCount);
-        Assert.Equal(8, response.TotalProductCount);
+        Assert.Multiple(
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal(5, response.LinkedProductCount),
+            () => Assert.Equal(8, response.TotalProductCount));
         Assert.Single(response.Nutrients);
         Assert.Null(response.HealthScores);
     }

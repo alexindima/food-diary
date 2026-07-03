@@ -41,16 +41,17 @@ public sealed class OpenFoodFactsHttpMappingsTests {
         OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 
         Assert.NotNull(response);
-        Assert.Equal("4600000000001", response.Barcode);
-        Assert.Equal("ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%", response.Name);
-        Assert.Equal("ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾", response.Brand);
-        Assert.Equal("Dairy", response.Category);
-        Assert.Equal("https://images.openfoodfacts.org/test.jpg", response.ImageUrl);
-        Assert.Equal(60, response.CaloriesPer100G);
-        Assert.Equal(3.2, response.ProteinsPer100G);
-        Assert.Equal(3.2, response.FatsPer100G);
-        Assert.Equal(4.7, response.CarbsPer100G);
-        Assert.Equal(0, response.FiberPer100G);
+        Assert.Multiple(
+            () => Assert.Equal("4600000000001", response.Barcode),
+            () => Assert.Equal("ÐœÐ¾Ð»Ð¾ÐºÐ¾ 3.2%", response.Name),
+            () => Assert.Equal("ÐŸÑ€Ð¾ÑÑ‚Ð¾ÐºÐ²Ð°ÑˆÐ¸Ð½Ð¾", response.Brand),
+            () => Assert.Equal("Dairy", response.Category),
+            () => Assert.Equal("https://images.openfoodfacts.org/test.jpg", response.ImageUrl),
+            () => Assert.Equal(60, response.CaloriesPer100G),
+            () => Assert.Equal(3.2, response.ProteinsPer100G),
+            () => Assert.Equal(3.2, response.FatsPer100G),
+            () => Assert.Equal(4.7, response.CarbsPer100G),
+            () => Assert.Equal(0, response.FiberPer100G));
     }
 
     [Fact]
@@ -70,11 +71,12 @@ public sealed class OpenFoodFactsHttpMappingsTests {
 
         IReadOnlyList<OpenFoodFactsProductHttpResponse> responses = models.ToListHttpResponse();
 
-        Assert.Equal(2, responses.Count);
-        Assert.Equal("111", responses[0].Barcode);
-        Assert.Equal("Product A", responses[0].Name);
-        Assert.Equal("222", responses[1].Barcode);
-        Assert.Null(responses[1].Brand);
+        Assert.Multiple(
+            () => Assert.Equal(2, responses.Count),
+            () => Assert.Equal("111", responses[0].Barcode),
+            () => Assert.Equal("Product A", responses[0].Name),
+            () => Assert.Equal("222", responses[1].Barcode),
+            () => Assert.Null(responses[1].Brand));
     }
 
     [Fact]
@@ -96,11 +98,12 @@ public sealed class OpenFoodFactsHttpMappingsTests {
         OpenFoodFactsProductHttpResponse? response = model.ToHttpResponse();
 
         Assert.NotNull(response);
-        Assert.Equal("Unknown Product", response.Name);
-        Assert.Null(response.Brand);
-        Assert.Null(response.Category);
-        Assert.Null(response.ImageUrl);
-        Assert.Null(response.CaloriesPer100G);
-        Assert.Null(response.ProteinsPer100G);
+        Assert.Multiple(
+            () => Assert.Equal("Unknown Product", response.Name),
+            () => Assert.Null(response.Brand),
+            () => Assert.Null(response.Category),
+            () => Assert.Null(response.ImageUrl),
+            () => Assert.Null(response.CaloriesPer100G),
+            () => Assert.Null(response.ProteinsPer100G));
     }
 }

@@ -78,11 +78,12 @@ public class UserInvariantTests {
 
         session.Revoke(revokedAtUtc);
 
-        Assert.False(session.IsActive);
-        Assert.Equal(revokedAtUtc, session.RevokedAtUtc);
-        Assert.Null(session.PreviousRefreshTokenHash);
-        Assert.Null(session.PreviousRefreshTokenValidUntilUtc);
-        Assert.Equal(revokedAtUtc, session.ModifiedOnUtc);
+        Assert.Multiple(
+            () => Assert.False(session.IsActive),
+            () => Assert.Equal(revokedAtUtc, session.RevokedAtUtc),
+            () => Assert.Null(session.PreviousRefreshTokenHash),
+            () => Assert.Null(session.PreviousRefreshTokenValidUntilUtc),
+            () => Assert.Equal(revokedAtUtc, session.ModifiedOnUtc));
     }
 
     [Fact]
@@ -101,15 +102,16 @@ public class UserInvariantTests {
     public void NavigationCollections_AreExposedAsReadOnly() {
         var user = User.Create("test@example.com", "hash");
 
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.Meal>>(user.Meals).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Products.Product>>(user.Products).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.Recipe>>(user.Recipes).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WeightEntry>>(user.WeightEntries).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WaistEntry>>(user.WaistEntries).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.CycleProfile>>(user.Cycles).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.HydrationEntry>>(user.HydrationEntries).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Shopping.ShoppingList>>(user.ShoppingLists).IsReadOnly);
-        Assert.True(Assert.IsAssignableFrom<ICollection<UserRole>>(user.UserRoles).IsReadOnly);
+        Assert.Multiple(
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Meals.Meal>>(user.Meals).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Products.Product>>(user.Products).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Recipes.Recipe>>(user.Recipes).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WeightEntry>>(user.WeightEntries).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.WaistEntry>>(user.WaistEntries).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.CycleProfile>>(user.Cycles).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Tracking.HydrationEntry>>(user.HydrationEntries).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<FoodDiary.Domain.Entities.Shopping.ShoppingList>>(user.ShoppingLists).IsReadOnly),
+            () => Assert.True(Assert.IsAssignableFrom<ICollection<UserRole>>(user.UserRoles).IsReadOnly));
     }
 
     [Fact]
@@ -140,11 +142,12 @@ public class UserInvariantTests {
 
         user.ReplaceRoles([adminRole, supportRole]);
 
-        Assert.Equal(["Admin", "Support"], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]);
-        Assert.True(user.HasRole("Admin"));
-        Assert.True(user.HasRole(" Support "));
-        Assert.False(user.HasRole("Premium"));
-        Assert.False(user.HasRole(" "));
+        Assert.Multiple(
+            () => Assert.Equal(["Admin", "Support"], [.. user.GetRoleNames().Order(StringComparer.Ordinal)]),
+            () => Assert.True(user.HasRole("Admin")),
+            () => Assert.True(user.HasRole(" Support ")),
+            () => Assert.False(user.HasRole("Premium")),
+            () => Assert.False(user.HasRole(" ")));
     }
 
     [Fact]
@@ -300,10 +303,11 @@ public class UserInvariantTests {
 
         user.CompleteEmailVerification();
 
-        Assert.True(user.IsEmailConfirmed);
-        Assert.Null(user.EmailConfirmationTokenHash);
-        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
-        Assert.Null(user.EmailConfirmationSentAtUtc);
+        Assert.Multiple(
+            () => Assert.True(user.IsEmailConfirmed),
+            () => Assert.Null(user.EmailConfirmationTokenHash),
+            () => Assert.Null(user.EmailConfirmationTokenExpiresAtUtc),
+            () => Assert.Null(user.EmailConfirmationSentAtUtc));
     }
 
     [Fact]
@@ -357,10 +361,11 @@ public class UserInvariantTests {
 
         user.CompletePasswordReset("new-hash");
 
-        Assert.Equal("new-hash", user.Password);
-        Assert.Null(user.PasswordResetTokenHash);
-        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
-        Assert.Null(user.PasswordResetSentAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("new-hash", user.Password),
+            () => Assert.Null(user.PasswordResetTokenHash),
+            () => Assert.Null(user.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Null(user.PasswordResetSentAtUtc));
     }
 
     [Fact]
@@ -440,10 +445,11 @@ public class UserInvariantTests {
             Weight: 82.5,
             Height: 181.2));
 
-        Assert.Equal("Doe", user.LastName);
-        Assert.Equal(birthDate, user.BirthDate);
-        Assert.Equal(82.5, user.Weight);
-        Assert.Equal(181.2, user.Height);
+        Assert.Multiple(
+            () => Assert.Equal("Doe", user.LastName),
+            () => Assert.Equal(birthDate, user.BirthDate),
+            () => Assert.Equal(82.5, user.Weight),
+            () => Assert.Equal(181.2, user.Height));
         Assert.NotNull(user.ModifiedOnUtc);
     }
 
@@ -560,14 +566,15 @@ public class UserInvariantTests {
             desiredWeight: 74.5,
             desiredWaist: 88);
 
-        Assert.Equal(2200, user.DailyCalorieTarget);
-        Assert.Equal(140, user.ProteinTarget);
-        Assert.Equal(80, user.FatTarget);
-        Assert.Equal(240, user.CarbTarget);
-        Assert.Equal(30, user.FiberTarget);
-        Assert.Equal(2.5, user.WaterGoal);
-        Assert.Equal(74.5, user.DesiredWeight);
-        Assert.Equal(88, user.DesiredWaist);
+        Assert.Multiple(
+            () => Assert.Equal(2200, user.DailyCalorieTarget),
+            () => Assert.Equal(140, user.ProteinTarget),
+            () => Assert.Equal(80, user.FatTarget),
+            () => Assert.Equal(240, user.CarbTarget),
+            () => Assert.Equal(30, user.FiberTarget),
+            () => Assert.Equal(2.5, user.WaterGoal),
+            () => Assert.Equal(74.5, user.DesiredWeight),
+            () => Assert.Equal(88, user.DesiredWaist));
     }
 
     [Fact]
@@ -583,12 +590,13 @@ public class UserInvariantTests {
 
         user.UpdateGoals(proteinTarget: 150);
 
-        Assert.Equal(2200, user.DailyCalorieTarget);
-        Assert.Equal(150, user.ProteinTarget);
-        Assert.Equal(80, user.FatTarget);
-        Assert.Equal(240, user.CarbTarget);
-        Assert.Equal(30, user.FiberTarget);
-        Assert.Equal(2.5, user.WaterGoal);
+        Assert.Multiple(
+            () => Assert.Equal(2200, user.DailyCalorieTarget),
+            () => Assert.Equal(150, user.ProteinTarget),
+            () => Assert.Equal(80, user.FatTarget),
+            () => Assert.Equal(240, user.CarbTarget),
+            () => Assert.Equal(30, user.FiberTarget),
+            () => Assert.Equal(2.5, user.WaterGoal));
     }
 
     [Fact]
@@ -614,14 +622,15 @@ public class UserInvariantTests {
             FridayCalories: 2200,
             SaturdayCalories: 2300));
 
-        Assert.Equal(1800, user.GetCalorieTargetForDate(new DateTime(2026, 6, 1)));
-        Assert.Equal(1900, user.GetCalorieTargetForDate(new DateTime(2026, 6, 2)));
-        Assert.Equal(2000, user.GetCalorieTargetForDate(new DateTime(2026, 6, 3)));
-        Assert.Equal(2100, user.GetCalorieTargetForDate(new DateTime(2026, 6, 4)));
-        Assert.Equal(2200, user.GetCalorieTargetForDate(new DateTime(2026, 6, 5)));
-        Assert.Equal(2300, user.GetCalorieTargetForDate(new DateTime(2026, 6, 6)));
-        Assert.Equal(2000, user.GetCalorieTargetForDate(new DateTime(2026, 6, 7)));
-        Assert.Equal(14300, user.GetWeeklyCalorieTarget());
+        Assert.Multiple(
+            () => Assert.Equal(1800, user.GetCalorieTargetForDate(new DateTime(2026, 6, 1))),
+            () => Assert.Equal(1900, user.GetCalorieTargetForDate(new DateTime(2026, 6, 2))),
+            () => Assert.Equal(2000, user.GetCalorieTargetForDate(new DateTime(2026, 6, 3))),
+            () => Assert.Equal(2100, user.GetCalorieTargetForDate(new DateTime(2026, 6, 4))),
+            () => Assert.Equal(2200, user.GetCalorieTargetForDate(new DateTime(2026, 6, 5))),
+            () => Assert.Equal(2300, user.GetCalorieTargetForDate(new DateTime(2026, 6, 6))),
+            () => Assert.Equal(2000, user.GetCalorieTargetForDate(new DateTime(2026, 6, 7))),
+            () => Assert.Equal(14300, user.GetWeeklyCalorieTarget()));
     }
 
     [Fact]
@@ -790,11 +799,12 @@ public class UserInvariantTests {
             FastingCheckInReminderHours: 12,
             FastingCheckInFollowUpReminderHours: 36));
 
-        Assert.True(user.PushNotificationsEnabled);
-        Assert.True(user.FastingPushNotificationsEnabled);
-        Assert.True(user.SocialPushNotificationsEnabled);
-        Assert.Equal(12, user.FastingCheckInReminderHours);
-        Assert.Equal(36, user.FastingCheckInFollowUpReminderHours);
+        Assert.Multiple(
+            () => Assert.True(user.PushNotificationsEnabled),
+            () => Assert.True(user.FastingPushNotificationsEnabled),
+            () => Assert.True(user.SocialPushNotificationsEnabled),
+            () => Assert.Equal(12, user.FastingCheckInReminderHours),
+            () => Assert.Equal(36, user.FastingCheckInFollowUpReminderHours));
         Assert.NotNull(user.ModifiedOnUtc);
     }
 
@@ -908,10 +918,11 @@ public class UserInvariantTests {
             AiInputTokenLimit: 123,
             AiOutputTokenLimit: 456));
 
-        Assert.True(user.IsEmailConfirmed);
-        Assert.Equal("ru", user.Language);
-        Assert.Equal(123, user.AiInputTokenLimit);
-        Assert.Equal(456, user.AiOutputTokenLimit);
+        Assert.Multiple(
+            () => Assert.True(user.IsEmailConfirmed),
+            () => Assert.Equal("ru", user.Language),
+            () => Assert.Equal(123, user.AiInputTokenLimit),
+            () => Assert.Equal(456, user.AiOutputTokenLimit));
     }
 
     [Fact]
@@ -956,9 +967,10 @@ public class UserInvariantTests {
 
         user.UpdateAiTokenLimits(inputLimit: null, outputLimit: null);
 
-        Assert.Equal(5_000_000, user.AiInputTokenLimit);
-        Assert.Equal(1_000_000, user.AiOutputTokenLimit);
-        Assert.Null(user.ModifiedOnUtc);
+        Assert.Multiple(
+            () => Assert.Equal(5_000_000, user.AiInputTokenLimit),
+            () => Assert.Equal(1_000_000, user.AiOutputTokenLimit),
+            () => Assert.Null(user.ModifiedOnUtc));
     }
 
     [Fact]
@@ -975,12 +987,13 @@ public class UserInvariantTests {
             AiOutputTokenLimit: 456));
         user.ReplaceRoles([adminRole, supportRole]);
 
-        Assert.False(user.IsActive);
-        Assert.True(user.IsEmailConfirmed);
-        Assert.Equal("ru", user.Language);
-        Assert.Equal(123, user.AiInputTokenLimit);
-        Assert.Equal(456, user.AiOutputTokenLimit);
-        Assert.Equal(["Admin", "Support"], [.. user.UserRoles.Select(role => role.Role.Name).Order(StringComparer.Ordinal)]);
+        Assert.Multiple(
+            () => Assert.False(user.IsActive),
+            () => Assert.True(user.IsEmailConfirmed),
+            () => Assert.Equal("ru", user.Language),
+            () => Assert.Equal(123, user.AiInputTokenLimit),
+            () => Assert.Equal(456, user.AiOutputTokenLimit),
+            () => Assert.Equal(["Admin", "Support"], [.. user.UserRoles.Select(role => role.Role.Name).Order(StringComparer.Ordinal)]));
     }
 
     [Fact]
@@ -1040,9 +1053,10 @@ public class UserInvariantTests {
             FirstName: " Alexey ",
             Gender: "f"));
 
-        Assert.Equal("alex", user.Username);
-        Assert.Equal("Alexey", user.FirstName);
-        Assert.Equal("F", user.Gender);
+        Assert.Multiple(
+            () => Assert.Equal("alex", user.Username),
+            () => Assert.Equal("Alexey", user.FirstName),
+            () => Assert.Equal("F", user.Gender));
     }
 
     [Fact]
@@ -1217,11 +1231,12 @@ public class UserInvariantTests {
 
         user.StartPremiumTrial(startedAtLocal, TimeSpan.FromDays(7));
 
-        Assert.True(user.HasUsedPremiumTrial());
-        Assert.Equal(startedAtLocal.ToUniversalTime(), user.PremiumTrialStartedAtUtc);
-        Assert.Equal(startedAtLocal.ToUniversalTime().AddDays(7), user.PremiumTrialEndsAtUtc);
-        Assert.True(user.HasActivePremiumTrial(startedAtLocal.ToUniversalTime().AddDays(1)));
-        Assert.False(user.HasActivePremiumTrial(startedAtLocal.ToUniversalTime().AddDays(8)));
+        Assert.Multiple(
+            () => Assert.True(user.HasUsedPremiumTrial()),
+            () => Assert.Equal(startedAtLocal.ToUniversalTime(), user.PremiumTrialStartedAtUtc),
+            () => Assert.Equal(startedAtLocal.ToUniversalTime().AddDays(7), user.PremiumTrialEndsAtUtc),
+            () => Assert.True(user.HasActivePremiumTrial(startedAtLocal.ToUniversalTime().AddDays(1))),
+            () => Assert.False(user.HasActivePremiumTrial(startedAtLocal.ToUniversalTime().AddDays(8))));
         Assert.NotNull(user.ModifiedOnUtc);
     }
 
@@ -1271,9 +1286,10 @@ public class UserInvariantTests {
 
         user.MarkDeleted(deletedAtLocal);
 
-        Assert.Equal(deletedAtLocal.ToUniversalTime(), user.DeletedAt);
-        Assert.Equal(DateTimeKind.Utc, user.DeletedAt!.Value.Kind);
-        Assert.Equal(deletedAtLocal.ToUniversalTime(), ((UserDeletedDomainEvent)user.DomainEvents[0]).DeletedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(deletedAtLocal.ToUniversalTime(), user.DeletedAt),
+            () => Assert.Equal(DateTimeKind.Utc, user.DeletedAt!.Value.Kind),
+            () => Assert.Equal(deletedAtLocal.ToUniversalTime(), ((UserDeletedDomainEvent)user.DomainEvents[0]).DeletedAtUtc));
     }
 
     [Fact]
@@ -1320,15 +1336,16 @@ public class UserInvariantTests {
 
         user.DeleteAccount(deletedAtUtc);
 
-        Assert.Null(user.RefreshToken);
-        Assert.Null(user.EmailConfirmationTokenHash);
-        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
-        Assert.Null(user.EmailConfirmationSentAtUtc);
-        Assert.Null(user.PasswordResetTokenHash);
-        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
-        Assert.Null(user.PasswordResetSentAtUtc);
-        Assert.Equal(deletedAtUtc, user.DeletedAt);
-        Assert.False(user.IsActive);
+        Assert.Multiple(
+            () => Assert.Null(user.RefreshToken),
+            () => Assert.Null(user.EmailConfirmationTokenHash),
+            () => Assert.Null(user.EmailConfirmationTokenExpiresAtUtc),
+            () => Assert.Null(user.EmailConfirmationSentAtUtc),
+            () => Assert.Null(user.PasswordResetTokenHash),
+            () => Assert.Null(user.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Null(user.PasswordResetSentAtUtc),
+            () => Assert.Equal(deletedAtUtc, user.DeletedAt),
+            () => Assert.False(user.IsActive));
         Assert.Single(user.DomainEvents);
         Assert.IsType<UserDeletedDomainEvent>(user.DomainEvents[0]);
     }
@@ -1342,13 +1359,14 @@ public class UserInvariantTests {
 
         user.MarkDeleted(DateTime.UtcNow);
 
-        Assert.Null(user.RefreshToken);
-        Assert.Null(user.EmailConfirmationTokenHash);
-        Assert.Null(user.EmailConfirmationTokenExpiresAtUtc);
-        Assert.Null(user.EmailConfirmationSentAtUtc);
-        Assert.Null(user.PasswordResetTokenHash);
-        Assert.Null(user.PasswordResetTokenExpiresAtUtc);
-        Assert.Null(user.PasswordResetSentAtUtc);
+        Assert.Multiple(
+            () => Assert.Null(user.RefreshToken),
+            () => Assert.Null(user.EmailConfirmationTokenHash),
+            () => Assert.Null(user.EmailConfirmationTokenExpiresAtUtc),
+            () => Assert.Null(user.EmailConfirmationSentAtUtc),
+            () => Assert.Null(user.PasswordResetTokenHash),
+            () => Assert.Null(user.PasswordResetTokenExpiresAtUtc),
+            () => Assert.Null(user.PasswordResetSentAtUtc));
     }
 
     [Fact]

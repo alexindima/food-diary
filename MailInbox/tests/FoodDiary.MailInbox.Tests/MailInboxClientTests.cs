@@ -27,9 +27,10 @@ public sealed class MailInboxClientTests {
         IReadOnlyList<InboundMailMessageSummaryResponse> messages = await client.GetMessagesAsync(10, CancellationToken.None);
 
         Assert.Empty(messages);
-        Assert.Equal(HttpMethod.Get, handler.Request?.Method);
-        Assert.Equal("https://inbox.example.test/api/mail-inbox/messages?limit=10", handler.Request?.RequestUri?.ToString());
-        Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single());
+        Assert.Multiple(
+            () => Assert.Equal(HttpMethod.Get, handler.Request?.Method),
+            () => Assert.Equal("https://inbox.example.test/api/mail-inbox/messages?limit=10", handler.Request?.RequestUri?.ToString()),
+            () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
     }
 
     [Fact]
@@ -129,11 +130,12 @@ public sealed class MailInboxClientTests {
         InboundMailMessageDetailsResponse? message = await client.GetMessageAsync(id, CancellationToken.None);
 
         Assert.NotNull(message);
-        Assert.Equal(expected.Id, message.Id);
-        Assert.Equal(expected.MessageId, message.MessageId);
-        Assert.Equal(expected.FromAddress, message.FromAddress);
-        Assert.Equal(expected.ToRecipients, message.ToRecipients);
-        Assert.Equal(expected.RawMime, message.RawMime);
+        Assert.Multiple(
+            () => Assert.Equal(expected.Id, message.Id),
+            () => Assert.Equal(expected.MessageId, message.MessageId),
+            () => Assert.Equal(expected.FromAddress, message.FromAddress),
+            () => Assert.Equal(expected.ToRecipients, message.ToRecipients),
+            () => Assert.Equal(expected.RawMime, message.RawMime));
     }
 
     [Fact]
@@ -165,10 +167,11 @@ public sealed class MailInboxClientTests {
 
         bool result = await client.MarkMessageReadAsync(id, CancellationToken.None);
 
-        Assert.True(result);
-        Assert.Equal(HttpMethod.Post, handler.Request?.Method);
-        Assert.Equal("https://inbox.example.test/api/mail-inbox/messages/11111111-1111-1111-1111-111111111111/read", handler.Request?.RequestUri?.ToString());
-        Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single());
+        Assert.Multiple(
+            () => Assert.True(result),
+            () => Assert.Equal(HttpMethod.Post, handler.Request?.Method),
+            () => Assert.Equal("https://inbox.example.test/api/mail-inbox/messages/11111111-1111-1111-1111-111111111111/read", handler.Request?.RequestUri?.ToString()),
+            () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-MailInbox-Api-Key").Single()));
     }
 
     [Fact]
@@ -199,14 +202,15 @@ public sealed class MailInboxClientTests {
             ReadAtUtc: null,
             receivedAtUtc);
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal("sender@example.com", response.FromAddress);
-        Assert.Equal(["admin@fooddiary.club"], response.ToRecipients);
-        Assert.Equal("Hello", response.Subject);
-        Assert.Equal("received", response.Status);
-        Assert.Equal("general", response.Category);
-        Assert.Null(response.ReadAtUtc);
-        Assert.Equal(receivedAtUtc, response.ReceivedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal("sender@example.com", response.FromAddress),
+            () => Assert.Equal(["admin@fooddiary.club"], response.ToRecipients),
+            () => Assert.Equal("Hello", response.Subject),
+            () => Assert.Equal("received", response.Status),
+            () => Assert.Equal("general", response.Category),
+            () => Assert.Null(response.ReadAtUtc),
+            () => Assert.Equal(receivedAtUtc, response.ReceivedAtUtc));
     }
 
     [Theory]
@@ -235,10 +239,11 @@ public sealed class MailInboxClientTests {
         IHttpClientFactory clientFactory = provider.GetRequiredService<IHttpClientFactory>();
         using HttpClient httpClient = clientFactory.CreateClient(nameof(IMailInboxClient));
 
-        Assert.Equal("https://inbox.example.test", options.BaseUrl);
-        Assert.Equal(TimeSpan.FromSeconds(3), options.Timeout);
-        Assert.Equal("https://inbox.example.test/", httpClient.BaseAddress?.ToString());
-        Assert.Equal(TimeSpan.FromSeconds(3), httpClient.Timeout);
+        Assert.Multiple(
+            () => Assert.Equal("https://inbox.example.test", options.BaseUrl),
+            () => Assert.Equal(TimeSpan.FromSeconds(3), options.Timeout),
+            () => Assert.Equal("https://inbox.example.test/", httpClient.BaseAddress?.ToString()),
+            () => Assert.Equal(TimeSpan.FromSeconds(3), httpClient.Timeout));
     }
 
     [ExcludeFromCodeCoverage]

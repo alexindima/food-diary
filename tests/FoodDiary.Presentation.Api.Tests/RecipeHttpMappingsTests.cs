@@ -28,11 +28,12 @@ public sealed class RecipeHttpMappingsTests {
 
         GetRecipesQuery query = request.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(2, query.Page);
-        Assert.Equal(25, query.Limit);
-        Assert.Equal("soup", query.Search);
-        Assert.False(query.IncludePublic);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(25, query.Limit),
+            () => Assert.Equal("soup", query.Search),
+            () => Assert.False(query.IncludePublic));
     }
 
     [Fact]
@@ -48,13 +49,14 @@ public sealed class RecipeHttpMappingsTests {
 
         GetRecipesOverviewQuery query = request.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(1, query.Page);
-        Assert.Equal(100, query.Limit);
-        Assert.Equal("salad", query.Search);
-        Assert.True(query.IncludePublic);
-        Assert.Equal(1, query.RecentLimit);
-        Assert.Equal(50, query.FavoriteLimit);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(1, query.Page),
+            () => Assert.Equal(100, query.Limit),
+            () => Assert.Equal("salad", query.Search),
+            () => Assert.True(query.IncludePublic),
+            () => Assert.Equal(1, query.RecentLimit),
+            () => Assert.Equal(50, query.FavoriteLimit));
     }
 
     [Fact]
@@ -74,19 +76,20 @@ public sealed class RecipeHttpMappingsTests {
         GetRecipeByIdQuery byIdQuery = recipeId.ToQuery(userId, includePublic: true);
         ExploreRecipesQuery exploreQuery = explore.ToExploreQuery(userId);
 
-        Assert.Equal(userId, recentQuery.UserId);
-        Assert.Equal(50, recentQuery.Limit);
-        Assert.False(recentQuery.IncludePublic);
-        Assert.Equal(userId, byIdQuery.UserId);
-        Assert.Equal(recipeId, byIdQuery.RecipeId);
-        Assert.True(byIdQuery.IncludePublic);
-        Assert.Equal(userId, exploreQuery.UserId);
-        Assert.Equal(3, exploreQuery.Page);
-        Assert.Equal(15, exploreQuery.Limit);
-        Assert.Equal("protein", exploreQuery.Search);
-        Assert.Equal("breakfast", exploreQuery.Category);
-        Assert.Equal(20, exploreQuery.MaxPrepTime);
-        Assert.Equal("popular", exploreQuery.SortBy);
+        Assert.Multiple(
+            () => Assert.Equal(userId, recentQuery.UserId),
+            () => Assert.Equal(50, recentQuery.Limit),
+            () => Assert.False(recentQuery.IncludePublic),
+            () => Assert.Equal(userId, byIdQuery.UserId),
+            () => Assert.Equal(recipeId, byIdQuery.RecipeId),
+            () => Assert.True(byIdQuery.IncludePublic),
+            () => Assert.Equal(userId, exploreQuery.UserId),
+            () => Assert.Equal(3, exploreQuery.Page),
+            () => Assert.Equal(15, exploreQuery.Limit),
+            () => Assert.Equal("protein", exploreQuery.Search),
+            () => Assert.Equal("breakfast", exploreQuery.Category),
+            () => Assert.Equal(20, exploreQuery.MaxPrepTime),
+            () => Assert.Equal("popular", exploreQuery.SortBy));
     }
 
     [Fact]
@@ -128,41 +131,45 @@ public sealed class RecipeHttpMappingsTests {
 
         CreateRecipeCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(request.Name, command.Name);
-        Assert.Equal(request.Description, command.Description);
-        Assert.Equal(request.Comment, command.Comment);
-        Assert.Equal(request.Category, command.Category);
-        Assert.Equal(request.ImageUrl, command.ImageUrl);
-        Assert.Equal(request.ImageAssetId, command.ImageAssetId);
-        Assert.Equal(request.PrepTime, command.PrepTime);
-        Assert.Equal(request.CookTime, command.CookTime);
-        Assert.Equal(request.Servings, command.Servings);
-        Assert.Equal(request.Visibility, command.Visibility);
-        Assert.Equal(request.CalculateNutritionAutomatically, command.CalculateNutritionAutomatically);
-        Assert.Equal(request.ManualCalories, command.ManualCalories);
-        Assert.Equal(request.ManualProteins, command.ManualProteins);
-        Assert.Equal(request.ManualFats, command.ManualFats);
-        Assert.Equal(request.ManualCarbs, command.ManualCarbs);
-        Assert.Equal(request.ManualFiber, command.ManualFiber);
-        Assert.Equal(request.ManualAlcohol, command.ManualAlcohol);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(request.Name, command.Name),
+            () => Assert.Equal(request.Description, command.Description),
+            () => Assert.Equal(request.Comment, command.Comment),
+            () => Assert.Equal(request.Category, command.Category),
+            () => Assert.Equal(request.ImageUrl, command.ImageUrl),
+            () => Assert.Equal(request.ImageAssetId, command.ImageAssetId),
+            () => Assert.Equal(request.PrepTime, command.PrepTime),
+            () => Assert.Equal(request.CookTime, command.CookTime),
+            () => Assert.Equal(request.Servings, command.Servings),
+            () => Assert.Equal(request.Visibility, command.Visibility),
+            () => Assert.Equal(request.CalculateNutritionAutomatically, command.CalculateNutritionAutomatically),
+            () => Assert.Equal(request.ManualCalories, command.ManualCalories),
+            () => Assert.Equal(request.ManualProteins, command.ManualProteins),
+            () => Assert.Equal(request.ManualFats, command.ManualFats),
+            () => Assert.Equal(request.ManualCarbs, command.ManualCarbs),
+            () => Assert.Equal(request.ManualFiber, command.ManualFiber),
+            () => Assert.Equal(request.ManualAlcohol, command.ManualAlcohol));
 
         RecipeStepInput step = Assert.Single(command.Steps);
-        Assert.Equal(1, step.Order);
-        Assert.Equal("Prep", step.Title);
-        Assert.Equal("Chop vegetables", step.Description);
-        Assert.Equal("https://cdn.example/step-1.png", step.ImageUrl);
-        Assert.Equal(stepAssetId, step.ImageAssetId);
+        Assert.Multiple(
+            () => Assert.Equal(1, step.Order),
+            () => Assert.Equal("Prep", step.Title),
+            () => Assert.Equal("Chop vegetables", step.Description),
+            () => Assert.Equal("https://cdn.example/step-1.png", step.ImageUrl),
+            () => Assert.Equal(stepAssetId, step.ImageAssetId));
 
         RecipeIngredientInput firstIngredient = step.Ingredients[0];
-        Assert.Equal(productId, firstIngredient.ProductId);
-        Assert.Null(firstIngredient.NestedRecipeId);
-        Assert.Equal(200, firstIngredient.Amount);
+        Assert.Multiple(
+            () => Assert.Equal(productId, firstIngredient.ProductId),
+            () => Assert.Null(firstIngredient.NestedRecipeId),
+            () => Assert.Equal(200, firstIngredient.Amount));
 
         RecipeIngredientInput secondIngredient = step.Ingredients[1];
-        Assert.Null(secondIngredient.ProductId);
-        Assert.Equal(nestedRecipeId, secondIngredient.NestedRecipeId);
-        Assert.Equal(50, secondIngredient.Amount);
+        Assert.Multiple(
+            () => Assert.Null(secondIngredient.ProductId),
+            () => Assert.Equal(nestedRecipeId, secondIngredient.NestedRecipeId),
+            () => Assert.Equal(50, secondIngredient.Amount));
     }
 
     [Fact]
@@ -197,31 +204,32 @@ public sealed class RecipeHttpMappingsTests {
 
         UpdateRecipeCommand command = request.ToCommand(userId, recipeId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(recipeId, command.RecipeId);
-        Assert.Equal(request.Name, command.Name);
-        Assert.Equal(request.Description, command.Description);
-        Assert.Equal(request.ClearDescription, command.ClearDescription);
-        Assert.Equal(request.Comment, command.Comment);
-        Assert.Equal(request.ClearComment, command.ClearComment);
-        Assert.Equal(request.Category, command.Category);
-        Assert.Equal(request.ClearCategory, command.ClearCategory);
-        Assert.Equal(request.ImageUrl, command.ImageUrl);
-        Assert.Equal(request.ClearImageUrl, command.ClearImageUrl);
-        Assert.Equal(request.ImageAssetId, command.ImageAssetId);
-        Assert.Equal(request.ClearImageAssetId, command.ClearImageAssetId);
-        Assert.Equal(request.PrepTime, command.PrepTime);
-        Assert.Equal(request.CookTime, command.CookTime);
-        Assert.Equal(request.Servings, command.Servings);
-        Assert.Equal(request.Visibility, command.Visibility);
-        Assert.Equal(request.CalculateNutritionAutomatically, command.CalculateNutritionAutomatically);
-        Assert.Equal(request.ManualCalories, command.ManualCalories);
-        Assert.Equal(request.ManualProteins, command.ManualProteins);
-        Assert.Equal(request.ManualFats, command.ManualFats);
-        Assert.Equal(request.ManualCarbs, command.ManualCarbs);
-        Assert.Equal(request.ManualFiber, command.ManualFiber);
-        Assert.Equal(request.ManualAlcohol, command.ManualAlcohol);
-        Assert.Null(command.Steps);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(recipeId, command.RecipeId),
+            () => Assert.Equal(request.Name, command.Name),
+            () => Assert.Equal(request.Description, command.Description),
+            () => Assert.Equal(request.ClearDescription, command.ClearDescription),
+            () => Assert.Equal(request.Comment, command.Comment),
+            () => Assert.Equal(request.ClearComment, command.ClearComment),
+            () => Assert.Equal(request.Category, command.Category),
+            () => Assert.Equal(request.ClearCategory, command.ClearCategory),
+            () => Assert.Equal(request.ImageUrl, command.ImageUrl),
+            () => Assert.Equal(request.ClearImageUrl, command.ClearImageUrl),
+            () => Assert.Equal(request.ImageAssetId, command.ImageAssetId),
+            () => Assert.Equal(request.ClearImageAssetId, command.ClearImageAssetId),
+            () => Assert.Equal(request.PrepTime, command.PrepTime),
+            () => Assert.Equal(request.CookTime, command.CookTime),
+            () => Assert.Equal(request.Servings, command.Servings),
+            () => Assert.Equal(request.Visibility, command.Visibility),
+            () => Assert.Equal(request.CalculateNutritionAutomatically, command.CalculateNutritionAutomatically),
+            () => Assert.Equal(request.ManualCalories, command.ManualCalories),
+            () => Assert.Equal(request.ManualProteins, command.ManualProteins),
+            () => Assert.Equal(request.ManualFats, command.ManualFats),
+            () => Assert.Equal(request.ManualCarbs, command.ManualCarbs),
+            () => Assert.Equal(request.ManualFiber, command.ManualFiber),
+            () => Assert.Equal(request.ManualAlcohol, command.ManualAlcohol),
+            () => Assert.Null(command.Steps));
     }
 
     [Fact]
@@ -297,10 +305,11 @@ public sealed class RecipeHttpMappingsTests {
 
         RecipeHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(model.Id, response.Id);
-        Assert.True(response.IsFavorite);
-        Assert.Equal(favoriteRecipeId, response.FavoriteRecipeId);
-        Assert.Equal(model.QualityScore, response.QualityScore);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, response.Id),
+            () => Assert.True(response.IsFavorite),
+            () => Assert.Equal(favoriteRecipeId, response.FavoriteRecipeId),
+            () => Assert.Equal(model.QualityScore, response.QualityScore));
         Assert.Single(response.Steps);
         Assert.Single(response.Steps[0].Ingredients);
     }
@@ -362,8 +371,9 @@ public sealed class RecipeHttpMappingsTests {
         Assert.Single(response.RecentItems);
         Assert.Single(response.AllRecipes.Data);
         Assert.Single(response.FavoriteItems);
-        Assert.Equal(1, response.FavoriteTotalCount);
-        Assert.Equal(recipe.Id, response.AllRecipes.Data[0].Id);
-        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
+        Assert.Multiple(
+            () => Assert.Equal(1, response.FavoriteTotalCount),
+            () => Assert.Equal(recipe.Id, response.AllRecipes.Data[0].Id),
+            () => Assert.Equal(favorite.Id, response.FavoriteItems[0].Id));
     }
 }

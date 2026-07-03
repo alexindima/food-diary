@@ -23,11 +23,12 @@ public sealed class FastingHttpMappingsTests {
 
         StartFastingCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("F16_8", command.Protocol);
-        Assert.Equal("Intermittent", command.PlanType);
-        Assert.Equal(16, command.PlannedDurationHours);
-        Assert.Equal("Feeling good", command.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("F16_8", command.Protocol),
+            () => Assert.Equal("Intermittent", command.PlanType),
+            () => Assert.Equal(16, command.PlannedDurationHours),
+            () => Assert.Equal("Feeling good", command.Notes));
     }
 
     [Fact]
@@ -50,9 +51,10 @@ public sealed class FastingHttpMappingsTests {
 
         GetFastingHistoryQuery query = httpQuery.ToHistoryQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(from, query.From);
-        Assert.Equal(to, query.To);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(from, query.From),
+            () => Assert.Equal(to, query.To));
     }
 
     [Fact]
@@ -173,20 +175,21 @@ public sealed class FastingHttpMappingsTests {
 
         FastingSessionHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal("Interrupted", response.Status);
-        Assert.True(response.IsCompleted);
-        Assert.Equal(16, response.InitialPlannedDurationHours);
-        Assert.Equal(8, response.AddedDurationHours);
-        Assert.Equal(24, response.PlannedDurationHours);
-        Assert.Equal("Intermittent", response.PlanType);
-        Assert.Equal("FastingWindow", response.OccurrenceKind);
-        Assert.Null(response.CyclicPhaseDayNumber);
-        Assert.Null(response.CyclicPhaseDayTotal);
-        Assert.Equal(3, response.HungerLevel);
-        Assert.Equal(4, response.EnergyLevel);
-        Assert.Equal(5, response.MoodLevel);
-        Assert.Equal(["good"], response.Symptoms);
-        Assert.Equal("Hydration was fine", response.CheckInNotes);
+        Assert.Multiple(
+            () => Assert.Equal("Interrupted", response.Status),
+            () => Assert.True(response.IsCompleted),
+            () => Assert.Equal(16, response.InitialPlannedDurationHours),
+            () => Assert.Equal(8, response.AddedDurationHours),
+            () => Assert.Equal(24, response.PlannedDurationHours),
+            () => Assert.Equal("Intermittent", response.PlanType),
+            () => Assert.Equal("FastingWindow", response.OccurrenceKind),
+            () => Assert.Null(response.CyclicPhaseDayNumber),
+            () => Assert.Null(response.CyclicPhaseDayTotal),
+            () => Assert.Equal(3, response.HungerLevel),
+            () => Assert.Equal(4, response.EnergyLevel),
+            () => Assert.Equal(5, response.MoodLevel),
+            () => Assert.Equal(["good"], response.Symptoms),
+            () => Assert.Equal("Hydration was fine", response.CheckInNotes));
         Assert.Single(response.CheckIns);
     }
 
@@ -237,10 +240,11 @@ public sealed class FastingHttpMappingsTests {
 
         FastingOverviewHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(sessionId, response.CurrentSession!.Id);
-        Assert.Equal(5, response.Stats.TotalCompleted);
-        Assert.Equal(66.7, response.Stats.CompletionRateLast30Days);
-        Assert.Equal("dizziness", response.Stats.TopSymptom);
+        Assert.Multiple(
+            () => Assert.Equal(sessionId, response.CurrentSession!.Id),
+            () => Assert.Equal(5, response.Stats.TotalCompleted),
+            () => Assert.Equal(66.7, response.Stats.CompletionRateLast30Days),
+            () => Assert.Equal("dizziness", response.Stats.TopSymptom));
         Assert.Single(response.Insights.Alerts);
         Assert.Single(response.Insights.Insights);
         Assert.Equal(1, response.History.Page);

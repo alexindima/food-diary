@@ -10,10 +10,11 @@ public class MealAiInvariantTests {
         var data = MealAiItemData.Create(
             "Chicken", "ÐšÑƒÑ€Ð¸Ñ†Ð°", 100, "g", 165, 31, 3.6, 0, 0, 0);
 
-        Assert.Equal("Chicken", data.NameEn);
-        Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", data.NameLocal);
-        Assert.Equal(100, data.Amount);
-        Assert.Equal("g", data.Unit);
+        Assert.Multiple(
+            () => Assert.Equal("Chicken", data.NameEn),
+            () => Assert.Equal("ÐšÑƒÑ€Ð¸Ñ†Ð°", data.NameLocal),
+            () => Assert.Equal(100, data.Amount),
+            () => Assert.Equal("g", data.Unit));
     }
 
     [Fact]

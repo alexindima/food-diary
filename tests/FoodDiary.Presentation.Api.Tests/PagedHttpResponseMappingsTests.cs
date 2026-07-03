@@ -17,11 +17,12 @@ public sealed class PagedHttpResponseMappingsTests {
 
         var result = response.ToPagedHttpResponse(static value => string.Create(CultureInfo.InvariantCulture, $"item-{value}"));
 
-        Assert.Equal(["item-1", "item-2", "item-3"], result.Data);
-        Assert.Equal(2, result.Page);
-        Assert.Equal(25, result.Limit);
-        Assert.Equal(4, result.TotalPages);
-        Assert.Equal(87, result.TotalItems);
+        Assert.Multiple(
+            () => Assert.Equal(["item-1", "item-2", "item-3"], result.Data),
+            () => Assert.Equal(2, result.Page),
+            () => Assert.Equal(25, result.Limit),
+            () => Assert.Equal(4, result.TotalPages),
+            () => Assert.Equal(87, result.TotalItems));
     }
 
     [Fact]

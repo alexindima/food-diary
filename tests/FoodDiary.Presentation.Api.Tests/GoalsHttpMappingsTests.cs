@@ -26,18 +26,19 @@ public sealed class GoalsHttpMappingsTests {
 
         UpdateGoalsCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(2000, command.DailyCalorieTarget);
-        Assert.Equal(150, command.ProteinTarget);
-        Assert.Equal(70, command.FatTarget);
-        Assert.Equal(250, command.CarbTarget);
-        Assert.Equal(30, command.FiberTarget);
-        Assert.Equal(2500, command.WaterGoal);
-        Assert.Equal(75, command.DesiredWeight);
-        Assert.Equal(80, command.DesiredWaist);
-        Assert.True(command.CalorieCyclingEnabled);
-        Assert.Equal(1800, command.MondayCalories);
-        Assert.Equal(2000, command.SundayCalories);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(2000, command.DailyCalorieTarget),
+            () => Assert.Equal(150, command.ProteinTarget),
+            () => Assert.Equal(70, command.FatTarget),
+            () => Assert.Equal(250, command.CarbTarget),
+            () => Assert.Equal(30, command.FiberTarget),
+            () => Assert.Equal(2500, command.WaterGoal),
+            () => Assert.Equal(75, command.DesiredWeight),
+            () => Assert.Equal(80, command.DesiredWaist),
+            () => Assert.True(command.CalorieCyclingEnabled),
+            () => Assert.Equal(1800, command.MondayCalories),
+            () => Assert.Equal(2000, command.SundayCalories));
     }
 
     [Fact]
@@ -47,11 +48,12 @@ public sealed class GoalsHttpMappingsTests {
 
         GoalsHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(2000, response.DailyCalorieTarget);
-        Assert.Equal(150, response.ProteinTarget);
-        Assert.True(response.CalorieCyclingEnabled);
-        Assert.Equal(1800, response.MondayCalories);
-        Assert.Equal(2000, response.SundayCalories);
+        Assert.Multiple(
+            () => Assert.Equal(2000, response.DailyCalorieTarget),
+            () => Assert.Equal(150, response.ProteinTarget),
+            () => Assert.True(response.CalorieCyclingEnabled),
+            () => Assert.Equal(1800, response.MondayCalories),
+            () => Assert.Equal(2000, response.SundayCalories));
     }
 
     [Fact]
@@ -61,8 +63,9 @@ public sealed class GoalsHttpMappingsTests {
 
         GoalsHttpResponse response = model.ToHttpResponse();
 
-        Assert.Null(response.DailyCalorieTarget);
-        Assert.False(response.CalorieCyclingEnabled);
-        Assert.Null(response.MondayCalories);
+        Assert.Multiple(
+            () => Assert.Null(response.DailyCalorieTarget),
+            () => Assert.False(response.CalorieCyclingEnabled),
+            () => Assert.Null(response.MondayCalories));
     }
 }

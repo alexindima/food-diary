@@ -18,9 +18,10 @@ public sealed class MailRelayEmailHttpMappingsTests {
         var messageId = Guid.NewGuid();
 
         Assert.IsType<GetMailRelayQueueStatsQuery>(MailRelayEmailHttpMappings.ToQueueStatsQuery());
-        Assert.Equal(messageId, messageId.ToMessageDetailsQuery().Id);
-        Assert.Equal("user@example.com", "user@example.com".ToSuppressionsQuery().Email);
-        Assert.Equal("user@example.com", "user@example.com".ToDeliveryEventsQuery().Email);
+        Assert.Multiple(
+            () => Assert.Equal(messageId, messageId.ToMessageDetailsQuery().Id),
+            () => Assert.Equal("user@example.com", "user@example.com".ToSuppressionsQuery().Email),
+            () => Assert.Equal("user@example.com", "user@example.com".ToDeliveryEventsQuery().Email));
     }
 
     [Fact]
@@ -37,14 +38,15 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         EnqueueMailRelayEmailCommand command = request.ToCommand();
 
-        Assert.Equal(request.FromAddress, command.Request.FromAddress);
-        Assert.Equal(request.FromName, command.Request.FromName);
-        Assert.Equal(request.To, command.Request.To);
-        Assert.Equal(request.Subject, command.Request.Subject);
-        Assert.Equal(request.HtmlBody, command.Request.HtmlBody);
-        Assert.Equal(request.TextBody, command.Request.TextBody);
-        Assert.Equal(request.CorrelationId, command.Request.CorrelationId);
-        Assert.Equal(request.IdempotencyKey, command.Request.IdempotencyKey);
+        Assert.Multiple(
+            () => Assert.Equal(request.FromAddress, command.Request.FromAddress),
+            () => Assert.Equal(request.FromName, command.Request.FromName),
+            () => Assert.Equal(request.To, command.Request.To),
+            () => Assert.Equal(request.Subject, command.Request.Subject),
+            () => Assert.Equal(request.HtmlBody, command.Request.HtmlBody),
+            () => Assert.Equal(request.TextBody, command.Request.TextBody),
+            () => Assert.Equal(request.CorrelationId, command.Request.CorrelationId),
+            () => Assert.Equal(request.IdempotencyKey, command.Request.IdempotencyKey));
     }
 
     [Fact]
@@ -58,10 +60,11 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         CreateMailRelaySuppressionCommand command = request.ToCommand();
 
-        Assert.Equal(request.Email, command.Request.Email);
-        Assert.Equal(request.Reason, command.Request.Reason);
-        Assert.Equal(request.Source, command.Request.Source);
-        Assert.Equal(expiresAt, command.Request.ExpiresAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(request.Email, command.Request.Email),
+            () => Assert.Equal(request.Reason, command.Request.Reason),
+            () => Assert.Equal(request.Source, command.Request.Source),
+            () => Assert.Equal(expiresAt, command.Request.ExpiresAtUtc));
     }
 
     [Fact]
@@ -78,13 +81,14 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         IngestMailRelayDeliveryEventCommand command = request.ToCommand();
 
-        Assert.Equal(request.EventType, command.Request.EventType);
-        Assert.Equal(request.Email, command.Request.Email);
-        Assert.Equal(request.Source, command.Request.Source);
-        Assert.Equal(request.Classification, command.Request.Classification);
-        Assert.Equal(request.ProviderMessageId, command.Request.ProviderMessageId);
-        Assert.Equal(request.Reason, command.Request.Reason);
-        Assert.Equal(occurredAt, command.Request.OccurredAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(request.EventType, command.Request.EventType),
+            () => Assert.Equal(request.Email, command.Request.Email),
+            () => Assert.Equal(request.Source, command.Request.Source),
+            () => Assert.Equal(request.Classification, command.Request.Classification),
+            () => Assert.Equal(request.ProviderMessageId, command.Request.ProviderMessageId),
+            () => Assert.Equal(request.Reason, command.Request.Reason),
+            () => Assert.Equal(occurredAt, command.Request.OccurredAtUtc));
     }
 
     [Fact]
@@ -123,11 +127,12 @@ public sealed class MailRelayEmailHttpMappingsTests {
         Assert.True(mapped.IsSuccess);
         IngestManyMailRelayDeliveryEventsCommand command = Assert.IsType<IngestManyMailRelayDeliveryEventsCommand>(mapped.Request);
         IngestMailEventRequest deliveryEvent = Assert.Single(command.Requests);
-        Assert.Equal("bounce", deliveryEvent.EventType);
-        Assert.Equal("a@example.com", deliveryEvent.Email);
-        Assert.Equal("hard", deliveryEvent.Classification);
-        Assert.Equal("ses-message-1", deliveryEvent.ProviderMessageId);
-        Assert.Equal("smtp; 550", deliveryEvent.Reason);
+        Assert.Multiple(
+            () => Assert.Equal("bounce", deliveryEvent.EventType),
+            () => Assert.Equal("a@example.com", deliveryEvent.Email),
+            () => Assert.Equal("hard", deliveryEvent.Classification),
+            () => Assert.Equal("ses-message-1", deliveryEvent.ProviderMessageId),
+            () => Assert.Equal("smtp; 550", deliveryEvent.Reason));
     }
 
     [Fact]
@@ -152,12 +157,13 @@ public sealed class MailRelayEmailHttpMappingsTests {
         Assert.True(mapped.IsSuccess);
         IngestManyMailRelayDeliveryEventsCommand command = Assert.IsType<IngestManyMailRelayDeliveryEventsCommand>(mapped.Request);
         IngestMailEventRequest deliveryEvent = Assert.Single(command.Requests);
-        Assert.Equal("complaint", deliveryEvent.EventType);
-        Assert.Equal("a@example.com", deliveryEvent.Email);
-        Assert.Equal("aws-ses-sns", deliveryEvent.Source);
-        Assert.Null(deliveryEvent.Classification);
-        Assert.Equal("ses-message-2", deliveryEvent.ProviderMessageId);
-        Assert.Equal("complaint", deliveryEvent.Reason);
+        Assert.Multiple(
+            () => Assert.Equal("complaint", deliveryEvent.EventType),
+            () => Assert.Equal("a@example.com", deliveryEvent.Email),
+            () => Assert.Equal("aws-ses-sns", deliveryEvent.Source),
+            () => Assert.Null(deliveryEvent.Classification),
+            () => Assert.Equal("ses-message-2", deliveryEvent.ProviderMessageId),
+            () => Assert.Equal("complaint", deliveryEvent.Reason));
     }
 
     [Fact]
@@ -267,10 +273,11 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         Assert.True(mapped.IsSuccess);
         IngestMailRelayDeliveryEventCommand command = Assert.IsType<IngestMailRelayDeliveryEventCommand>(mapped.Request);
-        Assert.Equal("bounce", command.Request.EventType);
-        Assert.Equal("a@example.com", command.Request.Email);
-        Assert.Equal("hard", command.Request.Classification);
-        Assert.Equal("mailgun-1", command.Request.ProviderMessageId);
+        Assert.Multiple(
+            () => Assert.Equal("bounce", command.Request.EventType),
+            () => Assert.Equal("a@example.com", command.Request.Email),
+            () => Assert.Equal("hard", command.Request.Classification),
+            () => Assert.Equal("mailgun-1", command.Request.ProviderMessageId));
     }
 
     [Fact]
@@ -290,10 +297,11 @@ public sealed class MailRelayEmailHttpMappingsTests {
     public void GuidAndSuppressionHelpers_MapResponsesAndCommands() {
         var id = Guid.NewGuid();
 
-        Assert.Equal(id, id.ToEnqueuedHttpResponse().Id);
-        Assert.Equal("queued", id.ToEnqueuedHttpResponse().Status);
-        Assert.Equal("suppressed", MailRelayEmailHttpMappings.ToSuppressionCreatedHttpResponse().Status);
-        Assert.Equal("blocked@example.com", "blocked@example.com".ToRemoveSuppressionCommand().Email);
+        Assert.Multiple(
+            () => Assert.Equal(id, id.ToEnqueuedHttpResponse().Id),
+            () => Assert.Equal("queued", id.ToEnqueuedHttpResponse().Status),
+            () => Assert.Equal("suppressed", MailRelayEmailHttpMappings.ToSuppressionCreatedHttpResponse().Status),
+            () => Assert.Equal("blocked@example.com", "blocked@example.com".ToRemoveSuppressionCommand().Email));
     }
 
     [Fact]
@@ -308,12 +316,13 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         MailRelayQueueStatsHttpResponse response = stats.ToHttpResponse();
 
-        Assert.Equal(1, response.PendingCount);
-        Assert.Equal(2, response.RetryCount);
-        Assert.Equal(3, response.ProcessingCount);
-        Assert.Equal(4, response.SentCount);
-        Assert.Equal(5, response.FailedCount);
-        Assert.Equal(6, response.SuppressedCount);
+        Assert.Multiple(
+            () => Assert.Equal(1, response.PendingCount),
+            () => Assert.Equal(2, response.RetryCount),
+            () => Assert.Equal(3, response.ProcessingCount),
+            () => Assert.Equal(4, response.SentCount),
+            () => Assert.Equal(5, response.FailedCount),
+            () => Assert.Equal(6, response.SuppressedCount));
     }
 
     [Fact]
@@ -339,18 +348,19 @@ public sealed class MailRelayEmailHttpMappingsTests {
 
         MailRelayMessageDetailsHttpResponse response = message.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal("sent", response.Status);
-        Assert.Equal("Subject", response.Subject);
-        Assert.Equal("corr-1", response.CorrelationId);
-        Assert.Equal(2, response.AttemptCount);
-        Assert.Equal(5, response.MaxAttempts);
-        Assert.Equal(createdAt, response.CreatedAtUtc);
-        Assert.Equal(availableAt, response.AvailableAtUtc);
-        Assert.Equal(lockedAt, response.LockedAtUtc);
-        Assert.Equal(sentAt, response.SentAtUtc);
-        Assert.Equal("last error", response.LastError);
-        Assert.Equal(["blocked@example.com"], response.SuppressedRecipients);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal("sent", response.Status),
+            () => Assert.Equal("Subject", response.Subject),
+            () => Assert.Equal("corr-1", response.CorrelationId),
+            () => Assert.Equal(2, response.AttemptCount),
+            () => Assert.Equal(5, response.MaxAttempts),
+            () => Assert.Equal(createdAt, response.CreatedAtUtc),
+            () => Assert.Equal(availableAt, response.AvailableAtUtc),
+            () => Assert.Equal(lockedAt, response.LockedAtUtc),
+            () => Assert.Equal(sentAt, response.SentAtUtc),
+            () => Assert.Equal("last error", response.LastError),
+            () => Assert.Equal(["blocked@example.com"], response.SuppressedRecipients));
     }
 
     [Fact]
@@ -367,11 +377,12 @@ public sealed class MailRelayEmailHttpMappingsTests {
         MailRelayDeliveryEventHttpResponse eventResponse = Assert.Single(deliveryEvents.ToHttpResponse());
         MailRelayProviderIngestionHttpResponse ingestionResponse = deliveryEvents.ToProviderIngestionHttpResponse();
 
-        Assert.Equal("blocked@example.com", suppressionResponse.Email);
-        Assert.Equal("bounce", suppressionResponse.Reason);
-        Assert.Equal("aws", suppressionResponse.Source);
-        Assert.Equal("bounce", eventResponse.EventType);
-        Assert.Equal("hard", eventResponse.Classification);
-        Assert.Equal(1, ingestionResponse.Accepted);
+        Assert.Multiple(
+            () => Assert.Equal("blocked@example.com", suppressionResponse.Email),
+            () => Assert.Equal("bounce", suppressionResponse.Reason),
+            () => Assert.Equal("aws", suppressionResponse.Source),
+            () => Assert.Equal("bounce", eventResponse.EventType),
+            () => Assert.Equal("hard", eventResponse.Classification),
+            () => Assert.Equal(1, ingestionResponse.Accepted));
     }
 }

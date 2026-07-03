@@ -80,9 +80,10 @@ public sealed class MailInboxPresentationTests {
 
         Assert.Equal(id, response.Id);
         Assert.NotNull(response.DmarcReport);
-        Assert.Equal("google.com", response.DmarcReport.OrganizationName);
-        Assert.Equal("192.0.2.1", response.DmarcReport.Records.Single().SourceIp);
-        Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult);
+        Assert.Multiple(
+            () => Assert.Equal("google.com", response.DmarcReport.OrganizationName),
+            () => Assert.Equal("192.0.2.1", response.DmarcReport.Records.Single().SourceIp),
+            () => Assert.Equal("pass", response.DmarcReport.Records.Single().DkimResult));
     }
 
     [Fact]
@@ -99,9 +100,10 @@ public sealed class MailInboxPresentationTests {
 
         InboundMailMessageSummaryHttpResponse response = summary.ToHttpResponse();
 
-        Assert.Equal(summary.Id, response.Id);
-        Assert.Equal("dmarc-report", response.Category);
-        Assert.Equal("Received", response.Status);
+        Assert.Multiple(
+            () => Assert.Equal(summary.Id, response.Id),
+            () => Assert.Equal("dmarc-report", response.Category),
+            () => Assert.Equal("Received", response.Status));
     }
 
     [Fact]
@@ -181,41 +183,42 @@ public sealed class MailInboxPresentationTests {
             ReadAtUtc: null,
             receivedAtUtc);
 
-        Assert.Equal(id, summary.Id);
-        Assert.Equal("general", summary.Category);
-        Assert.Equal("sender@example.com", summary.FromAddress);
-        Assert.Equal(["admin@fooddiary.club"], summary.ToRecipients);
-        Assert.Equal("Hello", summary.Subject);
-        Assert.Equal("received", summary.Status);
-        Assert.Equal(receivedAtUtc, summary.ReceivedAtUtc);
-        Assert.Equal(report, details.DmarcReport);
-        Assert.Equal("message-id", details.MessageId);
-        Assert.Equal("sender@example.com", details.FromAddress);
-        Assert.Equal(["admin@fooddiary.club"], details.ToRecipients);
-        Assert.Equal("Hello", details.Subject);
-        Assert.Equal("text", details.TextBody);
-        Assert.Equal("<p>text</p>", details.HtmlBody);
-        Assert.Equal("raw", details.RawMime);
-        Assert.Equal("dmarc-report", details.Category);
-        Assert.Equal("received", details.Status);
-        Assert.Equal(receivedAtUtc, details.ReceivedAtUtc);
-        Assert.Equal("google.com", report.OrganizationName);
-        Assert.Equal("report-1", report.ReportId);
-        Assert.Equal("fooddiary.club", report.Domain);
-        Assert.Equal(receivedAtUtc.AddDays(-1), report.DateRangeStartUtc);
-        Assert.Equal(receivedAtUtc, report.DateRangeEndUtc);
-        Assert.Equal(record, report.Records.Single());
-        Assert.Equal("192.0.2.1", record.SourceIp);
-        Assert.Equal(2, record.Count);
-        Assert.Equal("none", record.Disposition);
-        Assert.Equal("pass", record.Dkim);
-        Assert.Equal("pass", record.Spf);
-        Assert.Equal("fooddiary.club", record.HeaderFrom);
-        Assert.Equal("bounce.fooddiary.club", record.EnvelopeFrom);
-        Assert.Equal("fooddiary.club", record.DkimDomain);
-        Assert.Equal("pass", record.DkimResult);
-        Assert.Equal("fooddiary.club", record.SpfDomain);
-        Assert.Equal("pass", record.SpfResult);
+        Assert.Multiple(
+            () => Assert.Equal(id, summary.Id),
+            () => Assert.Equal("general", summary.Category),
+            () => Assert.Equal("sender@example.com", summary.FromAddress),
+            () => Assert.Equal(["admin@fooddiary.club"], summary.ToRecipients),
+            () => Assert.Equal("Hello", summary.Subject),
+            () => Assert.Equal("received", summary.Status),
+            () => Assert.Equal(receivedAtUtc, summary.ReceivedAtUtc),
+            () => Assert.Equal(report, details.DmarcReport),
+            () => Assert.Equal("message-id", details.MessageId),
+            () => Assert.Equal("sender@example.com", details.FromAddress),
+            () => Assert.Equal(["admin@fooddiary.club"], details.ToRecipients),
+            () => Assert.Equal("Hello", details.Subject),
+            () => Assert.Equal("text", details.TextBody),
+            () => Assert.Equal("<p>text</p>", details.HtmlBody),
+            () => Assert.Equal("raw", details.RawMime),
+            () => Assert.Equal("dmarc-report", details.Category),
+            () => Assert.Equal("received", details.Status),
+            () => Assert.Equal(receivedAtUtc, details.ReceivedAtUtc),
+            () => Assert.Equal("google.com", report.OrganizationName),
+            () => Assert.Equal("report-1", report.ReportId),
+            () => Assert.Equal("fooddiary.club", report.Domain),
+            () => Assert.Equal(receivedAtUtc.AddDays(-1), report.DateRangeStartUtc),
+            () => Assert.Equal(receivedAtUtc, report.DateRangeEndUtc),
+            () => Assert.Equal(record, report.Records.Single()),
+            () => Assert.Equal("192.0.2.1", record.SourceIp),
+            () => Assert.Equal(2, record.Count),
+            () => Assert.Equal("none", record.Disposition),
+            () => Assert.Equal("pass", record.Dkim),
+            () => Assert.Equal("pass", record.Spf),
+            () => Assert.Equal("fooddiary.club", record.HeaderFrom),
+            () => Assert.Equal("bounce.fooddiary.club", record.EnvelopeFrom),
+            () => Assert.Equal("fooddiary.club", record.DkimDomain),
+            () => Assert.Equal("pass", record.DkimResult),
+            () => Assert.Equal("fooddiary.club", record.SpfDomain),
+            () => Assert.Equal("pass", record.SpfResult));
     }
 
     [Theory]
@@ -234,9 +237,10 @@ public sealed class MailInboxPresentationTests {
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
         MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
-        Assert.Equal(expectedStatusCode, objectResult.StatusCode);
-        Assert.Equal("code", response.Error);
-        Assert.Equal("trace-123", response.TraceId);
+        Assert.Multiple(
+            () => Assert.Equal(expectedStatusCode, objectResult.StatusCode),
+            () => Assert.Equal("code", response.Error),
+            () => Assert.Equal("trace-123", response.TraceId));
         Assert.NotNull(response.Errors);
         Assert.Equal(["Required"], response.Errors["Request.RawMime"]);
     }
@@ -249,10 +253,11 @@ public sealed class MailInboxPresentationTests {
 
         ObjectResult objectResult = Assert.IsType<ObjectResult>(result);
         MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(objectResult.Value);
-        Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode);
-        Assert.Equal("message", response.Message);
-        Assert.Null(response.TraceId);
-        Assert.Null(response.Errors);
+        Assert.Multiple(
+            () => Assert.Equal(StatusCodes.Status500InternalServerError, objectResult.StatusCode),
+            () => Assert.Equal("message", response.Message),
+            () => Assert.Null(response.TraceId),
+            () => Assert.Null(response.Errors));
     }
 
     [Fact]
@@ -383,9 +388,10 @@ public sealed class MailInboxPresentationTests {
 
         BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(options.InvalidModelStateResponseFactory(context));
         MailInboxApiErrorHttpResponse response = Assert.IsType<MailInboxApiErrorHttpResponse>(result.Value);
-        Assert.Equal("Validation.Invalid", response.Error);
-        Assert.Equal("trace-presentation", response.TraceId);
-        Assert.Equal(["The value is invalid."], response.Errors!["request.rawMime"]);
+        Assert.Multiple(
+            () => Assert.Equal("Validation.Invalid", response.Error),
+            () => Assert.Equal("trace-presentation", response.TraceId),
+            () => Assert.Equal(["The value is invalid."], response.Errors!["request.rawMime"]));
     }
 
     [Fact]

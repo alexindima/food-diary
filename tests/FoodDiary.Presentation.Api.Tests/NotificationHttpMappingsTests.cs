@@ -64,14 +64,15 @@ public sealed class NotificationHttpMappingsTests {
 
         NotificationHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal("NewRecommendation", response.Type);
-        Assert.Equal("New recommendation", response.Title);
-        Assert.Equal("Details here", response.Body);
-        Assert.Equal("/dietologist", response.TargetUrl);
-        Assert.Equal("ref-123", response.ReferenceId);
-        Assert.False(response.IsRead);
-        Assert.Equal(createdAt, response.CreatedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal("NewRecommendation", response.Type),
+            () => Assert.Equal("New recommendation", response.Title),
+            () => Assert.Equal("Details here", response.Body),
+            () => Assert.Equal("/dietologist", response.TargetUrl),
+            () => Assert.Equal("ref-123", response.ReferenceId),
+            () => Assert.False(response.IsRead),
+            () => Assert.Equal(createdAt, response.CreatedAtUtc));
     }
 
     [Fact]
@@ -80,10 +81,11 @@ public sealed class NotificationHttpMappingsTests {
 
         NotificationHttpResponse response = model.ToHttpResponse();
 
-        Assert.Null(response.Body);
-        Assert.Null(response.TargetUrl);
-        Assert.Null(response.ReferenceId);
-        Assert.True(response.IsRead);
+        Assert.Multiple(
+            () => Assert.Null(response.Body),
+            () => Assert.Null(response.TargetUrl),
+            () => Assert.Null(response.ReferenceId),
+            () => Assert.True(response.IsRead));
     }
 
     [Fact]
@@ -102,12 +104,13 @@ public sealed class NotificationHttpMappingsTests {
 
         UpdateNotificationPreferencesCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(request.PushNotificationsEnabled, command.PushNotificationsEnabled);
-        Assert.Equal(request.FastingPushNotificationsEnabled, command.FastingPushNotificationsEnabled);
-        Assert.Equal(request.SocialPushNotificationsEnabled, command.SocialPushNotificationsEnabled);
-        Assert.Equal(request.FastingCheckInReminderHours, command.FastingCheckInReminderHours);
-        Assert.Equal(request.FastingCheckInFollowUpReminderHours, command.FastingCheckInFollowUpReminderHours);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(request.PushNotificationsEnabled, command.PushNotificationsEnabled),
+            () => Assert.Equal(request.FastingPushNotificationsEnabled, command.FastingPushNotificationsEnabled),
+            () => Assert.Equal(request.SocialPushNotificationsEnabled, command.SocialPushNotificationsEnabled),
+            () => Assert.Equal(request.FastingCheckInReminderHours, command.FastingCheckInReminderHours),
+            () => Assert.Equal(request.FastingCheckInFollowUpReminderHours, command.FastingCheckInFollowUpReminderHours));
     }
 
     [Fact]
@@ -116,11 +119,12 @@ public sealed class NotificationHttpMappingsTests {
 
         NotificationPreferencesHttpResponse response = model.ToHttpResponse();
 
-        Assert.True(response.PushNotificationsEnabled);
-        Assert.False(response.FastingPushNotificationsEnabled);
-        Assert.True(response.SocialPushNotificationsEnabled);
-        Assert.Equal(12, response.FastingCheckInReminderHours);
-        Assert.Equal(20, response.FastingCheckInFollowUpReminderHours);
+        Assert.Multiple(
+            () => Assert.True(response.PushNotificationsEnabled),
+            () => Assert.False(response.FastingPushNotificationsEnabled),
+            () => Assert.True(response.SocialPushNotificationsEnabled),
+            () => Assert.Equal(12, response.FastingCheckInReminderHours),
+            () => Assert.Equal(20, response.FastingCheckInFollowUpReminderHours));
     }
 
     [Fact]
@@ -138,13 +142,14 @@ public sealed class NotificationHttpMappingsTests {
 
         WebPushSubscriptionHttpResponse response = subscription.ToHttpResponse();
 
-        Assert.Equal(subscription.Endpoint, response.Endpoint);
-        Assert.Equal("push.example.com", response.EndpointHost);
-        Assert.Equal(expiration, response.ExpirationTimeUtc);
-        Assert.Equal("en", response.Locale);
-        Assert.Equal("Chrome", response.UserAgent);
-        Assert.Equal(subscription.CreatedOnUtc, response.CreatedAtUtc);
-        Assert.Equal(subscription.ModifiedOnUtc, response.UpdatedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(subscription.Endpoint, response.Endpoint),
+            () => Assert.Equal("push.example.com", response.EndpointHost),
+            () => Assert.Equal(expiration, response.ExpirationTimeUtc),
+            () => Assert.Equal("en", response.Locale),
+            () => Assert.Equal("Chrome", response.UserAgent),
+            () => Assert.Equal(subscription.CreatedOnUtc, response.CreatedAtUtc),
+            () => Assert.Equal(subscription.ModifiedOnUtc, response.UpdatedAtUtc));
     }
 
     [Fact]
@@ -162,19 +167,20 @@ public sealed class NotificationHttpMappingsTests {
         ScheduleTestNotificationCommand scheduled = new ScheduleTestNotificationHttpRequest(30, "fasting.completed").ToCommand(userId);
 
         Assert.NotNull(NotificationHttpMappings.ToWebPushConfigurationQuery());
-        Assert.Equal(userId, userId.ToWebPushSubscriptionsQuery().UserId);
-        Assert.Equal(userId, upsert.UserId);
-        Assert.Equal("https://push.example.com/subscriptions/123", upsert.Endpoint);
-        Assert.Equal("p256dh", upsert.P256Dh);
-        Assert.Equal("auth", upsert.Auth);
-        Assert.Equal(expiration, upsert.ExpirationTimeUtc);
-        Assert.Equal("ru", upsert.Locale);
-        Assert.Equal("Firefox", upsert.UserAgent);
-        Assert.Equal(userId, remove.UserId);
-        Assert.Equal("https://push.example.com/subscriptions/123", remove.Endpoint);
-        Assert.Equal(userId, scheduled.UserId);
-        Assert.Equal(30, scheduled.DelaySeconds);
-        Assert.Equal("fasting.completed", scheduled.Type);
+        Assert.Multiple(
+            () => Assert.Equal(userId, userId.ToWebPushSubscriptionsQuery().UserId),
+            () => Assert.Equal(userId, upsert.UserId),
+            () => Assert.Equal("https://push.example.com/subscriptions/123", upsert.Endpoint),
+            () => Assert.Equal("p256dh", upsert.P256Dh),
+            () => Assert.Equal("auth", upsert.Auth),
+            () => Assert.Equal(expiration, upsert.ExpirationTimeUtc),
+            () => Assert.Equal("ru", upsert.Locale),
+            () => Assert.Equal("Firefox", upsert.UserAgent),
+            () => Assert.Equal(userId, remove.UserId),
+            () => Assert.Equal("https://push.example.com/subscriptions/123", remove.Endpoint),
+            () => Assert.Equal(userId, scheduled.UserId),
+            () => Assert.Equal(30, scheduled.DelaySeconds),
+            () => Assert.Equal("fasting.completed", scheduled.Type));
     }
 
     [Fact]
@@ -192,13 +198,14 @@ public sealed class NotificationHttpMappingsTests {
 
         WebPushSubscriptionHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal("not-a-uri", response.Endpoint);
-        Assert.Equal("not-a-uri", response.EndpointHost);
-        Assert.Null(response.ExpirationTimeUtc);
-        Assert.Equal("en", response.Locale);
-        Assert.Equal("Chrome", response.UserAgent);
-        Assert.Equal(createdAtUtc, response.CreatedAtUtc);
-        Assert.Equal(updatedAtUtc, response.UpdatedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("not-a-uri", response.Endpoint),
+            () => Assert.Equal("not-a-uri", response.EndpointHost),
+            () => Assert.Null(response.ExpirationTimeUtc),
+            () => Assert.Equal("en", response.Locale),
+            () => Assert.Equal("Chrome", response.UserAgent),
+            () => Assert.Equal(createdAtUtc, response.CreatedAtUtc),
+            () => Assert.Equal(updatedAtUtc, response.UpdatedAtUtc));
     }
 
     [Fact]
@@ -210,10 +217,11 @@ public sealed class NotificationHttpMappingsTests {
         ScheduledNotificationHttpResponse scheduledResponse = scheduled.ToHttpResponse();
         WebPushConfigurationHttpResponse configurationResponse = configuration.ToHttpResponse();
 
-        Assert.Equal("fasting.completed", scheduledResponse.Type);
-        Assert.Equal(45, scheduledResponse.DelaySeconds);
-        Assert.Equal(scheduledAtUtc, scheduledResponse.ScheduledAtUtc);
-        Assert.True(configurationResponse.Enabled);
-        Assert.Equal("public-key", configurationResponse.PublicKey);
+        Assert.Multiple(
+            () => Assert.Equal("fasting.completed", scheduledResponse.Type),
+            () => Assert.Equal(45, scheduledResponse.DelaySeconds),
+            () => Assert.Equal(scheduledAtUtc, scheduledResponse.ScheduledAtUtc),
+            () => Assert.True(configurationResponse.Enabled),
+            () => Assert.Equal("public-key", configurationResponse.PublicKey));
     }
 }

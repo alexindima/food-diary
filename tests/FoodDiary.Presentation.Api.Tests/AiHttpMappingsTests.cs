@@ -29,9 +29,10 @@ public sealed class AiHttpMappingsTests {
 
         AnalyzeFoodImageCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(imageAssetId, command.ImageAssetId);
-        Assert.Equal("Dinner plate", command.Description);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(imageAssetId, command.ImageAssetId),
+            () => Assert.Equal("Dinner plate", command.Description));
     }
 
     [Fact]
@@ -56,11 +57,12 @@ public sealed class AiHttpMappingsTests {
 
         Assert.Equal(userId, command.UserId);
         FoodVisionItemModel item = Assert.Single(command.Items);
-        Assert.Equal("egg", item.NameEn);
-        Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
-        Assert.Equal(2, item.Amount);
-        Assert.Equal("pcs", item.Unit);
-        Assert.Equal(0.95m, item.Confidence);
+        Assert.Multiple(
+            () => Assert.Equal("egg", item.NameEn),
+            () => Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal),
+            () => Assert.Equal(2, item.Amount),
+            () => Assert.Equal("pcs", item.Unit),
+            () => Assert.Equal(0.95m, item.Confidence));
     }
 
     [Fact]
@@ -73,11 +75,12 @@ public sealed class AiHttpMappingsTests {
 
         Assert.Equal("looks cooked", response.Notes);
         FoodVisionItemHttpModel item = Assert.Single(response.Items);
-        Assert.Equal("egg", item.NameEn);
-        Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal);
-        Assert.Equal(2, item.Amount);
-        Assert.Equal("pcs", item.Unit);
-        Assert.Equal(0.95m, item.Confidence);
+        Assert.Multiple(
+            () => Assert.Equal("egg", item.NameEn),
+            () => Assert.Equal("ÑÐ¹Ñ†Ð¾", item.NameLocal),
+            () => Assert.Equal(2, item.Amount),
+            () => Assert.Equal("pcs", item.Unit),
+            () => Assert.Equal(0.95m, item.Confidence));
     }
 
     [Fact]
@@ -94,17 +97,19 @@ public sealed class AiHttpMappingsTests {
 
         FoodNutritionHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(300, response.Calories);
-        Assert.Equal(20, response.Protein);
-        Assert.Equal(10, response.Fat);
-        Assert.Equal(30, response.Carbs);
-        Assert.Equal(5, response.Fiber);
-        Assert.Equal(0, response.Alcohol);
-        Assert.Equal("manual check", response.Notes);
+        Assert.Multiple(
+            () => Assert.Equal(300, response.Calories),
+            () => Assert.Equal(20, response.Protein),
+            () => Assert.Equal(10, response.Fat),
+            () => Assert.Equal(30, response.Carbs),
+            () => Assert.Equal(5, response.Fiber),
+            () => Assert.Equal(0, response.Alcohol),
+            () => Assert.Equal("manual check", response.Notes));
         FoodNutritionItemHttpResponse item = Assert.Single(response.Items);
-        Assert.Equal("egg", item.Name);
-        Assert.Equal(160, item.Calories);
-        Assert.Equal(12, item.Protein);
+        Assert.Multiple(
+            () => Assert.Equal("egg", item.Name),
+            () => Assert.Equal(160, item.Calories),
+            () => Assert.Equal(12, item.Protein));
     }
 
     [Fact]
@@ -119,10 +124,11 @@ public sealed class AiHttpMappingsTests {
 
         UserAiUsageHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(1000, response.InputLimit);
-        Assert.Equal(2000, response.OutputLimit);
-        Assert.Equal(100, response.InputUsed);
-        Assert.Equal(200, response.OutputUsed);
-        Assert.Equal(resetAt, response.ResetAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(1000, response.InputLimit),
+            () => Assert.Equal(2000, response.OutputLimit),
+            () => Assert.Equal(100, response.InputUsed),
+            () => Assert.Equal(200, response.OutputUsed),
+            () => Assert.Equal(resetAt, response.ResetAtUtc));
     }
 }

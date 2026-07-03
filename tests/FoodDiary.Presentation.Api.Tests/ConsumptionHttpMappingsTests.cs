@@ -44,15 +44,17 @@ public sealed class ConsumptionHttpMappingsTests {
 
         CreateConsumptionCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(date, command.Date);
-        Assert.Equal("Breakfast", command.MealType);
-        Assert.Equal("Tasty", command.Comment);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(date, command.Date),
+            () => Assert.Equal("Breakfast", command.MealType),
+            () => Assert.Equal("Tasty", command.Comment));
         Assert.Single(command.Items);
-        Assert.Equal(productId, command.Items[0].ProductId);
-        Assert.Equal(150, command.Items[0].Amount);
-        Assert.Equal(3, command.PreMealSatietyLevel);
-        Assert.Equal(4, command.PostMealSatietyLevel);
+        Assert.Multiple(
+            () => Assert.Equal(productId, command.Items[0].ProductId),
+            () => Assert.Equal(150, command.Items[0].Amount),
+            () => Assert.Equal(3, command.PreMealSatietyLevel),
+            () => Assert.Equal(4, command.PostMealSatietyLevel));
     }
 
     [Fact]
@@ -72,14 +74,16 @@ public sealed class ConsumptionHttpMappingsTests {
         CreateConsumptionCommand command = request.ToCommand(userId);
 
         Assert.Single(command.AiSessions);
-        Assert.Equal(assetId, command.AiSessions[0].ImageAssetId);
-        Assert.Equal(recognizedAt, command.AiSessions[0].RecognizedAtUtc);
-        Assert.Equal("AI notes", command.AiSessions[0].Notes);
+        Assert.Multiple(
+            () => Assert.Equal(assetId, command.AiSessions[0].ImageAssetId),
+            () => Assert.Equal(recognizedAt, command.AiSessions[0].RecognizedAtUtc),
+            () => Assert.Equal("AI notes", command.AiSessions[0].Notes));
         Assert.Single(command.AiSessions[0].Items);
-        Assert.Equal("Chicken breast", command.AiSessions[0].Items[0].NameEn);
-        Assert.Equal("ÐšÑƒÑ€Ð¸Ð½Ð°Ñ Ð³Ñ€ÑƒÐ´ÐºÐ°", command.AiSessions[0].Items[0].NameLocal);
-        Assert.Equal(200, command.AiSessions[0].Items[0].Amount);
-        Assert.Equal(330, command.AiSessions[0].Items[0].Calories);
+        Assert.Multiple(
+            () => Assert.Equal("Chicken breast", command.AiSessions[0].Items[0].NameEn),
+            () => Assert.Equal("ÐšÑƒÑ€Ð¸Ð½Ð°Ñ Ð³Ñ€ÑƒÐ´ÐºÐ°", command.AiSessions[0].Items[0].NameLocal),
+            () => Assert.Equal(200, command.AiSessions[0].Items[0].Amount),
+            () => Assert.Equal(330, command.AiSessions[0].Items[0].Calories));
     }
 
     [Fact]
@@ -112,10 +116,11 @@ public sealed class ConsumptionHttpMappingsTests {
 
         UpdateConsumptionCommand command = request.ToCommand(userId, consumptionId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(consumptionId, command.ConsumptionId);
-        Assert.False(command.IsNutritionAutoCalculated);
-        Assert.Equal(500, command.ManualCalories);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(consumptionId, command.ConsumptionId),
+            () => Assert.False(command.IsNutritionAutoCalculated),
+            () => Assert.Equal(500, command.ManualCalories));
     }
 
     [Fact]
@@ -127,10 +132,11 @@ public sealed class ConsumptionHttpMappingsTests {
 
         RepeatMealCommand command = request.ToRepeatCommand(userId, mealId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(mealId, command.MealId);
-        Assert.Equal(targetDate, command.TargetDate);
-        Assert.Equal("Dinner", command.MealType);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(mealId, command.MealId),
+            () => Assert.Equal(targetDate, command.TargetDate),
+            () => Assert.Equal("Dinner", command.MealType));
     }
 
     // â”€â”€ Query mappings â”€â”€
@@ -144,11 +150,12 @@ public sealed class ConsumptionHttpMappingsTests {
 
         GetConsumptionsQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(2, query.Page);
-        Assert.Equal(20, query.Limit);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(20, query.Limit),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo));
     }
 
     [Fact]
@@ -165,12 +172,13 @@ public sealed class ConsumptionHttpMappingsTests {
 
         GetConsumptionsOverviewQuery query = httpQuery.ToQuery(userId);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(1, query.Page);
-        Assert.Equal(100, query.Limit);
-        Assert.Equal(from, query.DateFrom);
-        Assert.Equal(to, query.DateTo);
-        Assert.Equal(1, query.FavoriteLimit);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(1, query.Page),
+            () => Assert.Equal(100, query.Limit),
+            () => Assert.Equal(from, query.DateFrom),
+            () => Assert.Equal(to, query.DateTo),
+            () => Assert.Equal(1, query.FavoriteLimit));
     }
 
     [Fact]
@@ -197,15 +205,16 @@ public sealed class ConsumptionHttpMappingsTests {
 
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(id, response.Id);
-        Assert.Equal(date, response.Date);
-        Assert.Equal("Breakfast", response.MealType);
-        Assert.Equal(500, response.TotalCalories);
-        Assert.Equal(3, response.PreMealSatietyLevel);
-        Assert.Equal(4, response.PostMealSatietyLevel);
-        Assert.Equal(72, response.QualityScore);
-        Assert.Equal("green", response.QualityGrade);
-        Assert.True(response.IsNutritionAutoCalculated);
+        Assert.Multiple(
+            () => Assert.Equal(id, response.Id),
+            () => Assert.Equal(date, response.Date),
+            () => Assert.Equal("Breakfast", response.MealType),
+            () => Assert.Equal(500, response.TotalCalories),
+            () => Assert.Equal(3, response.PreMealSatietyLevel),
+            () => Assert.Equal(4, response.PostMealSatietyLevel),
+            () => Assert.Equal(72, response.QualityScore),
+            () => Assert.Equal("green", response.QualityGrade),
+            () => Assert.True(response.IsNutritionAutoCalculated));
         Assert.Empty(response.Items);
         Assert.Empty(response.AiSessions);
     }
@@ -264,19 +273,21 @@ public sealed class ConsumptionHttpMappingsTests {
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
         Assert.Single(response.Items);
-        Assert.Equal(itemId, response.Items[0].Id);
-        Assert.Equal(productId, response.Items[0].ProductId);
-        Assert.Equal("Chicken", response.Items[0].ProductName);
-        Assert.Equal("https://example.com/chicken.jpg", response.Items[0].ProductImageUrl);
-        Assert.Equal(85, response.Items[0].ProductQualityScore);
-        Assert.Equal("A", response.Items[0].ProductQualityGrade);
+        Assert.Multiple(
+            () => Assert.Equal(itemId, response.Items[0].Id),
+            () => Assert.Equal(productId, response.Items[0].ProductId),
+            () => Assert.Equal("Chicken", response.Items[0].ProductName),
+            () => Assert.Equal("https://example.com/chicken.jpg", response.Items[0].ProductImageUrl),
+            () => Assert.Equal(85, response.Items[0].ProductQualityScore),
+            () => Assert.Equal("A", response.Items[0].ProductQualityGrade));
 
         Assert.Single(response.AiSessions);
         Assert.Equal(sessionId, response.AiSessions[0].Id);
         Assert.Single(response.AiSessions[0].Items);
-        Assert.Equal("Rice", response.AiSessions[0].Items[0].NameEn);
-        Assert.Equal("Ð Ð¸Ñ", response.AiSessions[0].Items[0].NameLocal);
-        Assert.Equal(260, response.AiSessions[0].Items[0].Calories);
+        Assert.Multiple(
+            () => Assert.Equal("Rice", response.AiSessions[0].Items[0].NameEn),
+            () => Assert.Equal("Ð Ð¸Ñ", response.AiSessions[0].Items[0].NameLocal),
+            () => Assert.Equal(260, response.AiSessions[0].Items[0].Calories));
     }
 
     [Fact]
@@ -288,9 +299,10 @@ public sealed class ConsumptionHttpMappingsTests {
 
         ConsumptionHttpResponse response = model.ToHttpResponse();
 
-        Assert.False(response.IsNutritionAutoCalculated);
-        Assert.Equal(500, response.ManualCalories);
-        Assert.Equal(30, response.ManualProteins);
+        Assert.Multiple(
+            () => Assert.False(response.IsNutritionAutoCalculated),
+            () => Assert.Equal(500, response.ManualCalories),
+            () => Assert.Equal(30, response.ManualProteins));
     }
 
     [Fact]
@@ -382,8 +394,9 @@ public sealed class ConsumptionHttpMappingsTests {
 
         Assert.Single(response.AllConsumptions.Data);
         Assert.Single(response.FavoriteItems);
-        Assert.Equal(1, response.FavoriteTotalCount);
-        Assert.Equal(consumption.Id, response.AllConsumptions.Data[0].Id);
-        Assert.Equal(favorite.Id, response.FavoriteItems[0].Id);
+        Assert.Multiple(
+            () => Assert.Equal(1, response.FavoriteTotalCount),
+            () => Assert.Equal(consumption.Id, response.AllConsumptions.Data[0].Id),
+            () => Assert.Equal(favorite.Id, response.FavoriteItems[0].Id));
     }
 }

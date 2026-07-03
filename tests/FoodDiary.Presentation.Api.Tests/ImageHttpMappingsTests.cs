@@ -26,10 +26,11 @@ public sealed class ImageHttpMappingsTests {
 
         GetImageUploadUrlCommand command = request.ToCommand(userId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal("photo.jpg", command.FileName);
-        Assert.Equal("image/jpeg", command.ContentType);
-        Assert.Equal(1024000, command.FileSizeBytes);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal("photo.jpg", command.FileName),
+            () => Assert.Equal("image/jpeg", command.ContentType),
+            () => Assert.Equal(1024000, command.FileSizeBytes));
     }
 
     [Fact]
@@ -42,9 +43,10 @@ public sealed class ImageHttpMappingsTests {
 
         GetImageUploadUrlHttpResponse response = result.ToHttpResponse();
 
-        Assert.Equal("https://s3.example.com/upload", response.UploadUrl);
-        Assert.Equal("https://cdn.example.com/file.jpg", response.FileUrl);
-        Assert.Equal(expiresAt, response.ExpiresAtUtc);
-        Assert.Equal(assetId, response.AssetId);
+        Assert.Multiple(
+            () => Assert.Equal("https://s3.example.com/upload", response.UploadUrl),
+            () => Assert.Equal("https://cdn.example.com/file.jpg", response.FileUrl),
+            () => Assert.Equal(expiresAt, response.ExpiresAtUtc),
+            () => Assert.Equal(assetId, response.AssetId));
     }
 }

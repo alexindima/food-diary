@@ -14,12 +14,13 @@ public class FavoriteInvariantTests {
 
         var favorite = FavoriteProduct.Create(userId, productId, "  Apple  ");
 
-        Assert.NotEqual(FavoriteProductId.Empty, favorite.Id);
-        Assert.Equal(userId, favorite.UserId);
-        Assert.Equal(productId, favorite.ProductId);
-        Assert.Equal("Apple", favorite.Name);
-        Assert.NotEqual(default, favorite.CreatedAtUtc);
-        Assert.NotEqual(default, favorite.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(FavoriteProductId.Empty, favorite.Id),
+            () => Assert.Equal(userId, favorite.UserId),
+            () => Assert.Equal(productId, favorite.ProductId),
+            () => Assert.Equal("Apple", favorite.Name),
+            () => Assert.NotEqual(default, favorite.CreatedAtUtc),
+            () => Assert.NotEqual(default, favorite.CreatedOnUtc));
     }
 
     [Fact]
@@ -88,12 +89,13 @@ public class FavoriteInvariantTests {
 
         var favorite = FavoriteRecipe.Create(userId, recipeId, "  Soup  ");
 
-        Assert.NotEqual(FavoriteRecipeId.Empty, favorite.Id);
-        Assert.Equal(userId, favorite.UserId);
-        Assert.Equal(recipeId, favorite.RecipeId);
-        Assert.Equal("Soup", favorite.Name);
-        Assert.NotEqual(default, favorite.CreatedAtUtc);
-        Assert.NotEqual(default, favorite.CreatedOnUtc);
+        Assert.Multiple(
+            () => Assert.NotEqual(FavoriteRecipeId.Empty, favorite.Id),
+            () => Assert.Equal(userId, favorite.UserId),
+            () => Assert.Equal(recipeId, favorite.RecipeId),
+            () => Assert.Equal("Soup", favorite.Name),
+            () => Assert.NotEqual(default, favorite.CreatedAtUtc),
+            () => Assert.NotEqual(default, favorite.CreatedOnUtc));
     }
 
     [Fact]

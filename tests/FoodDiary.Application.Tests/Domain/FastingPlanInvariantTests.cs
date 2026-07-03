@@ -18,13 +18,14 @@ public class FastingPlanInvariantTests {
             startedAtUtc: startedAtUtc,
             title: "  My plan  ");
 
-        Assert.Equal(FastingPlanType.Intermittent, plan.Type);
-        Assert.Equal(FastingPlanStatus.Active, plan.Status);
-        Assert.Equal(FastingProtocol.CustomIntermittent, plan.Protocol);
-        Assert.Equal(17, plan.IntermittentFastHours);
-        Assert.Equal(7, plan.IntermittentEatingWindowHours);
-        Assert.Equal("My plan", plan.Title);
-        Assert.Equal(startedAtUtc, plan.StartedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(FastingPlanType.Intermittent, plan.Type),
+            () => Assert.Equal(FastingPlanStatus.Active, plan.Status),
+            () => Assert.Equal(FastingProtocol.CustomIntermittent, plan.Protocol),
+            () => Assert.Equal(17, plan.IntermittentFastHours),
+            () => Assert.Equal(7, plan.IntermittentEatingWindowHours),
+            () => Assert.Equal("My plan", plan.Title),
+            () => Assert.Equal(startedAtUtc, plan.StartedAtUtc));
     }
 
     [Fact]
@@ -61,13 +62,14 @@ public class FastingPlanInvariantTests {
             anchorDateUtc: anchorDateUtc,
             startedAtUtc: DateTime.UtcNow);
 
-        Assert.Equal(FastingPlanType.Cyclic, plan.Type);
-        Assert.Equal(1, plan.CyclicFastDays);
-        Assert.Equal(3, plan.CyclicEatDays);
-        Assert.Equal(16, plan.CyclicEatDayFastHours);
-        Assert.Equal(8, plan.CyclicEatDayEatingWindowHours);
-        Assert.Equal(anchorDateUtc, plan.CyclicAnchorDateUtc);
-        Assert.Equal(anchorDateUtc, plan.CyclicNextPhaseDateUtc);
+        Assert.Multiple(
+            () => Assert.Equal(FastingPlanType.Cyclic, plan.Type),
+            () => Assert.Equal(1, plan.CyclicFastDays),
+            () => Assert.Equal(3, plan.CyclicEatDays),
+            () => Assert.Equal(16, plan.CyclicEatDayFastHours),
+            () => Assert.Equal(8, plan.CyclicEatDayEatingWindowHours),
+            () => Assert.Equal(anchorDateUtc, plan.CyclicAnchorDateUtc),
+            () => Assert.Equal(anchorDateUtc, plan.CyclicNextPhaseDateUtc));
     }
 
     [Fact]

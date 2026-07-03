@@ -22,15 +22,16 @@ public sealed class TdeeHttpMappingsTests {
 
         TdeeInsightHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(2200, response.EstimatedTdee);
-        Assert.Equal(2150, response.AdaptiveTdee);
-        Assert.Equal(1600, response.Bmr);
-        Assert.Equal(1800, response.SuggestedCalorieTarget);
-        Assert.Equal(2000, response.CurrentCalorieTarget);
-        Assert.Equal(-0.3, response.WeightTrendPerWeek);
-        Assert.Equal("high", response.Confidence);
-        Assert.Equal(28, response.DataDaysUsed);
-        Assert.Equal("Reduce by 200 kcal", response.GoalAdjustmentHint);
+        Assert.Multiple(
+            () => Assert.Equal(2200, response.EstimatedTdee),
+            () => Assert.Equal(2150, response.AdaptiveTdee),
+            () => Assert.Equal(1600, response.Bmr),
+            () => Assert.Equal(1800, response.SuggestedCalorieTarget),
+            () => Assert.Equal(2000, response.CurrentCalorieTarget),
+            () => Assert.Equal(-0.3, response.WeightTrendPerWeek),
+            () => Assert.Equal("high", response.Confidence),
+            () => Assert.Equal(28, response.DataDaysUsed),
+            () => Assert.Equal("Reduce by 200 kcal", response.GoalAdjustmentHint));
     }
 
     [Fact]
@@ -39,9 +40,10 @@ public sealed class TdeeHttpMappingsTests {
 
         TdeeInsightHttpResponse response = model.ToHttpResponse();
 
-        Assert.Null(response.EstimatedTdee);
-        Assert.Null(response.Bmr);
-        Assert.Equal("none", response.Confidence);
-        Assert.Null(response.GoalAdjustmentHint);
+        Assert.Multiple(
+            () => Assert.Null(response.EstimatedTdee),
+            () => Assert.Null(response.Bmr),
+            () => Assert.Equal("none", response.Confidence),
+            () => Assert.Null(response.GoalAdjustmentHint));
     }
 }

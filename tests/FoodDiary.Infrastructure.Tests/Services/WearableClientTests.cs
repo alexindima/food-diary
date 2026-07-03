@@ -55,11 +55,12 @@ public sealed class WearableClientTests {
         WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
 
         Assert.NotNull(result);
-        Assert.Equal("access", result.AccessToken);
-        Assert.Equal("refresh", result.RefreshToken);
-        Assert.Equal("fitbit-user", result.ExternalUserId);
-        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
-        Assert.Equal("Basic", handler.Requests.Single().Headers.Authorization?.Scheme);
+        Assert.Multiple(
+            () => Assert.Equal("access", result.AccessToken),
+            () => Assert.Equal("refresh", result.RefreshToken),
+            () => Assert.Equal("fitbit-user", result.ExternalUserId),
+            () => Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc),
+            () => Assert.Equal("Basic", handler.Requests.Single().Headers.Authorization?.Scheme));
         Assert.Contains("grant_type=authorization_code", handler.RequestBodies.Single(), StringComparison.Ordinal);
         Assert.Contains("code=auth-code", handler.RequestBodies.Single(), StringComparison.Ordinal);
     }
@@ -155,10 +156,11 @@ public sealed class WearableClientTests {
         WearableTokenResult? result = await client.ExchangeCodeAsync("auth-code", CancellationToken.None);
 
         Assert.NotNull(result);
-        Assert.Equal("access", result.AccessToken);
-        Assert.Equal("refresh", result.RefreshToken);
-        Assert.Equal("google-user", result.ExternalUserId);
-        Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal("access", result.AccessToken),
+            () => Assert.Equal("refresh", result.RefreshToken),
+            () => Assert.Equal("google-user", result.ExternalUserId),
+            () => Assert.Equal(FixedNow.AddSeconds(3600).UtcDateTime, result.ExpiresAtUtc));
         Assert.Contains("grant_type=authorization_code", handler.RequestBodies[0], StringComparison.Ordinal);
         Assert.Contains("code=auth-code", handler.RequestBodies[0], StringComparison.Ordinal);
     }

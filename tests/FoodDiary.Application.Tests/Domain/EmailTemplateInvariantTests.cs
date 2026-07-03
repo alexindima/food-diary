@@ -14,11 +14,12 @@ public class EmailTemplateInvariantTests {
             textBody: "  Hello  ",
             isActive: true);
 
-        Assert.Equal("email_verification", template.Key);
-        Assert.Equal("ru", template.Locale);
-        Assert.Equal("Confirm email", template.Subject);
-        Assert.Equal("<p>Hello</p>", template.HtmlBody);
-        Assert.Equal("Hello", template.TextBody);
+        Assert.Multiple(
+            () => Assert.Equal("email_verification", template.Key),
+            () => Assert.Equal("ru", template.Locale),
+            () => Assert.Equal("Confirm email", template.Subject),
+            () => Assert.Equal("<p>Hello</p>", template.HtmlBody),
+            () => Assert.Equal("Hello", template.TextBody));
     }
 
     [Fact]
@@ -119,10 +120,11 @@ public class EmailTemplateInvariantTests {
             textBody: " New Body ",
             isActive: false);
 
-        Assert.Equal("New Subject", template.Subject);
-        Assert.Equal("<p>New Body</p>", template.HtmlBody);
-        Assert.Equal("New Body", template.TextBody);
-        Assert.False(template.IsActive);
+        Assert.Multiple(
+            () => Assert.Equal("New Subject", template.Subject),
+            () => Assert.Equal("<p>New Body</p>", template.HtmlBody),
+            () => Assert.Equal("New Body", template.TextBody),
+            () => Assert.False(template.IsActive));
         Assert.NotNull(template.ModifiedOnUtc);
     }
 }

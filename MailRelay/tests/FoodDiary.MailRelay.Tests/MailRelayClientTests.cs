@@ -29,10 +29,11 @@ public sealed class MailRelayClientTests {
 
         EnqueueMailRelayEmailResponse response = await client.EnqueueAsync(CreateRequest(), CancellationToken.None);
 
-        Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), response.Id);
-        Assert.Equal(HttpMethod.Post, handler.Request?.Method);
-        Assert.Equal("https://relay.example.test/api/email/send", handler.Request?.RequestUri?.ToString());
-        Assert.Equal("secret", handler.Request?.Headers.GetValues("X-Relay-Api-Key").Single());
+        Assert.Multiple(
+            () => Assert.Equal(Guid.Parse("11111111-1111-1111-1111-111111111111"), response.Id),
+            () => Assert.Equal(HttpMethod.Post, handler.Request?.Method),
+            () => Assert.Equal("https://relay.example.test/api/email/send", handler.Request?.RequestUri?.ToString()),
+            () => Assert.Equal("secret", handler.Request?.Headers.GetValues("X-Relay-Api-Key").Single()));
         EnqueueMailRelayEmailRequest? payload = System.Text.Json.JsonSerializer.Deserialize<EnqueueMailRelayEmailRequest>(
             handler.RequestBody!,
             WebJsonOptions);

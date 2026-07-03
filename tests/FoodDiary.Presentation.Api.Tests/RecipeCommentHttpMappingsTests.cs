@@ -20,10 +20,11 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         GetRecipeCommentsQuery query = RecipeCommentHttpMappings.ToQuery(userId, recipeId, page: 2, limit: 30);
 
-        Assert.Equal(userId, query.UserId);
-        Assert.Equal(recipeId, query.RecipeId);
-        Assert.Equal(2, query.Page);
-        Assert.Equal(30, query.Limit);
+        Assert.Multiple(
+            () => Assert.Equal(userId, query.UserId),
+            () => Assert.Equal(recipeId, query.RecipeId),
+            () => Assert.Equal(2, query.Page),
+            () => Assert.Equal(30, query.Limit));
     }
 
     [Fact]
@@ -34,9 +35,10 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         CreateRecipeCommentCommand command = request.ToCommand(userId, recipeId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(recipeId, command.RecipeId);
-        Assert.Equal("Great recipe!", command.Text);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(recipeId, command.RecipeId),
+            () => Assert.Equal("Great recipe!", command.Text));
     }
 
     [Fact]
@@ -47,9 +49,10 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         UpdateRecipeCommentCommand command = request.ToCommand(userId, commentId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(commentId, command.CommentId);
-        Assert.Equal("Updated text", command.Text);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(commentId, command.CommentId),
+            () => Assert.Equal("Updated text", command.Text));
     }
 
     [Fact]
@@ -61,13 +64,14 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         RecipeCommentHttpResponse response = model.ToHttpResponse();
 
-        Assert.Equal(model.Id, response.Id);
-        Assert.Equal(model.RecipeId, response.RecipeId);
-        Assert.Equal(model.AuthorId, response.AuthorId);
-        Assert.Equal("johndoe", response.AuthorUsername);
-        Assert.Equal("John", response.AuthorFirstName);
-        Assert.Equal("Looks delicious!", response.Text);
-        Assert.True(response.IsOwnedByCurrentUser);
+        Assert.Multiple(
+            () => Assert.Equal(model.Id, response.Id),
+            () => Assert.Equal(model.RecipeId, response.RecipeId),
+            () => Assert.Equal(model.AuthorId, response.AuthorId),
+            () => Assert.Equal("johndoe", response.AuthorUsername),
+            () => Assert.Equal("John", response.AuthorFirstName),
+            () => Assert.Equal("Looks delicious!", response.Text),
+            () => Assert.True(response.IsOwnedByCurrentUser));
     }
 
     [Fact]
@@ -78,9 +82,10 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         DeleteRecipeCommentCommand command = RecipeCommentHttpMappings.ToDeleteCommand(userId, recipeId, commentId);
 
-        Assert.Equal(userId, command.UserId);
-        Assert.Equal(recipeId, command.RecipeId);
-        Assert.Equal(commentId, command.CommentId);
+        Assert.Multiple(
+            () => Assert.Equal(userId, command.UserId),
+            () => Assert.Equal(recipeId, command.RecipeId),
+            () => Assert.Equal(commentId, command.CommentId));
     }
 
     [Fact]
@@ -98,10 +103,11 @@ public sealed class RecipeCommentHttpMappingsTests {
 
         PagedHttpResponse<RecipeCommentHttpResponse> response = paged.ToHttpResponse();
 
-        Assert.Equal(2, response.Page);
-        Assert.Equal(10, response.Limit);
-        Assert.Equal(3, response.TotalPages);
-        Assert.Equal(25, response.TotalItems);
+        Assert.Multiple(
+            () => Assert.Equal(2, response.Page),
+            () => Assert.Equal(10, response.Limit),
+            () => Assert.Equal(3, response.TotalPages),
+            () => Assert.Equal(25, response.TotalItems));
         RecipeCommentHttpResponse item = Assert.Single(response.Data);
         Assert.Equal(model.Id, item.Id);
     }

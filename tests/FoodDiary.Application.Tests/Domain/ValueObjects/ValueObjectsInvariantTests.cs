@@ -76,12 +76,13 @@ public class ValueObjectsInvariantTests {
         var original = UserNutritionGoals.Create(2000, 120, 70, 230, 30, 2.5);
         UserNutritionGoals updated = original.With(proteinTarget: 130);
 
-        Assert.Equal(2000, updated.DailyCalorieTarget);
-        Assert.Equal(130, updated.ProteinTarget);
-        Assert.Equal(70, updated.FatTarget);
-        Assert.Equal(230, updated.CarbTarget);
-        Assert.Equal(30, updated.FiberTarget);
-        Assert.Equal(2.5, updated.WaterGoal);
+        Assert.Multiple(
+            () => Assert.Equal(2000, updated.DailyCalorieTarget),
+            () => Assert.Equal(130, updated.ProteinTarget),
+            () => Assert.Equal(70, updated.FatTarget),
+            () => Assert.Equal(230, updated.CarbTarget),
+            () => Assert.Equal(30, updated.FiberTarget),
+            () => Assert.Equal(2.5, updated.WaterGoal));
     }
 
     [Fact]
@@ -89,9 +90,10 @@ public class ValueObjectsInvariantTests {
         bool ok = GenderCode.TryParse("  f ", out GenderCode gender);
         bool invalid = GenderCode.TryParse("x", out _);
 
-        Assert.True(ok);
-        Assert.Equal("F", gender.Value);
-        Assert.False(invalid);
+        Assert.Multiple(
+            () => Assert.True(ok),
+            () => Assert.Equal("F", gender.Value),
+            () => Assert.False(invalid));
     }
 
     [Fact]
@@ -100,10 +102,11 @@ public class ValueObjectsInvariantTests {
         var preferredRu = LanguageCode.FromPreferred("ru-RU");
         var preferredDefault = LanguageCode.FromPreferred("de-DE");
 
-        Assert.True(parsed);
-        Assert.Equal("en", en.Value);
-        Assert.Equal("ru", preferredRu.Value);
-        Assert.Equal("en", preferredDefault.Value);
+        Assert.Multiple(
+            () => Assert.True(parsed),
+            () => Assert.Equal("en", en.Value),
+            () => Assert.Equal("ru", preferredRu.Value),
+            () => Assert.Equal("en", preferredDefault.Value));
     }
 
     [Fact]

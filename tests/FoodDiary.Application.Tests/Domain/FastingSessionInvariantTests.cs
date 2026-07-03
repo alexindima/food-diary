@@ -28,14 +28,15 @@ public class FastingSessionInvariantTests {
 
         var session = FastingSession.Create(userId, FastingProtocol.F18_6, 18, startedAt);
 
-        Assert.Equal(userId, session.UserId);
-        Assert.Equal(FastingProtocol.F18_6, session.Protocol);
-        Assert.Equal(18, session.InitialPlannedDurationHours);
-        Assert.Equal(0, session.AddedDurationHours);
-        Assert.Equal(18, session.PlannedDurationHours);
-        Assert.Equal(startedAt, session.StartedAtUtc);
-        Assert.False(session.IsCompleted);
-        Assert.Null(session.EndedAtUtc);
+        Assert.Multiple(
+            () => Assert.Equal(userId, session.UserId),
+            () => Assert.Equal(FastingProtocol.F18_6, session.Protocol),
+            () => Assert.Equal(18, session.InitialPlannedDurationHours),
+            () => Assert.Equal(0, session.AddedDurationHours),
+            () => Assert.Equal(18, session.PlannedDurationHours),
+            () => Assert.Equal(startedAt, session.StartedAtUtc),
+            () => Assert.False(session.IsCompleted),
+            () => Assert.Null(session.EndedAtUtc));
     }
 
     [Fact]
@@ -70,9 +71,10 @@ public class FastingSessionInvariantTests {
 
         session.End(endedAt);
 
-        Assert.True(session.IsCompleted);
-        Assert.Equal(endedAt, session.EndedAtUtc);
-        Assert.Equal(FastingSessionStatus.Completed, session.Status);
+        Assert.Multiple(
+            () => Assert.True(session.IsCompleted),
+            () => Assert.Equal(endedAt, session.EndedAtUtc),
+            () => Assert.Equal(FastingSessionStatus.Completed, session.Status));
     }
 
     [Theory]
@@ -87,9 +89,10 @@ public class FastingSessionInvariantTests {
 
         session.End(startedAt.AddHours(10));
 
-        Assert.True(session.IsCompleted);
-        Assert.Equal(FastingSessionStatus.Completed, session.Status);
-        Assert.True(session.IsSuccessfulCompletion);
+        Assert.Multiple(
+            () => Assert.True(session.IsCompleted),
+            () => Assert.Equal(FastingSessionStatus.Completed, session.Status),
+            () => Assert.True(session.IsSuccessfulCompletion));
     }
 
     [Fact]
@@ -100,9 +103,10 @@ public class FastingSessionInvariantTests {
 
         session.End(startedAt.AddHours(24));
 
-        Assert.True(session.IsCompleted);
-        Assert.Equal(FastingSessionStatus.Interrupted, session.Status);
-        Assert.False(session.IsSuccessfulCompletion);
+        Assert.Multiple(
+            () => Assert.True(session.IsCompleted),
+            () => Assert.Equal(FastingSessionStatus.Interrupted, session.Status),
+            () => Assert.False(session.IsSuccessfulCompletion));
     }
 
     [Fact]
@@ -216,9 +220,10 @@ public class FastingSessionInvariantTests {
 
         session.Extend(24);
 
-        Assert.Equal(72, session.InitialPlannedDurationHours);
-        Assert.Equal(24, session.AddedDurationHours);
-        Assert.Equal(96, session.PlannedDurationHours);
+        Assert.Multiple(
+            () => Assert.Equal(72, session.InitialPlannedDurationHours),
+            () => Assert.Equal(24, session.AddedDurationHours),
+            () => Assert.Equal(96, session.PlannedDurationHours));
         Assert.NotNull(session.ModifiedOnUtc);
     }
 
