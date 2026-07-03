@@ -5,6 +5,8 @@ using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
+using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Services;
@@ -59,6 +61,7 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
+        services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();

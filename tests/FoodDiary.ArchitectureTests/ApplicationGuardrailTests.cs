@@ -230,6 +230,22 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedAdminReadHandlers_DoNotUseFullUserRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminDashboardSummary", "GetAdminDashboardSummaryQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUser", "GetAdminUserQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUserRoleAudit", "GetAdminUserRoleAuditQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUsers", "GetAdminUsersQueryHandler.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseLegacyCurrentUserAccessLoader() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

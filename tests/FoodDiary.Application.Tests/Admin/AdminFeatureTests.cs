@@ -6,6 +6,7 @@ using FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 using FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 using FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 using FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
@@ -1402,7 +1403,7 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository {
+    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository, IAdminUserReadService {
         private readonly User _user = user;
 
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
@@ -1430,8 +1431,19 @@ public class AdminFeatureTests {
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            UserAccountStatusFilter status,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
+
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
+            GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
             var found = names.Where(name => _roles.ContainsKey(name)).Select(name => _roles[name]).ToList();
@@ -1546,7 +1558,7 @@ public class AdminFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class SummaryUserRepository(
-        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository {
+        (int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers) response) : IUserRepository, IAdminUserReadService {
         public int LastRecentLimit { get; private set; }
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(
@@ -1556,6 +1568,11 @@ public class AdminFeatureTests {
             return Task.FromResult(response);
         }
 
+        public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(
+            int recentLimit,
+            CancellationToken cancellationToken = default) =>
+            GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1563,6 +1580,13 @@ public class AdminFeatureTests {
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            UserAccountStatusFilter status,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
