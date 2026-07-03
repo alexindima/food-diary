@@ -3,13 +3,23 @@ using System.Net.Sockets;
 
 namespace FoodDiary.MailRelay.Infrastructure.Services;
 
-public sealed class DirectMxEndpointConnector(
-    Func<AddressFamily, Socket>? socketFactory = null,
-    Func<Socket, IPEndPoint, CancellationToken, Task>? connectAsync = null) : IDirectMxEndpointConnector {
-    private readonly Func<AddressFamily, Socket> _socketFactory =
-        socketFactory ?? (static addressFamily => new Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp));
-    private readonly Func<Socket, IPEndPoint, CancellationToken, Task> _connectAsync =
-        connectAsync ?? (static (socket, endpoint, cancellationToken) => socket.ConnectAsync(endpoint, cancellationToken).AsTask());
+public sealed class DirectMxEndpointConnector : IDirectMxEndpointConnector {
+    private readonly Func<AddressFamily, Socket> _socketFactory;
+    private readonly Func<Socket, IPEndPoint, CancellationToken, Task> _connectAsync;
+
+    public DirectMxEndpointConnector()
+        : this(CreateSocket, ConnectSocketAsync) {
+    }
+
+    public DirectMxEndpointConnector(
+        Func<AddressFamily, Socket> socketFactory,
+        Func<Socket, IPEndPoint, CancellationToken, Task> connectAsync) {
+        ArgumentNullException.ThrowIfNull(socketFactory);
+        ArgumentNullException.ThrowIfNull(connectAsync);
+
+        _socketFactory = socketFactory;
+        _connectAsync = connectAsync;
+    }
 
     public async Task<Socket> ConnectAsync(string mxHost, int port, CancellationToken cancellationToken) {
         IPAddress[] addresses = IPAddress.TryParse(mxHost, out IPAddress? literalAddress)
@@ -70,6 +80,12 @@ public sealed class DirectMxEndpointConnector(
 
         return bytes[0] < 224;
     }
+
+    private static Socket CreateSocket(AddressFamily addressFamily) =>
+        new(addressFamily, SocketType.Stream, ProtocolType.Tcp);
+
+    private static Task ConnectSocketAsync(Socket socket, IPEndPoint endpoint, CancellationToken cancellationToken) =>
+        socket.ConnectAsync(endpoint, cancellationToken).AsTask();
 
     private static bool IsPublicIpv6Address(IPAddress address) {
         byte[] bytes = address.GetAddressBytes();

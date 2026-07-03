@@ -203,6 +203,25 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     }
 
     [Fact]
+    public async Task EndpointConnector_DefaultSocketHelpers_CreateAndConnectSocket() {
+        var listener = new TcpListener(IPAddress.Loopback, port: 0);
+        listener.Start();
+        try {
+            using Socket socket = InvokeCreateSocket(AddressFamily.InterNetwork);
+            var endpoint = (IPEndPoint)listener.LocalEndpoint;
+
+            Task connectTask = InvokeConnectSocketAsync(socket, endpoint, CancellationToken.None);
+            using Socket acceptedSocket = await listener.AcceptSocketAsync(CancellationToken.None);
+            await connectTask;
+
+            Assert.True(socket.Connected);
+            Assert.True(acceptedSocket.Connected);
+        } finally {
+            listener.Stop();
+        }
+    }
+
+    [Fact]
     public void CreateMessage_WhenTextBodyIsMissing_CreatesMultipartAlternativeWithTextFallback() {
         DirectMxRelayDeliveryTransport transport = CreateTransport(CreateDkimSigningService());
         RelayEmailMessageRequest request = CreateRequest(textBody: null);
@@ -271,6 +290,20 @@ public sealed class DirectMxRelayDeliveryTransportTests {
             dkimSigningService,
             FixedTime,
             NullLogger<DirectMxRelayDeliveryTransport>.Instance);
+
+    private static Socket InvokeCreateSocket(AddressFamily addressFamily) {
+        MethodInfo method = typeof(DirectMxEndpointConnector).GetMethod(
+            "CreateSocket",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        return (Socket)method.Invoke(null, [addressFamily])!;
+    }
+
+    private static Task InvokeConnectSocketAsync(Socket socket, IPEndPoint endpoint, CancellationToken cancellationToken) {
+        MethodInfo method = typeof(DirectMxEndpointConnector).GetMethod(
+            "ConnectSocketAsync",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        return (Task)method.Invoke(null, [socket, endpoint, cancellationToken])!;
+    }
 
     private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);
     private static readonly TimeProvider FixedTime = new FixedTimeProvider();
