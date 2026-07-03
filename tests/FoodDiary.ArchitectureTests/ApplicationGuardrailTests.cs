@@ -226,7 +226,6 @@ public sealed class ApplicationGuardrailTests {
                 "IUserRepository",
                 [
                     Path.Combine(applicationRoot, "Ai", "Services"),
-                    Path.Combine(applicationRoot, "Dashboard", "Services"),
                     Path.Combine(applicationRoot, "Gamification", "Services"),
                     Path.Combine(applicationRoot, "Hydration", "Services"),
                     Path.Combine(applicationRoot, "Tdee", "Services"),
