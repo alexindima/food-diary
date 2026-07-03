@@ -1403,7 +1403,7 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository, IAdminUserReadService {
+    private sealed class InMemoryUserRepository(User user, IEnumerable<string> availableRoles) : IUserRepository, IAdminUserReadService, IAdminUserManagementService {
         private readonly User _user = user;
 
         private readonly Dictionary<string, Role> _roles = availableRoles.ToDictionary(
@@ -1464,7 +1464,7 @@ public class AdminFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository {
+    private sealed class MultipleUserRepository(IReadOnlyList<User> users) : IUserRepository, IAdminImpersonationUserService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) =>

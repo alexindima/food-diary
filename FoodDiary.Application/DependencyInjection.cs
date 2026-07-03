@@ -61,6 +61,8 @@ public static class DependencyInjection {
         services.AddValidatorsFromAssembly(assembly, includeInternalTypes: true);
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
+        services.AddScoped<IAdminImpersonationUserService, AdminImpersonationUserService>();
+        services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();

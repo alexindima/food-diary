@@ -1,9 +1,9 @@
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Admin;
@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 
 public sealed class StartAdminImpersonationCommandHandler(
-    IUserRepository userRepository,
+    IAdminImpersonationUserService userService,
     IAdminImpersonationSessionRepository sessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider,
@@ -71,7 +71,7 @@ public sealed class StartAdminImpersonationCommandHandler(
     }
 
     private async Task<Result<User>> LoadActorAsync(UserId actorUserId, CancellationToken cancellationToken) {
-        User? actor = await userRepository.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
+        User? actor = await userService.GetByIdAsync(actorUserId, cancellationToken).ConfigureAwait(false);
         if (AuthenticationUserAccessPolicy.EnsureCanAuthenticate(actor) is not null
             || actor?.HasRole(RoleNames.Admin) != true) {
             return Result.Failure<User>(Errors.Authentication.ImpersonationForbidden);
@@ -84,7 +84,7 @@ public sealed class StartAdminImpersonationCommandHandler(
         UserId targetUserId,
         Guid targetId,
         CancellationToken cancellationToken) {
-        User? target = await userRepository.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
+        User? target = await userService.GetByIdAsync(targetUserId, cancellationToken).ConfigureAwait(false);
         if (target is null) {
             return Result.Failure<User>(Errors.User.NotFound(targetId));
         }

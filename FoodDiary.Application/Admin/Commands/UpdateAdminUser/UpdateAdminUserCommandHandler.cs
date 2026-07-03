@@ -1,9 +1,9 @@
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminUser;
 
 public sealed class UpdateAdminUserCommandHandler(
-    IUserRepository userRepository,
+    IAdminUserManagementService userManagementService,
     IAuditLogger auditLogger,
     TimeProvider dateTimeProvider)
     : ICommandHandler<UpdateAdminUserCommand, Result<AdminUserModel>> {
@@ -36,7 +36,7 @@ public sealed class UpdateAdminUserCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        User? user = await userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userManagementService.GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AdminUserModel>(Errors.User.NotFound(command.UserId));
         }
@@ -69,7 +69,7 @@ public sealed class UpdateAdminUserCommandHandler(
             user.ReplaceRoles(roleUpdateResult.Value.Roles);
         }
 
-        await userRepository.UpdateAsync(
+        await userManagementService.UpdateAsync(
             user,
             roleUpdateResult.Value?.AuditEvents ?? [],
             cancellationToken).ConfigureAwait(false);
@@ -105,7 +105,7 @@ public sealed class UpdateAdminUserCommandHandler(
             return Result.Failure<RoleUpdate?>(rolesError);
         }
 
-        IReadOnlyList<Role> roleEntities = await userRepository.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Role> roleEntities = await userManagementService.GetRolesByNamesAsync(requestedRoles, cancellationToken).ConfigureAwait(false);
         if (roleEntities.Count != requestedRoles.Length) {
             return Result.Failure<RoleUpdate?>(
                 Errors.Validation.Invalid("roles", "One or more roles are not configured in the system."));
