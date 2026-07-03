@@ -1,6 +1,3 @@
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
@@ -8,44 +5,22 @@ using FoodDiary.MailRelay.Client.Models;
 namespace FoodDiary.Integrations.Services;
 
 internal sealed class RelayEmailTransport(IMailRelayClient mailRelayClient) : IEmailTransport {
-    public async Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
+    public async Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {
         await mailRelayClient.EnqueueAsync(CreatePayload(message), cancellationToken).ConfigureAwait(false);
     }
 
-    private static EnqueueMailRelayEmailRequest CreatePayload(MailMessage message) {
-        if (message.From is null) {
+    private static EnqueueMailRelayEmailRequest CreatePayload(EmailMessage message) {
+        if (string.IsNullOrWhiteSpace(message.FromAddress)) {
             throw new InvalidOperationException("Email message must include a From address.");
         }
 
         return new EnqueueMailRelayEmailRequest(
-            message.From.Address,
-            message.From.DisplayName,
-            message.To.Select(static recipient => recipient.Address).ToArray(),
+            message.FromAddress,
+            message.FromName,
+            [.. message.ToAddresses],
             message.Subject,
-            message.Body,
-            GetPlainTextBody(message.AlternateViews),
+            message.HtmlBody,
+            message.TextBody,
             CorrelationId: Guid.NewGuid().ToString("N"));
-    }
-
-    private static string? GetPlainTextBody(AlternateViewCollection alternateViews) {
-        foreach (AlternateView view in alternateViews) {
-            if (!string.Equals(view.ContentType.MediaType, MediaTypeNames.Text.Plain, StringComparison.OrdinalIgnoreCase)) {
-                continue;
-            }
-
-            if (view.ContentStream.CanSeek) {
-                view.ContentStream.Position = 0;
-            }
-
-            using var reader = new StreamReader(view.ContentStream, Encoding.UTF8, detectEncodingFromByteOrderMarks: true, leaveOpen: true);
-            string content = reader.ReadToEnd();
-            if (view.ContentStream.CanSeek) {
-                view.ContentStream.Position = 0;
-            }
-
-            return content;
-        }
-
-        return null;
     }
 }

@@ -106,17 +106,17 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
-    public async Task EnsureRoleAsync_IsIdempotentForExistingUserRole() {
+    public async Task UserRoleMembershipService_EnsureRoleAsync_IsIdempotentForExistingUserRole() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
         var user = User.Create($"billing-role-{Guid.NewGuid():N}@example.com", "hash");
         context.Users.Add(user);
         await context.SaveChangesAsync();
 
-        var repository = new UserRepository(context);
+        var service = new UserRoleMembershipService(context);
 
-        await repository.EnsureRoleAsync(user, RoleNames.Premium);
-        await repository.EnsureRoleAsync(user, RoleNames.Premium);
+        await service.EnsureRoleAsync(user.Id, RoleNames.Premium);
+        await service.EnsureRoleAsync(user.Id, RoleNames.Premium);
 
         int roleCount = await context.UserRoles.CountAsync(userRole =>
             userRole.UserId == user.Id &&
@@ -140,7 +140,7 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
-    public async Task RemoveRoleAsync_IsIdempotentForMissingUserRole() {
+    public async Task UserRoleMembershipService_RemoveRoleAsync_IsIdempotentForMissingUserRole() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);
         var user = User.Create($"billing-role-remove-{Guid.NewGuid():N}@example.com", "hash");
@@ -148,10 +148,10 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
         context.UserRoles.Add(new UserRole(user.Id, premiumRole.Id));
         await context.SaveChangesAsync();
 
-        var repository = new UserRepository(context);
+        var service = new UserRoleMembershipService(context);
 
-        await repository.RemoveRoleAsync(user, RoleNames.Premium);
-        await repository.RemoveRoleAsync(user, RoleNames.Premium);
+        await service.RemoveRoleAsync(user.Id, RoleNames.Premium);
+        await service.RemoveRoleAsync(user.Id, RoleNames.Premium);
 
         int roleCount = await context.UserRoles.CountAsync(userRole =>
             userRole.UserId == user.Id &&

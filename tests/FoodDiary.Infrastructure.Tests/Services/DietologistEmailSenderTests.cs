@@ -1,4 +1,3 @@
-using System.Net.Mail;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
@@ -138,8 +137,8 @@ public sealed class DietologistEmailSenderTests {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         (int Count, string Recipient, string Subject, string HtmlBody) sent = (0, string.Empty, string.Empty, string.Empty);
         transport
-            .SendAsync(Arg.Do<MailMessage>(message => {
-                sent = (sent.Count + 1, message.To[0].Address, message.Subject, message.Body);
+            .SendAsync(Arg.Do<EmailMessage>(message => {
+                sent = (sent.Count + 1, message.ToAddresses[0], message.Subject, message.HtmlBody);
             }), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         getSent = () => sent;

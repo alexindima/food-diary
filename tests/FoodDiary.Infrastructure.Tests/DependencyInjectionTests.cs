@@ -288,6 +288,10 @@ public sealed class DependencyInjectionTests {
     public void AddInfrastructure_DashboardReadServicesResolveThroughScopedConcreteInstances() {
         var services = new ServiceCollection();
         services.AddSingleton(Substitute.For<IPublisher>());
+        services.AddScoped<IDashboardStatisticsReadService>(_ => Substitute.For<IDashboardStatisticsReadService>());
+        services.AddScoped<IDashboardBodyReadService>(_ => Substitute.For<IDashboardBodyReadService>());
+        services.AddScoped<IDashboardMealsReadService>(_ => Substitute.For<IDashboardMealsReadService>());
+        services.AddScoped<IDashboardReadService>(_ => Substitute.For<IDashboardReadService>());
         IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
             ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
             ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
@@ -299,6 +303,12 @@ public sealed class DependencyInjectionTests {
         });
 
         services.AddInfrastructure(configuration);
+        Assert.Multiple(
+            () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardStatisticsReadService))),
+            () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardBodyReadService))),
+            () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardMealsReadService))),
+            () => Assert.Equal(1, services.Count(static descriptor => descriptor.ServiceType == typeof(IDashboardReadService))));
+
         using ServiceProvider provider = services.BuildServiceProvider();
         using IServiceScope scope = provider.CreateScope();
 

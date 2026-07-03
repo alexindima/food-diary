@@ -1,4 +1,3 @@
-using System.Net.Mail;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -226,17 +225,17 @@ public sealed class EmailSenderTests {
             Body: null,
             AlternateViewBodies: []);
         transport
-            .SendAsync(Arg.Do<MailMessage>(message => {
+            .SendAsync(Arg.Do<EmailMessage>(message => {
                 List<string> alternateViewBodies = [];
-                foreach (AlternateView view in message.AlternateViews) {
-                    using var reader = new StreamReader(view.ContentStream);
-                    alternateViewBodies.Add(reader.ReadToEnd());
+                if (message.TextBody is not null) {
+                    alternateViewBodies.Add(message.TextBody);
                 }
 
+                alternateViewBodies.Add(message.HtmlBody);
                 sent = new SentEmail(
-                    ToEmail: message.To.Single().Address,
+                    ToEmail: message.ToAddresses.Single(),
                     Subject: message.Subject,
-                    Body: message.Body,
+                    Body: message.HtmlBody,
                     AlternateViewBodies: alternateViewBodies);
             }), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
@@ -247,7 +246,7 @@ public sealed class EmailSenderTests {
     private static IEmailTransport CreateThrowingTransport() {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport
-            .SendAsync(Arg.Any<MailMessage>(), Arg.Any<CancellationToken>())
+            .SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(new InvalidOperationException("transport failed")));
         return transport;
     }

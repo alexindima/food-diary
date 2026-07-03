@@ -203,32 +203,6 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
-    public async Task UserRepository_EnsureRoleAsync_WhenUserAlreadyHasRole_ReturnsWithoutUpdating() {
-        var role = Role.Create(RoleNames.Premium);
-        var user = User.Create("role-existing@test.com", "hashed");
-        user.ReplaceRoles([role]);
-        var stub = new RecordingUserRepository([role]);
-        IUserRepository repository = stub;
-
-        await repository.EnsureRoleAsync(user, $" {RoleNames.Premium} ", CancellationToken.None);
-
-        Assert.Equal(0, stub.GetRolesByNamesCallCount);
-        Assert.Null(stub.CapturedUpdatedUser);
-    }
-
-    [Fact]
-    public async Task UserRepository_RemoveRoleAsync_WhenUserDoesNotHaveRole_ReturnsWithoutUpdating() {
-        var user = User.Create("role-missing@test.com", "hashed");
-        var stub = new RecordingUserRepository([]);
-        IUserRepository repository = stub;
-
-        await repository.RemoveRoleAsync(user, $" {RoleNames.Premium} ", CancellationToken.None);
-
-        Assert.Equal(0, stub.GetRolesByNamesCallCount);
-        Assert.Null(stub.CapturedUpdatedUser);
-    }
-
-    [Fact]
     public void JwtImpersonationContext_StoresActorAndReason() {
         var actorUserId = UserId.New();
 

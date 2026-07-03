@@ -143,32 +143,6 @@ public class UserRepository(FoodDiaryDbContext context) : IUserRepository {
         return roles;
     }
 
-    public async Task EnsureRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
-        ArgumentNullException.ThrowIfNull(user);
-        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
-
-        // Follow-up: move role membership changes to tracked writes or an explicit role-membership service.
-        FormattableString sql = $"""
-            INSERT INTO "UserRoles" ("UserId", "RoleId")
-            SELECT {user.Id.Value}, "Id"
-            FROM "Roles"
-            WHERE "Name" = {roleName.Trim()}
-            ON CONFLICT DO NOTHING
-            """;
-        await context.Database.ExecuteSqlInterpolatedAsync(sql, cancellationToken).ConfigureAwait(false);
-    }
-
-    public async Task RemoveRoleAsync(User user, string roleName, CancellationToken cancellationToken = default) {
-        ArgumentNullException.ThrowIfNull(user);
-        ArgumentException.ThrowIfNullOrWhiteSpace(roleName);
-
-        // Follow-up: align this immediate delete with the role-membership transaction boundary.
-        string normalizedRoleName = roleName.Trim();
-        await context.UserRoles
-            .Where(userRole => userRole.UserId == user.Id && userRole.Role.Name == normalizedRoleName)
-            .ExecuteDeleteAsync(cancellationToken).ConfigureAwait(false);
-    }
-
     public async Task<User> AddAsync(User user, CancellationToken cancellationToken = default) {
         await context.Users.AddAsync(user, cancellationToken).ConfigureAwait(false);
         return user;

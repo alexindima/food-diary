@@ -1,4 +1,3 @@
-using System.Net.Mail;
 using FoodDiary.Application.Admin.Commands.DismissContentReport;
 using FoodDiary.Application.Admin.Commands.MarkAdminMailInboxMessageRead;
 using FoodDiary.Application.Admin.Commands.ReviewContentReport;
@@ -1628,15 +1627,17 @@ public class AdminFeatureTests {
         public string? Body { get; private set; }
         public List<string> AlternateViewBodies { get; } = [];
 
-        public async Task SendAsync(MailMessage message, CancellationToken cancellationToken) {
-            ToEmail = message.To.Single().Address;
+        public Task SendAsync(EmailMessage message, CancellationToken cancellationToken) {
+            ToEmail = message.ToAddresses.Single();
             Subject = message.Subject;
-            Body = message.Body;
+            Body = message.HtmlBody;
 
-            foreach (AlternateView view in message.AlternateViews) {
-                using var reader = new StreamReader(view.ContentStream);
-                AlternateViewBodies.Add(await reader.ReadToEndAsync(cancellationToken).ConfigureAwait(false));
+            if (message.TextBody is not null) {
+                AlternateViewBodies.Add(message.TextBody);
             }
+
+            AlternateViewBodies.Add(message.HtmlBody);
+            return Task.CompletedTask;
         }
     }
 

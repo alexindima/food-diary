@@ -116,6 +116,30 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void UserRepositoryContract_DoesNotRegrowRoleMembershipWrites() {
+        string root = GetRepositoryRoot();
+        string userRepositoryPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Common",
+            "Interfaces",
+            "Persistence",
+            "IUserRepository.cs");
+        string source = File.ReadAllText(userRepositoryPath);
+        string[] forbiddenPatterns = [
+            "EnsureRoleAsync",
+            "RemoveRoleAsync",
+            "IUserRoleMembershipService",
+        ];
+
+        string[] violations = [.. forbiddenPatterns
+            .Where(pattern => source.Contains(pattern, StringComparison.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationAbstractionsErrorsRoot_StaysAsThinPartialFacade() {
         string root = GetRepositoryRoot();
         string resultsRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Abstractions", "Results");
@@ -421,7 +445,12 @@ public sealed class ApplicationGuardrailTests {
 
         string repositoryRegistrationPath = Path.Combine(root, "FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
         string registrationSource = File.ReadAllText(repositoryRegistrationPath);
-        Assert.Contains("AddScoped<IDashboardReadService, DashboardReadService>", registrationSource, StringComparison.Ordinal);
+        Assert.Contains("services.RemoveAll<IDashboardReadService>();", registrationSource, StringComparison.Ordinal);
+        Assert.Contains("services.AddScoped<IDashboardReadService, DashboardReadService>();", registrationSource, StringComparison.Ordinal);
+
+        string applicationRegistrationPath = Path.Combine(root, "FoodDiary.Application", "DependencyInjection.cs");
+        string applicationRegistrationSource = File.ReadAllText(applicationRegistrationPath);
+        Assert.Contains("services.TryAddScoped<IDashboardReadService, ComposedDashboardReadService>();", applicationRegistrationSource, StringComparison.Ordinal);
     }
 
     [Fact]

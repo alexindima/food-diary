@@ -1,6 +1,4 @@
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
+using FoodDiary.Application.Abstractions.Email.Common;
 using FoodDiary.Integrations.Services;
 using FoodDiary.MailRelay.Client;
 using FoodDiary.MailRelay.Client.Models;
@@ -17,15 +15,13 @@ public sealed class RelayEmailTransportTests {
             .EnqueueAsync(Arg.Do<EnqueueMailRelayEmailRequest>(value => request = value), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new EnqueueMailRelayEmailResponse(Guid.NewGuid(), "queued")));
         RelayEmailTransport transport = new(client);
-        using var message = new MailMessage {
-            From = new MailAddress("from@example.com", "Sender"),
-            Subject = "Subject",
-            Body = "<p>Hello</p>",
-            IsBodyHtml = true,
-        };
-        message.To.Add("to@example.com");
-        using var plainText = AlternateView.CreateAlternateViewFromString("Hello", Encoding.UTF8, MediaTypeNames.Text.Plain);
-        message.AlternateViews.Add(plainText);
+        var message = new EmailMessage(
+            "from@example.com",
+            "Sender",
+            ["to@example.com"],
+            "Subject",
+            "<p>Hello</p>",
+            "Hello");
 
         await transport.SendAsync(message, CancellationToken.None);
 
@@ -43,11 +39,13 @@ public sealed class RelayEmailTransportTests {
     public async Task SendAsync_WhenFromMissing_ThrowsInvalidOperationException() {
         IMailRelayClient client = Substitute.For<IMailRelayClient>();
         RelayEmailTransport transport = new(client);
-        using var message = new MailMessage {
-            Subject = "Subject",
-            Body = "<p>Hello</p>",
-        };
-        message.To.Add("to@example.com");
+        var message = new EmailMessage(
+            FromAddress: string.Empty,
+            FromName: string.Empty,
+            ToAddresses: ["to@example.com"],
+            Subject: "Subject",
+            HtmlBody: "<p>Hello</p>",
+            TextBody: null);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             transport.SendAsync(message, CancellationToken.None));
@@ -63,15 +61,13 @@ public sealed class RelayEmailTransportTests {
             .EnqueueAsync(Arg.Do<EnqueueMailRelayEmailRequest>(value => request = value), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(new EnqueueMailRelayEmailResponse(Guid.NewGuid(), "queued")));
         RelayEmailTransport transport = new(client);
-        using var message = new MailMessage {
-            From = new MailAddress("from@example.com"),
-            Subject = "Subject",
-            Body = "<p>Hello</p>",
-            IsBodyHtml = true,
-        };
-        message.To.Add("to@example.com");
-        using var htmlView = AlternateView.CreateAlternateViewFromString("<p>Hello</p>", Encoding.UTF8, MediaTypeNames.Text.Html);
-        message.AlternateViews.Add(htmlView);
+        var message = new EmailMessage(
+            "from@example.com",
+            string.Empty,
+            ["to@example.com"],
+            "Subject",
+            "<p>Hello</p>",
+            TextBody: null);
 
         await transport.SendAsync(message, CancellationToken.None);
 

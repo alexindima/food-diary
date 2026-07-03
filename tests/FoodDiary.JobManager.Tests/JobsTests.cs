@@ -943,11 +943,25 @@ public sealed class JobsTests {
         public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
             Task.FromResult(IsAccessible(user));
 
-        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-            ((IUserRepository)this).EnsureRoleAsync(user, RoleNames.Premium, cancellationToken);
+        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+            if (!user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
+            }
 
-        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-            ((IUserRepository)this).RemoveRoleAsync(user, RoleNames.Premium, cancellationToken);
+            return Task.CompletedTask;
+        }
+
+        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+            if (user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([
+                    .. user.UserRoles
+                        .Select(userRole => userRole.Role)
+                        .Where(role => !string.Equals(role.Name, RoleNames.Premium, StringComparison.Ordinal)),
+                ]);
+            }
+
+            return Task.CompletedTask;
+        }
 
         public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
             UpdateAsync(user, cancellationToken);

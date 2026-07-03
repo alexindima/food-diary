@@ -46,9 +46,29 @@ public sealed class ApplicationAbstractionsBoundaryTests {
             "HttpContext",
             "IConfiguration",
             "IOptions<",
+            "System.Net.Mail",
+            "MailMessage",
+            "MailAddress",
+            "AlternateView",
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(abstractionsRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotBuildBclMailTransportMessages() {
+        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
+        string[] forbiddenPatterns = [
+            "System.Net.Mail",
+            "MailMessage",
+            "MailAddress",
+            "AlternateView",
+            "MediaTypeNames.Text",
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
 
         Assert.Empty(violations);
     }

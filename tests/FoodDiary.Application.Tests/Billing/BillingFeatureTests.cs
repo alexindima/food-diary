@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Billing.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 using FoodDiary.Application.Billing.Commands.CreatePortalSession;
@@ -242,7 +243,8 @@ public sealed class BillingFeatureTests {
     public async Task BillingUserContextService_WithAccessibleUser_ForwardsRepositoryOperations() {
         var user = User.Create("billing-context@example.com", "hash");
         var repository = new FakeUserRepository(user);
-        var service = new BillingUserContextService(repository);
+        var roleMembershipService = new RecordingUserRoleMembershipService();
+        var service = new BillingUserContextService(repository, roleMembershipService);
 
         Result<User> accessible = await service.GetAccessibleUserAsync(user.Id, CancellationToken.None);
         User? includingDeleted = await service.GetUserIncludingDeletedAsync(user.Id, CancellationToken.None);
@@ -254,13 +256,14 @@ public sealed class BillingFeatureTests {
         Assert.Same(user, ResultAssert.Success(accessible));
         Assert.Same(user, includingDeleted);
         Assert.True(canAccess);
-        Assert.DoesNotContain(RoleNames.Premium, user.GetRoleNames());
-        Assert.Equal(3, repository.UpdateCount);
+        Assert.Equal([user.Id], roleMembershipService.EnsureRoleUserIds);
+        Assert.Equal([user.Id], roleMembershipService.RemoveRoleUserIds);
+        Assert.Equal(1, repository.UpdateCount);
     }
 
     [Fact]
     public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
-        var service = new BillingUserContextService(new FakeUserRepository());
+        var service = new BillingUserContextService(new FakeUserRepository(), new RecordingUserRoleMembershipService());
 
         Result<User> result = await service.GetAccessibleUserAsync(UserId.New(), CancellationToken.None);
 
@@ -324,7 +327,8 @@ public sealed class BillingFeatureTests {
         Assert.Equal("evt_1", webhookEvent.EventId);
         Assert.Equal("processed", webhookEvent.Status);
         Assert.True(user.HasRole(RoleNames.Premium));
-        Assert.Equal(1, userRepository.UpdateCount);
+        Assert.Equal(1, userRepository.RoleMembershipWriteCount);
+        Assert.Equal(0, userRepository.UpdateCount);
     }
 
     [Fact]
@@ -1268,7 +1272,8 @@ public sealed class BillingFeatureTests {
 
         Assert.True(user.HasRole(RoleNames.Premium));
         Assert.True(subscription.PremiumRoleManagedByBilling);
-        Assert.Equal(1, userRepository.UpdateCount);
+        Assert.Equal(1, userRepository.RoleMembershipWriteCount);
+        Assert.Equal(0, userRepository.UpdateCount);
         Assert.Equal(1, subscriptionRepository.UpdateCount);
     }
 
@@ -1886,6 +1891,7 @@ public sealed class BillingFeatureTests {
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 
         public int UpdateCount { get; private set; }
+        public int RoleMembershipWriteCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) =>
             Task.FromResult(_users.FirstOrDefault(user =>
@@ -1912,11 +1918,27 @@ public sealed class BillingFeatureTests {
         public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
             Task.FromResult(IsAccessible(user));
 
-        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-            ((IUserRepository)this).EnsureRoleAsync(user, RoleNames.Premium, cancellationToken);
+        public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+            RoleMembershipWriteCount++;
+            if (!user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([.. user.UserRoles.Select(userRole => userRole.Role), _premiumRole]);
+            }
 
-        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-            ((IUserRepository)this).RemoveRoleAsync(user, RoleNames.Premium, cancellationToken);
+            return Task.CompletedTask;
+        }
+
+        public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) {
+            RoleMembershipWriteCount++;
+            if (user.HasRole(RoleNames.Premium)) {
+                user.ReplaceRoles([
+                    .. user.UserRoles
+                        .Select(userRole => userRole.Role)
+                        .Where(role => !string.Equals(role.Name, RoleNames.Premium, StringComparison.Ordinal)),
+                ]);
+            }
+
+            return Task.CompletedTask;
+        }
 
         public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
             UpdateAsync(user, cancellationToken);
@@ -1964,6 +1986,24 @@ public sealed class BillingFeatureTests {
         }
 
         private static bool IsAccessible(User user) => user is { IsActive: true, DeletedAt: null };
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingUserRoleMembershipService : IUserRoleMembershipService {
+        public List<UserId> EnsureRoleUserIds { get; } = [];
+        public List<UserId> RemoveRoleUserIds { get; } = [];
+
+        public Task EnsureRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
+            Assert.Equal(RoleNames.Premium, roleName);
+            EnsureRoleUserIds.Add(userId);
+            return Task.CompletedTask;
+        }
+
+        public Task RemoveRoleAsync(UserId userId, string roleName, CancellationToken cancellationToken = default) {
+            Assert.Equal(RoleNames.Premium, roleName);
+            RemoveRoleUserIds.Add(userId);
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

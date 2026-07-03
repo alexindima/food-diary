@@ -1,4 +1,5 @@
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Ai.Common;
 using FoodDiary.Application.Authentication.Services;
@@ -60,10 +61,10 @@ public static class DependencyInjection {
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
-        services.AddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
-        services.AddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
-        services.AddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
-        services.AddScoped<IDashboardReadService, ComposedDashboardReadService>();
+        services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
+        services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();
+        services.TryAddScoped<IDashboardMealsReadService, MediatorDashboardMealsReadService>();
+        services.TryAddScoped<IDashboardReadService, ComposedDashboardReadService>();
         services.AddScoped<IDashboardUserContextService, DashboardUserContextService>();
         services.AddScoped<IDashboardSectionDataLoader, DashboardSectionDataLoader>();
         services.AddScoped<IDashboardSnapshotBuilder>(static serviceProvider =>

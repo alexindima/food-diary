@@ -1,5 +1,4 @@
 using System.Diagnostics.Metrics;
-using System.Net.Mail;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Domain.Entities.Users;
@@ -123,7 +122,7 @@ public sealed class EmailSenderTests {
     private static IEmailTransport CreateSuccessfulTransport() {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport
-            .SendAsync(Arg.Any<MailMessage>(), Arg.Any<CancellationToken>())
+            .SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         return transport;
     }
@@ -132,7 +131,7 @@ public sealed class EmailSenderTests {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         string body = string.Empty;
         transport
-            .SendAsync(Arg.Do<MailMessage>(message => body = message.Body), Arg.Any<CancellationToken>())
+            .SendAsync(Arg.Do<EmailMessage>(message => body = message.HtmlBody), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         getBody = () => body;
         return transport;
@@ -141,7 +140,7 @@ public sealed class EmailSenderTests {
     private static IEmailTransport CreateThrowingTransport(Exception exception) {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport
-            .SendAsync(Arg.Any<MailMessage>(), Arg.Any<CancellationToken>())
+            .SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(exception));
         return transport;
     }

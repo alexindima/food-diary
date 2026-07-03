@@ -26,6 +26,7 @@ using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Infrastructure.Persistence.Admin;
@@ -54,12 +55,14 @@ using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Infrastructure.Persistence.Usda;
 using FoodDiary.Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace FoodDiary.Infrastructure;
 
 public static partial class DependencyInjection {
     private static IServiceCollection AddFeatureRepositories(this IServiceCollection services) {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
         services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();
@@ -73,13 +76,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecipeAccessService, RecipeAccessService>();
         services.AddScoped<IRecentItemRepository, RecentItemRepository>();
         services.AddScoped<IMealRepository, MealRepository>();
-        services.AddScoped<DashboardStatisticsReadService>();
-        services.AddScoped<IDashboardStatisticsReadService>(static provider => provider.GetRequiredService<DashboardStatisticsReadService>());
-        services.AddScoped<DashboardBodyReadService>();
-        services.AddScoped<IDashboardBodyReadService>(static provider => provider.GetRequiredService<DashboardBodyReadService>());
-        services.AddScoped<DashboardMealsReadService>();
-        services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());
-        services.AddScoped<IDashboardReadService, DashboardReadService>();
+        services.AddDashboardReadServices();
         services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
         services.AddScoped<IWaistEntryRepository, WaistEntryRepository>();
@@ -115,6 +112,23 @@ public static partial class DependencyInjection {
         services.AddScoped<IContentReportRepository, ContentReportRepository>();
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IUsdaProductLinkRepository, UsdaProductLinkRepository>();
+
+        return services;
+    }
+
+    private static IServiceCollection AddDashboardReadServices(this IServiceCollection services) {
+        services.RemoveAll<IDashboardStatisticsReadService>();
+        services.RemoveAll<IDashboardBodyReadService>();
+        services.RemoveAll<IDashboardMealsReadService>();
+        services.RemoveAll<IDashboardReadService>();
+
+        services.AddScoped<DashboardStatisticsReadService>();
+        services.AddScoped<IDashboardStatisticsReadService>(static provider => provider.GetRequiredService<DashboardStatisticsReadService>());
+        services.AddScoped<DashboardBodyReadService>();
+        services.AddScoped<IDashboardBodyReadService>(static provider => provider.GetRequiredService<DashboardBodyReadService>());
+        services.AddScoped<DashboardMealsReadService>();
+        services.AddScoped<IDashboardMealsReadService>(static provider => provider.GetRequiredService<DashboardMealsReadService>());
+        services.AddScoped<IDashboardReadService, DashboardReadService>();
 
         return services;
     }

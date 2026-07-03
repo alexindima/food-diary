@@ -1,6 +1,3 @@
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Email.Common;
@@ -143,20 +140,14 @@ public sealed class DietologistEmailSender(
          """;
 
     private async Task SendAsync(string toEmail, string subject, string htmlBody, string textBody, CancellationToken cancellationToken) {
-        using var message = new MailMessage();
-        message.From = new MailAddress(_options.FromAddress, _options.FromName);
-        message.Subject = subject;
-        message.Body = htmlBody;
-        message.IsBodyHtml = true;
-        message.BodyEncoding = Encoding.UTF8;
-        message.SubjectEncoding = Encoding.UTF8;
-        message.To.Add(new MailAddress(toEmail));
-        if (!string.IsNullOrWhiteSpace(textBody)) {
-            message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(textBody, Encoding.UTF8, MediaTypeNames.Text.Plain));
-        }
-
-        message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
-
-        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailTransport.SendAsync(
+            new EmailMessage(
+                _options.FromAddress,
+                _options.FromName,
+                [toEmail],
+                subject,
+                htmlBody,
+                string.IsNullOrWhiteSpace(textBody) ? null : textBody),
+            cancellationToken).ConfigureAwait(false);
     }
 }

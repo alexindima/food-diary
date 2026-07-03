@@ -1,6 +1,3 @@
-using System.Net.Mail;
-using System.Net.Mime;
-using System.Text;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Email.Common;
@@ -21,18 +18,15 @@ public sealed class SendAdminEmailTemplateTestCommandHandler(
         string htmlBody = ApplyTemplateTokens(command.HtmlBody, link, brand, clientName);
         string textBody = ApplyTemplateTokens(command.TextBody, link, brand, clientName);
 
-        using var message = new MailMessage();
-        message.From = new MailAddress(options.FromAddress, options.FromName);
-        message.Subject = subject;
-        message.Body = htmlBody;
-        message.IsBodyHtml = true;
-        message.BodyEncoding = Encoding.UTF8;
-        message.SubjectEncoding = Encoding.UTF8;
-        message.To.Add(new MailAddress(command.ToEmail));
-        message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(textBody, Encoding.UTF8, MediaTypeNames.Text.Plain));
-        message.AlternateViews.Add(AlternateView.CreateAlternateViewFromString(htmlBody, Encoding.UTF8, MediaTypeNames.Text.Html));
-
-        await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
+        await emailTransport.SendAsync(
+            new EmailMessage(
+                options.FromAddress,
+                options.FromName,
+                [command.ToEmail],
+                subject,
+                htmlBody,
+                textBody),
+            cancellationToken).ConfigureAwait(false);
         ApplicationEmailTelemetry.RecordEmailDispatch($"admin_template_test:{NormalizeKey(command.Key)}", "test", "success");
 
         return Result.Success();

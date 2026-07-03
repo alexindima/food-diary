@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Billing.Common;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -8,7 +9,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Billing.Services;
 
-internal sealed class BillingUserContextService(IUserRepository userRepository) : IBillingUserContextService {
+internal sealed class BillingUserContextService(
+    IUserRepository userRepository,
+    IUserRoleMembershipService roleMembershipService) : IBillingUserContextService {
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
         User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
@@ -24,10 +27,10 @@ internal sealed class BillingUserContextService(IUserRepository userRepository) 
         Task.FromResult(CurrentUserAccessPolicy.EnsureCanAccess(user) is null);
 
     public Task EnsurePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-        userRepository.EnsureRoleAsync(user, RoleNames.Premium, cancellationToken);
+        roleMembershipService.EnsureRoleAsync(user.Id, RoleNames.Premium, cancellationToken);
 
     public Task RemovePremiumRoleAsync(User user, CancellationToken cancellationToken) =>
-        userRepository.RemoveRoleAsync(user, RoleNames.Premium, cancellationToken);
+        roleMembershipService.RemoveRoleAsync(user.Id, RoleNames.Premium, cancellationToken);
 
     public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
         userRepository.UpdateAsync(user, cancellationToken);
