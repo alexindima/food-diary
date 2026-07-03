@@ -125,6 +125,21 @@ public sealed class UserRepositoryIntegrationTests(PostgresDatabaseFixture datab
     }
 
     [RequiresDockerFact]
+    public async Task UpdateAsync_WhenUserIsDetached_AttachesForUpdate() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"detached-update-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+        context.Entry(user).State = EntityState.Detached;
+        user.UpdatePersonalInfo(new FoodDiary.Domain.ValueObjects.UserPersonalInfoUpdate(Username: "detached-user"));
+        var repository = new UserRepository(context);
+
+        await repository.UpdateAsync(user);
+
+        Assert.Equal(EntityState.Modified, context.Entry(user).State);
+    }
+
+    [RequiresDockerFact]
     public async Task RemoveRoleAsync_IsIdempotentForMissingUserRole() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         Role premiumRole = await context.Roles.SingleAsync(role => role.Name == RoleNames.Premium);

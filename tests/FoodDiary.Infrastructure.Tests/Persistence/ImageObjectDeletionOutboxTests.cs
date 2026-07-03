@@ -64,6 +64,51 @@ public sealed class ImageObjectDeletionOutboxTests {
         Assert.Contains("Simulated", message.LastError, StringComparison.Ordinal);
     }
 
+    [Fact]
+    public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var processor = new ImageObjectDeletionOutboxProcessor(
+            context,
+            new RecordingImageStorageService(),
+            TimeProvider.System,
+            NullLogger<ImageObjectDeletionOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 0, CancellationToken.None);
+
+        Assert.Equal(0, processed);
+    }
+
+    [Fact]
+    public void Create_WithBlankObjectKey_Throws() {
+        ArgumentException ex = Assert.Throws<ArgumentException>(() =>
+            ImageObjectDeletionOutboxMessage.Create(" ", DateTime.UtcNow));
+
+        Assert.Equal("objectKey", ex.ParamName);
+    }
+
+    [Fact]
+    public void Create_TrimsObjectKeyAndNormalizesLocalDate() {
+        var localDate = new DateTime(2026, 7, 1, 12, 0, 0, DateTimeKind.Local);
+
+        var message = ImageObjectDeletionOutboxMessage.Create(" users/test/image.webp ", localDate);
+
+        Assert.Multiple(
+            () => Assert.Equal("users/test/image.webp", message.ObjectKey),
+            () => Assert.Equal(DateTimeKind.Utc, message.CreatedOnUtc.Kind),
+            () => Assert.Equal(message.CreatedOnUtc, message.NextAttemptOnUtc));
+    }
+
+    [Fact]
+    public void MarkFailed_WithBlankError_ClearsLastError() {
+        var message = ImageObjectDeletionOutboxMessage.Create("users/test/image.webp", DateTime.UtcNow);
+
+        message.MarkFailed(" ", DateTime.UtcNow.AddMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.Null(message.LastError));
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

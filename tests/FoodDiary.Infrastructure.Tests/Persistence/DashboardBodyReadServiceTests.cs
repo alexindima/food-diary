@@ -92,6 +92,32 @@ public sealed class DashboardBodyReadServiceTests {
         Assert.Equal(0, result.HydrationTotalMl);
     }
 
+    [Fact]
+    public async Task GetBodyAsync_WithPartialFinalBucket_ClampsBucketEndToRangeEnd() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"dashboard-body-partial-bucket-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        context.WeightEntries.AddRange(
+            WeightEntry.Create(user.Id, UtcDate(2026, 6, 1), 80),
+            WeightEntry.Create(user.Id, UtcDate(2026, 6, 5), 82));
+        await context.SaveChangesAsync();
+        var readService = new DashboardBodyReadService(context);
+
+        DashboardBodyReadModel result = await readService.GetBodyAsync(
+            user.Id,
+            UtcDate(2026, 6, 5),
+            UtcDate(2026, 6, 5),
+            UtcDate(2026, 6, 1),
+            trendQuantizationDays: 3,
+            includeWeight: true,
+            includeWaist: false,
+            includeHydration: false,
+            CancellationToken.None);
+
+        Assert.Equal(2, result.WeightTrend.Count);
+        Assert.Equal(UtcDate(2026, 6, 5), result.WeightTrend[1].DateTo);
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))

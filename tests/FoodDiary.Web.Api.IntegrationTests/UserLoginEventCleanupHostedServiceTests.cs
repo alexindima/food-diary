@@ -5,6 +5,7 @@ using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
 using OptionsFactory = Microsoft.Extensions.Options.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
@@ -26,8 +27,7 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
             TimeProvider.System,
             NullLogger<UserLoginEventCleanupHostedService>.Instance);
 
-        await service.StartAsync(CancellationToken.None);
-        await service.StopAsync(CancellationToken.None);
+        await InvokeExecuteAsync(service, CancellationToken.None);
 
         Assert.Equal(0, repository.DeleteCallCount);
     }
@@ -106,6 +106,15 @@ public sealed class UserLoginEventCleanupHostedServiceTests {
         var services = new ServiceCollection();
         services.AddSingleton(repository);
         return services.BuildServiceProvider();
+    }
+
+    private static async Task InvokeExecuteAsync(
+        UserLoginEventCleanupHostedService service,
+        CancellationToken cancellationToken) {
+        MethodInfo method = typeof(UserLoginEventCleanupHostedService).GetMethod(
+            "ExecuteAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        await ((Task)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
     }
 
     [ExcludeFromCodeCoverage]

@@ -6,9 +6,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Infrastructure.Persistence.Dashboard;
 
 internal sealed class DashboardReadService(
-    DashboardStatisticsReadService statisticsReadService,
-    DashboardBodyReadService bodyReadService,
-    DashboardMealsReadService mealsReadService) : IDashboardReadService {
+    IDashboardStatisticsReadService statisticsReadService,
+    IDashboardBodyReadService bodyReadService,
+    IDashboardMealsReadService mealsReadService) : IDashboardReadService {
     public async Task<Result<DashboardReadModel>> GetSnapshotDataAsync(
         UserId userId,
         DateTime dayStart,

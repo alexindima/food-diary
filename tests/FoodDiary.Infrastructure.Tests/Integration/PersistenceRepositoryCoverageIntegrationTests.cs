@@ -43,6 +43,7 @@ using FoodDiary.Infrastructure.Persistence.Tracking;
 using FoodDiary.Infrastructure.Persistence.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
+using Npgsql;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
 
@@ -697,7 +698,34 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         });
 
         Assert.True(executed);
+        await Assert.ThrowsAsync<DbUpdateException>(() =>
+            runner.ExecuteAsync(_ => throw CreateDuplicateUpdateException("IX_BillingPayments_Provider_ExternalPaymentId")));
+        await Assert.ThrowsAsync<DbUpdateException>(() =>
+            runner.ExecuteAsync(_ => throw CreateDuplicateUpdateException("IX_BillingWebhookEvents_Provider_EventId")));
     }
+
+    private static DbUpdateException CreateDuplicateUpdateException(string constraintName) =>
+        new(
+            "duplicate",
+            new PostgresException(
+                messageText: "duplicate key value violates unique constraint",
+                severity: "ERROR",
+                invariantSeverity: "ERROR",
+                sqlState: PostgresErrorCodes.UniqueViolation,
+                detail: string.Empty,
+                hint: string.Empty,
+                position: 0,
+                internalPosition: 0,
+                internalQuery: string.Empty,
+                where: string.Empty,
+                schemaName: string.Empty,
+                tableName: string.Empty,
+                columnName: string.Empty,
+                dataTypeName: string.Empty,
+                constraintName,
+                file: string.Empty,
+                line: string.Empty,
+                routine: string.Empty));
 
     private static async Task AssertRecipeRepositoryQueriesAsync(
         FoodDiaryDbContext context,
@@ -1072,6 +1100,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetByProductIdsAsync(userId, []));
         FavoriteProduct favorite = await repository.AddAsync(FavoriteProduct.Create(userId, productId, "Rice", 120));
         await context.SaveChangesAsync();
+        Assert.NotNull(await repository.GetByIdAsync(favorite.Id, userId));
         FavoriteProduct? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
         tracked.UpdateName("Brown rice");
@@ -1177,6 +1206,11 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         completedSession.End(now.AddDays(-1));
         await repository.UpdateAsync(completedSession);
         await context.SaveChangesAsync();
+        context.Entry(completedSession).State = EntityState.Detached;
+        completedSession.UpdateNotes("Detached update");
+        await repository.UpdateAsync(completedSession);
+        Assert.Equal(EntityState.Modified, context.Entry(completedSession).State);
+        context.Entry(completedSession).State = EntityState.Detached;
         var yesterdaySession = FastingSession.Create(userId, FastingProtocol.F16_8, 16, FixedNow.Date.AddDays(-1).AddHours(1));
         yesterdaySession.End(FixedNow.Date.AddHours(1));
         await repository.AddAsync(yesterdaySession);

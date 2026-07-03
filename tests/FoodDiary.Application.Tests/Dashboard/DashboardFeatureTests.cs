@@ -3,6 +3,9 @@ using System.Globalization;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Consumptions.Queries.GetConsumptions;
@@ -77,6 +80,17 @@ public class DashboardFeatureTests {
     }
 
     [Fact]
+    public void DashboardMapping_ToStatisticsModel_WhenReadModelResponseIsNull_ReturnsEmptyModel() {
+        DashboardStatisticsModel dto = DashboardMapping.ToStatisticsModel((DashboardStatisticsBucketReadModel?)null, user: null);
+
+        Assert.Multiple(
+            () => Assert.Equal(0, dto.TotalCalories),
+            () => Assert.Equal(0, dto.AverageProteins),
+            () => Assert.Null(dto.ProteinGoal),
+            () => Assert.Null(dto.FiberGoal));
+    }
+
+    [Fact]
     public void DashboardMapping_ToStatisticsModel_MapsMacroTargetsFromUser() {
         var user = User.Create("dashboard-stats@example.com", "hash");
         user.UpdateGoals(proteinTarget: 120, fatTarget: 70, carbTarget: 210, fiberTarget: 30);
@@ -142,6 +156,45 @@ public class DashboardFeatureTests {
         Assert.Null(dto.Latest);
         Assert.Null(dto.Previous);
         Assert.Null(dto.Desired);
+    }
+
+    [Fact]
+    public async Task RepositoryDashboardBodyReadService_WithPartialFinalBucket_ClampsBucketEndToRangeEnd() {
+        var userId = UserId.New();
+        DateTime dayStart = new(2026, 4, 5, 0, 0, 0, DateTimeKind.Utc);
+        DateTime trendStart = dayStart.AddDays(-4);
+        IWeightEntryRepository weightRepository = Substitute.For<IWeightEntryRepository>();
+        weightRepository.GetEntriesAsync(
+                userId,
+                Arg.Any<DateTime?>(),
+                dayStart,
+                limit: 2,
+                descending: true,
+                cancellationToken: Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([]));
+        weightRepository.GetByPeriodAsync(userId, trendStart, dayStart, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<WeightEntry>>([
+                WeightEntry.Create(userId, trendStart, 80),
+                WeightEntry.Create(userId, dayStart, 82),
+            ]));
+        RepositoryDashboardBodyReadService service = new(
+            weightRepository,
+            Substitute.For<IWaistEntryRepository>(),
+            Substitute.For<IHydrationEntryRepository>());
+
+        DashboardBodyReadModel result = await service.GetBodyAsync(
+            userId,
+            dayStart,
+            dayStart,
+            trendStart,
+            trendQuantizationDays: 3,
+            includeWeight: true,
+            includeWaist: false,
+            includeHydration: false,
+            CancellationToken.None);
+
+        Assert.Equal(2, result.WeightTrend.Count);
+        Assert.Equal(dayStart, result.WeightTrend[1].DateTo);
     }
 
     [Fact]

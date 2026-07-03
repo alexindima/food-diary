@@ -3,18 +3,24 @@ using System.Net.Sockets;
 
 namespace FoodDiary.MailRelay.Infrastructure.Services;
 
-public sealed class DirectMxEndpointConnector : IDirectMxEndpointConnector {
+public sealed class DirectMxEndpointConnector(
+    Func<AddressFamily, Socket>? socketFactory = null,
+    Func<Socket, IPEndPoint, CancellationToken, Task>? connectAsync = null) : IDirectMxEndpointConnector {
+    private readonly Func<AddressFamily, Socket> _socketFactory =
+        socketFactory ?? (static addressFamily => new Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp));
+    private readonly Func<Socket, IPEndPoint, CancellationToken, Task> _connectAsync =
+        connectAsync ?? (static (socket, endpoint, cancellationToken) => socket.ConnectAsync(endpoint, cancellationToken).AsTask());
+
     public async Task<Socket> ConnectAsync(string mxHost, int port, CancellationToken cancellationToken) {
         IPAddress[] addresses = IPAddress.TryParse(mxHost, out IPAddress? literalAddress)
             ? [literalAddress]
             : await Dns.GetHostAddressesAsync(mxHost, cancellationToken).ConfigureAwait(false);
         IPAddress? publicAddress = addresses.FirstOrDefault(IsPublicAddress) ?? throw new InvalidOperationException($"Direct MX host '{mxHost}' resolves only to private or loopback addresses.");
-        var socket = new Socket(publicAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp) {
-            NoDelay = true,
-        };
+        Socket socket = _socketFactory(publicAddress.AddressFamily);
+        socket.NoDelay = true;
 
         try {
-            await socket.ConnectAsync(new IPEndPoint(publicAddress, port), cancellationToken).ConfigureAwait(false);
+            await _connectAsync(socket, new IPEndPoint(publicAddress, port), cancellationToken).ConfigureAwait(false);
             return socket;
         } catch {
             socket.Dispose();

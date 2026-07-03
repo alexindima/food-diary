@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Notifications;
 using Microsoft.EntityFrameworkCore;
@@ -71,6 +72,52 @@ public sealed class NotificationWebPushOutboxTests {
         Assert.Equal(1, message.AttemptCount);
         Assert.True(message.NextAttemptOnUtc > DateTime.UtcNow);
         Assert.Contains("Simulated", message.LastError, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task ProcessDueAsync_WhenBatchSizeIsNotPositive_ReturnsZero() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var processor = new NotificationWebPushOutboxProcessor(
+            context,
+            new RecordingWebPushNotificationSender(),
+            TimeProvider.System,
+            NullLogger<NotificationWebPushOutboxProcessor>.Instance);
+
+        int processed = await processor.ProcessDueAsync(batchSize: 0, CancellationToken.None);
+
+        Assert.Equal(0, processed);
+    }
+
+    [Fact]
+    public void Create_WithEmptyNotificationId_Throws() {
+        ArgumentException ex = Assert.Throws<ArgumentException>(() =>
+            NotificationWebPushOutboxMessage.Create(NotificationId.Empty, DateTime.UtcNow));
+
+        Assert.Equal("notificationId", ex.ParamName);
+    }
+
+    [Fact]
+    public void Create_NormalizesLocalDate() {
+        var localDate = new DateTime(2026, 7, 1, 12, 0, 0, DateTimeKind.Local);
+        var notificationId = NotificationId.New();
+
+        var message = NotificationWebPushOutboxMessage.Create(notificationId, localDate);
+
+        Assert.Multiple(
+            () => Assert.Equal(notificationId, message.NotificationId),
+            () => Assert.Equal(DateTimeKind.Utc, message.CreatedOnUtc.Kind),
+            () => Assert.Equal(message.CreatedOnUtc, message.NextAttemptOnUtc));
+    }
+
+    [Fact]
+    public void MarkFailed_WithBlankError_ClearsLastError() {
+        var message = NotificationWebPushOutboxMessage.Create(NotificationId.New(), DateTime.UtcNow);
+
+        message.MarkFailed(" ", DateTime.UtcNow.AddMinutes(1));
+
+        Assert.Multiple(
+            () => Assert.Equal(1, message.AttemptCount),
+            () => Assert.Null(message.LastError));
     }
 
     private static async Task<Notification> SeedNotificationAsync(FoodDiaryDbContext context, string email) {

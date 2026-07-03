@@ -26,6 +26,7 @@ using FoodDiary.Application.Dietologist.Queries.GetMyDietologist;
 using FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
 using FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 using FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
+using FoodDiary.Application.Dietologist.Services;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
@@ -107,6 +108,19 @@ public class DietologistFeatureTests {
             new DashboardWaistModel(new WaistPointModel(date, 82), Previous: null, 80),
             new DashboardMealsModel([], 2),
             Hydration: null);
+    }
+
+    [Fact]
+    public async Task DietologistUserContextService_GetUserByIdAsync_ReturnsRepositoryUser() {
+        var user = User.Create("dietologist-context@example.com", "hash");
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(user));
+        var service = new DietologistUserContextService(repository);
+
+        User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
+
+        Assert.Same(user, result);
     }
 
     private static InviteDietologistCommandHandler CreateInviteHandler(

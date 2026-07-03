@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Dashboard.Common;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Exercises.Common;
@@ -24,6 +25,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using Microsoft.Extensions.Logging.Abstractions;
 using FoodDiary.Application.Dashboard.Models;
+using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Dashboard;
 
@@ -332,6 +334,46 @@ public sealed class DashboardSnapshotBuilderTests {
         Assert.NotNull(result.Value.Hydration);
         Assert.Equal(1200, result.Value.Hydration!.TotalMl);
         Assert.Equal(3600, result.Value.Hydration.GoalMl);
+    }
+
+    [Fact]
+    public void BuildStatistics_WithReadModel_UsesFirstStatisticsBucket() {
+        var user = User.Create("dashboard-read-model-statistics@example.com", "hash");
+        user.UpdateGoals(proteinTarget: 110);
+        DateTime date = new(2026, 3, 28, 0, 0, 0, DateTimeKind.Utc);
+        DashboardReadModel readModel = new(
+            [
+                new DashboardStatisticsBucketReadModel(date, date, 1900, 100, 60, 210, 25),
+            ],
+            [],
+            new DashboardBodyReadModel([], [], [], [], HydrationTotalMl: 0),
+            new DashboardMealsReadModel([], Page: 1, Limit: 10, TotalPages: 0, TotalItems: 0));
+        DashboardBuildContext context = new(
+            user.Id,
+            date,
+            date,
+            date,
+            PeriodDays: 1,
+            Locale: "en",
+            Page: 1,
+            PageSize: 10,
+            TrendDays: 7,
+            TrendStart: date.AddDays(-6),
+            Sections(includeStatistics: true),
+            user);
+        MethodInfo method = typeof(DashboardSnapshotBuilder).GetMethod(
+            name: "BuildStatistics",
+            BindingFlags.NonPublic | BindingFlags.Static,
+            binder: null,
+            [typeof(DashboardReadModel), typeof(DashboardBuildContext)],
+            modifiers: null)!;
+
+        var result = (DashboardStatisticsModel)method.Invoke(obj: null, parameters: [readModel, context])!;
+
+        Assert.Multiple(
+            () => Assert.Equal(1900, result.TotalCalories),
+            () => Assert.Equal(100, result.AverageProteins),
+            () => Assert.Equal(110, result.ProteinGoal));
     }
 
     private static DashboardSnapshotBuilder CreateBuilder(

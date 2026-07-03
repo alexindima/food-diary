@@ -8,7 +8,9 @@ using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Application.Tdee.Services;
 
 namespace FoodDiary.Application.Tests.Tdee;
 
@@ -34,6 +36,20 @@ public class TdeeFeatureTests {
             new GetTdeeInsightQuery(Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
+    }
+
+    [Fact]
+    public async Task TdeeUserProfileService_WhenUserMissing_ReturnsAccessFailure() {
+        IUserRepository userRepository = Substitute.For<IUserRepository>();
+        userRepository
+            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(null));
+        var service = new TdeeUserProfileService(userRepository);
+
+        Result<TdeeUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]

@@ -16,6 +16,7 @@ using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Recipes.Services;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
@@ -906,6 +907,24 @@ public class RecipesFeatureTests {
     }
 
     [Fact]
+    public async Task GetRecipesOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
+        var user = User.Create("overview-inactive-user@example.com", "hash");
+        user.Deactivate();
+        var handler = new GetRecipesOverviewQueryHandler(
+            new OverviewRecipeRepository(),
+            new StubRecentItemRepository([]),
+            new StubFavoriteRecipeRepository([]),
+            new StubUserRepository(user));
+
+        Result<RecipeOverviewModel> result = await handler.Handle(
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithoutSearch_ReturnsRecentFavoritesAndFavoriteFlags() {
         var user = User.Create("overview-recipes@example.com", "hash");
         var breakfast = Recipe.Create(
@@ -999,6 +1018,34 @@ public class RecipesFeatureTests {
         ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(0, recentRepository.GetRecentRecipesCallCount);
+    }
+
+    [Fact]
+    public async Task GetRecipesOverviewQueryHandler_WithHasImageFilter_FiltersRecentItems() {
+        var user = User.Create("overview-recipe-image-filter@example.com", "hash");
+        var withImage = Recipe.Create(user.Id, "Photo Soup", servings: 1, imageUrl: "https://cdn.test/soup.jpg", visibility: Visibility.Private);
+        var withoutImage = Recipe.Create(user.Id, "Plain Soup", servings: 1, visibility: Visibility.Private);
+        var repository = new OverviewRecipeRepository(
+            recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
+                [withImage.Id] = (withImage, 3),
+                [withoutImage.Id] = (withoutImage, 2),
+            });
+        var handler = new GetRecipesOverviewQueryHandler(
+            repository,
+            new StubRecentItemRepository([
+                new RecentRecipeUsage(withImage.Id, 3, DateTime.UtcNow),
+                new RecentRecipeUsage(withoutImage.Id, 2, DateTime.UtcNow),
+            ]),
+            new StubFavoriteRecipeRepository([]),
+            new StubUserRepository(user));
+
+        Result<RecipeOverviewModel> result = await handler.Handle(
+            new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, HasImage: true),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        RecipeModel recent = Assert.Single(result.Value.RecentItems);
+        Assert.Equal(withImage.Id.Value, recent.Id);
     }
 
     [Fact]
@@ -1745,6 +1792,46 @@ public class RecipesFeatureTests {
         Assert.Equal(1, repository.UpdateNutritionCallCount);
         Assert.Equal(200, recipe.TotalCalories);
         Assert.Equal(10, recipe.TotalProteins);
+    }
+
+    [Fact]
+    public async Task RecipeNutritionUpdater_WhenComputedNutritionIsAlreadyClose_DoesNotUpdateRepository() {
+        var userId = UserId.New();
+        var recipe = Recipe.Create(userId, "Empty Auto", servings: 1);
+        recipe.ApplyComputedNutrition(0, 0, 0, 0, 0, 0);
+        var repository = new RecordingRecipeNutritionRepository();
+
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, repository, CancellationToken.None);
+
+        Assert.Equal(0, repository.UpdateNutritionCallCount);
+    }
+
+    [Fact]
+    public void RecipeManualNutritionValidator_WhenCaloriesExceedLimit_ReturnsFailure() {
+        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> result = RecipeManualNutritionValidator.Validate(
+            ManualNutritionLimits.MaxCalories + 1,
+            proteins: 10,
+            fats: 5,
+            carbs: 20,
+            fiber: 3,
+            alcohol: 0);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
+    public void RecipeManualNutritionValidator_WhenNutrientExceedsLimit_ReturnsFailure() {
+        Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> result = RecipeManualNutritionValidator.Validate(
+            calories: 200,
+            ManualNutritionLimits.MaxNutrient + 1,
+            fats: 5,
+            carbs: 20,
+            fiber: 3,
+            alcohol: 0);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
     [ExcludeFromCodeCoverage]

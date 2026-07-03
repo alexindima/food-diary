@@ -18,6 +18,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Notifications.Models;
@@ -323,6 +324,56 @@ public class NotificationsFeatureTests {
         ResultAssert.Failure(result);
         Assert.Equal("Authentication.AccountDeleted", result.Error.Code);
         Assert.Equal(string.Empty, auditLogger.Action);
+    }
+
+    [Fact]
+    public async Task UpdateNotificationPreferences_WhenUpdateServiceFails_ReturnsFailureWithoutAuditLog() {
+        User user = CreateUser(email: "update-preferences-failure@example.com");
+        Error error = Errors.Validation.Invalid("Notifications", "Could not update preferences.");
+        INotificationPreferencesService preferencesService = Substitute.For<INotificationPreferencesService>();
+        preferencesService
+            .GetAsync(user.Id, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success(new NotificationPreferencesModel(
+                PushNotificationsEnabled: false,
+                FastingPushNotificationsEnabled: true,
+                SocialPushNotificationsEnabled: false,
+                FastingCheckInReminderHours: 12,
+                FastingCheckInFollowUpReminderHours: 20))));
+        preferencesService
+            .UpdateAsync(user.Id, Arg.Any<UserPreferenceUpdate>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<NotificationPreferencesUpdateResult>(error)));
+        RecordingAuditLogger auditLogger = new();
+        var handler = new UpdateNotificationPreferencesCommandHandler(preferencesService, auditLogger);
+
+        Result<NotificationPreferencesModel> result = await handler.Handle(
+            new UpdateNotificationPreferencesCommand(user.Id.Value, PushNotificationsEnabled: true, FastingPushNotificationsEnabled: null, SocialPushNotificationsEnabled: null, FastingCheckInReminderHours: null, FastingCheckInFollowUpReminderHours: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
+        Assert.Equal(string.Empty, auditLogger.Action);
+    }
+
+    [Fact]
+    public async Task NotificationPreferencesService_UpdateAsync_WhenUserMissing_ReturnsAccessFailure() {
+        INotificationUserAccessService userAccessService = Substitute.For<INotificationUserAccessService>();
+        userAccessService
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Failure<User>(Errors.Authentication.InvalidToken)));
+        var service = new NotificationPreferencesService(userAccessService);
+
+        Result<NotificationPreferencesUpdateResult> result = await service.UpdateAsync(
+            UserId.New(),
+            new UserPreferenceUpdate(
+                PushNotificationsEnabled: true,
+                FastingPushNotificationsEnabled: null,
+                SocialPushNotificationsEnabled: null,
+                FastingCheckInReminderHours: null,
+                FastingCheckInFollowUpReminderHours: null),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]

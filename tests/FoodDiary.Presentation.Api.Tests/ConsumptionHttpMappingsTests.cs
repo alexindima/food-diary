@@ -159,6 +159,30 @@ public sealed class ConsumptionHttpMappingsTests {
     }
 
     [Fact]
+    public void GetConsumptionsHttpQuery_ToQuery_NormalizesFilters() {
+        var userId = Guid.NewGuid();
+        var httpQuery = new GetConsumptionsHttpQuery(
+            Page: 1,
+            Limit: 10,
+            DateFrom: null,
+            DateTo: null,
+            MealTypes: "Breakfast, dinner, breakfast, ,",
+            CaloriesFrom: -1,
+            CaloriesTo: 500,
+            HasImage: true,
+            HasAiSession: false);
+
+        GetConsumptionsQuery query = httpQuery.ToQuery(userId);
+
+        Assert.Multiple(
+            () => Assert.Equal(["Breakfast", "dinner"], query.MealTypes),
+            () => Assert.Null(query.CaloriesFrom),
+            () => Assert.Equal(500, query.CaloriesTo),
+            () => Assert.True(query.HasImage),
+            () => Assert.False(query.HasAiSession));
+    }
+
+    [Fact]
     public void GetConsumptionsOverviewHttpQuery_ToQuery_NormalizesPagingAndFavoriteLimit() {
         var userId = Guid.NewGuid();
         DateTime from = DateTime.UtcNow.AddDays(-30);

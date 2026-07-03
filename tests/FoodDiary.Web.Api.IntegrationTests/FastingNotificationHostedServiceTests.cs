@@ -3,6 +3,7 @@ using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
+using System.Reflection;
 
 namespace FoodDiary.Web.Api.IntegrationTests;
 
@@ -17,8 +18,7 @@ public sealed class FastingNotificationHostedServiceTests {
             Microsoft.Extensions.Options.Options.Create(new FastingNotificationOptions { Enabled = false, PollIntervalSeconds = 1 }),
             NullLogger<FastingNotificationHostedService>.Instance);
 
-        await service.StartAsync(CancellationToken.None);
-        await service.StopAsync(CancellationToken.None);
+        await InvokeExecuteAsync(service, CancellationToken.None);
 
         Assert.Equal(0, scheduler.CallCount);
     }
@@ -76,6 +76,15 @@ public sealed class FastingNotificationHostedServiceTests {
         services.AddSingleton(scheduler);
         services.AddSingleton<IFastingNotificationScheduler>(scheduler);
         return services.BuildServiceProvider();
+    }
+
+    private static async Task InvokeExecuteAsync(
+        FastingNotificationHostedService service,
+        CancellationToken cancellationToken) {
+        MethodInfo method = typeof(FastingNotificationHostedService).GetMethod(
+            "ExecuteAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+        await ((Task)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
     }
 
     [ExcludeFromCodeCoverage]

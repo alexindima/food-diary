@@ -13,12 +13,14 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Common;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Domain.Entities.Ai;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Options;
 using FoodDiary.Infrastructure.Persistence;
+using FoodDiary.Infrastructure.Persistence.Dashboard;
 using FoodDiary.Infrastructure.Services;
 using FoodDiary.Integrations;
 using FoodDiary.Integrations.Billing;
@@ -280,6 +282,36 @@ public sealed class DependencyInjectionTests {
             services,
             static descriptor => descriptor.ServiceType == typeof(DatabaseCommandTelemetryInterceptor));
         Assert.Equal(ServiceLifetime.Singleton, interceptorDescriptor.Lifetime);
+    }
+
+    [Fact]
+    public void AddInfrastructure_DashboardReadServicesResolveThroughScopedConcreteInstances() {
+        var services = new ServiceCollection();
+        services.AddSingleton(Substitute.For<IPublisher>());
+        IConfiguration configuration = CreateConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=food_diary;Username=test;Password=test",
+            ["Jwt:SecretKey"] = "super-secret-key-for-tests-only-123456789",
+            ["Jwt:Issuer"] = "FoodDiary",
+            ["Jwt:Audience"] = "FoodDiaryClients",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+        });
+
+        services.AddInfrastructure(configuration);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        using IServiceScope scope = provider.CreateScope();
+
+        Assert.Multiple(
+            () => Assert.Same(
+                scope.ServiceProvider.GetRequiredService<DashboardStatisticsReadService>(),
+                scope.ServiceProvider.GetRequiredService<IDashboardStatisticsReadService>()),
+            () => Assert.Same(
+                scope.ServiceProvider.GetRequiredService<DashboardBodyReadService>(),
+                scope.ServiceProvider.GetRequiredService<IDashboardBodyReadService>()),
+            () => Assert.Same(
+                scope.ServiceProvider.GetRequiredService<DashboardMealsReadService>(),
+                scope.ServiceProvider.GetRequiredService<IDashboardMealsReadService>()));
     }
 
     [Fact]

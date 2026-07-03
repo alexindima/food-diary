@@ -139,6 +139,23 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     }
 
     [Fact]
+    public async Task EndpointConnector_WhenPublicAddressConnectFails_DisposesSocketAndRethrows() {
+        Socket? createdSocket = null;
+        string publicHost = string.Join('.', 8, 8, 8, 8);
+        var connector = new DirectMxEndpointConnector(
+            addressFamily => {
+                createdSocket = new Socket(addressFamily, SocketType.Stream, ProtocolType.Tcp);
+                return createdSocket;
+            },
+            (_, _, _) => Task.FromException(new SocketException((int)SocketError.ConnectionRefused)));
+
+        await Assert.ThrowsAnyAsync<Exception>(() =>
+            connector.ConnectAsync(publicHost, 25, CancellationToken.None));
+        Assert.NotNull(createdSocket);
+        Assert.Throws<ObjectDisposedException>(() => createdSocket!.NoDelay = true);
+    }
+
+    [Fact]
     public void CreateMessage_WhenTextBodyIsMissing_CreatesMultipartAlternativeWithTextFallback() {
         DirectMxRelayDeliveryTransport transport = CreateTransport(CreateDkimSigningService());
         RelayEmailMessageRequest request = CreateRequest(textBody: null);

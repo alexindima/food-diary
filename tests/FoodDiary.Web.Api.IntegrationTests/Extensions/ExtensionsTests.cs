@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 
@@ -186,6 +188,7 @@ public sealed class ExtensionsTests {
             ["Jwt:ExpirationMinutes"] = "60",
             ["Jwt:RefreshTokenExpirationDays"] = "7",
             ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+            ["HttpsRedirection:Enabled"] = "true",
             ["TelegramBot:ApiSecret"] = "",
             ["Cors:Origins:0"] = "http://localhost:4200",
         });
@@ -195,6 +198,21 @@ public sealed class ExtensionsTests {
         WebApplication configured = app.UseApiPipeline();
 
         Assert.Same(app, configured);
+    }
+
+    [Fact]
+    public void AddApiServices_WithRedisConnection_RegistersRedisDistributedCache() {
+        var services = new ServiceCollection();
+        IConfiguration configuration = CreateApiConfiguration(new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:Redis"] = "localhost:6379",
+        });
+
+        services.AddApiServices(configuration);
+
+        ServiceDescriptor cacheDescriptor = Assert.Single(
+            services,
+            descriptor => descriptor.ServiceType == typeof(IDistributedCache));
+        Assert.Contains("RedisCache", cacheDescriptor.ImplementationType?.Name, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -228,6 +246,27 @@ public sealed class ExtensionsTests {
 
     private static Error CreateError(string errorCode, string message) =>
         new(errorCode, message, Kind: ErrorKindResolver.Resolve(errorCode));
+
+    private static IConfiguration CreateApiConfiguration(Dictionary<string, string?> overrides) {
+        var values = new Dictionary<string, string?>(StringComparer.Ordinal) {
+            ["ConnectionStrings:DefaultConnection"] = "Host=localhost;Database=fooddiary;Username=postgres;Password=test",
+            ["Jwt:SecretKey"] = "integration-tests-jwt-secret-key-123",
+            ["Jwt:Issuer"] = "FoodDiaryApi",
+            ["Jwt:Audience"] = "FoodDiaryClient",
+            ["Jwt:ExpirationMinutes"] = "60",
+            ["Jwt:RefreshTokenExpirationDays"] = "7",
+            ["Jwt:RememberMeRefreshTokenExpirationDays"] = "90",
+            ["TelegramBot:ApiSecret"] = "",
+            ["Cors:Origins:0"] = "http://localhost:4200",
+        };
+        foreach ((string key, string? value) in overrides) {
+            values[key] = value;
+        }
+
+        return new ConfigurationBuilder()
+            .AddInMemoryCollection(values)
+            .Build();
+    }
 
     private static HealthCheckRegistration CreateHealthCheckRegistration(string name, IReadOnlyCollection<string> tags) =>
         new(

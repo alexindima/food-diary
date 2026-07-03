@@ -1196,6 +1196,24 @@ public class ProductsFeatureTests {
     }
 
     [Fact]
+    public async Task GetProductsOverviewQueryHandler_WhenUserAccessFails_ReturnsAccessFailure() {
+        var user = User.Create("overview-inactive-product-user@example.com", "hash");
+        user.Deactivate();
+        var handler = new GetProductsOverviewQueryHandler(
+            new OverviewProductRepository(),
+            new StubRecentItemRepository([]),
+            new StubFavoriteProductRepository([]),
+            new StubUserRepository(user));
+
+        Result<ProductOverviewModel> result = await handler.Handle(
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
+    }
+
+    [Fact]
     public async Task GetProductsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetProductsOverviewQueryHandler(
             new OverviewProductRepository(),
@@ -1241,6 +1259,34 @@ public class ProductsFeatureTests {
         ResultAssert.Success(result);
         Assert.Empty(result.Value.RecentItems);
         Assert.Equal(1, recentRepository.GetRecentProductsCallCount);
+    }
+
+    [Fact]
+    public async Task GetProductsOverviewQueryHandler_WithHasImageFilter_FiltersRecentItems() {
+        var user = User.Create("overview-product-image-filter@example.com", "hash");
+        Product withImage = CreateProduct(user.Id, "Photo Yogurt", imageUrl: "https://cdn.test/yogurt.jpg");
+        Product withoutImage = CreateProduct(user.Id, "Plain Yogurt");
+        var repository = new OverviewProductRepository(
+            productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
+                [withImage.Id] = (withImage, 4),
+                [withoutImage.Id] = (withoutImage, 2),
+            });
+        var handler = new GetProductsOverviewQueryHandler(
+            repository,
+            new StubRecentItemRepository([
+                new RecentProductUsage(withImage.Id, 4, DateTime.UtcNow),
+                new RecentProductUsage(withoutImage.Id, 2, DateTime.UtcNow),
+            ]),
+            new StubFavoriteProductRepository([]),
+            new StubUserRepository(user));
+
+        Result<ProductOverviewModel> result = await handler.Handle(
+            new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, HasImage: true),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        ProductModel recent = Assert.Single(result.Value.RecentItems);
+        Assert.Equal(withImage.Id.Value, recent.Id);
     }
 
     [Fact]
@@ -1598,6 +1644,22 @@ public class ProductsFeatureTests {
             .GetProperty(nameof(FavoriteProduct.Product))!
             .SetValue(favorite, product);
     }
+
+    private static Product CreateProduct(UserId userId, string name, string? imageUrl = null) =>
+        Product.Create(
+            userId,
+            name,
+            MeasurementUnit.G,
+            baseAmount: 100,
+            defaultPortionAmount: 100,
+            caloriesPerBase: 80,
+            proteinsPerBase: 5,
+            fatsPerBase: 2,
+            carbsPerBase: 10,
+            fiberPerBase: 1,
+            alcoholPerBase: 0,
+            imageUrl: imageUrl,
+            visibility: Visibility.Private);
 
     private static void SetProductUsageCollections(Product product, int mealItemsCount, int recipeIngredientsCount) {
         var mealItems = Enumerable.Range(0, mealItemsCount)

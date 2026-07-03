@@ -133,6 +133,20 @@ public class ConsumptionsAdditionalValidatorTests {
     }
 
     [Fact]
+    public void ManualNutrition_WithNutrientAboveMaximum_ReturnsFailure() {
+        Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(
+            200,
+            ManualNutritionLimits.MaxNutrient + 1,
+            10,
+            50,
+            5,
+            0);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
+    [Fact]
     public void ManualNutrition_WithValidData_ReturnsSuccess() {
         Result<ManualNutritionInput> result = ManualNutritionValidator.Validate(200, 30, 10, 50, 5, 0);
         ResultAssert.Success(result);

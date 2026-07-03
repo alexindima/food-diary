@@ -2125,6 +2125,26 @@ public class FastingFeatureTests {
     }
 
     [Fact]
+    public async Task ProcessDueNotificationsAsync_WhenPostCommitQueueHasActions_FlushesQueue() {
+        var postCommitActionQueue = new RecordingPostCommitActionQueue(hasActions: true);
+        var scheduler = new FastingNotificationScheduler(
+            new InMemoryFastingOccurrenceRepository(),
+            new InMemoryFastingCheckInRepository(),
+            new InMemorySchedulerNotificationRepository(),
+            new InMemorySchedulerNotificationWriter(new InMemorySchedulerNotificationRepository(), new RecordingWebPushNotificationSender()),
+            new RecordingNotificationPusher(),
+            CreateUnitOfWork(),
+            postCommitActionQueue,
+            new FixedDateTimeProvider(),
+            NullLogger<FastingNotificationScheduler>.Instance);
+
+        int created = await scheduler.ProcessDueNotificationsAsync(CancellationToken.None);
+
+        Assert.Equal(0, created);
+        Assert.Equal(1, postCommitActionQueue.FlushCallCount);
+    }
+
+    [Fact]
     public async Task TryCreateNotificationAsync_WithUnsupportedNotificationType_Throws() {
         var user = User.Create("fasting-unsupported-notification@example.com", "hash");
         var plan = FastingPlan.CreateCyclic(user.Id, fastDays: 1, eatDays: 1, eatDayFastHours: 16, eatDayEatingWindowHours: 8, FixedNow, FixedNow);
@@ -2883,6 +2903,20 @@ public class FastingFeatureTests {
         }
 
         public Task FlushAsync(CancellationToken cancellationToken = default) => Task.CompletedTask;
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingPostCommitActionQueue(bool hasActions) : IPostCommitActionQueue {
+        public bool HasActions => hasActions;
+        public int FlushCallCount { get; private set; }
+
+        public void Enqueue(Func<CancellationToken, Task> action) {
+        }
+
+        public Task FlushAsync(CancellationToken cancellationToken = default) {
+            FlushCallCount++;
+            return Task.CompletedTask;
+        }
     }
 
     [ExcludeFromCodeCoverage]

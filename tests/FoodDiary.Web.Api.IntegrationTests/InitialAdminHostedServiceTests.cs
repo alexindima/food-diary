@@ -1,6 +1,8 @@
 using FoodDiary.Application;
+using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Infrastructure.Persistence;
@@ -8,6 +10,7 @@ using FoodDiary.Infrastructure.Persistence.Users;
 using FoodDiary.Web.Api.IntegrationTests.TestInfrastructure;
 using FoodDiary.Web.Api.Options;
 using FoodDiary.Web.Api.Services;
+using FoodDiary.Mediator;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -92,6 +95,21 @@ public sealed class InitialAdminHostedServiceTests {
             admin.GetRoleNames());
     }
 
+    [Fact]
+    public async Task StartAsync_WhenBootstrapFails_LogsAndReturns() {
+        var services = new ServiceCollection();
+        services.AddScoped<ISender>(_ => new FailingSender());
+        await using ServiceProvider provider = services.BuildServiceProvider();
+        InitialAdminHostedService service = CreateService(
+            provider,
+            new InitialAdminOptions {
+                Email = " owner@fooddiary.test ",
+                Password = "StrongPassword123",
+            });
+
+        await service.StartAsync(CancellationToken.None);
+    }
+
     private static InitialAdminHostedService CreateService(
         IServiceProvider serviceProvider,
         InitialAdminOptions options) =>
@@ -121,5 +139,32 @@ public sealed class InitialAdminHostedServiceTests {
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
             dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class FailingSender : ISender {
+        public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default) {
+            if (request is BootstrapInitialAdminCommand) {
+                object result = Result.Failure<BootstrapInitialAdminModel>(Errors.Validation.Invalid("InitialAdmin", "failed"));
+                return Task.FromResult((TResponse)result);
+            }
+
+            throw new NotSupportedException();
+        }
+
+        public Task Send<TRequest>(TRequest request, CancellationToken cancellationToken = default)
+            where TRequest : IRequest =>
+            throw new NotSupportedException();
+
+        public Task<object?> Send(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<TResponse> CreateStream<TResponse>(
+            IStreamRequest<TResponse> request,
+            CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+
+        public IAsyncEnumerable<object?> CreateStream(object request, CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
     }
 }
