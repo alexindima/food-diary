@@ -279,6 +279,23 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedAuthenticationMutationServices_DoNotUseFullUserRepositoryOutsideAdapter() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Authentication", "Commands", "ConfirmPasswordReset", "ConfirmPasswordResetCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "RequestPasswordReset", "RequestPasswordResetCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "ResendEmailVerification", "ResendEmailVerificationCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "VerifyEmail", "VerifyEmailCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Services", "AuthenticationTokenService.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseLegacyCurrentUserAccessLoader() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

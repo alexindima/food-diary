@@ -1,7 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Models;
@@ -11,7 +10,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Authentication.Services;
 
 public sealed class AuthenticationTokenService(
-    IUserRepository userRepository,
+    IAuthenticationUserMutationService userMutationService,
     IUserLoginEventRepository userLoginEventRepository,
     IRefreshTokenSessionRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
@@ -33,7 +32,7 @@ public sealed class AuthenticationTokenService(
 
         string hashedRefreshToken = SecurityTokenGenerator.HashForStorage(refreshToken);
         user.RecordAuthenticationActivity(nowUtc);
-        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         if (refreshSessionId.HasValue) {
             UserRefreshTokenSession? session = await refreshTokenSessionRepository.GetByIdAsync(refreshSessionId.Value, cancellationToken).ConfigureAwait(false);

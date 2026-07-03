@@ -3,7 +3,7 @@ using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.ConfirmPasswordReset;
 
 public sealed class ConfirmPasswordResetCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserMutationService userMutationService,
     IPasswordHasher passwordHasher,
     TimeProvider dateTimeProvider,
     IAuthenticationTokenService authenticationTokenService,
@@ -25,7 +25,7 @@ public sealed class ConfirmPasswordResetCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userMutationService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound(userId));
         }

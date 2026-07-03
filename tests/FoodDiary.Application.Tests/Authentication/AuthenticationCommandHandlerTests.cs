@@ -1065,7 +1065,8 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class StubUserRepository(User? user = null, params User[] otherUsers) : IUserRepository, IAuthenticationUserLookupService {
+    private sealed class StubUserRepository(User? user = null, params User[] otherUsers)
+        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1090,7 +1091,8 @@ public sealed class AuthenticationCommandHandlerTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class DirectUserByIdRepository(User? user = null) : IUserRepository, IAuthenticationUserLookupService {
+    private sealed class DirectUserByIdRepository(User? user = null)
+        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user?.Id == id ? user : null);

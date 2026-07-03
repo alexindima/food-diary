@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Application.Abstractions.Authentication.Common;
@@ -11,7 +10,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.RequestPasswordReset;
 
 public sealed class RequestPasswordResetCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserMutationService userMutationService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
@@ -22,7 +21,7 @@ public sealed class RequestPasswordResetCommandHandler(
     private static readonly TimeSpan TokenLifetime = TimeSpan.FromHours(1);
 
     public async Task<Result> Handle(RequestPasswordResetCommand command, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
+        User? user = await userMutationService.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
         if (!AuthenticationUserAccessPolicy.CanRequestPasswordReset(user)) {
             return Result.Success();
         }
@@ -43,7 +42,7 @@ public sealed class RequestPasswordResetCommandHandler(
             TokenHash: tokenHash,
             ExpiresAtUtc: expiresAtUtc,
             IssuedAtUtc: nowUtc));
-        await userRepository.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userMutationService.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         PasswordResetMessage message = new(currentUser.Email, currentUser.Id.Value.ToString(), token, currentUser.Language, command.ClientOrigin);
         postCommitActionQueue.Enqueue(async ct => {

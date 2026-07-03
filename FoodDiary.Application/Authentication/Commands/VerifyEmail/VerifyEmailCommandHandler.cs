@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Authentication.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
@@ -10,7 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.VerifyEmail;
 
 public sealed class VerifyEmailCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserMutationService userMutationService,
     IPasswordHasher passwordHasher,
     TimeProvider dateTimeProvider,
     IPostCommitActionQueue postCommitActionQueue,
@@ -23,7 +22,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userMutationService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure(Errors.User.NotFound(userId));
         }
@@ -44,7 +43,7 @@ public sealed class VerifyEmailCommandHandler(
         }
 
         user.CompleteEmailVerification();
-        await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+        await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
 
         postCommitActionQueue.Enqueue(async ct => {
             try {
