@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Hydration.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
@@ -12,6 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.WeeklyCheckIn.Models;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.WeeklyCheckIn;
 
@@ -77,8 +77,8 @@ public class WeeklyCheckInFeatureTests {
     public async Task WeeklyCheckInUserProfileService_WithAccessibleUser_ReturnsDailyCalorieTarget() {
         var user = User.Create("weekly-profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2200);
-        IUserRepository repository = CreateUserRepository(user);
-        var service = new WeeklyCheckInUserProfileService(repository);
+        IUserContextService userContextService = CreateUserContextService(user);
+        var service = new WeeklyCheckInUserProfileService(userContextService);
 
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
 
@@ -88,8 +88,8 @@ public class WeeklyCheckInFeatureTests {
 
     [Fact]
     public async Task WeeklyCheckInUserProfileService_WithMissingUser_ReturnsInvalidToken() {
-        IUserRepository repository = CreateUserRepository(user: null);
-        var service = new WeeklyCheckInUserProfileService(repository);
+        IUserContextService userContextService = CreateUserContextService(user: null);
+        var service = new WeeklyCheckInUserProfileService(userContextService);
 
         Result<WeeklyCheckInUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
@@ -142,15 +142,17 @@ public class WeeklyCheckInFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static IUserContextService CreateUserContextService(User? user) {
+        IUserContextService service = Substitute.For<IUserContextService>();
+        service
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == userId ? user : null);
+                return Task.FromResult(user is not null && user.Id == userId
+                    ? Result.Success(user)
+                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
             });
-        return repository;
+        return service;
     }
 
     private static IWeeklyCheckInUserProfileService CreateProfileService(User? user) {

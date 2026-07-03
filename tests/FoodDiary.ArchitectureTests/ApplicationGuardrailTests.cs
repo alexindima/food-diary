@@ -224,13 +224,7 @@ public sealed class ApplicationGuardrailTests {
                 root,
                 directory,
                 "IUserRepository",
-                [
-                    Path.Combine(applicationRoot, "Ai", "Services"),
-                    Path.Combine(applicationRoot, "Gamification", "Services"),
-                    Path.Combine(applicationRoot, "Hydration", "Services"),
-                    Path.Combine(applicationRoot, "Tdee", "Services"),
-                    Path.Combine(applicationRoot, "WeeklyCheckIn", "Services"),
-                ]))];
+                []))];
 
         Assert.Empty(violations);
     }

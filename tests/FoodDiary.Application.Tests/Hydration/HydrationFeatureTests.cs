@@ -13,7 +13,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Hydration.Models;
 using FoodDiary.Application.Hydration.Services;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -89,10 +89,10 @@ public class HydrationFeatureTests {
 
     [Fact]
     public async Task HydrationGoalService_WhenUserIsMissing_ReturnsInvalidToken() {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository.GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<User?>(null));
-        var service = new HydrationGoalService(repository);
+        IUserContextService userContextService = Substitute.For<IUserContextService>();
+        userContextService.GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Result.Failure<User>(Errors.Authentication.InvalidToken));
+        var service = new HydrationGoalService(userContextService);
 
         Result<double?> result = await service.GetCurrentGoalAsync(UserId.New(), CancellationToken.None);
 

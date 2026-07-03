@@ -2,12 +2,12 @@ using FoodDiary.Application.Gamification.Queries.GetGamification;
 using FoodDiary.Application.Gamification.Common;
 using FoodDiary.Application.Gamification.Services;
 using FoodDiary.Application.Abstractions.Meals.Common;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Gamification.Models;
+using FoodDiary.Application.Users.Common;
 
 namespace FoodDiary.Application.Tests.Gamification;
 
@@ -76,8 +76,8 @@ public class GamificationFeatureTests {
     public async Task GamificationUserProfileService_WithAccessibleUser_ReturnsProfile() {
         var user = User.Create("profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2100);
-        IUserRepository repository = CreateUserRepository(user);
-        var service = new GamificationUserProfileService(repository);
+        IUserContextService userContextService = CreateUserContextService(user);
+        var service = new GamificationUserProfileService(userContextService);
 
         Result<IGamificationUserProfile> result = await service.GetAsync(user.Id, CancellationToken.None);
 
@@ -87,8 +87,8 @@ public class GamificationFeatureTests {
 
     [Fact]
     public async Task GamificationUserProfileService_WithMissingUser_ReturnsInvalidToken() {
-        IUserRepository repository = CreateUserRepository(user: null);
-        var service = new GamificationUserProfileService(repository);
+        IUserContextService userContextService = CreateUserContextService(user: null);
+        var service = new GamificationUserProfileService(userContextService);
 
         Result<IGamificationUserProfile> result = await service.GetAsync(UserId.New(), CancellationToken.None);
 
@@ -111,15 +111,17 @@ public class GamificationFeatureTests {
         return repository;
     }
 
-    private static IUserRepository CreateUserRepository(User? user) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository
-            .GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+    private static IUserContextService CreateUserContextService(User? user) {
+        IUserContextService service = Substitute.For<IUserContextService>();
+        service
+            .GetAccessibleUserAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 UserId userId = call.Arg<UserId>();
-                return Task.FromResult(user is not null && user.Id == userId ? user : null);
+                return Task.FromResult(user is not null && user.Id == userId
+                    ? Result.Success(user)
+                    : Result.Failure<User>(Errors.Authentication.InvalidToken));
             });
-        return repository;
+        return service;
     }
 
     private static IGamificationUserProfileService CreateUserProfileService(User? user) {
