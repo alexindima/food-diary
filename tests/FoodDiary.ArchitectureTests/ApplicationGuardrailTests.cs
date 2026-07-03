@@ -284,6 +284,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Dietologist", "Commands", "RevokeInvitation", "RevokeInvitationCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Commands", "UpdateDietologistPermissions", "UpdateDietologistPermissionsCommandHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientDashboard", "GetClientDashboardQueryHandler.cs"),
+            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologist", "GetMyDietologistQueryHandler.cs"),
             Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
@@ -301,7 +302,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DietologistUserContextService_UsesSharedCurrentUserAccessPolicyThroughUserContextService() {
+    public void DietologistUserContextService_UsesSharedUserContextAndNarrowLookupServices() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
@@ -312,6 +313,8 @@ public sealed class ApplicationGuardrailTests {
         string source = File.ReadAllText(servicePath);
 
         Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
+        Assert.Contains("IDietologistUserLookupService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
         Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);
     }
 

@@ -114,11 +114,11 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task DietologistUserContextService_GetUserByIdAsync_ReturnsRepositoryUser() {
         var user = User.Create("dietologist-context@example.com", "hash");
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository.GetByIdAsync(user.Id, Arg.Any<CancellationToken>())
+        IDietologistUserLookupService userLookupService = Substitute.For<IDietologistUserLookupService>();
+        userLookupService.GetUserByIdAsync(user.Id, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<User?>(user));
         IUserContextService userContextService = Substitute.For<IUserContextService>();
-        var service = new DietologistUserContextService(userContextService, repository);
+        var service = new DietologistUserContextService(userContextService, userLookupService);
 
         User? result = await service.GetUserByIdAsync(user.Id, CancellationToken.None);
 
@@ -2366,7 +2366,7 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService, IDietologistUserContextService {
+    private sealed class InMemoryUserRepository : IUserRepository, ICurrentUserAccessService, IDietologistUserContextService, IDietologistUserLookupService {
         private readonly List<User> _users = [];
         private readonly List<Role> _roles = [];
 
@@ -2439,7 +2439,7 @@ public class DietologistFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SequenceUserRepository(params User?[] users) : IUserRepository, IDietologistUserContextService {
+    private sealed class SequenceUserRepository(params User?[] users) : IUserRepository, IDietologistUserContextService, IDietologistUserLookupService {
         private readonly Queue<User?> _users = new(users);
 
         public Task<User?> GetByIdAsync(UserId id, CancellationToken ct = default) =>

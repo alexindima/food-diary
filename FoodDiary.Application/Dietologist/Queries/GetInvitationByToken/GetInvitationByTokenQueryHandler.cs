@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Enums;
@@ -14,7 +14,7 @@ namespace FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 
 public class GetInvitationByTokenQueryHandler(
     IDietologistInvitationRepository invitationRepository,
-    IUserRepository userRepository)
+    IDietologistUserLookupService userLookupService)
     : IQueryHandler<GetInvitationByTokenQuery, Result<InvitationModel>> {
     public async Task<Result<InvitationModel>> Handle(GetInvitationByTokenQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
@@ -29,7 +29,7 @@ public class GetInvitationByTokenQueryHandler(
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
         }
 
-        User? user = await userRepository.GetByIdAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupService.GetUserByIdAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
         if (user is null ||
             !string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
