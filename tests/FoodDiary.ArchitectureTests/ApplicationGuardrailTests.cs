@@ -260,6 +260,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedAuthenticationLookupHandlers_DoNotUseFullUserRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Authentication", "Commands", "AdminSsoExchange", "AdminSsoExchangeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "AdminSsoStart", "AdminSsoStartCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "Login", "LoginCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "RefreshToken", "RefreshTokenCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramBotAuth", "TelegramBotAuthCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramLoginWidget", "TelegramLoginWidgetCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramVerify", "TelegramVerifyCommandHandler.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseLegacyCurrentUserAccessLoader() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

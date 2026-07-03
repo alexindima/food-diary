@@ -3,7 +3,6 @@ using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.Entities.Users;
@@ -11,11 +10,11 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.Login;
 
 public class LoginCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserLookupService userLookupService,
     IPasswordHasher passwordHasher,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(LoginCommand command, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupService.GetByEmailIncludingDeletedAsync(command.Email, cancellationToken).ConfigureAwait(false);
         if (user == null || !passwordHasher.Verify(command.Password, user.Password)) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidCredentials);
         }

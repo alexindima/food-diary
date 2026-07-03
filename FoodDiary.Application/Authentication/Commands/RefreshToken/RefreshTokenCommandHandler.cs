@@ -4,7 +4,6 @@ using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -13,7 +12,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
 public class RefreshTokenCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserLookupService userLookupService,
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
     IRefreshTokenSessionRepository refreshTokenSessionRepository,
@@ -30,7 +29,7 @@ public class RefreshTokenCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);
         }
 
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AuthenticationModel>(Errors.Authentication.InvalidToken);

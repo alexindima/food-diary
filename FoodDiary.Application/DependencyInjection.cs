@@ -2,6 +2,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Ai.Common;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Ai.Services;
@@ -65,6 +66,7 @@ public static class DependencyInjection {
         services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
+        services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();

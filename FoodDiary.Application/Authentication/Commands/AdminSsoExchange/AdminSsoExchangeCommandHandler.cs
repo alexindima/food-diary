@@ -4,7 +4,6 @@ using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Application.Abstractions.Authentication.Services;
@@ -14,7 +13,7 @@ namespace FoodDiary.Application.Authentication.Commands.AdminSsoExchange;
 
 public sealed class AdminSsoExchangeCommandHandler(
     IAdminSsoService adminSsoService,
-    IUserRepository userRepository,
+    IAuthenticationUserLookupService userLookupService,
     IAuthenticationTokenService authenticationTokenService)
     : ICommandHandler<AdminSsoExchangeCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(
@@ -25,7 +24,7 @@ public sealed class AdminSsoExchangeCommandHandler(
             return Result.Failure<AuthenticationModel>(Errors.Authentication.AdminSsoInvalidCode);
         }
 
-        User? user = await userRepository.GetByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupService.GetByIdAsync(userId.Value, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return Result.Failure<AuthenticationModel>(Errors.User.NotFound());
         }

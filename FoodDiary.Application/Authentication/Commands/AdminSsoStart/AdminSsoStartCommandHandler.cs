@@ -1,7 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Domain.Enums;
@@ -12,7 +11,7 @@ namespace FoodDiary.Application.Authentication.Commands.AdminSsoStart;
 
 public sealed class AdminSsoStartCommandHandler(
     IAdminSsoService adminSsoService,
-    IUserRepository userRepository)
+    IAuthenticationUserLookupService userLookupService)
     : ICommandHandler<AdminSsoStartCommand, Result<AdminSsoStartModel>> {
     public async Task<Result<AdminSsoStartModel>> Handle(
         AdminSsoStartCommand command,
@@ -23,7 +22,7 @@ public sealed class AdminSsoStartCommandHandler(
         }
 
         var userId = new UserId(command.UserId);
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupService.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
         if (accessError is not null) {
             return Result.Failure<AdminSsoStartModel>(accessError);

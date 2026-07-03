@@ -271,7 +271,7 @@ public sealed class RefreshTokenCommandHandlerTests {
             nowUtc);
 
     [ExcludeFromCodeCoverage]
-    private sealed class InMemoryUserRepository(User user) : IUserRepository {
+    private sealed class InMemoryUserRepository(User user) : IUserRepository, IAuthenticationUserLookupService {
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => Task.FromResult<User?>(null);
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(user.Id == id ? user : null);
