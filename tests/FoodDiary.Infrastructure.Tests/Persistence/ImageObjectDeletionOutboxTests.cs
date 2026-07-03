@@ -87,6 +87,16 @@ public sealed class ImageObjectDeletionOutboxTests {
     }
 
     [Fact]
+    public void Create_WithTooLongObjectKey_Throws() {
+        string objectKey = new('a', 1025);
+
+        ArgumentOutOfRangeException ex = Assert.Throws<ArgumentOutOfRangeException>(() =>
+            ImageObjectDeletionOutboxMessage.Create(objectKey, DateTime.UtcNow));
+
+        Assert.Equal("objectKey", ex.ParamName);
+    }
+
+    [Fact]
     public void Create_TrimsObjectKeyAndNormalizesLocalDate() {
         var localDate = new DateTime(2026, 7, 1, 12, 0, 0, DateTimeKind.Local);
 

@@ -10,6 +10,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -92,12 +93,53 @@ public sealed class DashboardMealsReadServiceTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Fact]
+    public async Task GetMealsAsync_WithMealWithoutAiSessions_ReturnsEmptyAiSessions() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var user = User.Create($"dashboard-meals-empty-ai-{Guid.NewGuid():N}@example.com", "hash");
+        Meal meal = CreateMeal(user.Id);
+        context.AddRange(user, meal);
+        await context.SaveChangesAsync();
+        var readService = new DashboardMealsReadService(context);
+
+        Result<DashboardMealsReadModel> result = await readService.GetMealsAsync(
+            user.Id,
+            page: 1,
+            limit: 10,
+            new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc),
+            new DateTime(2026, 6, 1, 23, 59, 59, DateTimeKind.Utc),
+            CancellationToken.None);
+
+        Assert.True(result.IsSuccess, result.Error.Message);
+        DashboardMealReadModel projectedMeal = Assert.Single(result.Value.Items);
+        Assert.Empty(projectedMeal.AiSessions);
+    }
+
+    [Theory]
+    [InlineData(DateTimeKind.Utc)]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    public void NormalizeUtcInstant_HandlesAllDateTimeKinds(DateTimeKind kind) {
+        DateTime value = new(2026, 6, 1, 12, 0, 0, kind);
+
+        DateTime normalized = InvokeNormalizeUtcInstant(value);
+
+        Assert.Equal(DateTimeKind.Utc, normalized.Kind);
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
 
         return new FoodDiaryDbContext(options);
+    }
+
+    private static DateTime InvokeNormalizeUtcInstant(DateTime value) {
+        MethodInfo method = typeof(DashboardMealsReadService).GetMethod(
+            "NormalizeUtcInstant",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        return (DateTime)method.Invoke(null, [value])!;
     }
 
     private static Meal CreateMeal(Domain.ValueObjects.Ids.UserId userId) {

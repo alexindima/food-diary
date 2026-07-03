@@ -6,6 +6,7 @@ using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace FoodDiary.Infrastructure.Tests.Persistence;
 
@@ -65,12 +66,31 @@ public sealed class DashboardStatisticsReadServiceTests {
         Assert.Equal("Validation.Invalid", result.Error.Code);
     }
 
+    [Theory]
+    [InlineData(DateTimeKind.Utc)]
+    [InlineData(DateTimeKind.Local)]
+    [InlineData(DateTimeKind.Unspecified)]
+    public void NormalizeUtcInstant_HandlesAllDateTimeKinds(DateTimeKind kind) {
+        DateTime value = new(2026, 6, 1, 12, 0, 0, kind);
+
+        DateTime normalized = InvokeNormalizeUtcInstant(value);
+
+        Assert.Equal(DateTimeKind.Utc, normalized.Kind);
+    }
+
     private static FoodDiaryDbContext CreateContext() {
         DbContextOptions<FoodDiaryDbContext> options = new DbContextOptionsBuilder<FoodDiaryDbContext>()
             .UseInMemoryDatabase(Guid.NewGuid().ToString("N"))
             .Options;
 
         return new FoodDiaryDbContext(options);
+    }
+
+    private static DateTime InvokeNormalizeUtcInstant(DateTime value) {
+        MethodInfo method = typeof(DashboardStatisticsReadService).GetMethod(
+            "NormalizeUtcInstant",
+            BindingFlags.Static | BindingFlags.NonPublic)!;
+        return (DateTime)method.Invoke(null, [value])!;
     }
 
     private static Meal CreateMeal(

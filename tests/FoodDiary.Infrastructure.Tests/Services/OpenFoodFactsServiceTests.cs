@@ -353,6 +353,48 @@ public sealed class OpenFoodFactsServiceTests {
         Assert.Contains("page_size=50", handler.LastRequestUri!.Query, StringComparison.Ordinal);
     }
 
+    [Theory]
+    [InlineData("timeout", false, typeof(TaskCanceledException))]
+    [InlineData("json_error", false, typeof(System.Text.Json.JsonException))]
+    [InlineData("transport_error", false, typeof(HttpRequestException))]
+    [InlineData("failure", false, typeof(InvalidOperationException))]
+    public void ResolveFailureOutcome_MapsExceptionTypeToOutcome(
+        string expectedOutcome,
+        bool cancelToken,
+        Type exceptionType) {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        if (cancelToken) {
+            cancellationTokenSource.Cancel();
+        }
+
+        Exception exception = exceptionType == typeof(HttpRequestException)
+            ? new HttpRequestException("network error")
+            : (Exception)Activator.CreateInstance(exceptionType, "failed")!;
+
+        string outcome = InvokeResolveFailureOutcome(exception, cancellationTokenSource.Token);
+
+        Assert.Equal(expectedOutcome, outcome);
+    }
+
+    [Fact]
+    public void ResolveFailureOutcome_WithCanceledToken_ReturnsCanceled() {
+        using var cancellationTokenSource = new CancellationTokenSource();
+        cancellationTokenSource.Cancel();
+
+        string outcome = InvokeResolveFailureOutcome(new TaskCanceledException("canceled"), cancellationTokenSource.Token);
+
+        Assert.Equal("canceled", outcome);
+    }
+
+    [Fact]
+    public void ResolveFailureOutcome_WithHttpStatusCode_ReturnsHttpError() {
+        var exception = new HttpRequestException("server error", inner: null, HttpStatusCode.InternalServerError);
+
+        string outcome = InvokeResolveFailureOutcome(exception, CancellationToken.None);
+
+        Assert.Equal("http_error", outcome);
+    }
+
     private static OpenFoodFactsService CreateService(HttpMessageHandler handler) {
         var httpClient = new HttpClient(handler);
         return new OpenFoodFactsService(
@@ -373,6 +415,13 @@ public sealed class OpenFoodFactsServiceTests {
         object products = cachedType.GetProperty("Products")!.GetValue(cached)!;
         object stale = Activator.CreateInstance(cachedType, FixedNow - age, products)!;
         cache.GetType().GetMethod("set_Item")!.Invoke(cache, [cacheKey, stale]);
+    }
+
+    private static string InvokeResolveFailureOutcome(Exception exception, CancellationToken cancellationToken) {
+        System.Reflection.MethodInfo method = typeof(OpenFoodFactsService).GetMethod(
+            "ResolveFailureOutcome",
+            System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.NonPublic)!;
+        return (string)method.Invoke(null, [exception, cancellationToken])!;
     }
 
     private static readonly DateTimeOffset FixedNow = new(2026, 7, 1, 8, 0, 0, TimeSpan.Zero);

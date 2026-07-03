@@ -10,8 +10,11 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
     RabbitMqMailRelayBroker broker,
     IMailRelayQueueStore queueStore,
     MailRelayMessageProcessor messageProcessor,
-    ILogger<RabbitMqMailRelayConsumerHostedService> logger) : BackgroundService {
+    ILogger<RabbitMqMailRelayConsumerHostedService> logger,
+    Func<CancellationToken, Task<IConnection>>? createConnectionAsync = null) : BackgroundService {
     private readonly MailRelayBrokerOptions _brokerOptions = brokerOptions.Value;
+    private readonly Func<CancellationToken, Task<IConnection>> _createConnectionAsync =
+        createConnectionAsync ?? (cancellationToken => CreateConnectionFactory(brokerOptions.Value).CreateConnectionAsync(cancellationToken));
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken) {
         if (!string.Equals(_brokerOptions.Backend, MailRelayBrokerOptions.RabbitMqBackend, StringComparison.Ordinal)) {
@@ -21,7 +24,7 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
 
         while (!stoppingToken.IsCancellationRequested) {
             try {
-                IConnection connection = await CreateConnectionFactory().CreateConnectionAsync(stoppingToken).ConfigureAwait(false);
+                IConnection connection = await _createConnectionAsync(stoppingToken).ConfigureAwait(false);
                 await using (connection.ConfigureAwait(false)) {
                     IChannel channel = await connection.CreateChannelAsync(cancellationToken: stoppingToken).ConfigureAwait(false);
                     await using (channel.ConfigureAwait(false)) {
@@ -53,13 +56,13 @@ public sealed class RabbitMqMailRelayConsumerHostedService(
         }
     }
 
-    private ConnectionFactory CreateConnectionFactory() {
+    private static ConnectionFactory CreateConnectionFactory(MailRelayBrokerOptions brokerOptions) {
         return new ConnectionFactory {
-            HostName = _brokerOptions.HostName,
-            Port = _brokerOptions.Port,
-            UserName = _brokerOptions.UserName,
-            Password = _brokerOptions.Password,
-            VirtualHost = _brokerOptions.VirtualHost,
+            HostName = brokerOptions.HostName,
+            Port = brokerOptions.Port,
+            UserName = brokerOptions.UserName,
+            Password = brokerOptions.Password,
+            VirtualHost = brokerOptions.VirtualHost,
         };
     }
 

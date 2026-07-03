@@ -12,6 +12,8 @@ using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.Hydration.Services;
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 
 namespace FoodDiary.Application.Tests.Hydration;
 
@@ -83,6 +85,19 @@ public class HydrationFeatureTests {
         Result result = HydrationValidators.ValidateAmount(500);
 
         ResultAssert.Success(result);
+    }
+
+    [Fact]
+    public async Task HydrationGoalService_WhenUserIsMissing_ReturnsInvalidToken() {
+        IUserRepository repository = Substitute.For<IUserRepository>();
+        repository.GetByIdAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<User?>(null));
+        var service = new HydrationGoalService(repository);
+
+        Result<double?> result = await service.GetCurrentGoalAsync(UserId.New(), CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Authentication.InvalidToken", result.Error.Code);
     }
 
     [Fact]

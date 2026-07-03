@@ -1604,6 +1604,49 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(DateTimeKind.Utc, repository.LastDateTo!.Value.Kind);
     }
 
+    [Theory]
+    [InlineData(null)]
+    [InlineData("not-a-meal")]
+    public async Task GetConsumptionsQueryHandler_WithEmptyOrInvalidMealTypes_PassesNullMealTypeFilter(string? mealType) {
+        var repository = new RecordingMealPageRepository();
+        var handler = new GetConsumptionsQueryHandler(
+            repository,
+            CreateCurrentUserAccessService(User.Create("meal-type-filter@example.com", "hash")),
+            new StubFavoriteMealRepository());
+        var userId = UserId.New();
+        IReadOnlyCollection<string>? mealTypes = mealType is null ? null : [mealType];
+
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
+            new GetConsumptionsQuery(userId.Value, 1, 10, DateFrom: null, DateTo: null, MealTypes: mealTypes),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.LastMealTypes);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
+        var repository = new RecordingMealPageRepository();
+        var handler = new GetConsumptionsQueryHandler(
+            repository,
+            CreateCurrentUserAccessService(User.Create("meal-type-distinct@example.com", "hash")),
+            new StubFavoriteMealRepository());
+        var userId = UserId.New();
+
+        Result<PagedResponse<ConsumptionModel>> result = await handler.Handle(
+            new GetConsumptionsQuery(
+                userId.Value,
+                1,
+                10,
+                DateFrom: null,
+                DateTo: null,
+                MealTypes: ["Lunch", "lunch", "Dinner", "unknown"]),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal([MealType.Lunch, MealType.Dinner], repository.LastMealTypes);
+    }
+
     [Fact]
     public async Task GetConsumptionsQueryHandler_WithMeals_ReturnsMappedFavoriteFlags() {
         var user = User.Create("paged-consumptions@example.com", "hash");
@@ -1658,6 +1701,49 @@ public class ConsumptionsFeatureTests {
         Assert.Equal(1, result.Value.FavoriteTotalCount);
         Assert.True(result.Value.AllConsumptions.Data.Single(x => x.Id == dinner.Id.Value).IsFavorite);
         Assert.Equal(favorite.Id.Value, result.Value.AllConsumptions.Data.Single(x => x.Id == dinner.Id.Value).FavoriteMealId);
+    }
+
+    [Theory]
+    [InlineData(null)]
+    [InlineData("not-a-meal")]
+    public async Task GetConsumptionsOverviewQueryHandler_WithEmptyOrInvalidMealTypes_PassesNullMealTypeFilter(string? mealType) {
+        var repository = new RecordingMealPageRepository();
+        var handler = new GetConsumptionsOverviewQueryHandler(
+            repository,
+            CreateCurrentUserAccessService(User.Create("overview-meal-type-filter@example.com", "hash")),
+            new StubFavoriteMealRepository());
+        var userId = UserId.New();
+        IReadOnlyCollection<string>? mealTypes = mealType is null ? null : [mealType];
+
+        Result<ConsumptionOverviewModel> result = await handler.Handle(
+            new GetConsumptionsOverviewQuery(userId.Value, 1, 10, DateFrom: null, DateTo: null, MealTypes: mealTypes),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Null(repository.LastMealTypes);
+    }
+
+    [Fact]
+    public async Task GetConsumptionsOverviewQueryHandler_WithDuplicateValidMealTypes_DistinctsMealTypeFilter() {
+        var repository = new RecordingMealPageRepository();
+        var handler = new GetConsumptionsOverviewQueryHandler(
+            repository,
+            CreateCurrentUserAccessService(User.Create("overview-meal-type-distinct@example.com", "hash")),
+            new StubFavoriteMealRepository());
+        var userId = UserId.New();
+
+        Result<ConsumptionOverviewModel> result = await handler.Handle(
+            new GetConsumptionsOverviewQuery(
+                userId.Value,
+                1,
+                10,
+                DateFrom: null,
+                DateTo: null,
+                MealTypes: ["Breakfast", "breakfast", "Snack", "unknown"]),
+            CancellationToken.None);
+
+        ResultAssert.Success(result);
+        Assert.Equal([MealType.Breakfast, MealType.Snack], repository.LastMealTypes);
     }
 
     [Fact]
@@ -2455,6 +2541,7 @@ public class ConsumptionsFeatureTests {
         private readonly IReadOnlyList<Meal> _items = items ?? [];
         public DateTime? LastDateFrom { get; private set; }
         public DateTime? LastDateTo { get; private set; }
+        public IReadOnlyCollection<MealType>? LastMealTypes { get; private set; }
 
         public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -2477,6 +2564,7 @@ public class ConsumptionsFeatureTests {
             CancellationToken cancellationToken = default) {
             LastDateFrom = filters.DateFrom;
             LastDateTo = filters.DateTo;
+            LastMealTypes = filters.MealTypes;
             return Task.FromResult((_items, totalItems));
         }
 

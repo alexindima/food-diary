@@ -177,6 +177,27 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     [Fact]
+    public async Task RabbitMqConsumer_WhenConnectionFactoryThrows_LogsAndStopsWhenRetryIsCanceled() {
+        var store = new RecordingQueueStore();
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 5);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(options),
+            CreateBroker(options),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance,
+            async _ => {
+                await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                throw new InvalidOperationException("connection failed");
+            });
+
+        await InvokeExecuteAsync(service, cancellationTokenSource.Token);
+
+        Assert.False(store.QueueClaimed);
+    }
+
+    [Fact]
     public async Task RabbitMqBootstrap_WhenRabbitMqIsUnavailable_RetriesUntilStopped() {
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
         var service = new RabbitMqMailRelayBootstrapHostedService(
@@ -184,6 +205,22 @@ public sealed class MailRelayHostedServiceTests {
             Options.Create(options),
             NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance);
         using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromMilliseconds(250));
+
+        await service.StartAsync(cancellationTokenSource.Token);
+    }
+
+    [Fact]
+    public async Task RabbitMqBootstrap_WhenDeclareTopologyThrows_LogsAndStopsWhenRetryIsCanceled() {
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 5);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            CreateBroker(options),
+            Options.Create(options),
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
+            async _ => {
+                await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                throw new InvalidOperationException("bootstrap failed");
+            });
 
         await service.StartAsync(cancellationTokenSource.Token);
     }

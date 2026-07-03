@@ -217,6 +217,18 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
+    public async Task UserRepository_RemoveRoleAsync_WhenUserDoesNotHaveRole_ReturnsWithoutUpdating() {
+        var user = User.Create("role-missing@test.com", "hashed");
+        var stub = new RecordingUserRepository([]);
+        IUserRepository repository = stub;
+
+        await repository.RemoveRoleAsync(user, $" {RoleNames.Premium} ", CancellationToken.None);
+
+        Assert.Equal(0, stub.GetRolesByNamesCallCount);
+        Assert.Null(stub.CapturedUpdatedUser);
+    }
+
+    [Fact]
     public void JwtImpersonationContext_StoresActorAndReason() {
         var actorUserId = UserId.New();
 

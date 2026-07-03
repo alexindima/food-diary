@@ -11,10 +11,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 namespace FoodDiary.Web.Api.IntegrationTests.Extensions;
 
@@ -213,6 +215,10 @@ public sealed class ExtensionsTests {
             services,
             descriptor => descriptor.ServiceType == typeof(IDistributedCache));
         Assert.Contains("RedisCache", cacheDescriptor.ImplementationType?.Name, StringComparison.Ordinal);
+        using ServiceProvider provider = services.BuildServiceProvider();
+        RedisCacheOptions options = provider.GetRequiredService<IOptions<RedisCacheOptions>>().Value;
+        Assert.Equal("localhost:6379", options.Configuration);
+        Assert.Equal("fooddiary:", options.InstanceName);
     }
 
     [Fact]

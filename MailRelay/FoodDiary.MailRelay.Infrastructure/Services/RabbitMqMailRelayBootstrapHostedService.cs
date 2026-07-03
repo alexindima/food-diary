@@ -5,8 +5,11 @@ namespace FoodDiary.MailRelay.Infrastructure.Services;
 public sealed class RabbitMqMailRelayBootstrapHostedService(
     RabbitMqMailRelayBroker broker,
     IOptions<MailRelayBrokerOptions> brokerOptions,
-    ILogger<RabbitMqMailRelayBootstrapHostedService> logger) : IHostedService {
+    ILogger<RabbitMqMailRelayBootstrapHostedService> logger,
+    Func<CancellationToken, Task>? declareTopologyAsync = null) : IHostedService {
     private readonly MailRelayBrokerOptions _brokerOptions = brokerOptions.Value;
+    private readonly Func<CancellationToken, Task> _declareTopologyAsync =
+        declareTopologyAsync ?? broker.DeclareTopologyAsync;
 
     public async Task StartAsync(CancellationToken cancellationToken) {
         if (!broker.IsEnabled) {
@@ -15,7 +18,7 @@ public sealed class RabbitMqMailRelayBootstrapHostedService(
 
         while (!cancellationToken.IsCancellationRequested) {
             try {
-                await broker.DeclareTopologyAsync(cancellationToken).ConfigureAwait(false);
+                await _declareTopologyAsync(cancellationToken).ConfigureAwait(false);
                 logger.LogInformation("RabbitMQ topology bootstrap completed for MailRelay.");
                 return;
             } catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested) {

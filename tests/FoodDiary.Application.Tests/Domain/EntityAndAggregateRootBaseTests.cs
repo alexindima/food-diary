@@ -108,6 +108,16 @@ public class EntityAndAggregateRootBaseTests {
     }
 
     [Fact]
+    public void Entity_GetHashCode_PersistedEntityWithoutCachedHash_CachesHashAfterFirstCall() {
+        var entity = TestEntity.MaterializedWithoutCachedHash(Guid.NewGuid());
+
+        int first = entity.GetHashCode();
+        int second = entity.GetHashCode();
+
+        Assert.Equal(first, second);
+    }
+
+    [Fact]
     public void Entity_SetCreated_SetsCreatedOnUtc() {
         var entity = TestEntity.WithId(Guid.NewGuid());
         DateTime before = DateTime.UtcNow;
@@ -223,6 +233,14 @@ public class EntityAndAggregateRootBaseTests {
             var entity = new TestEntity();
             typeof(TestEntity)
                 .GetProperty(nameof(Id))!
+                .SetValue(entity, id);
+            return entity;
+        }
+
+        public static TestEntity MaterializedWithoutCachedHash(Guid id) {
+            var entity = new TestEntity();
+            typeof(Entity<Guid>)
+                .GetField("_id", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!
                 .SetValue(entity, id);
             return entity;
         }

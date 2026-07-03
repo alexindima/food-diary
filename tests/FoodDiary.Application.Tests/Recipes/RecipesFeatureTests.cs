@@ -1806,6 +1806,22 @@ public class RecipesFeatureTests {
         Assert.Equal(0, repository.UpdateNutritionCallCount);
     }
 
+    [Theory]
+    [InlineData(null, null, true)]
+    [InlineData(null, 1d, false)]
+    [InlineData(1d, null, false)]
+    [InlineData(1d, 1.005d, true)]
+    [InlineData(1d, 1.02d, false)]
+    public void RecipeNutritionUpdater_AreClose_HandlesNullableAndToleranceBranches(double? left, double? right, bool expected) {
+        System.Reflection.MethodInfo method = typeof(RecipeNutritionUpdater).GetMethod(
+            "AreClose",
+            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static)!;
+
+        bool actual = (bool)method.Invoke(null, [left, right])!;
+
+        Assert.Equal(expected, actual);
+    }
+
     [Fact]
     public void RecipeManualNutritionValidator_WhenCaloriesExceedLimit_ReturnsFailure() {
         Result<(double Calories, double Proteins, double Fats, double Carbs, double Fiber, double Alcohol)> result = RecipeManualNutritionValidator.Validate(
