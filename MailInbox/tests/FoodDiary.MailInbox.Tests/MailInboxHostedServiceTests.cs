@@ -3,6 +3,7 @@ using FoodDiary.MailInbox.Application.Messages.Models;
 using FoodDiary.MailInbox.Domain.Messages;
 using FoodDiary.MailInbox.Infrastructure.Options;
 using FoodDiary.MailInbox.Infrastructure.Services;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics;
@@ -45,6 +46,24 @@ public sealed class MailInboxHostedServiceTests {
 
         await service.StartAsync(CancellationToken.None);
         await service.StopAsync(CancellationToken.None);
+    }
+
+    [Fact]
+    public async Task SmtpHostedService_ExecuteAsync_WhenDisabled_ReturnsWithoutStartingListener() {
+        var messageStore = new SmtpInboundMessageStore(
+            new ThrowingInboundMailStore(),
+            TimeProvider.System,
+            NullLogger<SmtpInboundMessageStore>.Instance);
+        var mailboxFilter = new MailInboxMailboxFilter(Options.Create(new MailInboxSmtpOptions()));
+        var service = new MailInboxSmtpHostedService(
+            Options.Create(new MailInboxSmtpOptions {
+                Enabled = false,
+            }),
+            messageStore,
+            mailboxFilter,
+            NullLogger<MailInboxSmtpHostedService>.Instance);
+
+        await InvokeExecuteAsync(service, CancellationToken.None);
     }
 
     [Fact]
@@ -98,6 +117,13 @@ public sealed class MailInboxHostedServiceTests {
         }
 
         Assert.Fail($"SMTP listener did not open port {port.ToString(CultureInfo.InvariantCulture)} before the timeout.");
+    }
+
+    private static async Task InvokeExecuteAsync(BackgroundService service, CancellationToken cancellationToken) {
+        System.Reflection.MethodInfo method = service.GetType().GetMethod(
+            "ExecuteAsync",
+            System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        await ((Task)method.Invoke(service, [cancellationToken])!).ConfigureAwait(false);
     }
 
     [ExcludeFromCodeCoverage]
