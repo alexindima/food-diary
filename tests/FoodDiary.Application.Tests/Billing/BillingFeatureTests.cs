@@ -10,6 +10,7 @@ using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Application.Billing.Commands.StartPremiumTrial;
 using FoodDiary.Application.Billing.Queries.GetBillingOverview;
 using FoodDiary.Application.Billing.Services;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -244,7 +245,7 @@ public sealed class BillingFeatureTests {
         var user = User.Create("billing-context@example.com", "hash");
         var repository = new FakeUserRepository(user);
         var roleMembershipService = new RecordingUserRoleMembershipService();
-        var service = new BillingUserContextService(repository, roleMembershipService);
+        var service = new BillingUserContextService(repository, repository, roleMembershipService);
 
         Result<User> accessible = await service.GetAccessibleUserAsync(user.Id, CancellationToken.None);
         User? includingDeleted = await service.GetUserIncludingDeletedAsync(user.Id, CancellationToken.None);
@@ -263,7 +264,8 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task BillingUserContextService_WithMissingUser_ReturnsInvalidToken() {
-        var service = new BillingUserContextService(new FakeUserRepository(), new RecordingUserRoleMembershipService());
+        var repository = new FakeUserRepository();
+        var service = new BillingUserContextService(repository, repository, new RecordingUserRoleMembershipService());
 
         Result<User> result = await service.GetAccessibleUserAsync(UserId.New(), CancellationToken.None);
 
@@ -1886,7 +1888,7 @@ public sealed class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IBillingUserContextService {
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserContextService, IBillingUserContextService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 

@@ -355,9 +355,7 @@ public sealed class ApplicationGuardrailTests {
     public void NotificationsSlice_UsesUserRepositoryOnlyThroughNotificationUserAccessService() {
         string root = GetRepositoryRoot();
         string notificationsRoot = Path.Combine(root, "FoodDiary.Application", "Notifications");
-        string allowedPath = Path.Combine(notificationsRoot, "Services", "NotificationUserAccessService.cs");
-        string[] notificationFiles = [.. SourceScanner.SourceFiles(notificationsRoot)
-            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
+        string[] notificationFiles = [.. SourceScanner.SourceFiles(notificationsRoot)];
 
         string[] violations = [
             .. FindReferencesInFiles(root, notificationFiles, "IUserRepository"),
@@ -365,6 +363,21 @@ public sealed class ApplicationGuardrailTests {
         ];
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void BillingUserContextService_DelegatesAccessibleUserLoadToUserContextService() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Billing",
+            "Services",
+            "BillingUserContextService.cs");
+        string source = File.ReadAllText(servicePath);
+
+        Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("userRepository.GetByIdAsync", source, StringComparison.Ordinal);
     }
 
     [Fact]

@@ -11,14 +11,10 @@ namespace FoodDiary.Application.Billing.Services;
 
 internal sealed class BillingUserContextService(
     IUserRepository userRepository,
+    IUserContextService userContextService,
     IUserRoleMembershipService roleMembershipService) : IBillingUserContextService {
-    public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        return accessError is not null
-            ? Result.Failure<User>(accessError)
-            : Result.Success(user!);
-    }
+    public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
+        userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 
     public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
         userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
@@ -33,5 +29,5 @@ internal sealed class BillingUserContextService(
         roleMembershipService.RemoveRoleAsync(user.Id, RoleNames.Premium, cancellationToken);
 
     public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
-        userRepository.UpdateAsync(user, cancellationToken);
+        userContextService.UpdateUserAsync(user, cancellationToken);
 }
