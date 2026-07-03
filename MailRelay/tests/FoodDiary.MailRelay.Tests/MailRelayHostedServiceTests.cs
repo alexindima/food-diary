@@ -210,6 +210,20 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     [Fact]
+    public async Task RabbitMqBootstrap_WhenCancellationAlreadyRequested_DoesNotDeclareTopology() {
+        MailRelayBrokerOptions options = CreateRabbitOptions();
+        using var cancellationTokenSource = new CancellationTokenSource();
+        await cancellationTokenSource.CancelAsync();
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            CreateBroker(options),
+            Options.Create(options),
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
+            _ => throw new InvalidOperationException("should not run"));
+
+        await service.StartAsync(cancellationTokenSource.Token);
+    }
+
+    [Fact]
     public async Task RabbitMqBootstrap_WhenDeclareTopologyThrows_LogsAndStopsWhenRetryIsCanceled() {
         MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 5);
         using var cancellationTokenSource = new CancellationTokenSource();
@@ -223,6 +237,30 @@ public sealed class MailRelayHostedServiceTests {
             });
 
         await service.StartAsync(cancellationTokenSource.Token);
+    }
+
+    [Fact]
+    public async Task RabbitMqBootstrap_WhenRetryDelayCompletes_RetriesUntilCancellation() {
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        int attempts = 0;
+        var service = new RabbitMqMailRelayBootstrapHostedService(
+            CreateBroker(options),
+            Options.Create(options),
+            NullLogger<RabbitMqMailRelayBootstrapHostedService>.Instance,
+            async _ => {
+                attempts++;
+                if (attempts > 1) {
+                    await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
+                }
+
+                throw new InvalidOperationException("bootstrap failed");
+            });
+
+        await service.StartAsync(cancellationTokenSource.Token);
+
+        Assert.Equal(2, attempts);
     }
 
     [Fact]

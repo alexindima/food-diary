@@ -381,13 +381,21 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("::ffff:8.8.8.8")));
 
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("127.0.0.1")));
+        Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("0.0.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("10.0.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("100.64.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("100.128.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("169.253.255.255")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("169.254.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("172.15.255.255")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("172.16.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("172.32.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("192.0.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("192.1.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("192.167.255.255")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("192.168.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("198.18.0.1")));
+        Assert.True(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("198.20.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("224.0.0.1")));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.IPv6Loopback));
         Assert.False(InvokePrivateStatic<bool>("IsPublicAddress", IPAddress.Parse("fe80::1")));
@@ -608,6 +616,54 @@ public sealed class DiaryPdfGeneratorTests {
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("http://127.0.0.1/image.png"), CancellationToken.None));
         Assert.True(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://93.184.216.34/image.png"), CancellationToken.None));
         Assert.False(await InvokePrivateStatic<Task<bool>>("IsAllowedRemoteImageUriAsync", new Uri("https://unresolvable.invalid/image.png"), CancellationToken.None));
+    }
+
+    [Fact]
+    public async Task IsAllowedRemoteImageUriAsync_WhenDnsResolverThrowsSocketException_ReturnsFalse() {
+        Func<string, CancellationToken, Task<IPAddress[]>> originalResolver = DiaryPdfGenerator.RemoteImageHostResolver;
+        DiaryPdfGenerator.RemoteImageHostResolver = (_, _) => Task.FromException<IPAddress[]>(new System.Net.Sockets.SocketException());
+        try {
+            bool allowed = await InvokePrivateStatic<Task<bool>>(
+                "IsAllowedRemoteImageUriAsync",
+                new Uri("https://images.example.test/image.png"),
+                CancellationToken.None);
+
+            Assert.False(allowed);
+        } finally {
+            DiaryPdfGenerator.RemoteImageHostResolver = originalResolver;
+        }
+    }
+
+    [Fact]
+    public async Task IsAllowedRemoteImageUriAsync_WhenDnsResolverReturnsNoAddresses_ReturnsFalse() {
+        Func<string, CancellationToken, Task<IPAddress[]>> originalResolver = DiaryPdfGenerator.RemoteImageHostResolver;
+        DiaryPdfGenerator.RemoteImageHostResolver = (_, _) => Task.FromResult(Array.Empty<IPAddress>());
+        try {
+            bool allowed = await InvokePrivateStatic<Task<bool>>(
+                "IsAllowedRemoteImageUriAsync",
+                new Uri("https://images.example.test/image.png"),
+                CancellationToken.None);
+
+            Assert.False(allowed);
+        } finally {
+            DiaryPdfGenerator.RemoteImageHostResolver = originalResolver;
+        }
+    }
+
+    [Fact]
+    public async Task IsAllowedRemoteImageUriAsync_WhenDnsResolverReturnsPrivateAddress_ReturnsFalse() {
+        Func<string, CancellationToken, Task<IPAddress[]>> originalResolver = DiaryPdfGenerator.RemoteImageHostResolver;
+        DiaryPdfGenerator.RemoteImageHostResolver = (_, _) => Task.FromResult<IPAddress[]>([IPAddress.Parse("10.0.0.1")]);
+        try {
+            bool allowed = await InvokePrivateStatic<Task<bool>>(
+                "IsAllowedRemoteImageUriAsync",
+                new Uri("https://images.example.test/image.png"),
+                CancellationToken.None);
+
+            Assert.False(allowed);
+        } finally {
+            DiaryPdfGenerator.RemoteImageHostResolver = originalResolver;
+        }
     }
 
     [Fact]

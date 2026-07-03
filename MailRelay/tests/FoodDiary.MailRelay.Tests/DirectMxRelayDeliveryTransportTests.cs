@@ -104,13 +104,19 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     [Theory]
     [InlineData("127.0.0.1", false)]
     [InlineData("0.0.0.0", false)]
+    [InlineData("0.0.0.1", false)]
     [InlineData("10.0.0.1", false)]
     [InlineData("172.16.0.1", false)]
     [InlineData("172.31.255.255", false)]
+    [InlineData("172.15.255.255", true)]
+    [InlineData("172.32.0.1", true)]
+    [InlineData("169.253.255.255", true)]
     [InlineData("192.168.1.1", false)]
+    [InlineData("192.167.255.255", true)]
     [InlineData("169.254.1.1", false)]
     [InlineData("100.64.0.1", false)]
     [InlineData("100.127.255.255", false)]
+    [InlineData("100.128.0.1", true)]
     [InlineData("224.0.0.1", false)]
     [InlineData("8.8.8.8", true)]
     [InlineData("::1", false)]
@@ -134,6 +140,17 @@ public sealed class DirectMxRelayDeliveryTransportTests {
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             connector.ConnectAsync("127.0.0.1", 25, CancellationToken.None));
+
+        Assert.Contains("private or loopback", ex.Message, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public async Task EndpointConnector_WhenDnsNameResolvesOnlyToLoopback_RejectsBeforeConnecting() {
+        var connector = new DirectMxEndpointConnector();
+        const string LoopbackHost = "localhost";
+
+        InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
+            connector.ConnectAsync(LoopbackHost, 25, CancellationToken.None));
 
         Assert.Contains("private or loopback", ex.Message, StringComparison.Ordinal);
     }

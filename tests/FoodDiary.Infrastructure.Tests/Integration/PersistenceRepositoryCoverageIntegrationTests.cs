@@ -1149,6 +1149,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.Empty(await repository.GetByMealIdsAsync(userId, []));
         FavoriteMeal favorite = await repository.AddAsync(FavoriteMeal.Create(userId, mealId, "Dinner meal"));
         await context.SaveChangesAsync();
+        FavoriteMeal? untracked = await repository.GetByIdAsync(favorite.Id, userId);
+        Assert.NotNull(untracked);
         FavoriteMeal? tracked = await repository.GetByIdAsync(favorite.Id, userId, asTracking: true);
         Assert.NotNull(tracked);
         tracked.UpdateName("Weekend dinner");

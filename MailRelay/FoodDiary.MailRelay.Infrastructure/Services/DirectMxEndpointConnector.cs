@@ -48,14 +48,27 @@ public sealed class DirectMxEndpointConnector(
 
     private static bool IsPublicIpv4Address(IPAddress address) {
         byte[] bytes = address.GetAddressBytes();
-        return bytes[0] != 10 &&
-               bytes[0] != 127 &&
-               !(bytes[0] == 172 && bytes[1] is >= 16 and <= 31) &&
-               !(bytes[0] == 192 && bytes[1] == 168) &&
-               !(bytes[0] == 169 && bytes[1] == 254) &&
-               !(bytes[0] == 100 && bytes[1] is >= 64 and <= 127) &&
-               bytes[0] != 0 &&
-               bytes[0] < 224;
+        if (bytes[0] is 0 or 10) {
+            return false;
+        }
+
+        if (bytes[0] == 172 && bytes[1] is >= 16 and <= 31) {
+            return false;
+        }
+
+        if (bytes[0] == 192 && bytes[1] == 168) {
+            return false;
+        }
+
+        if (bytes[0] == 169 && bytes[1] == 254) {
+            return false;
+        }
+
+        if (bytes[0] == 100 && bytes[1] is >= 64 and <= 127) {
+            return false;
+        }
+
+        return bytes[0] < 224;
     }
 
     private static bool IsPublicIpv6Address(IPAddress address) {

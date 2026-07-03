@@ -7,6 +7,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
+using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Dashboard;
 using Microsoft.EntityFrameworkCore;
@@ -113,6 +114,21 @@ public sealed class DashboardMealsReadServiceTests {
         Assert.True(result.IsSuccess, result.Error.Message);
         DashboardMealReadModel projectedMeal = Assert.Single(result.Value.Items);
         Assert.Empty(projectedMeal.AiSessions);
+    }
+
+    [Fact]
+    public async Task DashboardMealAiSessionsLoader_LoadAiItemsAsync_WithNoSessionIds_ReturnsEmptyLookup() {
+        await using FoodDiaryDbContext context = CreateContext();
+        var loader = new DashboardMealAiSessionsLoader(context);
+        MethodInfo method = typeof(DashboardMealAiSessionsLoader).GetMethod(
+            "LoadAiItemsAsync",
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
+
+        object task = method.Invoke(loader, [Array.Empty<MealAiSessionId>(), CancellationToken.None])!;
+        ILookup<MealAiSessionId, DashboardMealAiItemReadModel> lookup =
+            await (Task<ILookup<MealAiSessionId, DashboardMealAiItemReadModel>>)task;
+
+        Assert.Empty(lookup);
     }
 
     [Theory]
