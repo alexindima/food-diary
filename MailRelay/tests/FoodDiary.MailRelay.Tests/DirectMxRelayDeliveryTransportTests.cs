@@ -135,6 +135,15 @@ public sealed class DirectMxRelayDeliveryTransportTests {
     }
 
     [Fact]
+    public void IsPublicAddress_WhenAddressIsPrivate172Range_ReturnsFalse() {
+        var address = IPAddress.Parse("172.20.0.1");
+
+        bool actual = DirectMxEndpointConnector.IsPublicAddress(address);
+
+        Assert.False(actual);
+    }
+
+    [Fact]
     public async Task EndpointConnector_WhenLiteralAddressIsPrivate_RejectsBeforeConnecting() {
         var connector = new DirectMxEndpointConnector();
 
