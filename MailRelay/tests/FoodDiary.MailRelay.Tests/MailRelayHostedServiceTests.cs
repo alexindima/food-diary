@@ -198,6 +198,33 @@ public sealed class MailRelayHostedServiceTests {
     }
 
     [Fact]
+    public async Task RabbitMqConsumer_WhenRetryDelayCompletes_RetriesUntilCancellation() {
+        var store = new RecordingQueueStore();
+        MailRelayBrokerOptions options = CreateRabbitOptions(connectionRetryDelaySeconds: 0);
+        using var cancellationTokenSource = new CancellationTokenSource();
+        int attempts = 0;
+        var service = new RabbitMqMailRelayConsumerHostedService(
+            Options.Create(options),
+            CreateBroker(options),
+            store,
+            CreateProcessor(store),
+            NullLogger<RabbitMqMailRelayConsumerHostedService>.Instance,
+            async _ => {
+                attempts++;
+                if (attempts > 1) {
+                    await cancellationTokenSource.CancelAsync().ConfigureAwait(false);
+                    throw new OperationCanceledException(cancellationTokenSource.Token);
+                }
+
+                throw new InvalidOperationException("connection failed");
+            });
+
+        await InvokeExecuteAsync(service, cancellationTokenSource.Token);
+
+        Assert.Equal(2, attempts);
+    }
+
+    [Fact]
     public async Task RabbitMqBootstrap_WhenRabbitMqIsUnavailable_RetriesUntilStopped() {
         MailRelayBrokerOptions options = CreateRabbitOptions(port: 1, connectionRetryDelaySeconds: 1);
         var service = new RabbitMqMailRelayBootstrapHostedService(

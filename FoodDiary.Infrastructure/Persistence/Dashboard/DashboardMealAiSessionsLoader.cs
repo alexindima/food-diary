@@ -36,10 +36,6 @@ internal sealed class DashboardMealAiSessionsLoader(FoodDiaryDbContext context) 
     private async Task<ILookup<MealAiSessionId, DashboardMealAiItemReadModel>> LoadAiItemsAsync(
         IReadOnlyCollection<MealAiSessionId> sessionIds,
         CancellationToken cancellationToken) {
-        if (sessionIds.Count == 0) {
-            return Array.Empty<DashboardMealAiItemReadModel>().ToLookup(item => new MealAiSessionId(item.SessionId));
-        }
-
         List<DashboardMealAiItemReadModel> items = await context.MealAiItems
             .AsNoTracking()
             .Where(item => sessionIds.Contains(item.MealAiSessionId))
