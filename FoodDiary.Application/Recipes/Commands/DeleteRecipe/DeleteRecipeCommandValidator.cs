@@ -1,15 +1,15 @@
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
 public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand> {
-    private readonly IRecipeRepository _recipeRepository;
+    private readonly IRecipeReadRepository _recipeRepository;
 
-    public DeleteRecipeCommandValidator(IRecipeRepository recipeRepository) {
+    public DeleteRecipeCommandValidator(IRecipeReadRepository recipeRepository) {
         _recipeRepository = recipeRepository;
 
         RuleFor(x => x.UserId)

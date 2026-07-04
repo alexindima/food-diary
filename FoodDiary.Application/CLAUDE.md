@@ -53,7 +53,8 @@ Each use case folder contains up to 3 files:
 - Entity-to-model mapping via extension methods from `Mappings/` folders
 
 ### Repository Interface Locations
-- Legacy: `Common/Interfaces/Persistence/` (IUserRepository, IProductRepository, IRecipeRepository)
+- Legacy: `Common/Interfaces/Persistence/` (IUserRepository and shared query filters)
+- Product/recipe persistence contracts: `Products/Common/`, `Recipes/Common/`
 - Newer: `{Feature}/Common/` (IMealRepository, IShoppingListRepository, etc.)
 - Methods: async with CancellationToken, strongly-typed IDs, return domain entities
 

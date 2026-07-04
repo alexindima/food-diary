@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Domain.Entities.Products;
@@ -8,7 +8,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
-public class DuplicateProductCommandHandler(IProductRepository productRepository)
+public class DuplicateProductCommandHandler(
+    IProductReadRepository productReadRepository,
+    IProductWriteRepository productWriteRepository)
     : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(DuplicateProductCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -22,7 +24,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
         var userId = new UserId(command.UserId!.Value);
         var productId = new ProductId(command.ProductId);
 
-        Product? original = await productRepository.GetByIdAsync(
+        Product? original = await productReadRepository.GetByIdAsync(
             productId,
             userId,
             includePublic: true,
@@ -54,7 +56,7 @@ public class DuplicateProductCommandHandler(IProductRepository productRepository
             imageAssetId: null,
             original.Visibility);
 
-        await productRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
+        await productWriteRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(duplicate.ToModel(isOwnedByCurrentUser: true));
     }

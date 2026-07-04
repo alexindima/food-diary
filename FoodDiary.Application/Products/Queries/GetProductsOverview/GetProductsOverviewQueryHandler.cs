@@ -4,6 +4,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -16,7 +17,7 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 
 public sealed class GetProductsOverviewQueryHandler(
-    IProductRepository productRepository,
+    IProductReadRepository productRepository,
     IRecentItemRepository recentItemRepository,
     IFavoriteProductRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)

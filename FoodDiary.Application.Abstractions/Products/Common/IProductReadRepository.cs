@@ -1,11 +1,10 @@
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Products.Common;
 
-public interface IProductRepository {
-    Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default);
-
+public interface IProductReadRepository {
     Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
         bool includePublic,
@@ -20,13 +19,6 @@ public interface IProductRepository {
         bool includePublic = true,
         CancellationToken cancellationToken = default);
 
-    Task<Product?> GetByIdForUpdateAsync(
-        ProductId id,
-        UserId userId,
-        bool includePublic = true,
-        CancellationToken cancellationToken = default) =>
-        GetByIdAsync(id, userId, includePublic, cancellationToken);
-
     Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(
         IEnumerable<ProductId> ids,
         UserId userId,
@@ -38,8 +30,4 @@ public interface IProductRepository {
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default);
-
-    Task UpdateAsync(Product product, CancellationToken cancellationToken = default);
-
-    Task DeleteAsync(Product product, CancellationToken cancellationToken = default);
 }

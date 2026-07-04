@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -15,7 +14,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
 public class CreateRecipeCommandHandler(
-    IRecipeRepository recipeRepository,
+    IRecipeWriteRepository recipeRepository,
+    IRecipeNutritionWriter recipeNutritionWriter,
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService,
     IProductLookupService productLookupService,
@@ -68,7 +68,7 @@ public class CreateRecipeCommandHandler(
         Recipe recipe,
         CancellationToken cancellationToken) {
         await recipeRepository.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
-        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeRepository, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(recipe, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(recipe.ToModel(0, isOwnedByCurrentUser: true));
     }

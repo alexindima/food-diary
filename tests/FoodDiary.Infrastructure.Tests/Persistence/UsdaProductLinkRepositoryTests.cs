@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -11,7 +11,7 @@ public sealed class UsdaProductLinkRepositoryTests {
     [Fact]
     public async Task GetForLinkUpdateAsync_DelegatesToProductRepositoryForPrivateUpdate() {
         Product product = CreateProduct();
-        IProductRepository productRepository = Substitute.For<IProductRepository>();
+        IProductWriteRepository productRepository = Substitute.For<IProductWriteRepository>();
         productRepository
             .GetByIdForUpdateAsync(product.Id, product.UserId, includePublic: false, Arg.Any<CancellationToken>())
             .Returns(Task.FromResult<Product?>(product));
@@ -25,7 +25,7 @@ public sealed class UsdaProductLinkRepositoryTests {
     [Fact]
     public async Task UpdateAsync_DelegatesToProductRepository() {
         Product product = CreateProduct();
-        IProductRepository productRepository = Substitute.For<IProductRepository>();
+        IProductWriteRepository productRepository = Substitute.For<IProductWriteRepository>();
         var repository = new UsdaProductLinkRepository(productRepository);
 
         await repository.UpdateAsync(product, CancellationToken.None);

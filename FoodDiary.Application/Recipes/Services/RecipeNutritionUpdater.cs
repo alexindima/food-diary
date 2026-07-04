@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Services;
@@ -8,7 +8,7 @@ public static class RecipeNutritionUpdater {
 
     public static async Task EnsureNutritionAsync(
         Recipe recipe,
-        IRecipeRepository repository,
+        IRecipeNutritionWriter nutritionWriter,
         CancellationToken cancellationToken = default) {
         if (!recipe.IsNutritionAutoCalculated) {
             return;
@@ -26,7 +26,7 @@ public static class RecipeNutritionUpdater {
             summary.TotalCarbs,
             summary.TotalFiber,
             summary.TotalAlcohol);
-        await repository.UpdateNutritionAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await nutritionWriter.UpdateNutritionAsync(recipe, cancellationToken).ConfigureAwait(false);
     }
 
     private static bool NeedsUpdate(Recipe recipe, RecipeNutritionSummary summary) =>

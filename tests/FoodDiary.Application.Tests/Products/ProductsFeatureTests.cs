@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
@@ -437,7 +438,8 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WithEmptyProductId_ReturnsValidationFailure() {
-        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+        var repository = new NoopProductRepository();
+        var handler = new DuplicateProductCommandHandler(repository, repository);
 
         Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(Guid.NewGuid(), Guid.Empty),
@@ -450,7 +452,8 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+        var repository = new NoopProductRepository();
+        var handler = new DuplicateProductCommandHandler(repository, repository);
 
         Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(UserId: null, ProductId.New().Value),
@@ -462,7 +465,8 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task DuplicateProductCommandHandler_WhenOriginalMissing_ReturnsNotFound() {
-        var handler = new DuplicateProductCommandHandler(new NoopProductRepository());
+        var repository = new NoopProductRepository();
+        var handler = new DuplicateProductCommandHandler(repository, repository);
 
         Result<ProductModel> result = await handler.Handle(
             new DuplicateProductCommand(Guid.NewGuid(), ProductId.New().Value),
@@ -1029,7 +1033,7 @@ public class ProductsFeatureTests {
             visibility: Visibility.Public);
 
         var repository = new SingleProductRepository(original);
-        var handler = new DuplicateProductCommandHandler(repository);
+        var handler = new DuplicateProductCommandHandler(repository, repository);
 
         Result<ProductModel> result = await handler.Handle(new DuplicateProductCommand(user.Id.Value, original.Id.Value), CancellationToken.None);
 

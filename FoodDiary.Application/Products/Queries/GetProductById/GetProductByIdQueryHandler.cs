@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
 public class GetProductByIdQueryHandler(
-    IProductRepository productRepository,
+    IProductReadRepository productRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductByIdQuery, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(

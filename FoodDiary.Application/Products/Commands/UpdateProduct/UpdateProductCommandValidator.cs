@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Domain.Entities.Products;
@@ -9,9 +9,9 @@ namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
 public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
     private const string ProductContextKey = "__product";
-    private readonly IProductRepository _productRepository;
+    private readonly IProductReadRepository _productRepository;
 
-    public UpdateProductCommandValidator(IProductRepository productRepository) {
+    public UpdateProductCommandValidator(IProductReadRepository productRepository) {
         _productRepository = productRepository;
         ConfigureIdentityRules();
         ConfigureNutritionRules();

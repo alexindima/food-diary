@@ -1,6 +1,6 @@
 using FluentValidation;
 using FluentValidation.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Common.Nutrition;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
@@ -12,9 +12,9 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
     private const string RecipeContextKey = "__recipe";
-    private readonly IRecipeRepository _recipeRepository;
+    private readonly IRecipeReadRepository _recipeRepository;
 
-    public UpdateRecipeCommandValidator(IRecipeRepository recipeRepository) {
+    public UpdateRecipeCommandValidator(IRecipeReadRepository recipeRepository) {
         _recipeRepository = recipeRepository;
         ConfigureIdentityRules();
         ConfigureBaseRecipeRules();

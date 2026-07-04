@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Assets;
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
 public class CreateProductCommandHandler(
-    IProductRepository productRepository,
+    IProductWriteRepository productRepository,
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService)
     : ICommandHandler<CreateProductCommand, Result<ProductModel>> {

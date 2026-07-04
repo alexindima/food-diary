@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -15,7 +16,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryHandler(
-    IRecipeRepository recipeRepository,
+    IRecipeReadRepository recipeRepository,
     IRecentItemRepository recentItemRepository,
     IFavoriteRecipeRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)

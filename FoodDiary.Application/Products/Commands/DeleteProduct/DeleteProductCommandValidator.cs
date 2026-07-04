@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Domain.Entities.Products;
@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
 public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand> {
-    public DeleteProductCommandValidator(IProductRepository productRepository) {
+    public DeleteProductCommandValidator(IProductReadRepository productRepository) {
 
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

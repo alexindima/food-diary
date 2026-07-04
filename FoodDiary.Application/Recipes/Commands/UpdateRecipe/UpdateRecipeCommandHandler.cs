@@ -1,6 +1,5 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -14,7 +13,9 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
 public class UpdateRecipeCommandHandler(
-    IRecipeRepository recipeRepository,
+    IRecipeReadRepository recipeReadRepository,
+    IRecipeWriteRepository recipeWriteRepository,
+    IRecipeNutritionWriter recipeNutritionWriter,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService,
@@ -24,7 +25,7 @@ public class UpdateRecipeCommandHandler(
     public async Task<Result<RecipeModel>> Handle(UpdateRecipeCommand command, CancellationToken cancellationToken) {
         Result<UpdateRecipeValues> valuesResult = await UpdateRecipeValuePreparer.PrepareAsync(
             command,
-            recipeRepository,
+            recipeReadRepository,
             currentUserAccessService,
             imageAssetAccessService,
             productLookupService,
@@ -78,9 +79,9 @@ public class UpdateRecipeCommandHandler(
         Recipe recipe,
         UserId userId,
         CancellationToken cancellationToken) {
-        await recipeRepository.UpdateAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.UpdateAsync(recipe, cancellationToken).ConfigureAwait(false);
 
-        Recipe? updated = await recipeRepository.GetByIdAsync(
+        Recipe? updated = await recipeReadRepository.GetByIdAsync(
             recipe.Id,
             userId,
             includePublic: false,
@@ -92,7 +93,7 @@ public class UpdateRecipeCommandHandler(
             return Result.Failure<Recipe>(Errors.Recipe.InvalidData("Failed to load updated recipe."));
         }
 
-        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeRepository, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(updated, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
         return Result.Success(updated);
     }
 

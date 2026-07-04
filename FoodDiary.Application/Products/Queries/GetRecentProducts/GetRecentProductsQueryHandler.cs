@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 
 public sealed class GetRecentProductsQueryHandler(
     IRecentItemRepository recentItemRepository,
-    IProductRepository productRepository)
+    IProductReadRepository productRepository)
     : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductModel>>> {
     public async Task<Result<IReadOnlyList<ProductModel>>> Handle(
         GetRecentProductsQuery query,

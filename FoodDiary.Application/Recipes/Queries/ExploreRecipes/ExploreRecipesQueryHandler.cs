@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 
-public class ExploreRecipesQueryHandler(IRecipeRepository recipeRepository)
+public class ExploreRecipesQueryHandler(IRecipeReadRepository recipeRepository)
     : IQueryHandler<ExploreRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(
         ExploreRecipesQuery query,

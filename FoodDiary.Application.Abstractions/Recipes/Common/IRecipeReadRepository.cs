@@ -1,11 +1,10 @@
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Recipes.Common;
 
-public interface IRecipeRepository {
-    Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default);
-
+public interface IRecipeReadRepository {
     Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
         UserId userId,
         bool includePublic,
@@ -33,12 +32,6 @@ public interface IRecipeRepository {
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default);
-
-    Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default);
-
-    Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default);
-
-    Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default);
 
     Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
         int page,

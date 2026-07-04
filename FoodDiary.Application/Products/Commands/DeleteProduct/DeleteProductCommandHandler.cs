@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Products;
@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
 public class DeleteProductCommandHandler(
-    IProductRepository productRepository,
+    IProductWriteRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteProductCommand, Result> {

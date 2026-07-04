@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Application.Recipes.Services;
@@ -9,7 +9,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
-public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
+public class DuplicateRecipeCommandHandler(
+    IRecipeReadRepository recipeReadRepository,
+    IRecipeWriteRepository recipeWriteRepository,
+    IRecipeNutritionWriter recipeNutritionWriter)
     : ICommandHandler<DuplicateRecipeCommand, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(DuplicateRecipeCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -23,7 +26,7 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
-        Recipe? original = await recipeRepository.GetByIdAsync(
+        Recipe? original = await recipeReadRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: true,
@@ -35,8 +38,8 @@ public class DuplicateRecipeCommandHandler(IRecipeRepository recipeRepository)
         }
 
         Recipe duplicate = CreateDuplicate(userId, original);
-        await recipeRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
-        await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeRepository, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.AddAsync(duplicate, cancellationToken).ConfigureAwait(false);
+        await RecipeNutritionUpdater.EnsureNutritionAsync(duplicate, recipeNutritionWriter, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(duplicate.ToModel(0, isOwnedByCurrentUser: true));
     }

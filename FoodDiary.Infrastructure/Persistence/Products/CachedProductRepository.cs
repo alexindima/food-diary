@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Caching.Memory;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
 

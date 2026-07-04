@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -17,7 +16,7 @@ namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 internal static class UpdateRecipeValuePreparer {
     public static async Task<Result<UpdateRecipeValues>> PrepareAsync(
         UpdateRecipeCommand command,
-        IRecipeRepository recipeRepository,
+        IRecipeReadRepository recipeRepository,
         ICurrentUserAccessService currentUserAccessService,
         IImageAssetAccessService imageAssetAccessService,
         IProductLookupService productLookupService,
@@ -113,7 +112,7 @@ internal static class UpdateRecipeValuePreparer {
         UpdateRecipeCommand command,
         RecipeId recipeId,
         UserId userId,
-        IRecipeRepository recipeRepository,
+        IRecipeReadRepository recipeRepository,
         CancellationToken cancellationToken) {
         Recipe? recipe = await recipeRepository.GetByIdAsync(
             recipeId,

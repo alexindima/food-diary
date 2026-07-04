@@ -18,6 +18,23 @@ namespace FoodDiary.Application.Tests.Recipes;
 
 [ExcludeFromCodeCoverage]
 public class UpdateRecipeCommandHandlerTests {
+    private static UpdateRecipeCommandHandler UpdateRecipeHandler(
+        IRecipeRepository repository,
+        IImageAssetCleanupService imageAssetCleanupService,
+        ICurrentUserAccessService currentUserAccessService,
+        IImageAssetAccessService imageAssetAccessService,
+        IProductLookupService productLookupService,
+        IRecipeLookupService recipeLookupService) =>
+        new(
+            repository,
+            repository,
+            repository,
+            imageAssetCleanupService,
+            currentUserAccessService,
+            imageAssetAccessService,
+            productLookupService,
+            recipeLookupService);
+
     [Fact]
     public async Task Handle_WithDuplicateStepOrder_ThrowsArgumentException() {
         var userId = UserId.New();
@@ -27,7 +44,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -77,7 +94,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -126,7 +143,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -185,7 +202,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("manual-missing@example.com", "hash")),
@@ -217,7 +234,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("manual-negative@example.com", "hash")),
@@ -248,7 +265,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("missing-user@example.com", "hash")),
@@ -268,7 +285,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("missing-recipe@example.com", "hash")),
@@ -288,7 +305,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("bad-visibility@example.com", "hash")),
@@ -309,7 +326,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2, visibility: Visibility.Private);
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("blank-visibility@example.com", "hash")),
@@ -331,7 +348,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
         RecordingImageAssetAccessService imageAccess = new FoodDiary.Application.Tests.RecordingImageAssetAccessService()
             .WithFailure(Errors.Image.Forbidden());
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("image-fail@example.com", "hash")),
@@ -355,7 +372,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -403,7 +420,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("empty-step-image@example.com", "hash")),
@@ -437,7 +454,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("step-image-fail@example.com", "hash")),
@@ -472,7 +489,7 @@ public class UpdateRecipeCommandHandlerTests {
         recipe.AddStep(1, "Initial step");
 
         IRecipeRepository repository = CreateRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -525,7 +542,7 @@ public class UpdateRecipeCommandHandlerTests {
         var userId = UserId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
 
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(RecipeId.New(), userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -574,7 +591,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
 
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -622,7 +639,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("empty-product@example.com", "hash")),
@@ -658,7 +675,7 @@ public class UpdateRecipeCommandHandlerTests {
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("nested-update@example.com", "hash")),
@@ -686,7 +703,7 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
 
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -735,7 +752,7 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step");
         var repository = new ReloadMissingRecipeRepository(recipeId, userId, recipe);
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             repository,
             new NoopImageAssetCleanupService(),
             CreateUserRepository(User.Create("user@example.com", "hash")),
@@ -789,7 +806,7 @@ public class UpdateRecipeCommandHandlerTests {
         SetRecipeId(recipe, recipeId);
         recipe.AddStep(1, "Initial step", imageUrl: "https://old-step", imageAssetId: oldStepAssetId);
         var cleanup = new RecordingImageAssetCleanupService();
-        var handler = new UpdateRecipeCommandHandler(
+        UpdateRecipeCommandHandler handler = UpdateRecipeHandler(
             CreateRecipeRepository(recipeId, userId, recipe),
             cleanup,
             CreateUserRepository(User.Create("user@example.com", "hash")),

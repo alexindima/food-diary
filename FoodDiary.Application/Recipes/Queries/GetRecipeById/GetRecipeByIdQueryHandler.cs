@@ -1,6 +1,6 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
 public class GetRecipeByIdQueryHandler(
-    IRecipeRepository recipeRepository,
+    IRecipeReadRepository recipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {

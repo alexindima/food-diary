@@ -1,14 +1,15 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
+using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
 public class DeleteRecipeCommandHandler(
-    IRecipeRepository recipeRepository,
+    IRecipeReadRepository recipeReadRepository,
+    IRecipeWriteRepository recipeWriteRepository,
     IImageAssetCleanupService imageAssetCleanupService)
     : ICommandHandler<DeleteRecipeCommand, Result> {
     public async Task<Result> Handle(DeleteRecipeCommand command, CancellationToken cancellationToken) {
@@ -23,7 +24,7 @@ public class DeleteRecipeCommandHandler(
         var userId = new UserId(command.UserId!.Value);
         var recipeId = new RecipeId(command.RecipeId);
 
-        Recipe? recipe = await recipeRepository.GetByIdAsync(
+        Recipe? recipe = await recipeReadRepository.GetByIdAsync(
             recipeId,
             userId,
             includePublic: false,
@@ -47,7 +48,7 @@ public class DeleteRecipeCommandHandler(
             .Select(id => id!.Value)
             .Distinct()
             .ToList();
-        await recipeRepository.DeleteAsync(recipe, cancellationToken).ConfigureAwait(false);
+        await recipeWriteRepository.DeleteAsync(recipe, cancellationToken).ConfigureAwait(false);
 
         if (assetId.HasValue) {
             await imageAssetCleanupService.DeleteIfUnusedAsync(assetId.Value, cancellationToken).ConfigureAwait(false);

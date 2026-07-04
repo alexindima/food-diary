@@ -1,5 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Products.Commands.CreateProduct;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.DuplicateProduct;
