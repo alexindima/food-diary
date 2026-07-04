@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dashboard.Services;
 
 internal sealed class RepositoryDashboardBodyReadService(
-    IWeightEntryRepository weightEntryRepository,
+    IWeightEntryReadRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
     IHydrationEntryRepository hydrationEntryRepository) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(

@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 
 public class UpdateWeightEntryCommandHandler(
-    IWeightEntryRepository weightEntryRepository,
+    IWeightEntryWriteRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateWeightEntryCommand, Result<WeightEntryModel>> {
     public async Task<Result<WeightEntryModel>> Handle(

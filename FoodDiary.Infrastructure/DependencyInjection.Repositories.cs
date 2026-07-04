@@ -87,6 +87,8 @@ public static partial class DependencyInjection {
         services.AddDashboardReadServices();
         services.AddScoped<IShoppingListRepository, ShoppingListRepository>();
         services.AddScoped<IWeightEntryRepository, WeightEntryRepository>();
+        services.AddScoped<IWeightEntryReadRepository>(static provider => provider.GetRequiredService<IWeightEntryRepository>());
+        services.AddScoped<IWeightEntryWriteRepository>(static provider => provider.GetRequiredService<IWeightEntryRepository>());
         services.AddScoped<IWaistEntryRepository, WaistEntryRepository>();
         services.AddScoped<IHydrationEntryRepository, HydrationEntryRepository>();
         services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();

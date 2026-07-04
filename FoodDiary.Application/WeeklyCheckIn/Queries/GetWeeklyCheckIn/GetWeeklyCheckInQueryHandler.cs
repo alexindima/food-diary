@@ -16,7 +16,7 @@ namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 
 public class GetWeeklyCheckInQueryHandler(
     IMealReadRepository mealRepository,
-    IWeightEntryRepository weightEntryRepository,
+    IWeightEntryReadRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
     IHydrationEntryRepository hydrationEntryRepository,
     IWeeklyCheckInUserProfileService weeklyCheckInUserProfileService,

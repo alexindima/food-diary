@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
 public class GetWeightSummariesQueryHandler(
-    IWeightEntryRepository weightEntryRepository,
+    IWeightEntryReadRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryModel>>> {
     public async Task<Result<IReadOnlyList<WeightEntrySummaryModel>>> Handle(

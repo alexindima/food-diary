@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
 public class GetLatestWeightEntryQueryHandler(
-    IWeightEntryRepository weightEntryRepository,
+    IWeightEntryReadRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryModel?>> {
     public async Task<Result<WeightEntryModel?>> Handle(

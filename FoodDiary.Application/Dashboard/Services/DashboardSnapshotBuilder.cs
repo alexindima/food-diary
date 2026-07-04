@@ -37,7 +37,7 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     public DashboardSnapshotBuilder(
         ISender sender,
         IDashboardUserContextService dashboardUserContextService,
-        IWeightEntryRepository weightEntryRepository,
+        IWeightEntryReadRepository weightEntryRepository,
         IWaistEntryRepository waistEntryRepository,
         IHydrationEntryRepository hydrationEntryRepository,
         IFastingOccurrenceReadRepository fastingOccurrenceRepository,
