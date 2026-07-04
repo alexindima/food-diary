@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.RecipeComments.Commands.CreateRecipeComment;
 
 public class CreateRecipeCommentCommandHandler(
-    IRecipeCommentRepository commentRepository,
+    IRecipeCommentWriteRepository commentRepository,
     IRecipeAccessService recipeAccessService,
     INotificationWriter notificationWriter)
     : ICommandHandler<CreateRecipeCommentCommand, Result<RecipeCommentModel>> {

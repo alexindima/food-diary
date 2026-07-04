@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 
 public class DeleteRecipeCommentCommandHandler(
-    IRecipeCommentRepository commentRepository,
+    IRecipeCommentWriteRepository commentRepository,
     IRecipeAccessService recipeAccessService)
     : ICommandHandler<DeleteRecipeCommentCommand, Result> {
     public async Task<Result> Handle(

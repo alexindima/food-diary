@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
 
-public class GetMealPlanByIdQueryHandler(IMealPlanRepository mealPlanRepository)
+public class GetMealPlanByIdQueryHandler(IMealPlanReadRepository mealPlanRepository)
     : IQueryHandler<GetMealPlanByIdQuery, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
         GetMealPlanByIdQuery query,

@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
 
-public class GetRecipeCommentsQueryHandler(IRecipeCommentRepository commentRepository)
+public class GetRecipeCommentsQueryHandler(IRecipeCommentReadRepository commentRepository)
     : IQueryHandler<GetRecipeCommentsQuery, Result<PagedResponse<RecipeCommentModel>>> {
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
         GetRecipeCommentsQuery query,

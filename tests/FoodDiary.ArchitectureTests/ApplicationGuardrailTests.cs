@@ -419,6 +419,48 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullMealPlanRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IMealPlanRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullRecipeCommentRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IRecipeCommentRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullRecipeLikeRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IRecipeLikeRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullCycleRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

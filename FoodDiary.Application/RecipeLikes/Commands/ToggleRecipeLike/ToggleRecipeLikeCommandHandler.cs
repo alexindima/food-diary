@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
 public class ToggleRecipeLikeCommandHandler(
-    IRecipeLikeRepository likeRepository,
+    IRecipeLikeWriteRepository likeRepository,
     IRecipeAccessService recipeAccessService)
     : ICommandHandler<ToggleRecipeLikeCommand, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(

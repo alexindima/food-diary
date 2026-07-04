@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 
 public class GenerateShoppingListCommandHandler(
-    IMealPlanRepository mealPlanRepository,
+    IMealPlanReadRepository mealPlanRepository,
     IShoppingListWriteRepository shoppingListRepository)
     : ICommandHandler<GenerateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(

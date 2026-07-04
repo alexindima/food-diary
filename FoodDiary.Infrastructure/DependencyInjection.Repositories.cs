@@ -141,8 +141,14 @@ public static partial class DependencyInjection {
         services.AddScoped<INutritionLessonReadRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());
         services.AddScoped<INutritionLessonWriteRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());
         services.AddScoped<IMealPlanRepository, MealPlanRepository>();
+        services.AddScoped<IMealPlanReadRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
+        services.AddScoped<IMealPlanWriteRepository>(static provider => provider.GetRequiredService<IMealPlanRepository>());
         services.AddScoped<IRecipeCommentRepository, RecipeCommentRepository>();
+        services.AddScoped<IRecipeCommentReadRepository>(static provider => provider.GetRequiredService<IRecipeCommentRepository>());
+        services.AddScoped<IRecipeCommentWriteRepository>(static provider => provider.GetRequiredService<IRecipeCommentRepository>());
         services.AddScoped<IRecipeLikeRepository, RecipeLikeRepository>();
+        services.AddScoped<IRecipeLikeReadRepository>(static provider => provider.GetRequiredService<IRecipeLikeRepository>());
+        services.AddScoped<IRecipeLikeWriteRepository>(static provider => provider.GetRequiredService<IRecipeLikeRepository>());
         services.AddScoped<IContentReportRepository, ContentReportRepository>();
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IUsdaProductLinkRepository, UsdaProductLinkRepository>();
