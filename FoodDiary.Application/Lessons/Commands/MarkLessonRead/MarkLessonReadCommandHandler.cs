@@ -8,7 +8,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 
 public class MarkLessonReadCommandHandler(
-    INutritionLessonRepository repository,
+    INutritionLessonReadRepository readRepository,
+    INutritionLessonWriteRepository writeRepository,
     TimeProvider dateTimeProvider)
     : ICommandHandler<MarkLessonReadCommand, Result> {
     public async Task<Result> Handle(
@@ -20,12 +21,12 @@ public class MarkLessonReadCommandHandler(
         }
 
         var lessonId = new NutritionLessonId(command.LessonId);
-        NutritionLesson? lesson = await repository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
+        NutritionLesson? lesson = await readRepository.GetByIdAsync(lessonId, cancellationToken).ConfigureAwait(false);
         if (lesson is null) {
             return Result.Failure(Errors.Lesson.NotFound(command.LessonId));
         }
 
-        UserLessonProgress? existing = await repository.GetUserProgressForLessonAsync(
+        UserLessonProgress? existing = await readRepository.GetUserProgressForLessonAsync(
             userIdResult.Value, lessonId, cancellationToken).ConfigureAwait(false);
         if (existing is not null) {
             return Result.Success();
@@ -33,7 +34,7 @@ public class MarkLessonReadCommandHandler(
 
         var progress = UserLessonProgress.Create(
             userIdResult.Value, lessonId, dateTimeProvider.GetUtcNow().UtcDateTime);
-        await repository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
+        await writeRepository.AddProgressAsync(progress, cancellationToken).ConfigureAwait(false);
 
         return Result.Success();
     }

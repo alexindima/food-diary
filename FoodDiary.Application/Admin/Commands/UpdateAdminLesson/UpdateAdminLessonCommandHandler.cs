@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.UpdateAdminLesson;
 
-public sealed class UpdateAdminLessonCommandHandler(INutritionLessonRepository repository)
+public sealed class UpdateAdminLessonCommandHandler(INutritionLessonWriteRepository repository)
     : ICommandHandler<UpdateAdminLessonCommand, Result<AdminLessonModel>> {
     public async Task<Result<AdminLessonModel>> Handle(
         UpdateAdminLessonCommand command,

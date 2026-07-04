@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminLessons;
 
-public sealed class GetAdminLessonsQueryHandler(INutritionLessonRepository repository)
+public sealed class GetAdminLessonsQueryHandler(INutritionLessonReadRepository repository)
     : IQueryHandler<GetAdminLessonsQuery, Result<IReadOnlyList<AdminLessonModel>>> {
     public async Task<Result<IReadOnlyList<AdminLessonModel>>> Handle(
         GetAdminLessonsQuery query,

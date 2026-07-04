@@ -18,7 +18,7 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: false, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
@@ -32,7 +32,7 @@ public class LessonsFeatureTests {
         var lesson = NutritionLesson.Create("Proteins", "Content", summary: null, "en",
             LessonCategory.Macronutrients, LessonDifficulty.Beginner, 5);
         INutritionLessonRepository repo = CreateLessonRepository(lesson, hasProgress: true, out Func<bool> wasProgressAdded);
-        var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), lesson.Id.Value), CancellationToken.None);
@@ -44,7 +44,7 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WhenLessonNotFound_ReturnsFailure() {
         INutritionLessonRepository repo = CreateLessonRepository(lesson: null, hasProgress: false);
-        var handler = new MarkLessonReadCommandHandler(repo, new FixedDateTimeProvider());
+        var handler = new MarkLessonReadCommandHandler(repo, repo, new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -56,7 +56,9 @@ public class LessonsFeatureTests {
     [Fact]
     public async Task MarkLessonRead_WithNullUserId_ReturnsFailure() {
         var handler = new MarkLessonReadCommandHandler(
-            CreateLessonRepository(lesson: null, hasProgress: false), new FixedDateTimeProvider());
+            CreateLessonRepository(lesson: null, hasProgress: false),
+            CreateLessonRepository(lesson: null, hasProgress: false),
+            new FixedDateTimeProvider());
 
         Result result = await handler.Handle(
             new MarkLessonReadCommand(UserId: null, Guid.NewGuid()), CancellationToken.None);

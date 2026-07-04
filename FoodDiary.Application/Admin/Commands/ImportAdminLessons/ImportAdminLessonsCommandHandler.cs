@@ -8,7 +8,7 @@ using System.Globalization;
 
 namespace FoodDiary.Application.Admin.Commands.ImportAdminLessons;
 
-public sealed class ImportAdminLessonsCommandHandler(INutritionLessonRepository repository)
+public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteRepository repository)
     : ICommandHandler<ImportAdminLessonsCommand, Result<AdminLessonsImportModel>> {
     public async Task<Result<AdminLessonsImportModel>> Handle(
         ImportAdminLessonsCommand command,

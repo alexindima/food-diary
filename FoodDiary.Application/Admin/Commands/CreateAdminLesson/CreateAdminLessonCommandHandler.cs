@@ -7,7 +7,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Commands.CreateAdminLesson;
 
-public sealed class CreateAdminLessonCommandHandler(INutritionLessonRepository repository)
+public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteRepository repository)
     : ICommandHandler<CreateAdminLessonCommand, Result<AdminLessonModel>> {
     public async Task<Result<AdminLessonModel>> Handle(
         CreateAdminLessonCommand command,

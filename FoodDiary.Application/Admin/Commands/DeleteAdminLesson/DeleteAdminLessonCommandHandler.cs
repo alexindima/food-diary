@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Admin.Commands.DeleteAdminLesson;
 
-public sealed class DeleteAdminLessonCommandHandler(INutritionLessonRepository repository)
+public sealed class DeleteAdminLessonCommandHandler(INutritionLessonWriteRepository repository)
     : ICommandHandler<DeleteAdminLessonCommand, Result> {
     public async Task<Result> Handle(
         DeleteAdminLessonCommand command,
