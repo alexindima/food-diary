@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 
-public class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRecipeRepository {
+public sealed class FavoriteRecipeRepository(FoodDiaryDbContext context) : IFavoriteRecipeRepository {
     public Task<FavoriteRecipe> AddAsync(FavoriteRecipe favorite, CancellationToken cancellationToken = default) {
         context.FavoriteRecipes.Add(favorite);
         return Task.FromResult(favorite);

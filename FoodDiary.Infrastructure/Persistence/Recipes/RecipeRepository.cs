@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
-public class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
+public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {

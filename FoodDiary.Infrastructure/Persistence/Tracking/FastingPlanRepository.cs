@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRepository {
+public sealed class FastingPlanRepository(FoodDiaryDbContext context) : IFastingPlanRepository {
     public async Task<FastingPlan?> GetActiveAsync(UserId userId, bool asTracking = false, CancellationToken cancellationToken = default) {
         IQueryable<FastingPlan> query = asTracking
             ? context.FastingPlans.AsQueryable()

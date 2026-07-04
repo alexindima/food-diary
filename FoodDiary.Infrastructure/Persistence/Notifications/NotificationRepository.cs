@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Notifications;
 
-public class NotificationRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : INotificationRepository {
+public sealed class NotificationRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : INotificationRepository {
     public async Task<IReadOnlyList<Notification>> GetByUserAsync(
         UserId userId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Notifications

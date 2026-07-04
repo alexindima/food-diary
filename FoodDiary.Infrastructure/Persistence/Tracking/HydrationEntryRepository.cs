@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
+public sealed class HydrationEntryRepository(FoodDiaryDbContext context) : IHydrationEntryRepository {
     public Task<HydrationEntry> AddAsync(HydrationEntry entry, CancellationToken cancellationToken = default) {
         context.HydrationEntries.Add(entry);
         return Task.FromResult(entry);

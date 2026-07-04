@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
+public sealed class WeightEntryRepository(FoodDiaryDbContext context) : IWeightEntryRepository {
     public async Task<WeightEntry> AddAsync(WeightEntry entry, CancellationToken cancellationToken = default) {
         await context.WeightEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;

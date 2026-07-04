@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class FastingSessionRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IFastingSessionRepository {
+public sealed class FastingSessionRepository(FoodDiaryDbContext context, TimeProvider timeProvider) : IFastingSessionRepository {
     public async Task<FastingSession?> GetCurrentAsync(UserId userId, CancellationToken cancellationToken = default) {
         return await context.FastingSessions
             .FirstOrDefaultAsync(s => s.UserId == userId && !s.IsCompleted, cancellationToken).ConfigureAwait(false);

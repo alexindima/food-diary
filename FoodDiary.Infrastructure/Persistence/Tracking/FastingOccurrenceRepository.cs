@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Query;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingOccurrenceRepository {
+public sealed class FastingOccurrenceRepository(FoodDiaryDbContext context) : IFastingOccurrenceRepository {
     public async Task<IReadOnlyList<FastingOccurrence>> GetActiveAsync(CancellationToken cancellationToken = default) {
         return await context.FastingOccurrences
             .AsNoTracking()

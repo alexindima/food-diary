@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepository {
+public sealed class WaistEntryRepository(FoodDiaryDbContext context) : IWaistEntryRepository {
     public async Task<WaistEntry> AddAsync(WaistEntry entry, CancellationToken cancellationToken = default) {
         await context.WaistEntries.AddAsync(entry, cancellationToken).ConfigureAwait(false);
         return entry;

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRepository {
+public sealed class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAdviceRepository {
     public async Task<IReadOnlyList<DailyAdvice>> GetByLocaleAsync(
         string locale,
         CancellationToken cancellationToken = default) {

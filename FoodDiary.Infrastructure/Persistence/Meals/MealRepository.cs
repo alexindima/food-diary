@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Meals;
 
-public class MealRepository(FoodDiaryDbContext context) : IMealRepository {
+public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository {
     private static DateTime StartOfUtcDay(DateTime value) =>
         DateTime.SpecifyKind(value.Date, DateTimeKind.Utc);
 

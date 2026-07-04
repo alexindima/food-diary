@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;
 
-public class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
+public sealed class ProductRepository(FoodDiaryDbContext context) : IProductRepository {
     private const string LikeEscapeCharacter = "\\";
 
     public async Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) {

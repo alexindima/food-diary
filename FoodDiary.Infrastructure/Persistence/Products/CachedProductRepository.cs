@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Products;
 
-public class CachedProductRepository(
+public sealed class CachedProductRepository(
     ProductRepository inner,
     IMemoryCache cache) : IProductRepository {
     private static readonly TimeSpan CacheDuration = TimeSpan.FromMinutes(5);

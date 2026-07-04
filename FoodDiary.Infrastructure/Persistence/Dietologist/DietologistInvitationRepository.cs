@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace FoodDiary.Infrastructure.Persistence.Dietologist;
 
-public class DietologistInvitationRepository(FoodDiaryDbContext context) : IDietologistInvitationRepository {
+public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) : IDietologistInvitationRepository {
     public async Task<DietologistInvitation?> GetByIdAsync(
         DietologistInvitationId id,
         bool asTracking = false,

@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -86,6 +87,25 @@ public class LayeringTests {
         Assert.DoesNotContain("WebPush", packages);
         Assert.DoesNotContain("Microsoft.AspNetCore.WebUtilities", packages);
         Assert.DoesNotContain("Microsoft.IdentityModel.Protocols.OpenIdConnect", packages);
+    }
+
+    [Fact]
+    public void InfrastructureConcreteClasses_AreSealedOrStatic() {
+        string root = GetRepositoryRoot();
+        string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
+
+        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry =>
+                entry.line.Contains("public class ", StringComparison.Ordinal) ||
+                entry.line.Contains("internal class ", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
     }
 
     [Fact]

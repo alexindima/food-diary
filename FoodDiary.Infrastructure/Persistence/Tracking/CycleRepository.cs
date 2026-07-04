@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Persistence.Tracking;
 
-public class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
+public sealed class CycleRepository(FoodDiaryDbContext context) : ICycleRepository {
     public async Task<CycleProfile> AddAsync(CycleProfile profile, CancellationToken cancellationToken = default) {
         await context.CycleProfiles.AddAsync(profile, cancellationToken).ConfigureAwait(false);
         return profile;

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.RecentItems;
 
-public class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateTimeProvider) : IRecentItemRepository {
+public sealed class RecentItemRepository(FoodDiaryDbContext context, TimeProvider dateTimeProvider) : IRecentItemRepository {
     private const int MaxStoredPerType = 100;
 
     public async Task RegisterUsageAsync(

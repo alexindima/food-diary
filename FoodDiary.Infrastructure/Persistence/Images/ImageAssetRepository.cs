@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Images;
 
-public class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
+public sealed class ImageAssetRepository(FoodDiaryDbContext context) : IImageAssetRepository {
     public Task<ImageAsset> AddAsync(ImageAsset asset, CancellationToken cancellationToken = default) {
         context.ImageAssets.Add(asset);
         return Task.FromResult(asset);

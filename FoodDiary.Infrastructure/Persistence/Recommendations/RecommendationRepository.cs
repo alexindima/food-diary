@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.Recommendations;
 
-public class RecommendationRepository(FoodDiaryDbContext context) : IRecommendationRepository {
+public sealed class RecommendationRepository(FoodDiaryDbContext context) : IRecommendationRepository {
     public async Task<IReadOnlyList<Recommendation>> GetByClientAsync(
         UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Recommendations

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence.ShoppingLists;
 
-public class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
+public sealed class ShoppingListRepository(FoodDiaryDbContext context) : IShoppingListRepository {
     public Task<ShoppingList> AddAsync(ShoppingList list, CancellationToken cancellationToken = default) {
         context.ShoppingLists.Add(list);
         return Task.FromResult(list);

@@ -9,7 +9,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace FoodDiary.Infrastructure.Authentication;
 
-public class JwtTokenGenerator : IJwtTokenGenerator {
+public sealed class JwtTokenGenerator : IJwtTokenGenerator {
     private readonly TimeProvider _dateTimeProvider;
     private readonly string _issuer;
     private readonly string _audience;

@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Infrastructure.Services;
 
-public class ProductLookupService(IProductReadRepository productRepository) : IProductLookupService {
+public sealed class ProductLookupService(IProductReadRepository productRepository) : IProductLookupService {
     public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
         IEnumerable<ProductId> ids,
         UserId userId,
