@@ -8,7 +8,6 @@ public static class ApiOptionsServiceCollectionExtensions {
         internal IServiceCollection AddApiOptions() {
             services.AddHostBoundaryOptions();
             services.AddTelemetryAndAuthOptions();
-            services.AddBackgroundJobOptions();
 
             return services;
         }
@@ -88,35 +87,6 @@ public static class ApiOptionsServiceCollectionExtensions {
                 .BindConfiguration(InitialAdminOptions.SectionName)
                 .Validate(InitialAdminOptions.HasValidConfiguration,
                     "InitialAdmin requires a valid email and a password of at least 12 characters when configured.")
-                .ValidateOnStart();
-
-            return services;
-        }
-
-        private IServiceCollection AddBackgroundJobOptions() {
-            services
-                .AddOptions<FastingNotificationOptions>()
-                .BindConfiguration(FastingNotificationOptions.SectionName)
-                .Validate(FastingNotificationOptions.HasValidConfiguration,
-                    "FastingNotifications:PollIntervalSeconds must be greater than zero when enabled.")
-                .ValidateOnStart();
-            services
-                .AddOptions<UserLoginEventCleanupOptions>()
-                .BindConfiguration(UserLoginEventCleanupOptions.SectionName)
-                .Validate(UserLoginEventCleanupOptions.HasValidConfiguration,
-                    "UserLoginEventCleanup requires positive RetentionDays, BatchSize, and PollIntervalHours when enabled.")
-                .ValidateOnStart();
-            services
-                .AddOptions<ImageObjectDeletionOutboxOptions>()
-                .BindConfiguration(ImageObjectDeletionOutboxOptions.SectionName)
-                .Validate(ImageObjectDeletionOutboxOptions.HasValidConfiguration,
-                    "ImageObjectDeletionOutbox requires positive BatchSize and PollIntervalSeconds when enabled.")
-                .ValidateOnStart();
-            services
-                .AddOptions<NotificationWebPushOutboxOptions>()
-                .BindConfiguration(NotificationWebPushOutboxOptions.SectionName)
-                .Validate(NotificationWebPushOutboxOptions.HasValidConfiguration,
-                    "NotificationWebPushOutbox requires positive BatchSize and PollIntervalSeconds when enabled.")
                 .ValidateOnStart();
 
             return services;

@@ -653,10 +653,14 @@ public sealed class JobsTests {
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
             Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
+            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
+            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
             }),
+            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await service.StartAsync(CancellationToken.None);
@@ -665,8 +669,12 @@ public sealed class JobsTests {
             [
                 RecurringJobIds.ImageAssetsCleanup,
                 RecurringJobIds.BillingRenewal,
+                RecurringJobIds.FastingNotifications,
+                RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.NotificationWebPushOutbox,
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
+                RecurringJobIds.UserLoginEventsCleanup,
             ],
             recurringJobManager.JobIds);
         Assert.Equal(
@@ -675,6 +683,10 @@ public sealed class JobsTests {
                 RecurringJobIds.NotificationsCleanup,
                 RecurringJobIds.UsersCleanup,
                 RecurringJobIds.BillingRenewal,
+                RecurringJobIds.FastingNotifications,
+                RecurringJobIds.ImageObjectDeletionOutbox,
+                RecurringJobIds.NotificationWebPushOutbox,
+                RecurringJobIds.UserLoginEventsCleanup,
             ],
             verifier.ExpectedJobIds);
     }
@@ -688,10 +700,14 @@ public sealed class JobsTests {
             verifier,
             Options.Create(new ImageCleanupOptions { Cron = "0 * * * *" }),
             Options.Create(new BillingRenewalOptions { Enabled = false, Cron = "15 * * * *" }),
+            Options.Create(new FastingNotificationOptions { Cron = "* * * * *" }),
+            Options.Create(new ImageObjectDeletionOutboxOptions { Cron = "* * * * *" }),
+            Options.Create(new NotificationWebPushOutboxOptions { Cron = "* * * * *" }),
             Options.Create(new NotificationCleanupOptions {
                 TransientTypes = ["Test"],
                 Cron = "15 4 * * *",
             }),
+            Options.Create(new UserLoginEventCleanupOptions { Cron = "0 3 * * *" }),
             Options.Create(new UserCleanupOptions { Cron = "30 2 * * *" }));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => service.StartAsync(CancellationToken.None));
@@ -700,6 +716,10 @@ public sealed class JobsTests {
     [Fact]
     public async Task RecurringJobsHostedService_StopAsync_CompletesWithoutWork() {
         var service = new RecurringJobsHostedService(
+            null!,
+            null!,
+            null!,
+            null!,
             null!,
             null!,
             null!,
@@ -714,20 +734,33 @@ public sealed class JobsTests {
     public void CleanupJobs_DeclareExpectedRetryAndConcurrencyPolicy() {
         MethodInfo? imageMethod = typeof(ImageCleanupJob).GetMethod(nameof(ImageCleanupJob.Execute));
         MethodInfo? billingRenewalMethod = typeof(BillingRenewalJob).GetMethod(nameof(BillingRenewalJob.Execute));
+        MethodInfo? fastingNotificationMethod = typeof(FastingNotificationJob).GetMethod(nameof(FastingNotificationJob.Execute));
+        MethodInfo? imageObjectDeletionOutboxMethod = typeof(ImageObjectDeletionOutboxJob).GetMethod(nameof(ImageObjectDeletionOutboxJob.Execute));
+        MethodInfo? notificationWebPushOutboxMethod = typeof(NotificationWebPushOutboxJob).GetMethod(nameof(NotificationWebPushOutboxJob.Execute));
         MethodInfo? notificationMethod = typeof(NotificationCleanupJob).GetMethod(nameof(NotificationCleanupJob.Execute));
+        MethodInfo? userLoginEventCleanupMethod = typeof(UserLoginEventCleanupJob).GetMethod(nameof(UserLoginEventCleanupJob.Execute));
         MethodInfo? userMethod = typeof(UserCleanupJob).GetMethod(nameof(UserCleanupJob.Execute));
 
         Assert.NotNull(imageMethod);
         Assert.NotNull(billingRenewalMethod);
+        Assert.NotNull(fastingNotificationMethod);
+        Assert.NotNull(imageObjectDeletionOutboxMethod);
+        Assert.NotNull(notificationWebPushOutboxMethod);
         Assert.NotNull(notificationMethod);
+        Assert.NotNull(userLoginEventCleanupMethod);
         Assert.NotNull(userMethod);
 
         AssertExecutionPolicy(imageMethod!);
         AssertExecutionPolicy(billingRenewalMethod!);
+        AssertExecutionPolicy(fastingNotificationMethod!);
+        AssertExecutionPolicy(imageObjectDeletionOutboxMethod!);
+        AssertExecutionPolicy(notificationWebPushOutboxMethod!);
         AssertExecutionPolicy(notificationMethod!);
+        AssertExecutionPolicy(userLoginEventCleanupMethod!);
         AssertExecutionPolicy(userMethod!);
         AssertCancellationTokenParameter(imageMethod!);
         AssertCancellationTokenParameter(billingRenewalMethod!);
+        AssertCancellationTokenParameter(fastingNotificationMethod!);
         AssertCancellationTokenParameter(notificationMethod!);
         AssertCancellationTokenParameter(userMethod!);
     }

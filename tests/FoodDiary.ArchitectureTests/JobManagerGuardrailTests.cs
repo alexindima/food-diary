@@ -21,4 +21,39 @@ public sealed class JobManagerGuardrailTests {
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void JobManager_RegistersBackgroundWorkMigratedOutOfPrimaryApiHost() {
+        string recurringJobIdsPath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.JobManager",
+            "Services",
+            "RecurringJobIds.cs");
+        string recurringJobsHostedServicePath = ArchitectureTestPaths.FromRoot(
+            "FoodDiary.JobManager",
+            "Services",
+            "RecurringJobsHostedService.cs");
+        string recurringJobIdsSource = File.ReadAllText(recurringJobIdsPath);
+        string recurringJobsHostedServiceSource = File.ReadAllText(recurringJobsHostedServicePath);
+        string[] expectedJobIds = [
+            "FastingNotifications",
+            "ImageObjectDeletionOutbox",
+            "NotificationWebPushOutbox",
+            "UserLoginEventsCleanup",
+        ];
+        string[] expectedJobTypes = [
+            "FastingNotificationJob",
+            "ImageObjectDeletionOutboxJob",
+            "NotificationWebPushOutboxJob",
+            "UserLoginEventCleanupJob",
+        ];
+
+        foreach (string expectedJobId in expectedJobIds) {
+            Assert.Contains(expectedJobId, recurringJobIdsSource, StringComparison.Ordinal);
+            Assert.Contains($"RecurringJobIds.{expectedJobId}", recurringJobsHostedServiceSource, StringComparison.Ordinal);
+        }
+
+        foreach (string expectedJobType in expectedJobTypes) {
+            Assert.Contains($"Job.FromExpression<{expectedJobType}>", recurringJobsHostedServiceSource, StringComparison.Ordinal);
+        }
+    }
 }

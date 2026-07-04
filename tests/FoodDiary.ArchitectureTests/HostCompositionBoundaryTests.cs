@@ -1,3 +1,5 @@
+using System.Globalization;
+
 namespace FoodDiary.ArchitectureTests;
 
 [ExcludeFromCodeCoverage]
@@ -72,8 +74,46 @@ public sealed class HostCompositionBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void PrimaryWebApiHost_RegistersOnlyAllowedHostedServices() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+        var allowedHostedServiceRegistrations = new HashSet<string>(StringComparer.Ordinal) {
+            "InitialAdminHostedService",
+        };
+
+        string[] violations = [.. SourceScanner.SourceFiles(hostRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Select(entry => new {
+                entry.path,
+                entry.index,
+                HostedServiceName = TryReadHostedServiceRegistration(entry.line),
+            })
+            .Where(static entry => entry.HostedServiceName is not null)
+            .Where(entry => !allowedHostedServiceRegistrations.Contains(entry.HostedServiceName!))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1} {entry.HostedServiceName}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static string ProjectFolderFromProjectName(string projectName) =>
         string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
             ? Path.Combine("Shared", "FoodDiary.Mediator")
             : projectName;
+
+    private static string? TryReadHostedServiceRegistration(string line) {
+        const string marker = "AddHostedService<";
+        int markerIndex = line.IndexOf(marker, StringComparison.Ordinal);
+        if (markerIndex < 0) {
+            return null;
+        }
+
+        int nameStart = markerIndex + marker.Length;
+        int nameEnd = line.IndexOf('>', nameStart);
+        return nameEnd > nameStart ? line[nameStart..nameEnd] : null;
+    }
 }

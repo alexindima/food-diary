@@ -1,4 +1,4 @@
-namespace FoodDiary.Web.Api.Options;
+namespace FoodDiary.JobManager.Services;
 
 public sealed class UserLoginEventCleanupOptions {
     public const string SectionName = "UserLoginEventCleanup";
@@ -6,9 +6,11 @@ public sealed class UserLoginEventCleanupOptions {
     public bool Enabled { get; init; } = true;
     public int RetentionDays { get; init; } = 180;
     public int BatchSize { get; init; } = 500;
-    public int PollIntervalHours { get; init; } = 24;
+    public string Cron { get; init; } = "0 3 * * *";
 
     public static bool HasValidConfiguration(UserLoginEventCleanupOptions options) =>
         !options.Enabled ||
-        options is { RetentionDays: > 0, BatchSize: > 0, PollIntervalHours: > 0 };
+        (options.RetentionDays > 0 &&
+            options.BatchSize > 0 &&
+            !string.IsNullOrWhiteSpace(options.Cron));
 }

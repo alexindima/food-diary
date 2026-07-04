@@ -26,7 +26,7 @@ Other deployable adapters are kept separate:
 The Docker compose setup defines these major runtime units:
 - `api` - primary ASP.NET Core API host.
 - `client` - Angular web client static host.
-- `job-manager` - scheduled/background job host.
+- `job-manager` - scheduled/background job host, including cleanup jobs and primary outbox processors.
 - `telegram-bot` - Telegram bot worker.
 - `mail-relay` - outbound email relay service.
 - `mail-inbox` - inbound email service.
@@ -62,7 +62,8 @@ Core rules:
 - `Infrastructure` implements abstractions and owns EF Core/persistence.
 - `Integrations` owns external provider adapters and typed client bridges to supporting services.
 - `Presentation.Api` owns HTTP/SignalR transport and mapping.
-- `Web.Api` is the executable host and composition root.
+- `Web.Api` is the executable HTTP host and composition root.
+- `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors.
 - `Resources` provides resource-backed text without depending on concrete application/domain/persistence.
 
 ## Supporting Service Boundaries

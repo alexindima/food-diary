@@ -2,6 +2,7 @@ using FoodDiary.Application;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -126,6 +127,9 @@ public sealed class InitialAdminHostedServiceTests {
         services.AddLogging();
         services.AddApplication();
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserLookupRepository>(static provider => provider.GetRequiredService<IUserRepository>());
+        services.AddScoped<IUserWriteRepository>(static provider => provider.GetRequiredService<IUserRepository>());
+        services.AddScoped<IUserRoleCatalogService, TestUserRoleCatalogService>();
         services.AddScoped<IUnitOfWork, TestUnitOfWork>();
         services.AddSingleton<TestPasswordHasher>();
         services.AddSingleton<FoodDiary.Application.Abstractions.Authentication.Common.IPasswordHasher>(
@@ -139,6 +143,33 @@ public sealed class InitialAdminHostedServiceTests {
 
         public Task SaveChangesAsync(CancellationToken cancellationToken = default) =>
             dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class TestUserRoleCatalogService(FoodDiaryDbContext dbContext) : IUserRoleCatalogService {
+        public async Task<IReadOnlyList<Role>> GetRolesByNamesAsync(
+            IReadOnlyList<string> names,
+            CancellationToken cancellationToken = default) =>
+            await dbContext.Roles
+                .Where(role => names.Contains(role.Name))
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+        public async Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(
+            IReadOnlyList<string> names,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyList<Role> existingRoles = await GetRolesByNamesAsync(names, cancellationToken).ConfigureAwait(false);
+            var existingNames = existingRoles.Select(role => role.Name).ToHashSet(StringComparer.Ordinal);
+            List<Role> roles = [.. existingRoles];
+
+            foreach (string roleName in names.Where(name => !existingNames.Contains(name))) {
+                var role = Role.Create(roleName);
+                roles.Add(role);
+                await dbContext.Roles.AddAsync(role, cancellationToken).ConfigureAwait(false);
+            }
+
+            return roles;
+        }
     }
 
     [ExcludeFromCodeCoverage]
