@@ -5,6 +5,27 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class JobManagerGuardrailTests {
     [Fact]
+    public void JobManagerSource_DoesNotReferenceHttpPresentationOrHostApiSurface() {
+        string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(jobManagerRoot, [
+            "FoodDiary.Presentation.Api",
+            "FoodDiary.Web.Api",
+            "Microsoft.AspNetCore.Mvc",
+            "ControllerBase",
+            "IActionResult",
+            "HttpContext",
+            "MapGet(",
+            "MapPost(",
+            "MapPut(",
+            "MapPatch(",
+            "MapDelete(",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void JobManagerProductionCode_UsesCancellationTokenNoneOnlyForHangfireRegistrationPlaceholders() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
