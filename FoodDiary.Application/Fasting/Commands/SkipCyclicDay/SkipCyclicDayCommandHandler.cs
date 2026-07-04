@@ -3,8 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 
@@ -37,8 +37,7 @@ public sealed class SkipCyclicDayCommandHandler(
         if (plan is null) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.NoActiveSession);
         }
-        if (plan.Type != FastingPlanType.Cyclic ||
-            (current.Kind != FastingOccurrenceKind.FastDay && current.Kind != FastingOccurrenceKind.EatDay)) {
+        if (!FastingCyclicTransitionPlanner.CanTransition(plan, current)) {
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("Only an active cyclic period can be skipped."));
         }
 
@@ -50,39 +49,12 @@ public sealed class SkipCyclicDayCommandHandler(
             return Result.Failure<FastingSessionModel>(Errors.Fasting.InvalidCyclicAction("The current cyclic period cannot be skipped."));
         }
 
-        FastingOccurrenceKind nextKind = current.Kind == FastingOccurrenceKind.FastDay
-            ? FastingOccurrenceKind.EatDay
-            : FastingOccurrenceKind.FastDay;
-        int? nextTargetHours = nextKind == FastingOccurrenceKind.FastDay
-            ? 24
-            : plan.CyclicEatDayEatingWindowHours;
-        int nextSequenceNumber = ResolveNextSequenceNumber(plan, current, nextKind);
-
-        var nextOccurrence = FastingOccurrence.Create(
-            plan.Id,
-            userId,
-            nextKind,
-            now,
-            nextSequenceNumber,
-            targetHours: nextTargetHours,
-            notes: current.Notes);
+        FastingOccurrence nextOccurrence = FastingCyclicTransitionPlanner.CreateAfterSkip(plan, current, userId, now);
 
         await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
         await fastingPlanRepository.UpdateAsync(plan, cancellationToken).ConfigureAwait(false);
         await fastingOccurrenceRepository.AddAsync(nextOccurrence, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(nextOccurrence.ToModel(plan));
-    }
-
-    private static int ResolveNextSequenceNumber(FastingPlan plan, FastingOccurrence current, FastingOccurrenceKind nextKind) {
-        int fastDays = Math.Max(1, plan.CyclicFastDays ?? 1);
-        int eatDays = Math.Max(1, plan.CyclicEatDays ?? 1);
-        int totalCycleDays = fastDays + eatDays;
-        int overallCycleDay = ((Math.Max(1, current.SequenceNumber) - 1) % totalCycleDays) + 1;
-        int cycleStartSequence = current.SequenceNumber - (overallCycleDay - 1);
-
-        return nextKind == FastingOccurrenceKind.FastDay
-            ? cycleStartSequence + totalCycleDays
-            : cycleStartSequence + fastDays;
     }
 }

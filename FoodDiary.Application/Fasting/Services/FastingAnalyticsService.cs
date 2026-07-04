@@ -1,6 +1,5 @@
-using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Fasting.Mappings;
+using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -66,14 +65,7 @@ public sealed class FastingAnalyticsService(
             to: toUtc,
             cancellationToken: cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
-        var models = occurrences
-            .Select(occurrence => occurrence.ToModel(
-                occurrence.Plan,
-                checkInsByOccurrence.GetValueOrDefault(occurrence.Id)))
-            .ToList();
-        int totalPages = totalItems == 0 ? 0 : (int)Math.Ceiling(totalItems / (double)limit);
-
-        return new PagedResponse<FastingSessionModel>(models, page, limit, totalPages, totalItems);
+        return FastingHistoryResponseBuilder.Build(occurrences, checkInsByOccurrence, page, limit, totalItems);
     }
 
     private async Task<IReadOnlyList<FastingOccurrenceAnalysis>> BuildAnalysesAsync(
@@ -84,13 +76,7 @@ public sealed class FastingAnalyticsService(
         }
 
         IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInsByOccurrence = await GetCheckInsByOccurrenceAsync(occurrences.Select(static occurrence => occurrence.Id).ToArray(), cancellationToken).ConfigureAwait(false);
-        return occurrences
-            .Select(occurrence => {
-                IReadOnlyList<FastingCheckInSnapshot> timeline = FastingCheckInTimelineBuilder.Build(occurrence, checkInsByOccurrence.GetValueOrDefault(occurrence.Id));
-                FastingCheckInSnapshot? latestCheckIn = timeline.Count > 0 ? timeline[0] : null;
-                return new FastingOccurrenceAnalysis(occurrence, timeline, latestCheckIn);
-            })
-            .ToList();
+        return FastingOccurrenceAnalysisBuilder.Build(occurrences, checkInsByOccurrence);
     }
 
     private async Task<IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>>> GetCheckInsByOccurrenceAsync(

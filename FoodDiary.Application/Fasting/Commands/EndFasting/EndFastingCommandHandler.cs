@@ -3,8 +3,8 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Mappings;
 using FoodDiary.Application.Fasting.Models;
+using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 
@@ -39,25 +39,7 @@ public class EndFastingCommandHandler(
         }
 
         DateTime now = dateTimeProvider.GetUtcNow().UtcDateTime;
-        switch (plan.Type) {
-            case FastingPlanType.Cyclic:
-                current.Interrupt(now);
-                break;
-            case FastingPlanType.Intermittent:
-                current.Complete(now);
-                break;
-            default:
-                DateTime targetReachedAtUtc = current.StartedAtUtc.AddHours(current.TargetHours ?? 0);
-                if (now >= targetReachedAtUtc) {
-                    current.Complete(now);
-                } else {
-                    current.Interrupt(now);
-                }
-
-                break;
-        }
-
-        plan.Stop(now);
+        FastingEndPolicy.End(plan, current, now);
         await fastingOccurrenceRepository.UpdateAsync(current, cancellationToken).ConfigureAwait(false);
         await fastingPlanRepository.UpdateAsync(plan, cancellationToken).ConfigureAwait(false);
 
