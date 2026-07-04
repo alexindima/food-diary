@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Billing.Commands.CreatePortalSession;
 
 public sealed class CreatePortalSessionCommandHandler(
     IBillingUserContextService billingUserContextService,
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadRepository billingSubscriptionRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor)
     : ICommandHandler<CreatePortalSessionCommand, Result<BillingPortalSessionModel>> {
     public async Task<Result<BillingPortalSessionModel>> Handle(

@@ -12,7 +12,7 @@ namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
 public sealed class ProcessBillingWebhookCommandHandler(
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingWebhookEventRepository billingWebhookEventRepository,
     IBillingTransactionRunner billingTransactionRunner,
     IBillingUserContextService billingUserContextService,

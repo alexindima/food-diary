@@ -10,7 +10,7 @@ using User = FoodDiary.Domain.Entities.Users.User;
 namespace FoodDiary.Application.Billing.Services;
 
 public sealed class BillingRenewalService(
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     IBillingPaymentRepository billingPaymentRepository,
     IBillingUserContextService billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,

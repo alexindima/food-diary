@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Billing.Commands.StartPremiumTrial;
 
 public sealed class StartPremiumTrialCommandHandler(
     IBillingUserContextService billingUserContextService,
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
     : ICommandHandler<StartPremiumTrialCommand, Result<BillingOverviewModel>> {

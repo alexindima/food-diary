@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Billing.Services;
 
 public sealed class BillingAccessService(
     IBillingUserContextService billingUserContextService,
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionWriteRepository billingSubscriptionRepository,
     TimeProvider dateTimeProvider) {
     public async Task EnsurePremiumRoleAsync(
         User user,

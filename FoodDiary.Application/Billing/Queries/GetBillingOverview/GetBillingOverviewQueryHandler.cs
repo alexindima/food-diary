@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Billing.Queries.GetBillingOverview;
 
 public sealed class GetBillingOverviewQueryHandler(
     IBillingUserContextService billingUserContextService,
-    IBillingSubscriptionRepository billingSubscriptionRepository,
+    IBillingSubscriptionReadRepository billingSubscriptionRepository,
     IBillingPublicConfigProvider billingPublicConfigProvider,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetBillingOverviewQuery, Result<BillingOverviewModel>> {
