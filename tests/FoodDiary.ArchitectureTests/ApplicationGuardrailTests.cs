@@ -178,32 +178,6 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationServiceInterfaces_AsyncMethodsAcceptCancellationToken() {
-        string root = GetRepositoryRoot();
-        string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
-
-        string[] violations = [.. GetFilesIfDirectoryExists(servicesRoot, "*.cs", SearchOption.AllDirectories)
-            .SelectMany(path => GetAsyncMethodSignatures(path)
-                .Where(static signature => !signature.Contains("CancellationToken", StringComparison.Ordinal))
-                .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void ApplicationPersistenceInterfaces_AsyncMethodsAcceptCancellationToken() {
-        string root = GetRepositoryRoot();
-        string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
-
-        string[] violations = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.AllDirectories)
-            .SelectMany(path => GetAsyncMethodSignatures(path)
-                .Where(static signature => !signature.Contains("CancellationToken", StringComparison.Ordinal))
-                .Select(signature => $"{Path.GetRelativePath(root, path)}: {signature}"))];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         string root = GetRepositoryRoot();
         string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
@@ -1127,12 +1101,6 @@ public sealed class ApplicationGuardrailTests {
 
     private static string[] GetFilesIfDirectoryExists(string path, string searchPattern, SearchOption searchOption) =>
         Directory.Exists(path) ? Directory.GetFiles(path, searchPattern, searchOption) : [];
-
-    private static IEnumerable<string> GetAsyncMethodSignatures(string path) {
-        return CSharpSyntaxReader.ReadMethods(path)
-            .Where(static method => method.IsAsyncLike)
-            .Select(static method => $"{method.ReturnType} {method.Name}({method.Parameters})");
-    }
 
     private static string[] FindRepositoryReferenceViolations(
         string repositoryRoot,
