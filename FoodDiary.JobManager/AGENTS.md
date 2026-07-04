@@ -17,7 +17,7 @@ Rules for `FoodDiary.JobManager/`.
 
 ## Dependencies
 - Reuse Application abstractions/handlers instead of duplicating logic.
-- Allowed production references are `FoodDiary.Application`, `FoodDiary.Infrastructure`, and `FoodDiary.Integrations`.
+- Allowed production references are `FoodDiary.Application`, `FoodDiary.Infrastructure`, `FoodDiary.Integrations`, and `FoodDiary.Resources`.
 - Keep package versions aligned with central project conventions.
 
 ## Commands

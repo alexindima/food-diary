@@ -41,7 +41,7 @@ public sealed class FastingNotificationJob(
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
             throw;
         } catch (Exception ex) {
-            logger.LogWarning(ex, "Fasting notification job failed.");
+            logger.LogError(ex, "Fasting notification job failed.");
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),

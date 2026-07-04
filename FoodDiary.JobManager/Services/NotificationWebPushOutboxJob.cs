@@ -41,7 +41,7 @@ public sealed class NotificationWebPushOutboxJob(
                 new KeyValuePair<string, object?>("fooddiary.job.outcome", "canceled"));
             throw;
         } catch (Exception ex) {
-            logger.LogWarning(ex, "Notification web-push outbox job failed.");
+            logger.LogError(ex, "Notification web-push outbox job failed.");
             JobManagerTelemetry.JobExecutionCounter.Add(
                 1,
                 new KeyValuePair<string, object?>("fooddiary.job.name", jobName),

@@ -1,5 +1,6 @@
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.JobManager.Services;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Diagnostics.Metrics;
@@ -82,12 +83,13 @@ public sealed class FastingNotificationJobTests {
         var scheduler = new ThrowingFastingNotificationScheduler();
         var now = new DateTime(2026, 2, 23, 12, 0, 0, DateTimeKind.Utc);
         var tracker = new JobExecutionStateTracker();
+        var logger = new RecordingLogger<FastingNotificationJob>();
         var job = new FastingNotificationJob(
             scheduler,
             Options.Create(new FastingNotificationOptions { Enabled = true }),
             new FixedDateTimeProvider(now),
             tracker,
-            NullLogger<FastingNotificationJob>.Instance);
+            logger);
 
         await Assert.ThrowsAsync<InvalidOperationException>(() => job.Execute());
 
@@ -97,6 +99,7 @@ public sealed class FastingNotificationJobTests {
         Assert.NotNull(duration);
         Assert.Equal(1, tracker.GetSnapshot("fasting.notifications")?.ConsecutiveFailures);
         Assert.Equal(now, tracker.GetSnapshot("fasting.notifications")?.LastFailedAtUtc);
+        Assert.Equal(LogLevel.Error, logger.LastLogLevel);
     }
 
     [Fact]
@@ -207,6 +210,26 @@ public sealed class FastingNotificationJobTests {
         public Task<int> ProcessDueNotificationsAsync(CancellationToken cancellationToken = default) {
             CallCount++;
             throw new InvalidOperationException("scheduler failed");
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class RecordingLogger<T> : ILogger<T> {
+        public LogLevel LastLogLevel { get; private set; } = LogLevel.None;
+
+        public IDisposable? BeginScope<TState>(TState state)
+            where TState : notnull =>
+            null;
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public void Log<TState>(
+            LogLevel logLevel,
+            EventId eventId,
+            TState state,
+            Exception? exception,
+            Func<TState, Exception?, string> formatter) {
+            LastLogLevel = logLevel;
         }
     }
 }

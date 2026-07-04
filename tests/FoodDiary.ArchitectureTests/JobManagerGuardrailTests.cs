@@ -11,6 +11,7 @@ public sealed class JobManagerGuardrailTests {
             "FoodDiary.Application",
             "FoodDiary.Infrastructure",
             "FoodDiary.Integrations",
+            "FoodDiary.Resources",
         ];
         string[] expectedPackageReferences = [
             "Hangfire.AspNetCore",

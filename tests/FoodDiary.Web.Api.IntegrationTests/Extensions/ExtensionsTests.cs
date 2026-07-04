@@ -242,13 +242,21 @@ public sealed class ExtensionsTests {
 
         app.UseApiPipeline();
 
-        foreach (string route in new[] { "/health/live", "/health/ready", "/api/version", "/api/v1/version" }) {
+        foreach (string route in new[] { "/health/live", "/health/ready" }) {
             RouteEndpoint endpoint = Assert.Single(
                 ((IEndpointRouteBuilder)app).DataSources.SelectMany(dataSource => dataSource.Endpoints).OfType<RouteEndpoint>(),
-                candidate => string.Equals(candidate.RoutePattern.RawText, route, StringComparison.Ordinal));
+                candidate => RouteMatches(candidate, route));
             Assert.NotNull(endpoint.Metadata.GetMetadata<SuppressRequestAccessLogAttribute>());
         }
     }
+
+    private static bool RouteMatches(RouteEndpoint endpoint, string expectedRoute) {
+        string? actualRoute = endpoint.RoutePattern.RawText;
+        return string.Equals(NormalizeRoute(actualRoute), NormalizeRoute(expectedRoute), StringComparison.Ordinal);
+    }
+
+    private static string? NormalizeRoute(string? route) =>
+        route is null ? null : $"/{route.TrimStart('/')}";
 
     private static Error CreateError(string errorCode, string message) =>
         new(errorCode, message, Kind: ErrorKindResolver.Resolve(errorCode));

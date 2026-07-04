@@ -32,6 +32,7 @@ public sealed class ProjectDependencyMatrixTests {
                 "FoodDiary.Application",
                 "FoodDiary.Infrastructure",
                 "FoodDiary.Integrations",
+                "FoodDiary.Resources",
             ],
             ["FoodDiary.MailInbox.Application"] = [
                 "FoodDiary.MailInbox.Domain",
