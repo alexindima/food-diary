@@ -170,6 +170,29 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void InfrastructureNarrowRepositoryFacades_AreRegisteredThroughFullRepositoryService() {
+        string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
+        string[] narrowRepositoryMarkers = [
+            "AdminReadRepository,",
+            "LookupRepository,",
+            "ReadRepository,",
+            "WriteRepository,",
+        ];
+
+        string[] violations = [.. Directory.GetFiles(infrastructureRoot, "DependencyInjection*.cs", SearchOption.TopDirectoryOnly)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(entry => entry.line.StartsWith("services.AddScoped<I", StringComparison.Ordinal))
+            .Where(entry => narrowRepositoryMarkers.Any(marker => entry.line.Contains(marker, StringComparison.Ordinal)))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void InfrastructureConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
