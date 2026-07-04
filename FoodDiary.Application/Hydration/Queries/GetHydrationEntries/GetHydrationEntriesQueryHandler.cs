@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
 public class GetHydrationEntriesQueryHandler(
-    IHydrationEntryRepository repository,
+    IHydrationEntryReadRepository repository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetHydrationEntriesQuery, Result<IReadOnlyList<HydrationEntryModel>>> {
     public async Task<Result<IReadOnlyList<HydrationEntryModel>>> Handle(

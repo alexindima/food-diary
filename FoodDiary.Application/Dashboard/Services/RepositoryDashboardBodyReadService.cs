@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Dashboard.Services;
 internal sealed class RepositoryDashboardBodyReadService(
     IWeightEntryReadRepository weightEntryRepository,
     IWaistEntryReadRepository waistEntryRepository,
-    IHydrationEntryRepository hydrationEntryRepository) : IDashboardBodyReadService {
+    IHydrationEntryReadRepository hydrationEntryRepository) : IDashboardBodyReadService {
     public async Task<DashboardBodyReadModel> GetBodyAsync(
         UserId userId,
         DateTime dayStart,

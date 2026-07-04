@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 
 public class GetHydrationDailyTotalQueryHandler(
-    IHydrationEntryRepository repository,
+    IHydrationEntryReadRepository repository,
     IHydrationGoalService hydrationGoalService)
     : IQueryHandler<GetHydrationDailyTotalQuery, Result<HydrationDailyModel>> {
     public async Task<Result<HydrationDailyModel>> Handle(

@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.Hydration.Commands.CreateHydrationEntry;
 
 public class CreateHydrationEntryCommandHandler(
-    IHydrationEntryRepository repository,
+    IHydrationEntryWriteRepository repository,
     ICurrentUserAccessService currentUserAccessService) : ICommandHandler<CreateHydrationEntryCommand, Result<HydrationEntryModel>> {
     public async Task<Result<HydrationEntryModel>> Handle(
         CreateHydrationEntryCommand command,

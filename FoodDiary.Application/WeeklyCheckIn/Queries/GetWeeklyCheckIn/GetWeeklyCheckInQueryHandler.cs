@@ -18,7 +18,7 @@ public class GetWeeklyCheckInQueryHandler(
     IMealReadRepository mealRepository,
     IWeightEntryReadRepository weightEntryRepository,
     IWaistEntryReadRepository waistEntryRepository,
-    IHydrationEntryRepository hydrationEntryRepository,
+    IHydrationEntryReadRepository hydrationEntryRepository,
     IWeeklyCheckInUserProfileService weeklyCheckInUserProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWeeklyCheckInQuery, Result<WeeklyCheckInModel>> {
