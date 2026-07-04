@@ -135,6 +135,27 @@ public sealed class HostCompositionBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void TelegramBotSource_DoesNotReferenceCoreBackendNamespaces() {
+        string botRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Telegram.Bot");
+        string[] forbiddenPatterns = [
+            "FoodDiary.Domain",
+            "FoodDiary.Application",
+            "FoodDiary.Infrastructure",
+            "FoodDiary.Resources",
+            "FoodDiary.Presentation.Api",
+            "FoodDiary.Web.Api",
+            "ControllerBase",
+            "IActionResult",
+            "DbContext",
+            "Npgsql",
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(botRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
     private static string ProjectFolderFromProjectName(string projectName) =>
         string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
             ? Path.Combine("Shared", "FoodDiary.Mediator")
