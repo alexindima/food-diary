@@ -100,8 +100,6 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
         string[] allowedFiles = [
-            "IProductRepository.cs",
-            "IRecipeRepository.cs",
             "IUserRepository.cs",
             "ProductQueryFilters.cs",
             "RecipeQueryFilters.cs",
@@ -161,35 +159,191 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationSourceFiles_UseFullProductRepositoryOnlyInsideProductsSlice() {
+    public void ApplicationSourceFiles_DoNotUseFullProductRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] allowedDirectories = [
-            Path.Combine(applicationRoot, "Products"),
-        ];
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
             applicationRoot,
             "IProductRepository",
-            allowedDirectories);
+            []);
 
         Assert.Empty(violations);
     }
 
     [Fact]
-    public void ApplicationSourceFiles_UseFullRecipeRepositoryOnlyInsideRecipesSlice() {
+    public void ProductQueryHandlers_DoNotUseFullProductRepository() {
+        string root = GetRepositoryRoot();
+        string queryRoot = Path.Combine(root, "FoodDiary.Application", "Products", "Queries");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            queryRoot,
+            "IProductRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ProductCommandHandlersAndValidators_DoNotUseFullProductRepository() {
+        string root = GetRepositoryRoot();
+        string commandRoot = Path.Combine(root, "FoodDiary.Application", "Products", "Commands");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            commandRoot,
+            "IProductRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullRecipeRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] allowedDirectories = [
-            Path.Combine(applicationRoot, "Recipes"),
-        ];
 
         string[] violations = FindRepositoryReferenceViolations(
             root,
             applicationRoot,
             "IRecipeRepository",
-            allowedDirectories);
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void RecipeQueryHandlers_DoNotUseFullRecipeRepository() {
+        string root = GetRepositoryRoot();
+        string queryRoot = Path.Combine(root, "FoodDiary.Application", "Recipes", "Queries");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            queryRoot,
+            "IRecipeRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void RecipeNutritionUpdater_DoesNotUseFullRecipeRepository() {
+        string root = GetRepositoryRoot();
+        string updaterPath = Path.Combine(root, "FoodDiary.Application", "Recipes", "Services", "RecipeNutritionUpdater.cs");
+
+        string[] violations = FindReferencesInFiles(root, [updaterPath], "IRecipeRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MigratedRecipeCommandHandlersAndValidators_DoNotUseFullRecipeRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedFiles = [
+            Path.Combine(applicationRoot, "Recipes", "Commands", "CreateRecipe", "CreateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "DeleteRecipe", "DeleteRecipeCommandValidator.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "DuplicateRecipe", "DuplicateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeCommandValidator.cs"),
+            Path.Combine(applicationRoot, "Recipes", "Commands", "UpdateRecipe", "UpdateRecipeValuePreparer.cs"),
+        ];
+
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "IRecipeRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ProductAndRecipeInfrastructureAdapters_UseNarrowRepositoryContracts() {
+        string root = GetRepositoryRoot();
+        string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
+        string[] migratedFiles = [
+            Path.Combine(infrastructureRoot, "Services", "ProductLookupService.cs"),
+            Path.Combine(infrastructureRoot, "Services", "RecipeLookupService.cs"),
+            Path.Combine(infrastructureRoot, "Services", "RecipeAccessService.cs"),
+            Path.Combine(infrastructureRoot, "Persistence", "Usda", "UsdaProductLinkRepository.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, migratedFiles, "IProductRepository"),
+            .. FindReferencesInFiles(root, migratedFiles, "IRecipeRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullMealRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IMealRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "INutritionLessonRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullNotificationRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "INotificationRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullFastingRepositories() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingPlanRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingOccurrenceRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingCheckInRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IFastingTelemetryEventRepository", []),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullBillingSubscriptionRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IBillingSubscriptionRepository",
+            []);
 
         Assert.Empty(violations);
     }
