@@ -139,4 +139,25 @@ public sealed class ProjectDependencyMatrixTests {
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void CoreProjectSource_ReferencesMailBoundedContextsOnlyFromIntegrations() {
+        string[] coreSourceRoots = [.. ProjectReferenceReader.ReadProductionProjectNames()
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailRelay.", StringComparison.Ordinal))
+            .Where(static projectName => !projectName.StartsWith("FoodDiary.MailInbox.", StringComparison.Ordinal))
+            .Where(static projectName => !string.Equals(projectName, "FoodDiary.Integrations", StringComparison.Ordinal))
+            .Select(projectName => ArchitectureTestPaths.FromRoot(ProjectFolderFromProjectName(projectName)))];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(coreSourceRoots, [
+            "FoodDiary.MailInbox",
+            "FoodDiary.MailRelay",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    private static string ProjectFolderFromProjectName(string projectName) =>
+        string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
+            ? Path.Combine("Shared", "FoodDiary.Mediator")
+            : projectName;
 }
