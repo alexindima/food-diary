@@ -118,6 +118,59 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayProductionProjectRootFolders_StayLimitedToLayerStructure() {
+        string root = GetRepositoryRoot();
+        var allowedRootFoldersByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["MailRelay/FoodDiary.MailRelay.Application"] = [
+                "Abstractions",
+                "Common",
+                "DeliveryEvents",
+                "Emails",
+                "Health",
+                "Options",
+                "Queue",
+                "Telemetry",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Client"] = [
+                "Extensions",
+                "Models",
+                "Options",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Domain"] = [
+                "Common",
+                "DeliveryEvents",
+                "Emails",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Infrastructure"] = [
+                "Extensions",
+                "Options",
+                "Services",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Initializer"] = [
+                "Properties",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Presentation"] = [
+                "Controllers",
+                "Extensions",
+                "Features",
+                "Filters",
+                "Responses",
+                "Security",
+                "Services",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.WebApi"] = [
+                "Properties",
+            ],
+        };
+
+        string[] violations = [.. allowedRootFoldersByProject
+            .SelectMany(entry => FindUnexpectedRootFolders(root, entry.Key, entry.Value))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailRelayProductionConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string[] sourceRoots = [
@@ -490,5 +543,23 @@ public sealed class MailRelayArchitectureTests {
     private static bool IsGeneratedPath(string path) {
         return path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
                path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IEnumerable<string> FindUnexpectedRootFolders(
+        string root,
+        string relativeProjectFolder,
+        string[] allowedRootFolders) {
+        string projectRoot = Path.Combine(root, relativeProjectFolder.Replace('/', Path.DirectorySeparatorChar));
+        var allowed = new HashSet<string>(allowedRootFolders, StringComparer.Ordinal);
+
+        return Directory.GetDirectories(projectRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowed.Contains(name))
+            .Select(name => Path.Combine(relativeProjectFolder, name))
+            .Order(StringComparer.Ordinal);
     }
 }

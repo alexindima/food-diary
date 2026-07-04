@@ -113,6 +113,55 @@ public sealed class MailInboxArchitectureTests {
     }
 
     [Fact]
+    public void MailInboxProductionProjectRootFolders_StayLimitedToLayerStructure() {
+        string root = GetRepositoryRoot();
+        var allowedRootFoldersByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["MailInbox/FoodDiary.MailInbox.Application"] = [
+                "Abstractions",
+                "Common",
+                "Health",
+                "Messages",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Client"] = [
+                "Extensions",
+                "Models",
+                "Options",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Domain"] = [
+                "Common",
+                "Events",
+                "Messages",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Infrastructure"] = [
+                "Extensions",
+                "Options",
+                "Services",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Initializer"] = [
+                "Properties",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Presentation"] = [
+                "Controllers",
+                "Extensions",
+                "Features",
+                "Filters",
+                "Options",
+                "Responses",
+                "Security",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.WebApi"] = [
+                "Properties",
+            ],
+        };
+
+        string[] violations = [.. allowedRootFoldersByProject
+            .SelectMany(entry => FindUnexpectedRootFolders(root, entry.Key, entry.Value))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailInboxProductionConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string[] sourceRoots = [
@@ -344,5 +393,23 @@ public sealed class MailInboxArchitectureTests {
     private static bool IsGeneratedPath(string path) {
         return path.Contains($"{Path.DirectorySeparatorChar}bin{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase) ||
                path.Contains($"{Path.DirectorySeparatorChar}obj{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IEnumerable<string> FindUnexpectedRootFolders(
+        string root,
+        string relativeProjectFolder,
+        string[] allowedRootFolders) {
+        string projectRoot = Path.Combine(root, relativeProjectFolder.Replace('/', Path.DirectorySeparatorChar));
+        var allowed = new HashSet<string>(allowedRootFolders, StringComparer.Ordinal);
+
+        return Directory.GetDirectories(projectRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowed.Contains(name))
+            .Select(name => Path.Combine(relativeProjectFolder, name))
+            .Order(StringComparer.Ordinal);
     }
 }
