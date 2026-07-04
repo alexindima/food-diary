@@ -29,6 +29,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Authentication.Models;
+using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Authentication;
@@ -588,9 +589,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [Fact]
     public async Task LinkTelegramHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new LinkTelegramCommandHandler(
-            new StubUserRepository(),
-            new StubTelegramAuthValidator());
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository());
 
         Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(Guid.Empty, "init-data"),
@@ -604,7 +603,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task LinkTelegramHandler_WhenInitDataInvalid_ReturnsFailure() {
         var user = User.Create("link-invalid@example.com", "secret");
-        var handler = new LinkTelegramCommandHandler(
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(
             new StubUserRepository(user),
             new StubTelegramAuthValidator(validateFailure: true));
 
@@ -618,9 +617,7 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [Fact]
     public async Task LinkTelegramHandler_WhenUserMissing_ReturnsFailure() {
-        var handler = new LinkTelegramCommandHandler(
-            new StubUserRepository(),
-            new StubTelegramAuthValidator());
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository());
 
         Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(Guid.NewGuid(), "valid-init-data"),
@@ -633,9 +630,7 @@ public sealed class AuthenticationCommandHandlerTests {
     public async Task LinkTelegramHandler_WhenSameTelegramIdAlreadyLinked_ReturnsCurrentUser() {
         var user = User.Create("same-telegram@example.com", "secret");
         user.LinkTelegram(123456);
-        var handler = new LinkTelegramCommandHandler(
-            new StubUserRepository(user),
-            new StubTelegramAuthValidator());
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user));
 
         Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
@@ -650,9 +645,7 @@ public sealed class AuthenticationCommandHandlerTests {
         var user = User.Create("current-telegram@example.com", "secret");
         var existing = User.Create("existing-telegram@example.com", "secret");
         existing.LinkTelegram(123456);
-        var handler = new LinkTelegramCommandHandler(
-            new StubUserRepository(user, existing),
-            new StubTelegramAuthValidator());
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user, existing));
 
         Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
@@ -665,9 +658,7 @@ public sealed class AuthenticationCommandHandlerTests {
     [Fact]
     public async Task LinkTelegramHandler_WithAvailableTelegramId_LinksCurrentUser() {
         var user = User.Create("link@example.com", "secret");
-        var handler = new LinkTelegramCommandHandler(
-            new StubUserRepository(user),
-            new StubTelegramAuthValidator());
+        LinkTelegramCommandHandler handler = CreateLinkTelegramHandler(new StubUserRepository(user));
 
         Result<UserModel> result = await handler.Handle(
             new LinkTelegramCommand(user.Id.Value, "valid-init-data"),
@@ -1064,9 +1055,14 @@ public sealed class AuthenticationCommandHandlerTests {
             Task.FromResult(string.Equals(code, "admin-sso-code", StringComparison.Ordinal) ? exchangeUserId : null);
     }
 
+    private static LinkTelegramCommandHandler CreateLinkTelegramHandler(
+        StubUserRepository userRepository,
+        StubTelegramAuthValidator? telegramAuthValidator = null) =>
+        new(userRepository, userRepository, telegramAuthValidator ?? new StubTelegramAuthValidator());
+
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null, params User[] otherUsers)
-        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService {
+        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService, IUserContextService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1086,8 +1082,22 @@ public sealed class AuthenticationCommandHandlerTests {
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) => Task.FromResult(userToAdd);
+        public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) {
+            _users.Add(userToAdd);
+            return Task.FromResult(userToAdd);
+        }
+
         public Task UpdateAsync(User userToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
+            User? accessibleUser = _users.FirstOrDefault(candidate => candidate is { IsActive: true, DeletedAt: null } && candidate.Id == userId);
+            Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(accessibleUser);
+            return Task.FromResult(accessError is not null
+                ? Result.Failure<User>(accessError)
+                : Result.Success(accessibleUser!));
+        }
+
+        public Task UpdateUserAsync(User userToUpdate, CancellationToken cancellationToken) => UpdateAsync(userToUpdate, cancellationToken);
     }
 
     [ExcludeFromCodeCoverage]

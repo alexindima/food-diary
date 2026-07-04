@@ -4,7 +4,6 @@ using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Entities.Users;
@@ -16,7 +15,7 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserMutationService userMutationService,
     INotificationRepository notificationRepository,
     INotificationWriter notificationWriter,
     IGoogleTokenValidator googleTokenValidator,
@@ -30,11 +29,11 @@ public sealed class GoogleLoginCommandHandler(
         }
 
         GoogleIdentityPayload payload = payloadResult.Value;
-        User? user = await userRepository.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
+        User? user = await userMutationService.GetByEmailIncludingDeletedAsync(payload.Email, cancellationToken).ConfigureAwait(false);
 
         if (user is null) {
             user = CreateGoogleUser(payload, passwordHasher);
-            user = await userRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+            user = await userMutationService.AddAsync(user, cancellationToken).ConfigureAwait(false);
         } else {
             Error? accessError = AuthenticationUserAccessPolicy.EnsureCanAuthenticate(user);
             if (accessError is not null) {
@@ -42,7 +41,7 @@ public sealed class GoogleLoginCommandHandler(
             }
 
             ApplyGoogleProfile(user, payload);
-            await userRepository.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
+            await userMutationService.UpdateAsync(user, cancellationToken).ConfigureAwait(false);
         }
 
         await EnsurePasswordSetupReminderAsync(user, notificationRepository, notificationWriter, cancellationToken).ConfigureAwait(false);

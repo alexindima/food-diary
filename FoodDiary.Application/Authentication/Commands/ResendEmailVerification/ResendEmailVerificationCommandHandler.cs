@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
 public class ResendEmailVerificationCommandHandler(
-    IAuthenticationUserMutationService userMutationService,
+    IUserContextService userContextService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
@@ -26,13 +26,14 @@ public class ResendEmailVerificationCommandHandler(
                 Errors.Validation.Invalid(nameof(command.UserId), "User id must not be empty."));
         }
 
-        User? user = await userMutationService.GetByIdAsync(new UserId(command.UserId), cancellationToken).ConfigureAwait(false);
-        Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
-        if (accessError is not null) {
-            return Result.Failure(accessError);
+        Result<User> userResult = await userContextService
+            .GetAccessibleUserAsync(new UserId(command.UserId), cancellationToken)
+            .ConfigureAwait(false);
+        if (!userResult.IsSuccess) {
+            return Result.Failure(userResult.Error);
         }
 
-        User currentUser = user!;
+        User currentUser = userResult.Value;
         if (currentUser.IsEmailConfirmed) {
             return Result.Success();
         }
@@ -53,7 +54,7 @@ public class ResendEmailVerificationCommandHandler(
             TokenHash: emailTokenHash,
             ExpiresAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime.AddHours(24),
             IssuedAtUtc: dateTimeProvider.GetUtcNow().UtcDateTime));
-        await userMutationService.UpdateAsync(currentUser, cancellationToken).ConfigureAwait(false);
+        await userContextService.UpdateUserAsync(currentUser, cancellationToken).ConfigureAwait(false);
 
         EmailVerificationMessage message = new(currentUser.Email, currentUser.Id.Value.ToString(), emailToken, currentUser.Language, command.ClientOrigin);
         postCommitActionQueue.Enqueue(async ct => {

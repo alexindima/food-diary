@@ -284,13 +284,19 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
             Path.Combine(applicationRoot, "Authentication", "Commands", "ConfirmPasswordReset", "ConfirmPasswordResetCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "GoogleLogin", "GoogleLoginCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "LinkTelegram", "LinkTelegramCommandHandler.cs"),
             Path.Combine(applicationRoot, "Authentication", "Commands", "RequestPasswordReset", "RequestPasswordResetCommandHandler.cs"),
             Path.Combine(applicationRoot, "Authentication", "Commands", "ResendEmailVerification", "ResendEmailVerificationCommandHandler.cs"),
+            Path.Combine(applicationRoot, "Authentication", "Commands", "RestoreAccount", "RestoreAccountCommandHandler.cs"),
             Path.Combine(applicationRoot, "Authentication", "Commands", "VerifyEmail", "VerifyEmailCommandHandler.cs"),
             Path.Combine(applicationRoot, "Authentication", "Services", "AuthenticationTokenService.cs"),
         ];
 
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+        string[] violations = [
+            .. FindReferencesInFiles(root, migratedFiles, "IUserRepository"),
+            .. FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy"),
+        ];
 
         Assert.Empty(violations);
     }
