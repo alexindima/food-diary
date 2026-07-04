@@ -126,6 +126,29 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void ResourcesSource_DoesNotReferenceConcreteBackendOrTransportLayers() {
+        string resourcesRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Resources");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(resourcesRoot, [
+            "FoodDiary.Application;",
+            "FoodDiary.Domain",
+            "FoodDiary.Infrastructure",
+            "FoodDiary.Presentation.Api",
+            "FoodDiary.Web.Api",
+            "Microsoft.AspNetCore",
+            "ControllerBase",
+            "IActionResult",
+            "HttpContext",
+            "DbContext",
+            "Npgsql",
+            "IConfiguration",
+            "IOptions<",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PresentationApi_SourceFiles_DoNotUseDomainNamespaces() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
