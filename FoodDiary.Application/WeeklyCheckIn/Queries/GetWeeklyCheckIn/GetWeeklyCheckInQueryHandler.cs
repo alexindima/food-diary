@@ -15,7 +15,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 
 public class GetWeeklyCheckInQueryHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     IWeightEntryRepository weightEntryRepository,
     IWaistEntryRepository waistEntryRepository,
     IHydrationEntryRepository hydrationEntryRepository,

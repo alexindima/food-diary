@@ -16,7 +16,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
 public class CreateConsumptionCommandHandler(
-    IMealRepository mealRepository,
+    IMealWriteRepository mealRepository,
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     ICurrentUserAccessService currentUserAccessService,

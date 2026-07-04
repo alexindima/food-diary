@@ -14,7 +14,7 @@ namespace FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 public class AddFavoriteMealCommandHandler(
     IFavoriteMealRepository favoriteMealRepository,
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteMealCommand, Result<FavoriteMealModel>> {
     public async Task<Result<FavoriteMealModel>> Handle(

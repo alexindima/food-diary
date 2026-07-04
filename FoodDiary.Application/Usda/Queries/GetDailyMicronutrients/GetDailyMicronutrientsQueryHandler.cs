@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 
 public class GetDailyMicronutrientsQueryHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     IUsdaFoodRepository usdaFoodRepository)
     : IQueryHandler<GetDailyMicronutrientsQuery, Result<DailyMicronutrientSummaryModel>> {
     public async Task<Result<DailyMicronutrientSummaryModel>> Handle(

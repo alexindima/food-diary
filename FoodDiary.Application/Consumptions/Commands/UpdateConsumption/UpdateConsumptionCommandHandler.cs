@@ -16,7 +16,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Commands.UpdateConsumption;
 
 public class UpdateConsumptionCommandHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealReadRepository,
+    IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
     IRecentItemRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
@@ -45,7 +46,7 @@ public class UpdateConsumptionCommandHandler(
             return Result.Failure<ConsumptionModel>(updateResult.Error);
         }
 
-        await mealRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.UpdateAsync(values.Meal, cancellationToken).ConfigureAwait(false);
         await recentItemRepository.RegisterUsageAsync(
             values.UserId,
             values.Meal.Items.Where(x => x.ProductId.HasValue).Select(x => x.ProductId!.Value).ToList(),
@@ -130,7 +131,7 @@ public class UpdateConsumptionCommandHandler(
         }
 
         var consumptionId = new MealId(command.ConsumptionId);
-        Meal? meal = await mealRepository.GetByIdAsync(
+        Meal? meal = await mealReadRepository.GetByIdAsync(
             consumptionId,
             userId,
             includeItems: true,
@@ -213,7 +214,7 @@ public class UpdateConsumptionCommandHandler(
         MealId mealId,
         UserId userId,
         CancellationToken cancellationToken) {
-        Meal? updated = await mealRepository.GetByIdAsync(
+        Meal? updated = await mealReadRepository.GetByIdAsync(
             mealId,
             userId,
             includeItems: true,

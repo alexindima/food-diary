@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
 public class GetStatisticsQueryHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsModel>>> {
     public async Task<Result<IReadOnlyList<AggregatedStatisticsModel>>> Handle(

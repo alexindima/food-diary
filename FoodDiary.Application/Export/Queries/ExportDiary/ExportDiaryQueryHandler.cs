@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Meals;
 namespace FoodDiary.Application.Export.Queries.ExportDiary;
 
 public class ExportDiaryQueryHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)
     : IQueryHandler<ExportDiaryQuery, Result<FileExportResult>> {

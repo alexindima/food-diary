@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Meals;
 namespace FoodDiary.Application.Gamification.Queries.GetGamification;
 
 public class GetGamificationQueryHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetGamificationQuery, Result<GamificationModel>> {

@@ -6,7 +6,9 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
-public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
+public class DeleteConsumptionCommandHandler(
+    IMealReadRepository mealReadRepository,
+    IMealWriteRepository mealWriteRepository)
     : ICommandHandler<DeleteConsumptionCommand, Result> {
     public async Task<Result> Handle(DeleteConsumptionCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {
@@ -20,7 +22,7 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
         var userId = new UserId(command.UserId!.Value);
         var consumptionId = new MealId(command.ConsumptionId);
 
-        Meal? meal = await mealRepository.GetByIdAsync(
+        Meal? meal = await mealReadRepository.GetByIdAsync(
             consumptionId,
             userId,
             includeItems: false,
@@ -31,7 +33,7 @@ public class DeleteConsumptionCommandHandler(IMealRepository mealRepository)
             return Result.Failure(Errors.Consumption.NotFound(command.ConsumptionId));
         }
 
-        await mealRepository.DeleteAsync(meal, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.DeleteAsync(meal, cancellationToken).ConfigureAwait(false);
         return Result.Success();
     }
 }

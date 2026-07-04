@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionById;
 
-public class GetConsumptionByIdQueryHandler(IMealRepository mealRepository)
+public class GetConsumptionByIdQueryHandler(IMealReadRepository mealRepository)
     : IQueryHandler<GetConsumptionByIdQuery, Result<ConsumptionModel>> {
     public async Task<Result<ConsumptionModel>> Handle(GetConsumptionByIdQuery request, CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == Guid.Empty) {

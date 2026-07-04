@@ -16,7 +16,7 @@ namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 public class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryRepository weightEntryRepository,
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {

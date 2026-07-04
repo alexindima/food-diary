@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 
 public class GetCycleNutritionSummaryQueryHandler(
     ICycleRepository cycleRepository,
-    IMealRepository mealRepository,
+    IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {
     private const int MaxSummaryRangeDays = 366;

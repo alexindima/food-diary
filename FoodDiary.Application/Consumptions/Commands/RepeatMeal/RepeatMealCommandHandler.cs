@@ -14,7 +14,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 
 public class RepeatMealCommandHandler(
-    IMealRepository mealRepository,
+    IMealReadRepository mealReadRepository,
+    IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RepeatMealCommand, Result<ConsumptionModel>> {
@@ -37,7 +38,7 @@ public class RepeatMealCommandHandler(
         CopyAiSessions(values.SourceMeal, newMeal, command.TargetDate);
         await ApplyNutritionAsync(values.SourceMeal, newMeal, values.UserId, cancellationToken).ConfigureAwait(false);
 
-        await mealRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
+        await mealWriteRepository.AddAsync(newMeal, cancellationToken).ConfigureAwait(false);
         return Result.Success(newMeal.ToModel());
     }
 
@@ -55,7 +56,7 @@ public class RepeatMealCommandHandler(
         }
 
         var sourceMealId = new MealId(command.MealId);
-        Meal? sourceMeal = await mealRepository.GetByIdAsync(
+        Meal? sourceMeal = await mealReadRepository.GetByIdAsync(
             sourceMealId,
             userId,
             includeItems: true,

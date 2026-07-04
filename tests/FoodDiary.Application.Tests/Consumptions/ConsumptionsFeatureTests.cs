@@ -35,6 +35,33 @@ namespace FoodDiary.Application.Tests.Consumptions;
 
 [ExcludeFromCodeCoverage]
 public class ConsumptionsFeatureTests {
+    private static UpdateConsumptionCommandHandler UpdateConsumptionHandler(
+        IMealRepository repository,
+        IMealNutritionService mealNutritionService,
+        IRecentItemRepository recentItemRepository,
+        IImageAssetCleanupService imageAssetCleanupService,
+        ICurrentUserAccessService currentUserAccessService,
+        TimeProvider dateTimeProvider,
+        IImageAssetAccessService imageAssetAccessService) =>
+        new(
+            repository,
+            repository,
+            mealNutritionService,
+            recentItemRepository,
+            imageAssetCleanupService,
+            currentUserAccessService,
+            dateTimeProvider,
+            imageAssetAccessService);
+
+    private static DeleteConsumptionCommandHandler DeleteConsumptionHandler(IMealRepository repository) =>
+        new(repository, repository);
+
+    private static RepeatMealCommandHandler RepeatMealHandler(
+        IMealRepository repository,
+        IMealNutritionService mealNutritionService,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(repository, repository, mealNutritionService, currentUserAccessService);
+
     [Fact]
     public void ConsumptionItemValidator_WhenIdsAreMissing_Fails() {
         Result result = ConsumptionItemValidator.Validate(new ConsumptionItemInput(ProductId: null, RecipeId: null, 100));
@@ -180,7 +207,7 @@ public class ConsumptionsFeatureTests {
 
         var mealRepository = new SingleMealRepository(meal);
         var cleanup = new RecordingCleanupService("storage_error");
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             mealRepository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -998,7 +1025,7 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
             MealType.Lunch);
 
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1042,7 +1069,7 @@ public class ConsumptionsFeatureTests {
             new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc),
             MealType.Lunch);
 
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1080,7 +1107,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
-        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+        DeleteConsumptionCommandHandler handler = DeleteConsumptionHandler(new CreatingMealRepository());
 
         Result result = await handler.Handle(
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.Empty),
@@ -1093,7 +1120,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WhenMealIsMissing_ReturnsNotFound() {
-        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+        DeleteConsumptionCommandHandler handler = DeleteConsumptionHandler(new CreatingMealRepository());
 
         Result result = await handler.Handle(
             new DeleteConsumptionCommand(Guid.NewGuid(), Guid.NewGuid()),
@@ -1108,7 +1135,7 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("delete-consumption@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = new DeleteConsumptionCommandHandler(repository);
+        DeleteConsumptionCommandHandler handler = DeleteConsumptionHandler(repository);
 
         Result result = await handler.Handle(
             new DeleteConsumptionCommand(user.Id.Value, meal.Id.Value),
@@ -1139,7 +1166,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task UpdateConsumptionCommandHandler_WithEmptyConsumptionId_ReturnsValidationFailure() {
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1181,7 +1208,7 @@ public class ConsumptionsFeatureTests {
         user.DeleteAccount(DateTime.UtcNow);
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
 
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1227,7 +1254,7 @@ public class ConsumptionsFeatureTests {
             imageAssetId: assetId);
 
         var cleanup = new RecordingCleanupService();
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1266,7 +1293,7 @@ public class ConsumptionsFeatureTests {
     public async Task UpdateConsumptionCommandHandler_WhenMealTypeInvalid_ReturnsValidationFailure() {
         var user = User.Create("invalid-update-meal-type@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1306,7 +1333,7 @@ public class ConsumptionsFeatureTests {
     public async Task UpdateConsumptionCommandHandler_WhenAiSourceInvalid_ReturnsValidationFailure() {
         var user = User.Create("invalid-update-ai-source@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1348,7 +1375,7 @@ public class ConsumptionsFeatureTests {
     public async Task UpdateConsumptionCommandHandler_WhenAiRecognizedAtIsUnspecified_ReturnsValidationFailure() {
         var user = User.Create("invalid-update-ai-time@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             new SingleMealRepository(meal),
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1391,7 +1418,7 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-nutrition-failure@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new SingleMealRepository(meal);
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             repository,
             new FailingMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1432,7 +1459,7 @@ public class ConsumptionsFeatureTests {
         var user = User.Create("update-reload-missing@example.com", "hash");
         var meal = Meal.Create(user.Id, new DateTime(2026, 3, 26, 12, 0, 0, DateTimeKind.Utc), MealType.Lunch);
         var repository = new ReloadMissingMealRepository(meal);
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             repository,
             new NoopMealNutritionService(),
             new RecordingRecentItemRepository(),
@@ -1482,7 +1509,7 @@ public class ConsumptionsFeatureTests {
         var repository = new SingleMealRepository(meal);
         var cleanup = new RecordingCleanupService();
         var recentItems = new RecordingRecentItemRepository();
-        var handler = new UpdateConsumptionCommandHandler(
+        UpdateConsumptionCommandHandler handler = UpdateConsumptionHandler(
             repository,
             new NoopMealNutritionService(),
             recentItems,
@@ -1754,7 +1781,7 @@ public class ConsumptionsFeatureTests {
         sourceMeal.AddRecipe(RecipeId.New(), 1);
 
         var repository = new SingleMealRepository(sourceMeal);
-        var handler = new RepeatMealCommandHandler(
+        RepeatMealCommandHandler handler = RepeatMealHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(510, 33, 18, 47, 5, 0)),
             CreateCurrentUserAccessService(user));
@@ -1806,7 +1833,7 @@ public class ConsumptionsFeatureTests {
             ManualAlcohol: 0));
 
         var repository = new SingleMealRepository(sourceMeal);
-        var handler = new RepeatMealCommandHandler(
+        RepeatMealCommandHandler handler = RepeatMealHandler(
             repository,
             new FixedMealNutritionService(new MealNutritionSummary(0, 0, 0, 0, 0, 0)),
             CreateCurrentUserAccessService(user));
@@ -2168,7 +2195,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task RepeatMealCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new RepeatMealCommandHandler(
+        RepeatMealCommandHandler handler = RepeatMealHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
@@ -2185,7 +2212,7 @@ public class ConsumptionsFeatureTests {
     public async Task RepeatMealCommandHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-repeat-meal@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new RepeatMealCommandHandler(
+        RepeatMealCommandHandler handler = RepeatMealHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             CreateCurrentUserAccessService(user));
@@ -2201,7 +2228,7 @@ public class ConsumptionsFeatureTests {
     [Fact]
     public async Task RepeatMealCommandHandler_WhenSourceMealMissing_ReturnsNotFound() {
         var user = User.Create("repeat-missing-source@example.com", "hash");
-        var handler = new RepeatMealCommandHandler(
+        RepeatMealCommandHandler handler = RepeatMealHandler(
             new CreatingMealRepository(),
             new NoopMealNutritionService(),
             CreateCurrentUserAccessService(user));
@@ -2216,7 +2243,7 @@ public class ConsumptionsFeatureTests {
 
     [Fact]
     public async Task DeleteConsumptionCommandHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new DeleteConsumptionCommandHandler(new CreatingMealRepository());
+        DeleteConsumptionCommandHandler handler = DeleteConsumptionHandler(new CreatingMealRepository());
 
         Result result = await handler.Handle(
             new DeleteConsumptionCommand(UserId: null, Guid.NewGuid()),
@@ -2354,7 +2381,7 @@ public class ConsumptionsFeatureTests {
         User user,
         RecordingRecentItemRepository? recentItems = null,
         IImageAssetAccessService? imageAccess = null) =>
-        new(
+        UpdateConsumptionHandler(
             repository,
             new NoopMealNutritionService(),
             recentItems ?? new RecordingRecentItemRepository(),
