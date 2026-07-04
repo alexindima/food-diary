@@ -249,6 +249,24 @@ public sealed class MailInboxArchitectureTests {
     }
 
     [Fact]
+    public void MailInboxWebApiHost_DoesNotDeclareHttpTransportSurface() {
+        string root = GetRepositoryRoot();
+        string webApiRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.WebApi");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(webApiRoot, [
+            "[ApiController]",
+            "ControllerBase",
+            "IActionResult",
+            "ActionResult<",
+            "HttpRequest",
+            "HttpResponse",
+            "HttpQuery",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailInboxPresentationControllers_AreKeptInFeatureFolders() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Presentation");
@@ -289,6 +307,36 @@ public sealed class MailInboxArchitectureTests {
                 .Where(path => path.Contains($"{Path.DirectorySeparatorChar}{convention.Folder}{Path.DirectorySeparatorChar}", StringComparison.Ordinal))
                 .Where(path => !path.EndsWith(convention.Suffix, StringComparison.Ordinal))
                 .Select(path => Path.GetRelativePath(root, path)))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MailInboxOptions_AreKeptInOwningLayerOptionsFolders() {
+        string root = GetRepositoryRoot();
+        string[] mailInboxRoots = [
+            "MailInbox/FoodDiary.MailInbox.Application",
+            "MailInbox/FoodDiary.MailInbox.Client",
+            "MailInbox/FoodDiary.MailInbox.Domain",
+            "MailInbox/FoodDiary.MailInbox.Infrastructure",
+            "MailInbox/FoodDiary.MailInbox.Initializer",
+            "MailInbox/FoodDiary.MailInbox.Presentation",
+            "MailInbox/FoodDiary.MailInbox.WebApi",
+        ];
+        var allowedOptionFiles = new HashSet<string>(StringComparer.Ordinal) {
+            Path.Combine("MailInbox", "FoodDiary.MailInbox.Client", "Options", "MailInboxClientOptions.cs"),
+            Path.Combine("MailInbox", "FoodDiary.MailInbox.Infrastructure", "Options", "MailInboxSmtpOptions.cs"),
+            Path.Combine("MailInbox", "FoodDiary.MailInbox.Presentation", "Options", "MailInboxHttpOptions.cs"),
+        };
+
+        string[] violations = [.. mailInboxRoots
+            .Select(rootName => Path.Combine(root, rootName.Replace('/', Path.DirectorySeparatorChar)))
+            .Where(Directory.Exists)
+            .SelectMany(directory => Directory.GetFiles(directory, "*Options.cs", SearchOption.AllDirectories))
+            .Where(path => !IsGeneratedPath(path))
+            .Where(path => !allowedOptionFiles.Contains(Path.GetRelativePath(root, path)))
+            .Select(path => Path.GetRelativePath(root, path))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);

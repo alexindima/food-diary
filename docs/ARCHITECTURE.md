@@ -59,12 +59,13 @@ Core rules:
 - `Domain` has no application, infrastructure, presentation, or host dependencies.
 - `Application` owns use cases and depends on abstractions, domain, and mediator only.
 - `Application.Abstractions` owns ports/models, not infrastructure or transport.
-- `Infrastructure` implements abstractions and owns EF Core/persistence.
-- `Integrations` owns external provider adapters and typed client bridges to supporting services.
-- `Presentation.Api` owns HTTP/SignalR transport and mapping.
-- `Web.Api` is the executable HTTP host and composition root.
-- `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors.
-- `Resources` provides resource-backed text without depending on concrete application/domain/persistence.
+- `Infrastructure` implements abstractions and owns EF Core/persistence; its composition root delegates to explicit technical modules.
+- `Integrations` owns external provider adapters and typed client bridges to supporting services; provider options and registrations stay in provider-specific modules.
+- `Presentation.Api` owns HTTP/SignalR transport, request/response DTOs, and mapping; HTTP contracts stay in feature `Requests`/`Responses` folders.
+- `Web.Api` is the executable HTTP host and composition root; it must not declare feature controllers or transport DTOs.
+- `JobManager` owns recurring/background execution such as cleanup tasks, due notification scheduling, and outbox processors; it must stay free of HTTP presentation concerns.
+- `Initializer` is a thin operational console host for database setup and seed/backfill operations.
+- `Resources` provides resource-backed text without depending on concrete application/domain/persistence; Russian resources must keep matching neutral resources and valid encoding.
 
 ## Supporting Service Boundaries
 MailRelay and MailInbox repeat the same basic layer pattern:
@@ -82,9 +83,12 @@ flowchart LR
 
 Rules:
 - Client packages must not reference service application/domain/infrastructure/presentation/host projects.
-- Primary FoodDiary core may interact with MailRelay/MailInbox through client packages only, currently from `FoodDiary.Integrations`.
+- Primary FoodDiary core may interact with MailRelay/MailInbox through client packages only, currently from `FoodDiary.Integrations`; other core source must not reference MailRelay/MailInbox namespaces.
 - MailRelay uses its own database and owns outbound delivery runtime configuration.
 - MailInbox uses its own database and owns inbound SMTP/MIME runtime concerns.
+- Supporting-service production projects have layer-specific package allowlists and root-folder guardrails.
+- Supporting-service WebApi projects are hosts only; HTTP controllers, DTOs, and mappings live in presentation projects.
+- Supporting-service infrastructure options live in infrastructure options folders, with explicit exceptions for client/application/presentation options.
 
 ## Architecture Tests
 Architecture guardrails live in `tests/FoodDiary.ArchitectureTests`.
@@ -97,6 +101,7 @@ Important tests:
 - `AsyncMethodGuardrailTests` protects async naming and cancellation-token conventions.
 - `ClientPackageBoundaryTests` protects typed service clients.
 - `HostCompositionBoundaryTests` protects host-only concerns.
+- Dedicated guardrail tests also protect domain shape, operational hosts, backend resources, presentation HTTP contracts, and package/root-folder placement.
 
 Run:
 

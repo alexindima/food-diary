@@ -293,6 +293,24 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayWebApiHost_DoesNotDeclareHttpTransportSurface() {
+        string root = GetRepositoryRoot();
+        string webApiRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.WebApi");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(webApiRoot, [
+            "[ApiController]",
+            "ControllerBase",
+            "IActionResult",
+            "ActionResult<",
+            "HttpRequest",
+            "HttpResponse",
+            "HttpQuery",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailRelayPresentationControllers_AreKeptInFeatureFolders() {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation");

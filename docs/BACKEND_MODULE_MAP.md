@@ -14,6 +14,7 @@ Use this file when deciding where backend code belongs.
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |
 | Host/composition | `FoodDiary.Web.Api` | Program, DI wiring, auth, middleware, Swagger, rate limiting, telemetry exporters | Feature controllers, request DTOs, domain rules |
 | Resources | `FoodDiary.Resources` | Notification/report text providers and resources | Business orchestration, persistence, host config |
+| Operational initialization | `FoodDiary.Initializer` | Migration/status/list orchestration, safe seed/backfill entrypoints | Domain rules, HTTP transport, background scheduler plumbing |
 | Jobs | `FoodDiary.JobManager` | Scheduled job host, Hangfire registration, cleanup jobs, fasting notification scheduling, outbox processing plumbing | HTTP presentation, duplicated business logic |
 | Telegram | `FoodDiary.Telegram.Bot` | Telegram transport, parsing, worker loop | Direct dependencies on core backend projects |
 
@@ -29,6 +30,11 @@ Use this file when deciding where backend code belongs.
 | `FoodDiary.MailRelay.Client` | Typed service-to-service client and DTOs. |
 | `FoodDiary.MailRelay.Initializer` | Operational database initialization. |
 
+MailRelay placement rules:
+- Runtime/provider options belong in infrastructure `Options/`, except `MailRelayOptions` in application and `MailRelayClientOptions` in client.
+- WebApi is host-only; endpoint controllers and HTTP DTOs belong in presentation.
+- Package references are layer-specific and guarded by architecture tests.
+
 ## MailInbox
 
 | Project | Responsibility |
@@ -41,6 +47,11 @@ Use this file when deciding where backend code belongs.
 | `FoodDiary.MailInbox.Client` | Typed service-to-service client and DTOs. |
 | `FoodDiary.MailInbox.Initializer` | Operational database initialization. |
 
+MailInbox placement rules:
+- SMTP/runtime options belong in infrastructure `Options/`, client options in client, and HTTP presentation options in presentation.
+- WebApi is host-only; endpoint controllers and HTTP DTOs belong in presentation.
+- Package references are layer-specific and guarded by architecture tests.
+
 ## Placement Checklist
 
 Before adding a file:
@@ -50,6 +61,7 @@ Before adding a file:
 - Is it EF/provider/worker implementation? Put it in infrastructure or integrations.
 - Is it HTTP transport shape or mapping? Put it in presentation.
 - Is it startup/DI/middleware/configuration? Put it in the host.
+- Is it service-to-service MailRelay/MailInbox access from core FoodDiary? Put it in `FoodDiary.Integrations` and use the client package.
 - Is it reusable UI? Put it in the frontend UI kit.
 - Is it feature UI? Put it in the frontend feature folder.
 
