@@ -44,8 +44,37 @@ internal static class SourceScanner {
             .SelectMany(SourceFiles)
             .Order(StringComparer.Ordinal);
 
+    public static string[] FindUnsealedConcreteClassDeclarations(IEnumerable<string> sourceRoots) {
+        string repositoryRoot = ArchitectureTestPaths.RepositoryRoot;
+
+        return [.. SourceFiles(sourceRoots)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(static entry => IsUnsealedConcreteClassDeclaration(entry.line))
+            .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(repositoryRoot, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+    }
+
     private static string StripLineComment(string line) {
         int commentIndex = line.IndexOf("//", StringComparison.Ordinal);
         return commentIndex < 0 ? line : line[..commentIndex];
+    }
+
+    private static bool IsUnsealedConcreteClassDeclaration(string line) {
+        string trimmed = line.TrimStart();
+        return (trimmed.StartsWith("public class ", StringComparison.Ordinal) ||
+                trimmed.StartsWith("internal class ", StringComparison.Ordinal) ||
+                trimmed.StartsWith("public partial class ", StringComparison.Ordinal) ||
+                trimmed.StartsWith("internal partial class ", StringComparison.Ordinal)) &&
+               !trimmed.StartsWith("public static class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("internal static class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("public abstract class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("internal abstract class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("public sealed class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("internal sealed class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("public sealed partial class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("internal sealed partial class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("public static partial class ", StringComparison.Ordinal) &&
+               !trimmed.StartsWith("internal static partial class ", StringComparison.Ordinal);
     }
 }

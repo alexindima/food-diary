@@ -77,6 +77,20 @@ public sealed class MailInboxArchitectureTests {
     }
 
     [Fact]
+    public void MailInboxProductionConcreteClasses_AreSealedOrStatic() {
+        string root = GetRepositoryRoot();
+        string[] sourceRoots = [
+            Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Application"),
+            Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Infrastructure"),
+            Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Presentation"),
+        ];
+
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations(sourceRoots);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailInboxDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
         string root = GetRepositoryRoot();
         string domainRoot = Path.Combine(root, "MailInbox", "FoodDiary.MailInbox.Domain");

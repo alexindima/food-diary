@@ -79,6 +79,20 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayProductionConcreteClasses_AreSealedOrStatic() {
+        string root = GetRepositoryRoot();
+        string[] sourceRoots = [
+            Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Application"),
+            Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Infrastructure"),
+            Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Presentation"),
+        ];
+
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations(sourceRoots);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void MailRelayDomainSource_DoesNotReferenceFrameworkOrInfrastructureTypes() {
         string root = GetRepositoryRoot();
         string domainRoot = Path.Combine(root, "MailRelay", "FoodDiary.MailRelay.Domain");
