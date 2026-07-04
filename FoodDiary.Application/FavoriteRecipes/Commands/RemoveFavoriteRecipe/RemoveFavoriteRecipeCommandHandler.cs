@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 namespace FoodDiary.Application.FavoriteRecipes.Commands.RemoveFavoriteRecipe;
 
 public class RemoveFavoriteRecipeCommandHandler(
-    IFavoriteRecipeRepository favoriteRecipeRepository,
+    IFavoriteRecipeWriteRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RemoveFavoriteRecipeCommand, Result> {
     public async Task<Result> Handle(

@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 namespace FoodDiary.Application.FavoriteRecipes.Queries.IsRecipeFavorite;
 
 public class IsRecipeFavoriteQueryHandler(
-    IFavoriteRecipeRepository favoriteRecipeRepository,
+    IFavoriteRecipeReadRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsRecipeFavoriteQuery, Result<bool>> {
     public async Task<Result<bool>> Handle(

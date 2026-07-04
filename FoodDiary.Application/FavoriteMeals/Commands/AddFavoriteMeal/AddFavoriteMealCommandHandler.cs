@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Meals;
 namespace FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 
 public class AddFavoriteMealCommandHandler(
-    IFavoriteMealRepository favoriteMealRepository,
+    IFavoriteMealWriteRepository favoriteMealRepository,
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteMealCommand, Result<FavoriteMealModel>> {

@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.Products.Queries.GetRecentProducts;
 
 public sealed class GetRecentProductsQueryHandler(
-    IRecentItemRepository recentItemRepository,
+    IRecentItemReadRepository recentItemRepository,
     IProductReadRepository productRepository)
     : IQueryHandler<GetRecentProductsQuery, Result<IReadOnlyList<ProductModel>>> {
     public async Task<Result<IReadOnlyList<ProductModel>>> Handle(

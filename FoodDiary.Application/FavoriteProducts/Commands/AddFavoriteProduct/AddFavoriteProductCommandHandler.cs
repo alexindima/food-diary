@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Products;
 namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 
 public class AddFavoriteProductCommandHandler(
-    IFavoriteProductRepository favoriteProductRepository,
+    IFavoriteProductWriteRepository favoriteProductRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteProductCommand, Result<FavoriteProductModel>> {

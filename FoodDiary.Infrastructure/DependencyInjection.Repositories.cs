@@ -81,6 +81,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecipeLookupService, RecipeLookupService>();
         services.AddScoped<IRecipeAccessService, RecipeAccessService>();
         services.AddScoped<IRecentItemRepository, RecentItemRepository>();
+        services.AddScoped<IRecentItemReadRepository>(static provider => provider.GetRequiredService<IRecentItemRepository>());
+        services.AddScoped<IRecentItemWriteRepository>(static provider => provider.GetRequiredService<IRecentItemRepository>());
         services.AddScoped<IMealRepository, MealRepository>();
         services.AddScoped<IMealReadRepository>(static provider => provider.GetRequiredService<IMealRepository>());
         services.AddScoped<IMealWriteRepository>(static provider => provider.GetRequiredService<IMealRepository>());
@@ -132,8 +134,14 @@ public static partial class DependencyInjection {
         services.AddScoped<IFastingTelemetryEventReadRepository>(static provider => provider.GetRequiredService<IFastingTelemetryEventRepository>());
         services.AddScoped<IFastingTelemetryEventWriteRepository>(static provider => provider.GetRequiredService<IFastingTelemetryEventRepository>());
         services.AddScoped<IFavoriteMealRepository, FavoriteMealRepository>();
+        services.AddScoped<IFavoriteMealReadRepository>(static provider => provider.GetRequiredService<IFavoriteMealRepository>());
+        services.AddScoped<IFavoriteMealWriteRepository>(static provider => provider.GetRequiredService<IFavoriteMealRepository>());
         services.AddScoped<IFavoriteProductRepository, FavoriteProductRepository>();
+        services.AddScoped<IFavoriteProductReadRepository>(static provider => provider.GetRequiredService<IFavoriteProductRepository>());
+        services.AddScoped<IFavoriteProductWriteRepository>(static provider => provider.GetRequiredService<IFavoriteProductRepository>());
         services.AddScoped<IFavoriteRecipeRepository, FavoriteRecipeRepository>();
+        services.AddScoped<IFavoriteRecipeReadRepository>(static provider => provider.GetRequiredService<IFavoriteRecipeRepository>());
+        services.AddScoped<IFavoriteRecipeWriteRepository>(static provider => provider.GetRequiredService<IFavoriteRecipeRepository>());
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();
         services.AddScoped<IExerciseEntryReadRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());
         services.AddScoped<IExerciseEntryWriteRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());

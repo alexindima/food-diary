@@ -18,7 +18,7 @@ namespace FoodDiary.Application.Consumptions.Queries.GetConsumptionsOverview;
 public sealed class GetConsumptionsOverviewQueryHandler(
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService,
-    IFavoriteMealRepository favoriteMealRepository)
+    IFavoriteMealReadRepository favoriteMealRepository)
     : IQueryHandler<GetConsumptionsOverviewQuery, Result<ConsumptionOverviewModel>> {
     public async Task<Result<ConsumptionOverviewModel>> Handle(
         GetConsumptionsOverviewQuery request,

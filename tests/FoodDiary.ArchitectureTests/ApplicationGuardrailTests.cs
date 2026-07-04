@@ -461,6 +461,62 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullFavoriteProductRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IFavoriteProductRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullFavoriteRecipeRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IFavoriteRecipeRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullFavoriteMealRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IFavoriteMealRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullRecentItemRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IRecentItemRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullCycleRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

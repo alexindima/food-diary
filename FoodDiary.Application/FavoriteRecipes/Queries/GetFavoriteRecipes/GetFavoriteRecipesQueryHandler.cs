@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 namespace FoodDiary.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 
 public class GetFavoriteRecipesQueryHandler(
-    IFavoriteRecipeRepository favoriteRecipeRepository,
+    IFavoriteRecipeReadRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetFavoriteRecipesQuery, Result<IReadOnlyList<FavoriteRecipeModel>>> {
     public async Task<Result<IReadOnlyList<FavoriteRecipeModel>>> Handle(

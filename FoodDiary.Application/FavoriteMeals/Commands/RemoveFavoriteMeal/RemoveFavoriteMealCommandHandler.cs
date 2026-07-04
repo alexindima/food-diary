@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.FavoriteMeals;
 namespace FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 
 public class RemoveFavoriteMealCommandHandler(
-    IFavoriteMealRepository favoriteMealRepository,
+    IFavoriteMealWriteRepository favoriteMealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RemoveFavoriteMealCommand, Result> {
     public async Task<Result> Handle(

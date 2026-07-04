@@ -18,7 +18,7 @@ namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 public class CreateConsumptionCommandHandler(
     IMealWriteRepository mealRepository,
     IMealNutritionService mealNutritionService,
-    IRecentItemRepository recentItemRepository,
+    IRecentItemWriteRepository recentItemRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,
     IImageAssetAccessService imageAssetAccessService)

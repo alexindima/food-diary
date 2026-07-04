@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 
 public class UpdateFavoriteProductCommandHandler(
-    IFavoriteProductRepository favoriteProductRepository,
+    IFavoriteProductWriteRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateFavoriteProductCommand, Result<FavoriteProductModel>> {
     public async Task<Result<FavoriteProductModel>> Handle(

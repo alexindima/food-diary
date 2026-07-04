@@ -19,7 +19,7 @@ public class UpdateConsumptionCommandHandler(
     IMealReadRepository mealReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,
-    IRecentItemRepository recentItemRepository,
+    IRecentItemWriteRepository recentItemRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider,

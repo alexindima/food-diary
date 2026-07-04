@@ -18,8 +18,8 @@ namespace FoodDiary.Application.Products.Queries.GetProductsOverview;
 
 public sealed class GetProductsOverviewQueryHandler(
     IProductReadRepository productRepository,
-    IRecentItemRepository recentItemRepository,
-    IFavoriteProductRepository favoriteProductRepository,
+    IRecentItemReadRepository recentItemRepository,
+    IFavoriteProductReadRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsOverviewQuery, Result<ProductOverviewModel>> {
     private sealed record ProductOverviewOptions(

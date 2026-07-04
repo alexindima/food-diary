@@ -17,7 +17,7 @@ namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 public class GetConsumptionsQueryHandler(
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService,
-    IFavoriteMealRepository favoriteMealRepository)
+    IFavoriteMealReadRepository favoriteMealRepository)
     : IQueryHandler<GetConsumptionsQuery, Result<PagedResponse<ConsumptionModel>>> {
     public async Task<Result<PagedResponse<ConsumptionModel>>> Handle(GetConsumptionsQuery request, CancellationToken cancellationToken) {
         if (request.UserId is null || request.UserId == Guid.Empty) {

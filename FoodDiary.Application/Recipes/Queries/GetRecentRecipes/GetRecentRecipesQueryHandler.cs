@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Recipes;
 namespace FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 
 public sealed class GetRecentRecipesQueryHandler(
-    IRecentItemRepository recentItemRepository,
+    IRecentItemReadRepository recentItemRepository,
     IRecipeReadRepository recipeRepository)
     : IQueryHandler<GetRecentRecipesQuery, Result<IReadOnlyList<RecipeModel>>> {
     public async Task<Result<IReadOnlyList<RecipeModel>>> Handle(

@@ -17,8 +17,8 @@ namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryHandler(
     IRecipeReadRepository recipeRepository,
-    IRecentItemRepository recentItemRepository,
-    IFavoriteRecipeRepository favoriteRecipeRepository,
+    IRecentItemReadRepository recentItemRepository,
+    IFavoriteRecipeReadRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesOverviewQuery, Result<RecipeOverviewModel>> {
     private sealed record RecipeOverviewOptions(
