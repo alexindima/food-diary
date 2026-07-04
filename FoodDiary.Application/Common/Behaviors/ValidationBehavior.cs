@@ -6,7 +6,7 @@ using FoodDiary.Mediator;
 
 namespace FoodDiary.Application.Common.Behaviors;
 
-public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
+public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TRequest>> validators) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : Result {
     private readonly IEnumerable<IValidator<TRequest>> _validators = validators;

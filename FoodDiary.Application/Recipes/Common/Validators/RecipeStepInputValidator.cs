@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Recipes.Common.Validators;
 
-internal class RecipeStepInputValidator : AbstractValidator<RecipeStepInput> {
+internal sealed class RecipeStepInputValidator : AbstractValidator<RecipeStepInput> {
     public RecipeStepInputValidator() {
         RuleFor(x => x.Title)
             .MaximumLength(120)

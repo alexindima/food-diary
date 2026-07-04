@@ -139,6 +139,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationConcreteClasses_AreSealedOrStatic() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry =>
+                entry.line.Contains("public class ", StringComparison.Ordinal) ||
+                entry.line.Contains("internal class ", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Recipes.Common.Validators;
 
-internal class RecipeIngredientInputValidator : AbstractValidator<RecipeIngredientInput> {
+internal sealed class RecipeIngredientInputValidator : AbstractValidator<RecipeIngredientInput> {
     public RecipeIngredientInputValidator() {
         RuleFor(x => x.Amount)
             .GreaterThan(0)
