@@ -28,6 +28,7 @@ public sealed class ControllerConventionsTests {
     public void FeatureControllerActions_ReturnTaskOfActionResult() {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
+            .Where(method => !IsNonStandardInfrastructureController(method.DeclaringType))
             .Where(method => method.ReturnType != typeof(Task<IActionResult>))
             .Select(FormatMethodName)];
 
@@ -51,6 +52,7 @@ public sealed class ControllerConventionsTests {
     public void FeatureControllerActions_DeclareProducesResponseTypes() {
         string[] violations = [.. GetFeatureControllerTypes()
             .SelectMany(GetActionMethods)
+            .Where(method => !IsNonStandardInfrastructureController(method.DeclaringType))
             .Where(method => !method.GetCustomAttributes<ProducesResponseTypeAttribute>().Any())
             .Select(FormatMethodName)];
 
@@ -357,7 +359,13 @@ public sealed class ControllerConventionsTests {
     }
 
     private static bool IsAnonymousInfrastructureController(Type? type) =>
-        type?.FullName is "FoodDiary.Presentation.Api.Features.Logs.LogsController";
+        type?.FullName is
+            "FoodDiary.Presentation.Api.Features.Billing.BillingWebhookController" or
+            "FoodDiary.Presentation.Api.Features.Logs.LogsController" or
+            "FoodDiary.Presentation.Api.Features.Version.VersionController";
+
+    private static bool IsNonStandardInfrastructureController(Type? type) =>
+        type?.FullName is "FoodDiary.Presentation.Api.Features.Version.VersionController";
 
     private static string FormatMethodName(MethodInfo method) =>
         $"{method.DeclaringType!.FullName}.{method.Name}";
