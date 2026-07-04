@@ -166,6 +166,28 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void IntegrationsCompositionRoot_StaysLimitedToApprovedProviderModules() {
+        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations", "DependencyInjection.cs");
+        string[] expectedRegistrations = [
+            "services.AddIntegrationOptions(configuration);",
+            "services.AddStorageIntegrations();",
+            "services.AddMailIntegrations(configuration);",
+            "services.AddAuthenticationIntegrations();",
+            "services.AddBillingIntegrations();",
+            "services.AddNotificationIntegrations();",
+            "services.AddAiIntegrations();",
+            "services.AddFoodDataIntegrations(configuration);",
+            "services.AddWearableIntegrations();",
+        ];
+
+        string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("services.", StringComparison.Ordinal))];
+
+        Assert.Equal(expectedRegistrations, actualRegistrations);
+    }
+
+    [Fact]
     public void InfrastructureProject_PackageReferencesStayLimitedToPersistenceAndTechnicalImplementations() {
         string[] allowedPackages = [
             "BCrypt.Net-Next",
