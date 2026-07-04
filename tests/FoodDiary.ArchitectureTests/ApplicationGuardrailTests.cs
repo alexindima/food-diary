@@ -317,6 +317,24 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void AuthenticationSlice_UsesUserRepositoryOnlyThroughFocusedAdapterServices() {
+        string root = GetRepositoryRoot();
+        string authenticationRoot = Path.Combine(root, "FoodDiary.Application", "Authentication");
+        string[] allowedFiles = [
+            Path.Combine(authenticationRoot, "Services", "AuthenticationUserLookupService.cs"),
+            Path.Combine(authenticationRoot, "Services", "AuthenticationUserMutationService.cs"),
+            Path.Combine(authenticationRoot, "Services", "AuthenticationUserRegistrationService.cs"),
+        ];
+
+        string[] authenticationFiles = [.. SourceScanner.SourceFiles(authenticationRoot)
+            .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))];
+
+        string[] violations = FindReferencesInFiles(root, authenticationFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseLegacyCurrentUserAccessLoader() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
@@ -429,10 +447,10 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingSlice_UsesUserRepositoryOnlyThroughBillingUserContextService() {
+    public void BillingSlice_UsesUserRepositoryOnlyThroughBillingUserLookupService() {
         string root = GetRepositoryRoot();
         string billingRoot = Path.Combine(root, "FoodDiary.Application", "Billing");
-        string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserContextService.cs");
+        string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserLookupService.cs");
         string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)
             .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
 
@@ -459,7 +477,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void BillingUserContextService_DelegatesAccessibleUserLoadToUserContextService() {
+    public void BillingUserContextService_DelegatesUserAccessToFocusedServices() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(
             root,
@@ -470,7 +488,9 @@ public sealed class ApplicationGuardrailTests {
         string source = File.ReadAllText(servicePath);
 
         Assert.Contains("IUserContextService", source, StringComparison.Ordinal);
-        Assert.DoesNotContain("userRepository.GetByIdAsync", source, StringComparison.Ordinal);
+        Assert.Contains("IBillingUserLookupService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IUserRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("CurrentUserAccessPolicy", source, StringComparison.Ordinal);
     }
 
     [Fact]

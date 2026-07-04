@@ -1,0 +1,15 @@
+using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Users.Common;
+using FoodDiary.Domain.Entities.Users;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Application.Billing.Services;
+
+internal sealed class BillingUserLookupService(IUserRepository userRepository) : IBillingUserLookupService {
+    public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+        userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
+
+    public Task<bool> CanAccessUserAsync(User user, CancellationToken cancellationToken) =>
+        Task.FromResult(CurrentUserAccessPolicy.EnsureCanAccess(user) is null);
+}

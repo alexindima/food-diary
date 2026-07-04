@@ -1888,7 +1888,7 @@ public sealed class BillingFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserContextService, IBillingUserContextService {
+    private sealed class FakeUserRepository(params User[] users) : IUserRepository, IUserContextService, IBillingUserContextService, IBillingUserLookupService {
         private readonly List<User> _users = [.. users];
         private readonly Role _premiumRole = Role.Create(RoleNames.Premium);
 

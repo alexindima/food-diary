@@ -95,6 +95,7 @@ public static class DependencyInjection {
         services.AddSingleton<IEmailSender, EmailSender>();
         services.AddSingleton<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
+        services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();
         services.AddScoped<BillingWebhookPaymentRecorder>();
         services.AddScoped<BillingRenewalService>();
