@@ -23,6 +23,10 @@ Rules for `FoodDiary.Presentation.Api/`.
 - Reusable HTTP responses/wrappers: `Responses/`
 - Presentation-only services: `Services/`
 - Auth/presentation policies: `Authorization/`, `Policies/`, `Security/`
+- ASP.NET filters and filter attributes: `Filters/`
+- SignalR hubs and hub method constants: `Hubs/`
+- Presentation option records: `Options/`
+- Presentation telemetry attributes/helpers: `Telemetry/`
 - Registration and endpoint mapping: `Extensions/`
 
 ## Naming

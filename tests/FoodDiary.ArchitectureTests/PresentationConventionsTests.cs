@@ -13,6 +13,37 @@ public class PresentationConventionsTests {
     }
 
     [Fact]
+    public void PresentationApi_RootFoldersStayLimitedToDocumentedStructure() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string[] allowedDirectories = [
+            "Authorization",
+            "Controllers",
+            "Extensions",
+            "Features",
+            "Filters",
+            "Hubs",
+            "Options",
+            "Policies",
+            "Responses",
+            "Security",
+            "Services",
+            "Telemetry",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(presentationRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
     public void PresentationControllers_DoNotCallMediatorSendDirectly() {
         string root = GetRepositoryRoot();
         string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
