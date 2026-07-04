@@ -19,7 +19,7 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 
 public class InviteDietologistCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     IPasswordHasher passwordHasher,
     IDietologistEmailSender emailSender,

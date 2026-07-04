@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 
 public class GetInvitationByTokenQueryHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationReadRepository invitationRepository,
     IDietologistUserLookupService userLookupService)
     : IQueryHandler<GetInvitationByTokenQuery, Result<InvitationModel>> {
     public async Task<Result<InvitationModel>> Handle(GetInvitationByTokenQuery query, CancellationToken cancellationToken) {

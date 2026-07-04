@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitationForCurrentUser;
 
 public sealed class DeclineInvitationForCurrentUserCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     INotificationWriter notificationWriter,
     INotificationReadRepository notificationRepository,

@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Commands.MarkRecommendationRead;
 
 public class MarkRecommendationReadCommandHandler(
-    IRecommendationRepository recommendationRepository,
+    IRecommendationWriteRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<MarkRecommendationReadCommand, Result> {
     public async Task<Result> Handle(MarkRecommendationReadCommand command, CancellationToken cancellationToken) {

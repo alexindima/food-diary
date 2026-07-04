@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 
 public class UpdateDietologistPermissionsCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateDietologistPermissionsCommand, Result> {
     public async Task<Result> Handle(UpdateDietologistPermissionsCommand command, CancellationToken cancellationToken) {

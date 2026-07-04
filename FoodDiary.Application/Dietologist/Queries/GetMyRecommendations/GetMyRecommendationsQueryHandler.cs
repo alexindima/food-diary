@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Queries.GetMyRecommendations;
 
 public class GetMyRecommendationsQueryHandler(
-    IRecommendationRepository recommendationRepository,
+    IRecommendationReadRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMyRecommendationsQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(

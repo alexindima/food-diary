@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 
 public class GetClientGoalsQueryHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationReadRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService)
     : IQueryHandler<GetClientGoalsQuery, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(

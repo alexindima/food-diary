@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 
 public class GetClientDashboardQueryHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationReadRepository invitationRepository,
     IDashboardSnapshotBuilder snapshotBuilder,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetClientDashboardQuery, Result<DashboardSnapshotModel>> {

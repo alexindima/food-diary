@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 
 public class RevokeInvitationCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RevokeInvitationCommand, Result> {
     public async Task<Result> Handle(RevokeInvitationCommand command, CancellationToken cancellationToken) {

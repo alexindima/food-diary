@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
 
 public class GetMyDietologistRelationshipQueryHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationReadRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetMyDietologistRelationshipQuery, Result<DietologistRelationshipModel?>> {
     public async Task<Result<DietologistRelationshipModel?>> Handle(

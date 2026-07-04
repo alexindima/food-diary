@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Dietologist.Common;
 
 public static class DietologistAccessPolicy {
     public static async Task<Result<DietologistPermissionsModel>> EnsureCanAccessClientAsync(
-        IDietologistInvitationRepository repository,
+        IDietologistInvitationReadRepository repository,
         UserId dietologistUserId,
         UserId clientUserId,
         CancellationToken cancellationToken) {

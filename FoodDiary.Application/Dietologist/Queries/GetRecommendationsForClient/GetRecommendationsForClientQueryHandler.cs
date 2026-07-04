@@ -11,8 +11,8 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 
 public class GetRecommendationsForClientQueryHandler(
-    IDietologistInvitationRepository invitationRepository,
-    IRecommendationRepository recommendationRepository,
+    IDietologistInvitationReadRepository invitationRepository,
+    IRecommendationReadRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecommendationsForClientQuery, Result<IReadOnlyList<RecommendationModel>>> {
     public async Task<Result<IReadOnlyList<RecommendationModel>>> Handle(

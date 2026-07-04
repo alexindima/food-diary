@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 namespace FoodDiary.Application.Dietologist.Commands.DisconnectDietologist;
 
 public class DisconnectDietologistCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DisconnectDietologistCommand, Result> {
     public async Task<Result> Handle(DisconnectDietologistCommand command, CancellationToken cancellationToken) {

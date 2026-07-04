@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
 public class AcceptInvitationCommandHandler(
-    IDietologistInvitationRepository invitationRepository,
+    IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     IUserRoleMembershipService userRoleMembershipService,
     IPasswordHasher passwordHasher,
