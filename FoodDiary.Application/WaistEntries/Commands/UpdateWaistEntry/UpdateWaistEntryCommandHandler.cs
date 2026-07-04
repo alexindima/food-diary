@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
 public class UpdateWaistEntryCommandHandler(
-    IWaistEntryRepository waistEntryRepository,
+    IWaistEntryWriteRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateWaistEntryCommand, Result<WaistEntryModel>> {
     public async Task<Result<WaistEntryModel>> Handle(

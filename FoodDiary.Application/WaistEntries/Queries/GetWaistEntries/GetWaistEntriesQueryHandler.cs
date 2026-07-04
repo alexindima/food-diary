@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistEntries;
 
 public class GetWaistEntriesQueryHandler(
-    IWaistEntryRepository waistEntryRepository,
+    IWaistEntryReadRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWaistEntriesQuery, Result<IReadOnlyList<WaistEntryModel>>> {
     public async Task<Result<IReadOnlyList<WaistEntryModel>>> Handle(

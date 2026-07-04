@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 
 public class CreateWaistEntryCommandHandler(
-    IWaistEntryRepository waistEntryRepository,
+    IWaistEntryWriteRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateWaistEntryCommand, Result<WaistEntryModel>> {
     public async Task<Result<WaistEntryModel>> Handle(
