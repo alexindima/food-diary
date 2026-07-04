@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 
@@ -119,32 +120,30 @@ public class CreateProductCommandValidator : AbstractValidator<CreateProductComm
     }
 
     private static bool BeValidUnit(string unit) {
-        return Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit _);
+        return EnumValueParser.CanParse<MeasurementUnit>(unit);
     }
 
     private static bool BeWithinDefaultPortionLimit(string unit, double amount) {
-        return !Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit parsedUnit) ||
+        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
                amount <= Product.GetMaxDefaultPortionAmount(parsedUnit);
     }
 
     private static bool BeWithinCaloriesLimit(string unit, double amount) {
-        return !Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit parsedUnit) ||
+        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
                amount <= Product.GetMaxCaloriesPerBase(parsedUnit);
     }
 
     private static bool BeWithinNutrientLimit(string unit, double amount) {
-        return !Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit parsedUnit) ||
+        return !EnumValueParser.TryParse(unit, out MeasurementUnit parsedUnit) ||
                amount <= Product.GetMaxNutrientPerBase(parsedUnit);
     }
 
     private static bool BeValidVisibility(string visibility) {
-        return Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+        return EnumValueParser.CanParse<Visibility>(visibility);
     }
 
     private static bool BeValidProductType(string? productType) {
-        return productType is not null &&
-               Enum.TryParse(productType, ignoreCase: true, out ProductType parsed) &&
-               Enum.IsDefined(parsed);
+        return productType is not null && EnumValueParser.CanParseDefined<ProductType>(productType);
     }
 
 }

@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Products.Common;
 using FluentValidation;
 using FluentValidation.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -146,15 +147,13 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
     }
 
     private bool BeValidUnit(string? unit) =>
-        unit != null && Enum.TryParse(unit, ignoreCase: true, out MeasurementUnit _);
+        unit != null && EnumValueParser.CanParse<MeasurementUnit>(unit);
 
     private bool BeValidVisibility(string? visibility) =>
-        visibility != null && Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+        visibility != null && EnumValueParser.CanParse<Visibility>(visibility);
 
     private bool BeValidProductType(string? productType) =>
-        productType != null &&
-        Enum.TryParse(productType, ignoreCase: true, out ProductType parsed) &&
-        Enum.IsDefined(parsed);
+        productType != null && EnumValueParser.CanParseDefined<ProductType>(productType);
 
     private async Task EnsureProductEditableAsync(
         UpdateProductCommand command,
@@ -203,7 +202,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
 
         MeasurementUnit unit = product.BaseUnit;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out unit)) {
+            if (!EnumValueParser.TryParse(command.BaseUnit, out unit)) {
                 return;
             }
         }
@@ -223,7 +222,7 @@ public class UpdateProductCommandValidator : AbstractValidator<UpdateProductComm
         ValidationContext<UpdateProductCommand> context) {
         MeasurementUnit unit = product.BaseUnit;
         if (!string.IsNullOrWhiteSpace(command.BaseUnit)) {
-            if (!Enum.TryParse(command.BaseUnit, ignoreCase: true, out unit)) {
+            if (!EnumValueParser.TryParse(command.BaseUnit, out unit)) {
                 return;
             }
         }

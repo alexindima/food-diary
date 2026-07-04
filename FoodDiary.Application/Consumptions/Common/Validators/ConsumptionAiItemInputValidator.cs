@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Common.Validators;
@@ -46,7 +47,7 @@ public sealed class ConsumptionAiItemInputValidator : AbstractValidator<Consumpt
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Confidence must be in range [0, 1].");
         RuleFor(x => x.Resolution)
-            .Must(resolution => string.IsNullOrWhiteSpace(resolution) || Enum.TryParse<MealAiItemResolution>(resolution, ignoreCase: true, out _))
+            .Must(EnumValueParser.CanParseOptional<MealAiItemResolution>)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown AI item resolution value.");
     }

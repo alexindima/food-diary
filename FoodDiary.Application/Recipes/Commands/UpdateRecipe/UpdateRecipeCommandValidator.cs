@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Recipes.Common;
 using FoodDiary.Application.Recipes.Common.Validators;
 using FoodDiary.Domain.Entities.Recipes;
@@ -202,7 +203,7 @@ public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeComman
     }
 
     private static bool BeValidVisibility(string? visibility) =>
-        visibility != null && Enum.TryParse(visibility, ignoreCase: true, out Visibility _);
+        visibility != null && EnumValueParser.CanParse<Visibility>(visibility);
 
     private static bool HasManualNutrition(UpdateRecipeCommand command) =>
         command is { ManualCalories: not null, ManualProteins: not null, ManualFats: not null, ManualCarbs: not null, ManualFiber: not null };

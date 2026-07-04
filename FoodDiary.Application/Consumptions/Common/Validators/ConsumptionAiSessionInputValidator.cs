@@ -1,4 +1,5 @@
 using FluentValidation;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Common.Validators;
@@ -8,7 +9,7 @@ public sealed class ConsumptionAiSessionInputValidator : AbstractValidator<Consu
 
     public ConsumptionAiSessionInputValidator() {
         RuleFor(x => x.Source)
-            .Must(source => string.IsNullOrWhiteSpace(source) || Enum.TryParse<AiRecognitionSource>(source, ignoreCase: true, out _))
+            .Must(EnumValueParser.CanParseOptional<AiRecognitionSource>)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown AI recognition source value.");
 

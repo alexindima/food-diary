@@ -1,5 +1,6 @@
 using FluentValidation;
 using FoodDiary.Application.Common.Nutrition;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Common.Validators;
 using FoodDiary.Domain.Enums;
 
@@ -31,7 +32,7 @@ public class UpdateConsumptionCommandValidator : AbstractValidator<UpdateConsump
 
     private void ConfigureMealRules() {
         RuleFor(c => c.MealType)
-            .Must(mealType => string.IsNullOrWhiteSpace(mealType) || Enum.TryParse<MealType>(mealType, ignoreCase: true, out _))
+            .Must(EnumValueParser.CanParseOptional<MealType>)
             .WithErrorCode("Validation.Invalid")
             .WithMessage("Unknown meal type value.");
 

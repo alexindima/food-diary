@@ -86,7 +86,7 @@ internal static class ConsumptionAiSessionAppender {
 
     private static bool TryParseAiRecognitionSource(string? source, out AiRecognitionSource result) {
         if (!string.IsNullOrWhiteSpace(source)) {
-            return Enum.TryParse(source, ignoreCase: true, out result);
+            return EnumValueParser.TryParse(source, out result);
         }
 
         result = AiRecognitionSource.Text;
@@ -128,7 +128,7 @@ internal static class ConsumptionAiSessionAppender {
 
     private static bool TryParseAiItemResolution(string? resolution, out MealAiItemResolution result) {
         if (!string.IsNullOrWhiteSpace(resolution)) {
-            return Enum.TryParse(resolution, ignoreCase: true, out result);
+            return EnumValueParser.TryParse(resolution, out result);
         }
 
         result = MealAiItemResolution.Accepted;

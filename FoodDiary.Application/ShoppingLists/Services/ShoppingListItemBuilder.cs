@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.ShoppingLists.Commands.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
@@ -133,14 +134,10 @@ public static class ShoppingListItemBuilder {
     }
 
     private static Result<MeasurementUnit?> ParseUnit(string? value) {
-        if (string.IsNullOrWhiteSpace(value)) {
-            return Result.Success<MeasurementUnit?>(value: null);
-        }
-
-        return Enum.TryParse(value, ignoreCase: true, out MeasurementUnit parsed)
-            ? Result.Success<MeasurementUnit?>(parsed)
-            : Result.Failure<MeasurementUnit?>(
-                Errors.Validation.Invalid(nameof(ShoppingListItemInput.Unit), "Unknown measurement unit value."));
+        return EnumValueParser.ParseOptional<MeasurementUnit>(
+            value,
+            nameof(ShoppingListItemInput.Unit),
+            "Unknown measurement unit value.");
     }
 
     private static int ResolveSortOrder(int? sortOrder, int index) =>

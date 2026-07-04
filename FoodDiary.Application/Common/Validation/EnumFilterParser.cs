@@ -3,7 +3,7 @@ namespace FoodDiary.Application.Common.Validation;
 public static class EnumFilterParser {
     public static TEnum? ParseOptional<TEnum>(string? value)
         where TEnum : struct, Enum =>
-        !string.IsNullOrWhiteSpace(value) && Enum.TryParse(value, ignoreCase: true, out TEnum parsed)
+        !string.IsNullOrWhiteSpace(value) && EnumValueParser.TryParse(value, out TEnum parsed)
             ? parsed
             : null;
 

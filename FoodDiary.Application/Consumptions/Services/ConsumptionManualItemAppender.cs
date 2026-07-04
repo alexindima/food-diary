@@ -73,7 +73,7 @@ internal static class ConsumptionManualItemAppender {
 
     private static bool TryParseMealItemOrigin(string? origin, out MealItemOrigin result) {
         if (!string.IsNullOrWhiteSpace(origin)) {
-            return Enum.TryParse(origin, ignoreCase: true, out result);
+            return EnumValueParser.TryParse(origin, out result);
         }
 
         result = MealItemOrigin.Manual;

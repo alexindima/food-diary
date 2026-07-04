@@ -20,7 +20,7 @@ public class CreateExerciseEntryCommandHandler(IExerciseEntryWriteRepository rep
             return Result.Failure<ExerciseEntryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse(command.ExerciseType, ignoreCase: true, out ExerciseType exerciseType)) {
+        if (!EnumValueParser.TryParse(command.ExerciseType, out ExerciseType exerciseType)) {
             exerciseType = ExerciseType.Other;
         }
 
