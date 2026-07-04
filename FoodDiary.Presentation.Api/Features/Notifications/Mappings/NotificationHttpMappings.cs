@@ -16,13 +16,13 @@ using FoodDiary.Presentation.Api.Features.Notifications.Responses;
 namespace FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 
 public static class NotificationHttpMappings {
-    extension(Guid userId) {
-        public GetNotificationsQuery ToNotificationsQuery() => new(userId);
-        public GetUnreadCountQuery ToUnreadCountQuery() => new(userId);
-        public MarkNotificationReadCommand ToMarkReadCommand(Guid userId1) => new(userId1, userId);
-        public MarkAllNotificationsReadCommand ToMarkAllReadCommand() => new(userId);
-        public GetNotificationPreferencesQuery ToNotificationPreferencesQuery() => new(userId);
-        public GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery() => new(userId);
+    extension(Guid id) {
+        public GetNotificationsQuery ToNotificationsQuery() => new(id);
+        public GetUnreadCountQuery ToUnreadCountQuery() => new(id);
+        public MarkNotificationReadCommand ToMarkReadCommand(Guid userId) => new(userId, id);
+        public MarkAllNotificationsReadCommand ToMarkAllReadCommand() => new(id);
+        public GetNotificationPreferencesQuery ToNotificationPreferencesQuery() => new(id);
+        public GetWebPushSubscriptionsQuery ToWebPushSubscriptionsQuery() => new(id);
     }
 
     public static UpdateNotificationPreferencesCommand ToCommand(this UpdateNotificationPreferencesHttpRequest request, Guid userId) =>
@@ -69,16 +69,6 @@ public static class NotificationHttpMappings {
             model.FastingCheckInReminderHours,
             model.FastingCheckInFollowUpReminderHours);
 
-    public static WebPushSubscriptionHttpResponse ToHttpResponse(this FoodDiary.Domain.Entities.Notifications.WebPushSubscription subscription) =>
-        new(
-            subscription.Endpoint,
-            GetEndpointHost(subscription.Endpoint),
-            subscription.ExpirationTimeUtc,
-            subscription.Locale,
-            subscription.UserAgent,
-            subscription.CreatedOnUtc,
-            subscription.ModifiedOnUtc);
-
     public static WebPushSubscriptionHttpResponse ToHttpResponse(this WebPushSubscriptionModel subscription) =>
         new(
             subscription.Endpoint,
@@ -88,10 +78,4 @@ public static class NotificationHttpMappings {
             subscription.UserAgent,
             subscription.CreatedAtUtc,
             subscription.UpdatedAtUtc);
-
-    private static string GetEndpointHost(string endpoint) {
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? uri)
-            ? uri.Host
-            : endpoint;
-    }
 }

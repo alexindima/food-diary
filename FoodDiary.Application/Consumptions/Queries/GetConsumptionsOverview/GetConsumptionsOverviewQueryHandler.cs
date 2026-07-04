@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Time;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Consumptions.Mappings;
 using FoodDiary.Application.Consumptions.Models;
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
@@ -93,12 +94,6 @@ public sealed class GetConsumptionsOverviewQueryHandler(
             request.HasImage,
             request.HasAiSession);
 
-    private static MealType[]? ParseMealTypes(IReadOnlyCollection<string>? values) {
-        MealType[] parsed = [.. values?
-            .Select(value => Enum.TryParse(value, ignoreCase: true, out MealType mealType) ? mealType : (MealType?)null)
-            .OfType<MealType>()
-            .Distinct() ?? []];
-
-        return parsed.Length > 0 ? parsed : null;
-    }
+    private static MealType[]? ParseMealTypes(IReadOnlyCollection<string>? values) =>
+        EnumFilterParser.ParseMany<MealType>(values);
 }

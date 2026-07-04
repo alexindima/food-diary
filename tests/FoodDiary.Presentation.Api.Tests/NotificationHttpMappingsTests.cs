@@ -8,8 +8,6 @@ using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Notifications.Queries.GetNotificationPreferences;
 using FoodDiary.Application.Notifications.Queries.GetNotifications;
 using FoodDiary.Application.Notifications.Queries.GetUnreadCount;
-using FoodDiary.Domain.Entities.Notifications;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Presentation.Api.Features.Notifications.Mappings;
 using FoodDiary.Presentation.Api.Features.Notifications.Requests;
 using FoodDiary.Presentation.Api.Features.Notifications.Responses;
@@ -125,31 +123,6 @@ public sealed class NotificationHttpMappingsTests {
             () => Assert.True(response.SocialPushNotificationsEnabled),
             () => Assert.Equal(12, response.FastingCheckInReminderHours),
             () => Assert.Equal(20, response.FastingCheckInFollowUpReminderHours));
-    }
-
-    [Fact]
-    public void WebPushSubscription_ToHttpResponse_MapsAllFields() {
-        var user = User.Create("mapping@example.com", "hash");
-        DateTime expiration = DateTime.UtcNow.AddDays(7);
-        var subscription = WebPushSubscription.Create(
-            user.Id,
-            "https://push.example.com/subscriptions/123",
-            "p256",
-            "auth",
-            expiration,
-            "en",
-            "Chrome");
-
-        WebPushSubscriptionHttpResponse response = subscription.ToHttpResponse();
-
-        Assert.Multiple(
-            () => Assert.Equal(subscription.Endpoint, response.Endpoint),
-            () => Assert.Equal("push.example.com", response.EndpointHost),
-            () => Assert.Equal(expiration, response.ExpirationTimeUtc),
-            () => Assert.Equal("en", response.Locale),
-            () => Assert.Equal("Chrome", response.UserAgent),
-            () => Assert.Equal(subscription.CreatedOnUtc, response.CreatedAtUtc),
-            () => Assert.Equal(subscription.ModifiedOnUtc, response.UpdatedAtUtc));
     }
 
     [Fact]

@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -29,11 +30,7 @@ public class GetProductsQueryHandler(
         if (accessError is not null) {
             return Result.Failure<PagedResponse<ProductModel>>(accessError);
         }
-        ProductType[]? productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
-            .OfType<ProductType>()
-            .Distinct()
-            .ToArray();
+        ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
         (IReadOnlyList<(Domain.Entities.Products.Product Product, int UsageCount)> items, int totalItems) = await productRepository.GetPagedAsync(
             userId,
@@ -42,7 +39,7 @@ public class GetProductsQueryHandler(
             pageSize,
             new ProductQueryFilters(
                 query.Search,
-                productTypes is { Length: > 0 } ? productTypes : null,
+                productTypes,
                 query.CaloriesFrom,
                 query.CaloriesTo,
                 query.HasImage),

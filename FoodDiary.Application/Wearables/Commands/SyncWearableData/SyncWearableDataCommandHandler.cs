@@ -3,6 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Abstractions.Wearables.Models;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,9 +23,12 @@ public class SyncWearableDataCommandHandler(
             return Result.Failure<WearableDailySummaryModel>(userIdResult.Error);
         }
 
-        if (!Enum.TryParse(command.Provider, ignoreCase: true, out WearableProvider provider)) {
-            return Result.Failure<WearableDailySummaryModel>(Errors.Wearable.InvalidProvider(command.Provider));
+        Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);
+        if (providerResult.IsFailure) {
+            return Result.Failure<WearableDailySummaryModel>(providerResult.Error);
         }
+
+        WearableProvider provider = providerResult.Value;
 
         WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection?.IsActive != true) {

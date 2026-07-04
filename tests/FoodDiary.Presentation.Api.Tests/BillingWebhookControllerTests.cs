@@ -3,7 +3,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 using FoodDiary.Mediator;
 using FoodDiary.Presentation.Api.Responses;
-using FoodDiary.Presentation.Api.Webhooks;
+using FoodDiary.Presentation.Api.Features.Billing;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

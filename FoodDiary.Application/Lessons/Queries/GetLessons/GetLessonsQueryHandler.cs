@@ -20,10 +20,7 @@ public class GetLessonsQueryHandler(INutritionLessonReadRepository repository)
             return Result.Failure<IReadOnlyList<LessonSummaryModel>>(userIdResult.Error);
         }
 
-        LessonCategory? categoryFilter = null;
-        if (!string.IsNullOrWhiteSpace(query.Category) && Enum.TryParse<LessonCategory>(query.Category, ignoreCase: true, out LessonCategory parsed)) {
-            categoryFilter = parsed;
-        }
+        LessonCategory? categoryFilter = EnumFilterParser.ParseOptional<LessonCategory>(query.Category);
 
         string locale = string.IsNullOrWhiteSpace(query.Locale) ? "en" : query.Locale.Trim().ToLowerInvariant();
         IReadOnlyList<NutritionLesson> lessons = await repository.GetByLocaleAsync(locale, categoryFilter, cancellationToken).ConfigureAwait(false);

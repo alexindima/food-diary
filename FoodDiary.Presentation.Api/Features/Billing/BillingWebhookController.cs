@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
-namespace FoodDiary.Presentation.Api.Webhooks;
+namespace FoodDiary.Presentation.Api.Features.Billing;
 
 [ApiController]
 [AllowAnonymous]

@@ -12,7 +12,10 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["Enum.Parse("]);
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, [
+            "Enum.Parse(",
+            "Enum.Parse<",
+        ]);
 
         Assert.Empty(violations);
     }

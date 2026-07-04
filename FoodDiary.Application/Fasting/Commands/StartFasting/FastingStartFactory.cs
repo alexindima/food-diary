@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -29,17 +30,15 @@ internal static class FastingStartFactory {
 
     private static Result<FastingPlanType> ResolvePlanType(StartFastingCommand command) {
         if (!string.IsNullOrWhiteSpace(command.PlanType)) {
-            return Enum.TryParse(command.PlanType, ignoreCase: true, out FastingPlanType explicitPlanType)
-                ? Result.Success(explicitPlanType)
-                : Result.Failure<FastingPlanType>(Errors.Fasting.InvalidProtocol);
+            return EnumValueParser.ParseRequired<FastingPlanType>(command.PlanType, Errors.Fasting.InvalidProtocol);
         }
 
-        if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
+        FastingProtocol? protocol = EnumFilterParser.ParseOptional<FastingProtocol>(command.Protocol);
+        if (protocol is null) {
             return Result.Success(FastingPlanType.Intermittent);
         }
 
-        FastingPlanType planType = protocol switch {
+        FastingPlanType planType = protocol.Value switch {
             FastingProtocol.F16_8 or FastingProtocol.F18_6 or FastingProtocol.F20_4 or FastingProtocol.CustomIntermittent => FastingPlanType.Intermittent,
             _ => FastingPlanType.Extended,
         };
@@ -51,11 +50,12 @@ internal static class FastingStartFactory {
         StartFastingCommand command,
         UserId userId,
         DateTime startedAtUtc) {
-        if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
-            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+        Result<FastingProtocol> protocolResult = EnumValueParser.ParseRequired<FastingProtocol>(command.Protocol, Errors.Fasting.InvalidProtocol);
+        if (protocolResult.IsFailure) {
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(protocolResult.Error);
         }
 
+        FastingProtocol protocol = protocolResult.Value;
         int duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
         if (protocol == FastingProtocol.CustomIntermittent && (duration < 1 || duration >= 24)) {
             return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
@@ -78,11 +78,12 @@ internal static class FastingStartFactory {
         StartFastingCommand command,
         UserId userId,
         DateTime startedAtUtc) {
-        if (string.IsNullOrWhiteSpace(command.Protocol) ||
-            !Enum.TryParse(command.Protocol, ignoreCase: true, out FastingProtocol protocol)) {
-            return Result.Failure<(FastingPlan, FastingOccurrence)>(Errors.Fasting.InvalidProtocol);
+        Result<FastingProtocol> protocolResult = EnumValueParser.ParseRequired<FastingProtocol>(command.Protocol, Errors.Fasting.InvalidProtocol);
+        if (protocolResult.IsFailure) {
+            return Result.Failure<(FastingPlan, FastingOccurrence)>(protocolResult.Error);
         }
 
+        FastingProtocol protocol = protocolResult.Value;
         int duration = command.PlannedDurationHours ?? FastingSession.GetDefaultDuration(protocol);
         var plan = FastingPlan.CreateExtended(userId, protocol, duration, startedAtUtc);
         var occurrence = FastingOccurrence.Create(

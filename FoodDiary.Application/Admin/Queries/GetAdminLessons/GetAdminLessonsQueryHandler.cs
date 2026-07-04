@@ -1,3 +1,4 @@
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -13,18 +14,7 @@ public sealed class GetAdminLessonsQueryHandler(INutritionLessonReadRepository r
         CancellationToken cancellationToken) {
         IReadOnlyList<NutritionLesson> lessons = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
 
-        var models = lessons.Select(l => new AdminLessonModel(
-            l.Id.Value,
-            l.Title,
-            l.Content,
-            l.Summary,
-            l.Locale,
-            l.Category.ToString(),
-            l.Difficulty.ToString(),
-            l.EstimatedReadMinutes,
-            l.SortOrder,
-            l.CreatedOnUtc,
-            l.ModifiedOnUtc)).ToList();
+        var models = lessons.Select(static lesson => lesson.ToAdminModel()).ToList();
 
         return Result.Success<IReadOnlyList<AdminLessonModel>>(models);
     }

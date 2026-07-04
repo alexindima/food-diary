@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Wearables.Common;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -19,9 +20,12 @@ public class GetWearableAuthUrlQueryHandler(
             return Task.FromResult(Result.Failure<string>(userIdResult.Error));
         }
 
-        if (!Enum.TryParse(query.Provider, ignoreCase: true, out WearableProvider provider)) {
-            return Task.FromResult(Result.Failure<string>(Errors.Wearable.InvalidProvider(query.Provider)));
+        Result<WearableProvider> providerResult = WearableProviderParser.Parse(query.Provider);
+        if (providerResult.IsFailure) {
+            return Task.FromResult(Result.Failure<string>(providerResult.Error));
         }
+
+        WearableProvider provider = providerResult.Value;
 
         IWearableClient? client = wearableClients.FirstOrDefault(c => c.Provider == provider);
         if (client is null) {

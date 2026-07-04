@@ -20,4 +20,11 @@ public static class EnumValueParser {
             ? Result.Success(parsed)
             : Result.Failure<TEnum>(Errors.Validation.Invalid(fieldName, message));
     }
+
+    public static Result<TEnum> ParseRequired<TEnum>(string? value, Error error)
+        where TEnum : struct, Enum {
+        return Enum.TryParse(value, ignoreCase: true, out TEnum parsed)
+            ? Result.Success(parsed)
+            : Result.Failure<TEnum>(error);
+    }
 }

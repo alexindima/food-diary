@@ -1,3 +1,5 @@
+using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -18,14 +20,18 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteReposi
         for (int index = 0; index < command.Lessons.Count; index++) {
             ImportAdminLessonItem item = command.Lessons[index];
 
-            if (!Enum.TryParse(item.Category, ignoreCase: true, out LessonCategory category)) {
-                return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].category"), "Invalid lesson category."));
+            Result<LessonCategory> categoryResult = AdminLessonValueParser.ParseCategory(
+                item.Category,
+                string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].category"));
+            if (categoryResult.IsFailure) {
+                return Result.Failure<AdminLessonsImportModel>(categoryResult.Error);
             }
 
-            if (!Enum.TryParse(item.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
-                return Result.Failure<AdminLessonsImportModel>(
-                    Errors.Validation.Invalid(string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].difficulty"), "Invalid lesson difficulty."));
+            Result<LessonDifficulty> difficultyResult = AdminLessonValueParser.ParseDifficulty(
+                item.Difficulty,
+                string.Create(CultureInfo.InvariantCulture, $"lessons[{index}].difficulty"));
+            if (difficultyResult.IsFailure) {
+                return Result.Failure<AdminLessonsImportModel>(difficultyResult.Error);
             }
 
             try {
@@ -34,8 +40,8 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteReposi
                     item.Content,
                     item.Summary,
                     item.Locale,
-                    category,
-                    difficulty,
+                    categoryResult.Value,
+                    difficultyResult.Value,
                     item.EstimatedReadMinutes,
                     item.SortOrder));
             } catch (ArgumentException exception) {
@@ -46,19 +52,7 @@ public sealed class ImportAdminLessonsCommandHandler(INutritionLessonWriteReposi
 
         await repository.AddRangeAsync(lessons, cancellationToken).ConfigureAwait(false);
 
-        List<AdminLessonModel> models = lessons
-            .ConvertAll(static lesson => new AdminLessonModel(
-                lesson.Id.Value,
-                lesson.Title,
-                lesson.Content,
-                lesson.Summary,
-                lesson.Locale,
-                lesson.Category.ToString(),
-                lesson.Difficulty.ToString(),
-                lesson.EstimatedReadMinutes,
-                lesson.SortOrder,
-                lesson.CreatedOnUtc,
-                lesson.ModifiedOnUtc));
+        List<AdminLessonModel> models = lessons.ConvertAll(static lesson => lesson.ToAdminModel());
 
         return Result.Success(new AdminLessonsImportModel(models.Count, models));
     }

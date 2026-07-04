@@ -2,6 +2,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Wearables.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Wearables;
@@ -18,9 +19,12 @@ public class DisconnectWearableCommandHandler(IWearableConnectionWriteRepository
             return Result.Failure(userIdResult.Error);
         }
 
-        if (!Enum.TryParse(command.Provider, ignoreCase: true, out WearableProvider provider)) {
-            return Result.Failure(Errors.Wearable.InvalidProvider(command.Provider));
+        Result<WearableProvider> providerResult = WearableProviderParser.Parse(command.Provider);
+        if (providerResult.IsFailure) {
+            return Result.Failure(providerResult.Error);
         }
+
+        WearableProvider provider = providerResult.Value;
 
         WearableConnection? connection = await connectionRepository.GetAsync(userIdResult.Value, provider, cancellationToken).ConfigureAwait(false);
         if (connection is null) {

@@ -19,16 +19,22 @@ public class CreateContentReportCommandHandler(IContentReportWriteRepository rep
             return Result.Failure<ContentReportModel>(userIdResult.Error);
         }
 
-        ReportTargetType targetType = Enum.Parse<ReportTargetType>(command.TargetType);
+        Result<ReportTargetType> targetTypeResult = EnumValueParser.ParseRequired<ReportTargetType>(
+            command.TargetType,
+            nameof(command.TargetType),
+            "Target type must be 'Recipe' or 'Comment'.");
+        if (targetTypeResult.IsFailure) {
+            return Result.Failure<ContentReportModel>(targetTypeResult.Error);
+        }
 
         bool alreadyReported = await reportRepository.HasUserReportedAsync(
-            userIdResult.Value, targetType, command.TargetId, cancellationToken).ConfigureAwait(false);
+            userIdResult.Value, targetTypeResult.Value, command.TargetId, cancellationToken).ConfigureAwait(false);
 
         if (alreadyReported) {
             return Result.Failure<ContentReportModel>(Errors.ContentReport.AlreadyReported);
         }
 
-        var report = ContentReport.Create(userIdResult.Value, targetType, command.TargetId, command.Reason);
+        var report = ContentReport.Create(userIdResult.Value, targetTypeResult.Value, command.TargetId, command.Reason);
         await reportRepository.AddAsync(report, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new ContentReportModel(

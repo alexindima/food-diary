@@ -1,3 +1,5 @@
+using FoodDiary.Application.Admin.Common;
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
@@ -12,14 +14,14 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteReposit
     public async Task<Result<AdminLessonModel>> Handle(
         CreateAdminLessonCommand command,
         CancellationToken cancellationToken) {
-        if (!Enum.TryParse(command.Category, ignoreCase: true, out LessonCategory category)) {
-            return Result.Failure<AdminLessonModel>(
-                Errors.Validation.Invalid("category", "Invalid lesson category."));
+        Result<LessonCategory> categoryResult = AdminLessonValueParser.ParseCategory(command.Category, "category");
+        if (categoryResult.IsFailure) {
+            return Result.Failure<AdminLessonModel>(categoryResult.Error);
         }
 
-        if (!Enum.TryParse(command.Difficulty, ignoreCase: true, out LessonDifficulty difficulty)) {
-            return Result.Failure<AdminLessonModel>(
-                Errors.Validation.Invalid("difficulty", "Invalid lesson difficulty."));
+        Result<LessonDifficulty> difficultyResult = AdminLessonValueParser.ParseDifficulty(command.Difficulty, "difficulty");
+        if (difficultyResult.IsFailure) {
+            return Result.Failure<AdminLessonModel>(difficultyResult.Error);
         }
 
         var lesson = NutritionLesson.Create(
@@ -27,24 +29,13 @@ public sealed class CreateAdminLessonCommandHandler(INutritionLessonWriteReposit
             command.Content,
             command.Summary,
             command.Locale,
-            category,
-            difficulty,
+            categoryResult.Value,
+            difficultyResult.Value,
             command.EstimatedReadMinutes,
             command.SortOrder);
 
         await repository.AddAsync(lesson, cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(new AdminLessonModel(
-            lesson.Id.Value,
-            lesson.Title,
-            lesson.Content,
-            lesson.Summary,
-            lesson.Locale,
-            lesson.Category.ToString(),
-            lesson.Difficulty.ToString(),
-            lesson.EstimatedReadMinutes,
-            lesson.SortOrder,
-            lesson.CreatedOnUtc,
-            lesson.ModifiedOnUtc));
+        return Result.Success(lesson.ToAdminModel());
     }
 }

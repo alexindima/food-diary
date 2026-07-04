@@ -2,6 +2,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
+using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -42,13 +43,7 @@ public sealed class RemoveWebPushSubscriptionCommandHandler(
             userId,
             "WebPushSubscription",
             existing.Id.Value.ToString(),
-            $"endpointHost={GetEndpointHost(existing.Endpoint)}");
+            $"endpointHost={WebPushEndpointHost.Resolve(existing.Endpoint)}");
         return Result.Success();
-    }
-
-    private static string GetEndpointHost(string endpoint) {
-        return Uri.TryCreate(endpoint, UriKind.Absolute, out Uri? uri)
-            ? uri.Host
-            : endpoint;
     }
 }

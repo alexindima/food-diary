@@ -1,3 +1,4 @@
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -12,11 +13,7 @@ public class GetAdminAiPromptsQueryHandler(IAiPromptTemplateReadRepository repos
         GetAdminAiPromptsQuery query,
         CancellationToken cancellationToken) {
         IReadOnlyList<AiPromptTemplate> templates = await repository.GetAllAsync(cancellationToken).ConfigureAwait(false);
-        var models = templates
-            .Select(t => new AdminAiPromptModel(
-                t.Id.Value, t.Key, t.Locale, t.PromptText,
-                t.Version, t.IsActive, t.CreatedOnUtc, t.ModifiedOnUtc))
-            .ToList();
+        var models = templates.Select(static template => template.ToAdminModel()).ToList();
         return Result.Success<IReadOnlyList<AdminAiPromptModel>>(models);
     }
 }

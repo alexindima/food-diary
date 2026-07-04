@@ -1,7 +1,9 @@
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Domain.Entities.Ai;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
@@ -12,9 +14,15 @@ public class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateWriteRepository 
         UpsertAdminAiPromptCommand command,
         CancellationToken cancellationToken) {
         string key = command.Key.Trim().ToLowerInvariant();
-        string locale = command.Locale.Trim().ToLowerInvariant();
+        Result<string> localeResult = StringCodeParser.ParseRequiredLanguage(
+            command.Locale,
+            nameof(command.Locale),
+            "Locale must be one of the supported codes.");
+        if (localeResult.IsFailure) {
+            return Result.Failure<AdminAiPromptModel>(localeResult.Error);
+        }
 
-        AiPromptTemplate? existing = await repository.GetByKeyAsync(key, locale, cancellationToken).ConfigureAwait(false);
+        AiPromptTemplate? existing = await repository.GetByKeyAsync(key, localeResult.Value, cancellationToken).ConfigureAwait(false);
         AiPromptTemplate template;
 
         if (existing is not null) {
@@ -23,12 +31,10 @@ public class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateWriteRepository 
             await repository.UpdateAsync(tracked, cancellationToken).ConfigureAwait(false);
             template = tracked;
         } else {
-            template = AiPromptTemplate.Create(key, locale, command.PromptText, command.IsActive);
+            template = AiPromptTemplate.Create(key, localeResult.Value, command.PromptText, command.IsActive);
             await repository.AddAsync(template, cancellationToken).ConfigureAwait(false);
         }
 
-        return Result.Success(new AdminAiPromptModel(
-            template.Id.Value, template.Key, template.Locale, template.PromptText,
-            template.Version, template.IsActive, template.CreatedOnUtc, template.ModifiedOnUtc));
+        return Result.Success(template.ToAdminModel());
     }
 }

@@ -20,10 +20,7 @@ public class GetMealPlansQueryHandler(IMealPlanReadRepository mealPlanRepository
             return Result.Failure<IReadOnlyList<MealPlanSummaryModel>>(userIdResult.Error);
         }
 
-        DietType? dietTypeFilter = null;
-        if (!string.IsNullOrWhiteSpace(query.DietType) && Enum.TryParse(query.DietType, ignoreCase: true, out DietType parsed)) {
-            dietTypeFilter = parsed;
-        }
+        DietType? dietTypeFilter = EnumFilterParser.ParseOptional<DietType>(query.DietType);
 
         IReadOnlyList<MealPlan> curatedPlans = await mealPlanRepository.GetCuratedAsync(dietTypeFilter, cancellationToken).ConfigureAwait(false);
         IReadOnlyList<MealPlan> userPlans = await mealPlanRepository.GetByUserAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);

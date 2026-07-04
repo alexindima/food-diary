@@ -116,7 +116,10 @@ public class LayeringTests {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
 
-        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, ["using FoodDiary.Domain"]);
+        string[] violations = SourceScanner.FindLinePatternViolations(presentationRoot, [
+            "using FoodDiary.Domain",
+            "FoodDiary.Domain.",
+        ]);
 
         Assert.Empty(violations);
     }
@@ -162,6 +165,21 @@ public class LayeringTests {
         Assert.Contains("BaseApiController", names);
         Assert.Contains("AuthorizedController", names);
         Assert.Equal(2, names.Length);
+    }
+
+    [Fact]
+    public void PresentationApi_EndpointControllersLiveUnderFeatures() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+        string controllersRoot = Path.Combine(presentationRoot, "Controllers");
+
+        string[] violations = [.. Directory.GetFiles(presentationRoot, "*Controller.cs", SearchOption.AllDirectories)
+            .Where(path => !path.StartsWith(controllersRoot, StringComparison.OrdinalIgnoreCase))
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}Features{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
     }
 
     private static HashSet<string> GetProjectReferences(string relativeProjectPath) {

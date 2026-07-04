@@ -1,8 +1,11 @@
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.ContentReports.Common;
+using FoodDiary.Domain.Entities.Social;
 using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminContentReports;
@@ -15,22 +18,11 @@ public sealed class GetAdminContentReportsQueryHandler(IContentReportReadReposit
         int pageNumber = Math.Max(query.Page, 1);
         int pageSize = Math.Max(query.Limit, 1);
 
-        ReportStatus? status = query.Status is not null && Enum.TryParse(query.Status, out ReportStatus parsed)
-            ? parsed
-            : null;
+        ReportStatus? status = EnumFilterParser.ParseOptional<ReportStatus>(query.Status);
 
-        (IReadOnlyList<Domain.Entities.Social.ContentReport> items, int total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
+        (IReadOnlyList<ContentReport> items, int total) = await reportRepository.GetPagedAsync(status, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
 
-        var models = items.Select(r => new AdminContentReportModel(
-            r.Id.Value,
-            r.UserId.Value,
-            r.TargetType.ToString(),
-            r.TargetId,
-            r.Reason,
-            r.Status.ToString(),
-            r.AdminNote,
-            r.CreatedOnUtc,
-            r.ReviewedAtUtc)).ToList();
+        var models = items.Select(static report => report.ToAdminModel()).ToList();
 
         int totalPages = (int)Math.Ceiling(total / (double)pageSize);
         return Result.Success(new PagedResponse<AdminContentReportModel>(models, pageNumber, pageSize, totalPages, total));

@@ -24,50 +24,45 @@ public sealed class RecurringJobsHostedService(
         NotificationCleanupOptions notificationSettings = notificationCleanupOptions.Value;
         UserLoginEventCleanupOptions userLoginEventSettings = userLoginEventCleanupOptions.Value;
         UserCleanupOptions userSettings = userCleanupOptions.Value;
-        string imageCron = string.IsNullOrWhiteSpace(settings.Cron) ? "0 * * * *" : settings.Cron;
-        string billingRenewalCron = string.IsNullOrWhiteSpace(billingRenewalSettings.Cron) ? "15 * * * *" : billingRenewalSettings.Cron;
-        string fastingNotificationCron = string.IsNullOrWhiteSpace(fastingNotificationSettings.Cron) ? "* * * * *" : fastingNotificationSettings.Cron;
-        string imageOutboxCron = string.IsNullOrWhiteSpace(imageOutboxSettings.Cron) ? "* * * * *" : imageOutboxSettings.Cron;
-        string notificationOutboxCron = string.IsNullOrWhiteSpace(notificationOutboxSettings.Cron) ? "* * * * *" : notificationOutboxSettings.Cron;
-        string notificationCron = string.IsNullOrWhiteSpace(notificationSettings.Cron) ? "0 4 * * *" : notificationSettings.Cron;
-        string userLoginEventCron = string.IsNullOrWhiteSpace(userLoginEventSettings.Cron) ? "0 3 * * *" : userLoginEventSettings.Cron;
-        string userCron = string.IsNullOrWhiteSpace(userSettings.Cron) ? "0 3 * * *" : userSettings.Cron;
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageAssetsCleanup,
             Job.FromExpression<ImageCleanupJob>(job => job.Execute(CancellationToken.None)),
-            imageCron);
+            ResolveCron(settings.Cron, "0 * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.BillingRenewal,
             Job.FromExpression<BillingRenewalJob>(job => job.Execute(CancellationToken.None)),
-            billingRenewalCron);
+            ResolveCron(billingRenewalSettings.Cron, "15 * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.FastingNotifications,
             Job.FromExpression<FastingNotificationJob>(job => job.Execute(CancellationToken.None)),
-            fastingNotificationCron);
+            ResolveCron(fastingNotificationSettings.Cron, "* * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.ImageObjectDeletionOutbox,
             Job.FromExpression<ImageObjectDeletionOutboxJob>(job => job.Execute(CancellationToken.None)),
-            imageOutboxCron);
+            ResolveCron(imageOutboxSettings.Cron, "* * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationWebPushOutbox,
             Job.FromExpression<NotificationWebPushOutboxJob>(job => job.Execute(CancellationToken.None)),
-            notificationOutboxCron);
+            ResolveCron(notificationOutboxSettings.Cron, "* * * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.NotificationsCleanup,
             Job.FromExpression<NotificationCleanupJob>(job => job.Execute(CancellationToken.None)),
-            notificationCron);
+            ResolveCron(notificationSettings.Cron, "0 4 * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.UsersCleanup,
             Job.FromExpression<UserCleanupJob>(job => job.Execute(CancellationToken.None)),
-            userCron);
+            ResolveCron(userSettings.Cron, "0 3 * * *"));
         recurringJobManager.AddOrUpdate(
             RecurringJobIds.UserLoginEventsCleanup,
             Job.FromExpression<UserLoginEventCleanupJob>(job => job.Execute(CancellationToken.None)),
-            userLoginEventCron);
+            ResolveCron(userLoginEventSettings.Cron, "0 3 * * *"));
         recurringJobRegistrationVerifier.EnsureRegistered(RecurringJobIds.All);
 
         return Task.CompletedTask;
     }
 
     public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+    private static string ResolveCron(string? configuredCron, string fallbackCron) =>
+        string.IsNullOrWhiteSpace(configuredCron) ? fallbackCron : configuredCron;
 }

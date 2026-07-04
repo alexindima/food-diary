@@ -960,6 +960,20 @@ public class AdminFeatureTests {
     }
 
     [Fact]
+    public async Task UpsertAdminAiPromptHandler_WithInvalidLocale_ReturnsValidationFailure() {
+        var repository = new InMemoryAiPromptTemplateRepository();
+        var handler = new UpsertAdminAiPromptCommandHandler(repository);
+
+        Result<AdminAiPromptModel> result = await handler.Handle(
+            new UpsertAdminAiPromptCommand("meal_summary", "xx", "Prompt text", IsActive: true),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+        Assert.Empty(repository.Templates);
+    }
+
+    [Fact]
     public async Task GetAdminAiPromptsQueryHandler_ReturnsTemplates() {
         var template = AiPromptTemplate.Create("meal_summary", "en", "Prompt text", isActive: true);
         var handler = new GetAdminAiPromptsQueryHandler(new InMemoryAiPromptTemplateRepository(template));
@@ -1209,7 +1223,7 @@ public class AdminFeatureTests {
         var repository = new CountingContentReportRepository(0, [report]);
         var handler = new GetAdminContentReportsQueryHandler(repository);
 
-        Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("Dismissed", 0, 0), CancellationToken.None);
+        Result<PagedResponse<AdminContentReportModel>> result = await handler.Handle(new GetAdminContentReportsQuery("dismissed", 0, 0), CancellationToken.None);
 
         ResultAssert.Success(result);
         Assert.Equal(1, result.Value.Page);

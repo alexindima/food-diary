@@ -51,6 +51,18 @@ public class ContentReportsFeatureTests {
         ResultAssert.Failure(result);
     }
 
+    [Fact]
+    public async Task CreateContentReport_WithInvalidTargetType_ReturnsValidationFailure() {
+        var handler = new CreateContentReportCommandHandler(CreateContentReportRepository());
+
+        Result<ContentReportModel> result = await handler.Handle(
+            new CreateContentReportCommand(Guid.NewGuid(), "Unknown", Guid.NewGuid(), "Spam"),
+            CancellationToken.None);
+
+        ResultAssert.Failure(result);
+        Assert.Equal("Validation.Invalid", result.Error.Code);
+    }
+
     private static IContentReportRepository CreateContentReportRepository(
         params (UserId UserId, ReportTargetType TargetType, Guid TargetId)[] reported) {
         HashSet<(UserId UserId, ReportTargetType TargetType, Guid TargetId)> reportedSet = [.. reported];

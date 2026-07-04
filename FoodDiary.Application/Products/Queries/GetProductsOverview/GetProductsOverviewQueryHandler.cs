@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
@@ -97,11 +98,7 @@ public sealed class GetProductsOverviewQueryHandler(
     }
 
     private static ProductOverviewOptions CreateOptions(GetProductsOverviewQuery query, UserId userId) {
-        ProductType[]? productTypes = query.ProductTypes?
-            .Select(type => Enum.TryParse(type, ignoreCase: true, out ProductType parsed) ? parsed : (ProductType?)null)
-            .OfType<ProductType>()
-            .Distinct()
-            .ToArray();
+        ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
         return new ProductOverviewOptions(
             userId,

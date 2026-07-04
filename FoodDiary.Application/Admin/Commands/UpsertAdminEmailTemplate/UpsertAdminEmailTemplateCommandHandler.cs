@@ -1,3 +1,4 @@
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Admin.Common;
@@ -31,18 +32,7 @@ public sealed class UpsertAdminEmailTemplateCommandHandler(
             command.IsActive,
             cancellationToken).ConfigureAwait(false);
 
-        var response = new AdminEmailTemplateModel(
-            template.Id,
-            template.Key,
-            template.Locale,
-            template.Subject,
-            template.HtmlBody,
-            template.TextBody,
-            template.IsActive,
-            template.CreatedOnUtc,
-            template.ModifiedOnUtc);
-
-        return Result.Success(response);
+        return Result.Success(template.ToAdminModel());
     }
 
     private static string NormalizeKey(string value) {
