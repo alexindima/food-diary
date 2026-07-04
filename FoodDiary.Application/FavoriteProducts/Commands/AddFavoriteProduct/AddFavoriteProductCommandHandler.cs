@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Mappings;
 using FoodDiary.Application.FavoriteProducts.Models;
@@ -14,7 +14,7 @@ namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 
 public class AddFavoriteProductCommandHandler(
     IFavoriteProductRepository favoriteProductRepository,
-    IProductRepository productRepository,
+    IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<AddFavoriteProductCommand, Result<FavoriteProductModel>> {
     public async Task<Result<FavoriteProductModel>> Handle(
@@ -32,11 +32,10 @@ public class AddFavoriteProductCommandHandler(
         }
 
         var productId = new ProductId(command.ProductId);
-        Product? product = await productRepository.GetByIdAsync(
-            productId,
-            userId,
-            includePublic: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+        IReadOnlyDictionary<ProductId, Product> products = await productLookupService
+            .GetAccessibleByIdsAsync([productId], userId, cancellationToken)
+            .ConfigureAwait(false);
+        Product? product = products.GetValueOrDefault(productId);
         if (product is null) {
             return Result.Failure<FavoriteProductModel>(Errors.Product.NotFound(command.ProductId));
         }

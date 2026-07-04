@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 using FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
@@ -426,14 +426,16 @@ public sealed class FavoriteProductsAdditionalFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class SingleProductRepository(Product? product) : IProductRepository {
-        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(UserId userId, bool includePublic, int page, int limit, ProductQueryFilters filters, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<Product?> GetByIdAsync(ProductId id, UserId userId, bool includePublic = true, CancellationToken cancellationToken = default) => Task.FromResult(product is not null && product.Id == id ? product : null);
-        public Task<IReadOnlyDictionary<ProductId, Product>> GetByIdsAsync(IEnumerable<ProductId> ids, UserId userId, bool includePublic = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(IEnumerable<ProductId> ids, UserId userId, bool includePublic = true, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    private sealed class SingleProductRepository(Product? product) : IProductLookupService {
+        public Task<IReadOnlyDictionary<ProductId, Product>> GetAccessibleByIdsAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            CancellationToken cancellationToken = default) {
+            IReadOnlyDictionary<ProductId, Product> products = product is not null && ids.Contains(product.Id)
+                ? new[] { product }.ToDictionary(item => item.Id)
+                : Array.Empty<Product>().ToDictionary(item => item.Id);
+            return Task.FromResult(products);
+        }
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {

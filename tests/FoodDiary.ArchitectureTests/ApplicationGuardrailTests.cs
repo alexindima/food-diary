@@ -166,7 +166,6 @@ public sealed class ApplicationGuardrailTests {
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] allowedDirectories = [
             Path.Combine(applicationRoot, "Products"),
-            Path.Combine(applicationRoot, "FavoriteProducts"),
         ];
 
         string[] violations = FindRepositoryReferenceViolations(
@@ -258,6 +257,24 @@ public sealed class ApplicationGuardrailTests {
         ];
 
         string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void AdminSlice_UsesUserRepositoryOnlyThroughFocusedAdapterServices() {
+        string root = GetRepositoryRoot();
+        string adminRoot = Path.Combine(root, "FoodDiary.Application", "Admin");
+        string[] allowedFiles = [
+            Path.Combine(adminRoot, "Services", "AdminImpersonationUserService.cs"),
+            Path.Combine(adminRoot, "Services", "AdminUserManagementService.cs"),
+            Path.Combine(adminRoot, "Services", "AdminUserReadService.cs"),
+        ];
+
+        string[] adminFiles = [.. SourceScanner.SourceFiles(adminRoot)
+            .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))];
+
+        string[] violations = FindReferencesInFiles(root, adminFiles, "IUserRepository");
 
         Assert.Empty(violations);
     }
