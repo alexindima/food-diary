@@ -5,6 +5,50 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class JobManagerGuardrailTests {
     [Fact]
+    public void JobManagerProject_ReferencesOnlyApprovedRuntimeModulesAndSchedulerPackages() {
+        const string relativeProjectPath = "FoodDiary.JobManager/FoodDiary.JobManager.csproj";
+        string[] expectedProjectReferences = [
+            "FoodDiary.Application",
+            "FoodDiary.Infrastructure",
+            "FoodDiary.Integrations",
+        ];
+        string[] expectedPackageReferences = [
+            "Hangfire.AspNetCore",
+            "Hangfire.Core",
+            "Hangfire.PostgreSql",
+            "Microsoft.EntityFrameworkCore",
+            "Microsoft.EntityFrameworkCore.Relational",
+            "Microsoft.Extensions.Hosting",
+            "Newtonsoft.Json",
+        ];
+
+        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
+        string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+        Assert.Equal(expectedProjectReferences, projectReferences);
+        Assert.Equal(expectedPackageReferences, packageReferences);
+    }
+
+    [Fact]
+    public void JobManagerRootFolders_StayLimitedToWorkerHostStructure() {
+        string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
+        string[] allowedDirectories = [
+            "Services",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(jobManagerRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
     public void JobManagerSource_DoesNotReferenceHttpPresentationOrHostApiSurface() {
         string jobManagerRoot = ArchitectureTestPaths.FromRoot("FoodDiary.JobManager");
 
