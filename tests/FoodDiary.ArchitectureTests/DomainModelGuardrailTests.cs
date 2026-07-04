@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Reflection;
 using FoodDiary.Domain.Common;
 
@@ -6,6 +7,40 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public class DomainModelGuardrailTests {
     private static readonly HashSet<string> AllowedWideMutators = new(StringComparer.Ordinal);
+
+    [Fact]
+    public void DomainProject_StaysMinimalWithoutDirectDependencies() {
+        const string relativeProjectPath = "FoodDiary.Domain/FoodDiary.Domain.csproj";
+
+        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
+        string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+        Assert.Empty(projectReferences);
+        Assert.Empty(packageReferences);
+    }
+
+    [Fact]
+    public void DomainRootFolders_StayLimitedToDomainModelStructure() {
+        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+        string[] allowedDirectories = [
+            "Common",
+            "Entities",
+            "Enums",
+            "Events",
+            "ValueObjects",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(domainRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
 
     [Fact]
     public void DomainSourceFiles_DoNotReferenceInfrastructurePersistenceOrTransportConcerns() {
@@ -44,6 +79,32 @@ public class DomainModelGuardrailTests {
         ];
 
         string[] violations = SourceScanner.FindLinePatternViolations(domainRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DomainStronglyTypedIds_LiveUnderValueObjectsIdsOnePerFile() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+        string idsRoot = Path.Combine(domainRoot, "ValueObjects", "Ids");
+
+        string[] violations = [.. SourceScanner.SourceFiles(domainRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(static entry =>
+                entry.line.StartsWith("public readonly record struct ", StringComparison.Ordinal) &&
+                entry.line.Contains("Id(", StringComparison.Ordinal) &&
+                entry.line.Contains("IEntityId<", StringComparison.Ordinal))
+            .Where(entry => !entry.path.StartsWith(idsRoot, StringComparison.OrdinalIgnoreCase) ||
+                            !string.Equals(
+                                Path.GetFileNameWithoutExtension(entry.path),
+                                entry.line.Split(' ', StringSplitOptions.RemoveEmptyEntries)[4].Split('(')[0],
+                                StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
