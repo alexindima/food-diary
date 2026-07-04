@@ -67,6 +67,26 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void IntegrationsProject_PackageReferencesStayLimitedToApprovedProvidersAndTransport() {
+        string[] allowedPackages = [
+            "AWSSDK.S3",
+            "Microsoft.AspNetCore.WebUtilities",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.Http",
+            "Microsoft.Extensions.Http.Resilience",
+            "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "Microsoft.IdentityModel.Protocols.OpenIdConnect",
+            "Stripe.net",
+            "System.IdentityModel.Tokens.Jwt",
+            "WebPush",
+        ];
+
+        string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Integrations/FoodDiary.Integrations.csproj");
+
+        Assert.Equal(allowedPackages, packages);
+    }
+
+    [Fact]
     public void IntegrationsProject_UsesTimeProviderInsteadOfDirectUtcNow() {
         string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
 
