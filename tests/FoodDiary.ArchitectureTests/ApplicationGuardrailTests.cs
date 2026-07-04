@@ -116,6 +116,29 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationServicesBuildersAndFactories_AreSealedOrStatic() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(path =>
+                path.EndsWith("Service.cs", StringComparison.Ordinal) ||
+                path.EndsWith("Builder.cs", StringComparison.Ordinal) ||
+                path.EndsWith("Factory.cs", StringComparison.Ordinal))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry =>
+                entry.line.Contains("public class ", StringComparison.Ordinal) ||
+                entry.line.Contains("internal class ", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

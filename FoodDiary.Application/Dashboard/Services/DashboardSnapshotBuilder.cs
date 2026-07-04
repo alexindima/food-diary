@@ -23,7 +23,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Application.Dashboard.Services;
 
-public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
+public sealed class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
     private readonly IDashboardSectionDataLoader _dataLoader;
     private readonly ILogger<DashboardSnapshotBuilder> _logger;
 

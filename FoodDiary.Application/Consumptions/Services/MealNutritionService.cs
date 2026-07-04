@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Consumptions.Services;
 
-public class MealNutritionService(
+public sealed class MealNutritionService(
     IProductLookupService productLookupService,
     IRecipeLookupService recipeLookupService) : IMealNutritionService {
 
