@@ -8,6 +8,28 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ApplicationGuardrailTests {
     [Fact]
+    public void ApplicationProject_StaysDependencyLightweight() {
+        const string relativeProjectPath = "FoodDiary.Application/FoodDiary.Application.csproj";
+        string[] allowedProjectReferences = [
+            "FoodDiary.Application.Abstractions",
+            "FoodDiary.Domain",
+            "FoodDiary.Mediator",
+        ];
+        string[] allowedPackageReferences = [
+            "FluentValidation",
+            "FluentValidation.DependencyInjectionExtensions",
+            "Microsoft.Extensions.DependencyInjection.Abstractions",
+            "Microsoft.Extensions.Logging.Abstractions",
+        ];
+
+        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
+        string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+        Assert.Equal(allowedProjectReferences, projectReferences);
+        Assert.Equal(allowedPackageReferences, packageReferences);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseEnumParseDirectly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
