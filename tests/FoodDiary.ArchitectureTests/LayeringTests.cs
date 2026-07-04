@@ -147,6 +147,29 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void InfrastructureCompositionRoot_StaysLimitedToApprovedTechnicalModules() {
+        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.cs");
+        string[] expectedRegistrations = [
+            "services.TryAddSingleton(TimeProvider.System);",
+            "services.AddMemoryCache();",
+            "services.AddLogging();",
+            "services.AddInfrastructureOptions(configuration);",
+            "services.AddPersistence(configuration);",
+            "services.AddFeatureRepositories();",
+            "services.AddAuthenticationInfrastructure();",
+            "services.AddBillingInfrastructure();",
+            "services.AddExportInfrastructure();",
+            "services.AddWearablesInfrastructure();",
+        ];
+
+        string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("services.", StringComparison.Ordinal))];
+
+        Assert.Equal(expectedRegistrations, actualRegistrations);
+    }
+
+    [Fact]
     public void InfrastructureConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
