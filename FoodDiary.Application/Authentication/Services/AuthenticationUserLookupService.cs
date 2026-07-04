@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Services;
 
-internal sealed class AuthenticationUserLookupService(IUserRepository userRepository) : IAuthenticationUserLookupService {
+internal sealed class AuthenticationUserLookupService(IUserReadRepository userRepository) : IAuthenticationUserLookupService {
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
         userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 

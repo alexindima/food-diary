@@ -6,14 +6,15 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Services;
 
 internal sealed class AuthenticationUserRegistrationService(
-    IUserRepository userRepository,
+    IUserReadRepository userReadRepository,
+    IUserWriteRepository userWriteRepository,
     IUserRoleCatalogService roleCatalogService) : IAuthenticationUserRegistrationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
-        userRepository.AddAsync(user, cancellationToken);
+        userWriteRepository.AddAsync(user, cancellationToken);
 
     public Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
         roleCatalogService.EnsureRolesByNamesAsync(names, cancellationToken);
 
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        userReadRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 }

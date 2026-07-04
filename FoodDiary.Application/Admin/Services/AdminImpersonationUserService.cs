@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Services;
 
-internal sealed class AdminImpersonationUserService(IUserRepository userRepository) : IAdminImpersonationUserService {
+internal sealed class AdminImpersonationUserService(IUserReadRepository userRepository) : IAdminImpersonationUserService {
     public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
         userRepository.GetByIdAsync(userId, cancellationToken);
 }

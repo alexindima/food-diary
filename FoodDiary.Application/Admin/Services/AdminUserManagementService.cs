@@ -7,10 +7,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Admin.Services;
 
 internal sealed class AdminUserManagementService(
-    IUserRepository userRepository,
+    IUserReadRepository userReadRepository,
+    IUserWriteRepository userWriteRepository,
     IUserRoleCatalogService roleCatalogService) : IAdminUserManagementService {
     public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
+        userReadRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
 
     public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
         roleCatalogService.GetRolesByNamesAsync(names, cancellationToken);
@@ -19,5 +20,5 @@ internal sealed class AdminUserManagementService(
         User user,
         IReadOnlyCollection<UserRoleAuditEvent> roleAuditEvents,
         CancellationToken cancellationToken = default) =>
-        userRepository.UpdateAsync(user, roleAuditEvents, cancellationToken);
+        userWriteRepository.UpdateAsync(user, roleAuditEvents, cancellationToken);
 }

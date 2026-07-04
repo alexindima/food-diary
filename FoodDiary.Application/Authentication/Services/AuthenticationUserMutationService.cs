@@ -5,19 +5,21 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Authentication.Services;
 
-internal sealed class AuthenticationUserMutationService(IUserRepository userRepository) : IAuthenticationUserMutationService {
+internal sealed class AuthenticationUserMutationService(
+    IUserReadRepository userReadRepository,
+    IUserWriteRepository userWriteRepository) : IAuthenticationUserMutationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
-        userRepository.AddAsync(user, cancellationToken);
+        userWriteRepository.AddAsync(user, cancellationToken);
 
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        userReadRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 
     public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userRepository.GetByIdAsync(userId, cancellationToken);
+        userReadRepository.GetByIdAsync(userId, cancellationToken);
 
     public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
-        userRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
+        userReadRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
 
     public Task UpdateAsync(User user, CancellationToken cancellationToken = default) =>
-        userRepository.UpdateAsync(user, cancellationToken);
+        userWriteRepository.UpdateAsync(user, cancellationToken);
 }

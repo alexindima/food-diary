@@ -5,7 +5,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Services;
 
-internal sealed class AdminUserReadService(IUserRepository userRepository) : IAdminUserReadService {
+internal sealed class AdminUserReadService(IUserReadRepository userRepository) : IAdminUserReadService {
     public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
         userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
 

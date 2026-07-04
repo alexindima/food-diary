@@ -6,9 +6,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Users.Common;
 
-internal sealed class UserContextService(IUserRepository userRepository) : IUserContextService, ICurrentUserAccessService {
+internal sealed class UserContextService(
+    IUserReadRepository userReadRepository,
+    IUserWriteRepository userWriteRepository) : IUserContextService, ICurrentUserAccessService {
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userReadRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<User>(accessError)
@@ -21,5 +23,5 @@ internal sealed class UserContextService(IUserRepository userRepository) : IUser
     }
 
     public Task UpdateUserAsync(User user, CancellationToken cancellationToken) =>
-        userRepository.UpdateAsync(user, cancellationToken);
+        userWriteRepository.UpdateAsync(user, cancellationToken);
 }
