@@ -5,6 +5,81 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class HostCompositionBoundaryTests {
     [Fact]
+    public void PrimaryWebApiHost_ProjectGuide_Exists() {
+        string guidePath = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api", "AGENTS.md");
+
+        Assert.True(File.Exists(guidePath), $"Expected project guide at '{guidePath}'.");
+    }
+
+    [Fact]
+    public void PrimaryWebApiHost_RootFoldersStayLimitedToCompositionStructure() {
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+        string[] allowedDirectories = [
+            "Build",
+            "Extensions",
+            "HealthChecks",
+            "Options",
+            "Properties",
+            "Services",
+            "Swagger",
+        ];
+
+        string[] unexpectedDirectories = [.. Directory.GetDirectories(hostRoot)
+            .Select(Path.GetFileName)
+            .Where(name => name is not null)
+            .Select(name => name!)
+            .Where(name => !name.Equals("bin", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !name.Equals("obj", StringComparison.OrdinalIgnoreCase))
+            .Where(name => !allowedDirectories.Contains(name, StringComparer.Ordinal))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(unexpectedDirectories);
+    }
+
+    [Fact]
+    public void PrimaryWebApiHost_DoesNotDeclareFeatureControllersOrTransportModels() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+        string[] forbiddenDeclarationPatterns = [
+            " class ",
+            " record ",
+            " record class ",
+            " record struct ",
+        ];
+        string[] forbiddenTypeNameMarkers = [
+            "Controller",
+            "HttpRequest",
+            "HttpQuery",
+        ];
+
+        string[] violations = [.. SourceScanner.SourceFiles(hostRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(entry => forbiddenDeclarationPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+            .Where(entry => forbiddenTypeNameMarkers.Any(marker => entry.line.Contains(marker, StringComparison.Ordinal)))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PrimaryWebApiHost_DoesNotUseMvcControllerSurface() {
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(hostRoot, [
+            "[ApiController]",
+            "ControllerBase",
+            "IActionResult",
+            "ActionResult<",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void NonHostProductionProjects_DoNotReferencePrimaryWebApiNamespace() {
         string[] nonHostRoots = [.. ProjectReferenceReader.ReadProductionProjectNames()
             .Where(static projectName => !string.Equals(projectName, "FoodDiary.Web.Api", StringComparison.Ordinal))
