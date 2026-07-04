@@ -117,19 +117,20 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
-    public void Result_WithSuccessAndError_ThrowsInvalidOperationException() {
-        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
-            new TestResult(isSuccess: true, Errors.Validation.Required("name")));
+    public void Result_Success_ReturnsSuccessfulResultWithoutError() {
+        var result = Result.Success();
 
-        Assert.Contains("A successful result cannot contain an error.", ex.Message, StringComparison.Ordinal);
+        ResultAssert.Success(result);
+        Assert.Equal(Error.None, result.Error);
     }
 
     [Fact]
-    public void Result_WithFailureAndNoError_ThrowsInvalidOperationException() {
-        InvalidOperationException ex = Assert.Throws<InvalidOperationException>(() =>
-            new TestResult(isSuccess: false, Error.None));
+    public void Result_Failure_ReturnsFailedResultWithError() {
+        Error error = Errors.Validation.Required("name");
+        var result = Result.Failure(error);
 
-        Assert.Contains("A failed result must contain an error.", ex.Message, StringComparison.Ordinal);
+        ResultAssert.Failure(result);
+        Assert.Equal(error, result.Error);
     }
 
     [Fact]
@@ -368,18 +369,6 @@ public class CommonAbstractionsTests {
     }
 
     [Fact]
-    public async Task ValidationBehavior_ForUnsupportedResultType_Throws() {
-        var validator = new UnsupportedResultCommandValidator();
-        var behavior = new ValidationBehavior<UnsupportedResultCommand, TestResult>([validator]);
-        var command = new UnsupportedResultCommand("");
-
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() =>
-            behavior.Handle(command, _ => Task.FromResult(new TestResult(isSuccess: true, Error.None)), CancellationToken.None));
-
-        Assert.Contains(nameof(TestResult), exception.Message, StringComparison.Ordinal);
-    }
-
-    [Fact]
     public void SecurityTokenGenerator_WithInvalidLength_Throws() {
         Assert.Throws<ArgumentOutOfRangeException>(() => SecurityTokenGenerator.GenerateUrlSafeToken(0));
     }
@@ -447,12 +436,6 @@ public class CommonAbstractionsTests {
 
     [ExcludeFromCodeCoverage]
     private sealed record NonGenericCommand(string Value) : ICommand<Result>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed record UnsupportedResultCommand(string Value) : ICommand<TestResult>;
-
-    [ExcludeFromCodeCoverage]
-    private sealed class TestResult(bool isSuccess, Error error) : Result(isSuccess, error);
 
     [ExcludeFromCodeCoverage]
     private sealed class RecordingProductRepository : IProductRepository {
@@ -550,16 +533,6 @@ public class CommonAbstractionsTests {
     [ExcludeFromCodeCoverage]
     private sealed class NonGenericCommandValidator : AbstractValidator<NonGenericCommand> {
         public NonGenericCommandValidator() {
-            RuleFor(x => x.Value)
-                .NotEmpty()
-                .WithErrorCode("Validation.Required")
-                .WithMessage("value is required");
-        }
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class UnsupportedResultCommandValidator : AbstractValidator<UnsupportedResultCommand> {
-        public UnsupportedResultCommandValidator() {
             RuleFor(x => x.Value)
                 .NotEmpty()
                 .WithErrorCode("Validation.Required")

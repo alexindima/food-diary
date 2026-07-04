@@ -58,6 +58,15 @@ public sealed class ApplicationAbstractionsBoundaryTests {
     }
 
     [Fact]
+    public void ApplicationAbstractions_ConcreteClasses_AreSealedOrStatic() {
+        string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
+
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations([abstractionsRoot]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotBuildBclMailTransportMessages() {
         string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
         string[] forbiddenPatterns = [
