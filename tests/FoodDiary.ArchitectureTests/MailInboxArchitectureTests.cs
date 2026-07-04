@@ -77,6 +77,42 @@ public sealed class MailInboxArchitectureTests {
     }
 
     [Fact]
+    public void MailInboxProductionProjects_UseOnlyApprovedPackagesForTheirLayer() {
+        var expectedPackagesByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["MailInbox/FoodDiary.MailInbox.Application/FoodDiary.MailInbox.Application.csproj"] = [
+                "FluentValidation",
+                "FluentValidation.DependencyInjectionExtensions",
+                "Microsoft.Extensions.Logging.Abstractions",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj"] = [
+                "Microsoft.Extensions.Http",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Domain/FoodDiary.MailInbox.Domain.csproj"] = [],
+            ["MailInbox/FoodDiary.MailInbox.Infrastructure/FoodDiary.MailInbox.Infrastructure.csproj"] = [
+                "MailKit",
+                "Microsoft.Extensions.Hosting",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+                "Npgsql",
+                "SmtpServer",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Initializer/FoodDiary.MailInbox.Initializer.csproj"] = [
+                "Microsoft.Extensions.Hosting",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+                "Npgsql",
+            ],
+            ["MailInbox/FoodDiary.MailInbox.Presentation/FoodDiary.MailInbox.Presentation.csproj"] = [],
+            ["MailInbox/FoodDiary.MailInbox.WebApi/FoodDiary.MailInbox.WebApi.csproj"] = [],
+        };
+
+        foreach ((string? relativeProjectPath, string[]? expectedPackages) in expectedPackagesByProject) {
+            string[] actualPackages = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+            Assert.Equal(expectedPackages, actualPackages);
+        }
+    }
+
+    [Fact]
     public void MailInboxProductionConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string[] sourceRoots = [

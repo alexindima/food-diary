@@ -79,6 +79,45 @@ public sealed class MailRelayArchitectureTests {
     }
 
     [Fact]
+    public void MailRelayProductionProjects_UseOnlyApprovedPackagesForTheirLayer() {
+        var expectedPackagesByProject = new Dictionary<string, string[]>(StringComparer.Ordinal) {
+            ["MailRelay/FoodDiary.MailRelay.Application/FoodDiary.MailRelay.Application.csproj"] = [
+                "FluentValidation",
+                "FluentValidation.DependencyInjectionExtensions",
+                "Microsoft.Extensions.Logging.Abstractions",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj"] = [
+                "Microsoft.Extensions.Http",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Domain/FoodDiary.MailRelay.Domain.csproj"] = [],
+            ["MailRelay/FoodDiary.MailRelay.Infrastructure/FoodDiary.MailRelay.Infrastructure.csproj"] = [
+                "DnsClient",
+                "MailKit",
+                "Microsoft.Extensions.Hosting",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+                "Npgsql",
+                "OpenTelemetry.Exporter.OpenTelemetryProtocol",
+                "OpenTelemetry.Extensions.Hosting",
+                "RabbitMQ.Client",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Initializer/FoodDiary.MailRelay.Initializer.csproj"] = [
+                "Microsoft.Extensions.Hosting",
+                "Microsoft.Extensions.Options.ConfigurationExtensions",
+                "Npgsql",
+            ],
+            ["MailRelay/FoodDiary.MailRelay.Presentation/FoodDiary.MailRelay.Presentation.csproj"] = [],
+            ["MailRelay/FoodDiary.MailRelay.WebApi/FoodDiary.MailRelay.WebApi.csproj"] = [],
+        };
+
+        foreach ((string? relativeProjectPath, string[]? expectedPackages) in expectedPackagesByProject) {
+            string[] actualPackages = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+            Assert.Equal(expectedPackages, actualPackages);
+        }
+    }
+
+    [Fact]
     public void MailRelayProductionConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string[] sourceRoots = [
