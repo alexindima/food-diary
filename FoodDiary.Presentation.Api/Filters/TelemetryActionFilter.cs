@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace FoodDiary.Presentation.Api.Filters;
 
-public class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsyncActionFilter {
+public sealed class TelemetryActionFilter(ILogger<TelemetryActionFilter> logger) : IAsyncActionFilter {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         string controllerName = context.Controller.GetType().Name;
         string? actionName = context.ActionDescriptor.RouteValues.TryGetValue("action", out string? action) ? action : "Unknown";
