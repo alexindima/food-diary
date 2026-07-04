@@ -51,6 +51,21 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
+    public void PrimaryWebApiHost_DoesNotMapApiFeatureEndpointsDirectly() {
+        string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
+
+        string[] violations = SourceScanner.FindLinePatternViolations(hostRoot, [
+            "MapGet(\"/api",
+            "MapPost(\"/api",
+            "MapPut(\"/api",
+            "MapPatch(\"/api",
+            "MapDelete(\"/api",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PrimaryWebApiHost_UsesTimeProviderInsteadOfDateTimeUtcNow() {
         string hostRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api");
 

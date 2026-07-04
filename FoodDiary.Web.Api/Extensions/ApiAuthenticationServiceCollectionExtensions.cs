@@ -1,5 +1,6 @@
 using System.Text;
 using FoodDiary.Infrastructure.Options;
+using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Web.Api.Build;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -22,6 +23,8 @@ public static class ApiAuthenticationServiceCollectionExtensions {
                 TimeProvider timeProvider = serviceProvider.GetRequiredService<TimeProvider>();
                 return ApiBuildInfo.Create(options, environment.EnvironmentName, timeProvider);
             });
+            services.AddSingleton<IApiVersionInfo>(static serviceProvider =>
+                serviceProvider.GetRequiredService<ApiBuildInfo>());
             services.AddCors(static _ => { });
 
             services

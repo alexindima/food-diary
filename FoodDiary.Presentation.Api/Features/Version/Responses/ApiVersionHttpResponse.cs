@@ -1,6 +1,6 @@
-namespace FoodDiary.Web.Api.Build;
+namespace FoodDiary.Presentation.Api.Features.Version.Responses;
 
-public sealed record ApiVersionResponse(
+public sealed record ApiVersionHttpResponse(
     string CommitSha,
     string ImageTag,
     string Environment,

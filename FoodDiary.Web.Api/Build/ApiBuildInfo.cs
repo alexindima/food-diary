@@ -1,4 +1,5 @@
 using System.Reflection;
+using FoodDiary.Presentation.Api.Features.Version;
 using FoodDiary.Web.Api.Options;
 
 namespace FoodDiary.Web.Api.Build;
@@ -8,7 +9,7 @@ public sealed record ApiBuildInfo(
     string ImageTag,
     string Environment,
     string ApplicationVersion,
-    DateTimeOffset StartedAtUtc) {
+    DateTimeOffset StartedAtUtc) : IApiVersionInfo {
     public static ApiBuildInfo Create(ApiBuildInfoOptions options, string environmentName, TimeProvider timeProvider) {
         string applicationVersion = typeof(Program).Assembly
                                      .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?

@@ -1,6 +1,5 @@
 using FoodDiary.Presentation.Api.Extensions;
 using FoodDiary.Presentation.Api.Telemetry;
-using FoodDiary.Web.Api.Build;
 using FoodDiary.Web.Api.Options;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -39,7 +38,6 @@ public static class ApiApplicationBuilderExtensions {
         app.UseOutputCache();
 
         app.MapOperationalEndpoints();
-        app.MapVersionEndpoints();
         app.MapPresentationApi(ApiCompositionConstants.CorsPolicyName);
 
         return app;
@@ -52,24 +50,6 @@ public static class ApiApplicationBuilderExtensions {
         app.MapHealthChecks("/health/ready", new HealthCheckOptions {
             Predicate = IsReadyHealthCheck,
         }).WithMetadata(new SuppressRequestAccessLogAttribute());
-    }
-
-    private static void MapVersionEndpoints(this WebApplication app) {
-        static IResult BuildVersionResponse(ApiBuildInfo buildInfo) {
-            return Results.Ok(new ApiVersionResponse(
-                buildInfo.CommitSha,
-                buildInfo.ImageTag,
-                buildInfo.Environment,
-                buildInfo.ApplicationVersion,
-                buildInfo.StartedAtUtc));
-        }
-
-        app.MapGet("/api/version", BuildVersionResponse)
-            .ExcludeFromDescription()
-            .WithMetadata(new SuppressRequestAccessLogAttribute());
-        app.MapGet("/api/v1/version", BuildVersionResponse)
-            .ExcludeFromDescription()
-            .WithMetadata(new SuppressRequestAccessLogAttribute());
     }
 
     private static bool ExcludeHealthChecks(HealthCheckRegistration _) => false;
