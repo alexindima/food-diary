@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext {
     public DbSet<User> Users => Set<User>();
     public DbSet<UserLoginEvent> UserLoginEvents => Set<UserLoginEvent>();
     public DbSet<UserRefreshTokenSession> UserRefreshTokenSessions => Set<UserRefreshTokenSession>();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext {
     public DbSet<Meal> Meals => Set<Meal>();
     public DbSet<MealItem> MealItems => Set<MealItem>();
     public DbSet<MealAiSession> MealAiSessions => Set<MealAiSession>();

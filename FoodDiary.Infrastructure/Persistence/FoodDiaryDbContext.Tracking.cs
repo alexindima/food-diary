@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext {
     public DbSet<WeightEntry> WeightEntries => Set<WeightEntry>();
     public DbSet<WaistEntry> WaistEntries => Set<WaistEntry>();
     public DbSet<CycleProfile> CycleProfiles => Set<CycleProfile>();

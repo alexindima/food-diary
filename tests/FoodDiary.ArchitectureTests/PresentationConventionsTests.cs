@@ -145,16 +145,7 @@ public class PresentationConventionsTests {
         string root = GetRepositoryRoot();
         string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
 
-        string[] violations = [.. SourceScanner.SourceFiles(presentationRoot)
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry =>
-                entry.line.Contains("public class ", StringComparison.Ordinal) ||
-                entry.line.Contains("internal class ", StringComparison.Ordinal))
-            .Select(entry => string.Create(
-                CultureInfo.InvariantCulture,
-                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
-            .Order(StringComparer.Ordinal)];
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations([presentationRoot]);
 
         Assert.Empty(violations);
     }

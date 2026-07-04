@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext {
     public DbSet<EmailTemplate> EmailTemplates => Set<EmailTemplate>();
     public DbSet<DietologistInvitation> DietologistInvitations => Set<DietologistInvitation>();
     public DbSet<Recommendation> Recommendations => Set<Recommendation>();

@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FoodDiary.Infrastructure.Persistence;
 
-public partial class FoodDiaryDbContext {
+public sealed partial class FoodDiaryDbContext {
     public DbSet<ImageAsset> ImageAssets => Set<ImageAsset>();
     public DbSet<ImageObjectDeletionOutboxMessage> ImageObjectDeletionOutbox => Set<ImageObjectDeletionOutboxMessage>();
     public DbSet<Product> Products => Set<Product>();

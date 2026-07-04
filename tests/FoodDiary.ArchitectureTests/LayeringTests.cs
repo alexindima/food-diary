@@ -1,4 +1,3 @@
-using System.Globalization;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -94,16 +93,9 @@ public class LayeringTests {
         string root = GetRepositoryRoot();
         string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
 
-        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line }))
-            .Where(entry =>
-                entry.line.Contains("public class ", StringComparison.Ordinal) ||
-                entry.line.Contains("internal class ", StringComparison.Ordinal))
-            .Select(entry => string.Create(
-                CultureInfo.InvariantCulture,
-                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
-            .Order(StringComparer.Ordinal)];
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations(
+            [infrastructureRoot],
+            static path => !path.Contains($"{Path.DirectorySeparatorChar}Migrations{Path.DirectorySeparatorChar}", StringComparison.Ordinal));
 
         Assert.Empty(violations);
     }

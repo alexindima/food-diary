@@ -44,10 +44,13 @@ internal static class SourceScanner {
             .SelectMany(SourceFiles)
             .Order(StringComparer.Ordinal);
 
-    public static string[] FindUnsealedConcreteClassDeclarations(IEnumerable<string> sourceRoots) {
+    public static string[] FindUnsealedConcreteClassDeclarations(
+        IEnumerable<string> sourceRoots,
+        Func<string, bool>? includePath = null) {
         string repositoryRoot = ArchitectureTestPaths.RepositoryRoot;
 
         return [.. SourceFiles(sourceRoots)
+            .Where(path => includePath?.Invoke(path) ?? true)
             .SelectMany(path => File.ReadLines(path)
                 .Select((line, index) => new { path, index, line }))
             .Where(static entry => IsUnsealedConcreteClassDeclaration(entry.line))
