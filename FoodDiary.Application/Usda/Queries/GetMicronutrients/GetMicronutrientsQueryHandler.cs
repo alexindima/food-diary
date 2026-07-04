@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
 
-public class GetMicronutrientsQueryHandler(
+public sealed class GetMicronutrientsQueryHandler(
     IUsdaFoodReadRepository repository,
     IUsdaFoodSearchService brandedSearchService)
     : IQueryHandler<GetMicronutrientsQuery, Result<UsdaFoodDetailModel>> {

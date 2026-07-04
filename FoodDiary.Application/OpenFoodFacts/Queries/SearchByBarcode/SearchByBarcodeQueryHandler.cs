@@ -5,7 +5,7 @@ using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 
 namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchByBarcode;
 
-public class SearchByBarcodeQueryHandler(
+public sealed class SearchByBarcodeQueryHandler(
     IOpenFoodFactsService openFoodFactsService)
     : IQueryHandler<SearchByBarcodeQuery, Result<OpenFoodFactsProductModel?>> {
     public async Task<Result<OpenFoodFactsProductModel?>> Handle(

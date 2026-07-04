@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.UpdateFavoriteProduct;
 
-public class UpdateFavoriteProductCommandHandler(
+public sealed class UpdateFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateFavoriteProductCommand, Result<FavoriteProductModel>> {

@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.AddFavoriteProduct;
 
-public class AddFavoriteProductCommandHandler(
+public sealed class AddFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)

@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 
-public class GetDailyMicronutrientsQueryHandler(
+public sealed class GetDailyMicronutrientsQueryHandler(
     IMealReadRepository mealRepository,
     IUsdaFoodReadRepository usdaFoodRepository)
     : IQueryHandler<GetDailyMicronutrientsQuery, Result<DailyMicronutrientSummaryModel>> {

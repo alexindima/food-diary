@@ -40,11 +40,22 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedSlices = [
+            "DailyAdvices",
             "Exercises",
+            "FavoriteMeals",
+            "FavoriteProducts",
+            "FavoriteRecipes",
             "Hydration",
             "Lessons",
+            "MealPlans",
+            "OpenFoodFacts",
+            "RecipeComments",
+            "RecipeLikes",
             "ShoppingLists",
+            "Usda",
+            "WaistEntries",
             "Wearables",
+            "WeightEntries",
         ];
 
         string[] violations = [.. migratedSlices

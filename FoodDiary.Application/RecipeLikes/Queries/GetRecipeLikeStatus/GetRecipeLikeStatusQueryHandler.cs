@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Social;
 
 namespace FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
 
-public class GetRecipeLikeStatusQueryHandler(IRecipeLikeReadRepository likeRepository)
+public sealed class GetRecipeLikeStatusQueryHandler(IRecipeLikeReadRepository likeRepository)
     : IQueryHandler<GetRecipeLikeStatusQuery, Result<RecipeLikeStatusModel>> {
     public async Task<Result<RecipeLikeStatusModel>> Handle(
         GetRecipeLikeStatusQuery query,

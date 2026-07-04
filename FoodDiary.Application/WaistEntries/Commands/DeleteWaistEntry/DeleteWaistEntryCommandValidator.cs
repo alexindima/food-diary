@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
-public class DeleteWaistEntryCommandValidator : AbstractValidator<DeleteWaistEntryCommand> {
+public sealed class DeleteWaistEntryCommandValidator : AbstractValidator<DeleteWaistEntryCommand> {
     public DeleteWaistEntryCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 
-public class AdoptMealPlanCommandValidator : AbstractValidator<AdoptMealPlanCommand> {
+public sealed class AdoptMealPlanCommandValidator : AbstractValidator<AdoptMealPlanCommand> {
     public AdoptMealPlanCommandValidator() {
         RuleFor(x => x.UserId)
             .NotEmpty()

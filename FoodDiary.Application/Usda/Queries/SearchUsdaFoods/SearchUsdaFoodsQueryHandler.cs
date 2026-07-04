@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 
-public class SearchUsdaFoodsQueryHandler(
+public sealed class SearchUsdaFoodsQueryHandler(
     IUsdaFoodReadRepository repository,
     IUsdaFoodSearchService brandedSearchService)
     : IQueryHandler<SearchUsdaFoodsQuery, Result<IReadOnlyList<UsdaFoodModel>>> {

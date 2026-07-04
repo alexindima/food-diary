@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
-public class GetDailyAdviceQueryHandler(
+public sealed class GetDailyAdviceQueryHandler(
     IDailyAdviceReadRepository adviceRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {

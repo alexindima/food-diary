@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 
-public class GetMealPlansQueryValidator : AbstractValidator<GetMealPlansQuery> {
+public sealed class GetMealPlansQueryValidator : AbstractValidator<GetMealPlansQuery> {
     public GetMealPlansQueryValidator() {
         RuleFor(x => x.UserId)
             .NotEmpty()

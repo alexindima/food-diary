@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightSummaries;
 
-public class GetWeightSummariesQueryHandler(
+public sealed class GetWeightSummariesQueryHandler(
     IWeightEntryReadRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightSummariesQuery, Result<IReadOnlyList<WeightEntrySummaryModel>>> {

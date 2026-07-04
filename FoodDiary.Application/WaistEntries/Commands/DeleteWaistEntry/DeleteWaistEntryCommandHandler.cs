@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Commands.DeleteWaistEntry;
 
-public class DeleteWaistEntryCommandHandler(
+public sealed class DeleteWaistEntryCommandHandler(
     IWaistEntryWriteRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteWaistEntryCommand, Result> {

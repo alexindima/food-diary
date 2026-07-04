@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Commands.AddFavoriteRecipe;
 
-public class AddFavoriteRecipeCommandHandler(
+public sealed class AddFavoriteRecipeCommandHandler(
     IFavoriteRecipeWriteRepository favoriteRecipeRepository,
     IRecipeAccessService recipeAccessService,
     ICurrentUserAccessService currentUserAccessService)

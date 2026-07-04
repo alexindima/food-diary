@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlans;
 
-public class GetMealPlansQueryHandler(IMealPlanReadRepository mealPlanRepository)
+public sealed class GetMealPlansQueryHandler(IMealPlanReadRepository mealPlanRepository)
     : IQueryHandler<GetMealPlansQuery, Result<IReadOnlyList<MealPlanSummaryModel>>> {
     public async Task<Result<IReadOnlyList<MealPlanSummaryModel>>> Handle(
         GetMealPlansQuery query,

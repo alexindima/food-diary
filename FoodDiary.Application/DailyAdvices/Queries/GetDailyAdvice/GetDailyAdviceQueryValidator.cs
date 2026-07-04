@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
-public class GetDailyAdviceQueryValidator : AbstractValidator<GetDailyAdviceQuery> {
+public sealed class GetDailyAdviceQueryValidator : AbstractValidator<GetDailyAdviceQuery> {
     public GetDailyAdviceQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

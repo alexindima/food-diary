@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.WaistEntries.Commands.CreateWaistEntry;
 
-public class CreateWaistEntryCommandValidator : AbstractValidator<CreateWaistEntryCommand> {
+public sealed class CreateWaistEntryCommandValidator : AbstractValidator<CreateWaistEntryCommand> {
     public CreateWaistEntryCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

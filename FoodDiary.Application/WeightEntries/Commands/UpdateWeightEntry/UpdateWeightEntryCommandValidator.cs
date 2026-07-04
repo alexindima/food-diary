@@ -4,7 +4,7 @@ using FoodDiary.Domain.ValueObjects;
 
 namespace FoodDiary.Application.WeightEntries.Commands.UpdateWeightEntry;
 
-public class UpdateWeightEntryCommandValidator : AbstractValidator<UpdateWeightEntryCommand> {
+public sealed class UpdateWeightEntryCommandValidator : AbstractValidator<UpdateWeightEntryCommand> {
     public UpdateWeightEntryCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

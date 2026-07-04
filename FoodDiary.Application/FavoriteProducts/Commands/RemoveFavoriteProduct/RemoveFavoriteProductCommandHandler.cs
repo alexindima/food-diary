@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.FavoriteProducts.Commands.RemoveFavoriteProduct;
 
-public class RemoveFavoriteProductCommandHandler(
+public sealed class RemoveFavoriteProductCommandHandler(
     IFavoriteProductWriteRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RemoveFavoriteProductCommand, Result> {

@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Commands.DeleteWeightEntry;
 
-public class DeleteWeightEntryCommandHandler(
+public sealed class DeleteWeightEntryCommandHandler(
     IWeightEntryWriteRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteWeightEntryCommand, Result> {

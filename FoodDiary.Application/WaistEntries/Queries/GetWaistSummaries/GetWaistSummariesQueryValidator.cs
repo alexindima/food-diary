@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetWaistSummaries;
 
-public class GetWaistSummariesQueryValidator : AbstractValidator<GetWaistSummariesQuery> {
+public sealed class GetWaistSummariesQueryValidator : AbstractValidator<GetWaistSummariesQuery> {
     public GetWaistSummariesQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

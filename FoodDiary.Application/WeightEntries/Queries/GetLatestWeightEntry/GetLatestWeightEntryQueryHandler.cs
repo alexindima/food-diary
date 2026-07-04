@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetLatestWeightEntry;
 
-public class GetLatestWeightEntryQueryHandler(
+public sealed class GetLatestWeightEntryQueryHandler(
     IWeightEntryReadRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWeightEntryQuery, Result<WeightEntryModel?>> {

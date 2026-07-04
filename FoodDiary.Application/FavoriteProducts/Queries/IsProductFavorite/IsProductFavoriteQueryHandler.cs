@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.FavoriteProducts;
 
 namespace FoodDiary.Application.FavoriteProducts.Queries.IsProductFavorite;
 
-public class IsProductFavoriteQueryHandler(
+public sealed class IsProductFavoriteQueryHandler(
     IFavoriteProductReadRepository favoriteProductRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<IsProductFavoriteQuery, Result<bool>> {

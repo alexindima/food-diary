@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Queries.GetLatestWaistEntry;
 
-public class GetLatestWaistEntryQueryHandler(
+public sealed class GetLatestWaistEntryQueryHandler(
     IWaistEntryReadRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetLatestWaistEntryQuery, Result<WaistEntryModel?>> {

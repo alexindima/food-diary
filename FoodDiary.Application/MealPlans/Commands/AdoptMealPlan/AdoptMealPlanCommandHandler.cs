@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 
-public class AdoptMealPlanCommandHandler(IMealPlanWriteRepository mealPlanRepository)
+public sealed class AdoptMealPlanCommandHandler(IMealPlanWriteRepository mealPlanRepository)
     : ICommandHandler<AdoptMealPlanCommand, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
         AdoptMealPlanCommand command,

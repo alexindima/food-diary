@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.FavoriteMeals;
 
 namespace FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 
-public class RemoveFavoriteMealCommandHandler(
+public sealed class RemoveFavoriteMealCommandHandler(
     IFavoriteMealWriteRepository favoriteMealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RemoveFavoriteMealCommand, Result> {

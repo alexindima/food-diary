@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Usda;
 
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
-public class LinkProductToUsdaFoodCommandHandler(
+public sealed class LinkProductToUsdaFoodCommandHandler(
     IUsdaProductLinkWriteRepository productLinkRepository,
     IUsdaFoodReadRepository usdaFoodRepository)
     : ICommandHandler<LinkProductToUsdaFoodCommand, Result> {

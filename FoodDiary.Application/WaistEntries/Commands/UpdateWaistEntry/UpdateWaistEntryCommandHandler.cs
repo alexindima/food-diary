@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WaistEntries.Commands.UpdateWaistEntry;
 
-public class UpdateWaistEntryCommandHandler(
+public sealed class UpdateWaistEntryCommandHandler(
     IWaistEntryWriteRepository waistEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateWaistEntryCommand, Result<WaistEntryModel>> {

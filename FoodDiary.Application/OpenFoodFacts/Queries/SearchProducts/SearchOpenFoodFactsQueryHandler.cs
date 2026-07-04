@@ -5,7 +5,7 @@ using FoodDiary.Application.OpenFoodFacts.Common;
 
 namespace FoodDiary.Application.OpenFoodFacts.Queries.SearchProducts;
 
-public class SearchOpenFoodFactsQueryHandler(IOpenFoodFactsCachedProductSearch cachedProductSearch)
+public sealed class SearchOpenFoodFactsQueryHandler(IOpenFoodFactsCachedProductSearch cachedProductSearch)
     : IQueryHandler<SearchOpenFoodFactsQuery, Result<IReadOnlyList<OpenFoodFactsProductModel>>> {
     public async Task<Result<IReadOnlyList<OpenFoodFactsProductModel>>> Handle(
         SearchOpenFoodFactsQuery query,

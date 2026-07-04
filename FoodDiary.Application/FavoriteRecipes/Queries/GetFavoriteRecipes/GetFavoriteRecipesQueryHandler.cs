@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.FavoriteRecipes;
 
 namespace FoodDiary.Application.FavoriteRecipes.Queries.GetFavoriteRecipes;
 
-public class GetFavoriteRecipesQueryHandler(
+public sealed class GetFavoriteRecipesQueryHandler(
     IFavoriteRecipeReadRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetFavoriteRecipesQuery, Result<IReadOnlyList<FavoriteRecipeModel>>> {

@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Commands.CreateWeightEntry;
 
-public class CreateWeightEntryCommandHandler(
+public sealed class CreateWeightEntryCommandHandler(
     IWeightEntryWriteRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateWeightEntryCommand, Result<WeightEntryModel>> {

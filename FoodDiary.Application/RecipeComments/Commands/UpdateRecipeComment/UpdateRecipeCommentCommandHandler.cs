@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 
-public class UpdateRecipeCommentCommandHandler(IRecipeCommentWriteRepository commentRepository)
+public sealed class UpdateRecipeCommentCommandHandler(IRecipeCommentWriteRepository commentRepository)
     : ICommandHandler<UpdateRecipeCommentCommand, Result<RecipeCommentModel>> {
     public async Task<Result<RecipeCommentModel>> Handle(
         UpdateRecipeCommentCommand command,

@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.WeightEntries.Queries.GetWeightEntries;
 
-public class GetWeightEntriesQueryHandler(
+public sealed class GetWeightEntriesQueryHandler(
     IWeightEntryReadRepository weightEntryRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetWeightEntriesQuery, Result<IReadOnlyList<WeightEntryModel>>> {

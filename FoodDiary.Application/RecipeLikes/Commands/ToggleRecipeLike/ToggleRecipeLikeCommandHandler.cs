@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 
-public class ToggleRecipeLikeCommandHandler(
+public sealed class ToggleRecipeLikeCommandHandler(
     IRecipeLikeWriteRepository likeRepository,
     IRecipeAccessService recipeAccessService)
     : ICommandHandler<ToggleRecipeLikeCommand, Result<RecipeLikeStatusModel>> {

@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 
-public class DeleteRecipeCommentCommandHandler(
+public sealed class DeleteRecipeCommentCommandHandler(
     IRecipeCommentWriteRepository commentRepository,
     IRecipeAccessService recipeAccessService)
     : ICommandHandler<DeleteRecipeCommentCommand, Result> {
