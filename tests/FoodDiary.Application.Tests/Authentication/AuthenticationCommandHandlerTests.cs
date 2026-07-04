@@ -1062,7 +1062,11 @@ public sealed class AuthenticationCommandHandlerTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class StubUserRepository(User? user = null, params User[] otherUsers)
-        : IUserRepository, IAuthenticationUserLookupService, IAuthenticationUserMutationService, IUserContextService {
+        : IUserRepository,
+            IAuthenticationUserLookupService,
+            IAuthenticationUserMutationService,
+            IAuthenticationUserRegistrationService,
+            IUserContextService {
         private readonly List<User> _users = user is null ? [.. otherUsers] : [user, .. otherUsers];
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1081,7 +1085,12 @@ public sealed class AuthenticationCommandHandlerTests {
                 candidate.TelegramUserId == telegramUserId));
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
+            Task.FromResult<IReadOnlyList<Role>>([.. names.Select(Role.Create)]);
+
+        public Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) =>
+            GetRolesByNamesAsync(names, cancellationToken);
+
         public Task<User> AddAsync(User userToAdd, CancellationToken cancellationToken = default) {
             _users.Add(userToAdd);
             return Task.FromResult(userToAdd);

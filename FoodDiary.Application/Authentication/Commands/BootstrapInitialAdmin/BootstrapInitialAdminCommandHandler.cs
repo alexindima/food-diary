@@ -1,6 +1,6 @@
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -8,7 +8,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 
 public sealed class BootstrapInitialAdminCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserRegistrationService userRegistrationService,
     IPasswordHasher passwordHasher)
     : ICommandHandler<BootstrapInitialAdminCommand, Result<BootstrapInitialAdminModel>> {
     private static readonly string[] BootstrapRoles = [
@@ -28,19 +28,19 @@ public sealed class BootstrapInitialAdminCommandHandler(
                 normalizedEmail));
         }
 
-        User? existingUser = await userRepository.GetByEmailIncludingDeletedAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
+        User? existingUser = await userRegistrationService.GetByEmailIncludingDeletedAsync(normalizedEmail, cancellationToken).ConfigureAwait(false);
         if (existingUser is not null) {
             return Result.Success(new BootstrapInitialAdminModel(
                 BootstrapInitialAdminStatus.SkippedExistingUser,
                 normalizedEmail));
         }
 
-        IReadOnlyList<Role> roles = await userRepository.EnsureRolesByNamesAsync(BootstrapRoles, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<Role> roles = await userRegistrationService.EnsureRolesByNamesAsync(BootstrapRoles, cancellationToken).ConfigureAwait(false);
         var admin = User.Create(normalizedEmail, passwordHasher.Hash(command.Password));
         admin.SetEmailConfirmed(isConfirmed: true);
         admin.ReplaceRoles(roles);
 
-        await userRepository.AddAsync(admin, cancellationToken).ConfigureAwait(false);
+        await userRegistrationService.AddAsync(admin, cancellationToken).ConfigureAwait(false);
 
         return Result.Success(new BootstrapInitialAdminModel(
             BootstrapInitialAdminStatus.Created,

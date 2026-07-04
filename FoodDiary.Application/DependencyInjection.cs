@@ -68,6 +68,7 @@ public static class DependencyInjection {
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
+        services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();

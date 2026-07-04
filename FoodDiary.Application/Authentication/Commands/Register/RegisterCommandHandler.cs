@@ -3,7 +3,6 @@ using FoodDiary.Application.Authentication.Mappings;
 using FoodDiary.Application.Authentication.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects;
 using Microsoft.Extensions.Logging;
@@ -14,7 +13,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
 public class RegisterCommandHandler(
-    IUserRepository userRepository,
+    IAuthenticationUserRegistrationService userRegistrationService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,
     TimeProvider dateTimeProvider,
@@ -36,7 +35,7 @@ public class RegisterCommandHandler(
             WaterGoal: 2000));
         user.SetLanguage(normalizedLanguage);
 
-        user = await userRepository.AddAsync(user, cancellationToken).ConfigureAwait(false);
+        user = await userRegistrationService.AddAsync(user, cancellationToken).ConfigureAwait(false);
 
         string emailToken = SecurityTokenGenerator.GenerateUrlSafeToken();
         string emailTokenHash = passwordHasher.Hash(emailToken);

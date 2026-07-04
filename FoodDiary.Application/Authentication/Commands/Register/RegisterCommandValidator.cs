@@ -1,15 +1,15 @@
 using FluentValidation;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Common;
 using FluentValidation.Results;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
 public class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
-    private readonly IUserRepository _userRepository;
+    private readonly IAuthenticationUserRegistrationService _userRegistrationService;
 
-    public RegisterCommandValidator(IUserRepository userRepository) {
-        _userRepository = userRepository;
+    public RegisterCommandValidator(IAuthenticationUserRegistrationService userRegistrationService) {
+        _userRegistrationService = userRegistrationService;
 
         RuleFor(x => x.Email)
             .NotEmpty()
@@ -30,7 +30,7 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
     }
 
     private async Task ValidateEmailAsync(string email, ValidationContext<RegisterCommand> context, CancellationToken cancellationToken) {
-        User? user = await _userRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
+        User? user = await _userRegistrationService.GetByEmailIncludingDeletedAsync(email, cancellationToken).ConfigureAwait(false);
         if (user is null) {
             return;
         }

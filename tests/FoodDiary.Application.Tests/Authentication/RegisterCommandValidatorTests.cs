@@ -1,6 +1,6 @@
 using FluentValidation.TestHelper;
 using FoodDiary.Application.Authentication.Commands.Register;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Authentication.Common;
 using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Tests.Authentication;
@@ -45,9 +45,9 @@ public class RegisterCommandValidatorTests {
     [Fact]
     public async Task Register_WhenEmailAlreadyExists_HasConflictError() {
         var existingUser = User.Create("taken@test.com", "hashed");
-        IUserRepository repo = CreateUserRepository(existingUser);
+        IAuthenticationUserRegistrationService userRegistrationService = CreateUserRegistrationService(existingUser);
 
-        var validator = new RegisterCommandValidator(repo);
+        var validator = new RegisterCommandValidator(userRegistrationService);
         TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("taken@test.com", "password1", Language: null));
 
         result.ShouldHaveValidationErrorFor(c => c.Email)
@@ -58,18 +58,21 @@ public class RegisterCommandValidatorTests {
     public async Task Register_WhenEmailBelongsToDeletedAccount_HasDeletedError() {
         var deletedUser = User.Create("deleted@test.com", "hashed");
         deletedUser.MarkDeleted(DateTime.UtcNow);
-        IUserRepository repo = CreateUserRepository(deletedUser);
+        IAuthenticationUserRegistrationService userRegistrationService = CreateUserRegistrationService(deletedUser);
 
-        var validator = new RegisterCommandValidator(repo);
+        var validator = new RegisterCommandValidator(userRegistrationService);
         TestValidationResult<RegisterCommand> result = await validator.TestValidateAsync(new RegisterCommand("deleted@test.com", "password1", Language: null));
 
         result.ShouldHaveValidationErrorFor(c => c.Email)
             .WithErrorCode("Authentication.AccountDeleted");
     }
 
-    private static IUserRepository CreateUserRepository(User? includingDeletedUser = null) {
-        IUserRepository repository = Substitute.For<IUserRepository>();
-        repository.GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+    private static IAuthenticationUserRegistrationService CreateUserRepository(User? includingDeletedUser = null) =>
+        CreateUserRegistrationService(includingDeletedUser);
+
+    private static IAuthenticationUserRegistrationService CreateUserRegistrationService(User? includingDeletedUser = null) {
+        IAuthenticationUserRegistrationService userRegistrationService = Substitute.For<IAuthenticationUserRegistrationService>();
+        userRegistrationService.GetByEmailIncludingDeletedAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
             .Returns(call => {
                 string email = call.ArgAt<string>(0);
                 return Task.FromResult(
@@ -78,6 +81,6 @@ public class RegisterCommandValidatorTests {
                         ? includingDeletedUser
                         : null);
             });
-        return repository;
+        return userRegistrationService;
     }
 }
