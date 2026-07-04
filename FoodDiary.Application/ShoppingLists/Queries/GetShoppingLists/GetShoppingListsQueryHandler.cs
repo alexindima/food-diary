@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Shopping;
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 
 public class GetShoppingListsQueryHandler(
-    IShoppingListRepository shoppingListRepository,
+    IShoppingListReadRepository shoppingListRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetShoppingListsQuery, Result<IReadOnlyList<ShoppingListSummaryModel>>> {
     public async Task<Result<IReadOnlyList<ShoppingListSummaryModel>>> Handle(

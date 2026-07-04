@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 
 public class CreateShoppingListCommandHandler(
-    IShoppingListRepository shoppingListRepository,
+    IShoppingListWriteRepository shoppingListRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateShoppingListCommand, Result<ShoppingListModel>> {

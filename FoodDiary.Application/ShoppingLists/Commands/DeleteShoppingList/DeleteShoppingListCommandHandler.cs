@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Shopping;
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
 public class DeleteShoppingListCommandHandler(
-    IShoppingListRepository shoppingListRepository,
+    IShoppingListWriteRepository shoppingListRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteShoppingListCommand, Result> {
     public async Task<Result> Handle(

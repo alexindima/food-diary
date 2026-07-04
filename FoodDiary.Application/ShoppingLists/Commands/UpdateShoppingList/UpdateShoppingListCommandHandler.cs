@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Shopping;
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 
 public class UpdateShoppingListCommandHandler(
-    IShoppingListRepository shoppingListRepository,
+    IShoppingListWriteRepository shoppingListRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateShoppingListCommand, Result<ShoppingListModel>> {

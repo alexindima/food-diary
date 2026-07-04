@@ -14,7 +14,7 @@ namespace FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
 
 public class GenerateShoppingListCommandHandler(
     IMealPlanRepository mealPlanRepository,
-    IShoppingListRepository shoppingListRepository)
+    IShoppingListWriteRepository shoppingListRepository)
     : ICommandHandler<GenerateShoppingListCommand, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
         GenerateShoppingListCommand command,
