@@ -1,3 +1,4 @@
+using System.Globalization;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -73,6 +74,50 @@ public class LayeringTests {
             "DateTime.UtcNow",
             "DateTimeOffset.UtcNow",
         ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void IntegrationsSource_DoesNotReferenceConcreteApplicationHostPresentationOrServerMailLayers() {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] forbiddenPatterns = [
+            "FoodDiary.Application;",
+            "using FoodDiary.Infrastructure",
+            "FoodDiary.Infrastructure.",
+            "using FoodDiary.Presentation.Api",
+            "FoodDiary.Presentation.Api.",
+            "using FoodDiary.Web.Api",
+            "FoodDiary.Web.Api.",
+            "using FoodDiary.Resources",
+            "FoodDiary.Resources.",
+            "FoodDiary.MailInbox.Application",
+            "FoodDiary.MailInbox.Domain",
+            "FoodDiary.MailInbox.Infrastructure",
+            "FoodDiary.MailInbox.Presentation",
+            "FoodDiary.MailInbox.WebApi",
+            "FoodDiary.MailRelay.Application",
+            "FoodDiary.MailRelay.Domain",
+            "FoodDiary.MailRelay.Infrastructure",
+            "FoodDiary.MailRelay.Presentation",
+            "FoodDiary.MailRelay.WebApi",
+            "ControllerBase",
+            "IActionResult",
+            "HttpContext",
+            "DbContext",
+            "Npgsql",
+        ];
+
+        string[] violations = [.. SourceScanner.SourceFiles(integrationsRoot)
+            .Where(static path => !path.EndsWith("AssemblyInfo.cs", StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
