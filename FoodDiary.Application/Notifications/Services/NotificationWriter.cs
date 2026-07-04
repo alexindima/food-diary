@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Notifications.Services;
 
 public sealed class NotificationWriter(
-    INotificationRepository notificationRepository,
+    INotificationWriteRepository notificationRepository,
     INotificationWebPushOutbox webPushOutbox) : INotificationWriter {
     public async Task AddAsync(
         Notification notification,

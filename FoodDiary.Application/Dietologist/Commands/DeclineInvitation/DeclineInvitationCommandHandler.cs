@@ -15,7 +15,7 @@ public class DeclineInvitationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationCommand, Result> {

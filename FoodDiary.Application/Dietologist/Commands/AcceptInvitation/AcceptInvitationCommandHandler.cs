@@ -19,7 +19,7 @@ public class AcceptInvitationCommandHandler(
     IUserRoleMembershipService userRoleMembershipService,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationCommand, Result> {

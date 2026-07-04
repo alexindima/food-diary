@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Dietologist.Common;
 internal static class DietologistInvitationClientNotifier {
     public static Task NotifyAcceptedAsync(
         INotificationWriter notificationWriter,
-        INotificationRepository notificationRepository,
+        INotificationReadRepository notificationRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
@@ -29,7 +29,7 @@ internal static class DietologistInvitationClientNotifier {
 
     public static Task NotifyDeclinedAsync(
         INotificationWriter notificationWriter,
-        INotificationRepository notificationRepository,
+        INotificationReadRepository notificationRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         UserId clientUserId,
@@ -49,7 +49,7 @@ internal static class DietologistInvitationClientNotifier {
 
     private static async Task NotifyAsync(
         INotificationWriter notificationWriter,
-        INotificationRepository notificationRepository,
+        INotificationReadRepository notificationRepository,
         INotificationPusher notificationPusher,
         IPostCommitActionQueue postCommitActionQueue,
         Notification notification,

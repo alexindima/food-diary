@@ -7,7 +7,7 @@ namespace FoodDiary.Application.Notifications.Common;
 internal static class NotificationPostCommitActions {
     public static void EnqueueUnreadCountPush(
         IPostCommitActionQueue postCommitActionQueue,
-        INotificationRepository notificationRepository,
+        INotificationReadRepository notificationRepository,
         INotificationPusher notificationPusher,
         UserId userId,
         bool pushChanged = true) {

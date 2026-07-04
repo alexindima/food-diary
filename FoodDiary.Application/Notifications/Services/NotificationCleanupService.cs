@@ -4,7 +4,7 @@ using FoodDiary.Application.Abstractions.Notifications.Common;
 namespace FoodDiary.Application.Notifications.Services;
 
 public sealed class NotificationCleanupService(
-    INotificationRepository notificationRepository,
+    INotificationWriteRepository notificationRepository,
     TimeProvider dateTimeProvider,
     IUnitOfWork unitOfWork) : INotificationCleanupService {
     public async Task<int> CleanupExpiredNotificationsAsync(NotificationCleanupPolicy policy, CancellationToken cancellationToken = default) {

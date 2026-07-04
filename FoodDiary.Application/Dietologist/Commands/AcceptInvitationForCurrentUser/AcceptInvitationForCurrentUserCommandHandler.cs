@@ -17,7 +17,7 @@ public sealed class AcceptInvitationForCurrentUserCommandHandler(
     IDietologistUserContextService dietologistUserContextService,
     IUserRoleMembershipService userRoleMembershipService,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<AcceptInvitationForCurrentUserCommand, Result> {

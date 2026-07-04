@@ -18,7 +18,7 @@ public class CreateRecommendationCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IRecommendationRepository recommendationRepository,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IDietologistUserContextService dietologistUserContextService,
     IPostCommitActionQueue postCommitActionQueue)

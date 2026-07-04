@@ -24,7 +24,7 @@ public class InviteDietologistCommandHandler(
     IPasswordHasher passwordHasher,
     IDietologistEmailSender emailSender,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue,
     TimeProvider dateTimeProvider,

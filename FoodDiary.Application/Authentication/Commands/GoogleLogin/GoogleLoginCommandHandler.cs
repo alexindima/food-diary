@@ -16,7 +16,7 @@ namespace FoodDiary.Application.Authentication.Commands.GoogleLogin;
 
 public sealed class GoogleLoginCommandHandler(
     IAuthenticationUserMutationService userMutationService,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationWriter notificationWriter,
     IGoogleTokenValidator googleTokenValidator,
     IPasswordHasher passwordHasher,
@@ -85,7 +85,7 @@ public sealed class GoogleLoginCommandHandler(
 
     private static async Task EnsurePasswordSetupReminderAsync(
         User user,
-        INotificationRepository notificationRepository,
+        INotificationReadRepository notificationRepository,
         INotificationWriter notificationWriter,
         CancellationToken cancellationToken) {
         if (user.HasPassword) {

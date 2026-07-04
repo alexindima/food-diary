@@ -15,7 +15,7 @@ public sealed class DeclineInvitationForCurrentUserCommandHandler(
     IDietologistInvitationRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     INotificationWriter notificationWriter,
-    INotificationRepository notificationRepository,
+    INotificationReadRepository notificationRepository,
     INotificationPusher notificationPusher,
     IPostCommitActionQueue postCommitActionQueue)
     : ICommandHandler<DeclineInvitationForCurrentUserCommand, Result> {
