@@ -12,7 +12,7 @@ using FoodDiary.Domain.Entities.Tracking;
 namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 
 public class GetCurrentCycleQueryHandler(
-    ICycleRepository cycleRepository,
+    ICycleReadRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCurrentCycleQuery, Result<CycleModel?>> {
     public async Task<Result<CycleModel?>> Handle(

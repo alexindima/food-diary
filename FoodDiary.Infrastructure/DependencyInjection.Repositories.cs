@@ -97,6 +97,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IHydrationEntryWriteRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
         services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();
         services.AddScoped<ICycleRepository, CycleRepository>();
+        services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
+        services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
         services.AddScoped<IImageObjectDeletionOutbox, ImageObjectDeletionOutbox>();
         services.AddScoped<IImageObjectDeletionOutboxProcessor, ImageObjectDeletionOutboxProcessor>();

@@ -12,7 +12,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
 public class CreateCycleCommandHandler(
-    ICycleRepository cycleRepository,
+    ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateCycleCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(

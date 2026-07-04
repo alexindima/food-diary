@@ -14,7 +14,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 
 public class GetCycleNutritionSummaryQueryHandler(
-    ICycleRepository cycleRepository,
+    ICycleReadRepository cycleRepository,
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {

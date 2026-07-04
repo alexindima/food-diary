@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 
 public class UpsertCycleFactorCommandHandler(
-    ICycleRepository cycleRepository,
+    ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpsertCycleFactorCommand, Result<CycleModel>> {
     public async Task<Result<CycleModel>> Handle(UpsertCycleFactorCommand command, CancellationToken cancellationToken) {

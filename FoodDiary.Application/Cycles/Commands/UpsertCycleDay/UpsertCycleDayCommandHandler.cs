@@ -11,7 +11,7 @@ using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
 public class UpsertCycleDayCommandHandler(
-    ICycleRepository cycleRepository,
+    ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpsertCycleDayCommand, Result<CycleLogDayModel>> {
     public async Task<Result<CycleLogDayModel>> Handle(

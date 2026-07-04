@@ -506,8 +506,8 @@ public class ExportFeatureTests {
         return service;
     }
 
-    private static ICycleRepository CreateCycleRepository(CycleProfile? profile) {
-        ICycleRepository repository = Substitute.For<ICycleRepository>();
+    private static ICycleReadRepository CreateCycleRepository(CycleProfile? profile) {
+        ICycleReadRepository repository = Substitute.For<ICycleReadRepository>();
         repository
             .GetCurrentAsync(Arg.Any<UserId>(), Arg.Any<bool>(), Arg.Any<CancellationToken>())
             .Returns(call => {

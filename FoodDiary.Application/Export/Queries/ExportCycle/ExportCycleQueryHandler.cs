@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public class ExportCycleQueryHandler(
-    ICycleRepository cycleRepository,
+    ICycleReadRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
     private const int MaxExportRangeDays = 366;

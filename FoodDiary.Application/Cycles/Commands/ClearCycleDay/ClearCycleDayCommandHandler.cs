@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 
 public class ClearCycleDayCommandHandler(
-    ICycleRepository cycleRepository,
+    ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ClearCycleDayCommand, Result> {
     public async Task<Result> Handle(ClearCycleDayCommand command, CancellationToken cancellationToken) {
