@@ -130,6 +130,9 @@ public sealed class ApplicationGuardrailTests {
             "EnsureRoleAsync",
             "RemoveRoleAsync",
             "IUserRoleMembershipService",
+            "GetRolesByNamesAsync",
+            "EnsureRolesByNamesAsync",
+            "IUserRoleCatalogService",
         ];
 
         string[] violations = [.. forbiddenPatterns

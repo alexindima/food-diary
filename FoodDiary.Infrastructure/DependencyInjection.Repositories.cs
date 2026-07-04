@@ -62,6 +62,7 @@ namespace FoodDiary.Infrastructure;
 public static partial class DependencyInjection {
     private static IServiceCollection AddFeatureRepositories(this IServiceCollection services) {
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
         services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
         services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();

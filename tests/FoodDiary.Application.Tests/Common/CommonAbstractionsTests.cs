@@ -12,7 +12,6 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using System.Reflection;
 using System.Text.RegularExpressions;
@@ -180,26 +179,6 @@ public class CommonAbstractionsTests {
 
         Assert.Same(user, stub.CapturedUpdatedUser);
         Assert.Equal(cancellationTokenSource.Token, stub.CapturedUpdateCancellationToken);
-    }
-
-    [Fact]
-    public async Task UserRepository_EnsureRolesByNamesAsync_ReturnsExistingRolesWhenAllNamesResolve() {
-        var role = Role.Create(RoleNames.Premium);
-        IUserRepository repository = new RecordingUserRepository([role]);
-
-        IReadOnlyList<Role> roles = await repository.EnsureRolesByNamesAsync([RoleNames.Premium], CancellationToken.None);
-
-        Assert.Same(role, Assert.Single(roles));
-    }
-
-    [Fact]
-    public async Task UserRepository_EnsureRolesByNamesAsync_WhenRoleIsMissing_ThrowsNotSupported() {
-        IUserRepository repository = new RecordingUserRepository([]);
-
-        NotSupportedException ex = await Assert.ThrowsAsync<NotSupportedException>(() =>
-            repository.EnsureRolesByNamesAsync([RoleNames.Premium], CancellationToken.None));
-
-        Assert.Contains("cannot create missing roles", ex.Message, StringComparison.Ordinal);
     }
 
     [Fact]
@@ -524,7 +503,7 @@ public class CommonAbstractionsTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class RecordingUserRepository(IReadOnlyList<Role>? roles = null) : IUserRepository {
+    private sealed class RecordingUserRepository : IUserRepository {
         public string? CapturedSearch { get; private set; }
         public int CapturedPage { get; private set; }
         public int CapturedLimit { get; private set; }
@@ -532,7 +511,6 @@ public class CommonAbstractionsTests {
         public CancellationToken CapturedPagedCancellationToken { get; private set; }
         public User? CapturedUpdatedUser { get; private set; }
         public CancellationToken CapturedUpdateCancellationToken { get; private set; }
-        public int GetRolesByNamesCallCount { get; private set; }
 
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -558,11 +536,6 @@ public class CommonAbstractionsTests {
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
             GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
-
-        public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
-            GetRolesByNamesCallCount++;
-            return Task.FromResult(roles ?? throw new NotSupportedException());
-        }
 
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 

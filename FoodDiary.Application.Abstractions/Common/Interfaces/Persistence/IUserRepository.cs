@@ -29,15 +29,6 @@ public interface IUserRepository {
     Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)>
         GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default);
-
-    async Task<IReadOnlyList<Role>> EnsureRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
-        IReadOnlyList<Role> roles = await GetRolesByNamesAsync(names, cancellationToken).ConfigureAwait(false);
-        return roles.Count == names.Count
-            ? roles
-            : throw new NotSupportedException("This user repository cannot create missing roles.");
-    }
-
     Task<User> AddAsync(User user, CancellationToken cancellationToken = default);
     Task UpdateAsync(User user, CancellationToken cancellationToken = default);
 
