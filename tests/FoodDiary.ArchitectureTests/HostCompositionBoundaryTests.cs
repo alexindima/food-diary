@@ -152,6 +152,33 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
+    public void InitializerSource_DoesNotReferenceHttpPresentationOrMediatorSurface() {
+        string[] initializerRoots = [
+            ArchitectureTestPaths.FromRoot("FoodDiary.Initializer"),
+            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Initializer"),
+            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Initializer"),
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(initializerRoots, [
+            "FoodDiary.Presentation.Api",
+            "Microsoft.AspNetCore.Mvc",
+            "ControllerBase",
+            "IActionResult",
+            "HttpContext",
+            "MapGet(",
+            "MapPost(",
+            "MapPut(",
+            "MapPatch(",
+            "MapDelete(",
+            "ISender",
+            "IMediator",
+            ".Send(",
+        ]);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void TelegramBotProject_ReferencesOnlyTransportAndHostingPackages() {
         var allowedPackages = new HashSet<string>(StringComparer.Ordinal) {
             "Microsoft.Extensions.Hosting",
