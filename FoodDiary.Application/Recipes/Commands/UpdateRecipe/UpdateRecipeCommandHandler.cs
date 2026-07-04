@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
-public class UpdateRecipeCommandHandler(
+public sealed class UpdateRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
     IRecipeNutritionWriter recipeNutritionWriter,

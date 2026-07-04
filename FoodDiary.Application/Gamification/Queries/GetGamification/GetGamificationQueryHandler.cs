@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Gamification.Queries.GetGamification;
 
-public class GetGamificationQueryHandler(
+public sealed class GetGamificationQueryHandler(
     IMealReadRepository mealRepository,
     IGamificationUserProfileService userProfileService,
     TimeProvider dateTimeProvider)

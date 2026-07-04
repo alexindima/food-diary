@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Ai.Commands.ParseFoodText;
 
-public class ParseFoodTextCommandHandler(
+public sealed class ParseFoodTextCommandHandler(
     IOpenAiFoodService openAiFoodService,
     IAiUserContextService aiUserContextService)
     : ICommandHandler<ParseFoodTextCommand, Result<FoodVisionModel>> {

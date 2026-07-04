@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
-public class DeleteUserCommandHandler(
+public sealed class DeleteUserCommandHandler(
     IUserContextService userContextService,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)

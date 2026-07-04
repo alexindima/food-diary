@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
 
-public class RestoreAccountCommandValidator : AbstractValidator<RestoreAccountCommand> {
+public sealed class RestoreAccountCommandValidator : AbstractValidator<RestoreAccountCommand> {
     public RestoreAccountCommandValidator() {
         RuleFor(x => x.Email)
             .NotEmpty()

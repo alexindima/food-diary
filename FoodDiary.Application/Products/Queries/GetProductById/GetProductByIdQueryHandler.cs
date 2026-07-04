@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
-public class GetProductByIdQueryHandler(
+public sealed class GetProductByIdQueryHandler(
     IProductReadRepository productRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductByIdQuery, Result<ProductModel>> {

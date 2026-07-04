@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
-public class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
+public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProductCommand> {
     private const string ProductContextKey = "__product";
     private readonly IProductReadRepository _productRepository;
 

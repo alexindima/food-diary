@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
-public class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand> {
+public sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProductCommand> {
     public DeleteProductCommandValidator(IProductReadRepository productRepository) {
 
         RuleFor(x => x.UserId)

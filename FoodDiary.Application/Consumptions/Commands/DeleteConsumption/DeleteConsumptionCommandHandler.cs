@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Consumptions.Commands.DeleteConsumption;
 
-public class DeleteConsumptionCommandHandler(
+public sealed class DeleteConsumptionCommandHandler(
     IMealReadRepository mealReadRepository,
     IMealWriteRepository mealWriteRepository)
     : ICommandHandler<DeleteConsumptionCommand, Result> {

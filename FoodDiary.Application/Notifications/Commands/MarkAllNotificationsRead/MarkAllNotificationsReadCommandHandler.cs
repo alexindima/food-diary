@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkAllNotificationsRead;
 
-public class MarkAllNotificationsReadCommandHandler(
+public sealed class MarkAllNotificationsReadCommandHandler(
     INotificationReadRepository notificationReadRepository,
     INotificationWriteRepository notificationWriteRepository,
     ICurrentUserAccessService currentUserAccessService,

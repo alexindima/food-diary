@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetClientDashboard;
 
-public class GetClientDashboardQueryHandler(
+public sealed class GetClientDashboardQueryHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IDashboardSnapshotBuilder snapshotBuilder,
     ICurrentUserAccessService currentUserAccessService)

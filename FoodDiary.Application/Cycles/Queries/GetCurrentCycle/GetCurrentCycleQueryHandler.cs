@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Cycles.Queries.GetCurrentCycle;
 
-public class GetCurrentCycleQueryHandler(
+public sealed class GetCurrentCycleQueryHandler(
     ICycleReadRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCurrentCycleQuery, Result<CycleModel?>> {

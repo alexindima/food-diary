@@ -40,27 +40,46 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedSlices = [
+            "Ai",
+            "Admin",
+            "Authentication",
+            "ContentReports",
+            "Consumptions",
+            "Cycles",
             "DailyAdvices",
+            "Dashboard",
+            "Dietologist",
             "Exercises",
+            "Export",
             "FavoriteMeals",
             "FavoriteProducts",
             "FavoriteRecipes",
+            "Fasting",
+            "Gamification",
             "Hydration",
             "Lessons",
             "MealPlans",
+            "Notifications",
             "OpenFoodFacts",
+            "Products",
             "RecipeComments",
             "RecipeLikes",
+            "Recipes",
             "ShoppingLists",
+            "Statistics",
+            "Tdee",
             "Usda",
+            "Users",
             "WaistEntries",
             "Wearables",
             "WeightEntries",
+            "WeeklyCheckIn",
         ];
 
         string[] violations = [.. migratedSlices
             .Select(slice => Path.Combine(applicationRoot, slice))
             .SelectMany(SourceScanner.SourceFiles)
+            .Where(path => !path.Contains($"{Path.DirectorySeparatorChar}EventHandlers{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
             .Where(path =>
                 path.EndsWith("Handler.cs", StringComparison.Ordinal) ||
                 path.EndsWith("Validator.cs", StringComparison.Ordinal))

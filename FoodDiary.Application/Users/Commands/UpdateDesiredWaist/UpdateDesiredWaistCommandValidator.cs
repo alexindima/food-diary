@@ -4,7 +4,7 @@ using DesiredWaistValueObject = FoodDiary.Domain.ValueObjects.DesiredWaist;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 
-public class UpdateDesiredWaistCommandValidator : AbstractValidator<UpdateDesiredWaistCommand> {
+public sealed class UpdateDesiredWaistCommandValidator : AbstractValidator<UpdateDesiredWaistCommand> {
     public UpdateDesiredWaistCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

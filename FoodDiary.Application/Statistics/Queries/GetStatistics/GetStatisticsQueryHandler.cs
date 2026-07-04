@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
-public class GetStatisticsQueryHandler(
+public sealed class GetStatisticsQueryHandler(
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetStatisticsQuery, Result<IReadOnlyList<AggregatedStatisticsModel>>> {

@@ -5,7 +5,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
-public class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
+public sealed class RegisterCommandValidator : AbstractValidator<RegisterCommand> {
     private readonly IAuthenticationUserRegistrationService _userRegistrationService;
 
     public RegisterCommandValidator(IAuthenticationUserRegistrationService userRegistrationService) {

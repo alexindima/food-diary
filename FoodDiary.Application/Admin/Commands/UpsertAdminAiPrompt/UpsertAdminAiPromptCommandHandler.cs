@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Ai;
 
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminAiPrompt;
 
-public class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateWriteRepository repository)
+public sealed class UpsertAdminAiPromptCommandHandler(IAiPromptTemplateWriteRepository repository)
     : ICommandHandler<UpsertAdminAiPromptCommand, Result<AdminAiPromptModel>> {
     public async Task<Result<AdminAiPromptModel>> Handle(
         UpsertAdminAiPromptCommand command,

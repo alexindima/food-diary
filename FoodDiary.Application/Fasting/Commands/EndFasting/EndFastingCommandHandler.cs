@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Commands.EndFasting;
 
-public class EndFastingCommandHandler(
+public sealed class EndFastingCommandHandler(
     IFastingPlanWriteRepository fastingPlanRepository,
     IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,

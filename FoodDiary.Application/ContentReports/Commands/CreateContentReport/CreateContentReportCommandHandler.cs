@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ContentReports.Commands.CreateContentReport;
 
-public class CreateContentReportCommandHandler(IContentReportWriteRepository reportRepository)
+public sealed class CreateContentReportCommandHandler(IContentReportWriteRepository reportRepository)
     : ICommandHandler<CreateContentReportCommand, Result<ContentReportModel>> {
     public async Task<Result<ContentReportModel>> Handle(
         CreateContentReportCommand command,

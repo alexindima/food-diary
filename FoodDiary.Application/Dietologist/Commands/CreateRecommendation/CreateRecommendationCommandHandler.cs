@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Dietologist.Commands.CreateRecommendation;
 
-public class CreateRecommendationCommandHandler(
+public sealed class CreateRecommendationCommandHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IRecommendationWriteRepository recommendationRepository,
     INotificationWriter notificationWriter,

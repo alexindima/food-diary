@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
-public class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuery> {
+public sealed class GetProductByIdQueryValidator : AbstractValidator<GetProductByIdQuery> {
     public GetProductByIdQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

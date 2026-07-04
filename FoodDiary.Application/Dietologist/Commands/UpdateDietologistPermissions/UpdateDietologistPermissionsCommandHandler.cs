@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.UpdateDietologistPermissions;
 
-public class UpdateDietologistPermissionsCommandHandler(
+public sealed class UpdateDietologistPermissionsCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpdateDietologistPermissionsCommand, Result> {

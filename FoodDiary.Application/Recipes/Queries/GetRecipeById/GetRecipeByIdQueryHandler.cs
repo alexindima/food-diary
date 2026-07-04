@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
-public class GetRecipeByIdQueryHandler(
+public sealed class GetRecipeByIdQueryHandler(
     IRecipeReadRepository recipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {

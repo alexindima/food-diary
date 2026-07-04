@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.DeclineInvitation;
 
-public class DeclineInvitationCommandHandler(
+public sealed class DeclineInvitationCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     IPasswordHasher passwordHasher,
     INotificationWriter notificationWriter,

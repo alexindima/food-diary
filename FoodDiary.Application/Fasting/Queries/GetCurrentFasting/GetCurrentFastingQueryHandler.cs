@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 
-public class GetCurrentFastingQueryHandler(
+public sealed class GetCurrentFastingQueryHandler(
     IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IFastingCheckInReadRepository fastingCheckInRepository,
     ICurrentUserAccessService currentUserAccessService)

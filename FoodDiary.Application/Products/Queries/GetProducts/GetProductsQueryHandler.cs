@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
-public class GetProductsQueryHandler(
+public sealed class GetProductsQueryHandler(
     IProductReadRepository productRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductModel>>> {

@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.Login;
 
-public class LoginCommandHandler(
+public sealed class LoginCommandHandler(
     IAuthenticationUserLookupService userLookupService,
     IPasswordHasher passwordHasher,
     IAuthenticationTokenService authenticationTokenService) : ICommandHandler<LoginCommand, Result<AuthenticationModel>> {

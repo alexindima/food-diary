@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 
-public class GetRecipesQueryHandler(
+public sealed class GetRecipesQueryHandler(
     IRecipeReadRepository recipeRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {

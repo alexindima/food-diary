@@ -18,7 +18,7 @@ using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Dietologist.Commands.InviteDietologist;
 
-public class InviteDietologistCommandHandler(
+public sealed class InviteDietologistCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     IPasswordHasher passwordHasher,

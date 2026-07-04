@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetRecommendationsForClient;
 
-public class GetRecommendationsForClientQueryHandler(
+public sealed class GetRecommendationsForClientQueryHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IRecommendationReadRepository recommendationRepository,
     ICurrentUserAccessService currentUserAccessService)

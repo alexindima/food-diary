@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 
-public class UpdateCurrentFastingCheckInCommandValidator : AbstractValidator<UpdateCurrentFastingCheckInCommand> {
+public sealed class UpdateCurrentFastingCheckInCommandValidator : AbstractValidator<UpdateCurrentFastingCheckInCommand> {
     private static readonly string[] AllowedSymptoms = [
         "headache",
         "weakness",

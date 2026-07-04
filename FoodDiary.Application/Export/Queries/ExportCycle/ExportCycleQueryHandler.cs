@@ -12,7 +12,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
-public class ExportCycleQueryHandler(
+public sealed class ExportCycleQueryHandler(
     ICycleReadRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {

@@ -7,7 +7,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
-public class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
+public sealed class CreateRecipeCommandValidator : AbstractValidator<CreateRecipeCommand> {
     public CreateRecipeCommandValidator() {
         ConfigureIdentityRules();
         ConfigureBaseRecipeRules();

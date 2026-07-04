@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Users.Queries.GetUserGoals;
 
-public class GetUserGoalsQueryValidator : AbstractValidator<GetUserGoalsQuery> {
+public sealed class GetUserGoalsQueryValidator : AbstractValidator<GetUserGoalsQuery> {
     public GetUserGoalsQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

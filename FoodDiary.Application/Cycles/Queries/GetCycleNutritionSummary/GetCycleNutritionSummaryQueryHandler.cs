@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 
-public class GetCycleNutritionSummaryQueryHandler(
+public sealed class GetCycleNutritionSummaryQueryHandler(
     ICycleReadRepository cycleRepository,
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService)

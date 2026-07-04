@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
-public class UpdateGoalsCommandHandler(IUserContextService userContextService)
+public sealed class UpdateGoalsCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateGoalsCommand, Result<GoalsModel>> {
     public async Task<Result<GoalsModel>> Handle(UpdateGoalsCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {

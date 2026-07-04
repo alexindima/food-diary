@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 
-public class UpdateCurrentFastingCheckInCommandHandler(
+public sealed class UpdateCurrentFastingCheckInCommandHandler(
     IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     IFastingCheckInWriteRepository fastingCheckInRepository,
     ICurrentUserAccessService currentUserAccessService,

@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.UpdateRecipe;
 
-public class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
+public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecipeCommand> {
     private const string RecipeContextKey = "__recipe";
     private readonly IRecipeReadRepository _recipeRepository;
 

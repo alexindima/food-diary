@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
-public class DeleteRecipeCommandHandler(
+public sealed class DeleteRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
     IImageAssetCleanupService imageAssetCleanupService)

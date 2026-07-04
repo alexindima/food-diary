@@ -5,7 +5,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-public class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
+public sealed class CreateProductCommandValidator : AbstractValidator<CreateProductCommand> {
     public CreateProductCommandValidator() {
         ConfigureIdentityRules();
         ConfigureEnumRules();

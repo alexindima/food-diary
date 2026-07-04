@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 
-public class RepeatMealCommandValidator : AbstractValidator<RepeatMealCommand> {
+public sealed class RepeatMealCommandValidator : AbstractValidator<RepeatMealCommand> {
     public RepeatMealCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

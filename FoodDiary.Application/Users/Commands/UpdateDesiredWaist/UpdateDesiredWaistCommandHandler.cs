@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.UpdateDesiredWaist;
 
-public class UpdateDesiredWaistCommandHandler(IUserContextService userContextService)
+public sealed class UpdateDesiredWaistCommandHandler(IUserContextService userContextService)
     : ICommandHandler<UpdateDesiredWaistCommand, Result<UserDesiredWaistModel>> {
     public async Task<Result<UserDesiredWaistModel>> Handle(
         UpdateDesiredWaistCommand command,

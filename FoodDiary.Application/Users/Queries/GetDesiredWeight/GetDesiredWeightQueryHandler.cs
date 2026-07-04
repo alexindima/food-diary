@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWeight;
 
-public class GetDesiredWeightQueryHandler(IUserContextService userContextService)
+public sealed class GetDesiredWeightQueryHandler(IUserContextService userContextService)
     : IQueryHandler<GetDesiredWeightQuery, Result<UserDesiredWeightModel>> {
     public async Task<Result<UserDesiredWeightModel>> Handle(
         GetDesiredWeightQuery query,

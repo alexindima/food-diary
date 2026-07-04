@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
-public class DuplicateProductCommandHandler(
+public sealed class DuplicateProductCommandHandler(
     IProductReadRepository productReadRepository,
     IProductWriteRepository productWriteRepository)
     : ICommandHandler<DuplicateProductCommand, Result<ProductModel>> {

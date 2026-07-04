@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 
-public class ClearCycleDayCommandHandler(
+public sealed class ClearCycleDayCommandHandler(
     ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ClearCycleDayCommand, Result> {

@@ -3,7 +3,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 
-public class GetDashboardSnapshotQueryValidator : AbstractValidator<GetDashboardSnapshotQuery> {
+public sealed class GetDashboardSnapshotQueryValidator : AbstractValidator<GetDashboardSnapshotQuery> {
     public GetDashboardSnapshotQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

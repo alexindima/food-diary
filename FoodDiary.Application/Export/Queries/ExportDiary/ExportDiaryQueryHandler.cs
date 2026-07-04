@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Export.Queries.ExportDiary;
 
-public class ExportDiaryQueryHandler(
+public sealed class ExportDiaryQueryHandler(
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)

@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Commands.RevokeInvitation;
 
-public class RevokeInvitationCommandHandler(
+public sealed class RevokeInvitationCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<RevokeInvitationCommand, Result> {

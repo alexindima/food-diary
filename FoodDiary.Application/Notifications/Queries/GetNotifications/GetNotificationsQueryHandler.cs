@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Notifications.Queries.GetNotifications;
 
-public class GetNotificationsQueryHandler(
+public sealed class GetNotificationsQueryHandler(
     INotificationReadRepository notificationRepository,
     INotificationUserContextService notificationUserContextService,
     INotificationTextRenderer notificationTextRenderer)

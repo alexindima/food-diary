@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Consumptions.Commands.RepeatMeal;
 
-public class RepeatMealCommandHandler(
+public sealed class RepeatMealCommandHandler(
     IMealReadRepository mealReadRepository,
     IMealWriteRepository mealWriteRepository,
     IMealNutritionService mealNutritionService,

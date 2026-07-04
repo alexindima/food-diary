@@ -2,7 +2,7 @@ using FluentValidation;
 using FoodDiary.Domain.Enums;
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
-public class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCommand> {
+public sealed class UpsertCycleDayCommandValidator : AbstractValidator<UpsertCycleDayCommand> {
     public UpsertCycleDayCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

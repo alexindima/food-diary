@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Commands.StartFasting;
 
-public class StartFastingCommandHandler(
+public sealed class StartFastingCommandHandler(
     IFastingPlanWriteRepository fastingPlanRepository,
     IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,

@@ -5,7 +5,7 @@ using FoodDiary.Application.Dashboard.Services;
 
 namespace FoodDiary.Application.Dashboard.Queries.GetDashboardSnapshot;
 
-public class GetDashboardSnapshotQueryHandler(IDashboardSnapshotBuilder snapshotBuilder)
+public sealed class GetDashboardSnapshotQueryHandler(IDashboardSnapshotBuilder snapshotBuilder)
     : IQueryHandler<GetDashboardSnapshotQuery, Result<DashboardSnapshotModel>> {
     public async Task<Result<DashboardSnapshotModel>> Handle(GetDashboardSnapshotQuery query, CancellationToken cancellationToken) {
         if (query.UserId is null || query.UserId == Guid.Empty) {

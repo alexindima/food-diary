@@ -14,7 +14,7 @@ using FoodDiary.Domain.Entities.Assets;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
-public class UpdateUserCommandHandler(
+public sealed class UpdateUserCommandHandler(
     IUserContextService userContextService,
     IImageAssetCleanupService imageAssetCleanupService,
     IImageAssetAccessService imageAssetAccessService)

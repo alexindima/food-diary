@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Commands.RevokeAiConsent;
 
-public class RevokeAiConsentCommandHandler(IUserContextService userContextService)
+public sealed class RevokeAiConsentCommandHandler(IUserContextService userContextService)
     : ICommandHandler<RevokeAiConsentCommand, Result> {
     public async Task<Result> Handle(RevokeAiConsentCommand command, CancellationToken cancellationToken) {
         if (command.UserId is null || command.UserId == Guid.Empty) {

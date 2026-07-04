@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DuplicateRecipe;
 
-public class DuplicateRecipeCommandHandler(
+public sealed class DuplicateRecipeCommandHandler(
     IRecipeReadRepository recipeReadRepository,
     IRecipeWriteRepository recipeWriteRepository,
     IRecipeNutritionWriter recipeNutritionWriter)

@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Products.Commands.UpdateProduct;
 
-public class UpdateProductCommandHandler(
+public sealed class UpdateProductCommandHandler(
     IProductWriteRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService,

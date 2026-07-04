@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Products.Commands.DuplicateProduct;
 
-public class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand> {
+public sealed class DuplicateProductCommandValidator : AbstractValidator<DuplicateProductCommand> {
     public DuplicateProductCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

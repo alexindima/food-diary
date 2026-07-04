@@ -6,7 +6,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Commands.CreateConsumption;
 
-public class CreateConsumptionCommandValidator : AbstractValidator<CreateConsumptionCommand> {
+public sealed class CreateConsumptionCommandValidator : AbstractValidator<CreateConsumptionCommand> {
     public CreateConsumptionCommandValidator() {
         ConfigureUserRules();
         ConfigureMealRules();

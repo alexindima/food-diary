@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Commands.DeleteProduct;
 
-public class DeleteProductCommandHandler(
+public sealed class DeleteProductCommandHandler(
     IProductWriteRepository productRepository,
     IImageAssetCleanupService imageAssetCleanupService,
     ICurrentUserAccessService currentUserAccessService)

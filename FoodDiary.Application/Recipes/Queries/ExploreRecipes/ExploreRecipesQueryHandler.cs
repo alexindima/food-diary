@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 
-public class ExploreRecipesQueryHandler(IRecipeReadRepository recipeRepository)
+public sealed class ExploreRecipesQueryHandler(IRecipeReadRepository recipeRepository)
     : IQueryHandler<ExploreRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(
         ExploreRecipesQuery query,

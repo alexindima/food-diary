@@ -4,7 +4,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Fasting.Commands.StartFasting;
 
-public class StartFastingCommandValidator : AbstractValidator<StartFastingCommand> {
+public sealed class StartFastingCommandValidator : AbstractValidator<StartFastingCommand> {
     public StartFastingCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

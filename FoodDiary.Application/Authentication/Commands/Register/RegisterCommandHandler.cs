@@ -12,7 +12,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 
 namespace FoodDiary.Application.Authentication.Commands.Register;
 
-public class RegisterCommandHandler(
+public sealed class RegisterCommandHandler(
     IAuthenticationUserRegistrationService userRegistrationService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,

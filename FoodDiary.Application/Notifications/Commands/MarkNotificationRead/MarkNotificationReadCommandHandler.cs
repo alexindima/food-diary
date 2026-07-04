@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Notifications.Commands.MarkNotificationRead;
 
-public class MarkNotificationReadCommandHandler(
+public sealed class MarkNotificationReadCommandHandler(
     INotificationReadRepository notificationReadRepository,
     INotificationWriteRepository notificationWriteRepository,
     ICurrentUserAccessService currentUserAccessService,

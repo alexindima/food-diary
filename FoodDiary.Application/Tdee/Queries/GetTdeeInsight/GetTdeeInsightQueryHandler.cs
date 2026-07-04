@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
-public class GetTdeeInsightQueryHandler(
+public sealed class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryReadRepository weightEntryRepository,
     IMealReadRepository mealRepository,

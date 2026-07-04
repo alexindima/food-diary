@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetDesiredWaist;
 
-public class GetDesiredWaistQueryHandler(IUserContextService userContextService)
+public sealed class GetDesiredWaistQueryHandler(IUserContextService userContextService)
     : IQueryHandler<GetDesiredWaistQuery, Result<UserDesiredWaistModel>> {
     public async Task<Result<UserDesiredWaistModel>> Handle(
         GetDesiredWaistQuery query,

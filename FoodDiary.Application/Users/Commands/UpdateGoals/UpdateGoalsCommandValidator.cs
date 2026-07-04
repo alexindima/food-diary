@@ -5,7 +5,7 @@ using DesiredWeightValueObject = FoodDiary.Domain.ValueObjects.DesiredWeight;
 
 namespace FoodDiary.Application.Users.Commands.UpdateGoals;
 
-public class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand> {
+public sealed class UpdateGoalsCommandValidator : AbstractValidator<UpdateGoalsCommand> {
     public UpdateGoalsCommandValidator() {
         ConfigureUserRules();
         ConfigureMacroTargets();

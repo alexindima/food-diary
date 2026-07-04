@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingStats;
 
-public class GetFastingStatsQueryHandler(
+public sealed class GetFastingStatsQueryHandler(
     IFastingAnalyticsService fastingAnalyticsService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)

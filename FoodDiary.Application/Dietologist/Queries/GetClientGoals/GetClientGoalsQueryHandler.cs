@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 
-public class GetClientGoalsQueryHandler(
+public sealed class GetClientGoalsQueryHandler(
     IDietologistInvitationReadRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService)
     : IQueryHandler<GetClientGoalsQuery, Result<UserModel>> {

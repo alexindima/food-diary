@@ -10,7 +10,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleDay;
 
-public class UpsertCycleDayCommandHandler(
+public sealed class UpsertCycleDayCommandHandler(
     ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpsertCycleDayCommand, Result<CycleLogDayModel>> {

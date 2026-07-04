@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Cycles.Commands.UpsertCycleFactor;
 
-public class UpsertCycleFactorCommandHandler(
+public sealed class UpsertCycleFactorCommandHandler(
     ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<UpsertCycleFactorCommand, Result<CycleModel>> {

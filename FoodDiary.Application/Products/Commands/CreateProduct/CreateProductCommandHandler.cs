@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Assets;
 
 namespace FoodDiary.Application.Products.Commands.CreateProduct;
 
-public class CreateProductCommandHandler(
+public sealed class CreateProductCommandHandler(
     IProductWriteRepository productRepository,
     ICurrentUserAccessService currentUserAccessService,
     IImageAssetAccessService imageAssetAccessService)

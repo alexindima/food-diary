@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RefreshToken;
 
-public class RefreshTokenCommandHandler(
+public sealed class RefreshTokenCommandHandler(
     IAuthenticationUserLookupService userLookupService,
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,

@@ -13,7 +13,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
-public class AcceptInvitationCommandHandler(
+public sealed class AcceptInvitationCommandHandler(
     IDietologistInvitationWriteRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
     IUserRoleMembershipService userRoleMembershipService,

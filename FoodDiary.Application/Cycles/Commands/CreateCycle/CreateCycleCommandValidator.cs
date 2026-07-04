@@ -3,7 +3,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
-public class CreateCycleCommandValidator : AbstractValidator<CreateCycleCommand> {
+public sealed class CreateCycleCommandValidator : AbstractValidator<CreateCycleCommand> {
     public CreateCycleCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

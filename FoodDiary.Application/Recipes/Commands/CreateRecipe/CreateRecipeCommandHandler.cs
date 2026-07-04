@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.CreateRecipe;
 
-public class CreateRecipeCommandHandler(
+public sealed class CreateRecipeCommandHandler(
     IRecipeWriteRepository recipeRepository,
     IRecipeNutritionWriter recipeNutritionWriter,
     ICurrentUserAccessService currentUserAccessService,

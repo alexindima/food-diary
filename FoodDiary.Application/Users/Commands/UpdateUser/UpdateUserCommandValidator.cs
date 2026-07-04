@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Users.Commands.UpdateUser;
 
-public class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
+public sealed class UpdateUserCommandValidator : AbstractValidator<UpdateUserCommand> {
     public UpdateUserCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

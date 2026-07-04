@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Recipes.Commands.DeleteRecipe;
 
-public class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand> {
+public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecipeCommand> {
     private readonly IRecipeReadRepository _recipeRepository;
 
     public DeleteRecipeCommandValidator(IRecipeReadRepository recipeRepository) {

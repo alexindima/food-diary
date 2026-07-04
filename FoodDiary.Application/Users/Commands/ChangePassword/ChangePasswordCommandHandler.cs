@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Authentication.Common;
 
 namespace FoodDiary.Application.Users.Commands.ChangePassword;
 
-public class ChangePasswordCommandHandler(
+public sealed class ChangePasswordCommandHandler(
     IUserContextService userContextService,
     IPasswordHasher passwordHasher)
     : ICommandHandler<ChangePasswordCommand, Result> {

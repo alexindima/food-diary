@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Users.Queries.GetUserById;
 
-public class GetUserByIdQueryHandler(IUserContextService userContextService) : IQueryHandler<GetUserByIdQuery, Result<UserModel>> {
+public sealed class GetUserByIdQueryHandler(IUserContextService userContextService) : IQueryHandler<GetUserByIdQuery, Result<UserModel>> {
     public async Task<Result<UserModel>> Handle(GetUserByIdQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
         if (userIdResult.IsFailure) {

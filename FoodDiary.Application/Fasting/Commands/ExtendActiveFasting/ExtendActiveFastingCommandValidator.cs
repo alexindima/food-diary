@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 
-public class ExtendActiveFastingCommandValidator : AbstractValidator<ExtendActiveFastingCommand> {
+public sealed class ExtendActiveFastingCommandValidator : AbstractValidator<ExtendActiveFastingCommand> {
     public ExtendActiveFastingCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

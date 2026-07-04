@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.ResendEmailVerification;
 
-public class ResendEmailVerificationCommandHandler(
+public sealed class ResendEmailVerificationCommandHandler(
     IUserContextService userContextService,
     IPasswordHasher passwordHasher,
     IEmailSender emailSender,

@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Cycles.Commands.ClearCycleDay;
 
-public class ClearCycleDayCommandValidator : AbstractValidator<ClearCycleDayCommand> {
+public sealed class ClearCycleDayCommandValidator : AbstractValidator<ClearCycleDayCommand> {
     public ClearCycleDayCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

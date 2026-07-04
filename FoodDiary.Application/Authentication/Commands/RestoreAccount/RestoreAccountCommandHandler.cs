@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Authentication.Commands.RestoreAccount;
 
-public class RestoreAccountCommandHandler(
+public sealed class RestoreAccountCommandHandler(
     IAuthenticationUserMutationService userMutationService,
     IPasswordHasher passwordHasher,
     IAuthenticationTokenService authenticationTokenService,

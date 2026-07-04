@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Dietologist.Commands.AcceptInvitation;
 
-public class AcceptInvitationCommandValidator : AbstractValidator<AcceptInvitationCommand> {
+public sealed class AcceptInvitationCommandValidator : AbstractValidator<AcceptInvitationCommand> {
     public AcceptInvitationCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

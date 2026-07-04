@@ -15,7 +15,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Consumptions.Queries.GetConsumptions;
 
-public class GetConsumptionsQueryHandler(
+public sealed class GetConsumptionsQueryHandler(
     IMealReadRepository mealRepository,
     ICurrentUserAccessService currentUserAccessService,
     IFavoriteMealReadRepository favoriteMealRepository)

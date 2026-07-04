@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Statistics.Queries.GetStatistics;
 
-public class GetStatisticsQueryValidator : AbstractValidator<GetStatisticsQuery> {
+public sealed class GetStatisticsQueryValidator : AbstractValidator<GetStatisticsQuery> {
     public GetStatisticsQueryValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
-public class GetTdeeInsightQueryValidator : AbstractValidator<GetTdeeInsightQuery> {
+public sealed class GetTdeeInsightQueryValidator : AbstractValidator<GetTdeeInsightQuery> {
     public GetTdeeInsightQueryValidator() {
         RuleFor(x => x.UserId)
             .NotEmpty()

@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Fasting.Queries.GetFastingHistory;
 
-public class GetFastingHistoryQueryHandler(
+public sealed class GetFastingHistoryQueryHandler(
     IFastingAnalyticsService fastingAnalyticsService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetFastingHistoryQuery, Result<PagedResponse<FastingSessionModel>>> {

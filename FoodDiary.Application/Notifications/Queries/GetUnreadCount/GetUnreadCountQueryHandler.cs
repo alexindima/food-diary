@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 
-public class GetUnreadCountQueryHandler(
+public sealed class GetUnreadCountQueryHandler(
     INotificationReadRepository notificationRepository,
     INotificationUserContextService notificationUserContextService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {

@@ -11,7 +11,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Cycles.Commands.CreateCycle;
 
-public class CreateCycleCommandHandler(
+public sealed class CreateCycleCommandHandler(
     ICycleWriteRepository cycleRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<CreateCycleCommand, Result<CycleModel>> {

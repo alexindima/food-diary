@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Users.Commands.ChangePassword;
 
-public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand> {
+public sealed class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCommand> {
     public ChangePasswordCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)

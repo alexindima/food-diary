@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Users.Commands.DeleteUser;
 
-public class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand> {
+public sealed class DeleteUserCommandValidator : AbstractValidator<DeleteUserCommand> {
     public DeleteUserCommandValidator() {
         RuleFor(x => x.UserId)
             .Cascade(CascadeMode.Stop)
