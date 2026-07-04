@@ -49,6 +49,19 @@ public class DomainModelGuardrailTests {
     }
 
     [Fact]
+    public void DomainConcreteClasses_AreSealedOrStaticExceptEfNavigationEntities() {
+        string domainRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Domain");
+
+        string[] violations = SourceScanner.FindUnsealedConcreteClassDeclarations(
+            [domainRoot],
+            static path => !path.EndsWith(
+                Path.Combine("Entities", "Meals", "MealItem.cs"),
+                StringComparison.Ordinal));
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void DomainAggregates_DoNotIntroduceNewWidePublicMutators() {
         string[] violations = [.. typeof(AggregateRoot<>).Assembly
             .GetTypes()

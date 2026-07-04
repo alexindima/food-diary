@@ -1,6 +1,6 @@
 namespace FoodDiary.Domain.Entities.OpenFoodFacts;
 
-public class OpenFoodFactsProduct {
+public sealed class OpenFoodFactsProduct {
     public string Barcode { get; private set; } = string.Empty;
     public string Name { get; private set; } = string.Empty;
     public string? Brand { get; private set; }
