@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Dietologist.EventHandlers;
 
-public class RecommendationCreatedEventHandler(
+public sealed class RecommendationCreatedEventHandler(
     INotificationReadRepository notificationRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
