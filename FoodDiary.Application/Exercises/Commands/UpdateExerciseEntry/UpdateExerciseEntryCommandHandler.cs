@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.UpdateExerciseEntry;
 
-public class UpdateExerciseEntryCommandHandler(IExerciseEntryRepository repository)
+public class UpdateExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
     : ICommandHandler<UpdateExerciseEntryCommand, Result<ExerciseEntryModel>> {
     public async Task<Result<ExerciseEntryModel>> Handle(
         UpdateExerciseEntryCommand command,

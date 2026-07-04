@@ -125,6 +125,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IFavoriteProductRepository, FavoriteProductRepository>();
         services.AddScoped<IFavoriteRecipeRepository, FavoriteRecipeRepository>();
         services.AddScoped<IExerciseEntryRepository, ExerciseEntryRepository>();
+        services.AddScoped<IExerciseEntryReadRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());
+        services.AddScoped<IExerciseEntryWriteRepository>(static provider => provider.GetRequiredService<IExerciseEntryRepository>());
         services.AddScoped<INutritionLessonRepository, NutritionLessonRepository>();
         services.AddScoped<INutritionLessonReadRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());
         services.AddScoped<INutritionLessonWriteRepository>(static provider => provider.GetRequiredService<INutritionLessonRepository>());

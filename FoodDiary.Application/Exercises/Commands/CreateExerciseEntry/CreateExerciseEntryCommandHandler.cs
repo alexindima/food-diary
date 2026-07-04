@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 
-public class CreateExerciseEntryCommandHandler(IExerciseEntryRepository repository)
+public class CreateExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
     : ICommandHandler<CreateExerciseEntryCommand, Result<ExerciseEntryModel>> {
     public async Task<Result<ExerciseEntryModel>> Handle(
         CreateExerciseEntryCommand command,

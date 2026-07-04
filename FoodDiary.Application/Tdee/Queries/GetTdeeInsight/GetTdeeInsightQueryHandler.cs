@@ -17,7 +17,7 @@ public class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryRepository weightEntryRepository,
     IMealReadRepository mealRepository,
-    IExerciseEntryRepository exerciseEntryRepository,
+    IExerciseEntryReadRepository exerciseEntryRepository,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {
     private const int AnalysisPeriodDays = 28;

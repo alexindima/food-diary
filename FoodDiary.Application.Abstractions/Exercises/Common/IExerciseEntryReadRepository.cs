@@ -1,0 +1,23 @@
+using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Domain.ValueObjects.Ids;
+
+namespace FoodDiary.Application.Abstractions.Exercises.Common;
+
+public interface IExerciseEntryReadRepository {
+    Task<ExerciseEntry?> GetByIdAsync(
+        ExerciseEntryId id,
+        UserId userId,
+        bool asTracking = false,
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<ExerciseEntry>> GetByDateRangeAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default);
+
+    Task<double> GetTotalCaloriesBurnedAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default);
+}

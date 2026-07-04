@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Queries.GetExerciseEntries;
 
-public class GetExerciseEntriesQueryHandler(IExerciseEntryRepository repository)
+public class GetExerciseEntriesQueryHandler(IExerciseEntryReadRepository repository)
     : IQueryHandler<GetExerciseEntriesQuery, Result<IReadOnlyList<ExerciseEntryModel>>> {
     public async Task<Result<IReadOnlyList<ExerciseEntryModel>>> Handle(
         GetExerciseEntriesQuery query,

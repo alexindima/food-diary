@@ -22,7 +22,7 @@ internal sealed class DashboardSectionDataLoader(
     ISender sender,
     IDashboardUserContextService dashboardUserContextService,
     IFastingOccurrenceReadRepository fastingOccurrenceRepository,
-    IExerciseEntryRepository exerciseEntryRepository,
+    IExerciseEntryReadRepository exerciseEntryRepository,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
     private const int DefaultPage = 1;
     private const int DefaultPageSize = 10;
