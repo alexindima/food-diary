@@ -120,6 +120,38 @@ public sealed class HostCompositionBoundaryTests {
     }
 
     [Fact]
+    public void HostEntryPoints_DoNotUseMediatorDirectlyExceptInitialAdminBootstrap() {
+        string root = ArchitectureTestPaths.RepositoryRoot;
+        string[] hostRoots = [
+            ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
+            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.WebApi"),
+            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.WebApi"),
+            ArchitectureTestPaths.FromRoot("FoodDiary.Initializer"),
+            ArchitectureTestPaths.FromRoot("MailInbox/FoodDiary.MailInbox.Initializer"),
+            ArchitectureTestPaths.FromRoot("MailRelay/FoodDiary.MailRelay.Initializer"),
+        ];
+        string allowedPath = Path.Combine(
+            ArchitectureTestPaths.FromRoot("FoodDiary.Web.Api"),
+            "Services",
+            "InitialAdminHostedService.cs");
+
+        string[] violations = [.. SourceScanner.SourceFiles(hostRoots)
+            .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(static entry =>
+                entry.line.Contains("ISender", StringComparison.Ordinal) ||
+                entry.line.Contains("IMediator", StringComparison.Ordinal) ||
+                entry.line.Contains(".Send(", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void TelegramBotProject_ReferencesOnlyTransportAndHostingPackages() {
         var allowedPackages = new HashSet<string>(StringComparer.Ordinal) {
             "Microsoft.Extensions.Hosting",
