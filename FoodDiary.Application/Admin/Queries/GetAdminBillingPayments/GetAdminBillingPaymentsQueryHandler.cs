@@ -6,7 +6,7 @@ using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 
-public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingRepository billingRepository)
+public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingReadRepository billingRepository)
     : IQueryHandler<GetAdminBillingPaymentsQuery, Result<PagedResponse<AdminBillingPaymentReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingPaymentReadModel>>> Handle(
         GetAdminBillingPaymentsQuery query,

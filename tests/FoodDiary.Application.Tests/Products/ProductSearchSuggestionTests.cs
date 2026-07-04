@@ -267,7 +267,7 @@ public sealed class ProductSearchSuggestionTests {
         IOpenFoodFactsService service,
         IOpenFoodFactsProductCacheRepository cache,
         IUnitOfWork unitOfWork) =>
-        new OpenFoodFactsCachedProductSearch(service, cache, unitOfWork);
+        new OpenFoodFactsCachedProductSearch(service, cache, cache, unitOfWork);
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts,

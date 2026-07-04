@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Admin.Commands.StartAdminImpersonation;
 
 public sealed class StartAdminImpersonationCommandHandler(
     IAdminImpersonationUserService userService,
-    IAdminImpersonationSessionRepository sessionRepository,
+    IAdminImpersonationSessionWriteRepository sessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider,
     IAuditLogger auditLogger)

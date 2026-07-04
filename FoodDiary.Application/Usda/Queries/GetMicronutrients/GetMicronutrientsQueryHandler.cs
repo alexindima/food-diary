@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects;
 namespace FoodDiary.Application.Usda.Queries.GetMicronutrients;
 
 public class GetMicronutrientsQueryHandler(
-    IUsdaFoodRepository repository,
+    IUsdaFoodReadRepository repository,
     IUsdaFoodSearchService brandedSearchService)
     : IQueryHandler<GetMicronutrientsQuery, Result<UsdaFoodDetailModel>> {
     public async Task<Result<UsdaFoodDetailModel>> Handle(

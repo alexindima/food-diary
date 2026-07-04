@@ -606,6 +606,23 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullAdminUsdaAndOpenFoodFactsSupportRepositories() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminBillingRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminImpersonationSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IAdminUserRoleAuditRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUsdaFoodRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUsdaProductLinkRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IOpenFoodFactsProductCacheRepository", []),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullCycleRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

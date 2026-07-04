@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Usda.Commands.UnlinkProductFromUsdaFood;
 
-public class UnlinkProductFromUsdaFoodCommandHandler(IUsdaProductLinkRepository productLinkRepository)
+public class UnlinkProductFromUsdaFoodCommandHandler(IUsdaProductLinkWriteRepository productLinkRepository)
     : ICommandHandler<UnlinkProductFromUsdaFoodCommand, Result> {
     public async Task<Result> Handle(
         UnlinkProductFromUsdaFoodCommand command,

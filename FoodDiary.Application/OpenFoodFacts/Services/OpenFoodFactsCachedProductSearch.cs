@@ -7,20 +7,21 @@ namespace FoodDiary.Application.OpenFoodFacts.Services;
 
 internal sealed class OpenFoodFactsCachedProductSearch(
     IOpenFoodFactsService openFoodFactsService,
-    IOpenFoodFactsProductCacheRepository productCacheRepository,
+    IOpenFoodFactsProductCacheReadRepository productCacheReadRepository,
+    IOpenFoodFactsProductCacheWriteRepository productCacheWriteRepository,
     IUnitOfWork unitOfWork) : IOpenFoodFactsCachedProductSearch {
     public async Task<IReadOnlyList<OpenFoodFactsProductModel>> SearchAsync(
         string search,
         int limit,
         CancellationToken cancellationToken = default) {
-        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<OpenFoodFactsProductModel> cachedProducts = await productCacheReadRepository.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         if (cachedProducts.Count >= limit) {
             return cachedProducts;
         }
 
         IReadOnlyList<OpenFoodFactsProductModel> externalProducts = await openFoodFactsService.SearchAsync(search, limit, cancellationToken).ConfigureAwait(false);
         if (externalProducts.Count > 0) {
-            await productCacheRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
+            await productCacheWriteRepository.UpsertAsync(externalProducts, cancellationToken).ConfigureAwait(false);
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 

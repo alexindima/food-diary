@@ -71,8 +71,12 @@ public static partial class DependencyInjection {
         services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IRefreshTokenSessionWriteRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();
+        services.AddScoped<IAdminBillingReadRepository>(static provider => provider.GetRequiredService<IAdminBillingRepository>());
         services.AddScoped<IAdminImpersonationSessionRepository, AdminImpersonationSessionRepository>();
+        services.AddScoped<IAdminImpersonationSessionReadRepository>(static provider => provider.GetRequiredService<IAdminImpersonationSessionRepository>());
+        services.AddScoped<IAdminImpersonationSessionWriteRepository>(static provider => provider.GetRequiredService<IAdminImpersonationSessionRepository>());
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();
+        services.AddScoped<IAdminUserRoleAuditReadRepository>(static provider => provider.GetRequiredService<IAdminUserRoleAuditRepository>());
         services.AddScoped<ProductRepository>();
         services.AddScoped<IProductRepository, CachedProductRepository>();
         services.AddScoped<IProductReadRepository>(static provider => provider.GetRequiredService<IProductRepository>());
@@ -137,6 +141,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IWebPushSubscriptionReadRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IOpenFoodFactsProductCacheRepository, OpenFoodFactsProductCacheRepository>();
+        services.AddScoped<IOpenFoodFactsProductCacheReadRepository>(static provider => provider.GetRequiredService<IOpenFoodFactsProductCacheRepository>());
+        services.AddScoped<IOpenFoodFactsProductCacheWriteRepository>(static provider => provider.GetRequiredService<IOpenFoodFactsProductCacheRepository>());
         services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
         services.AddScoped<IFastingPlanReadRepository>(static provider => provider.GetRequiredService<IFastingPlanRepository>());
         services.AddScoped<IFastingPlanWriteRepository>(static provider => provider.GetRequiredService<IFastingPlanRepository>());
@@ -180,7 +186,10 @@ public static partial class DependencyInjection {
         services.AddScoped<IContentReportReadRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
         services.AddScoped<IContentReportWriteRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
+        services.AddScoped<IUsdaFoodReadRepository>(static provider => provider.GetRequiredService<IUsdaFoodRepository>());
         services.AddScoped<IUsdaProductLinkRepository, UsdaProductLinkRepository>();
+        services.AddScoped<IUsdaProductLinkReadRepository>(static provider => provider.GetRequiredService<IUsdaProductLinkRepository>());
+        services.AddScoped<IUsdaProductLinkWriteRepository>(static provider => provider.GetRequiredService<IUsdaProductLinkRepository>());
 
         return services;
     }

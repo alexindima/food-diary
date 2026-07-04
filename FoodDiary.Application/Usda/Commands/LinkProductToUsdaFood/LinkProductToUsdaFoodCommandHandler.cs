@@ -9,8 +9,8 @@ using FoodDiary.Domain.Entities.Usda;
 namespace FoodDiary.Application.Usda.Commands.LinkProductToUsdaFood;
 
 public class LinkProductToUsdaFoodCommandHandler(
-    IUsdaProductLinkRepository productLinkRepository,
-    IUsdaFoodRepository usdaFoodRepository)
+    IUsdaProductLinkWriteRepository productLinkRepository,
+    IUsdaFoodReadRepository usdaFoodRepository)
     : ICommandHandler<LinkProductToUsdaFoodCommand, Result> {
     public async Task<Result> Handle(
         LinkProductToUsdaFoodCommand command,

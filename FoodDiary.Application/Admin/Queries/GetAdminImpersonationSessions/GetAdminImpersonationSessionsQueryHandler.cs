@@ -7,7 +7,7 @@ using FoodDiary.Application.Common.Models;
 namespace FoodDiary.Application.Admin.Queries.GetAdminImpersonationSessions;
 
 public sealed class GetAdminImpersonationSessionsQueryHandler(
-    IAdminImpersonationSessionRepository repository)
+    IAdminImpersonationSessionReadRepository repository)
     : IQueryHandler<GetAdminImpersonationSessionsQuery, Result<PagedResponse<AdminImpersonationSessionReadModel>>> {
     public async Task<Result<PagedResponse<AdminImpersonationSessionReadModel>>> Handle(
         GetAdminImpersonationSessionsQuery query,

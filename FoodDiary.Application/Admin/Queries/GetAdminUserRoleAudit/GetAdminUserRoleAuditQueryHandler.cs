@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
 
 public sealed class GetAdminUserRoleAuditQueryHandler(
     IAdminUserReadService userReadService,
-    IAdminUserRoleAuditRepository roleAuditRepository)
+    IAdminUserRoleAuditReadRepository roleAuditRepository)
     : IQueryHandler<GetAdminUserRoleAuditQuery, Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>>> Handle(
         GetAdminUserRoleAuditQuery query,

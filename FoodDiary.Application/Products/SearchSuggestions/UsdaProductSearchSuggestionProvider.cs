@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Usda;
 namespace FoodDiary.Application.Products.SearchSuggestions;
 
 public sealed class UsdaProductSearchSuggestionProvider(
-    IUsdaFoodRepository usdaFoodRepository,
+    IUsdaFoodReadRepository usdaFoodRepository,
     IUsdaFoodSearchService usdaFoodSearchService) : IProductSearchSuggestionProvider {
     public string Source => "usda";
 

@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Usda;
 namespace FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
 
 public class SearchUsdaFoodsQueryHandler(
-    IUsdaFoodRepository repository,
+    IUsdaFoodReadRepository repository,
     IUsdaFoodSearchService brandedSearchService)
     : IQueryHandler<SearchUsdaFoodsQuery, Result<IReadOnlyList<UsdaFoodModel>>> {
     public async Task<Result<IReadOnlyList<UsdaFoodModel>>> Handle(

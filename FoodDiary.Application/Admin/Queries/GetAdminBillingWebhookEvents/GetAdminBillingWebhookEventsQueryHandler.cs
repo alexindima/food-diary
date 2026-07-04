@@ -6,7 +6,7 @@ using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 
-public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingRepository billingRepository)
+public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReadRepository billingRepository)
     : IQueryHandler<GetAdminBillingWebhookEventsQuery, Result<PagedResponse<AdminBillingWebhookEventReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingWebhookEventReadModel>>> Handle(
         GetAdminBillingWebhookEventsQuery query,

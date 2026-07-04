@@ -143,11 +143,15 @@ public class OpenFoodFactsFeatureTests {
     private static IOpenFoodFactsCachedProductSearch CreateCachedProductSearch(
         IOpenFoodFactsService service,
         IOpenFoodFactsProductCacheRepository? cache = null,
-        IUnitOfWork? unitOfWork = null) =>
-        new OpenFoodFactsCachedProductSearch(
+        IUnitOfWork? unitOfWork = null) {
+        IOpenFoodFactsProductCacheRepository productCache = cache ?? CreateOpenFoodFactsProductCacheRepository();
+
+        return new OpenFoodFactsCachedProductSearch(
             service,
-            cache ?? CreateOpenFoodFactsProductCacheRepository(),
+            productCache,
+            productCache,
             unitOfWork ?? CreateUnitOfWork());
+    }
 
     private static IOpenFoodFactsProductCacheRepository CreateOpenFoodFactsProductCacheRepository(
         IReadOnlyList<OpenFoodFactsProductModel>? cachedProducts = null) =>
