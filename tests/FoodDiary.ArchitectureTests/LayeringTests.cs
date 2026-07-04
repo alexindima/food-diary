@@ -193,6 +193,35 @@ public class LayeringTests {
     }
 
     [Fact]
+    public void InfrastructureFeatureRepositoryComposition_StaysLimitedToApprovedFeatureModules() {
+        string dependencyInjectionPath = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
+        string[] expectedRegistrations = [
+            "services.AddUserPersistence();",
+            "services.AddFoodPersistence();",
+            "services.AddDashboardReadServices();",
+            "services.AddShoppingListPersistence();",
+            "services.AddTrackingPersistence();",
+            "services.AddImagePersistence();",
+            "services.AddAiPersistence();",
+            "services.AddDietologistPersistence();",
+            "services.AddNotificationPersistence();",
+            "services.AddProviderCachePersistence();",
+            "services.AddFastingPersistence();",
+            "services.AddFavoritesPersistence();",
+            "services.AddLearningPersistence();",
+            "services.AddRecipeInteractionPersistence();",
+            "services.AddModerationPersistence();",
+            "services.AddUsdaPersistence();",
+        ];
+
+        string[] actualRegistrations = [.. File.ReadLines(dependencyInjectionPath)
+            .Select(static line => line.Trim())
+            .Where(static line => line.StartsWith("services.", StringComparison.Ordinal))];
+
+        Assert.Equal(expectedRegistrations, actualRegistrations);
+    }
+
+    [Fact]
     public void InfrastructureConcreteClasses_AreSealedOrStatic() {
         string root = GetRepositoryRoot();
         string infrastructureRoot = Path.Combine(root, "FoodDiary.Infrastructure");
