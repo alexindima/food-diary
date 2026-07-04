@@ -1,4 +1,5 @@
 using System.Globalization;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -11,9 +12,11 @@ public sealed class TestCoverageExclusionGuardrailTests {
     [Fact]
     public void TestTypes_AreExcludedFromCodeCoverage() {
         string testRoot = ArchitectureTestPaths.FromRoot("tests");
-        string[] violations = [.. Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
-            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))
-            .SelectMany(FindTypesWithoutCoverageExclusion)
+        string[] sourceFiles = [.. Directory.EnumerateFiles(testRoot, "*.cs", SearchOption.AllDirectories)
+            .Where(static path => !ArchitectureTestPaths.IsGeneratedOrBuildPath(path))];
+        HashSet<string> excludedPartialTypeNames = FindExcludedPartialTypeNames(sourceFiles);
+        string[] violations = [.. sourceFiles
+            .SelectMany(path => FindTypesWithoutCoverageExclusion(path, excludedPartialTypeNames))
             .OrderBy(static violation => violation.Path, PathComparer)
             .ThenBy(static violation => violation.Line)
             .Select(static violation => violation.Format())];
@@ -25,19 +28,44 @@ public sealed class TestCoverageExclusionGuardrailTests {
             string.Join(Environment.NewLine, violations));
     }
 
-    private static IEnumerable<CoverageExclusionViolation> FindTypesWithoutCoverageExclusion(string path) {
+    private static HashSet<string> FindExcludedPartialTypeNames(IEnumerable<string> sourceFiles) {
+        var excludedTypeNames = new HashSet<string>(StringComparer.Ordinal);
+
+        foreach (string path in sourceFiles) {
+            Microsoft.CodeAnalysis.SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
+            CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
+            foreach (TypeDeclarationSyntax type in root.DescendantNodes()
+                .OfType<TypeDeclarationSyntax>()
+                .Where(static type => type.Modifiers.Any(static token => token.IsKind(SyntaxKind.PartialKeyword)))
+                .Where(HasExcludeFromCodeCoverage)) {
+                excludedTypeNames.Add(type.Identifier.ValueText);
+            }
+        }
+
+        return excludedTypeNames;
+    }
+
+    private static IEnumerable<CoverageExclusionViolation> FindTypesWithoutCoverageExclusion(
+        string path,
+        IReadOnlySet<string> excludedPartialTypeNames) {
         Microsoft.CodeAnalysis.SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(File.ReadAllText(path), path: path);
         CompilationUnitSyntax root = syntaxTree.GetCompilationUnitRoot();
 
         return root.DescendantNodes()
             .OfType<TypeDeclarationSyntax>()
             .Where(static type => type is ClassDeclarationSyntax or RecordDeclarationSyntax or StructDeclarationSyntax)
-            .Where(static type => !HasExcludeFromCodeCoverage(type))
+            .Where(type => !HasExcludeFromCodeCoverage(type) && !IsCoveredPartialDeclaration(type, excludedPartialTypeNames))
             .Select(type => new CoverageExclusionViolation(
                 Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, path),
                 type.GetLocation().GetLineSpan().StartLinePosition.Line + 1,
                 type.Identifier.ValueText));
     }
+
+    private static bool IsCoveredPartialDeclaration(
+        TypeDeclarationSyntax type,
+        IReadOnlySet<string> excludedPartialTypeNames) =>
+        type.Modifiers.Any(static token => token.IsKind(SyntaxKind.PartialKeyword)) &&
+        excludedPartialTypeNames.Contains(type.Identifier.ValueText);
 
     private static bool HasExcludeFromCodeCoverage(TypeDeclarationSyntax type) =>
         type.AttributeLists

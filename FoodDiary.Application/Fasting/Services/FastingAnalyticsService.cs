@@ -100,8 +100,10 @@ public sealed class FastingAnalyticsService(
             return new Dictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>>();
         }
 
-        return (await fastingCheckInRepository.GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken).ConfigureAwait(false))
-            .GroupBy(static checkIn => checkIn.OccurrenceId)
-            .ToDictionary(static group => group.Key, static group => (IReadOnlyList<FastingCheckIn>)[.. group]);
+        IReadOnlyList<FastingCheckIn> checkIns = await fastingCheckInRepository
+            .GetByOccurrenceIdsAsync(occurrenceIds, cancellationToken)
+            .ConfigureAwait(false);
+
+        return FastingCheckInLookup.Create(checkIns);
     }
 }
