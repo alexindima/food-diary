@@ -3,6 +3,17 @@ namespace FoodDiary.ArchitectureTests;
 [ExcludeFromCodeCoverage]
 public sealed class ApplicationAbstractionsBoundaryTests {
     [Fact]
+    public void ApplicationAbstractionsProject_StaysDependencyLightweight() {
+        const string relativeProjectPath = "FoodDiary.Application.Abstractions/FoodDiary.Application.Abstractions.csproj";
+
+        string[] projectReferences = ProjectReferenceReader.ReadProjectReferences(relativeProjectPath);
+        string[] packageReferences = ProjectReferenceReader.ReadPackageReferences(relativeProjectPath);
+
+        Assert.Equal(["FoodDiary.Domain"], projectReferences);
+        Assert.Empty(packageReferences);
+    }
+
+    [Fact]
     public void ApplicationAbstractions_Interfaces_AreKeptInPurposeFolders() {
         string root = ArchitectureTestPaths.RepositoryRoot;
         string abstractionsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application.Abstractions");
