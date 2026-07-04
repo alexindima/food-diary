@@ -21,6 +21,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string allowedRoot = Path.Combine(applicationRoot, "Common", "Validation");
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(path => !path.StartsWith(allowedRoot, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => entry.line.Contains("Enum.TryParse", StringComparison.Ordinal))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationHandlersAndServices_DoNotUseDateTimeUtcNow_Directly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
