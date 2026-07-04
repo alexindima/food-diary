@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 
-public class UpdateShoppingListCommandValidator : AbstractValidator<UpdateShoppingListCommand> {
+public sealed class UpdateShoppingListCommandValidator : AbstractValidator<UpdateShoppingListCommand> {
     public UpdateShoppingListCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

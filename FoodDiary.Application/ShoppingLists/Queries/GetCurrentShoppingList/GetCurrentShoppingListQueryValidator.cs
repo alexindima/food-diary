@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetCurrentShoppingList;
 
-public class GetCurrentShoppingListQueryValidator : AbstractValidator<GetCurrentShoppingListQuery> {
+public sealed class GetCurrentShoppingListQueryValidator : AbstractValidator<GetCurrentShoppingListQuery> {
     public GetCurrentShoppingListQueryValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

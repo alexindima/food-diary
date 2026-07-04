@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingLists;
 
-public class GetShoppingListsQueryHandler(
+public sealed class GetShoppingListsQueryHandler(
     IShoppingListReadRepository shoppingListRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetShoppingListsQuery, Result<IReadOnlyList<ShoppingListSummaryModel>>> {

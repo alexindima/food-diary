@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 
-public class CreateShoppingListCommandHandler(
+public sealed class CreateShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)

@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 
-public class CreateShoppingListCommandValidator : AbstractValidator<CreateShoppingListCommand> {
+public sealed class CreateShoppingListCommandValidator : AbstractValidator<CreateShoppingListCommand> {
     public CreateShoppingListCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

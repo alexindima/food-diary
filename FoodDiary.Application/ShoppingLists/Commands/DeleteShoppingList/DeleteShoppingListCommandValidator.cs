@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 
-public class DeleteShoppingListCommandValidator : AbstractValidator<DeleteShoppingListCommand> {
+public sealed class DeleteShoppingListCommandValidator : AbstractValidator<DeleteShoppingListCommand> {
     public DeleteShoppingListCommandValidator() {
         RuleFor(x => x.UserId)
             .NotNull()

@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;
 
-public class UpdateShoppingListCommandHandler(
+public sealed class UpdateShoppingListCommandHandler(
     IShoppingListWriteRepository shoppingListRepository,
     IProductLookupService productLookupService,
     ICurrentUserAccessService currentUserAccessService)
