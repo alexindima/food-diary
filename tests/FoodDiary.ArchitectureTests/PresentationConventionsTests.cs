@@ -44,6 +44,58 @@ public class PresentationConventionsTests {
     }
 
     [Fact]
+    public void PresentationApi_PackageReferencesStayLimitedToHttpPresentationConcerns() {
+        string[] expectedPackages = [
+            "Asp.Versioning.Mvc",
+        ];
+
+        string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Presentation.Api/FoodDiary.Presentation.Api.csproj");
+
+        Assert.Equal(expectedPackages, packages);
+    }
+
+    [Fact]
+    public void PresentationHttpRequestsAndQueries_LiveUnderFeatureRequestsFolders() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(static entry =>
+                entry.line.StartsWith("public sealed record ", StringComparison.Ordinal) &&
+                (entry.line.Contains("HttpRequest", StringComparison.Ordinal) ||
+                 entry.line.Contains("HttpQuery", StringComparison.Ordinal)))
+            .Where(static entry => !entry.path.Contains($"{Path.DirectorySeparatorChar}Requests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void PresentationHttpResponses_LiveUnderResponseFolders() {
+        string root = GetRepositoryRoot();
+        string presentationRoot = Path.Combine(root, "FoodDiary.Presentation.Api");
+
+        string[] violations = [.. SourceScanner.SourceFiles(presentationRoot)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line = line.Trim() }))
+            .Where(static entry =>
+                entry.line.StartsWith("public sealed record ", StringComparison.Ordinal) &&
+                entry.line.Contains("HttpResponse", StringComparison.Ordinal))
+            .Where(static entry => !entry.path.Contains($"{Path.DirectorySeparatorChar}Responses{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void PresentationControllers_DoNotCallMediatorSendDirectly() {
         string root = GetRepositoryRoot();
         string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
