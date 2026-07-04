@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Domain.Entities.Meals;
 
-public class MealItem : Entity<MealItemId> {
+public sealed class MealItem : Entity<MealItemId> {
     private const double MaxAmount = 1_000_000d;
     private const double ComparisonEpsilon = 0.000001d;
     private const int SnapshotNameMaxLength = 256;
@@ -33,9 +33,9 @@ public class MealItem : Entity<MealItemId> {
     public double? SnapshotFiberPerBase { get; private set; }
     public double? SnapshotAlcoholPerBase { get; private set; }
 
-    public virtual Meal Meal { get; private set; } = null!;
-    public virtual Product? Product { get; private set; }
-    public virtual Recipe? Recipe { get; private set; }
+    public Meal Meal { get; private set; } = null!;
+    public Product? Product { get; private set; }
+    public Recipe? Recipe { get; private set; }
 
     private MealItem() { }
 
