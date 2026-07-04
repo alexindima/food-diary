@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Commands.UpsertWebPushSubscription;
 
 public sealed class UpsertWebPushSubscriptionCommandHandler(
-    IWebPushSubscriptionRepository webPushSubscriptionRepository,
+    IWebPushSubscriptionWriteRepository webPushSubscriptionRepository,
     ICurrentUserAccessService currentUserAccessService,
     IAuditLogger auditLogger)
     : ICommandHandler<UpsertWebPushSubscriptionCommand, Result> {

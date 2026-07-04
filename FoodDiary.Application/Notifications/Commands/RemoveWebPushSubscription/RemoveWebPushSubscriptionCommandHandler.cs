@@ -9,7 +9,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Commands.RemoveWebPushSubscription;
 
 public sealed class RemoveWebPushSubscriptionCommandHandler(
-    IWebPushSubscriptionRepository webPushSubscriptionRepository,
+    IWebPushSubscriptionWriteRepository webPushSubscriptionRepository,
     ICurrentUserAccessService currentUserAccessService,
     IAuditLogger auditLogger)
     : ICommandHandler<RemoveWebPushSubscriptionCommand, Result> {

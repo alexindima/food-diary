@@ -18,7 +18,7 @@ namespace FoodDiary.Application.Users.Queries.GetProfileOverview;
 
 public sealed class GetProfileOverviewQueryHandler(
     IUserContextService userContextService,
-    IWebPushSubscriptionRepository webPushSubscriptionRepository,
+    IWebPushSubscriptionReadRepository webPushSubscriptionRepository,
     IDietologistInvitationReadRepository dietologistInvitationRepository)
     : IQueryHandler<GetProfileOverviewQuery, Result<ProfileOverviewModel>> {
     public async Task<Result<ProfileOverviewModel>> Handle(GetProfileOverviewQuery query, CancellationToken cancellationToken) {

@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Notifications.Queries.GetWebPushSubscriptions;
 
 public sealed class GetWebPushSubscriptionsQueryHandler(
-    IWebPushSubscriptionRepository webPushSubscriptionRepository,
+    IWebPushSubscriptionReadRepository webPushSubscriptionRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetWebPushSubscriptionsQuery, Result<IReadOnlyList<WebPushSubscriptionModel>>> {

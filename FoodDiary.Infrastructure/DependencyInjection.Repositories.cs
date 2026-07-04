@@ -123,6 +123,8 @@ public static partial class DependencyInjection {
         services.AddScoped<INotificationWebPushOutbox, NotificationWebPushOutbox>();
         services.AddScoped<INotificationWebPushOutboxProcessor, NotificationWebPushOutboxProcessor>();
         services.AddScoped<IWebPushSubscriptionRepository, WebPushSubscriptionRepository>();
+        services.AddScoped<IWebPushSubscriptionReadRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
+        services.AddScoped<IWebPushSubscriptionWriteRepository>(static provider => provider.GetRequiredService<IWebPushSubscriptionRepository>());
         services.AddScoped<IOpenFoodFactsProductCacheRepository, OpenFoodFactsProductCacheRepository>();
         services.AddScoped<IFastingPlanRepository, FastingPlanRepository>();
         services.AddScoped<IFastingPlanReadRepository>(static provider => provider.GetRequiredService<IFastingPlanRepository>());
