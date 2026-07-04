@@ -39,6 +39,29 @@ public sealed class OptionsValidationTests {
         Assert.True(UserCleanupOptions.HasValidConfiguration(options));
     }
 
+    [Theory]
+    [InlineData(true, 180, 500, "0 3 * * *", true)]
+    [InlineData(false, 0, 0, "", true)]
+    [InlineData(true, 0, 500, "0 3 * * *", false)]
+    [InlineData(true, 180, 0, "0 3 * * *", false)]
+    [InlineData(true, 180, 500, "", false)]
+    [InlineData(true, 180, 500, " ", false)]
+    public void UserLoginEventCleanupOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int retentionDays,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new UserLoginEventCleanupOptions {
+            Enabled = enabled,
+            RetentionDays = retentionDays,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, UserLoginEventCleanupOptions.HasValidConfiguration(options));
+    }
+
     [Fact]
     public void BillingRenewalOptions_WhenDisabled_PassesValidation() {
         var options = new BillingRenewalOptions {
@@ -81,6 +104,63 @@ public sealed class OptionsValidationTests {
         };
 
         Assert.False(BillingRenewalOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData(true, "* * * * *", true)]
+    [InlineData(false, "", true)]
+    [InlineData(true, "", false)]
+    [InlineData(true, " ", false)]
+    public void FastingNotificationOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        string cron,
+        bool expected) {
+        var options = new FastingNotificationOptions {
+            Enabled = enabled,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, FastingNotificationOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData(true, 25, "* * * * *", true)]
+    [InlineData(false, 0, "", true)]
+    [InlineData(true, 0, "* * * * *", false)]
+    [InlineData(true, 25, "", false)]
+    [InlineData(true, 25, " ", false)]
+    public void ImageObjectDeletionOutboxOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new ImageObjectDeletionOutboxOptions {
+            Enabled = enabled,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, ImageObjectDeletionOutboxOptions.HasValidConfiguration(options));
+    }
+
+    [Theory]
+    [InlineData(true, 50, "* * * * *", true)]
+    [InlineData(false, 0, "", true)]
+    [InlineData(true, 0, "* * * * *", false)]
+    [InlineData(true, 50, "", false)]
+    [InlineData(true, 50, " ", false)]
+    public void NotificationWebPushOutboxOptions_ReturnExpectedValidationResult(
+        bool enabled,
+        int batchSize,
+        string cron,
+        bool expected) {
+        var options = new NotificationWebPushOutboxOptions {
+            Enabled = enabled,
+            BatchSize = batchSize,
+            Cron = cron,
+        };
+
+        Assert.Equal(expected, NotificationWebPushOutboxOptions.HasValidConfiguration(options));
     }
 
     [Fact]

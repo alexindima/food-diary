@@ -14,7 +14,7 @@ Use this file when deciding where backend code belongs.
 | HTTP/SignalR transport | `FoodDiary.Presentation.Api` | Controllers, hubs, HTTP requests/responses, presentation mappings | Business logic, infrastructure, host middleware |
 | Host/composition | `FoodDiary.Web.Api` | Program, DI wiring, auth, middleware, Swagger, rate limiting, telemetry exporters | Feature controllers, request DTOs, domain rules |
 | Resources | `FoodDiary.Resources` | Notification/report text providers and resources | Business orchestration, persistence, host config |
-| Jobs | `FoodDiary.JobManager` | Scheduled job host, Hangfire registration, job plumbing | HTTP presentation, duplicated business logic |
+| Jobs | `FoodDiary.JobManager` | Scheduled job host, Hangfire registration, cleanup jobs, fasting notification scheduling, outbox processing plumbing | HTTP presentation, duplicated business logic |
 | Telegram | `FoodDiary.Telegram.Bot` | Telegram transport, parsing, worker loop | Direct dependencies on core backend projects |
 
 ## MailRelay

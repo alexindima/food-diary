@@ -24,11 +24,7 @@ public static class ApiHostServiceCollectionExtensions {
             services.AddExceptionHandler<ApiExceptionHandler>();
             services.AddRateLimiter(static _ => { });
             services.AddOutputCache(static _ => { });
-            services.AddHostedService<FastingNotificationHostedService>();
             services.AddHostedService<InitialAdminHostedService>();
-            services.AddHostedService<UserLoginEventCleanupHostedService>();
-            services.AddHostedService<ImageObjectDeletionOutboxHostedService>();
-            services.AddHostedService<NotificationWebPushOutboxHostedService>();
 
             return services;
         }

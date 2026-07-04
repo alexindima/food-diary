@@ -845,7 +845,7 @@ public sealed class ApplicationGuardrailTests {
         string dashboardPlanPath = Path.Combine(root, "FoodDiary.Application", "Dashboard", "Dashboard-Query-Plan.md");
         Assert.False(File.Exists(dashboardPlanPath), "Dashboard migration plan should not be kept after the dedicated read path is implemented.");
 
-        string repositoryRegistrationPath = Path.Combine(root, "FoodDiary.Infrastructure", "DependencyInjection.Repositories.cs");
+        string repositoryRegistrationPath = Path.Combine(root, "FoodDiary.Infrastructure", "DependencyInjection.Dashboard.cs");
         string registrationSource = File.ReadAllText(repositoryRegistrationPath);
         Assert.Contains("services.RemoveAll<IDashboardReadService>();", registrationSource, StringComparison.Ordinal);
         Assert.Contains("services.AddScoped<IDashboardReadService, DashboardReadService>();", registrationSource, StringComparison.Ordinal);

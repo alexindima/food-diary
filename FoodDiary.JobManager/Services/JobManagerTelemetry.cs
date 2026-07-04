@@ -13,6 +13,9 @@ internal static class JobManagerTelemetry {
     public static readonly Counter<long> JobDeletedItemsCounter = Meter.CreateCounter<long>(
         "fooddiary.job.deleted_items");
 
+    public static readonly Counter<long> JobProcessedItemsCounter = Meter.CreateCounter<long>(
+        "fooddiary.job.processed_items");
+
     public static readonly Histogram<double> JobExecutionDuration = Meter.CreateHistogram<double>(
         "fooddiary.job.execution.duration",
         unit: "ms");
