@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
 
 namespace FoodDiary.ArchitectureTests;
@@ -137,6 +138,28 @@ public class LayeringTests {
             .Select(entry => string.Create(
                 CultureInfo.InvariantCulture,
                 $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void IntegrationsOptions_AreKeptInOptionsFolder() {
+        string integrationsRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Integrations");
+        string optionsRoot = Path.Combine(integrationsRoot, "Options");
+        var optionsTypePattern = new Regex(
+            @"\b(?:class|record)\s+\w+Options\b",
+            RegexOptions.Compiled,
+            TimeSpan.FromSeconds(1));
+
+        string[] violations = [.. SourceScanner.SourceFiles(integrationsRoot)
+            .Where(path => !path.StartsWith(optionsRoot, StringComparison.OrdinalIgnoreCase))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => optionsTypePattern.IsMatch(entry.line))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{entry.index + 1}")))
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
