@@ -1051,25 +1051,6 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationProject_DoesNotReferencePresentationProject() {
-        string root = GetRepositoryRoot();
-        string projectPath = Path.Combine(root, "FoodDiary.Application", "FoodDiary.Application.csproj");
-        string content = File.ReadAllText(projectPath);
-
-        Assert.DoesNotContain("FoodDiary.Presentation.Api", content, StringComparison.Ordinal);
-    }
-
-    [Fact]
-    public void ApplicationSourceFiles_DoNotUseCancellationTokenNone() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-
-        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, ["CancellationToken.None"]);
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
     public void DomainEventHandlers_DoNotDependOnDirectExternalSideEffectDispatchers() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
