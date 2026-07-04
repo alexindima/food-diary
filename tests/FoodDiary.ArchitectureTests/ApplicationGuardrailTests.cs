@@ -36,6 +36,37 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void MigratedSmallApplicationFeatureHandlersAndValidators_AreSealed() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] migratedSlices = [
+            "Exercises",
+            "Hydration",
+            "Lessons",
+            "ShoppingLists",
+            "Wearables",
+        ];
+
+        string[] violations = [.. migratedSlices
+            .Select(slice => Path.Combine(applicationRoot, slice))
+            .SelectMany(SourceScanner.SourceFiles)
+            .Where(path =>
+                path.EndsWith("Handler.cs", StringComparison.Ordinal) ||
+                path.EndsWith("Validator.cs", StringComparison.Ordinal))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry =>
+                entry.line.Contains("public class ", StringComparison.Ordinal) ||
+                entry.line.Contains("public abstract class ", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
