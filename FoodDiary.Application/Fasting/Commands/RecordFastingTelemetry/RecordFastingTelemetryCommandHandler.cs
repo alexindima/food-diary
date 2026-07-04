@@ -7,7 +7,7 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 namespace FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 
 public sealed class RecordFastingTelemetryCommandHandler(
-    IFastingTelemetryEventRepository repository,
+    IFastingTelemetryEventWriteRepository repository,
     TimeProvider timeProvider)
     : ICommandHandler<RecordFastingTelemetryCommand, Result> {
     public async Task<Result> Handle(RecordFastingTelemetryCommand command, CancellationToken cancellationToken) {

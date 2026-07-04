@@ -6,7 +6,7 @@ using FoodDiary.Application.Fasting.Models;
 namespace FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
 
 public sealed class GetFastingTelemetrySummaryQueryHandler(
-    IFastingTelemetryEventRepository repository,
+    IFastingTelemetryEventReadRepository repository,
     TimeProvider timeProvider)
     : IQueryHandler<GetFastingTelemetrySummaryQuery, Result<FastingTelemetrySummaryModel>> {
     public async Task<Result<FastingTelemetrySummaryModel>> Handle(

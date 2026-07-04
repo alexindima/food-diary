@@ -11,8 +11,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Commands.ReduceActiveFastingTarget;
 
 public sealed class ReduceActiveFastingTargetCommandHandler(
-    IFastingPlanRepository fastingPlanRepository,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingPlanWriteRepository fastingPlanRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : ICommandHandler<ReduceActiveFastingTargetCommand, Result<FastingSessionModel>> {

@@ -11,8 +11,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Commands.PostponeCyclicDay;
 
 public sealed class PostponeCyclicDayCommandHandler(
-    IFastingPlanRepository fastingPlanRepository,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingPlanWriteRepository fastingPlanRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : ICommandHandler<PostponeCyclicDayCommand, Result<FastingSessionModel>> {

@@ -21,7 +21,7 @@ namespace FoodDiary.Application.Dashboard.Services;
 internal sealed class DashboardSectionDataLoader(
     ISender sender,
     IDashboardUserContextService dashboardUserContextService,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IExerciseEntryRepository exerciseEntryRepository,
     IDashboardReadService dashboardReadService) : IDashboardSectionDataLoader {
     private const int DefaultPage = 1;

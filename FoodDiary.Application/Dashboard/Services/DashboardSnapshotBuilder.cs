@@ -40,7 +40,7 @@ public class DashboardSnapshotBuilder : IDashboardSnapshotBuilder {
         IWeightEntryRepository weightEntryRepository,
         IWaistEntryRepository waistEntryRepository,
         IHydrationEntryRepository hydrationEntryRepository,
-        IFastingOccurrenceRepository fastingOccurrenceRepository,
+        IFastingOccurrenceReadRepository fastingOccurrenceRepository,
         IExerciseEntryRepository exerciseEntryRepository,
         ILogger<DashboardSnapshotBuilder> logger)
         : this(

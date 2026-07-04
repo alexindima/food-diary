@@ -10,8 +10,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Commands.UpdateCurrentFastingCheckIn;
 
 public class UpdateCurrentFastingCheckInCommandHandler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
-    IFastingCheckInRepository fastingCheckInRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
+    IFastingCheckInWriteRepository fastingCheckInRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : ICommandHandler<UpdateCurrentFastingCheckInCommand, Result<FastingSessionModel>> {

@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Queries.GetFastingInsights;
 
 public sealed class GetFastingInsightsQueryHandler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
     IFastingAnalyticsService fastingAnalyticsService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)

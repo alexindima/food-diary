@@ -10,8 +10,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 
 public class GetCurrentFastingQueryHandler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
-    IFastingCheckInRepository fastingCheckInRepository,
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+    IFastingCheckInReadRepository fastingCheckInRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCurrentFastingQuery, Result<FastingSessionModel?>> {
     public async Task<Result<FastingSessionModel?>> Handle(

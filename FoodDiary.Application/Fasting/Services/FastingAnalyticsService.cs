@@ -8,8 +8,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Fasting.Services;
 
 public sealed class FastingAnalyticsService(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
-    IFastingCheckInRepository fastingCheckInRepository)
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+    IFastingCheckInReadRepository fastingCheckInRepository)
     : IFastingAnalyticsService {
     private const int AnalysisDays = 90;
 

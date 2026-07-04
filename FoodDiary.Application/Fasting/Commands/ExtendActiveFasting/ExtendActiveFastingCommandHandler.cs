@@ -11,8 +11,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Commands.ExtendActiveFasting;
 
 public class ExtendActiveFastingCommandHandler(
-    IFastingPlanRepository fastingPlanRepository,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingPlanWriteRepository fastingPlanRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<ExtendActiveFastingCommand, Result<FastingSessionModel>> {
     public async Task<Result<FastingSessionModel>> Handle(

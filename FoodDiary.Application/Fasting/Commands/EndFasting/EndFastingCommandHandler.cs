@@ -11,8 +11,8 @@ using FoodDiary.Domain.Entities.Tracking.Fasting;
 namespace FoodDiary.Application.Fasting.Commands.EndFasting;
 
 public class EndFastingCommandHandler(
-    IFastingPlanRepository fastingPlanRepository,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingPlanWriteRepository fastingPlanRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : ICommandHandler<EndFastingCommand, Result<FastingSessionModel>> {

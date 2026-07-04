@@ -12,9 +12,9 @@ using FoodDiary.Domain.Entities.Notifications;
 namespace FoodDiary.Application.Fasting.Services;
 
 public sealed class FastingNotificationScheduler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
-    IFastingCheckInRepository fastingCheckInRepository,
-    INotificationRepository notificationRepository,
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+    IFastingCheckInReadRepository fastingCheckInRepository,
+    INotificationReadRepository notificationRepository,
     INotificationWriter notificationWriter,
     INotificationPusher notificationPusher,
     IUnitOfWork unitOfWork,

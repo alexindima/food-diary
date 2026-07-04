@@ -11,8 +11,8 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Fasting.Commands.StartFasting;
 
 public class StartFastingCommandHandler(
-    IFastingPlanRepository fastingPlanRepository,
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
+    IFastingPlanWriteRepository fastingPlanRepository,
+    IFastingOccurrenceWriteRepository fastingOccurrenceRepository,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
     : ICommandHandler<StartFastingCommand, Result<FastingSessionModel>> {

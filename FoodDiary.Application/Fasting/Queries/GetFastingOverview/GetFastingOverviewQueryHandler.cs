@@ -12,8 +12,8 @@ using FoodDiary.Application.Common.Models;
 namespace FoodDiary.Application.Fasting.Queries.GetFastingOverview;
 
 public sealed class GetFastingOverviewQueryHandler(
-    IFastingOccurrenceRepository fastingOccurrenceRepository,
-    IFastingCheckInRepository fastingCheckInRepository,
+    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
+    IFastingCheckInReadRepository fastingCheckInRepository,
     IFastingAnalyticsService fastingAnalyticsService,
     ICurrentUserAccessService currentUserAccessService,
     TimeProvider dateTimeProvider)
