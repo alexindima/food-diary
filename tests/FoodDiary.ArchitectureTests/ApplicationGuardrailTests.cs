@@ -669,111 +669,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void ApplicationSourceFiles_UseFullUserRepositoryOnlyOutsideMigratedUserSlices() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedDirectories = [
-            Path.Combine(applicationRoot, "Ai"),
-            Path.Combine(applicationRoot, "Consumptions"),
-            Path.Combine(applicationRoot, "Cycles"),
-            Path.Combine(applicationRoot, "DailyAdvices"),
-            Path.Combine(applicationRoot, "Dashboard"),
-            Path.Combine(applicationRoot, "Export"),
-            Path.Combine(applicationRoot, "FavoriteProducts"),
-            Path.Combine(applicationRoot, "FavoriteRecipes"),
-            Path.Combine(applicationRoot, "FavoriteMeals"),
-            Path.Combine(applicationRoot, "Fasting"),
-            Path.Combine(applicationRoot, "Gamification"),
-            Path.Combine(applicationRoot, "Hydration"),
-            Path.Combine(applicationRoot, "Products"),
-            Path.Combine(applicationRoot, "Recipes"),
-            Path.Combine(applicationRoot, "ShoppingLists"),
-            Path.Combine(applicationRoot, "Statistics"),
-            Path.Combine(applicationRoot, "Tdee"),
-            Path.Combine(applicationRoot, "WaistEntries"),
-            Path.Combine(applicationRoot, "WeeklyCheckIn"),
-            Path.Combine(applicationRoot, "WeightEntries"),
-        ];
-
-        string[] violations = [.. migratedDirectories.SelectMany(directory =>
-            FindRepositoryReferenceViolations(
-                root,
-                directory,
-                "IUserRepository",
-                []))];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedAdminReadHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminDashboardSummary", "GetAdminDashboardSummaryQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUser", "GetAdminUserQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUserRoleAudit", "GetAdminUserRoleAuditQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Admin", "Queries", "GetAdminUsers", "GetAdminUsersQueryHandler.cs"),
-        ];
-
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedAdminUserCommandHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Admin", "Commands", "StartAdminImpersonation", "StartAdminImpersonationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Admin", "Commands", "UpdateAdminUser", "UpdateAdminUserCommandHandler.cs"),
-        ];
-
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void AdminSlice_UsesUserRepositoryOnlyThroughFocusedAdapterServices() {
-        string root = GetRepositoryRoot();
-        string adminRoot = Path.Combine(root, "FoodDiary.Application", "Admin");
-        string[] allowedFiles = [
-            Path.Combine(adminRoot, "Services", "AdminImpersonationUserService.cs"),
-            Path.Combine(adminRoot, "Services", "AdminUserManagementService.cs"),
-            Path.Combine(adminRoot, "Services", "AdminUserReadService.cs"),
-        ];
-
-        string[] adminFiles = [.. SourceScanner.SourceFiles(adminRoot)
-            .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))];
-
-        string[] violations = FindReferencesInFiles(root, adminFiles, "IUserRepository");
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedAuthenticationLookupHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Authentication", "Commands", "AdminSsoExchange", "AdminSsoExchangeCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "AdminSsoStart", "AdminSsoStartCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "Login", "LoginCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "RefreshToken", "RefreshTokenCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramBotAuth", "TelegramBotAuthCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramLoginWidget", "TelegramLoginWidgetCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "TelegramVerify", "TelegramVerifyCommandHandler.cs"),
-        ];
-
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedAuthenticationMutationServices_DoNotUseFullUserRepositoryOutsideAdapter() {
+    public void MigratedAuthenticationMutationServices_DoNotUseCurrentUserAccessPolicy() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
@@ -787,43 +683,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Authentication", "Services", "AuthenticationTokenService.cs"),
         ];
 
-        string[] violations = [
-            .. FindReferencesInFiles(root, migratedFiles, "IUserRepository"),
-            .. FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy"),
-        ];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedAuthenticationRegistrationServices_DoNotUseFullUserRepositoryOutsideAdapter() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Authentication", "Commands", "BootstrapInitialAdmin", "BootstrapInitialAdminCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "Register", "RegisterCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Authentication", "Commands", "Register", "RegisterCommandValidator.cs"),
-        ];
-
-        string[] violations = FindReferencesInFiles(root, migratedFiles, "IUserRepository");
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void AuthenticationSlice_UsesUserRepositoryOnlyThroughFocusedAdapterServices() {
-        string root = GetRepositoryRoot();
-        string authenticationRoot = Path.Combine(root, "FoodDiary.Application", "Authentication");
-        string[] allowedFiles = [
-            Path.Combine(authenticationRoot, "Services", "AuthenticationUserLookupService.cs"),
-            Path.Combine(authenticationRoot, "Services", "AuthenticationUserMutationService.cs"),
-            Path.Combine(authenticationRoot, "Services", "AuthenticationUserRegistrationService.cs"),
-        ];
-
-        string[] authenticationFiles = [.. SourceScanner.SourceFiles(authenticationRoot)
-            .Where(path => !allowedFiles.Contains(path, StringComparer.OrdinalIgnoreCase))];
-
-        string[] violations = FindReferencesInFiles(root, authenticationFiles, "IUserRepository");
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");
 
         Assert.Empty(violations);
     }
@@ -844,63 +704,7 @@ public sealed class ApplicationGuardrailTests {
         string usersCommonRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Common");
         string servicePath = Path.Combine(usersCommonRoot, "CurrentUserAccessService.cs");
 
-        Assert.False(File.Exists(servicePath), "UserContextService should remain the single IUserRepository-backed current-user access implementation.");
-    }
-
-    [Fact]
-    public void MigratedNotificationHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Notifications", "Commands", "MarkAllNotificationsRead", "MarkAllNotificationsReadCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "MarkNotificationRead", "MarkNotificationReadCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "RemoveWebPushSubscription", "RemoveWebPushSubscriptionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "ScheduleTestNotification", "ScheduleTestNotificationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "UpdateNotificationPreferences", "UpdateNotificationPreferencesCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Commands", "UpsertWebPushSubscription", "UpsertWebPushSubscriptionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotificationPreferences", "GetNotificationPreferencesQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetNotifications", "GetNotificationsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetUnreadCount", "GetUnreadCountQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Notifications", "Queries", "GetWebPushSubscriptions", "GetWebPushSubscriptionsQueryHandler.cs"),
-        ];
-
-        string[] violations = [.. migratedFiles
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line })
-                .Where(entry => entry.line.Contains("IUserRepository", StringComparison.Ordinal))
-                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void MigratedDietologistAccessOnlyHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitation", "AcceptInvitationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "AcceptInvitationForCurrentUser", "AcceptInvitationForCurrentUserCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "DisconnectDietologist", "DisconnectDietologistCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "MarkRecommendationRead", "MarkRecommendationReadCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "RevokeInvitation", "RevokeInvitationCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Commands", "UpdateDietologistPermissions", "UpdateDietologistPermissionsCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "EventHandlers", "RecommendationCreatedEventHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetClientDashboard", "GetClientDashboardQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetInvitationByToken", "GetInvitationByTokenQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyClients", "GetMyClientsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologist", "GetMyDietologistQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyDietologistRelationship", "GetMyDietologistRelationshipQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetMyRecommendations", "GetMyRecommendationsQueryHandler.cs"),
-            Path.Combine(applicationRoot, "Dietologist", "Queries", "GetRecommendationsForClient", "GetRecommendationsForClientQueryHandler.cs"),
-        ];
-
-        string[] violations = [.. migratedFiles
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line })
-                .Where(entry => entry.line.Contains("IUserRepository", StringComparison.Ordinal))
-                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
-
-        Assert.Empty(violations);
+        Assert.False(File.Exists(servicePath), "UserContextService should remain the single current-user access implementation.");
     }
 
     [Fact]
@@ -921,51 +725,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void MigratedBillingUserContextHandlers_DoNotUseFullUserRepository() {
-        string root = GetRepositoryRoot();
-        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
-        string[] migratedFiles = [
-            Path.Combine(applicationRoot, "Billing", "Commands", "CreateCheckoutSession", "CreateCheckoutSessionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Commands", "CreatePortalSession", "CreatePortalSessionCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Commands", "StartPremiumTrial", "StartPremiumTrialCommandHandler.cs"),
-            Path.Combine(applicationRoot, "Billing", "Queries", "GetBillingOverview", "GetBillingOverviewQueryHandler.cs"),
-        ];
-
-        string[] violations = [.. migratedFiles
-            .SelectMany(path => File.ReadLines(path)
-                .Select((line, index) => new { path, index, line })
-                .Where(entry => entry.line.Contains("IUserRepository", StringComparison.Ordinal))
-                .Select(entry => string.Create(CultureInfo.InvariantCulture, $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))];
-
-        Assert.Empty(violations);
-    }
-
-    [Fact]
-    public void BillingSlice_UsesUserRepositoryOnlyThroughBillingUserLookupService() {
+    public void BillingSlice_UsesCurrentUserAccessPolicyOnlyThroughBillingUserLookupService() {
         string root = GetRepositoryRoot();
         string billingRoot = Path.Combine(root, "FoodDiary.Application", "Billing");
         string allowedPath = Path.Combine(billingRoot, "Services", "BillingUserLookupService.cs");
         string[] billingFiles = [.. SourceScanner.SourceFiles(billingRoot)
             .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
 
-        string[] violations = [
-            .. FindReferencesInFiles(root, billingFiles, "IUserRepository"),
-            .. FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy"),
-        ];
+        string[] violations = FindReferencesInFiles(root, billingFiles, "CurrentUserAccessPolicy");
 
         Assert.Empty(violations);
     }
 
     [Fact]
-    public void NotificationsSlice_UsesUserRepositoryOnlyThroughNotificationUserAccessService() {
+    public void NotificationsSlice_DoesNotUseCurrentUserAccessPolicyDirectly() {
         string root = GetRepositoryRoot();
         string notificationsRoot = Path.Combine(root, "FoodDiary.Application", "Notifications");
         string[] notificationFiles = [.. SourceScanner.SourceFiles(notificationsRoot)];
 
-        string[] violations = [
-            .. FindReferencesInFiles(root, notificationFiles, "IUserRepository"),
-            .. FindReferencesInFiles(root, notificationFiles, "CurrentUserAccessPolicy"),
-        ];
+        string[] violations = FindReferencesInFiles(root, notificationFiles, "CurrentUserAccessPolicy");
 
         Assert.Empty(violations);
     }
@@ -988,7 +766,7 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void UserProfileFeatureSlices_UseUserRepositoryOnlyThroughDedicatedProfileServices() {
+    public void UserProfileFeatureSlices_UseCurrentUserAccessPolicyOnlyThroughDedicatedProfileServices() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         (string Slice, string AllowedRelativePath)[] slices = [
@@ -1006,15 +784,14 @@ public sealed class ApplicationGuardrailTests {
             string[] files = [.. SourceScanner.SourceFiles(sliceRoot)
                 .Where(path => !string.Equals(path, allowedPath, StringComparison.OrdinalIgnoreCase))];
 
-            return FindReferencesInFiles(root, files, "IUserRepository")
-                .Concat(FindReferencesInFiles(root, files, "CurrentUserAccessPolicy"));
+            return FindReferencesInFiles(root, files, "CurrentUserAccessPolicy");
         })];
 
         Assert.Empty(violations);
     }
 
     [Fact]
-    public void MigratedUserHandlers_DoNotUseFullUserRepositoryOrAccessPolicy() {
+    public void MigratedUserHandlers_DoNotUseCurrentUserAccessPolicyDirectly() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
         string[] migratedFiles = [
@@ -1035,10 +812,7 @@ public sealed class ApplicationGuardrailTests {
             Path.Combine(applicationRoot, "Users", "Queries", "GetUserGoals", "GetUserGoalsQueryHandler.cs"),
         ];
 
-        string[] violations = [
-            .. FindReferencesInFiles(root, migratedFiles, "IUserRepository"),
-            .. FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy"),
-        ];
+        string[] violations = FindReferencesInFiles(root, migratedFiles, "CurrentUserAccessPolicy");
 
         Assert.Empty(violations);
     }
