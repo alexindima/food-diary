@@ -1,4 +1,4 @@
-using FoodDiary.Application.ShoppingLists.Commands.Common;
+using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Commands.CreateShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.DeleteShoppingList;
 using FoodDiary.Application.ShoppingLists.Commands.UpdateShoppingList;

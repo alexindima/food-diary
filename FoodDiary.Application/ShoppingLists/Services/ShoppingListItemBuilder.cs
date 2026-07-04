@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.ShoppingLists.Commands.Common;
+using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;

@@ -21,6 +21,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationFeatures_DoNotUseLegacyCommandsCommonFolders() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [.. Directory.GetDirectories(applicationRoot, "Common", SearchOption.AllDirectories)
+            .Where(path => path.EndsWith(
+                $"{Path.DirectorySeparatorChar}Commands{Path.DirectorySeparatorChar}Common",
+                StringComparison.OrdinalIgnoreCase))
+            .Select(path => Path.GetRelativePath(root, path))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_UseSharedEnumParsersForTryParse() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
