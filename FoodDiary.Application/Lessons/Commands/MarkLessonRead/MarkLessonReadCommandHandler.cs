@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Lessons.Commands.MarkLessonRead;
 
-public class MarkLessonReadCommandHandler(
+public sealed class MarkLessonReadCommandHandler(
     INutritionLessonReadRepository readRepository,
     INutritionLessonWriteRepository writeRepository,
     TimeProvider dateTimeProvider)

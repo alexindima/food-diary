@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Exercises.Commands.DeleteExerciseEntry;
 
-public class DeleteExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
+public sealed class DeleteExerciseEntryCommandHandler(IExerciseEntryWriteRepository repository)
     : ICommandHandler<DeleteExerciseEntryCommand, Result> {
     public async Task<Result> Handle(
         DeleteExerciseEntryCommand command,

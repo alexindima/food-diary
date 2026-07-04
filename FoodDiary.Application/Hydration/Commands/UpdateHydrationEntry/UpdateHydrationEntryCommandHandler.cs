@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
-public class UpdateHydrationEntryCommandHandler(
+public sealed class UpdateHydrationEntryCommandHandler(
     IHydrationEntryWriteRepository repository,
     ICurrentUserAccessService currentUserAccessService) : ICommandHandler<UpdateHydrationEntryCommand, Result<HydrationEntryModel>> {
     public async Task<Result<HydrationEntryModel>> Handle(

@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
-public class GetLessonsQueryHandler(INutritionLessonReadRepository repository)
+public sealed class GetLessonsQueryHandler(INutritionLessonReadRepository repository)
     : IQueryHandler<GetLessonsQuery, Result<IReadOnlyList<LessonSummaryModel>>> {
     public async Task<Result<IReadOnlyList<LessonSummaryModel>>> Handle(
         GetLessonsQuery query,

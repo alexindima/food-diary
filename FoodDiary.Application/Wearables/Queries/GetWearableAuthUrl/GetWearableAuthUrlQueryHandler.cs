@@ -8,7 +8,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableAuthUrl;
 
-public class GetWearableAuthUrlQueryHandler(
+public sealed class GetWearableAuthUrlQueryHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableOAuthStateService stateService)
     : IQueryHandler<GetWearableAuthUrlQuery, Result<string>> {

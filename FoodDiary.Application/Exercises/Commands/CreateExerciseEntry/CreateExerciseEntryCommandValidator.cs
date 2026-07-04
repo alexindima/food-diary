@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Exercises.Commands.CreateExerciseEntry;
 
-public class CreateExerciseEntryCommandValidator : AbstractValidator<CreateExerciseEntryCommand> {
+public sealed class CreateExerciseEntryCommandValidator : AbstractValidator<CreateExerciseEntryCommand> {
     public CreateExerciseEntryCommandValidator() {
         RuleFor(x => x.UserId)
             .NotEmpty()

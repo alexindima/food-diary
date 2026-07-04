@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Commands.DisconnectWearable;
 
-public class DisconnectWearableCommandHandler(IWearableConnectionWriteRepository connectionRepository)
+public sealed class DisconnectWearableCommandHandler(IWearableConnectionWriteRepository connectionRepository)
     : ICommandHandler<DisconnectWearableCommand, Result> {
     public async Task<Result> Handle(
         DisconnectWearableCommand command,

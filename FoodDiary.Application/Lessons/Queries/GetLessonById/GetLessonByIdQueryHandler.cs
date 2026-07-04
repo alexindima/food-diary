@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Content;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessonById;
 
-public class GetLessonByIdQueryHandler(INutritionLessonReadRepository repository)
+public sealed class GetLessonByIdQueryHandler(INutritionLessonReadRepository repository)
     : IQueryHandler<GetLessonByIdQuery, Result<LessonDetailModel>> {
     public async Task<Result<LessonDetailModel>> Handle(
         GetLessonByIdQuery query,

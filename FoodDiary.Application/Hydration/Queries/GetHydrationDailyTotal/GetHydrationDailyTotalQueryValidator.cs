@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationDailyTotal;
 
-public class GetHydrationDailyTotalQueryValidator : AbstractValidator<GetHydrationDailyTotalQuery> {
+public sealed class GetHydrationDailyTotalQueryValidator : AbstractValidator<GetHydrationDailyTotalQuery> {
     public GetHydrationDailyTotalQueryValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

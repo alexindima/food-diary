@@ -7,7 +7,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Commands.DeleteHydrationEntry;
 
-public class DeleteHydrationEntryCommandHandler(
+public sealed class DeleteHydrationEntryCommandHandler(
     IHydrationEntryWriteRepository repository,
     ICurrentUserAccessService currentUserAccessService)
     : ICommandHandler<DeleteHydrationEntryCommand, Result> {

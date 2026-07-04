@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Hydration.Commands.UpdateHydrationEntry;
 
-public class UpdateHydrationEntryCommandValidator : AbstractValidator<UpdateHydrationEntryCommand> {
+public sealed class UpdateHydrationEntryCommandValidator : AbstractValidator<UpdateHydrationEntryCommand> {
     public UpdateHydrationEntryCommandValidator() {
         RuleFor(c => c.UserId)
             .Cascade(CascadeMode.Stop)

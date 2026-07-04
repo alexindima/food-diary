@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace FoodDiary.Application.Lessons.Queries.GetLessons;
 
-public class GetLessonsQueryValidator : AbstractValidator<GetLessonsQuery> {
+public sealed class GetLessonsQueryValidator : AbstractValidator<GetLessonsQuery> {
     public GetLessonsQueryValidator() {
         RuleFor(x => x.UserId)
             .NotEmpty()

@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Tracking;
 
 namespace FoodDiary.Application.Hydration.Queries.GetHydrationEntries;
 
-public class GetHydrationEntriesQueryHandler(
+public sealed class GetHydrationEntriesQueryHandler(
     IHydrationEntryReadRepository repository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetHydrationEntriesQuery, Result<IReadOnlyList<HydrationEntryModel>>> {

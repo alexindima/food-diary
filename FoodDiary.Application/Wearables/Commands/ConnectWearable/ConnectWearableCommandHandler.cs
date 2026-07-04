@@ -10,7 +10,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
 
-public class ConnectWearableCommandHandler(
+public sealed class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
     IWearableConnectionWriteRepository connectionRepository,
     IWearableOAuthStateService stateService)
