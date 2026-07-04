@@ -13,7 +13,7 @@ namespace FoodDiary.Application.Billing.Commands.CreateCheckoutSession;
 public sealed class CreateCheckoutSessionCommandHandler(
     IBillingUserContextService billingUserContextService,
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
-    IBillingPaymentRepository billingPaymentRepository,
+    IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingProviderGatewayAccessor billingProviderGatewayAccessor,
     TimeProvider dateTimeProvider)
     : ICommandHandler<CreateCheckoutSessionCommand, Result<BillingCheckoutSessionModel>> {

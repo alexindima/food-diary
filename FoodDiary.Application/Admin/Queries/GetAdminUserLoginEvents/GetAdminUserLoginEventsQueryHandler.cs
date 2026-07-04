@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginEvents;
 
-public sealed class GetAdminUserLoginEventsQueryHandler(IUserLoginEventRepository repository)
+public sealed class GetAdminUserLoginEventsQueryHandler(IUserLoginEventReadRepository repository)
     : IQueryHandler<GetAdminUserLoginEventsQuery, Result<PagedResponse<AdminUserLoginEventModel>>> {
     public async Task<Result<PagedResponse<AdminUserLoginEventModel>>> Handle(
         GetAdminUserLoginEventsQuery query,

@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Billing;
 
 namespace FoodDiary.Application.Billing.Commands.ProcessBillingWebhook;
 
-public sealed class BillingWebhookPaymentRecorder(IBillingPaymentRepository billingPaymentRepository) {
+public sealed class BillingWebhookPaymentRecorder(IBillingPaymentWriteRepository billingPaymentRepository) {
     public async Task AddIfPresentAsync(
         BillingSubscription subscription,
         string provider,

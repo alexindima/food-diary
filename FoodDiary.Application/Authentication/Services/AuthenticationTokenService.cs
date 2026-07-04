@@ -11,8 +11,8 @@ namespace FoodDiary.Application.Authentication.Services;
 
 public sealed class AuthenticationTokenService(
     IAuthenticationUserMutationService userMutationService,
-    IUserLoginEventRepository userLoginEventRepository,
-    IRefreshTokenSessionRepository refreshTokenSessionRepository,
+    IUserLoginEventWriteRepository userLoginEventRepository,
+    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IJwtTokenGenerator jwtTokenGenerator,
     TimeProvider dateTimeProvider)
     : IAuthenticationTokenService {

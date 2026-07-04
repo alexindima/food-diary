@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableConnections;
 
-public class GetWearableConnectionsQueryHandler(IWearableConnectionRepository repository)
+public class GetWearableConnectionsQueryHandler(IWearableConnectionReadRepository repository)
     : IQueryHandler<GetWearableConnectionsQuery, Result<IReadOnlyList<WearableConnectionModel>>> {
     public async Task<Result<IReadOnlyList<WearableConnectionModel>>> Handle(
         GetWearableConnectionsQuery query,

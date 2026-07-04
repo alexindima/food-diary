@@ -349,6 +349,23 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationSourceFiles_DoNotUseFullAuthenticationBillingAndWearableSupportRepositories() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IUserLoginEventRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IRefreshTokenSessionRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IBillingPaymentRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IBillingWebhookEventRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IWearableConnectionRepository", []),
+            .. FindRepositoryReferenceViolations(root, applicationRoot, "IWearableSyncRepository", []),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullExerciseEntryRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

@@ -11,8 +11,8 @@ namespace FoodDiary.Application.Wearables.Commands.SyncWearableData;
 
 public class SyncWearableDataCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
-    IWearableConnectionRepository connectionRepository,
-    IWearableSyncRepository syncRepository)
+    IWearableConnectionWriteRepository connectionRepository,
+    IWearableSyncWriteRepository syncRepository)
     : ICommandHandler<SyncWearableDataCommand, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         SyncWearableDataCommand command,

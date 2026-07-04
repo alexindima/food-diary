@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Wearables.Commands.ConnectWearable;
 
 public class ConnectWearableCommandHandler(
     IEnumerable<IWearableClient> wearableClients,
-    IWearableConnectionRepository connectionRepository,
+    IWearableConnectionWriteRepository connectionRepository,
     IWearableOAuthStateService stateService)
     : ICommandHandler<ConnectWearableCommand, Result<WearableConnectionModel>> {
     public async Task<Result<WearableConnectionModel>> Handle(

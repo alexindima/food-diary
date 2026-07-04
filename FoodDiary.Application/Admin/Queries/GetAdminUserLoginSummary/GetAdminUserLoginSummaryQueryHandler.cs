@@ -6,7 +6,7 @@ using FoodDiary.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 
-public sealed class GetAdminUserLoginSummaryQueryHandler(IUserLoginEventRepository repository)
+public sealed class GetAdminUserLoginSummaryQueryHandler(IUserLoginEventReadRepository repository)
     : IQueryHandler<GetAdminUserLoginSummaryQuery, Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> Handle(
         GetAdminUserLoginSummaryQuery query,

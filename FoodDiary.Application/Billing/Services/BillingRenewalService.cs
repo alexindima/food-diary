@@ -11,7 +11,7 @@ namespace FoodDiary.Application.Billing.Services;
 
 public sealed class BillingRenewalService(
     IBillingSubscriptionWriteRepository billingSubscriptionRepository,
-    IBillingPaymentRepository billingPaymentRepository,
+    IBillingPaymentWriteRepository billingPaymentRepository,
     IBillingUserContextService billingUserContextService,
     IBillingTransactionRunner billingTransactionRunner,
     IEnumerable<IBillingRecurringProviderGateway> recurringProviderGateways,

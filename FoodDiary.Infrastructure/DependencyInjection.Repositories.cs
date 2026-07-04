@@ -65,7 +65,11 @@ public static partial class DependencyInjection {
         services.AddScoped<IUserRoleCatalogService, UserRoleCatalogService>();
         services.AddScoped<IUserRoleMembershipService, UserRoleMembershipService>();
         services.AddScoped<IUserLoginEventRepository, UserLoginEventRepository>();
+        services.AddScoped<IUserLoginEventReadRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
+        services.AddScoped<IUserLoginEventWriteRepository>(static provider => provider.GetRequiredService<IUserLoginEventRepository>());
         services.AddScoped<IRefreshTokenSessionRepository, RefreshTokenSessionRepository>();
+        services.AddScoped<IRefreshTokenSessionReadRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
+        services.AddScoped<IRefreshTokenSessionWriteRepository>(static provider => provider.GetRequiredService<IRefreshTokenSessionRepository>());
         services.AddScoped<IAdminBillingRepository, AdminBillingRepository>();
         services.AddScoped<IAdminImpersonationSessionRepository, AdminImpersonationSessionRepository>();
         services.AddScoped<IAdminUserRoleAuditRepository, AdminUserRoleAuditRepository>();

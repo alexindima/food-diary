@@ -15,7 +15,7 @@ public class RefreshTokenCommandHandler(
     IAuthenticationUserLookupService userLookupService,
     IJwtTokenGenerator jwtTokenGenerator,
     IPasswordHasher passwordHasher,
-    IRefreshTokenSessionRepository refreshTokenSessionRepository,
+    IRefreshTokenSessionWriteRepository refreshTokenSessionRepository,
     IAuthenticationTokenService authenticationTokenService,
     TimeProvider dateTimeProvider) : ICommandHandler<RefreshTokenCommand, Result<AuthenticationModel>> {
     public async Task<Result<AuthenticationModel>> Handle(RefreshTokenCommand command, CancellationToken cancellationToken) {

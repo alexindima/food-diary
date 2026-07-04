@@ -9,7 +9,7 @@ using FoodDiary.Domain.Entities.Wearables;
 
 namespace FoodDiary.Application.Wearables.Queries.GetWearableDailySummary;
 
-public class GetWearableDailySummaryQueryHandler(IWearableSyncRepository syncRepository)
+public class GetWearableDailySummaryQueryHandler(IWearableSyncReadRepository syncRepository)
     : IQueryHandler<GetWearableDailySummaryQuery, Result<WearableDailySummaryModel>> {
     public async Task<Result<WearableDailySummaryModel>> Handle(
         GetWearableDailySummaryQuery query,
