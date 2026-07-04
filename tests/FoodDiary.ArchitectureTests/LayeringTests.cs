@@ -123,16 +123,27 @@ public class LayeringTests {
     }
 
     [Fact]
-    public void InfrastructureProject_DoesNotReferenceExternalProviderPackages() {
-        HashSet<string> packages = ProjectReferenceReader
-            .ReadPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj")
-            .ToHashSet(StringComparer.Ordinal);
+    public void InfrastructureProject_PackageReferencesStayLimitedToPersistenceAndTechnicalImplementations() {
+        string[] allowedPackages = [
+            "BCrypt.Net-Next",
+            "Microsoft.EntityFrameworkCore",
+            "Microsoft.EntityFrameworkCore.Design",
+            "Microsoft.Extensions.Configuration",
+            "Microsoft.Extensions.Configuration.Json",
+            "Microsoft.Extensions.Configuration.UserSecrets",
+            "Microsoft.Extensions.Http",
+            "Microsoft.Extensions.Options.ConfigurationExtensions",
+            "Newtonsoft.Json",
+            "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "QuestPDF",
+            "SkiaSharp",
+            "SkiaSharp.NativeAssets.Linux.NoDependencies",
+            "System.IdentityModel.Tokens.Jwt",
+        ];
 
-        Assert.DoesNotContain("AWSSDK.S3", packages);
-        Assert.DoesNotContain("Stripe.net", packages);
-        Assert.DoesNotContain("WebPush", packages);
-        Assert.DoesNotContain("Microsoft.AspNetCore.WebUtilities", packages);
-        Assert.DoesNotContain("Microsoft.IdentityModel.Protocols.OpenIdConnect", packages);
+        string[] packages = ProjectReferenceReader.ReadPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
+
+        Assert.Equal(allowedPackages, packages);
     }
 
     [Fact]
