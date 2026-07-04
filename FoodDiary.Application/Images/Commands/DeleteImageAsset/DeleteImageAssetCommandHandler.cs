@@ -7,7 +7,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Images.Commands.DeleteImageAsset;
 
 public sealed class DeleteImageAssetCommandHandler(
-    IImageAssetRepository imageAssetRepository,
+    IImageAssetReadRepository imageAssetRepository,
     IImageAssetCleanupService cleanupService) : ICommandHandler<DeleteImageAssetCommand, Result> {
     public async Task<Result> Handle(DeleteImageAssetCommand request, CancellationToken cancellationToken) {
         if (request.UserId == Guid.Empty) {

@@ -10,7 +10,7 @@ using FoodDiary.Domain.Entities.Assets;
 namespace FoodDiary.Application.Ai.Commands.AnalyzeFoodImage;
 
 public sealed class AnalyzeFoodImageCommandHandler(
-    IImageAssetRepository imageAssetRepository,
+    IImageAssetReadRepository imageAssetRepository,
     IAiUserContextService aiUserContextService,
     IOpenAiFoodService openAiFoodService,
     IImageStorageService imageStorageService)

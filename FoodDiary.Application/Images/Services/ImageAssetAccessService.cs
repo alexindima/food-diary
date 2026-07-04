@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Images.Services;
 
 public sealed class ImageAssetAccessService(
-    IImageAssetRepository imageAssetRepository,
+    IImageAssetReadRepository imageAssetRepository,
     IImageStorageService imageStorageService) : IImageAssetAccessService {
     public async Task<Result<ImageAsset?>> ResolveOptionalAsync(
         ImageAssetId? assetId,

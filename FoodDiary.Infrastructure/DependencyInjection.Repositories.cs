@@ -104,6 +104,8 @@ public static partial class DependencyInjection {
         services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<IImageAssetRepository, ImageAssetRepository>();
+        services.AddScoped<IImageAssetReadRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());
+        services.AddScoped<IImageAssetWriteRepository>(static provider => provider.GetRequiredService<IImageAssetRepository>());
         services.AddScoped<IImageObjectDeletionOutbox, ImageObjectDeletionOutbox>();
         services.AddScoped<IImageObjectDeletionOutboxProcessor, ImageObjectDeletionOutboxProcessor>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();

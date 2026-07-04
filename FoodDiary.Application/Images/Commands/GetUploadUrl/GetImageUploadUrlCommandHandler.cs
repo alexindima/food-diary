@@ -8,7 +8,7 @@ namespace FoodDiary.Application.Images.Commands.GetUploadUrl;
 
 public sealed class GetImageUploadUrlCommandHandler(
     IImageStorageService imageStorageService,
-    IImageAssetRepository imageAssetRepository) : ICommandHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
+    IImageAssetWriteRepository imageAssetRepository) : ICommandHandler<GetImageUploadUrlCommand, Result<GetImageUploadUrlResult>> {
     public async Task<Result<GetImageUploadUrlResult>> Handle(GetImageUploadUrlCommand request, CancellationToken cancellationToken) {
         Result validationResult = ValidateRequest(request);
         if (validationResult.IsFailure) {

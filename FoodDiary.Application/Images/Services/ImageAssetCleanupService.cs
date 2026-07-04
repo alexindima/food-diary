@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 namespace FoodDiary.Application.Images.Services;
 
 public sealed class ImageAssetCleanupService(
-    IImageAssetRepository imageAssetRepository,
+    IImageAssetWriteRepository imageAssetRepository,
     IImageObjectDeletionOutbox imageObjectDeletionOutbox,
     IImageStorageService imageStorageService,
     ILogger<ImageAssetCleanupService> logger,
