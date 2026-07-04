@@ -178,6 +178,36 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationAsyncMethods_UseAsyncSuffixExceptFrameworkEntrypoints() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = [.. SourceScanner.SourceFiles(applicationRoot)
+            .SelectMany(path => CSharpSyntaxReader.ReadMethods(path)
+                .Where(static method => method.IsAsyncLike)
+                .Where(static method => !method.Name.EndsWith("Async", StringComparison.Ordinal))
+                .Where(static method => !string.Equals(method.Name, "Handle", StringComparison.Ordinal))
+                .Select(method => method.Format(root)))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotSuppressCancellationTokens() {
+        string applicationRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Application");
+        string[] forbiddenPatterns = [
+            "CancellationToken.None",
+            "default(CancellationToken)",
+            "new CancellationToken(",
+        ];
+
+        string[] violations = SourceScanner.FindLinePatternViolations(applicationRoot, forbiddenPatterns);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationCommonServiceInterfaces_StayLimitedToTrueCrossCuttingAbstractions() {
         string root = GetRepositoryRoot();
         string servicesRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Services");
