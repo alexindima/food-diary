@@ -40,4 +40,33 @@ public sealed class PersistenceTransactionGuardrailTests {
 
         Assert.Empty(violations);
     }
+
+    [Fact]
+    public void InfrastructureManualTransactionUsage_StaysInsideCurrentExplicitAllowlist() {
+        string infrastructureRoot = ArchitectureTestPaths.FromRoot("FoodDiary.Infrastructure");
+        string[] allowedFiles = [
+            Path.Combine(infrastructureRoot, "Persistence", "Billing", "EfBillingTransactionRunner.cs"),
+            Path.Combine(infrastructureRoot, "Services", "UserCleanupService.cs"),
+        ];
+        string[] forbiddenPatterns = [
+            "BeginTransaction(",
+            "BeginTransactionAsync(",
+            "CommitAsync(",
+            "RollbackAsync(",
+        ];
+
+        HashSet<string> allowed = allowedFiles.ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        string[] violations = [.. SourceScanner.SourceFiles(infrastructureRoot)
+            .Where(path => !allowed.Contains(path))
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(ArchitectureTestPaths.RepositoryRoot, entry.path)}:{entry.index + 1}")))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
 }
