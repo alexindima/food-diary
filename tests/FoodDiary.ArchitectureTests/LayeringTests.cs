@@ -79,7 +79,9 @@ public class LayeringTests {
 
     [Fact]
     public void InfrastructureProject_DoesNotReferenceExternalProviderPackages() {
-        HashSet<string> packages = GetPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj");
+        HashSet<string> packages = ProjectReferenceReader
+            .ReadPackageReferences("FoodDiary.Infrastructure/FoodDiary.Infrastructure.csproj")
+            .ToHashSet(StringComparer.Ordinal);
 
         Assert.DoesNotContain("AWSSDK.S3", packages);
         Assert.DoesNotContain("Stripe.net", packages);
@@ -203,18 +205,6 @@ public class LayeringTests {
             .Select(node => node.Attribute("Include")?.Value)
             .Where(value => !string.IsNullOrWhiteSpace(value))
             .Select(value => GetProjectNameFromReference(value!))
-            .ToHashSet(StringComparer.Ordinal);
-    }
-
-    private static HashSet<string> GetPackageReferences(string relativeProjectPath) {
-        string root = GetRepositoryRoot();
-        string projectPath = Path.Combine(root, relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
-        var document = XDocument.Load(projectPath);
-
-        return document.Descendants("PackageReference")
-            .Select(node => node.Attribute("Include")?.Value)
-            .Where(value => !string.IsNullOrWhiteSpace(value))
-            .Select(value => value!)
             .ToHashSet(StringComparer.Ordinal);
     }
 

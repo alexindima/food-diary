@@ -100,6 +100,22 @@ public sealed class HostCompositionBoundaryTests {
         Assert.Empty(violations);
     }
 
+    [Fact]
+    public void TelegramBotProject_ReferencesOnlyTransportAndHostingPackages() {
+        var allowedPackages = new HashSet<string>(StringComparer.Ordinal) {
+            "Microsoft.Extensions.Hosting",
+            "Microsoft.Extensions.Http",
+            "Telegram.Bot",
+        };
+
+        string[] violations = [.. ProjectReferenceReader
+            .ReadPackageReferences("FoodDiary.Telegram.Bot/FoodDiary.Telegram.Bot.csproj")
+            .Where(packageName => !allowedPackages.Contains(packageName))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
     private static string ProjectFolderFromProjectName(string projectName) =>
         string.Equals(projectName, "FoodDiary.Mediator", StringComparison.Ordinal)
             ? Path.Combine("Shared", "FoodDiary.Mediator")

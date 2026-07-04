@@ -29,6 +29,18 @@ internal static class ProjectReferenceReader {
             .Order(StringComparer.Ordinal)];
     }
 
+    public static string[] ReadPackageReferences(string relativeProjectPath) {
+        string projectPath = ArchitectureTestPaths.FromRoot(
+            relativeProjectPath.Replace('/', Path.DirectorySeparatorChar));
+        var document = XDocument.Load(projectPath);
+
+        return [.. document.Descendants("PackageReference")
+            .Select(node => node.Attribute("Include")?.Value)
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value!)
+            .Order(StringComparer.Ordinal)];
+    }
+
     private static IEnumerable<string> ReadProductionProjectPaths() =>
         Directory.GetFiles(ArchitectureTestPaths.RepositoryRoot, "*.csproj", SearchOption.AllDirectories)
             .Where(static path => !path.Contains($"{Path.DirectorySeparatorChar}tests{Path.DirectorySeparatorChar}", StringComparison.OrdinalIgnoreCase))

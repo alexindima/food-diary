@@ -31,6 +31,27 @@ public sealed class ClientPackageBoundaryTests {
     }
 
     [Theory]
+    [InlineData("MailRelay/FoodDiary.MailRelay.Client/FoodDiary.MailRelay.Client.csproj")]
+    [InlineData("MailInbox/FoodDiary.MailInbox.Client/FoodDiary.MailInbox.Client.csproj")]
+    public void ClientPackages_DoNotReferenceServerSidePackages(string relativeProjectPath) {
+        var forbiddenPackages = new HashSet<string>(StringComparer.Ordinal) {
+            "Microsoft.AspNetCore.App",
+            "Microsoft.EntityFrameworkCore",
+            "Npgsql.EntityFrameworkCore.PostgreSQL",
+            "RabbitMQ.Client",
+            "MailKit",
+            "MimeKit",
+            "SmtpServer",
+        };
+
+        string[] violations = [.. ProjectReferenceReader.ReadPackageReferences(relativeProjectPath)
+            .Where(forbiddenPackages.Contains)
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Theory]
     [InlineData("FoodDiary.MailRelay.Client", "MailRelay/FoodDiary.MailRelay.Client")]
     [InlineData("FoodDiary.MailInbox.Client", "MailInbox/FoodDiary.MailInbox.Client")]
     public void ClientPackages_ExposeOnlyClientModelsOptionsAndRegistrationSurface(string projectName, string projectFolder) {
