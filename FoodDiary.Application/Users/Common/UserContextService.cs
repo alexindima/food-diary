@@ -7,10 +7,10 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Users.Common;
 
 internal sealed class UserContextService(
-    IUserReadRepository userReadRepository,
+    IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository) : IUserContextService, ICurrentUserAccessService {
     public async Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) {
-        User? user = await userReadRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+        User? user = await userLookupRepository.GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
         Error? accessError = CurrentUserAccessPolicy.EnsureCanAccess(user);
         return accessError is not null
             ? Result.Failure<User>(accessError)

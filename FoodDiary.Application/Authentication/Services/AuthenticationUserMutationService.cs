@@ -6,19 +6,19 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Authentication.Services;
 
 internal sealed class AuthenticationUserMutationService(
-    IUserReadRepository userReadRepository,
+    IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository) : IAuthenticationUserMutationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
         userWriteRepository.AddAsync(user, cancellationToken);
 
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        userReadRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        userLookupRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 
     public Task<User?> GetByIdAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userReadRepository.GetByIdAsync(userId, cancellationToken);
+        userLookupRepository.GetByIdAsync(userId, cancellationToken);
 
     public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) =>
-        userReadRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
+        userLookupRepository.GetByTelegramUserIdIncludingDeletedAsync(telegramUserId, cancellationToken);
 
     public Task UpdateAsync(User user, CancellationToken cancellationToken = default) =>
         userWriteRepository.UpdateAsync(user, cancellationToken);

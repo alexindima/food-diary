@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Users;
 namespace FoodDiary.Application.Authentication.Services;
 
 internal sealed class AuthenticationUserRegistrationService(
-    IUserReadRepository userReadRepository,
+    IUserLookupRepository userLookupRepository,
     IUserWriteRepository userWriteRepository,
     IUserRoleCatalogService roleCatalogService) : IAuthenticationUserRegistrationService {
     public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) =>
@@ -16,5 +16,5 @@ internal sealed class AuthenticationUserRegistrationService(
         roleCatalogService.EnsureRolesByNamesAsync(names, cancellationToken);
 
     public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) =>
-        userReadRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
+        userLookupRepository.GetByEmailIncludingDeletedAsync(email, cancellationToken);
 }

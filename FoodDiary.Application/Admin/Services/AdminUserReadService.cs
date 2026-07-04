@@ -5,9 +5,11 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Services;
 
-internal sealed class AdminUserReadService(IUserReadRepository userRepository) : IAdminUserReadService {
+internal sealed class AdminUserReadService(
+    IUserLookupRepository userLookupRepository,
+    IUserAdminReadRepository userAdminReadRepository) : IAdminUserReadService {
     public Task<User?> GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
-        userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
+        userLookupRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
 
     public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(
         string? search,
@@ -15,10 +17,10 @@ internal sealed class AdminUserReadService(IUserReadRepository userRepository) :
         int limit,
         UserAccountStatusFilter status,
         CancellationToken cancellationToken = default) =>
-        userRepository.GetPagedAsync(search, page, limit, status, cancellationToken);
+        userAdminReadRepository.GetPagedAsync(search, page, limit, status, cancellationToken);
 
     public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(
         int recentLimit,
         CancellationToken cancellationToken = default) =>
-        userRepository.GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
+        userAdminReadRepository.GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 }

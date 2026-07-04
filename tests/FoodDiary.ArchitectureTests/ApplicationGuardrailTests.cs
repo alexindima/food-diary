@@ -100,6 +100,8 @@ public sealed class ApplicationGuardrailTests {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
         string[] allowedFiles = [
+            "IUserAdminReadRepository.cs",
+            "IUserLookupRepository.cs",
             "IUserReadRepository.cs",
             "IUserRepository.cs",
             "IUserWriteRepository.cs",
@@ -151,6 +153,20 @@ public sealed class ApplicationGuardrailTests {
             root,
             applicationRoot,
             "IUserRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ApplicationSourceFiles_DoNotUseBroadUserReadRepository() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            applicationRoot,
+            "IUserReadRepository",
             []);
 
         Assert.Empty(violations);

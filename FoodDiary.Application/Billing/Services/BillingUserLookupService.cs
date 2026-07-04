@@ -6,7 +6,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Billing.Services;
 
-internal sealed class BillingUserLookupService(IUserReadRepository userRepository) : IBillingUserLookupService {
+internal sealed class BillingUserLookupService(IUserLookupRepository userRepository) : IBillingUserLookupService {
     public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
         userRepository.GetByIdIncludingDeletedAsync(userId, cancellationToken);
 
