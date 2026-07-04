@@ -13,7 +13,7 @@ namespace FoodDiary.Presentation.Api.Features.Dashboard;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/dashboard")]
-public class DashboardController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class DashboardController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
     [ProducesResponseType<DashboardSnapshotHttpResponse>(StatusCodes.Status200OK)]

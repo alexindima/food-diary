@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Hydration;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/hydrations")]
-public class HydrationEntriesController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
+public sealed class HydrationEntriesController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<HydrationEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

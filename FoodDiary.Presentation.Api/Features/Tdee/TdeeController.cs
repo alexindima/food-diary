@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.Tdee;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/tdee")]
-public class TdeeController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class TdeeController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<TdeeInsightHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetInsight([FromCurrentUser] Guid userId) =>

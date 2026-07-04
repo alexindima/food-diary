@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/notifications")]
-public class NotificationsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class NotificationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<NotificationHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetNotifications([FromCurrentUser] Guid userId) {

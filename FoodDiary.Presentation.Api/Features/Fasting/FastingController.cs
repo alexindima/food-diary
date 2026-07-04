@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Fasting;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/fasting")]
-public class FastingController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class FastingController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("start")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

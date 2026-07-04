@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Usda;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/usda")]
-public class UsdaController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class UsdaController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("foods")]
     [ProducesResponseType<IReadOnlyList<UsdaFoodHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> Search(

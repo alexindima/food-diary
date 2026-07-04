@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.Lessons;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/lessons")]
-public class LessonsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class LessonsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<LessonSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll(

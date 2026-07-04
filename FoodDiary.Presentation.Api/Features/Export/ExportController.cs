@@ -8,7 +8,7 @@ namespace FoodDiary.Presentation.Api.Features.Export;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/export")]
-public class ExportController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ExportController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("diary")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public Task<IActionResult> ExportDiary(

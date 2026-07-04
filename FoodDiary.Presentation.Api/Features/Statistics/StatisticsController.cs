@@ -13,7 +13,7 @@ namespace FoodDiary.Presentation.Api.Features.Statistics;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/statistics")]
-public class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class StatisticsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [OutputCache(PolicyName = PresentationPolicyNames.UserScopedCachePolicyName)]
     [ProducesResponseType<List<AggregatedStatisticsHttpResponse>>(StatusCodes.Status200OK)]

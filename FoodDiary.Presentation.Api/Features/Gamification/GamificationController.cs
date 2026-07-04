@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.Gamification;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/gamification")]
-public class GamificationController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class GamificationController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<GamificationHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId) =>

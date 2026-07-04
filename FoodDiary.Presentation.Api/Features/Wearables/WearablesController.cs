@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Wearables;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/wearables")]
-public class WearablesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class WearablesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("connections")]
     [ProducesResponseType<IReadOnlyList<WearableConnectionHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetConnections([FromCurrentUser] Guid userId) =>

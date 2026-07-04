@@ -12,7 +12,7 @@ namespace FoodDiary.Presentation.Api.Features.Recipes;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/recipes")]
-public class RecipesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class RecipesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

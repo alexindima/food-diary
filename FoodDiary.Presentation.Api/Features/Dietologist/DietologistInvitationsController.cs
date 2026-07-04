@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/dietologist")]
-public class DietologistInvitationsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class DietologistInvitationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("accept")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

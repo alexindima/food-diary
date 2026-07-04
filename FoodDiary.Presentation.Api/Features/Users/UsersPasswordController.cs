@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Users;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/users/password")]
-public class UsersPasswordController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class UsersPasswordController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPatch]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Recipes;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/recipes/explore")]
-public class RecipeExploreController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class RecipeExploreController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> Explore([FromCurrentUser] Guid userId, [FromQuery] ExploreRecipesHttpQuery query) =>

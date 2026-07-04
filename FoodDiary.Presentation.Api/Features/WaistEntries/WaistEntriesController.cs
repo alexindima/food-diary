@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.WaistEntries;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/waist-entries")]
-public class WaistEntriesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class WaistEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<WaistEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

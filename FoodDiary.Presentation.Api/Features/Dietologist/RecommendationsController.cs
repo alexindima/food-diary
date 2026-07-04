@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/recommendations")]
-public class RecommendationsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class RecommendationsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<RecommendationHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetMyRecommendations([FromCurrentUser] Guid userId) =>

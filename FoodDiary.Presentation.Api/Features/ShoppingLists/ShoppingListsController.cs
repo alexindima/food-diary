@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.ShoppingLists;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/shopping-lists")]
-public class ShoppingListsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ShoppingListsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<ShoppingListHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>

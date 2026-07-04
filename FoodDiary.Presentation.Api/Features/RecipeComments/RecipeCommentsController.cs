@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.RecipeComments;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/recipes/{recipeId:guid}/comments")]
-public class RecipeCommentsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class RecipeCommentsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<RecipeCommentHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll(

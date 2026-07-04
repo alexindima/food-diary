@@ -90,6 +90,26 @@ public class PresentationConventionsTests {
     }
 
     [Fact]
+    public void PresentationFeatureControllers_AreSealed() {
+        string root = GetRepositoryRoot();
+        string featuresPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Features");
+
+        string[] violations = [.. SourceScanner.SourceFiles(featuresPath)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line }))
+            .Where(entry =>
+                entry.line.Contains(" class ", StringComparison.Ordinal) &&
+                entry.line.Contains("Controller", StringComparison.Ordinal) &&
+                !entry.line.Contains(" sealed ", StringComparison.Ordinal))
+            .Select(entry => string.Create(
+                CultureInfo.InvariantCulture,
+                $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}"))
+            .Order(StringComparer.Ordinal)];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ResultExtensions_UseDedicatedPresentationErrorMapper() {
         string root = GetRepositoryRoot();
         string resultExtensionsPath = Path.Combine(root, "FoodDiary.Presentation.Api", "Extensions", "ResultExtensions.cs");

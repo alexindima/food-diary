@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.ContentReports;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/reports")]
-public class ContentReportsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ContentReportsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost]
     [ProducesResponseType<ContentReportHttpResponse>(StatusCodes.Status201Created)]
     public Task<IActionResult> Create(

@@ -12,7 +12,7 @@ namespace FoodDiary.Presentation.Api.Features.Users;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/users")]
-public class UsersController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class UsersController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("info")]
     [ProducesResponseType<UserHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Products;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/products/suggestions")]
-public class ProductSuggestionsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ProductSuggestionsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<ProductSearchSuggestionHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

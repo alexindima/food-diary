@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Goals;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/goals")]
-public class GoalsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class GoalsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<GoalsHttpResponse>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

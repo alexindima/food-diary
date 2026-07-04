@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Cycles;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/cycles")]
-public class CyclesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class CyclesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<CycleHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>

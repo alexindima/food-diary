@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.WeightEntries;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/weight-entries")]
-public class WeightEntriesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class WeightEntriesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<WeightEntryHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]

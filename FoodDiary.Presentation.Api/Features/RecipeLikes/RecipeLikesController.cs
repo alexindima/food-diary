@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.RecipeLikes;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/recipes/{recipeId:guid}/likes")]
-public class RecipeLikesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class RecipeLikesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("toggle")]
     [ProducesResponseType<RecipeLikeStatusHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Toggle(

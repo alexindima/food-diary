@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Users;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/users")]
-public class UserAiConsentController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class UserAiConsentController(ISender mediator) : AuthorizedController(mediator) {
     [HttpPost("ai-consent")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesApiErrorResponse(StatusCodes.Status404NotFound)]

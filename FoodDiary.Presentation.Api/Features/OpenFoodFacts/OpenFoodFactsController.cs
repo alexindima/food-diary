@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.OpenFoodFacts;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/open-food-facts")]
-public class OpenFoodFactsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class OpenFoodFactsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("products/{barcode}")]
     [ProducesResponseType<OpenFoodFactsProductHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> SearchByBarcode(string barcode) =>

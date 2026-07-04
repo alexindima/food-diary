@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Notifications;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/notifications/push")]
-public class NotificationPushController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class NotificationPushController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("config")]
     [ProducesResponseType<WebPushConfigurationHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetWebPushConfiguration() {

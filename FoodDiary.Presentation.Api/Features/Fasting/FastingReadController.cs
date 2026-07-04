@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.Fasting;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/fasting")]
-public class FastingReadController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class FastingReadController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet("current")]
     [ProducesResponseType<FastingSessionHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetCurrent([FromCurrentUser] Guid userId) =>

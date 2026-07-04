@@ -10,7 +10,7 @@ namespace FoodDiary.Presentation.Api.Features.Exercises;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/exercises")]
-public class ExercisesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ExercisesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<ExerciseEntryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll(

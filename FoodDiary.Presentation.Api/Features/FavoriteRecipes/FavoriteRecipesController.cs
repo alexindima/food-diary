@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.FavoriteRecipes;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/favorite-recipes")]
-public class FavoriteRecipesController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class FavoriteRecipesController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<FavoriteRecipeHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll([FromCurrentUser] Guid userId) =>

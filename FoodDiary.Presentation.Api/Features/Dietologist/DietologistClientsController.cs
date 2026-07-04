@@ -18,7 +18,7 @@ namespace FoodDiary.Presentation.Api.Features.Dietologist;
 [ApiController]
 [Authorize(Roles = PresentationRoleNames.Dietologist)]
 [Route("api/v{version:apiVersion}/dietologist/clients")]
-public class DietologistClientsController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
+public sealed class DietologistClientsController(ISender mediator, TimeProvider timeProvider) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<List<ClientSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetMyClients([FromCurrentUser] Guid userId) =>

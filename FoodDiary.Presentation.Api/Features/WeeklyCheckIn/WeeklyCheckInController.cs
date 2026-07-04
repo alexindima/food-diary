@@ -9,7 +9,7 @@ namespace FoodDiary.Presentation.Api.Features.WeeklyCheckIn;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/weekly-check-in")]
-public class WeeklyCheckInController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class WeeklyCheckInController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<WeeklyCheckInHttpResponse>(StatusCodes.Status200OK)]
     public Task<IActionResult> Get([FromCurrentUser] Guid userId) =>

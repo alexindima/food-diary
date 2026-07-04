@@ -11,7 +11,7 @@ namespace FoodDiary.Presentation.Api.Features.MealPlans;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/meal-plans")]
-public class MealPlansController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class MealPlansController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<IReadOnlyList<MealPlanSummaryHttpResponse>>(StatusCodes.Status200OK)]
     public Task<IActionResult> GetAll(

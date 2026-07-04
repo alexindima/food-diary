@@ -12,7 +12,7 @@ namespace FoodDiary.Presentation.Api.Features.Products;
 
 [ApiController]
 [Route("api/v{version:apiVersion}/products")]
-public class ProductsController(ISender mediator) : AuthorizedController(mediator) {
+public sealed class ProductsController(ISender mediator) : AuthorizedController(mediator) {
     [HttpGet]
     [ProducesResponseType<PagedHttpResponse<ProductHttpResponse>>(StatusCodes.Status200OK)]
     [ProducesApiErrorResponse(StatusCodes.Status400BadRequest)]
