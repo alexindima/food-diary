@@ -100,6 +100,7 @@ public static partial class DependencyInjection {
         services.AddScoped<IHydrationEntryReadRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
         services.AddScoped<IHydrationEntryWriteRepository>(static provider => provider.GetRequiredService<IHydrationEntryRepository>());
         services.AddScoped<IDailyAdviceRepository, DailyAdviceRepository>();
+        services.AddScoped<IDailyAdviceReadRepository>(static provider => provider.GetRequiredService<IDailyAdviceRepository>());
         services.AddScoped<ICycleRepository, CycleRepository>();
         services.AddScoped<ICycleReadRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
         services.AddScoped<ICycleWriteRepository>(static provider => provider.GetRequiredService<ICycleRepository>());
@@ -109,8 +110,14 @@ public static partial class DependencyInjection {
         services.AddScoped<IImageObjectDeletionOutbox, ImageObjectDeletionOutbox>();
         services.AddScoped<IImageObjectDeletionOutboxProcessor, ImageObjectDeletionOutboxProcessor>();
         services.AddScoped<IAiUsageRepository, AiUsageRepository>();
+        services.AddScoped<IAiUsageReadRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
+        services.AddScoped<IAiUsageWriteRepository>(static provider => provider.GetRequiredService<IAiUsageRepository>());
         services.AddScoped<IAiPromptTemplateRepository, AiPromptTemplateRepository>();
+        services.AddScoped<IAiPromptTemplateReadRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
+        services.AddScoped<IAiPromptTemplateWriteRepository>(static provider => provider.GetRequiredService<IAiPromptTemplateRepository>());
         services.AddScoped<IEmailTemplateRepository, EmailTemplateRepository>();
+        services.AddScoped<IEmailTemplateReadRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
+        services.AddScoped<IEmailTemplateWriteRepository>(static provider => provider.GetRequiredService<IEmailTemplateRepository>());
         services.AddScoped<IDietologistInvitationRepository, DietologistInvitationRepository>();
         services.AddScoped<IDietologistInvitationReadRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
         services.AddScoped<IDietologistInvitationWriteRepository>(static provider => provider.GetRequiredService<IDietologistInvitationRepository>());
@@ -166,6 +173,8 @@ public static partial class DependencyInjection {
         services.AddScoped<IRecipeLikeReadRepository>(static provider => provider.GetRequiredService<IRecipeLikeRepository>());
         services.AddScoped<IRecipeLikeWriteRepository>(static provider => provider.GetRequiredService<IRecipeLikeRepository>());
         services.AddScoped<IContentReportRepository, ContentReportRepository>();
+        services.AddScoped<IContentReportReadRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
+        services.AddScoped<IContentReportWriteRepository>(static provider => provider.GetRequiredService<IContentReportRepository>());
         services.AddScoped<IUsdaFoodRepository, UsdaFoodRepository>();
         services.AddScoped<IUsdaProductLinkRepository, UsdaProductLinkRepository>();
 

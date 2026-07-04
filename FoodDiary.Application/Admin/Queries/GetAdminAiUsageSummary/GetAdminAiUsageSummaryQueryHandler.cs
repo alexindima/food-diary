@@ -7,7 +7,7 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiUsageSummary;
 
 public sealed class GetAdminAiUsageSummaryQueryHandler(
-    IAiUsageRepository aiUsageRepository,
+    IAiUsageReadRepository aiUsageRepository,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetAdminAiUsageSummaryQuery, Result<AdminAiUsageSummaryModel>> {
     public async Task<Result<AdminAiUsageSummaryModel>> Handle(

@@ -8,7 +8,7 @@ using FoodDiary.Domain.Entities.Content;
 namespace FoodDiary.Application.Admin.Commands.UpsertAdminEmailTemplate;
 
 public sealed class UpsertAdminEmailTemplateCommandHandler(
-    IEmailTemplateRepository repository)
+    IEmailTemplateWriteRepository repository)
     : ICommandHandler<UpsertAdminEmailTemplateCommand, Result<AdminEmailTemplateModel>> {
     public async Task<Result<AdminEmailTemplateModel>> Handle(
         UpsertAdminEmailTemplateCommand command,

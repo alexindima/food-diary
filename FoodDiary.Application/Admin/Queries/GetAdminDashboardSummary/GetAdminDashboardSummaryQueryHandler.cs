@@ -10,7 +10,7 @@ namespace FoodDiary.Application.Admin.Queries.GetAdminDashboardSummary;
 
 public sealed class GetAdminDashboardSummaryQueryHandler(
     IAdminUserReadService userReadService,
-    IContentReportRepository contentReportRepository)
+    IContentReportReadRepository contentReportRepository)
     : IQueryHandler<GetAdminDashboardSummaryQuery, Result<AdminDashboardSummaryModel>> {
     public async Task<Result<AdminDashboardSummaryModel>> Handle(
         GetAdminDashboardSummaryQuery query,

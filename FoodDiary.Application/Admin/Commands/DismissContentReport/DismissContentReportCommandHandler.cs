@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Social;
 
 namespace FoodDiary.Application.Admin.Commands.DismissContentReport;
 
-public sealed class DismissContentReportCommandHandler(IContentReportRepository reportRepository)
+public sealed class DismissContentReportCommandHandler(IContentReportWriteRepository reportRepository)
     : ICommandHandler<DismissContentReportCommand, Result> {
     public async Task<Result> Handle(DismissContentReportCommand command, CancellationToken cancellationToken) {
         var reportId = (ContentReportId)command.ReportId;

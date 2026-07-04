@@ -6,7 +6,7 @@ using FoodDiary.Domain.Entities.Ai;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminAiPrompts;
 
-public class GetAdminAiPromptsQueryHandler(IAiPromptTemplateRepository repository)
+public class GetAdminAiPromptsQueryHandler(IAiPromptTemplateReadRepository repository)
     : IQueryHandler<GetAdminAiPromptsQuery, Result<IReadOnlyList<AdminAiPromptModel>>> {
     public async Task<Result<IReadOnlyList<AdminAiPromptModel>>> Handle(
         GetAdminAiPromptsQuery query,

@@ -7,7 +7,7 @@ using FoodDiary.Domain.Enums;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminContentReports;
 
-public sealed class GetAdminContentReportsQueryHandler(IContentReportRepository reportRepository)
+public sealed class GetAdminContentReportsQueryHandler(IContentReportReadRepository reportRepository)
     : IQueryHandler<GetAdminContentReportsQuery, Result<PagedResponse<AdminContentReportModel>>> {
     public async Task<Result<PagedResponse<AdminContentReportModel>>> Handle(
         GetAdminContentReportsQuery query,

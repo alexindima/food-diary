@@ -1,20 +1,3 @@
-using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Domain.Entities.Ai;
-using FoodDiary.Domain.ValueObjects.Ids;
-
 namespace FoodDiary.Application.Abstractions.Ai.Common;
 
-public interface IAiUsageRepository {
-    Task AddAsync(AiUsage usage, CancellationToken cancellationToken = default);
-
-    Task<AiUsageSummary> GetSummaryAsync(
-        DateTime fromUtc,
-        DateTime toUtc,
-        CancellationToken cancellationToken = default);
-
-    Task<AiUsageTotals> GetUserTotalsAsync(
-        UserId userId,
-        DateTime fromUtc,
-        DateTime toUtc,
-        CancellationToken cancellationToken = default);
-}
+public interface IAiUsageRepository : IAiUsageReadRepository, IAiUsageWriteRepository;

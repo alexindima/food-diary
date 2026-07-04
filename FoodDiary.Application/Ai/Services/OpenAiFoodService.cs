@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Ai.Services;
 
 public sealed class OpenAiFoodService(
     IOpenAiFoodClient openAiFoodClient,
-    IAiUsageRepository aiUsageRepository,
+    IAiUsageWriteRepository aiUsageRepository,
     IAiUserContextService aiUserContextService,
     TimeProvider dateTimeProvider,
     IAiPromptProvider aiPromptProvider)

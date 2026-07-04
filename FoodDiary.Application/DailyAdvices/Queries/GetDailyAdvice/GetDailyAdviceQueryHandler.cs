@@ -11,7 +11,7 @@ using FoodDiary.Domain.Entities.Content;
 namespace FoodDiary.Application.DailyAdvices.Queries.GetDailyAdvice;
 
 public class GetDailyAdviceQueryHandler(
-    IDailyAdviceRepository adviceRepository,
+    IDailyAdviceReadRepository adviceRepository,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetDailyAdviceQuery, Result<DailyAdviceModel>> {
     public async Task<Result<DailyAdviceModel>> Handle(GetDailyAdviceQuery query, CancellationToken cancellationToken) {

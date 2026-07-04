@@ -9,7 +9,7 @@ namespace FoodDiary.Application.Ai.Queries.GetUserAiUsageSummary;
 
 public sealed class GetUserAiUsageSummaryQueryHandler(
     IAiUserContextService aiUserContextService,
-    IAiUsageRepository aiUsageRepository,
+    IAiUsageReadRepository aiUsageRepository,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetUserAiUsageSummaryQuery, Result<UserAiUsageModel>> {
     public async Task<Result<UserAiUsageModel>> Handle(
