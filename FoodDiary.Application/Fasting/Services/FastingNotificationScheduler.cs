@@ -1,12 +1,10 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging;
 using FoodDiary.Domain.Entities.Tracking.Fasting;
-using FoodDiary.Domain.Entities.Notifications;
 
 namespace FoodDiary.Application.Fasting.Services;
 
@@ -31,7 +29,7 @@ public sealed class FastingNotificationScheduler(
             : await fastingCheckInRepository.GetByOccurrenceIdsAsync(activeOccurrenceIds, cancellationToken).ConfigureAwait(false);
         IReadOnlyDictionary<FastingOccurrenceId, IReadOnlyList<FastingCheckIn>> checkInLookup =
             FastingCheckInLookup.Create(checkIns);
-        var usersToPush = new HashSet<Guid>();
+        var usersToPush = new HashSet<UserId>();
         int createdCount = 0;
 
         foreach (FastingOccurrence occurrence in activeOccurrences) {
@@ -41,23 +39,29 @@ public sealed class FastingNotificationScheduler(
             }
 
             checkInLookup.TryGetValue(occurrence.Id, out IReadOnlyList<FastingCheckIn>? occurrenceCheckIns);
-            createdCount += await ProcessCheckInReminderNotificationsAsync(occurrence, occurrenceCheckIns, now, usersToPush, cancellationToken).ConfigureAwait(false);
-            createdCount += plan.Type switch {
-                FastingPlanType.Intermittent => await ProcessIntermittentNotificationsAsync(occurrence, plan, now, usersToPush, cancellationToken).ConfigureAwait(false),
-                _ => await ProcessCompletionNotificationAsync(occurrence, plan, now, usersToPush, cancellationToken).ConfigureAwait(false),
-            };
+            foreach (FastingNotificationCandidate notification in FastingNotificationCandidatePlanner.GetDueNotifications(occurrence, plan, occurrenceCheckIns, now)) {
+                bool created = await FastingNotificationCreationService.TryCreateAsync(
+                    notification,
+                    notificationRepository,
+                    notificationWriter,
+                    cancellationToken).ConfigureAwait(false);
+
+                if (created) {
+                    usersToPush.Add(notification.UserId);
+                    createdCount++;
+                }
+            }
         }
 
         if (createdCount > 0) {
             await unitOfWork.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        foreach (Guid userGuid in usersToPush) {
-            var userId = new UserId(userGuid);
-            int unreadCount = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushUnreadCountAsync(userGuid, unreadCount, cancellationToken).ConfigureAwait(false);
-            await notificationPusher.PushNotificationsChangedAsync(userGuid, cancellationToken).ConfigureAwait(false);
-        }
+        await FastingNotificationPushDispatcher.PushAsync(
+            usersToPush,
+            notificationRepository,
+            notificationPusher,
+            cancellationToken).ConfigureAwait(false);
 
         if (postCommitActionQueue.HasActions) {
             await postCommitActionQueue.FlushAsync(cancellationToken).ConfigureAwait(false);
@@ -71,124 +75,5 @@ public sealed class FastingNotificationScheduler(
         }
 
         return createdCount;
-    }
-
-    private async Task<int> ProcessCheckInReminderNotificationsAsync(
-        FastingOccurrence occurrence,
-        IReadOnlyList<FastingCheckIn>? checkIns,
-        DateTime now,
-        ISet<Guid> usersToPush,
-        CancellationToken cancellationToken) {
-        int createdCount = 0;
-        foreach (string referenceId in FastingCheckInReminderPlanner.GetDueReferenceIds(occurrence, checkIns, now)) {
-            createdCount += await TryCreateCheckInReminderAsync(
-                occurrence,
-                referenceId,
-                usersToPush,
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        return createdCount;
-    }
-
-    private async Task<int> ProcessCompletionNotificationAsync(
-        FastingOccurrence occurrence,
-        FastingPlan plan,
-        DateTime now,
-        ISet<Guid> usersToPush,
-        CancellationToken cancellationToken) {
-        if (!occurrence.TargetHours.HasValue) {
-            return 0;
-        }
-
-        DateTime completionAtUtc = occurrence.StartedAtUtc.AddHours(occurrence.TargetHours.Value);
-        if (completionAtUtc > now) {
-            return 0;
-        }
-
-        string referenceId = $"fasting-completed:{occurrence.Id.Value}";
-        if (await notificationRepository.ExistsAsync(occurrence.UserId, NotificationTypes.FastingCompleted, referenceId, cancellationToken).ConfigureAwait(false)) {
-            return 0;
-        }
-
-        Notification notification = NotificationFactory.CreateFastingCompleted(
-            occurrence.UserId,
-            plan.Type.ToString(),
-            occurrence.Kind.ToString(),
-            referenceId);
-
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-        usersToPush.Add(occurrence.UserId.Value);
-        return 1;
-    }
-
-    private async Task<int> TryCreateCheckInReminderAsync(
-        FastingOccurrence occurrence,
-        string referenceId,
-        ISet<Guid> usersToPush,
-        CancellationToken cancellationToken) {
-        if (await notificationRepository.ExistsAsync(
-                occurrence.UserId,
-                NotificationTypes.FastingCheckInReminder,
-                referenceId,
-                cancellationToken).ConfigureAwait(false)) {
-            return 0;
-        }
-
-        Notification notification = NotificationFactory.CreateFastingCheckInReminder(occurrence.UserId, referenceId);
-
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-        usersToPush.Add(occurrence.UserId.Value);
-        return 1;
-    }
-
-    private async Task<int> ProcessIntermittentNotificationsAsync(
-        FastingOccurrence occurrence,
-        FastingPlan plan,
-        DateTime now,
-        ISet<Guid> usersToPush,
-        CancellationToken cancellationToken) {
-        int createdCount = 0;
-        foreach (FastingWindowNotificationPlan notification in FastingIntermittentNotificationPlanner.GetDueNotifications(occurrence, plan, now)) {
-            createdCount += await TryCreateNotificationAsync(
-                occurrence,
-                plan,
-                notification.Type,
-                notification.ReferenceId,
-                usersToPush,
-                cancellationToken).ConfigureAwait(false);
-        }
-
-        return createdCount;
-    }
-
-    private async Task<int> TryCreateNotificationAsync(
-        FastingOccurrence occurrence,
-        FastingPlan plan,
-        string notificationType,
-        string referenceId,
-        ISet<Guid> usersToPush,
-        CancellationToken cancellationToken) {
-        if (await notificationRepository.ExistsAsync(occurrence.UserId, notificationType, referenceId, cancellationToken).ConfigureAwait(false)) {
-            return 0;
-        }
-
-        Notification notification = notificationType switch {
-            NotificationTypes.EatingWindowStarted => NotificationFactory.CreateEatingWindowStarted(
-                occurrence.UserId,
-                plan.Type.ToString(),
-                occurrence.Kind.ToString(),
-                referenceId),
-            NotificationTypes.FastingWindowStarted => NotificationFactory.CreateFastingWindowStarted(
-                occurrence.UserId,
-                plan.Type.ToString(),
-                occurrence.Kind.ToString(),
-                referenceId),
-            _ => throw new InvalidOperationException($"Unsupported fasting notification type '{notificationType}'."),
-        };
-
-        await notificationWriter.AddAsync(notification, sendWebPush: true, cancellationToken).ConfigureAwait(false);
-        usersToPush.Add(occurrence.UserId.Value);
-        return 1;
     }
 }

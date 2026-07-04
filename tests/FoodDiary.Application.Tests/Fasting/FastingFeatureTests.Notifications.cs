@@ -8,7 +8,6 @@ using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.Extensions.Logging.Abstractions;
 using System.Globalization;
-using System.Reflection;
 
 namespace FoodDiary.Application.Tests.Fasting;
 
@@ -58,40 +57,16 @@ public partial class FastingFeatureTests {
     }
 
     [Fact]
-    public async Task TryCreateNotificationAsync_WithUnsupportedNotificationType_Throws() {
+    public void FastingNotificationFactory_WithUnsupportedNotificationType_Throws() {
         var user = User.Create("fasting-unsupported-notification@example.com", "hash");
-        var plan = FastingPlan.CreateCyclic(user.Id, fastDays: 1, eatDays: 1, eatDayFastHours: 16, eatDayEatingWindowHours: 8, FixedNow, FixedNow);
-        var occurrence = FastingOccurrence.Create(plan.Id, user.Id, FastingOccurrenceKind.FastDay, FixedNow, 1, 24);
-        var notificationRepo = new InMemorySchedulerNotificationRepository();
-        var notificationPusher = new RecordingNotificationPusher();
-        var webPushSender = new RecordingWebPushNotificationSender();
-        var scheduler = new FastingNotificationScheduler(
-            new InMemoryFastingOccurrenceRepository(),
-            new InMemoryFastingCheckInRepository(),
-            notificationRepo,
-            new InMemorySchedulerNotificationWriter(notificationRepo, webPushSender),
-            notificationPusher,
-            CreateUnitOfWork(),
-            new ImmediatePostCommitActionQueue(),
-            new FixedDateTimeProvider(),
-            NullLogger<FastingNotificationScheduler>.Instance);
-        MethodInfo? method = typeof(FastingNotificationScheduler).GetMethod(
-            "TryCreateNotificationAsync",
-            BindingFlags.Instance | BindingFlags.NonPublic);
-        Assert.NotNull(method);
+        var candidate = new FastingNotificationCandidate(
+            user.Id,
+            "unsupported",
+            "unsupported-reference",
+            "Cyclic",
+            "FastDay");
 
-        var task = (Task<int>)method!.Invoke(
-            scheduler,
-            [
-                occurrence,
-                plan,
-                "unsupported",
-                "unsupported-reference",
-                new HashSet<Guid>(),
-                CancellationToken.None,
-            ])!;
-
-        InvalidOperationException exception = await Assert.ThrowsAsync<InvalidOperationException>(() => task);
+        InvalidOperationException exception = Assert.Throws<InvalidOperationException>(() => FastingNotificationFactory.Create(candidate));
         Assert.Contains("Unsupported fasting notification type", exception.Message, StringComparison.Ordinal);
     }
 
