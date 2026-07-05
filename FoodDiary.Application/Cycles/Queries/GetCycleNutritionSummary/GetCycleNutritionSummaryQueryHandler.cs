@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Cycles.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -15,7 +15,7 @@ namespace FoodDiary.Application.Cycles.Queries.GetCycleNutritionSummary;
 
 public sealed class GetCycleNutritionSummaryQueryHandler(
     ICycleReadRepository cycleRepository,
-    IMealReadRepository mealRepository,
+    IDashboardStatisticsReadService statisticsReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCycleNutritionSummaryQuery, Result<CycleNutritionSummaryModel?>> {
     private const int MaxSummaryRangeDays = 366;
@@ -55,24 +55,28 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
             return Result.Success<CycleNutritionSummaryModel?>(value: null);
         }
 
-        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> nutritionResult = await statisticsReadService.GetStatisticsAsync(
             userId,
             normalizedFrom.Date,
             normalizedTo.Date.AddDays(1).AddTicks(-1),
+            quantizationDays: 1,
             cancellationToken).ConfigureAwait(false);
+        if (nutritionResult.IsFailure) {
+            return Result.Failure<CycleNutritionSummaryModel?>(nutritionResult.Error);
+        }
 
-        return Result.Success<CycleNutritionSummaryModel?>(BuildSummary(profile, meals, normalizedFrom, normalizedTo));
+        return Result.Success<CycleNutritionSummaryModel?>(BuildSummary(profile, nutritionResult.Value, normalizedFrom, normalizedTo));
     }
 
     private static CycleNutritionSummaryModel BuildSummary(
         CycleProfile profile,
-        IReadOnlyCollection<Meal> meals,
+        IReadOnlyCollection<DashboardStatisticsBucketReadModel> nutritionBuckets,
         DateTime dateFrom,
         DateTime dateTo) {
-        var mealsByDate = meals
-            .GroupBy(meal => meal.Date.Date)
-            .ToDictionary(group => group.Key, group => group.ToList());
-        List<CycleNutritionDay> days = BuildCycleDays(profile, mealsByDate, dateFrom.Date, dateTo.Date);
+        var nutritionByDate = nutritionBuckets
+            .Where(static bucket => bucket.TotalCalories > 0 || bucket.TotalFiber > 0)
+            .ToDictionary(static bucket => bucket.DateFrom.Date);
+        List<CycleNutritionDay> days = BuildCycleDays(profile, nutritionByDate, dateFrom.Date, dateTo.Date);
         var bleedingDays = days.Where(day => day.IsBleeding && day.HasMeals).ToList();
         var nonBleedingDays = days.Where(day => !day.IsBleeding && day.HasMeals).ToList();
 
@@ -92,7 +96,7 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
 
     private static List<CycleNutritionDay> BuildCycleDays(
         CycleProfile profile,
-        IReadOnlyDictionary<DateTime, List<Meal>> mealsByDate,
+        IReadOnlyDictionary<DateTime, DashboardStatisticsBucketReadModel> nutritionByDate,
         DateTime dateFrom,
         DateTime dateTo) {
         DateTime[] logDates = [
@@ -106,16 +110,15 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
             .Where(date => date >= dateFrom && date <= dateTo)
             .Distinct()
             .Order()
-            .Select(date => BuildDay(profile, mealsByDate, date)),
+            .Select(date => BuildDay(profile, nutritionByDate, date)),
         ];
     }
 
     private static CycleNutritionDay BuildDay(
         CycleProfile profile,
-        IReadOnlyDictionary<DateTime, List<Meal>> mealsByDate,
+        IReadOnlyDictionary<DateTime, DashboardStatisticsBucketReadModel> nutritionByDate,
         DateTime date) {
-        mealsByDate.TryGetValue(date, out List<Meal>? meals);
-        IReadOnlyCollection<Meal> dayMeals = meals ?? [];
+        nutritionByDate.TryGetValue(date, out DashboardStatisticsBucketReadModel? nutrition);
         IReadOnlyCollection<BleedingEntry> bleedingEntries = [
             .. profile.BleedingEntries
             .Where(entry => entry.Date.Date == date),
@@ -123,10 +126,10 @@ public sealed class GetCycleNutritionSummaryQueryHandler(
 
         return new CycleNutritionDay(
             date,
-            dayMeals.Count > 0,
+            nutrition is not null,
             bleedingEntries.Any(entry => entry.Type == BleedingType.Bleeding),
-            dayMeals.Sum(meal => meal.TotalCalories),
-            dayMeals.Sum(meal => meal.TotalFiber),
+            nutrition?.TotalCalories ?? 0,
+            nutrition?.TotalFiber ?? 0,
             bleedingEntries.Select(entry => entry.PainImpact).FirstOrDefault(value => value.HasValue));
     }
 
