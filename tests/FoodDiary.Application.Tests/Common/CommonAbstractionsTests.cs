@@ -1,7 +1,7 @@
 using FluentValidation;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Authentication.Abstractions;
 using FoodDiary.Application.Abstractions.Billing.Common;

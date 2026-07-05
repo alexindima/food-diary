@@ -1,6 +1,6 @@
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Abstractions.Admin.Models;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Presentation.Api.Features.Admin.Mappings;

@@ -1,7 +1,6 @@
 using FoodDiary.Application;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Authentication.Commands.BootstrapInitialAdmin;
 using FoodDiary.Domain.Entities.Users;

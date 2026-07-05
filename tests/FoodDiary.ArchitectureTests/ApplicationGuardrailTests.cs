@@ -270,7 +270,7 @@ public sealed class ApplicationGuardrailTests {
             "IWeightEntryRepository.cs",
         ];
 
-        var actualFiles = Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        var actualFiles = GetFilesIfDirectoryExists(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .ToHashSet(StringComparer.Ordinal);
 
@@ -285,15 +285,9 @@ public sealed class ApplicationGuardrailTests {
     public void ApplicationAbstractionsCommonPersistenceInterfaces_StayLimitedToCurrentCrossFeatureContracts() {
         string root = GetRepositoryRoot();
         string persistenceRoot = Path.Combine(root, "FoodDiary.Application.Abstractions", "Common", "Interfaces", "Persistence");
-        string[] allowedFiles = [
-            "IUserAdminReadRepository.cs",
-            "IUserLookupRepository.cs",
-            "IUserRepository.cs",
-            "IUserWriteRepository.cs",
-            "UserAccountStatusFilter.cs",
-        ];
+        string[] allowedFiles = [];
 
-        string?[] actualFiles = [.. Directory.GetFiles(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
+        string?[] actualFiles = [.. GetFilesIfDirectoryExists(persistenceRoot, "*.cs", SearchOption.TopDirectoryOnly)
             .Select(Path.GetFileName)
             .Order(StringComparer.Ordinal)];
 
@@ -306,9 +300,8 @@ public sealed class ApplicationGuardrailTests {
         string userRepositoryPath = Path.Combine(
             root,
             "FoodDiary.Application.Abstractions",
+            "Users",
             "Common",
-            "Interfaces",
-            "Persistence",
             "IUserRepository.cs");
         string source = File.ReadAllText(userRepositoryPath);
         string[] forbiddenPatterns = [

@@ -1,4 +1,4 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Billing.Services;

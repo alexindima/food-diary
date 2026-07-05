@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Entities.Users;
 
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public interface IUserAdminReadRepository {
     Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(

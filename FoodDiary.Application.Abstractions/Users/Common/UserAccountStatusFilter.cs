@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Users.Common;
 
 public enum UserAccountStatusFilter {
     All = 0,
