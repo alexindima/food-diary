@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -82,6 +83,28 @@ public sealed class FavoriteMealRepository(FoodDiaryDbContext context) : IFavori
             .ThenInclude(m => m.Items)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.FavoriteMeals
+            .AsNoTracking()
+            .Where(f => f.UserId == userId)
+            .OrderByDescending(f => f.CreatedAtUtc)
+            .Select(f => new FavoriteMealReadModel(
+                f.Id.Value,
+                f.MealId.Value,
+                f.Name,
+                f.CreatedAtUtc,
+                f.Meal.Date,
+                f.Meal.MealType == null ? null : f.Meal.MealType.ToString(),
+                f.Meal.TotalCalories,
+                f.Meal.TotalProteins,
+                f.Meal.TotalFats,
+                f.Meal.TotalCarbs,
+                f.Meal.Items.Count))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

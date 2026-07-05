@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Application.FavoriteProducts.Models;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.Entities.Products;
@@ -36,5 +37,40 @@ public static class FavoriteProductMappings {
             product.BaseUnit.ToString(),
             favorite.PreferredPortionAmount ?? product.DefaultPortionAmount,
             product.DefaultPortionAmount);
+    }
+
+    public static FavoriteProductModel ToModel(this FavoriteProductReadModel favorite) {
+        var quality = FoodQualityScore.Calculate(
+            favorite.CaloriesPerBase,
+            favorite.ProteinsPerBase,
+            favorite.FatsPerBase,
+            favorite.CarbsPerBase,
+            favorite.FiberPerBase,
+            favorite.AlcoholPerBase,
+            favorite.ProductType);
+        bool isOwnedByCurrentUser = favorite.ProductUserId == favorite.UserId;
+
+        return new(
+            favorite.Id,
+            favorite.ProductId,
+            favorite.Name,
+            favorite.CreatedAtUtc,
+            favorite.ProductName,
+            favorite.Brand,
+            favorite.Barcode,
+            isOwnedByCurrentUser ? favorite.Comment : null,
+            favorite.ImageUrl,
+            favorite.CaloriesPerBase,
+            favorite.ProteinsPerBase,
+            favorite.FatsPerBase,
+            favorite.CarbsPerBase,
+            favorite.FiberPerBase,
+            favorite.AlcoholPerBase,
+            quality.Score,
+            quality.Grade.ToString().ToLowerInvariant(),
+            isOwnedByCurrentUser,
+            favorite.BaseUnit.ToString(),
+            favorite.PreferredPortionAmount ?? favorite.DefaultPortionAmount,
+            favorite.DefaultPortionAmount);
     }
 }

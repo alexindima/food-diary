@@ -1159,6 +1159,24 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void FavoriteReadServices_UseReadModelsInsteadOfFavoriteAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] serviceFiles = [
+            Path.Combine(applicationRoot, "FavoriteMeals", "Services", "FavoriteMealReadService.cs"),
+            Path.Combine(applicationRoot, "FavoriteProducts", "Services", "FavoriteProductReadService.cs"),
+            Path.Combine(applicationRoot, "FavoriteRecipes", "Services", "FavoriteRecipeReadService.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Favorite"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetAllAsync(userId"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void NotificationQueries_UseReadServicesInsteadOfNotificationAggregates() {
         string root = GetRepositoryRoot();
         string notificationQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Notifications", "Queries");
@@ -1221,6 +1239,26 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, wearableQueryFiles, "FoodDiary.Domain.Entities.Wearables"),
             .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableConnectionReadRepository"),
             .. FindReferencesInFiles(root, wearableQueryFiles, "IWearableSyncReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void WearableReadService_UsesReadModelsInsteadOfWearableAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Wearables",
+            "Services",
+            "WearableReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Wearables"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetAllForUserAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetDailySummaryAsync(userId"),
         ];
 
         Assert.Empty(violations);
@@ -1377,6 +1415,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void SocialReadServices_UseReadModelsInsteadOfSocialAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] serviceFiles = [
+            Path.Combine(applicationRoot, "RecipeLikes", "Services", "RecipeLikeReadService.cs"),
+            Path.Combine(applicationRoot, "RecipeComments", "Services", "RecipeCommentReadService.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Social"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Recipes"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByUserAndRecipeAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetPagedByRecipeAsync(recipeId"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void AiQueries_UseReadServicesInsteadOfUsageRepositories() {
         string root = GetRepositoryRoot();
         string aiQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Ai", "Queries");
@@ -1412,6 +1469,25 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, contentQueryFiles, "IEmailTemplateReadRepository"),
             .. FindReferencesInFiles(root, contentQueryFiles, "IAiPromptTemplateReadRepository"),
             .. FindReferencesInFiles(root, contentQueryFiles, "IContentReportReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DailyAdviceReadService_UsesReadModelsInsteadOfContentAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "DailyAdvices",
+            "Services",
+            "DailyAdviceReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Content"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByLocaleAsync"),
         ];
 
         Assert.Empty(violations);

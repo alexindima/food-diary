@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Domain.Entities.FavoriteMeals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -29,4 +30,22 @@ public interface IFavoriteMealReadRepository {
     Task<IReadOnlyList<FavoriteMeal>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken = default);
+
+    async Task<IReadOnlyList<FavoriteMealReadModel>> GetAllReadModelsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<FavoriteMeal> favorites = await GetAllAsync(userId, cancellationToken).ConfigureAwait(false);
+        return [.. favorites.Select(static favorite => new FavoriteMealReadModel(
+            favorite.Id.Value,
+            favorite.MealId.Value,
+            favorite.Name,
+            favorite.CreatedAtUtc,
+            favorite.Meal.Date,
+            favorite.Meal.MealType?.ToString(),
+            favorite.Meal.TotalCalories,
+            favorite.Meal.TotalProteins,
+            favorite.Meal.TotalFats,
+            favorite.Meal.TotalCarbs,
+            favorite.Meal.Items.Count))];
+    }
 }

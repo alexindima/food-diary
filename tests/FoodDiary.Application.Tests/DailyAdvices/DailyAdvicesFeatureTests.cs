@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.DailyAdvices.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.DailyAdvices.Common;
 using FoodDiary.Application.DailyAdvices.Models;
@@ -210,6 +211,21 @@ public class DailyAdvicesFeatureTests {
                 string locale = call.Arg<string>();
                 capturedRequestedLocales.Add(locale);
                 return Task.FromResult(advices.GetValueOrDefault(locale, []));
+            });
+        repository
+            .GetByLocaleReadModelsAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
+            .Returns(call => {
+                string locale = call.Arg<string>();
+                capturedRequestedLocales.Add(locale);
+                IReadOnlyList<DailyAdvice> items = advices.GetValueOrDefault(locale, []);
+                return Task.FromResult<IReadOnlyList<DailyAdviceReadModel>>([
+                    .. items.Select(static advice => new DailyAdviceReadModel(
+                        advice.Id.Value,
+                        advice.Locale,
+                        advice.Value,
+                        advice.Tag,
+                        advice.Weight)),
+                ]);
             });
 
         requestedLocales = capturedRequestedLocales;

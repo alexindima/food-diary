@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.FavoriteMeals.Common;
+using FoodDiary.Application.Abstractions.FavoriteMeals.Models;
 using FoodDiary.Application.FavoriteMeals.Commands.AddFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Commands.RemoveFavoriteMeal;
 using FoodDiary.Application.FavoriteMeals.Queries.GetFavoriteMeals;
@@ -277,6 +278,22 @@ public class FavoriteMealsFeatureTests {
         repository
             .GetAllAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(favorites ?? []));
+        repository
+            .GetAllReadModelsAsync(Arg.Any<UserId>(), Arg.Any<CancellationToken>())
+            .Returns(_ => Task.FromResult<IReadOnlyList<FavoriteMealReadModel>>([
+                .. (favorites ?? []).Select(static favorite => new FavoriteMealReadModel(
+                    favorite.Id.Value,
+                    favorite.MealId.Value,
+                    favorite.Name,
+                    favorite.CreatedAtUtc,
+                    favorite.Meal.Date,
+                    favorite.Meal.MealType?.ToString(),
+                    favorite.Meal.TotalCalories,
+                    favorite.Meal.TotalProteins,
+                    favorite.Meal.TotalFats,
+                    favorite.Meal.TotalCarbs,
+                    favorite.Meal.Items.Count)),
+            ]));
         return repository;
     }
 

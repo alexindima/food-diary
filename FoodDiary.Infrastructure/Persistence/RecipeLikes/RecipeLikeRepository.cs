@@ -13,6 +13,15 @@ internal sealed class RecipeLikeRepository(FoodDiaryDbContext context) : IRecipe
             .FirstOrDefaultAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
     }
 
+    public async Task<bool> ExistsByUserAndRecipeAsync(
+        UserId userId,
+        RecipeId recipeId,
+        CancellationToken cancellationToken = default) {
+        return await context.RecipeLikes
+            .AsNoTracking()
+            .AnyAsync(l => l.UserId == userId && l.RecipeId == recipeId, cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<RecipeLike> AddAsync(RecipeLike like, CancellationToken cancellationToken = default) {
         await context.RecipeLikes.AddAsync(like, cancellationToken).ConfigureAwait(false);
         return like;

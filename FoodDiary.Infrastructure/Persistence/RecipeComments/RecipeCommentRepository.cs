@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.Abstractions.RecipeComments.Models;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -40,6 +41,35 @@ internal sealed class RecipeCommentRepository(FoodDiaryDbContext context) : IRec
             .OrderByDescending(c => c.CreatedOnUtc)
             .Skip((page - 1) * limit)
             .Take(limit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+
+        return (items, total);
+    }
+
+    public async Task<(IReadOnlyList<RecipeCommentReadModel> Items, int Total)> GetPagedReadModelsByRecipeAsync(
+        RecipeId recipeId,
+        int page,
+        int limit,
+        CancellationToken cancellationToken = default) {
+        IQueryable<RecipeComment> query = context.RecipeComments
+            .AsNoTracking()
+            .Where(c => c.RecipeId == recipeId);
+
+        int total = await query.CountAsync(cancellationToken).ConfigureAwait(false);
+
+        List<RecipeCommentReadModel> items = await query
+            .OrderByDescending(c => c.CreatedOnUtc)
+            .Skip((page - 1) * limit)
+            .Take(limit)
+            .Select(c => new RecipeCommentReadModel(
+                c.Id.Value,
+                c.RecipeId.Value,
+                c.UserId.Value,
+                c.User == null ? null : c.User.Username,
+                c.User == null ? null : c.User.FirstName,
+                c.Text,
+                c.CreatedOnUtc,
+                c.ModifiedOnUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
 
         return (items, total);

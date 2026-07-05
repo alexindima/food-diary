@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Wearables.Common;
+using FoodDiary.Application.Abstractions.Wearables.Models;
 using FoodDiary.Domain.Entities.Wearables;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -22,6 +23,17 @@ internal sealed class WearableSyncRepository(FoodDiaryDbContext context) : IWear
         return await context.WearableSyncEntries
             .AsNoTracking()
             .Where(e => e.UserId == userId && e.Date == date.Date)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<WearableSyncEntryReadModel>> GetDailySummaryReadModelsAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default) {
+        return await context.WearableSyncEntries
+            .AsNoTracking()
+            .Where(e => e.UserId == userId && e.Date == date.Date)
+            .Select(e => new WearableSyncEntryReadModel(e.DataType, e.Value))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.DailyAdvices.Common;
+using FoodDiary.Application.Abstractions.DailyAdvices.Models;
 using FoodDiary.Domain.Entities.Content;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +15,24 @@ public sealed class DailyAdviceRepository(FoodDiaryDbContext context) : IDailyAd
             .AsNoTracking()
             .Where(advice => advice.Locale == normalizedLocale)
             .OrderBy(advice => advice.Id)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<DailyAdviceReadModel>> GetByLocaleReadModelsAsync(
+        string locale,
+        CancellationToken cancellationToken = default) {
+        string normalizedLocale = NormalizeLocale(locale);
+
+        return await context.DailyAdvices
+            .AsNoTracking()
+            .Where(advice => advice.Locale == normalizedLocale)
+            .OrderBy(advice => advice.Id)
+            .Select(advice => new DailyAdviceReadModel(
+                advice.Id.Value,
+                advice.Locale,
+                advice.Value,
+                advice.Tag,
+                advice.Weight))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 

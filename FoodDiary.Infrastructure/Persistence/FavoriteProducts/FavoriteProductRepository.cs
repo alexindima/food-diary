@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
+using FoodDiary.Application.Abstractions.FavoriteProducts.Models;
 using FoodDiary.Domain.Entities.FavoriteProducts;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -66,6 +67,38 @@ public sealed class FavoriteProductRepository(FoodDiaryDbContext context) : IFav
             .Include(f => f.Product)
             .Where(f => f.UserId == userId)
             .OrderByDescending(f => f.CreatedAtUtc)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<FavoriteProductReadModel>> GetAllReadModelsAsync(
+        UserId userId,
+        CancellationToken cancellationToken = default) {
+        return await context.FavoriteProducts
+            .AsNoTracking()
+            .Where(f => f.UserId == userId)
+            .OrderByDescending(f => f.CreatedAtUtc)
+            .Select(f => new FavoriteProductReadModel(
+                f.Id.Value,
+                f.ProductId.Value,
+                f.UserId.Value,
+                f.Name,
+                f.CreatedAtUtc,
+                f.Product.Name,
+                f.Product.Brand,
+                f.Product.Barcode,
+                f.Product.UserId == f.UserId ? f.Product.Comment : null,
+                f.Product.ImageUrl,
+                f.Product.CaloriesPerBase,
+                f.Product.ProteinsPerBase,
+                f.Product.FatsPerBase,
+                f.Product.CarbsPerBase,
+                f.Product.FiberPerBase,
+                f.Product.AlcoholPerBase,
+                f.Product.ProductType,
+                f.Product.BaseUnit,
+                f.PreferredPortionAmount,
+                f.Product.DefaultPortionAmount,
+                f.Product.UserId.Value))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
