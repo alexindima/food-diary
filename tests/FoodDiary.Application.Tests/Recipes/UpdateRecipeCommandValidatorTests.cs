@@ -61,7 +61,7 @@ public class UpdateRecipeCommandValidatorTests {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Soup", servings: 2);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe, usageCount: 2));
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step")]) with {
             CalculateNutritionAutomatically = false,
             ManualCalories = ManualNutritionLimits.MaxCalories + 1,
@@ -183,7 +183,7 @@ public class UpdateRecipeCommandValidatorTests {
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 1);
-        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe));
+        var validator = new UpdateRecipeCommandValidator(CreateRecipeRepository(recipeId, userId, recipe, usageCount: 2));
 
         ValidationResult result = await validator.ValidateAsync(CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]));
 
@@ -193,12 +193,12 @@ public class UpdateRecipeCommandValidatorTests {
     }
 
     [Fact]
-    public async Task ValidateAsync_WithCachedUsedRecipe_ReturnsValidationErrorWithoutRepositoryQuery() {
+    public async Task ValidateAsync_WithCachedUsedRecipe_ReturnsValidationErrorFromUsageCount() {
         var userId = UserId.New();
         var recipeId = RecipeId.New();
         var recipe = Recipe.Create(userId, "Cached used soup", servings: 2);
         SetRecipeUsageCollections(recipe, mealItemsCount: 1, nestedRecipeUsageCount: 0);
-        var validator = new UpdateRecipeCommandValidator(CreateThrowingRecipeRepository());
+        var validator = new UpdateRecipeCommandValidator(CreateUsageCountRecipeRepository(recipe.Id, userId, usageCount: 1));
         UpdateRecipeCommand command = CreateCommand(userId.Value, recipeId, [CreateStep(order: 1, "Step 1")]);
         var context = new ValidationContext<UpdateRecipeCommand>(command);
         context.RootContextData["__recipe"] = recipe;
@@ -236,7 +236,7 @@ public class UpdateRecipeCommandValidatorTests {
             .SetValue(recipe, nestedRecipeUsages);
     }
 
-    private static IRecipeRepository CreateRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe) {
+    private static IRecipeRepository CreateRecipeRepository(RecipeId recipeId, UserId userId, Recipe recipe, int usageCount = 0) {
         IRecipeRepository repository = Substitute.For<IRecipeRepository>();
         repository
             .GetByIdAsync(
@@ -251,7 +251,44 @@ public class UpdateRecipeCommandValidatorTests {
                 UserId requestedUserId = call.ArgAt<UserId>(1);
                 return Task.FromResult(id == recipeId && requestedUserId == userId ? recipe : null);
             });
+        repository
+            .GetUsageCountAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.ArgAt<RecipeId>(0);
+                UserId requestedUserId = call.ArgAt<UserId>(1);
+                bool isRequestedRecipe = id == recipeId || id == recipe.Id;
+                return Task.FromResult(isRequestedRecipe && requestedUserId == userId ? usageCount : 0);
+            });
 
+        return repository;
+    }
+
+    private static IRecipeRepository CreateUsageCountRecipeRepository(RecipeId recipeId, UserId userId, int usageCount) {
+        IRecipeRepository repository = Substitute.For<IRecipeRepository>();
+        repository
+            .GetByIdAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns<Task<Recipe?>>(_ => throw new InvalidOperationException("Recipe should be read from validator context."));
+        repository
+            .GetUsageCountAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns(call => {
+                RecipeId id = call.ArgAt<RecipeId>(0);
+                UserId requestedUserId = call.ArgAt<UserId>(1);
+                return Task.FromResult(id == recipeId && requestedUserId == userId ? usageCount : 0);
+            });
         return repository;
     }
 
@@ -266,6 +303,13 @@ public class UpdateRecipeCommandValidatorTests {
                 Arg.Any<bool>(),
                 Arg.Any<CancellationToken>())
             .Returns<Task<Recipe?>>(_ => throw new InvalidOperationException("Repository should not be queried."));
+        repository
+            .GetUsageCountAsync(
+                Arg.Any<RecipeId>(),
+                Arg.Any<UserId>(),
+                Arg.Any<bool>(),
+                Arg.Any<CancellationToken>())
+            .Returns<Task<int>>(_ => throw new InvalidOperationException("Repository should not be queried."));
 
         return repository;
     }

@@ -1,7 +1,7 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Products.Mappings;
@@ -13,7 +13,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Products.Queries.GetProducts;
 
 public sealed class GetProductsQueryHandler(
-    IProductReadRepository productRepository,
+    IProductOverviewReadService productOverviewReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductsQuery, Result<PagedResponse<ProductModel>>> {
     public async Task<Result<PagedResponse<ProductModel>>> Handle(
@@ -32,7 +32,7 @@ public sealed class GetProductsQueryHandler(
         }
         ProductType[]? productTypes = EnumFilterParser.ParseMany<ProductType>(query.ProductTypes);
 
-        (IReadOnlyList<(Domain.Entities.Products.Product Product, int UsageCount)> items, int totalItems) = await productRepository.GetPagedAsync(
+        (IReadOnlyList<ProductOverviewReadItem> items, int totalItems) = await productOverviewReadService.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,
@@ -45,15 +45,9 @@ public sealed class GetProductsQueryHandler(
                 query.HasImage),
             cancellationToken).ConfigureAwait(false);
 
-        var productsWithUsage = items.Select(item => new {
-            item.Product,
-            item.UsageCount,
-            IsOwner = item.Product.UserId == userId,
-        }).ToList();
-
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<ProductModel>(
-            productsWithUsage.ConvertAll(p => p.Product.ToModel(p.UsageCount, p.IsOwner)),
+            items.Select(product => product.ToModel()).ToList(),
             pageNumber,
             pageSize,
             totalPages,

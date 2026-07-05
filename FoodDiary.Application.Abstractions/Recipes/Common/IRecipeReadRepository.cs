@@ -1,18 +1,9 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Abstractions.Recipes.Common;
 
 public interface IRecipeReadRepository {
-    Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-        UserId userId,
-        bool includePublic,
-        int page,
-        int limit,
-        RecipeQueryFilters filters,
-        CancellationToken cancellationToken = default);
-
     Task<Recipe?> GetByIdAsync(
         RecipeId id,
         UserId userId,
@@ -27,18 +18,9 @@ public interface IRecipeReadRepository {
         bool includePublic = true,
         CancellationToken cancellationToken = default);
 
-    Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-        IEnumerable<RecipeId> ids,
+    Task<int> GetUsageCountAsync(
+        RecipeId id,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default);
-
-    Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-        int page,
-        int limit,
-        string? search,
-        string? category,
-        int? maxPrepTime,
-        string sortBy,
         CancellationToken cancellationToken = default);
 }

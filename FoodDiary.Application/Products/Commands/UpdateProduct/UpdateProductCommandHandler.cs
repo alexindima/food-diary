@@ -52,8 +52,7 @@ public sealed class UpdateProductCommandHandler(
             hasChanges,
             cancellationToken).ConfigureAwait(false);
 
-        int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        return Result.Success(product.ToModel(usageCount, isOwnedByCurrentUser: true));
+        return Result.Success(product.ToModel(isOwnedByCurrentUser: true));
     }
 
     private async Task CleanupOldImageAssetAsync(

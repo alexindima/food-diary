@@ -1,8 +1,8 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.FavoriteProducts.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Products.Commands.DeleteProduct;
 using FoodDiary.Application.Products.Commands.CreateProduct;
@@ -81,7 +81,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
         var query = new GetProductsQuery(UserId: null, 1, 10, Search: null, IncludePublic: true);
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -121,7 +121,7 @@ public class ProductsFeatureTests {
             alcoholPerBase: 0,
             productType: ProductType.Dairy,
             visibility: Visibility.Private);
-        var repository = new OverviewProductRepository([(owned, 4), (supplement, 2)]);
+        var repository = new OverviewProductReadService([(owned, 4), (supplement, 2)]);
         var handler = new GetProductsQueryHandler(repository, new StubUserRepository(user));
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
@@ -395,7 +395,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetProductByIdQueryHandler_WithEmptyProductId_ReturnsValidationFailure() {
-        var handler = new GetProductByIdQueryHandler(new NoopProductRepository(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetProductByIdQueryHandler(new OverviewProductReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<ProductModel> result = await handler.Handle(
             new GetProductByIdQuery(Guid.NewGuid(), Guid.Empty),
@@ -409,7 +409,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetProductByIdQueryHandler(
-            new NoopProductRepository(),
+            new OverviewProductReadService(),
             new StubUserRepository(User.Create("product-by-id-invalid-token@example.com", "hash")));
 
         Result<ProductModel> result = await handler.Handle(
@@ -425,7 +425,7 @@ public class ProductsFeatureTests {
         var user = User.Create("product-by-id-deleted-user@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new GetProductByIdQueryHandler(
-            new NoopProductRepository(),
+            new OverviewProductReadService(),
             new StubUserRepository(user));
 
         Result<ProductModel> result = await handler.Handle(
@@ -854,7 +854,7 @@ public class ProductsFeatureTests {
     public async Task GetProductsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-product@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetProductsQueryHandler(new NoopProductRepository(), new StubUserRepository(user));
+        var handler = new GetProductsQueryHandler(new OverviewProductReadService(), new StubUserRepository(user));
 
         Result<PagedResponse<ProductModel>> result = await handler.Handle(
             new GetProductsQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true),
@@ -997,7 +997,11 @@ public class ProductsFeatureTests {
             visibility: Visibility.Private);
 
         SetProductUsageCollections(product, mealItemsCount: 2, recipeIngredientsCount: 1);
-        var handler = new GetProductByIdQueryHandler(new SingleProductRepository(product), new StubUserRepository(user));
+        var handler = new GetProductByIdQueryHandler(
+            new OverviewProductReadService(productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
+                [product.Id] = (product, 3),
+            }),
+            new StubUserRepository(user));
 
         Result<ProductModel> result = await handler.Handle(new GetProductByIdQuery(user.Id.Value, product.Id.Value), CancellationToken.None);
 
@@ -1140,7 +1144,7 @@ public class ProductsFeatureTests {
         var favorite = FavoriteProduct.Create(user.Id, lunch.Id, "Fav lunch");
         SetFavoriteProductNavigation(favorite, lunch);
 
-        var repository = new OverviewProductRepository(
+        var overviewReadService = new OverviewProductReadService(
             pagedItems: [(breakfast, 2), (lunch, 5)],
             productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
                 [lunch.Id] = (lunch, 5),
@@ -1149,7 +1153,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(lunch.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([favorite]);
-        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
+        var handler = new GetProductsOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1183,12 +1187,12 @@ public class ProductsFeatureTests {
             alcoholPerBase: 0,
             visibility: Visibility.Private);
 
-        var repository = new OverviewProductRepository(pagedItems: [(product, 1)]);
+        var overviewReadService = new OverviewProductReadService(pagedItems: [(product, 1)]);
         var recentRepository = new StubRecentItemRepository([
             new RecentProductUsage(product.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteProductRepository([]);
-        var handler = new GetProductsOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
+        var handler = new GetProductsOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<ProductOverviewModel> result = await handler.Handle(
             new GetProductsOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1204,7 +1208,7 @@ public class ProductsFeatureTests {
         var user = User.Create("overview-inactive-product-user@example.com", "hash");
         user.Deactivate();
         var handler = new GetProductsOverviewQueryHandler(
-            new OverviewProductRepository(),
+            new OverviewProductReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
             new StubUserRepository(user));
@@ -1220,7 +1224,7 @@ public class ProductsFeatureTests {
     [Fact]
     public async Task GetProductsOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetProductsOverviewQueryHandler(
-            new OverviewProductRepository(),
+            new OverviewProductReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
             new StubUserRepository(User.Create("overview-missing-user@example.com", "hash")));
@@ -1251,7 +1255,7 @@ public class ProductsFeatureTests {
             visibility: Visibility.Private);
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetProductsOverviewQueryHandler(
-            new OverviewProductRepository(pagedItems: [(product, 1)]),
+            new OverviewProductReadService(pagedItems: [(product, 1)]),
             recentRepository,
             new StubFavoriteProductRepository([]),
             new StubUserRepository(user));
@@ -1270,13 +1274,13 @@ public class ProductsFeatureTests {
         var user = User.Create("overview-product-image-filter@example.com", "hash");
         Product withImage = CreateProduct(user.Id, "Photo Yogurt", imageUrl: "https://cdn.test/yogurt.jpg");
         Product withoutImage = CreateProduct(user.Id, "Plain Yogurt");
-        var repository = new OverviewProductRepository(
+        var overviewReadService = new OverviewProductReadService(
             productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
                 [withImage.Id] = (withImage, 4),
                 [withoutImage.Id] = (withoutImage, 2),
             });
         var handler = new GetProductsOverviewQueryHandler(
-            repository,
+            overviewReadService,
             new StubRecentItemRepository([
                 new RecentProductUsage(withImage.Id, 4, DateTime.UtcNow),
                 new RecentProductUsage(withoutImage.Id, 2, DateTime.UtcNow),
@@ -1325,7 +1329,7 @@ public class ProductsFeatureTests {
             productType: ProductType.Fruit,
             visibility: Visibility.Private);
         var handler = new GetProductsOverviewQueryHandler(
-            new OverviewProductRepository(pagedItems: [(dairy, 3), (fruit, 2)]),
+            new OverviewProductReadService(pagedItems: [(dairy, 3), (fruit, 2)]),
             new StubRecentItemRepository([]),
             new StubFavoriteProductRepository([]),
             new StubUserRepository(user));
@@ -1348,7 +1352,7 @@ public class ProductsFeatureTests {
 
     [Fact]
     public async Task GetRecentProductsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new NoopProductRepository());
+        var handler = new GetRecentProductsQueryHandler(new StubRecentItemRepository([]), new OverviewProductReadService());
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1360,7 +1364,7 @@ public class ProductsFeatureTests {
     public async Task GetRecentProductsQueryHandler_WhenNoRecentProducts_ReturnsEmptyList() {
         var userId = UserId.New();
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetRecentProductsQueryHandler(recentRepository, new NoopProductRepository());
+        var handler = new GetRecentProductsQueryHandler(recentRepository, new OverviewProductReadService());
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1399,7 +1403,7 @@ public class ProductsFeatureTests {
             alcoholPerBase: 0,
             visibility: Visibility.Public);
         var missingProductId = ProductId.New();
-        var repository = new OverviewProductRepository(
+        var readService = new OverviewProductReadService(
             productsByIdWithUsage: new Dictionary<ProductId, (Product Product, int UsageCount)> {
                 [owned.Id] = (owned, 7),
                 [publicProduct.Id] = (publicProduct, 3),
@@ -1409,7 +1413,7 @@ public class ProductsFeatureTests {
             new RecentProductUsage(missingProductId, 9, DateTime.UtcNow),
             new RecentProductUsage(owned.Id, 7, DateTime.UtcNow),
         ]);
-        var handler = new GetRecentProductsQueryHandler(recentRepository, repository);
+        var handler = new GetRecentProductsQueryHandler(recentRepository, readService);
 
         Result<IReadOnlyList<ProductModel>> result = await handler.Handle(new GetRecentProductsQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
@@ -1431,15 +1435,6 @@ public class ProductsFeatureTests {
             return Task.FromResult(product);
         }
 
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            ProductQueryFilters filters,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((Items: (IReadOnlyList<(Product Product, int UsageCount)>)[], TotalItems: 0));
-
         public Task<Product?> GetByIdAsync(
             ProductId id,
             UserId userId,
@@ -1454,12 +1449,12 @@ public class ProductsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
 
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
+        public Task<int> GetUsageCountAsync(
+            ProductId id,
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>>(new Dictionary<ProductId, (Product Product, int UsageCount)>());
+            Task.FromResult(0);
 
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => Task.CompletedTask;
@@ -1476,14 +1471,6 @@ public class ProductsFeatureTests {
             LastAddedProduct = product;
             return Task.FromResult(product);
         }
-
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            ProductQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Product?> GetByIdAsync(
             ProductId id,
@@ -1507,11 +1494,12 @@ public class ProductsFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
+        public Task<int> GetUsageCountAsync(
+            ProductId id,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(product.MealItems.Count + product.RecipeIngredients.Count);
 
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
             UpdateCalled = true;
@@ -1540,15 +1528,13 @@ public class ProductsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private sealed class OverviewProductRepository(
+    private sealed class OverviewProductReadService(
         IReadOnlyList<(Product Product, int UsageCount)>? pagedItems = null,
-        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>? productsByIdWithUsage = null) : IProductRepository {
+        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>? productsByIdWithUsage = null) : IProductOverviewReadService {
         private readonly IReadOnlyList<(Product Product, int UsageCount)> _pagedItems = pagedItems ?? [];
         private readonly IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> _productsByIdWithUsage = productsByIdWithUsage ?? new Dictionary<ProductId, (Product Product, int UsageCount)>();
 
-        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
+        public Task<(IReadOnlyList<ProductOverviewReadItem> Items, int TotalItems)> GetPagedAsync(
             UserId userId,
             bool includePublic,
             int page,
@@ -1557,9 +1543,64 @@ public class ProductsFeatureTests {
             CancellationToken cancellationToken = default) {
             var filtered = _pagedItems
                 .Where(item => filters.ProductTypes?.Contains(item.Product.ProductType) != false)
+                .Select(item => ToReadItem(item.Product, item.UsageCount, userId))
                 .ToList();
-            return Task.FromResult(((IReadOnlyList<(Product Product, int UsageCount)>)filtered, filtered.Count));
+            return Task.FromResult(((IReadOnlyList<ProductOverviewReadItem>)filtered, filtered.Count));
         }
+
+        public Task<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>> GetByIdsWithUsageAsync(
+            IEnumerable<ProductId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) {
+            var idSet = ids.ToHashSet();
+            var filtered = _productsByIdWithUsage
+                .Where(pair => idSet.Contains(pair.Key))
+                .ToDictionary(pair => pair.Key, pair => ToReadItem(pair.Value.Product, pair.Value.UsageCount, userId));
+            return Task.FromResult<IReadOnlyDictionary<ProductId, ProductOverviewReadItem>>(filtered);
+        }
+
+        private static ProductOverviewReadItem ToReadItem(Product product, int usageCount, UserId userId) {
+            ProductModel model = product.ToModel(usageCount, product.UserId == userId);
+            return new ProductOverviewReadItem(
+                product.Id,
+                product.UserId,
+                model.Barcode,
+                model.Name,
+                model.Brand,
+                product.ProductType,
+                model.Category,
+                model.Description,
+                model.Comment,
+                model.ImageUrl,
+                product.ImageAssetId,
+                product.BaseUnit,
+                model.BaseAmount,
+                model.DefaultPortionAmount,
+                model.CaloriesPerBase,
+                model.ProteinsPerBase,
+                model.FatsPerBase,
+                model.CarbsPerBase,
+                model.FiberPerBase,
+                model.AlcoholPerBase,
+                model.UsageCount,
+                product.Visibility,
+                model.CreatedAt,
+                model.IsOwnedByCurrentUser,
+                model.QualityScore,
+                model.QualityGrade,
+                model.UsdaFdcId);
+        }
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class OverviewProductRepository(
+        IReadOnlyList<(Product Product, int UsageCount)>? pagedItems = null,
+        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>? productsByIdWithUsage = null) : IProductRepository {
+        private readonly IReadOnlyList<(Product Product, int UsageCount)> _pagedItems = pagedItems ?? [];
+        private readonly IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> _productsByIdWithUsage = productsByIdWithUsage ?? new Dictionary<ProductId, (Product Product, int UsageCount)>();
+
+        public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Product?> GetByIdAsync(
             ProductId id,
@@ -1575,17 +1616,12 @@ public class ProductsFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<ProductId, Product>>(new Dictionary<ProductId, Product>());
 
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
+        public Task<int> GetUsageCountAsync(
+            ProductId id,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) {
-            var idSet = ids.ToHashSet();
-            var filtered = _productsByIdWithUsage
-                .Where(pair => idSet.Contains(pair.Key))
-                .ToDictionary();
-            return Task.FromResult<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>>(filtered);
-        }
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_pagedItems.FirstOrDefault(item => item.Product.Id == id).UsageCount);
 
         public Task UpdateAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();

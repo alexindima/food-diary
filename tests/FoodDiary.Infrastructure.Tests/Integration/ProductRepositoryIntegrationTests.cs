@@ -2,7 +2,7 @@ using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.Products;
 using System.Diagnostics;
@@ -51,18 +51,18 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.Products.AddRange(matchingProduct, otherProduct);
         await context.SaveChangesAsync();
 
-        var repository = new ProductRepository(context);
+        var readService = new ProductOverviewReadService(context);
 
-        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<ProductOverviewReadItem>? items, int totalItems) = await readService.GetPagedAsync(
             userId,
             includePublic: false,
             page: 0,
             limit: 0,
             filters: new ProductQueryFilters("100% Cocoa"));
 
-        (Product Product, int UsageCount) item = Assert.Single(items);
+        ProductOverviewReadItem item = Assert.Single(items);
         Assert.Equal(1, totalItems);
-        Assert.Equal(matchingProduct.Id, item.Product.Id);
+        Assert.Equal(matchingProduct.Id, item.Id);
     }
 
     [RequiresDockerFact]
@@ -74,19 +74,19 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
 
         (Product dairyWithImage, Product grainNoImage, Product lowCalorieDairy) =
             await SeedProductFiltersAsync(context, user.Id);
-        var repository = new ProductRepository(context);
+        var readService = new ProductOverviewReadService(context);
 
-        IReadOnlyList<ProductId> dairyIds = await GetProductIdsAsync(repository, user.Id, new ProductQueryFilters(
+        IReadOnlyList<ProductId> dairyIds = await GetProductIdsAsync(readService, user.Id, new ProductQueryFilters(
             Search: null,
             ProductTypes: [ProductType.Dairy]));
-        IReadOnlyList<ProductId> calorieIds = await GetProductIdsAsync(repository, user.Id, new ProductQueryFilters(
+        IReadOnlyList<ProductId> calorieIds = await GetProductIdsAsync(readService, user.Id, new ProductQueryFilters(
             Search: null,
             CaloriesFrom: 100,
             CaloriesTo: 150));
-        IReadOnlyList<ProductId> withImageIds = await GetProductIdsAsync(repository, user.Id, new ProductQueryFilters(
+        IReadOnlyList<ProductId> withImageIds = await GetProductIdsAsync(readService, user.Id, new ProductQueryFilters(
             Search: null,
             HasImage: true));
-        IReadOnlyList<ProductId> withoutImageIds = await GetProductIdsAsync(repository, user.Id, new ProductQueryFilters(
+        IReadOnlyList<ProductId> withoutImageIds = await GetProductIdsAsync(readService, user.Id, new ProductQueryFilters(
             Search: null,
             HasImage: false));
 
@@ -120,9 +120,9 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         context.Products.AddRange(products);
         await context.SaveChangesAsync();
 
-        var repository = new ProductRepository(context);
+        var readService = new ProductOverviewReadService(context);
 
-        _ = await repository.GetPagedAsync(
+        _ = await readService.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,
@@ -130,7 +130,7 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
             filters: new ProductQueryFilters(Search: null));
 
         var stopwatch = Stopwatch.StartNew();
-        (IReadOnlyList<(Product Product, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<ProductOverviewReadItem>? items, int totalItems) = await readService.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,
@@ -142,21 +142,21 @@ public sealed class ProductRepositoryIntegrationTests(PostgresDatabaseFixture da
         Assert.Equal(25, items.Count);
         Assert.True(
             stopwatch.Elapsed <= FirstPageLatencyBudget,
-            string.Create(CultureInfo.InvariantCulture, $"Expected ProductRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+            string.Create(CultureInfo.InvariantCulture, $"Expected ProductOverviewReadService.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     private static async Task<IReadOnlyList<ProductId>> GetProductIdsAsync(
-        ProductRepository repository,
+        ProductOverviewReadService readService,
         UserId userId,
         ProductQueryFilters filters) {
-        (IReadOnlyList<(Product Product, int UsageCount)> items, int _) = await repository.GetPagedAsync(
+        (IReadOnlyList<ProductOverviewReadItem> items, int _) = await readService.GetPagedAsync(
             userId,
             includePublic: false,
             page: 1,
             limit: 50,
             filters: filters).ConfigureAwait(false);
 
-        return [.. items.Select(item => item.Product.Id)];
+        return [.. items.Select(item => item.Id)];
     }
 
     private static async Task<(Product DairyWithImage, Product GrainNoImage, Product LowCalorieDairy)> SeedProductFiltersAsync(

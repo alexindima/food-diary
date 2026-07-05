@@ -1,4 +1,4 @@
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Recipes.Models;
 
 public sealed record RecipeQueryFilters(
     string? Search,

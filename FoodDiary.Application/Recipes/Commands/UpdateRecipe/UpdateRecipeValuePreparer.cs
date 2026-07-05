@@ -125,7 +125,11 @@ internal static class UpdateRecipeValuePreparer {
             return Result.Failure<Recipe>(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
-        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        int usageCount = await recipeRepository.GetUsageCountAsync(
+            recipe.Id,
+            recipe.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
         return usageCount > 0
             ? Result.Failure<Recipe>(
                 Errors.Validation.Invalid("RecipeId", "Recipe is already used and cannot be modified"))

@@ -1,4 +1,3 @@
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Enums;
@@ -9,74 +8,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace FoodDiary.Infrastructure.Persistence.Recipes;
 
 public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeRepository {
-    private const string LikeEscapeCharacter = "\\";
-
     public async Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) {
         await context.Recipes.AddAsync(recipe, cancellationToken).ConfigureAwait(false);
         return recipe;
-    }
-
-    public async Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-        UserId userId,
-        bool includePublic,
-        int page,
-        int limit,
-        RecipeQueryFilters filters,
-        CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
-
-        IQueryable<Recipe> query = IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
-            .Where(includePublic
-                ? r => r.UserId == userId || r.Visibility == Visibility.Public
-                : r => r.UserId == userId);
-
-        if (!string.IsNullOrWhiteSpace(filters.Search)) {
-            string normalized = $"%{EscapeLikePattern(filters.Search.Trim())}%";
-            query = query.Where(r =>
-                EF.Functions.ILike(r.Name, normalized, LikeEscapeCharacter) ||
-                EF.Functions.ILike(r.Category ?? string.Empty, normalized, LikeEscapeCharacter) ||
-                EF.Functions.ILike(r.Description ?? string.Empty, normalized, LikeEscapeCharacter));
-        }
-
-        if (!string.IsNullOrWhiteSpace(filters.Category)) {
-            string category = $"%{EscapeLikePattern(filters.Category.Trim())}%";
-            query = query.Where(r => EF.Functions.ILike(r.Category ?? string.Empty, category, LikeEscapeCharacter));
-        }
-
-        if (filters.MaxTotalTime.HasValue) {
-            int maxTotalTime = filters.MaxTotalTime.Value;
-            query = query.Where(r => (r.PrepTime ?? 0) + (r.CookTime ?? 0) <= maxTotalTime);
-        }
-
-        if (filters.CaloriesFrom.HasValue) {
-            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) >= filters.CaloriesFrom.Value);
-        }
-
-        if (filters.CaloriesTo.HasValue) {
-            query = query.Where(r => (r.ManualCalories ?? r.TotalCalories ?? 0) <= filters.CaloriesTo.Value);
-        }
-
-        if (filters.HasImage.HasValue) {
-            query = filters.HasImage.Value
-                ? query.Where(r => r.ImageUrl != null || r.ImageAssetId != null)
-                : query.Where(r => r.ImageUrl == null && r.ImageAssetId == null);
-        }
-
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-        IOrderedQueryable<Recipe> orderedQuery = query.OrderByDescending(r => r.CreatedOnUtc);
-        int skip = (pageNumber - 1) * pageSize;
-
-        var items = await orderedQuery
-            .Skip(skip)
-            .Take(pageSize)
-            .Select(r => new {
-                Recipe = r,
-                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count,
-            })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        return (items.ConvertAll(i => (i.Recipe, i.UsageCount)), totalItems);
     }
 
     private static IQueryable<Recipe> IncludeStepsAndIngredients(IQueryable<Recipe> query) =>
@@ -112,10 +46,6 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
                 .ThenInclude(s => s.Ingredients)
                 .ThenInclude(i => i.NestedRecipe);
         }
-
-        query = query
-            .Include(r => r.MealItems)
-            .Include(r => r.NestedRecipeUsages);
 
         return await query.FirstOrDefaultAsync(
             r => r.Id == id && (includePublic
@@ -178,78 +108,17 @@ public sealed class RecipeRepository(FoodDiaryDbContext context) : IRecipeReposi
         return recipes.ToDictionary(r => r.Id);
     }
 
-    public async Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-        IEnumerable<RecipeId> ids,
+    public async Task<int> GetUsageCountAsync(
+        RecipeId id,
         UserId userId,
         bool includePublic = true,
-        CancellationToken cancellationToken = default) {
-        var recipeIds = ids.Distinct().ToList();
-        if (recipeIds.Count == 0) {
-            return new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
-        }
-
-        var items = await IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
-            .Where(r => recipeIds.Contains(r.Id) && (includePublic
+        CancellationToken cancellationToken = default) =>
+        await context.Recipes
+            .AsNoTracking()
+            .Where(r => r.Id == id && (includePublic
                 ? r.UserId == userId || r.Visibility == Visibility.Public
                 : r.UserId == userId))
-            .Select(r => new {
-                Recipe = r,
-                UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count,
-            })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
+            .Select(r => r.MealItems.Count + r.NestedRecipeUsages.Count)
+            .SingleOrDefaultAsync(cancellationToken).ConfigureAwait(false);
 
-        return items.ToDictionary(x => x.Recipe.Id, x => (x.Recipe, x.UsageCount));
-    }
-
-    public async Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-        int page,
-        int limit,
-        string? search,
-        string? category,
-        int? maxPrepTime,
-        string sortBy,
-        CancellationToken cancellationToken = default) {
-        int pageNumber = Math.Max(page, 1);
-        int pageSize = Math.Max(limit, 1);
-
-        IQueryable<Recipe> query = IncludeStepsAndIngredients(context.Recipes.AsNoTracking())
-            .Where(r => r.Visibility == Visibility.Public);
-
-        if (!string.IsNullOrWhiteSpace(search)) {
-            string pattern = $"%{EscapeLikePattern(search.Trim())}%";
-            query = query.Where(r =>
-                EF.Functions.ILike(r.Name, pattern, LikeEscapeCharacter) ||
-                (r.Category != null && EF.Functions.ILike(r.Category, pattern, LikeEscapeCharacter)) ||
-                (r.Description != null && EF.Functions.ILike(r.Description, pattern, LikeEscapeCharacter)));
-        }
-
-        if (!string.IsNullOrWhiteSpace(category)) {
-            query = query.Where(r => r.Category != null && EF.Functions.ILike(r.Category, category, LikeEscapeCharacter));
-        }
-
-        if (maxPrepTime.HasValue) {
-            query = query.Where(r => r.PrepTime <= maxPrepTime.Value);
-        }
-
-        int totalItems = await query.CountAsync(cancellationToken).ConfigureAwait(false);
-
-        IOrderedQueryable<Recipe> orderedQuery = string.Equals(sortBy, "popular", StringComparison.OrdinalIgnoreCase)
-            ? query.OrderByDescending(r => r.MealItems.Count + r.NestedRecipeUsages.Count).ThenByDescending(r => r.CreatedOnUtc)
-            : query.OrderByDescending(r => r.CreatedOnUtc);
-
-        var items = await orderedQuery
-            .Skip((pageNumber - 1) * pageSize)
-            .Take(pageSize)
-            .Select(r => new { Recipe = r, UsageCount = r.MealItems.Count + r.NestedRecipeUsages.Count })
-            .ToListAsync(cancellationToken).ConfigureAwait(false);
-
-        return (items.ConvertAll(x => (x.Recipe, x.UsageCount)), totalItems);
-    }
-
-    private static string EscapeLikePattern(string value) {
-        return value
-            .Replace("\\", "\\\\", StringComparison.Ordinal)
-            .Replace("%", "\\%", StringComparison.Ordinal)
-            .Replace("_", "\\_", StringComparison.Ordinal);
-    }
 }

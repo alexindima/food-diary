@@ -9,7 +9,7 @@ public sealed class EmailSender(
     EmailOptions options,
     IEmailTemplateProvider templateProvider,
     IEmailTransport emailTransport,
-    IEmailOutbox? emailOutbox = null) : IEmailSender {
+    IEmailOutbox emailOutbox) : IEmailSender {
     private const string EmailVerificationSubjectRu =
         "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 email";
 
@@ -302,11 +302,6 @@ public sealed class EmailSender(
             subject,
             htmlBody,
             string.IsNullOrWhiteSpace(textBody) ? null : textBody);
-
-        if (emailOutbox is null) {
-            await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            return;
-        }
 
         await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }

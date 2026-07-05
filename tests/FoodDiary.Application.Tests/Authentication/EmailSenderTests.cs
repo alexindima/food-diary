@@ -11,11 +11,12 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendEmailVerification_WithAllowedClientOrigin_UsesFallbackAndTenantOrigin() {
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(out Func<string?> getLastKey, out Func<string?> getLastLocale);
-        IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
         var sender = new EmailSender(
             CreateOptions(allowedFrontendBaseUrls: ["https://tenant.example/"]),
             templateProvider,
-            transport);
+            CreateSuccessfulTransport(),
+            outbox);
 
         await sender.SendEmailVerificationAsync(
             new EmailVerificationMessage(
@@ -42,8 +43,8 @@ public sealed class EmailSenderTests {
                 "Plain {{brand}} {{link}}"),
         };
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(templates);
-        IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
-        var sender = new EmailSender(CreateOptions(fromName: "FD"), templateProvider, transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new EmailSender(CreateOptions(fromName: "FD"), templateProvider, CreateSuccessfulTransport(), outbox);
 
         await sender.SendPasswordResetAsync(
             new PasswordResetMessage("user@example.com", "user-1", "token", "ru"),
@@ -57,7 +58,7 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendTestEmail_WithRussianLanguage_SendsRussianSubjectAndPlainText() {
         IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
-        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), transport);
+        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), transport, CreateNullOutbox());
 
         await sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", "ru-RU"), CancellationToken.None);
 
@@ -70,7 +71,7 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendTestEmail_WithBlankLanguage_UsesEnglishFallback() {
         IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
-        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), transport);
+        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), transport, CreateNullOutbox());
 
         await sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", " "), CancellationToken.None);
 
@@ -80,7 +81,7 @@ public sealed class EmailSenderTests {
 
     [Fact]
     public async Task SendTestEmail_WhenTransportFails_Rethrows() {
-        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), CreateThrowingTransport());
+        var sender = new EmailSender(CreateOptions(), CreateTemplateProvider(), CreateThrowingTransport(), CreateNullOutbox());
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendTestEmailAsync(new TestEmailMessage("user@example.com", "en"), CancellationToken.None));
@@ -93,7 +94,8 @@ public sealed class EmailSenderTests {
         var sender = new EmailSender(
             CreateOptions(frontendBaseUrl: ""),
             CreateTemplateProvider(),
-            CreateCapturingTransport(out _));
+            CreateSuccessfulTransport(),
+            CreateNullOutbox());
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendEmailVerificationAsync(
@@ -103,8 +105,8 @@ public sealed class EmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitation_WithFallbackContent_SendsInvitationLink() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
-        var sender = new DietologistEmailSender(CreateOptions(), CreateTemplateProvider(), transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new DietologistEmailSender(CreateOptions(), CreateTemplateProvider(), outbox);
         var invitationId = Guid.NewGuid();
 
         await sender.SendDietologistInvitationAsync(
@@ -133,8 +135,8 @@ public sealed class EmailSenderTests {
                 "{{clientName}} {{brand}} {{link}}"),
         };
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(templates);
-        IEmailTransport transport = CreateCapturingTransport(out Func<SentEmail> getSent);
-        var sender = new DietologistEmailSender(CreateOptions(fromName: "FD"), templateProvider, transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<SentEmail> getSent);
+        var sender = new DietologistEmailSender(CreateOptions(fromName: "FD"), templateProvider, outbox);
 
         await sender.SendDietologistInvitationAsync(
             new DietologistInvitationMessage(
@@ -156,7 +158,7 @@ public sealed class EmailSenderTests {
         var sender = new DietologistEmailSender(
             CreateOptions(frontendBaseUrl: ""),
             CreateTemplateProvider(),
-            CreateCapturingTransport(out _));
+            CreateNullOutbox());
 
         InvalidOperationException ex = await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendDietologistInvitationAsync(
@@ -240,6 +242,48 @@ public sealed class EmailSenderTests {
             }), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         getSent = () => sent;
+        return transport;
+    }
+
+    private static IEmailOutbox CreateCapturingOutbox(out Func<SentEmail> getSent) {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        SentEmail sent = new(
+            ToEmail: null,
+            Subject: null,
+            Body: null,
+            AlternateViewBodies: []);
+        outbox
+            .EnqueueAsync(Arg.Do<EmailMessage>(message => {
+                List<string> alternateViewBodies = [];
+                if (message.TextBody is not null) {
+                    alternateViewBodies.Add(message.TextBody);
+                }
+
+                alternateViewBodies.Add(message.HtmlBody);
+                sent = new SentEmail(
+                    ToEmail: message.ToAddresses.Single(),
+                    Subject: message.Subject,
+                    Body: message.HtmlBody,
+                    AlternateViewBodies: alternateViewBodies);
+            }), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getSent = () => sent;
+        return outbox;
+    }
+
+    private static IEmailOutbox CreateNullOutbox() {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        outbox
+            .EnqueueAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return outbox;
+    }
+
+    private static IEmailTransport CreateSuccessfulTransport() {
+        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        transport
+            .SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
         return transport;
     }
 

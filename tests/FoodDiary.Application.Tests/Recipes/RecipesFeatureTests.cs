@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Commands.CreateRecipe;
 using FoodDiary.Application.Recipes.Commands.DeleteRecipe;
@@ -14,6 +14,7 @@ using FoodDiary.Application.Recipes.Queries.ExploreRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecentRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipes;
 using FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
+using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Common.Nutrition;
@@ -731,7 +732,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithEmptyRecipeId_ReturnsValidationFailure() {
-        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetRecipeByIdQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(Guid.NewGuid(), Guid.Empty, IncludePublic: false),
@@ -744,7 +745,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecipeByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepositoryForCreate(), new StubUserRepository(User.Create("user@example.com", "hash")));
+        var handler = new GetRecipeByIdQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(User.Create("user@example.com", "hash")));
 
         Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(UserId: null, Guid.NewGuid(), IncludePublic: false),
@@ -759,7 +760,11 @@ public class RecipesFeatureTests {
         var user = User.Create("deleted-recipe-reader@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var recipe = Recipe.Create(user.Id, "Soup", servings: 1);
-        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
+        var handler = new GetRecipeByIdQueryHandler(
+            new OverviewRecipeReadService(recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
+                [recipe.Id] = (recipe, 0),
+            }),
+            new StubUserRepository(user));
 
         Result<RecipeModel> result = await handler.Handle(
             new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false),
@@ -783,7 +788,11 @@ public class RecipesFeatureTests {
         recipe.AddStep(1, "Prepare ingredients");
         SetRecipeUsageCollections(recipe, mealItemsCount: 2, nestedRecipeUsageCount: 1);
 
-        var handler = new GetRecipeByIdQueryHandler(new SingleRecipeRepository(recipe), new StubUserRepository(user));
+        var handler = new GetRecipeByIdQueryHandler(
+            new OverviewRecipeReadService(recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
+                [recipe.Id] = (recipe, 3),
+            }),
+            new StubUserRepository(user));
 
         Result<RecipeModel> result = await handler.Handle(new GetRecipeByIdQuery(user.Id.Value, recipe.Id.Value, IncludePublic: false), CancellationToken.None);
 
@@ -926,7 +935,7 @@ public class RecipesFeatureTests {
     [Fact]
     public async Task GetRecipesOverviewQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
         var handler = new GetRecipesOverviewQueryHandler(
-            new OverviewRecipeRepository(),
+            new OverviewRecipeReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteRecipeRepository([]),
             new StubUserRepository(User.Create("overview-missing-user@example.com", "hash")));
@@ -944,7 +953,7 @@ public class RecipesFeatureTests {
         var user = User.Create("overview-inactive-user@example.com", "hash");
         user.Deactivate();
         var handler = new GetRecipesOverviewQueryHandler(
-            new OverviewRecipeRepository(),
+            new OverviewRecipeReadService(),
             new StubRecentItemRepository([]),
             new StubFavoriteRecipeRepository([]),
             new StubUserRepository(user));
@@ -979,7 +988,7 @@ public class RecipesFeatureTests {
         var favorite = FavoriteRecipe.Create(user.Id, dinner.Id, "Fav dinner");
         SetFavoriteRecipeNavigation(favorite, dinner);
 
-        var repository = new OverviewRecipeRepository(
+        var overviewReadService = new OverviewRecipeReadService(
             pagedItems: [(breakfast, 2), (dinner, 5)],
             recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
                 [dinner.Id] = (dinner, 5),
@@ -988,7 +997,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(dinner.Id, 5, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([favorite]);
-        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
+        var handler = new GetRecipesOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true, 10, 10),
@@ -1012,7 +1021,7 @@ public class RecipesFeatureTests {
         recipe.AddStep(1, "Cook");
         var recentRepository = new StubRecentItemRepository([]);
         var handler = new GetRecipesOverviewQueryHandler(
-            new OverviewRecipeRepository(pagedItems: [(recipe, 1)]),
+            new OverviewRecipeReadService(pagedItems: [(recipe, 1)]),
             recentRepository,
             new StubFavoriteRecipeRepository([]),
             new StubUserRepository(user));
@@ -1037,12 +1046,12 @@ public class RecipesFeatureTests {
             visibility: Visibility.Private);
         recipe.AddStep(1, "Cook pancakes");
 
-        var repository = new OverviewRecipeRepository(pagedItems: [(recipe, 1)]);
+        var overviewReadService = new OverviewRecipeReadService(pagedItems: [(recipe, 1)]);
         var recentRepository = new StubRecentItemRepository([
             new RecentRecipeUsage(recipe.Id, 1, DateTime.UtcNow),
         ]);
         var favoriteRepository = new StubFavoriteRecipeRepository([]);
-        var handler = new GetRecipesOverviewQueryHandler(repository, recentRepository, favoriteRepository, new StubUserRepository(user));
+        var handler = new GetRecipesOverviewQueryHandler(overviewReadService, recentRepository, favoriteRepository, new StubUserRepository(user));
 
         Result<RecipeOverviewModel> result = await handler.Handle(
             new GetRecipesOverviewQuery(user.Id.Value, 1, 10, "protein", IncludePublic: true, 10, 10),
@@ -1058,13 +1067,13 @@ public class RecipesFeatureTests {
         var user = User.Create("overview-recipe-image-filter@example.com", "hash");
         var withImage = Recipe.Create(user.Id, "Photo Soup", servings: 1, imageUrl: "https://cdn.test/soup.jpg", visibility: Visibility.Private);
         var withoutImage = Recipe.Create(user.Id, "Plain Soup", servings: 1, visibility: Visibility.Private);
-        var repository = new OverviewRecipeRepository(
+        var overviewReadService = new OverviewRecipeReadService(
             recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
                 [withImage.Id] = (withImage, 3),
                 [withoutImage.Id] = (withoutImage, 2),
             });
         var handler = new GetRecipesOverviewQueryHandler(
-            repository,
+            overviewReadService,
             new StubRecentItemRepository([
                 new RecentRecipeUsage(withImage.Id, 3, DateTime.UtcNow),
                 new RecentRecipeUsage(withoutImage.Id, 2, DateTime.UtcNow),
@@ -1083,7 +1092,7 @@ public class RecipesFeatureTests {
 
     [Fact]
     public async Task GetRecentRecipesQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new SingleRecipeRepositoryForCreate());
+        var handler = new GetRecentRecipesQueryHandler(new StubRecentItemRepository([]), new OverviewRecipeReadService());
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(UserId: null, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1095,7 +1104,7 @@ public class RecipesFeatureTests {
     public async Task GetRecentRecipesQueryHandler_WhenNoRecentRecipes_ReturnsEmptyList() {
         var userId = UserId.New();
         var recentRepository = new StubRecentItemRepository([]);
-        var handler = new GetRecentRecipesQueryHandler(recentRepository, new SingleRecipeRepositoryForCreate());
+        var handler = new GetRecentRecipesQueryHandler(recentRepository, new OverviewRecipeReadService());
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 10, IncludePublic: true), CancellationToken.None);
 
@@ -1122,7 +1131,7 @@ public class RecipesFeatureTests {
             visibility: Visibility.Public);
         publicRecipe.AddStep(1, "Cook pancakes");
         var missingRecipeId = RecipeId.New();
-        var repository = new OverviewRecipeRepository(
+        var readService = new OverviewRecipeReadService(
             recipesByIdWithUsage: new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)> {
                 [owned.Id] = (owned, 5),
                 [publicRecipe.Id] = (publicRecipe, 2),
@@ -1132,7 +1141,7 @@ public class RecipesFeatureTests {
             new RecentRecipeUsage(missingRecipeId, 9, DateTime.UtcNow),
             new RecentRecipeUsage(owned.Id, 5, DateTime.UtcNow),
         ]);
-        var handler = new GetRecentRecipesQueryHandler(recentRepository, repository);
+        var handler = new GetRecentRecipesQueryHandler(recentRepository, readService);
 
         Result<IReadOnlyList<RecipeModel>> result = await handler.Handle(new GetRecentRecipesQuery(userId.Value, 99, IncludePublic: true), CancellationToken.None);
 
@@ -1152,8 +1161,8 @@ public class RecipesFeatureTests {
         owned.AddStep(1, "Cook");
         var publicRecipe = Recipe.Create(UserId.New(), "Shared Salad", servings: 1, visibility: Visibility.Public);
         publicRecipe.AddStep(1, "Mix");
-        var repository = new OverviewRecipeRepository(pagedItems: [(owned, 3), (publicRecipe, 7)]);
-        var handler = new ExploreRecipesQueryHandler(repository);
+        var readService = new OverviewRecipeReadService(pagedItems: [(owned, 3), (publicRecipe, 7)]);
+        var handler = new ExploreRecipesQueryHandler(readService);
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(
             new ExploreRecipesQuery(user.Id.Value, Page: 0, Limit: 0, Search: "s", Category: "Lunch", MaxPrepTime: 20, SortBy: "popular"),
@@ -1295,7 +1304,7 @@ public class RecipesFeatureTests {
         ownedRecipe.SetManualNutrition(200, 10, 5, 20, 2, 0);
         var publicOwnerId = UserId.New();
         var publicRecipe = Recipe.Create(publicOwnerId, "Public salad", servings: 1, visibility: Visibility.Public);
-        var repository = new OverviewRecipeRepository([
+        var repository = new OverviewRecipeReadService([
             (ownedRecipe, 3),
             (publicRecipe, 5),
         ]);
@@ -1324,7 +1333,7 @@ public class RecipesFeatureTests {
     [Fact]
     public async Task GetRecipesQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetRecipesQueryHandler(
-            new OverviewRecipeRepository(),
+            new OverviewRecipeReadService(),
             new StubUserRepository(User.Create("unused@example.com", "hash")));
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(Guid.Empty, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
@@ -1337,7 +1346,7 @@ public class RecipesFeatureTests {
     public async Task GetRecipesQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-recipes-list@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetRecipesQueryHandler(new OverviewRecipeRepository(), new StubUserRepository(user));
+        var handler = new GetRecipesQueryHandler(new OverviewRecipeReadService(), new StubUserRepository(user));
 
         Result<PagedResponse<RecipeModel>> result = await handler.Handle(new GetRecipesQuery(user.Id.Value, 1, 10, Search: null, IncludePublic: true), CancellationToken.None);
 
@@ -1421,14 +1430,6 @@ public class RecipesFeatureTests {
             return Task.FromResult(recipe);
         }
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
         public Task<Recipe?> GetByIdAsync(
             RecipeId id,
             UserId userId,
@@ -1452,11 +1453,12 @@ public class RecipesFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
+        public Task<int> GetUsageCountAsync(
+            RecipeId id,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(recipe.MealItems.Count + recipe.NestedRecipeUsages.Count);
 
         public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
@@ -1468,9 +1470,6 @@ public class RecipesFeatureTests {
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]
@@ -1481,14 +1480,6 @@ public class RecipesFeatureTests {
             LastAddedRecipe = recipe;
             return Task.FromResult(recipe);
         }
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<Recipe?> GetByIdAsync(
             RecipeId id,
@@ -1505,11 +1496,12 @@ public class RecipesFeatureTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
+        public Task<int> GetUsageCountAsync(
+            RecipeId id,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
 
         public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -1517,9 +1509,116 @@ public class RecipesFeatureTests {
 
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class OverviewRecipeReadService(
+        IReadOnlyList<(Recipe Recipe, int UsageCount)>? pagedItems = null,
+        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>? recipesByIdWithUsage = null) : IRecipeOverviewReadService {
+        private readonly IReadOnlyList<(Recipe Recipe, int UsageCount)> _pagedItems = pagedItems ?? [];
+        private readonly IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> _recipesByIdWithUsage = recipesByIdWithUsage ?? new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
+
+        public Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetPagedAsync(
+            UserId userId,
+            bool includePublic,
+            int page,
+            int limit,
+            RecipeQueryFilters filters,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(((IReadOnlyList<RecipeOverviewReadItem>)[.. _pagedItems.Select(item => ToReadItem(item.Recipe, item.UsageCount, userId))], _pagedItems.Count));
+
+        public Task<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>> GetByIdsWithUsageAsync(
+            IEnumerable<RecipeId> ids,
+            UserId userId,
+            bool includePublic = true,
+            CancellationToken cancellationToken = default) {
+            var idSet = ids.ToHashSet();
+            var filtered = _recipesByIdWithUsage
+                .Where(pair => idSet.Contains(pair.Key))
+                .ToDictionary(pair => pair.Key, pair => ToReadItem(pair.Value.Recipe, pair.Value.UsageCount, userId));
+            return Task.FromResult<IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem>>(filtered);
+        }
+
+        public Task<(IReadOnlyList<RecipeOverviewReadItem> Items, int TotalItems)> GetExplorePagedAsync(
+            UserId currentUserId,
+            int page,
+            int limit,
+            string? search,
+            string? category,
+            int? maxPrepTime,
+            string sortBy,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(((IReadOnlyList<RecipeOverviewReadItem>)[.. _pagedItems.Select(item => ToReadItem(item.Recipe, item.UsageCount, currentUserId))], _pagedItems.Count));
+
+        private static RecipeOverviewReadItem ToReadItem(Recipe recipe, int usageCount, UserId userId) {
+            RecipeModel model = recipe.ToModel(usageCount, recipe.UserId == userId);
+            return new RecipeOverviewReadItem(
+                recipe.Id,
+                recipe.UserId,
+                model.Name,
+                model.Description,
+                model.Comment,
+                model.Category,
+                model.ImageUrl,
+                recipe.ImageAssetId,
+                model.PrepTime,
+                model.CookTime,
+                model.Servings,
+                model.TotalCalories,
+                model.TotalProteins,
+                model.TotalFats,
+                model.TotalCarbs,
+                model.TotalFiber,
+                model.TotalAlcohol,
+                model.IsNutritionAutoCalculated,
+                model.ManualCalories,
+                model.ManualProteins,
+                model.ManualFats,
+                model.ManualCarbs,
+                model.ManualFiber,
+                model.ManualAlcohol,
+                recipe.Visibility,
+                model.UsageCount,
+                model.CreatedAt,
+                model.IsOwnedByCurrentUser,
+                model.QualityScore,
+                model.QualityGrade,
+                [.. model.Steps.Select(ToReadStep)]);
+        }
+
+        private static RecipeOverviewStepReadItem ToReadStep(RecipeStepModel step) =>
+            new(
+                step.Id,
+                step.StepNumber,
+                step.Title,
+                step.Instruction,
+                step.ImageUrl,
+                step.ImageAssetId,
+                [.. step.Ingredients.Select(ToReadIngredient)]);
+
+        private static RecipeOverviewIngredientReadItem ToReadIngredient(RecipeIngredientModel ingredient) =>
+            new(
+                ingredient.Id,
+                ingredient.Amount,
+                ingredient.ProductId,
+                ingredient.ProductName,
+                ingredient.ProductBaseUnit,
+                ingredient.ProductBaseAmount,
+                ingredient.ProductCaloriesPerBase,
+                ingredient.ProductProteinsPerBase,
+                ingredient.ProductFatsPerBase,
+                ingredient.ProductCarbsPerBase,
+                ingredient.ProductFiberPerBase,
+                ingredient.ProductAlcoholPerBase,
+                ingredient.NestedRecipeId,
+                ingredient.NestedRecipeName,
+                ingredient.NestedRecipeServings,
+                ingredient.NestedRecipeTotalCalories,
+                ingredient.NestedRecipeTotalProteins,
+                ingredient.NestedRecipeTotalFats,
+                ingredient.NestedRecipeTotalCarbs,
+                ingredient.NestedRecipeTotalFiber,
+                ingredient.NestedRecipeTotalAlcohol);
     }
 
     [ExcludeFromCodeCoverage]
@@ -1530,15 +1629,6 @@ public class RecipesFeatureTests {
         private readonly IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> _recipesByIdWithUsage = recipesByIdWithUsage ?? new Dictionary<RecipeId, (Recipe Recipe, int UsageCount)>();
 
         public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((_pagedItems, _pagedItems.Count));
 
         public Task<Recipe?> GetByIdAsync(
             RecipeId id,
@@ -1556,26 +1646,17 @@ public class RecipesFeatureTests {
             CancellationToken cancellationToken = default) =>
             Task.FromResult<IReadOnlyDictionary<RecipeId, Recipe>>(new Dictionary<RecipeId, Recipe>());
 
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
+        public Task<int> GetUsageCountAsync(
+            RecipeId id,
             UserId userId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) {
-            var idSet = ids.ToHashSet();
-            var filtered = _recipesByIdWithUsage
-                .Where(pair => idSet.Contains(pair.Key))
-                .ToDictionary();
-            return Task.FromResult<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>>(filtered);
-        }
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(_pagedItems.FirstOrDefault(item => item.Recipe.Id == id).UsageCount);
 
         public Task UpdateAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task DeleteAsync(Recipe recipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task UpdateNutritionAsync(Recipe recipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page, int limit, string? search, string? category, int? maxPrepTime, string sortBy,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((_pagedItems, _pagedItems.Count));
     }
 
     [ExcludeFromCodeCoverage]
@@ -1890,15 +1971,6 @@ public class RecipesFeatureTests {
         public Task<Recipe> AddAsync(Recipe recipe, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
         public Task<Recipe?> GetByIdAsync(
             RecipeId id,
             UserId userId,
@@ -1915,8 +1987,8 @@ public class RecipesFeatureTests {
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
+        public Task<int> GetUsageCountAsync(
+            RecipeId id,
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>
@@ -1933,15 +2005,6 @@ public class RecipesFeatureTests {
             return Task.CompletedTask;
         }
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page,
-            int limit,
-            string? search,
-            string? category,
-            int? maxPrepTime,
-            string sortBy,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

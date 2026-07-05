@@ -291,8 +291,6 @@ public sealed class ApplicationGuardrailTests {
             "IUserReadRepository.cs",
             "IUserRepository.cs",
             "IUserWriteRepository.cs",
-            "ProductQueryFilters.cs",
-            "RecipeQueryFilters.cs",
             "UserAccountStatusFilter.cs",
         ];
 
@@ -405,6 +403,104 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ProductQueryHandlers_DoNotUseAggregateReadRepository() {
+        string root = GetRepositoryRoot();
+        string queryRoot = Path.Combine(root, "FoodDiary.Application", "Products", "Queries");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            queryRoot,
+            "IProductReadRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ProductReadRepository_DoesNotExposeAggregatePaging() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Products",
+            "Common",
+            "IProductReadRepository.cs");
+        string source = File.ReadAllText(contractPath);
+
+        Assert.DoesNotContain("GetPagedAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("GetByIdsWithUsageAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("ProductQueryFilters", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProductOverviewQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Products",
+            "Queries",
+            "GetProductsOverview",
+            "GetProductsOverviewQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProductListQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Products",
+            "Queries",
+            "GetProducts",
+            "GetProductsQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProductByIdQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Products",
+            "Queries",
+            "GetProductById",
+            "GetProductByIdQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void ProductRecentQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Products",
+            "Queries",
+            "GetRecentProducts",
+            "GetRecentProductsQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IProductOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IProductReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Product = FoodDiary.Domain.Entities.Products.Product", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void ProductCommandHandlersAndValidators_DoNotUseFullProductRepository() {
         string root = GetRepositoryRoot();
         string commandRoot = Path.Combine(root, "FoodDiary.Application", "Products", "Commands");
@@ -447,11 +543,154 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void RecipeQueryHandlers_DoNotUseAggregateReadRepository() {
+        string root = GetRepositoryRoot();
+        string queryRoot = Path.Combine(root, "FoodDiary.Application", "Recipes", "Queries");
+
+        string[] violations = FindRepositoryReferenceViolations(
+            root,
+            queryRoot,
+            "IRecipeReadRepository",
+            []);
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void RecipeReadRepository_DoesNotExposeAggregatePaging() {
+        string root = GetRepositoryRoot();
+        string contractPath = Path.Combine(
+            root,
+            "FoodDiary.Application.Abstractions",
+            "Recipes",
+            "Common",
+            "IRecipeReadRepository.cs");
+        string source = File.ReadAllText(contractPath);
+
+        Assert.DoesNotContain("GetPagedAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("GetByIdsWithUsageAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("GetExplorePagedAsync", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("RecipeQueryFilters", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RecipeOverviewQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Recipes",
+            "Queries",
+            "GetRecipesOverview",
+            "GetRecipesOverviewQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RecipeListQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Recipes",
+            "Queries",
+            "GetRecipes",
+            "GetRecipesQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RecipeByIdQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Recipes",
+            "Queries",
+            "GetRecipeById",
+            "GetRecipeByIdQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RecipeRecentQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Recipes",
+            "Queries",
+            "GetRecentRecipes",
+            "GetRecentRecipesQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
+    public void RecipeExploreQueryHandler_UsesDedicatedReadModelService() {
+        string root = GetRepositoryRoot();
+        string handlerPath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Recipes",
+            "Queries",
+            "ExploreRecipes",
+            "ExploreRecipesQueryHandler.cs");
+        string source = File.ReadAllText(handlerPath);
+
+        Assert.Contains("IRecipeOverviewReadService", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("IRecipeReadRepository", source, StringComparison.Ordinal);
+        Assert.DoesNotContain("Recipe = FoodDiary.Domain.Entities.Recipes.Recipe", source, StringComparison.Ordinal);
+    }
+
+    [Fact]
     public void RecipeNutritionUpdater_DoesNotUseFullRecipeRepository() {
         string root = GetRepositoryRoot();
         string updaterPath = Path.Combine(root, "FoodDiary.Application", "Recipes", "Services", "RecipeNutritionUpdater.cs");
 
         string[] violations = FindReferencesInFiles(root, [updaterPath], "IRecipeRepository");
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ProductAndRecipeCommands_DoNotCalculateUsageFromLoadedCollections() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] commandRoots = [
+            Path.Combine(applicationRoot, "Products", "Commands"),
+            Path.Combine(applicationRoot, "Recipes", "Commands"),
+        ];
+        string[] forbiddenPatterns = [
+            "MealItems.Count",
+            "RecipeIngredients.Count",
+            "NestedRecipeUsages.Count",
+        ];
+
+        string[] violations = [.. commandRoots
+            .SelectMany(SourceScanner.SourceFiles)
+            .SelectMany(path => File.ReadLines(path)
+                .Select((line, index) => new { path, index, line })
+                .Where(entry => forbiddenPatterns.Any(pattern => entry.line.Contains(pattern, StringComparison.Ordinal)))
+                .Select(entry => string.Create(
+                    CultureInfo.InvariantCulture,
+                    $"{Path.GetRelativePath(root, entry.path)}:{entry.index + 1}")))
+            .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
     }
@@ -1108,6 +1347,25 @@ public sealed class ApplicationGuardrailTests {
             .Order(StringComparer.Ordinal)];
 
         Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void BusinessEmailSenders_UseRequiredOutboxInsteadOfDirectTransportFallback() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string emailSenderPath = Path.Combine(applicationRoot, "Authentication", "Services", "EmailSender.cs");
+        string dietologistEmailSenderPath = Path.Combine(applicationRoot, "Dietologist", "Services", "DietologistEmailSender.cs");
+
+        string emailSenderSource = File.ReadAllText(emailSenderPath);
+        string dietologistEmailSenderSource = File.ReadAllText(dietologistEmailSenderPath);
+
+        Assert.Contains("IEmailOutbox emailOutbox", emailSenderSource, StringComparison.Ordinal);
+        Assert.Contains("IEmailOutbox emailOutbox", dietologistEmailSenderSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("IEmailOutbox?", emailSenderSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("IEmailOutbox?", dietologistEmailSenderSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("emailOutbox is null", emailSenderSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("emailOutbox is null", dietologistEmailSenderSource, StringComparison.Ordinal);
+        Assert.DoesNotContain("IEmailTransport emailTransport", dietologistEmailSenderSource, StringComparison.Ordinal);
     }
 
     [Fact]

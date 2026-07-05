@@ -1,22 +1,21 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.FavoriteRecipes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
 using FoodDiary.Application.FavoriteRecipes.Mappings;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using Recipe = FoodDiary.Domain.Entities.Recipes.Recipe;
 using FoodDiary.Domain.Entities.FavoriteRecipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipesOverview;
 
 public sealed class GetRecipesOverviewQueryHandler(
-    IRecipeReadRepository recipeRepository,
+    IRecipeOverviewReadService recipeOverviewReadService,
     IRecentItemReadRepository recentItemRepository,
     IFavoriteRecipeReadRepository favoriteRecipeRepository,
     ICurrentUserAccessService currentUserAccessService)
@@ -28,11 +27,6 @@ public sealed class GetRecipesOverviewQueryHandler(
         int RecentLimit,
         int FavoriteLimit,
         RecipeQueryFilters Filters);
-
-    private sealed record RecipeListItem(
-        Recipe Recipe,
-        int UsageCount,
-        bool IsOwner);
 
     public async Task<Result<RecipeOverviewModel>> Handle(
         GetRecipesOverviewQuery query,
@@ -49,7 +43,7 @@ public sealed class GetRecipesOverviewQueryHandler(
 
         RecipeOverviewOptions options = CreateOptions(query, userId);
 
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetPagedAsync(
             options.UserId,
             query.IncludePublic,
             options.PageNumber,
@@ -57,9 +51,7 @@ public sealed class GetRecipesOverviewQueryHandler(
             options.Filters,
             cancellationToken).ConfigureAwait(false);
 
-        var allRecipes = items
-            .Select(item => ToListItem(item.Recipe, item.UsageCount, options.UserId))
-            .ToList();
+        var allRecipes = items.ToList();
         IReadOnlyList<FavoriteRecipe> allFavorites = await favoriteRecipeRepository.GetAllAsync(options.UserId, cancellationToken).ConfigureAwait(false);
         var favoriteItems = allFavorites
             .Take(options.FavoriteLimit)
@@ -67,10 +59,10 @@ public sealed class GetRecipesOverviewQueryHandler(
             .ToList();
         var favoriteLookup = allFavorites.ToDictionary(favorite => favorite.RecipeId);
 
-        IReadOnlyList<RecipeListItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
+        IReadOnlyList<RecipeOverviewReadItem> recentItems = await GetRecentItemsAsync(query, options, cancellationToken).ConfigureAwait(false);
         RecipeId[] favoriteRecipeIds = [.. allRecipes
-            .Select(x => x.Recipe.Id)
-            .Concat(recentItems.Select(x => x.Recipe.Id))
+            .Select(x => x.Id)
+            .Concat(recentItems.Select(x => x.Id))
             .Distinct()];
         var favoritesByRecipeId = favoriteLookup
             .Where(pair => favoriteRecipeIds.Contains(pair.Key))
@@ -101,7 +93,7 @@ public sealed class GetRecipesOverviewQueryHandler(
                 query.CaloriesTo,
                 query.HasImage));
 
-    private async Task<IReadOnlyList<RecipeListItem>> GetRecentItemsAsync(
+    private async Task<IReadOnlyList<RecipeOverviewReadItem>> GetRecentItemsAsync(
         GetRecipesOverviewQuery query,
         RecipeOverviewOptions options,
         CancellationToken cancellationToken) {
@@ -118,7 +110,7 @@ public sealed class GetRecipesOverviewQueryHandler(
         }
 
         var recentIds = recents.Select(x => x.RecipeId).ToList();
-        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> recipesById = await recipeRepository.GetByIdsWithUsageAsync(
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipesById = await recipeOverviewReadService.GetByIdsWithUsageAsync(
             recentIds,
             options.UserId,
             query.IncludePublic,
@@ -127,27 +119,23 @@ public sealed class GetRecipesOverviewQueryHandler(
         return recentIds
             .Where(recipesById.ContainsKey)
             .Select(id => recipesById[id])
-            .Where(item => MatchesRecentFilters(item.Recipe, options.Filters))
-            .Select(item => ToListItem(item.Recipe, item.UsageCount, options.UserId))
+            .Where(item => MatchesRecentFilters(item, options.Filters))
             .ToArray();
     }
 
-    private static RecipeListItem ToListItem(Recipe recipe, int usageCount, UserId userId) =>
-        new(recipe, usageCount, recipe.UserId == userId);
-
-    private static bool MatchesRecentFilters(Recipe recipe, RecipeQueryFilters filters) =>
+    private static bool MatchesRecentFilters(RecipeOverviewReadItem recipe, RecipeQueryFilters filters) =>
         (string.IsNullOrWhiteSpace(filters.Category) ||
          (recipe.Category?.Contains(filters.Category.Trim(), StringComparison.OrdinalIgnoreCase) ?? false)) &&
         (!filters.MaxTotalTime.HasValue || (recipe.PrepTime ?? 0) + (recipe.CookTime ?? 0) <= filters.MaxTotalTime.Value) &&
-        (!filters.CaloriesFrom.HasValue || (recipe.ManualCalories ?? recipe.TotalCalories ?? 0) >= filters.CaloriesFrom.Value) &&
-        (!filters.CaloriesTo.HasValue || (recipe.ManualCalories ?? recipe.TotalCalories ?? 0) <= filters.CaloriesTo.Value) &&
+        (!filters.CaloriesFrom.HasValue || (recipe.TotalCalories ?? 0) >= filters.CaloriesFrom.Value) &&
+        (!filters.CaloriesTo.HasValue || (recipe.TotalCalories ?? 0) <= filters.CaloriesTo.Value) &&
         (!filters.HasImage.HasValue || HasImage(recipe) == filters.HasImage.Value);
 
-    private static bool HasImage(Recipe recipe) =>
+    private static bool HasImage(RecipeOverviewReadItem recipe) =>
         recipe.ImageUrl is not null || recipe.ImageAssetId is not null;
 
     private static PagedResponse<RecipeModel> CreatePagedRecipes(
-        IReadOnlyList<RecipeListItem> recipes,
+        IReadOnlyList<RecipeOverviewReadItem> recipes,
         IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId,
         RecipeOverviewOptions options,
         int totalItems) =>
@@ -159,18 +147,14 @@ public sealed class GetRecipesOverviewQueryHandler(
             totalItems);
 
     private static RecipeModel[] ToRecipeModels(
-        IEnumerable<RecipeListItem> recipes,
+        IEnumerable<RecipeOverviewReadItem> recipes,
         IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId) =>
         [.. recipes.Select(recipe => ToRecipeModel(recipe, favoritesByRecipeId))];
 
     private static RecipeModel ToRecipeModel(
-        RecipeListItem recipe,
+        RecipeOverviewReadItem recipe,
         IReadOnlyDictionary<RecipeId, FavoriteRecipe> favoritesByRecipeId) {
-        FavoriteRecipe? favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Recipe.Id);
-        return recipe.Recipe.ToModel(
-            recipe.UsageCount,
-            recipe.IsOwner,
-            favorite is not null,
-            favorite?.Id.Value);
+        FavoriteRecipe? favorite = favoritesByRecipeId.GetValueOrDefault(recipe.Id);
+        return recipe.ToModel(favorite is not null, favorite?.Id.Value);
     }
 }

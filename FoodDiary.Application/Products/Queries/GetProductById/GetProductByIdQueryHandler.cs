@@ -1,16 +1,16 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Products.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Products.Mappings;
 using FoodDiary.Application.Products.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Products;
 
 namespace FoodDiary.Application.Products.Queries.GetProductById;
 
 public sealed class GetProductByIdQueryHandler(
-    IProductReadRepository productRepository,
+    IProductOverviewReadService productOverviewReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetProductByIdQuery, Result<ProductModel>> {
     public async Task<Result<ProductModel>> Handle(
@@ -30,17 +30,16 @@ public sealed class GetProductByIdQueryHandler(
             return Result.Failure<ProductModel>(accessError);
         }
         var productId = new ProductId(query.ProductId);
-        Product? product = await productRepository.GetByIdAsync(
-            productId,
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> productsById = await productOverviewReadService.GetByIdsWithUsageAsync(
+            [productId],
             userId,
             includePublic: false,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
+        ProductOverviewReadItem? product = productsById.GetValueOrDefault(productId);
         if (product is null) {
             return Result.Failure<ProductModel>(Errors.Product.NotAccessible(query.ProductId));
         }
 
-        int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
-        bool isOwner = product.UserId == userId;
-        return Result.Success(product.ToModel(usageCount, isOwner));
+        return Result.Success(product.ToModel());
     }
 }

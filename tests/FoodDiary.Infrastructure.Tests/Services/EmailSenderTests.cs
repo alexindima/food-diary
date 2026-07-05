@@ -21,7 +21,7 @@ public sealed class EmailSenderTests {
             template = GetTagValue(tags, "fooddiary.email.template");
         });
 
-        EmailSender sender = CreateSender(CreateSuccessfulTransport());
+        EmailSender sender = CreateSender(CreateSuccessfulTransport(), CreateSuccessfulOutbox());
 
         await sender.SendEmailVerificationAsync(
             new EmailVerificationMessage("user@example.com", User.Create("user@example.com", "hash").Id.Value.ToString(), "token", "en"),
@@ -33,7 +33,7 @@ public sealed class EmailSenderTests {
     }
 
     [Fact]
-    public async Task SendPasswordResetAsync_WhenTransportFails_RecordsFailureMetric() {
+    public async Task SendPasswordResetAsync_WhenOutboxFails_RecordsFailureMetric() {
         long? count = null;
         string? outcome = null;
         string? errorType = null;
@@ -43,7 +43,7 @@ public sealed class EmailSenderTests {
             errorType = GetTagValue(tags, "error.type");
         });
 
-        EmailSender sender = CreateSender(CreateThrowingTransport(new InvalidOperationException("boom")));
+        EmailSender sender = CreateSender(CreateSuccessfulTransport(), CreateThrowingOutbox(new InvalidOperationException("boom")));
 
         await Assert.ThrowsAsync<InvalidOperationException>(() =>
             sender.SendPasswordResetAsync(
@@ -58,8 +58,10 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendPasswordResetAsync_WithAllowedClientOrigin_UsesThatOriginInLink() {
         IEmailTransport transport = CreateCapturingTransport(out Func<string> getBody);
+        IEmailOutbox outbox = CreateCapturingOutbox(out getBody);
         EmailSender sender = CreateSender(
             transport,
+            outbox,
             new EmailOptions {
                 FromAddress = "noreply@example.com",
                 FromName = "FoodDiary",
@@ -79,8 +81,10 @@ public sealed class EmailSenderTests {
     [Fact]
     public async Task SendEmailVerificationAsync_WithUntrustedClientOrigin_FallsBackToDefaultFrontendBaseUrl() {
         IEmailTransport transport = CreateCapturingTransport(out Func<string> getBody);
+        IEmailOutbox outbox = CreateCapturingOutbox(out getBody);
         EmailSender sender = CreateSender(
             transport,
+            outbox,
             new EmailOptions {
                 FromAddress = "noreply@example.com",
                 FromName = "FoodDiary",
@@ -98,7 +102,7 @@ public sealed class EmailSenderTests {
         Assert.DoesNotContain("evil.example.com", getBody(), StringComparison.Ordinal);
     }
 
-    private static EmailSender CreateSender(IEmailTransport transport, EmailOptions? options = null) {
+    private static EmailSender CreateSender(IEmailTransport transport, IEmailOutbox outbox, EmailOptions? options = null) {
         return new EmailSender(
             options ?? new EmailOptions {
                 FromAddress = "noreply@example.com",
@@ -108,7 +112,8 @@ public sealed class EmailSenderTests {
                 PasswordResetPath = "/reset-password",
             },
             CreateTemplateProvider(),
-            transport);
+            transport,
+            outbox);
     }
 
     private static IEmailTemplateProvider CreateTemplateProvider() {
@@ -137,12 +142,38 @@ public sealed class EmailSenderTests {
         return transport;
     }
 
+    private static IEmailOutbox CreateCapturingOutbox(out Func<string> getBody) {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        string body = string.Empty;
+        outbox
+            .EnqueueAsync(Arg.Do<EmailMessage>(message => body = message.HtmlBody), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        getBody = () => body;
+        return outbox;
+    }
+
     private static IEmailTransport CreateThrowingTransport(Exception exception) {
         IEmailTransport transport = Substitute.For<IEmailTransport>();
         transport
             .SendAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromException(exception));
         return transport;
+    }
+
+    private static IEmailOutbox CreateSuccessfulOutbox() {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        outbox
+            .EnqueueAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.CompletedTask);
+        return outbox;
+    }
+
+    private static IEmailOutbox CreateThrowingOutbox(Exception exception) {
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
+        outbox
+            .EnqueueAsync(Arg.Any<EmailMessage>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromException(exception));
+        return outbox;
     }
 
     private static MeterListener CreateInfrastructureListener(

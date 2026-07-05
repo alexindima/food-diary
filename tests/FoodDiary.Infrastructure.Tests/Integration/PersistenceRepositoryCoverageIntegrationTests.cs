@@ -2,7 +2,9 @@ using FoodDiary.Application.Abstractions.Billing.Common;
 using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Content;
@@ -541,8 +543,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         context.Meals.Add(meal);
         await context.SaveChangesAsync();
 
-        (IReadOnlyList<(Product Product, int UsageCount)> searchedItems, int searchedTotal) =
-            await repository.GetPagedAsync(userId, includePublic: true, page: 0, limit: 0, filters: new ProductQueryFilters("100% Milk_", [ProductType.Dairy]));
+        var productOverviewReadService = new ProductOverviewReadService(context);
+        (IReadOnlyList<ProductOverviewReadItem> searchedItems, int searchedTotal) =
+            await productOverviewReadService.GetPagedAsync(userId, includePublic: true, page: 0, limit: 0, filters: new ProductQueryFilters("100% Milk_", [ProductType.Dairy]));
         Product? publicById = await repository.GetByIdAsync(otherPublic.Id, userId);
         Product? privateByIdWithoutPublic = await repository.GetByIdAsync(privateProduct.Id, userId, includePublic: false);
         Product? tracked = await repository.GetByIdForUpdateAsync(searchable.Id, userId, includePublic: false);
@@ -553,8 +556,8 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         IReadOnlyDictionary<ProductId, Product> emptyByIds = await repository.GetByIdsAsync([], userId);
         IReadOnlyDictionary<ProductId, Product> byIds = await repository.GetByIdsAsync([searchable.Id, otherPublic.Id, otherPublic.Id], userId);
-        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> emptyUsage = await repository.GetByIdsWithUsageAsync([], userId);
-        IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)> usage = await repository.GetByIdsWithUsageAsync([searchable.Id], userId);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> emptyUsage = await productOverviewReadService.GetByIdsWithUsageAsync([], userId);
+        IReadOnlyDictionary<ProductId, ProductOverviewReadItem> usage = await productOverviewReadService.GetByIdsWithUsageAsync([searchable.Id], userId);
 
         await CoverCachedProductRepositoryAsync(repository, searchable.Id, userId);
         await DeleteExistingProductAsync(context, repository, privateProduct.Id, userId);
@@ -591,9 +594,7 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.NotNull(await cachedRepository.GetByIdAsync(productId, userId));
         Assert.NotNull(await cachedRepository.GetByIdAsync(productId, userId));
         Assert.NotNull(await cachedRepository.GetByIdForUpdateAsync(productId, userId, includePublic: false));
-        Assert.Single((await cachedRepository.GetPagedAsync(userId, includePublic: false, page: 1, limit: 10, filters: new ProductQueryFilters("Updated", [ProductType.Dairy]))).Items);
         Assert.Single(await cachedRepository.GetByIdsAsync([productId], userId));
-        Assert.Single(await cachedRepository.GetByIdsWithUsageAsync([productId], userId));
 
         var cacheAdded = Product.Create(userId, "Cache add", MeasurementUnit.G, 100, 100, 1, 1, 1, 1, 1, 0);
         await cachedRepository.AddAsync(cacheAdded);
@@ -735,8 +736,9 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Recipe publicRecipe,
         Recipe privateRecipe,
         Recipe otherPublic) {
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)> searchedItems, int searchedTotal) =
-            await repository.GetPagedAsync(ownerId, includePublic: false, page: 0, limit: 0, filters: new RecipeQueryFilters("100% Pancake"));
+        var recipeOverviewReadService = new RecipeOverviewReadService(context);
+        (IReadOnlyList<RecipeOverviewReadItem> searchedItems, int searchedTotal) =
+            await recipeOverviewReadService.GetPagedAsync(ownerId, includePublic: false, page: 0, limit: 0, filters: new RecipeQueryFilters("100% Pancake"));
         Recipe? withSteps = await repository.GetByIdAsync(publicRecipe.Id, ownerId, includeSteps: true, asTracking: true);
         Assert.NotNull(withSteps);
         withSteps.ApplyComputedNutrition(220, 9, 5, 31, 4, 0);
@@ -751,10 +753,10 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         IReadOnlyDictionary<RecipeId, Recipe> emptyByIds = await repository.GetByIdsAsync([], ownerId);
         IReadOnlyDictionary<RecipeId, Recipe> byIds = await repository.GetByIdsAsync([publicRecipe.Id, otherPublic.Id, otherPublic.Id], ownerId);
-        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> emptyUsage = await repository.GetByIdsWithUsageAsync([], ownerId);
-        IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)> usage = await repository.GetByIdsWithUsageAsync([publicRecipe.Id], ownerId);
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)> exploreItems, int exploreTotal) =
-            await repository.GetExplorePagedAsync(page: 1, limit: 10, search: "Public", category: "Salad", maxPrepTime: 10, sortBy: "popular");
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> emptyUsage = await recipeOverviewReadService.GetByIdsWithUsageAsync([], ownerId);
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> usage = await recipeOverviewReadService.GetByIdsWithUsageAsync([publicRecipe.Id], ownerId);
+        (IReadOnlyList<RecipeOverviewReadItem> exploreItems, int exploreTotal) =
+            await recipeOverviewReadService.GetExplorePagedAsync(ownerId, page: 1, limit: 10, search: "Public", category: "Salad", maxPrepTime: 10, sortBy: "popular");
 
         await repository.DeleteAsync(privateRecipe);
         await context.SaveChangesAsync();

@@ -7,8 +7,7 @@ namespace FoodDiary.Application.Dietologist.Services;
 public sealed class DietologistEmailSender(
     EmailOptions options,
     IEmailTemplateProvider templateProvider,
-    IEmailTransport emailTransport,
-    IEmailOutbox? emailOutbox = null) : IDietologistEmailSender {
+    IEmailOutbox emailOutbox) : IDietologistEmailSender {
     private const string TemplateKey = "dietologist_invitation";
 
     private readonly EmailOptions _options = options;
@@ -148,11 +147,6 @@ public sealed class DietologistEmailSender(
             subject,
             htmlBody,
             string.IsNullOrWhiteSpace(textBody) ? null : textBody);
-
-        if (emailOutbox is null) {
-            await emailTransport.SendAsync(message, cancellationToken).ConfigureAwait(false);
-            return;
-        }
 
         await emailOutbox.EnqueueAsync(message, cancellationToken).ConfigureAwait(false);
     }

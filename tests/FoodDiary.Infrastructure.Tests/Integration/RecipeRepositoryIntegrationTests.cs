@@ -4,7 +4,7 @@ using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Infrastructure.Persistence;
 using FoodDiary.Infrastructure.Persistence.FavoriteRecipes;
 using FoodDiary.Infrastructure.Persistence.Recipes;
@@ -42,18 +42,18 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         context.Recipes.AddRange(matchingRecipe, otherRecipe);
         await context.SaveChangesAsync();
 
-        var repository = new RecipeRepository(context);
+        var readService = new RecipeOverviewReadService(context);
 
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<RecipeOverviewReadItem>? items, int totalItems) = await readService.GetPagedAsync(
             userId,
             includePublic: false,
             page: 0,
             limit: 0,
             filters: new RecipeQueryFilters("100% Soup"));
 
-        (Recipe Recipe, int UsageCount) item = Assert.Single(items);
+        RecipeOverviewReadItem item = Assert.Single(items);
         Assert.Equal(1, totalItems);
-        Assert.Equal(matchingRecipe.Id, item.Recipe.Id);
+        Assert.Equal(matchingRecipe.Id, item.Id);
     }
 
     [RequiresDockerFact]
@@ -65,22 +65,22 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
 
         (Recipe quickSaladWithImage, Recipe longSaladNoImage, Recipe quickSoupNoImage) =
             await SeedRecipeFiltersAsync(context, user.Id);
-        var repository = new RecipeRepository(context);
+        var readService = new RecipeOverviewReadService(context);
 
-        IReadOnlyList<RecipeId> saladIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+        IReadOnlyList<RecipeId> saladIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             Category: "salad"));
-        IReadOnlyList<RecipeId> quickIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+        IReadOnlyList<RecipeId> quickIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             MaxTotalTime: 25));
-        IReadOnlyList<RecipeId> mediumCalorieIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+        IReadOnlyList<RecipeId> mediumCalorieIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             CaloriesFrom: 200,
             CaloriesTo: 300));
-        IReadOnlyList<RecipeId> withImageIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+        IReadOnlyList<RecipeId> withImageIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             HasImage: true));
-        IReadOnlyList<RecipeId> withoutImageIds = await GetRecipeIdsAsync(repository, user.Id, new RecipeQueryFilters(
+        IReadOnlyList<RecipeId> withoutImageIds = await GetRecipeIdsAsync(readService, user.Id, new RecipeQueryFilters(
             Search: null,
             HasImage: false));
 
@@ -108,9 +108,9 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         context.Recipes.AddRange(recipes);
         await context.SaveChangesAsync();
 
-        var repository = new RecipeRepository(context);
+        var readService = new RecipeOverviewReadService(context);
 
-        _ = await repository.GetPagedAsync(
+        _ = await readService.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,
@@ -118,7 +118,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
             filters: new RecipeQueryFilters(Search: null));
 
         var stopwatch = Stopwatch.StartNew();
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)>? items, int totalItems) = await repository.GetPagedAsync(
+        (IReadOnlyList<RecipeOverviewReadItem>? items, int totalItems) = await readService.GetPagedAsync(
             user.Id,
             includePublic: false,
             page: 1,
@@ -130,7 +130,7 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
         Assert.Equal(25, items.Count);
         Assert.True(
             stopwatch.Elapsed <= FirstPageLatencyBudget,
-            string.Create(CultureInfo.InvariantCulture, $"Expected RecipeRepository.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
+            string.Create(CultureInfo.InvariantCulture, $"Expected RecipeOverviewReadService.GetPagedAsync first page to stay within {FirstPageLatencyBudget.TotalMilliseconds} ms on seeded PostgreSQL data, but observed {stopwatch.Elapsed.TotalMilliseconds:F1} ms."));
     }
 
     [RequiresDockerFact]
@@ -176,17 +176,17 @@ public sealed class RecipeRepositoryIntegrationTests(PostgresDatabaseFixture dat
     }
 
     private static async Task<IReadOnlyList<RecipeId>> GetRecipeIdsAsync(
-        RecipeRepository repository,
+        RecipeOverviewReadService readService,
         UserId userId,
         RecipeQueryFilters filters) {
-        (IReadOnlyList<(Recipe Recipe, int UsageCount)> items, int _) = await repository.GetPagedAsync(
+        (IReadOnlyList<RecipeOverviewReadItem> items, int _) = await readService.GetPagedAsync(
             userId,
             includePublic: false,
             page: 1,
             limit: 50,
             filters: filters).ConfigureAwait(false);
 
-        return [.. items.Select(item => item.Recipe.Id)];
+        return [.. items.Select(item => item.Id)];
     }
 
     private static async Task<(Recipe QuickSaladWithImage, Recipe LongSaladNoImage, Recipe QuickSoupNoImage)> SeedRecipeFiltersAsync(

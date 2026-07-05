@@ -1,5 +1,4 @@
 using Microsoft.Extensions.Caching.Memory;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -16,15 +15,6 @@ public sealed class CachedProductRepository(
         Evict(result.Id, result.UserId);
         return result;
     }
-
-    public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-        UserId userId,
-        bool includePublic,
-        int page,
-        int limit,
-        ProductQueryFilters filters,
-        CancellationToken cancellationToken = default) =>
-        inner.GetPagedAsync(userId, includePublic, page, limit, filters, cancellationToken);
 
     public async Task<Product?> GetByIdAsync(
         ProductId id,
@@ -58,12 +48,12 @@ public sealed class CachedProductRepository(
         CancellationToken cancellationToken = default) =>
         inner.GetByIdsAsync(ids, userId, includePublic, cancellationToken);
 
-    public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-        IEnumerable<ProductId> ids,
+    public Task<int> GetUsageCountAsync(
+        ProductId id,
         UserId userId,
         bool includePublic = true,
         CancellationToken cancellationToken = default) =>
-        inner.GetByIdsWithUsageAsync(ids, userId, includePublic, cancellationToken);
+        inner.GetUsageCountAsync(id, userId, includePublic, cancellationToken);
 
     public async Task UpdateAsync(Product product, CancellationToken cancellationToken = default) {
         await inner.UpdateAsync(product, cancellationToken).ConfigureAwait(false);

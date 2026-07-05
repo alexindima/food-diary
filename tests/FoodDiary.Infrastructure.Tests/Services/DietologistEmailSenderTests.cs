@@ -15,8 +15,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_SendsEmailToRecipient() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         DietologistInvitationMessage message = CreateMessage("diet@example.com");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
@@ -27,8 +27,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithEnglishLocale_HasEnglishSubject() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "en");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
@@ -38,8 +38,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithRussianLocale_HasRussianSubject() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         DietologistInvitationMessage message = CreateMessage("diet@example.com", language: "ru");
 
         await sender.SendDietologistInvitationAsync(message, CancellationToken.None);
@@ -49,8 +49,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesInvitationLink() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         var invitationId = Guid.NewGuid();
         var message = new DietologistInvitationMessage(
             "diet@example.com", invitationId, "test-token", "John", "Doe", "en");
@@ -64,8 +64,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_IncludesClientName() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "\u0410\u043b\u0435\u043a\u0441\u0435\u0439", "\u0418\u0432\u0430\u043d\u043e\u0432", "ru");
 
@@ -76,8 +76,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullClientName_UsesDefaultName() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", ClientFirstName: null, ClientLastName: null, "en");
 
@@ -88,8 +88,8 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithNullLanguage_DefaultsToEnglish() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
-        DietologistEmailSender sender = CreateSender(transport);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        DietologistEmailSender sender = CreateSender(outbox);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", ClientLastName: null, Language: null);
 
@@ -100,7 +100,7 @@ public sealed class DietologistEmailSenderTests {
 
     [Fact]
     public async Task SendDietologistInvitationAsync_WithStoredTemplate_UsesTemplateTokens() {
-        IEmailTransport transport = CreateCapturingTransport(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
+        IEmailOutbox outbox = CreateCapturingOutbox(out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent);
         string lastKey = string.Empty;
         string lastLocale = string.Empty;
         IEmailTemplateProvider templateProvider = CreateTemplateProvider(new EmailTemplateContent(
@@ -109,7 +109,7 @@ public sealed class DietologistEmailSenderTests {
             "{{clientName}} {{link}} {{brand}}"),
             key => lastKey = key,
             locale => lastLocale = locale);
-        DietologistEmailSender sender = CreateSender(transport, templateProvider: templateProvider);
+        DietologistEmailSender sender = CreateSender(outbox, templateProvider: templateProvider);
         var message = new DietologistInvitationMessage(
             "diet@example.com", Guid.NewGuid(), "token", "John", "Doe", "en");
 
@@ -123,26 +123,26 @@ public sealed class DietologistEmailSenderTests {
     }
 
     private static DietologistEmailSender CreateSender(
-        IEmailTransport transport,
+        IEmailOutbox outbox,
         EmailOptions? options = null,
         IEmailTemplateProvider? templateProvider = null) =>
-        new(options ?? DefaultOptions, templateProvider ?? CreateTemplateProvider(), transport);
+        new(options ?? DefaultOptions, templateProvider ?? CreateTemplateProvider(), outbox);
 
     private static DietologistInvitationMessage CreateMessage(
         string toEmail, string language = "en") =>
         new(toEmail, Guid.NewGuid(), "token-value", "Test", "User", language);
 
-    private static IEmailTransport CreateCapturingTransport(
+    private static IEmailOutbox CreateCapturingOutbox(
         out Func<(int Count, string Recipient, string Subject, string HtmlBody)> getSent) {
-        IEmailTransport transport = Substitute.For<IEmailTransport>();
+        IEmailOutbox outbox = Substitute.For<IEmailOutbox>();
         (int Count, string Recipient, string Subject, string HtmlBody) sent = (0, string.Empty, string.Empty, string.Empty);
-        transport
-            .SendAsync(Arg.Do<EmailMessage>(message => {
+        outbox
+            .EnqueueAsync(Arg.Do<EmailMessage>(message => {
                 sent = (sent.Count + 1, message.ToAddresses[0], message.Subject, message.HtmlBody);
             }), Arg.Any<CancellationToken>())
             .Returns(Task.CompletedTask);
         getSent = () => sent;
-        return transport;
+        return outbox;
     }
 
     private static IEmailTemplateProvider CreateTemplateProvider(

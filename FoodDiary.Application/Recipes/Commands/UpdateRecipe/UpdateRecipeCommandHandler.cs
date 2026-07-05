@@ -72,7 +72,7 @@ public sealed class UpdateRecipeCommandHandler(
             imageAssetCleanupService,
             cancellationToken).ConfigureAwait(false);
         Recipe updated = updatedResult.Value;
-        return Result.Success(updated.ToModel(updated.MealItems.Count + updated.NestedRecipeUsages.Count, isOwnedByCurrentUser: true));
+        return Result.Success(updated.ToModel(usageCount: 0, isOwnedByCurrentUser: true));
     }
 
     private async Task<Result<Recipe>> SaveAndReloadAsync(

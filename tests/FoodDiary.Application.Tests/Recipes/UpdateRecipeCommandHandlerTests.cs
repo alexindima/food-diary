@@ -1,5 +1,4 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Products.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
@@ -952,14 +951,6 @@ public class UpdateRecipeCommandHandlerTests {
 
         public Task<Recipe> AddAsync(Recipe addedRecipe, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId ownerId,
-            bool includePublic,
-            int page,
-            int limit,
-            RecipeQueryFilters filters,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
-
         public Task<Recipe?> GetByIdAsync(
             RecipeId id,
             UserId ownerId,
@@ -980,11 +971,12 @@ public class UpdateRecipeCommandHandlerTests {
             bool includePublic = true,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<RecipeId, (Recipe Recipe, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<RecipeId> ids,
+        public Task<int> GetUsageCountAsync(
+            RecipeId id,
             UserId ownerId,
             bool includePublic = true,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(0);
 
         public Task UpdateAsync(Recipe updatedRecipe, CancellationToken cancellationToken = default) {
             UpdateCalled = true;
@@ -995,14 +987,6 @@ public class UpdateRecipeCommandHandlerTests {
 
         public Task UpdateNutritionAsync(Recipe updatedRecipe, CancellationToken cancellationToken = default) => Task.CompletedTask;
 
-        public Task<(IReadOnlyList<(Recipe Recipe, int UsageCount)> Items, int TotalItems)> GetExplorePagedAsync(
-            int page,
-            int limit,
-            string? search,
-            string? category,
-            int? maxPrepTime,
-            string sortBy,
-            CancellationToken cancellationToken = default) => throw new NotSupportedException();
     }
 
     [ExcludeFromCodeCoverage]

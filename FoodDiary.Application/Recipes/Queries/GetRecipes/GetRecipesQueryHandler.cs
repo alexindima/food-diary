@@ -1,8 +1,8 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
@@ -11,7 +11,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 namespace FoodDiary.Application.Recipes.Queries.GetRecipes;
 
 public sealed class GetRecipesQueryHandler(
-    IRecipeReadRepository recipeRepository,
+    IRecipeOverviewReadService recipeOverviewReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipesQuery, Result<PagedResponse<RecipeModel>>> {
     public async Task<Result<PagedResponse<RecipeModel>>> Handle(GetRecipesQuery query, CancellationToken cancellationToken) {
@@ -27,7 +27,7 @@ public sealed class GetRecipesQueryHandler(
             return Result.Failure<PagedResponse<RecipeModel>>(accessError);
         }
 
-        (IReadOnlyList<(Domain.Entities.Recipes.Recipe Recipe, int UsageCount)> items, int totalItems) = await recipeRepository.GetPagedAsync(
+        (IReadOnlyList<RecipeOverviewReadItem> items, int totalItems) = await recipeOverviewReadService.GetPagedAsync(
             userId,
             query.IncludePublic,
             pageNumber,
@@ -41,15 +41,9 @@ public sealed class GetRecipesQueryHandler(
                 query.HasImage),
             cancellationToken).ConfigureAwait(false);
 
-        var recipes = items.Select(item => new {
-            item.Recipe,
-            item.UsageCount,
-            IsOwner = item.Recipe.UserId == userId,
-        }).ToList();
-
         int totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
         var response = new PagedResponse<RecipeModel>(
-            recipes.ConvertAll(r => r.Recipe.ToModel(r.UsageCount, r.IsOwner)),
+            items.Select(recipe => recipe.ToModel()).ToList(),
             pageNumber,
             pageSize,
             totalPages,

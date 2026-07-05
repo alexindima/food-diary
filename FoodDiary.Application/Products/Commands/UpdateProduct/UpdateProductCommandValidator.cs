@@ -180,7 +180,11 @@ public sealed class UpdateProductCommandValidator : AbstractValidator<UpdateProd
             return;
         }
 
-        int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+        int usageCount = await _productRepository.GetUsageCountAsync(
+            product.Id,
+            product.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.ProductId),
                 "Product is already used in consumptions or recipes and cannot be updated") {

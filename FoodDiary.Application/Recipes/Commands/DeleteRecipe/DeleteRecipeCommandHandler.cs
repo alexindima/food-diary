@@ -36,7 +36,12 @@ public sealed class DeleteRecipeCommandHandler(
             return Result.Failure(Errors.Recipe.NotAccessible(command.RecipeId));
         }
 
-        if (recipe.MealItems.Count + recipe.NestedRecipeUsages.Count > 0) {
+        int usageCount = await recipeReadRepository.GetUsageCountAsync(
+            recipe.Id,
+            recipe.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
+        if (usageCount > 0) {
             return Result.Failure(Errors.Validation.Invalid("RecipeId",
                 "Recipe is already used and cannot be deleted"));
         }

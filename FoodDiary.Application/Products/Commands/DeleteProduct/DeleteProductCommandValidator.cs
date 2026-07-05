@@ -35,7 +35,11 @@ public sealed class DeleteProductCommandValidator : AbstractValidator<DeleteProd
                         ErrorCode = "Product.NotFound",
                     });
                 } else {
-                    int usageCount = product.MealItems.Count + product.RecipeIngredients.Count;
+                    int usageCount = await productRepository.GetUsageCountAsync(
+                        product.Id,
+                        product.UserId,
+                        includePublic: false,
+                        cancellationToken).ConfigureAwait(false);
                     if (usageCount > 0) {
                         context.AddFailure(new ValidationFailure(nameof(command.ProductId), "Product is already used and cannot be deleted") {
                             ErrorCode = "Validation.Invalid",

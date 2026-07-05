@@ -1,16 +1,16 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.Abstractions.Recipes.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Recipes.Mappings;
 using FoodDiary.Application.Recipes.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Recipes;
 
 namespace FoodDiary.Application.Recipes.Queries.GetRecipeById;
 
 public sealed class GetRecipeByIdQueryHandler(
-    IRecipeReadRepository recipeRepository,
+    IRecipeOverviewReadService recipeOverviewReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetRecipeByIdQuery, Result<RecipeModel>> {
     public async Task<Result<RecipeModel>> Handle(GetRecipeByIdQuery query, CancellationToken cancellationToken) {
@@ -29,20 +29,17 @@ public sealed class GetRecipeByIdQueryHandler(
         }
         var recipeId = new RecipeId(query.RecipeId);
 
-        Recipe? recipe = await recipeRepository.GetByIdAsync(
-            recipeId,
+        IReadOnlyDictionary<RecipeId, RecipeOverviewReadItem> recipesById = await recipeOverviewReadService.GetByIdsWithUsageAsync(
+            [recipeId],
             userId,
             includePublic: query.IncludePublic,
-            includeSteps: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
+        RecipeOverviewReadItem? recipe = recipesById.GetValueOrDefault(recipeId);
 
         if (recipe is null) {
             return Result.Failure<RecipeModel>(Errors.Recipe.NotFound(query.RecipeId));
         }
 
-        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        bool isOwner = recipe.UserId == userId;
-
-        return Result.Success(recipe.ToModel(usageCount, isOwner));
+        return Result.Success(recipe.ToModel());
     }
 }

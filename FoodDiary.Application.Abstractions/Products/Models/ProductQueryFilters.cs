@@ -1,6 +1,6 @@
 using FoodDiary.Domain.Enums;
 
-namespace FoodDiary.Application.Abstractions.Common.Interfaces.Persistence;
+namespace FoodDiary.Application.Abstractions.Products.Models;
 
 public sealed record ProductQueryFilters(
     string? Search,

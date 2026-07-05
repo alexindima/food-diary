@@ -53,7 +53,11 @@ public sealed class DeleteRecipeCommandValidator : AbstractValidator<DeleteRecip
             return;
         }
 
-        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
+        int usageCount = await _recipeRepository.GetUsageCountAsync(
+            recipe.Id,
+            recipe.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
         if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe is already used and cannot be deleted") {

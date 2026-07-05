@@ -504,15 +504,6 @@ public class CommonAbstractionsTests {
 
         public Task<Product> AddAsync(Product product, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
-        public Task<(IReadOnlyList<(Product Product, int UsageCount)> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            bool includePublic,
-            int page,
-            int limit,
-            ProductQueryFilters filters,
-            CancellationToken cancellationToken = default) =>
-            throw new NotSupportedException();
-
         public Task<Product?> GetByIdAsync(
             ProductId id,
             UserId userId,
@@ -532,8 +523,8 @@ public class CommonAbstractionsTests {
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
-        public Task<IReadOnlyDictionary<ProductId, (Product Product, int UsageCount)>> GetByIdsWithUsageAsync(
-            IEnumerable<ProductId> ids,
+        public Task<int> GetUsageCountAsync(
+            ProductId id,
             UserId userId,
             bool includePublic = true,
             CancellationToken cancellationToken = default) =>

@@ -158,7 +158,12 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
         CancellationToken cancellationToken) {
         context.RootContextData.TryGetValue(RecipeContextKey, out object? cached);
         if (cached is Recipe recipe) {
-            if (!ValidateUsage(recipe)) {
+            int cachedUsageCount = await _recipeRepository.GetUsageCountAsync(
+                recipe.Id,
+                recipe.UserId,
+                includePublic: false,
+                cancellationToken).ConfigureAwait(false);
+            if (cachedUsageCount > 0) {
                 context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                     "Recipe is already used and cannot be modified") {
                     ErrorCode = "Validation.Invalid",
@@ -189,17 +194,17 @@ public sealed class UpdateRecipeCommandValidator : AbstractValidator<UpdateRecip
 
         context.RootContextData[RecipeContextKey] = existing;
 
-        if (!ValidateUsage(existing)) {
+        int usageCount = await _recipeRepository.GetUsageCountAsync(
+            existing.Id,
+            existing.UserId,
+            includePublic: false,
+            cancellationToken).ConfigureAwait(false);
+        if (usageCount > 0) {
             context.AddFailure(new ValidationFailure(nameof(command.RecipeId),
                 "Recipe is already used and cannot be modified") {
                 ErrorCode = "Validation.Invalid",
             });
         }
-    }
-
-    private static bool ValidateUsage(Recipe recipe) {
-        int usageCount = recipe.MealItems.Count + recipe.NestedRecipeUsages.Count;
-        return usageCount == 0;
     }
 
     private static bool BeValidVisibility(string? visibility) =>
