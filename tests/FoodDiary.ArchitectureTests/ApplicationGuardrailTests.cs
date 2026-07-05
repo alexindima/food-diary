@@ -1037,6 +1037,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void FastingQueries_UseReadServicesInsteadOfFastingAggregates() {
+        string root = GetRepositoryRoot();
+        string fastingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Fasting", "Queries");
+        string[] fastingQueryFiles = [.. SourceScanner.SourceFiles(fastingQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, fastingQueryFiles, "FoodDiary.Domain.Entities.Tracking.Fasting"),
+            .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingOccurrenceReadRepository"),
+            .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingCheckInReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

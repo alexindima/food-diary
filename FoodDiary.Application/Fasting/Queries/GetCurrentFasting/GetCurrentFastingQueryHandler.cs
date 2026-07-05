@@ -1,17 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Fasting.Common;
-using FoodDiary.Application.Fasting.Mappings;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Tracking.Fasting;
 
 namespace FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
 
 public sealed class GetCurrentFastingQueryHandler(
-    IFastingOccurrenceReadRepository fastingOccurrenceRepository,
-    IFastingCheckInReadRepository fastingCheckInRepository,
+    IFastingReadService fastingReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetCurrentFastingQuery, Result<FastingSessionModel?>> {
     public async Task<Result<FastingSessionModel?>> Handle(
@@ -26,12 +23,7 @@ public sealed class GetCurrentFastingQueryHandler(
             return Result.Failure<FastingSessionModel?>(accessError);
         }
 
-        FastingOccurrence? current = await fastingOccurrenceRepository.GetCurrentAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (current is null) {
-            return Result.Success<FastingSessionModel?>(value: null);
-        }
-
-        IReadOnlyList<FastingCheckIn> checkIns = await fastingCheckInRepository.GetByOccurrenceIdsAsync([current.Id], cancellationToken).ConfigureAwait(false);
-        return Result.Success<FastingSessionModel?>(current.ToModel(current.Plan, checkIns));
+        FastingSessionModel? current = await fastingReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(current);
     }
 }

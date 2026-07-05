@@ -21,6 +21,7 @@ using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Services;
+using FoodDiary.Application.Fasting.Common;
 using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Application.FavoriteMeals.Common;
 using FoodDiary.Application.FavoriteMeals.Services;
@@ -108,6 +109,7 @@ public static class DependencyInjection {
                 serviceProvider.GetRequiredService<IDashboardSectionDataLoader>(),
                 serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
+        services.AddScoped<IFastingReadService, FastingReadService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IFavoriteMealReadService, FavoriteMealReadService>();
         services.AddScoped<IFavoriteProductReadService, FavoriteProductReadService>();

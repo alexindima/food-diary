@@ -1,4 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Fasting.Common;
+using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Queries.GetCurrentFasting;
@@ -48,11 +50,10 @@ public partial class FastingFeatureTests {
 
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current: current);
         occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository()),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository(),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -72,11 +73,10 @@ public partial class FastingFeatureTests {
             sequenceNumber: 1,
             targetHours: 36);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository()),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository(),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -104,11 +104,10 @@ public partial class FastingFeatureTests {
             notes: "not great",
             checkedInAtUtc: FixedNow.AddHours(-1));
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository(checkIn)),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository(checkIn),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -137,11 +136,10 @@ public partial class FastingFeatureTests {
             notes: "fine",
             checkedInAtUtc: FixedNow.AddHours(-1));
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository(checkIn)),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository(checkIn),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -183,11 +181,10 @@ public partial class FastingFeatureTests {
         AddCompleted(4, 36, 2, 2);
         AddCompleted(5, 36, 2, 3);
 
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository([.. checkIns])),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository([.. checkIns]),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -228,11 +225,10 @@ public partial class FastingFeatureTests {
         AddCompleted(3, 36, 4, 4);
         AddCompleted(4, 36, 4, 4);
 
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, new InMemoryFastingCheckInRepository([.. checkIns])),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            new InMemoryFastingCheckInRepository([.. checkIns]),
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(userId.Value), CancellationToken.None);
 
@@ -246,7 +242,7 @@ public partial class FastingFeatureTests {
         var plan = FastingPlan.CreateIntermittent(userId, FastingProtocol.F16_8, 16, 8, FixedNow.AddDays(-1));
         var current = FastingOccurrence.Create(plan.Id, userId, FastingOccurrenceKind.FastingWindow, FixedNow.AddHours(-4), 1, 16);
         var checkIn = FastingCheckIn.Create(current.Id, userId, 2, 4, 4, ["weakness"], "steady", FixedNow.AddHours(-1));
-        var handler = new GetCurrentFastingQueryHandler(
+        GetCurrentFastingQueryHandler handler = CreateCurrentFastingHandler(
             new InMemoryFastingOccurrenceRepository(current),
             new InMemoryFastingCheckInRepository(checkIn),
             CreateCurrentUserAccessService(userId));
@@ -262,7 +258,7 @@ public partial class FastingFeatureTests {
 
     [Fact]
     public async Task GetCurrentFasting_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentFastingQueryHandler(
+        GetCurrentFastingQueryHandler handler = CreateCurrentFastingHandler(
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             CreateCurrentUserAccessService(user: null));
@@ -277,7 +273,7 @@ public partial class FastingFeatureTests {
     public async Task GetCurrentFasting_WithDeletedUser_ReturnsAccountDeleted() {
         User user = CreateUser(UserId.New());
         user.DeleteAccount(FixedNow);
-        var handler = new GetCurrentFastingQueryHandler(
+        GetCurrentFastingQueryHandler handler = CreateCurrentFastingHandler(
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             CreateCurrentUserAccessService(user));
@@ -291,7 +287,7 @@ public partial class FastingFeatureTests {
     [Fact]
     public async Task GetCurrentFasting_WhenNoCurrentOccurrence_ReturnsNullSuccess() {
         var userId = UserId.New();
-        var handler = new GetCurrentFastingQueryHandler(
+        GetCurrentFastingQueryHandler handler = CreateCurrentFastingHandler(
             new InMemoryFastingOccurrenceRepository(),
             new InMemoryFastingCheckInRepository(),
             CreateCurrentUserAccessService(userId));
@@ -516,12 +512,10 @@ public partial class FastingFeatureTests {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository(current);
         occurrenceRepo.StoredOccurrences.InsertRange(0, [historyOne, historyTwo]);
         var checkInRepo = new InMemoryFastingCheckInRepository(currentCheckIn);
-        var handler = new GetFastingOverviewQueryHandler(
+        GetFastingOverviewQueryHandler handler = CreateFastingOverviewHandler(
             occurrenceRepo,
             checkInRepo,
-            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
-            CreateCurrentUserAccessService(userId),
-            new FixedDateTimeProvider());
+            CreateCurrentUserAccessService(userId));
 
         Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(userId.Value), CancellationToken.None);
 
@@ -541,12 +535,10 @@ public partial class FastingFeatureTests {
         user.DeleteAccount(FixedNow);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
-        var handler = new GetFastingOverviewQueryHandler(
+        GetFastingOverviewQueryHandler handler = CreateFastingOverviewHandler(
             occurrenceRepo,
             checkInRepo,
-            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
-            CreateCurrentUserAccessService(user),
-            new FixedDateTimeProvider());
+            CreateCurrentUserAccessService(user));
 
         Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(user.Id.Value), CancellationToken.None);
 
@@ -558,12 +550,10 @@ public partial class FastingFeatureTests {
     public async Task GetFastingOverview_WithMissingUserId_ReturnsInvalidToken() {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
-        var handler = new GetFastingOverviewQueryHandler(
+        GetFastingOverviewQueryHandler handler = CreateFastingOverviewHandler(
             occurrenceRepo,
             checkInRepo,
-            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
-            CreateCurrentUserAccessService(user: null),
-            new FixedDateTimeProvider());
+            CreateCurrentUserAccessService(user: null));
 
         Result<FastingOverviewModel> result = await handler.Handle(new GetFastingOverviewQuery(UserId: null), CancellationToken.None);
 
@@ -575,11 +565,10 @@ public partial class FastingFeatureTests {
     public async Task GetFastingInsights_WithMissingUserId_ReturnsInvalidToken() {
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
-            CreateCurrentUserAccessService(user: null),
-            new FixedDateTimeProvider());
+            checkInRepo,
+            CreateCurrentUserAccessService(user: null));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(UserId: null), CancellationToken.None);
 
@@ -593,11 +582,10 @@ public partial class FastingFeatureTests {
         user.DeleteAccount(FixedNow);
         var occurrenceRepo = new InMemoryFastingOccurrenceRepository();
         var checkInRepo = new InMemoryFastingCheckInRepository();
-        var handler = new GetFastingInsightsQueryHandler(
+        GetFastingInsightsQueryHandler handler = CreateFastingInsightsHandler(
             occurrenceRepo,
-            new FastingAnalyticsService(occurrenceRepo, checkInRepo),
-            CreateCurrentUserAccessService(user),
-            new FixedDateTimeProvider());
+            checkInRepo,
+            CreateCurrentUserAccessService(user));
 
         Result<FastingInsightsModel> result = await handler.Handle(new GetFastingInsightsQuery(user.Id.Value), CancellationToken.None);
 
@@ -613,4 +601,31 @@ public partial class FastingFeatureTests {
         Assert.Equal(new DateTime(2025, 12, 1, 0, 0, 0, DateTimeKind.Utc), fromUtc);
         Assert.Equal(new DateTime(2026, 2, 28, 23, 59, 59, 999, DateTimeKind.Utc).AddTicks(9999), toUtc);
     }
+
+    private static GetCurrentFastingQueryHandler CreateCurrentFastingHandler(
+        IFastingOccurrenceReadRepository occurrenceRepository,
+        IFastingCheckInReadRepository checkInRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
+
+    private static GetFastingInsightsQueryHandler CreateFastingInsightsHandler(
+        IFastingOccurrenceReadRepository occurrenceRepository,
+        IFastingCheckInReadRepository checkInRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
+
+    private static GetFastingOverviewQueryHandler CreateFastingOverviewHandler(
+        IFastingOccurrenceReadRepository occurrenceRepository,
+        IFastingCheckInReadRepository checkInRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(CreateFastingReadService(occurrenceRepository, checkInRepository), currentUserAccessService);
+
+    private static FastingReadService CreateFastingReadService(
+        IFastingOccurrenceReadRepository occurrenceRepository,
+        IFastingCheckInReadRepository checkInRepository) =>
+        new(
+            occurrenceRepository,
+            checkInRepository,
+            new FastingAnalyticsService(occurrenceRepository, checkInRepository),
+            new FixedDateTimeProvider());
 }
