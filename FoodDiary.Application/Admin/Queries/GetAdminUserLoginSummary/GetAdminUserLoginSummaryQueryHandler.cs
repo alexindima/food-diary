@@ -1,19 +1,15 @@
 using FoodDiary.Application.Admin.Models;
-using FoodDiary.Application.Abstractions.Authentication.Common;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Authentication.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserLoginSummary;
 
-public sealed class GetAdminUserLoginSummaryQueryHandler(IUserLoginEventReadRepository repository)
+public sealed class GetAdminUserLoginSummaryQueryHandler(IAdminUserLoginReadService readService)
     : IQueryHandler<GetAdminUserLoginSummaryQuery, Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> {
     public async Task<Result<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>> Handle(
         GetAdminUserLoginSummaryQuery query,
         CancellationToken cancellationToken) {
-        IReadOnlyList<UserLoginDeviceSummaryModel> summary = await repository.GetDeviceSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken).ConfigureAwait(false);
-        return Result.Success<IReadOnlyList<AdminUserLoginDeviceSummaryModel>>(summary
-            .Select(item => new AdminUserLoginDeviceSummaryModel(item.Key, item.Count, item.LastSeenAtUtc))
-            .ToArray());
+        return await readService.GetSummaryAsync(query.FromUtc, query.ToUtc, cancellationToken).ConfigureAwait(false);
     }
 }

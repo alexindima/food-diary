@@ -102,10 +102,12 @@ public static class DependencyInjection {
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IAdminImpersonationUserService, AdminImpersonationUserService>();
+        services.AddScoped<IAdminAuditReadService, AdminAuditReadService>();
         services.AddScoped<IAdminBillingReadService, AdminBillingReadService>();
         services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
+        services.AddScoped<IAdminUserLoginReadService, AdminUserLoginReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
         services.AddScoped<IUserAiUsageSummaryReadService, UserAiUsageSummaryReadService>();
         services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();

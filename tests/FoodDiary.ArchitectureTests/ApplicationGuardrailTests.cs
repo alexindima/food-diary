@@ -920,6 +920,27 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void AdminAuditAndLoginQueries_UseReadServicesInsteadOfRepositories() {
+        string root = GetRepositoryRoot();
+        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
+        string[] adminAuditAndLoginQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginEvents")),
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserLoginSummary")),
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminUserRoleAudit")),
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminImpersonationSessions")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IUserLoginEventReadRepository"),
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminUserRoleAuditReadRepository"),
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "IAdminImpersonationSessionReadRepository"),
+            .. FindReferencesInFiles(root, adminAuditAndLoginQueryFiles, "MaskIpAddress"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string userQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Queries");

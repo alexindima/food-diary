@@ -1334,7 +1334,10 @@ public class AdminFeatureTests {
         var repository = new RecordingImpersonationSessionRepository {
             PagedResponse = ([session], 45),
         };
-        var handler = new GetAdminImpersonationSessionsQueryHandler(repository);
+        var handler = new GetAdminImpersonationSessionsQueryHandler(new AdminAuditReadService(
+            Substitute.For<IAdminUserReadService>(),
+            Substitute.For<IAdminUserRoleAuditReadRepository>(),
+            repository));
 
         Result<PagedResponse<AdminImpersonationSessionReadModel>> result = await handler.Handle(new GetAdminImpersonationSessionsQuery(0, 999, " target "), CancellationToken.None);
 
@@ -1348,9 +1351,10 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new GetAdminUserRoleAuditQueryHandler(
+        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
             new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
-            new RecordingUserRoleAuditRepository());
+            new RecordingUserRoleAuditRepository(),
+            Substitute.For<IAdminImpersonationSessionReadRepository>()));
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.Empty, 10), CancellationToken.None);
 
@@ -1360,9 +1364,10 @@ public class AdminFeatureTests {
 
     [Fact]
     public async Task GetAdminUserRoleAuditQueryHandler_WhenUserMissing_ReturnsNotFound() {
-        var handler = new GetAdminUserRoleAuditQueryHandler(
+        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
             new InMemoryUserRepository(CreateUserWithRoles("admin@example.com", []), []),
-            new RecordingUserRoleAuditRepository());
+            new RecordingUserRoleAuditRepository(),
+            Substitute.For<IAdminImpersonationSessionReadRepository>()));
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(Guid.NewGuid(), 10), CancellationToken.None);
 
@@ -1383,9 +1388,10 @@ public class AdminFeatureTests {
             "test",
             DateTime.UtcNow);
         var repository = new RecordingUserRoleAuditRepository([auditEvent]);
-        var handler = new GetAdminUserRoleAuditQueryHandler(
+        var handler = new GetAdminUserRoleAuditQueryHandler(new AdminAuditReadService(
             new InMemoryUserRepository(user, [RoleNames.Admin]),
-            repository);
+            repository,
+            Substitute.For<IAdminImpersonationSessionReadRepository>()));
 
         Result<IReadOnlyList<AdminUserRoleAuditEventReadModel>> result = await handler.Handle(new GetAdminUserRoleAuditQuery(user.Id.Value, 999), CancellationToken.None);
 
