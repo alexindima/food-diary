@@ -1,13 +1,11 @@
 using FluentValidation.Results;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Statistics.Models;
 using FoodDiary.Application.Statistics.Queries.GetStatistics;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Users;
-using FoodDiary.Domain.Enums;
-using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Tests.Statistics;
@@ -26,7 +24,7 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithDateFromAfterDateTo_ReturnsValidationError() {
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), CreateCurrentUserAccessService(user: null));
+        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user: null));
         var query = new GetStatisticsQuery(Guid.NewGuid(), DateTime.UtcNow, DateTime.UtcNow.AddDays(-1), 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -37,7 +35,7 @@ public class StatisticsFeatureTests {
 
     [Fact]
     public async Task GetStatisticsQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), CreateCurrentUserAccessService(user: null));
+        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user: null));
         var query = new GetStatisticsQuery(Guid.Empty, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -49,9 +47,11 @@ public class StatisticsFeatureTests {
     [Fact]
     public async Task GetStatisticsQueryHandler_WithEmptyMeals_ReturnsSingleZeroBucket() {
         var user = User.Create("statistics-empty@example.com", "hash");
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), CreateCurrentUserAccessService(user));
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
+        var handler = new GetStatisticsQueryHandler(
+            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(from, to, 0, 0, 0, 0, 0)]),
+            CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -70,7 +70,7 @@ public class StatisticsFeatureTests {
     public async Task GetStatisticsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("statistics-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetStatisticsQueryHandler(new NoopMealRepository(), CreateCurrentUserAccessService(user));
+        var handler = new GetStatisticsQueryHandler(new StaticStatisticsReadService([]), CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, DateTime.UtcNow.AddDays(-1), DateTime.UtcNow, 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -84,9 +84,20 @@ public class StatisticsFeatureTests {
         var user = User.Create("statistics-multiday@example.com", "hash");
         var from = new DateTime(2026, 2, 1, 0, 0, 0, DateTimeKind.Utc);
         var to = new DateTime(2026, 2, 2, 23, 59, 59, DateTimeKind.Utc);
-        var meal = Meal.Create(user.Id, from.AddHours(12), MealType.Lunch);
-        meal.ApplyNutrition(new MealNutritionUpdate(1000, 100, 50, 200, 20, 0, IsAutoCalculated: true));
-        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([meal]), CreateCurrentUserAccessService(user));
+        var handler = new GetStatisticsQueryHandler(
+            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(
+                from,
+                to,
+                TotalCalories: 1000,
+                AverageProteins: 50,
+                AverageFats: 25,
+                AverageCarbs: 100,
+                AverageFiber: 10,
+                TotalProteins: 100,
+                TotalFats: 50,
+                TotalCarbs: 200,
+                TotalFiber: 20)]),
+            CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, from, to, 2);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -109,11 +120,20 @@ public class StatisticsFeatureTests {
         var user = User.Create("statistics-boundaries@example.com", "hash");
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
-        var includedMeal = Meal.Create(user.Id, localDayStartUtc.AddMinutes(30), MealType.Snack);
-        includedMeal.ApplyNutrition(new MealNutritionUpdate(946, 59, 45, 76, 7, 0, IsAutoCalculated: true));
-        var nextLocalDayMeal = Meal.Create(user.Id, localDayEndUtc.AddMinutes(1), MealType.Snack);
-        nextLocalDayMeal.ApplyNutrition(new MealNutritionUpdate(41, 1, 0, 10, 3, 0, IsAutoCalculated: true));
-        var handler = new GetStatisticsQueryHandler(new StaticMealRepository([includedMeal, nextLocalDayMeal]), CreateCurrentUserAccessService(user));
+        var handler = new GetStatisticsQueryHandler(
+            new StaticStatisticsReadService([new DashboardStatisticsBucketReadModel(
+                localDayStartUtc,
+                localDayEndUtc,
+                TotalCalories: 946,
+                AverageProteins: 59,
+                AverageFats: 45,
+                AverageCarbs: 76,
+                AverageFiber: 7,
+                TotalProteins: 59,
+                TotalFats: 45,
+                TotalCarbs: 76,
+                TotalFiber: 7)]),
+            CreateCurrentUserAccessService(user));
         var query = new GetStatisticsQuery(user.Id.Value, localDayStartUtc, localDayEndUtc, 1);
 
         Result<IReadOnlyList<AggregatedStatisticsModel>> result = await handler.Handle(query, CancellationToken.None);
@@ -134,57 +154,14 @@ public class StatisticsFeatureTests {
     }
 
     [ExcludeFromCodeCoverage]
-    private class NoopMealRepository : IMealRepository {
-        public Task<Meal> AddAsync(Meal meal, CancellationToken cancellationToken = default) => Task.FromResult(meal);
-        public Task UpdateAsync(Meal meal, CancellationToken cancellationToken = default) => Task.CompletedTask;
-        public Task DeleteAsync(Meal meal, CancellationToken cancellationToken = default) => Task.CompletedTask;
-
-        public Task<Meal?> GetByIdAsync(
-            MealId id,
-            UserId userId,
-            bool includeItems = false,
-            bool asTracking = false,
-            CancellationToken cancellationToken = default) => Task.FromResult<Meal?>(null);
-
-        public Task<(IReadOnlyList<Meal> Items, int TotalItems)> GetPagedAsync(
-            UserId userId,
-            int page,
-            int limit,
-            MealQueryFilters filters,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult((Items: (IReadOnlyList<Meal>)[], TotalItems: 0));
-
-        public virtual Task<IReadOnlyList<Meal>> GetByPeriodAsync(
+    private sealed class StaticStatisticsReadService(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) : IDashboardStatisticsReadService {
+        public Task<Result<IReadOnlyList<DashboardStatisticsBucketReadModel>>> GetStatisticsAsync(
             UserId userId,
             DateTime dateFrom,
             DateTime dateTo,
+            int quantizationDays,
             CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
-
-        public Task<IReadOnlyList<DateTime>> GetDistinctMealDatesAsync(
-            UserId userId, DateTime dateFrom, DateTime dateTo,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<DateTime>>(Array.Empty<DateTime>());
-
-        public Task<int> GetTotalMealCountAsync(
-            UserId userId,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult(0);
-
-        public Task<IReadOnlyList<Meal>> GetWithItemsAndProductsAsync(
-            UserId userId, DateTime date,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Meal>>(Array.Empty<Meal>());
-    }
-
-    [ExcludeFromCodeCoverage]
-    private sealed class StaticMealRepository(IReadOnlyList<Meal> meals) : NoopMealRepository {
-        public override Task<IReadOnlyList<Meal>> GetByPeriodAsync(
-            UserId userId,
-            DateTime dateFrom,
-            DateTime dateTo,
-            CancellationToken cancellationToken = default) =>
-            Task.FromResult<IReadOnlyList<Meal>>(meals);
+            Task.FromResult(Result.Success(buckets));
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User? user) {
