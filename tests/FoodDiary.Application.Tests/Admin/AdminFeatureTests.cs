@@ -72,7 +72,7 @@ public class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.PaymentsResponse = ([payment], 41);
-        var handler = new GetAdminBillingPaymentsQueryHandler(repository);
+        var handler = new GetAdminBillingPaymentsQueryHandler(new AdminBillingReadService(repository));
 
         Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(
@@ -104,7 +104,7 @@ public class AdminFeatureTests {
     [InlineData(" custom-provider ", "custom-provider")]
     public async Task GetAdminBillingPaymentsHandler_NormalizesProviderFilter(string? provider, string? expectedProvider) {
         var repository = new RecordingAdminBillingRepository();
-        var handler = new GetAdminBillingPaymentsQueryHandler(repository);
+        var handler = new GetAdminBillingPaymentsQueryHandler(new AdminBillingReadService(repository));
 
         Result<PagedResponse<AdminBillingPaymentReadModel>> result = await handler.Handle(
             new GetAdminBillingPaymentsQuery(1, 20, provider, Status: null, Kind: null, Search: null, FromUtc: null, ToUtc: null),
@@ -137,7 +137,7 @@ public class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.SubscriptionsResponse = ([subscription], 1);
-        var handler = new GetAdminBillingSubscriptionsQueryHandler(repository);
+        var handler = new GetAdminBillingSubscriptionsQueryHandler(new AdminBillingReadService(repository));
 
         Result<PagedResponse<AdminBillingSubscriptionReadModel>> result = await handler.Handle(
             new GetAdminBillingSubscriptionsQuery(1, 20, "yookassa", "Active", Search: null, FromUtc: null, ToUtc: null),
@@ -165,7 +165,7 @@ public class AdminFeatureTests {
             DateTime.UtcNow,
             ModifiedOnUtc: null);
         repository.WebhookEventsResponse = ([webhookEvent], 1);
-        var handler = new GetAdminBillingWebhookEventsQueryHandler(repository);
+        var handler = new GetAdminBillingWebhookEventsQueryHandler(new AdminBillingReadService(repository));
 
         Result<PagedResponse<AdminBillingWebhookEventReadModel>> result = await handler.Handle(
             new GetAdminBillingWebhookEventsQuery(1, 20, "paddle", "Processed", "evt_123", FromUtc: null, ToUtc: null),

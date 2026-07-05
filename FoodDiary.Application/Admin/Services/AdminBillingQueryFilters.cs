@@ -1,7 +1,7 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Domain.Entities.Billing;
 
-namespace FoodDiary.Application.Admin.Queries;
+namespace FoodDiary.Application.Admin.Services;
 
 internal static class AdminBillingQueryFilters {
     public static AdminBillingListFilter Create(

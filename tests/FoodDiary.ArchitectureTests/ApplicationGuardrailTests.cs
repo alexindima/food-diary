@@ -901,6 +901,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void AdminBillingQueries_UseReadServiceInsteadOfBillingRepository() {
+        string root = GetRepositoryRoot();
+        string adminQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Admin", "Queries");
+        string[] adminBillingQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingPayments")),
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingSubscriptions")),
+            .. SourceScanner.SourceFiles(Path.Combine(adminQueriesRoot, "GetAdminBillingWebhookEvents")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, adminBillingQueryFiles, "IAdminBillingReadRepository"),
+            .. FindReferencesInFiles(root, adminBillingQueryFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, adminBillingQueryFiles, "AdminBillingQueryFilters"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void UserQueries_UseProfileReadServiceModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string userQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Users", "Queries");

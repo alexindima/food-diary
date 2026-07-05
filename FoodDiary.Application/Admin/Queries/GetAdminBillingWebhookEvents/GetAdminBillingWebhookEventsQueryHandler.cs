@@ -1,32 +1,24 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminBillingWebhookEvents;
 
-public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReadRepository billingRepository)
+public sealed class GetAdminBillingWebhookEventsQueryHandler(IAdminBillingReadService readService)
     : IQueryHandler<GetAdminBillingWebhookEventsQuery, Result<PagedResponse<AdminBillingWebhookEventReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingWebhookEventReadModel>>> Handle(
         GetAdminBillingWebhookEventsQuery query,
         CancellationToken cancellationToken) {
-        AdminBillingListFilter filter = AdminBillingQueryFilters.Create(
+        return await readService.GetWebhookEventsAsync(
             query.Page,
             query.Limit,
             query.Provider,
             query.Status,
-            kind: null,
             query.Search,
             query.FromUtc,
-            query.ToUtc);
-        (IReadOnlyList<AdminBillingWebhookEventReadModel> Items, int TotalItems) = await billingRepository.GetWebhookEventsAsync(filter, cancellationToken).ConfigureAwait(false);
-        int totalPages = (int)Math.Ceiling(TotalItems / (double)filter.Limit);
-        return Result.Success(new PagedResponse<AdminBillingWebhookEventReadModel>(
-            Items,
-            filter.Page,
-            filter.Limit,
-            totalPages,
-            TotalItems));
+            query.ToUtc,
+            cancellationToken).ConfigureAwait(false);
     }
 }

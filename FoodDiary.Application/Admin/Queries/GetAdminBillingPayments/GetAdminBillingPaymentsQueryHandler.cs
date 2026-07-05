@@ -1,17 +1,17 @@
-using FoodDiary.Application.Abstractions.Admin.Common;
 using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Models;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminBillingPayments;
 
-public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingReadRepository billingRepository)
+public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingReadService readService)
     : IQueryHandler<GetAdminBillingPaymentsQuery, Result<PagedResponse<AdminBillingPaymentReadModel>>> {
     public async Task<Result<PagedResponse<AdminBillingPaymentReadModel>>> Handle(
         GetAdminBillingPaymentsQuery query,
         CancellationToken cancellationToken) {
-        AdminBillingListFilter filter = AdminBillingQueryFilters.Create(
+        return await readService.GetPaymentsAsync(
             query.Page,
             query.Limit,
             query.Provider,
@@ -19,14 +19,7 @@ public sealed class GetAdminBillingPaymentsQueryHandler(IAdminBillingReadReposit
             query.Kind,
             query.Search,
             query.FromUtc,
-            query.ToUtc);
-        (IReadOnlyList<AdminBillingPaymentReadModel> Items, int TotalItems) = await billingRepository.GetPaymentsAsync(filter, cancellationToken).ConfigureAwait(false);
-        int totalPages = (int)Math.Ceiling(TotalItems / (double)filter.Limit);
-        return Result.Success(new PagedResponse<AdminBillingPaymentReadModel>(
-            Items,
-            filter.Page,
-            filter.Limit,
-            totalPages,
-            TotalItems));
+            query.ToUtc,
+            cancellationToken).ConfigureAwait(false);
     }
 }

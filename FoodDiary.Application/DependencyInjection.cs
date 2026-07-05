@@ -102,6 +102,7 @@ public static class DependencyInjection {
 
         services.AddScoped<IPostCommitActionQueue, PostCommitActionQueue>();
         services.AddScoped<IAdminImpersonationUserService, AdminImpersonationUserService>();
+        services.AddScoped<IAdminBillingReadService, AdminBillingReadService>();
         services.AddScoped<IAdminContentReadService, AdminContentReadService>();
         services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
