@@ -798,6 +798,20 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void WeeklyCheckInQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string weeklyCheckInQueriesRoot = Path.Combine(root, "FoodDiary.Application", "WeeklyCheckIn", "Queries");
+        string[] weeklyCheckInQueryFiles = [.. SourceScanner.SourceFiles(weeklyCheckInQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "mealRepository.GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

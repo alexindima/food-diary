@@ -18,6 +18,14 @@ public interface IMealReadRepository {
         MealQueryFilters filters,
         CancellationToken cancellationToken = default);
 
+    async Task<int> GetCountAsync(
+        UserId userId,
+        MealQueryFilters filters,
+        CancellationToken cancellationToken = default) {
+        (_, int totalItems) = await GetPagedAsync(userId, page: 1, limit: 1, filters, cancellationToken).ConfigureAwait(false);
+        return totalItems;
+    }
+
     Task<IReadOnlyList<Meal>> GetByPeriodAsync(
         UserId userId,
         DateTime dateFrom,

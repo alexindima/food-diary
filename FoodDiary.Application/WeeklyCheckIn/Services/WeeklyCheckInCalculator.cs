@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
@@ -10,14 +11,41 @@ public static class WeeklyCheckInCalculator {
         IReadOnlyList<WeightEntry> weights,
         IReadOnlyList<WaistEntry> waists,
         IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
+        int daysInPeriod) =>
+        BuildSummary(
+            [.. meals
+                .GroupBy(static meal => meal.Date.Date)
+                .Select(static group => new DashboardStatisticsBucketReadModel(
+                    group.Key,
+                    group.Key,
+                    group.Sum(meal => meal.TotalCalories),
+                    group.Sum(meal => meal.TotalProteins),
+                    group.Sum(meal => meal.TotalFats),
+                    group.Sum(meal => meal.TotalCarbs),
+                    AverageFiber: 0,
+                    group.Sum(meal => meal.TotalProteins),
+                    group.Sum(meal => meal.TotalFats),
+                    group.Sum(meal => meal.TotalCarbs),
+                    group.Sum(meal => meal.TotalFiber)))],
+            meals.Count,
+            weights,
+            waists,
+            hydration,
+            daysInPeriod);
+
+    public static WeekSummaryModel BuildSummary(
+        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        int mealsLogged,
+        IReadOnlyList<WeightEntry> weights,
+        IReadOnlyList<WaistEntry> waists,
+        IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
         int daysInPeriod) {
-        double totalCalories = meals.Sum(m => m.TotalCalories);
+        double totalCalories = nutritionBuckets.Sum(bucket => bucket.TotalCalories);
         double avgDaily = daysInPeriod > 0 ? totalCalories / daysInPeriod : 0;
-        double avgProteins = daysInPeriod > 0 ? meals.Sum(m => m.TotalProteins) / daysInPeriod : 0;
-        double avgFats = daysInPeriod > 0 ? meals.Sum(m => m.TotalFats) / daysInPeriod : 0;
-        double avgCarbs = daysInPeriod > 0 ? meals.Sum(m => m.TotalCarbs) / daysInPeriod : 0;
-        int mealsLogged = meals.Count;
-        int daysLogged = meals.Select(m => m.Date.Date).Distinct().Count();
+        double avgProteins = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalProteins) / daysInPeriod : 0;
+        double avgFats = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalFats) / daysInPeriod : 0;
+        double avgCarbs = daysInPeriod > 0 ? nutritionBuckets.Sum(bucket => bucket.TotalCarbs) / daysInPeriod : 0;
+        int daysLogged = nutritionBuckets.Count(static bucket => bucket.TotalCalories > 0);
 
         var sortedWeights = weights.OrderBy(w => w.Date).ToList();
         double? weightStart = sortedWeights.FirstOrDefault()?.Weight;

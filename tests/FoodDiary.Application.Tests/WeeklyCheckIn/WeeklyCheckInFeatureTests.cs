@@ -1,11 +1,12 @@
 using FoodDiary.Application.Abstractions.Hydration.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -74,6 +75,50 @@ public class WeeklyCheckInFeatureTests {
     }
 
     [Fact]
+    public async Task GetWeeklyCheckIn_UsesStatisticsBucketsAndMealCountForCurrentSummary() {
+        var userId = UserId.New();
+        var user = User.Create("user@example.com", "hashed");
+        typeof(User).GetProperty(nameof(User.Id))!.SetValue(user, userId);
+        DateTime thisWeekStart = Today.AddDays(-6);
+        DateTime lastWeekStart = thisWeekStart.AddDays(-7);
+        DateTime lastWeekEnd = thisWeekStart.AddDays(-1);
+        DashboardStatisticsBucketReadModel[] thisWeekBuckets = [
+            new(thisWeekStart, thisWeekStart, TotalCalories: 700, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 35, TotalFats: 20, TotalCarbs: 90),
+            new(Today, Today, TotalCalories: 900, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: 0, TotalProteins: 45, TotalFats: 30, TotalCarbs: 110),
+        ];
+        IMealRepository mealRepo = CreateMealRepository();
+        mealRepo
+            .GetCountAsync(
+                userId,
+                Arg.Is<MealQueryFilters>(filters => filters.DateFrom == thisWeekStart && filters.DateTo == Today),
+                Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(3));
+        IDashboardStatisticsReadService statisticsReadService = Substitute.For<IDashboardStatisticsReadService>();
+        statisticsReadService
+            .GetStatisticsAsync(userId, thisWeekStart, Today, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(thisWeekBuckets)));
+        statisticsReadService
+            .GetStatisticsAsync(userId, lastWeekStart, lastWeekEnd, 1, Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+
+        GetWeeklyCheckInQueryHandler handler = CreateHandler(
+            mealRepo: mealRepo,
+            statisticsReadService: statisticsReadService,
+            profileService: CreateProfileService(user));
+
+        Result<WeeklyCheckInModel> result = await handler.Handle(
+            new GetWeeklyCheckInQuery(userId.Value), CancellationToken.None);
+
+        WeeklyCheckInModel model = ResultAssert.Success(result);
+        Assert.Equal(1600, model.ThisWeek.TotalCalories);
+        Assert.Equal(3, model.ThisWeek.MealsLogged);
+        Assert.Equal(2, model.ThisWeek.DaysLogged);
+        Assert.Equal(11.4, model.ThisWeek.AvgProteins);
+        Assert.Equal(7.1, model.ThisWeek.AvgFats);
+        Assert.Equal(28.6, model.ThisWeek.AvgCarbs);
+    }
+
+    [Fact]
     public async Task WeeklyCheckInUserProfileService_WithAccessibleUser_ReturnsDailyCalorieTarget() {
         var user = User.Create("weekly-profile@example.com", "hashed");
         user.UpdateGoals(dailyCalorieTarget: 2200);
@@ -98,12 +143,14 @@ public class WeeklyCheckInFeatureTests {
 
     private static GetWeeklyCheckInQueryHandler CreateHandler(
         IMealRepository? mealRepo = null,
+        IDashboardStatisticsReadService? statisticsReadService = null,
         IWeightEntryRepository? weightRepo = null,
         IWaistEntryRepository? waistRepo = null,
         IHydrationEntryRepository? hydrationRepo = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
             mealRepo ?? CreateMealRepository(),
+            statisticsReadService ?? CreateStatisticsReadService(),
             weightRepo ?? CreateWeightEntryRepository(),
             waistRepo ?? CreateWaistEntryRepository(),
             hydrationRepo ?? CreateHydrationEntryRepository(),
@@ -113,9 +160,18 @@ public class WeeklyCheckInFeatureTests {
     private static IMealRepository CreateMealRepository() {
         IMealRepository repository = Substitute.For<IMealRepository>();
         repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
+            .GetCountAsync(Arg.Any<UserId>(), Arg.Any<MealQueryFilters>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(0));
         return repository;
+    }
+
+    private static IDashboardStatisticsReadService CreateStatisticsReadService(
+        IReadOnlyList<DashboardStatisticsBucketReadModel>? buckets = null) {
+        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>(buckets ?? [])));
+        return service;
     }
 
     private static IWeightEntryRepository CreateWeightEntryRepository() {

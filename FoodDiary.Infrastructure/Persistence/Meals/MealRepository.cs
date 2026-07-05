@@ -112,6 +112,18 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
         return (items, totalItems);
     }
 
+    public async Task<int> GetCountAsync(
+        UserId userId,
+        MealQueryFilters filters,
+        CancellationToken cancellationToken = default) {
+        IQueryable<Meal> filteredQuery = context.Meals
+            .AsNoTracking()
+            .Where(m => m.UserId == userId);
+
+        return await ApplyFilters(filteredQuery, filters)
+            .CountAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private static IQueryable<Meal> ApplyFilters(IQueryable<Meal> query, MealQueryFilters filters) {
         if (filters.DateFrom.HasValue) {
             DateTime from = NormalizeUtcInstant(filters.DateFrom.Value);
