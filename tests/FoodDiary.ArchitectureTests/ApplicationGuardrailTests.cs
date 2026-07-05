@@ -1052,6 +1052,53 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ShoppingListQueries_UseReadServicesInsteadOfShoppingAggregates() {
+        string root = GetRepositoryRoot();
+        string shoppingListQueriesRoot = Path.Combine(root, "FoodDiary.Application", "ShoppingLists", "Queries");
+        string[] shoppingListQueryFiles = [.. SourceScanner.SourceFiles(shoppingListQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, shoppingListQueryFiles, "FoodDiary.Domain.Entities.Shopping"),
+            .. FindReferencesInFiles(root, shoppingListQueryFiles, "IShoppingListReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MealPlanQueries_UseReadServicesInsteadOfMealPlanAggregates() {
+        string root = GetRepositoryRoot();
+        string mealPlanQueriesRoot = Path.Combine(root, "FoodDiary.Application", "MealPlans", "Queries");
+        string[] mealPlanQueryFiles = [.. SourceScanner.SourceFiles(mealPlanQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, mealPlanQueryFiles, "FoodDiary.Domain.Entities.MealPlans"),
+            .. FindReferencesInFiles(root, mealPlanQueryFiles, "IMealPlanReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void SocialQueries_UseReadServicesInsteadOfSocialAggregates() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] socialQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeLikes", "Queries")),
+            .. SourceScanner.SourceFiles(Path.Combine(applicationRoot, "RecipeComments", "Queries")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, socialQueryFiles, "FoodDiary.Domain.Entities.Social"),
+            .. FindReferencesInFiles(root, socialQueryFiles, "Domain.Entities.Recipes.RecipeComment"),
+            .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeLikeReadRepository"),
+            .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeCommentReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

@@ -4,7 +4,9 @@ using FoodDiary.Application.RecipeComments.Commands.DeleteRecipeComment;
 using FoodDiary.Application.RecipeComments.Commands.UpdateRecipeComment;
 using FoodDiary.Application.Abstractions.RecipeComments.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
+using FoodDiary.Application.RecipeComments.Services;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Entities.Recipes;
 
@@ -239,7 +241,7 @@ public class RecipeCommentsFeatureTests {
 
     [Fact]
     public async Task GetRecipeComments_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetRecipeCommentsQueryHandler(new InMemoryRecipeCommentRepository());
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(new InMemoryRecipeCommentRepository());
 
         Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
             new GetRecipeCommentsQuery(Guid.Empty, Guid.NewGuid(), 1, 10),
@@ -257,7 +259,7 @@ public class RecipeCommentsFeatureTests {
         repo.Seed(RecipeComment.Create(userId, recipeId, "Mine"));
         repo.Seed(RecipeComment.Create(UserId.New(), recipeId, "Other"));
         repo.Seed(RecipeComment.Create(userId, RecipeId.New(), "Different recipe"));
-        var handler = new GetRecipeCommentsQueryHandler(repo);
+        GetRecipeCommentsQueryHandler handler = CreateRecipeCommentsHandler(repo);
 
         Result<PagedResponse<RecipeCommentModel>> result = await handler.Handle(
             new GetRecipeCommentsQuery(userId.Value, recipeId.Value, 0, 0),
@@ -327,4 +329,12 @@ public class RecipeCommentsFeatureTests {
             .Returns(Task.FromResult(recipe));
         return service;
     }
+
+    private static GetRecipeCommentsQueryHandler CreateRecipeCommentsHandler(
+        IRecipeCommentReadRepository commentRepository) =>
+        new(CreateRecipeCommentReadService(commentRepository));
+
+    private static IRecipeCommentReadService CreateRecipeCommentReadService(
+        IRecipeCommentReadRepository commentRepository) =>
+        new RecipeCommentReadService(commentRepository);
 }

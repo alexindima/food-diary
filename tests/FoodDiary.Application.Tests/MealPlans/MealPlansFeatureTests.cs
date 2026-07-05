@@ -2,9 +2,11 @@ using FoodDiary.Application.MealPlans.Commands.AdoptMealPlan;
 using FoodDiary.Application.Abstractions.MealPlans.Common;
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.MealPlans.Commands.GenerateShoppingList;
+using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
 using FoodDiary.Application.MealPlans.Queries.GetMealPlans;
+using FoodDiary.Application.MealPlans.Services;
 using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Recipes;
@@ -146,7 +148,7 @@ public class MealPlansFeatureTests {
     public async Task GetMealPlanById_WhenUserDoesNotOwnPrivatePlan_ReturnsNotFound() {
         var ownerId = UserId.New();
         var plan = MealPlan.CreateForUser(ownerId, "Private plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
+        GetMealPlanByIdQueryHandler handler = CreateMealPlanByIdHandler(new StubMealPlanRepository(plan));
 
         Result<MealPlanModel> result = await handler.Handle(
             new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value),
@@ -175,7 +177,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlanById_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan: null));
+        GetMealPlanByIdQueryHandler handler = CreateMealPlanByIdHandler(new StubMealPlanRepository(plan: null));
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
 
@@ -185,7 +187,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlanById_WhenPlanMissing_ReturnsNotFound() {
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan: null));
+        GetMealPlanByIdQueryHandler handler = CreateMealPlanByIdHandler(new StubMealPlanRepository(plan: null));
         var planId = Guid.NewGuid();
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), planId), CancellationToken.None);
@@ -197,7 +199,7 @@ public class MealPlansFeatureTests {
     [Fact]
     public async Task GetMealPlanById_WithCuratedPlan_ReturnsModel() {
         var plan = MealPlan.CreateCurated("Curated", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
-        var handler = new GetMealPlanByIdQueryHandler(new StubMealPlanRepository(plan));
+        GetMealPlanByIdQueryHandler handler = CreateMealPlanByIdHandler(new StubMealPlanRepository(plan));
 
         Result<MealPlanModel> result = await handler.Handle(new GetMealPlanByIdQuery(Guid.NewGuid(), plan.Id.Value), CancellationToken.None);
 
@@ -208,7 +210,7 @@ public class MealPlansFeatureTests {
 
     [Fact]
     public async Task GetMealPlans_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetMealPlansQueryHandler(new StubMealPlanRepository(plan: null));
+        GetMealPlansQueryHandler handler = CreateMealPlansHandler(new StubMealPlanRepository(plan: null));
 
         Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(new GetMealPlansQuery(Guid.Empty, DietType: null), CancellationToken.None);
 
@@ -222,7 +224,7 @@ public class MealPlansFeatureTests {
         var curated = MealPlan.CreateCurated("Keto curated", description: null, DietType.Keto, 1, targetCaloriesPerDay: null);
         var userPlan = MealPlan.CreateForUser(userId, "User plan", description: null, DietType.Balanced, 1, targetCaloriesPerDay: null);
         var repository = new StubMealPlanRepository(curated, curatedPlans: [curated], userPlans: [userPlan]);
-        var handler = new GetMealPlansQueryHandler(repository);
+        GetMealPlansQueryHandler handler = CreateMealPlansHandler(repository);
 
         Result<IReadOnlyList<MealPlanSummaryModel>> result = await handler.Handle(
             new GetMealPlansQuery(userId.Value, "keto"),
@@ -359,4 +361,16 @@ public class MealPlansFeatureTests {
     private static void SetProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) where TTarget : class {
         typeof(TTarget).GetProperty(propertyName)!.SetValue(target, value);
     }
+
+    private static GetMealPlanByIdQueryHandler CreateMealPlanByIdHandler(
+        IMealPlanReadRepository mealPlanRepository) =>
+        new(CreateMealPlanReadService(mealPlanRepository));
+
+    private static GetMealPlansQueryHandler CreateMealPlansHandler(
+        IMealPlanReadRepository mealPlanRepository) =>
+        new(CreateMealPlanReadService(mealPlanRepository));
+
+    private static IMealPlanReadService CreateMealPlanReadService(
+        IMealPlanReadRepository mealPlanRepository) =>
+        new MealPlanReadService(mealPlanRepository);
 }

@@ -24,7 +24,7 @@ namespace FoodDiary.Application.Tests.ShoppingLists;
 public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetCurrentShoppingListQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        GetCurrentShoppingListQueryHandler handler = CreateCurrentShoppingListHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(UserId: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -35,7 +35,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetCurrentShoppingListQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-current-shopping@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetCurrentShoppingListQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
+        GetCurrentShoppingListQueryHandler handler = CreateCurrentShoppingListHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetCurrentShoppingListQuery(user.Id.Value), CancellationToken.None);
 
@@ -45,7 +45,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        GetShoppingListByIdQueryHandler handler = CreateShoppingListByIdHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -54,7 +54,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WithEmptyShoppingListId_ReturnsValidationFailure() {
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        GetShoppingListByIdQueryHandler handler = CreateShoppingListByIdHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(Guid.NewGuid(), Guid.Empty), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -66,7 +66,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListByIdQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-shopping-by-id@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
+        GetShoppingListByIdQueryHandler handler = CreateShoppingListByIdHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, Guid.NewGuid()), CancellationToken.None);
 
@@ -77,7 +77,7 @@ public class ShoppingListsFeatureTests {
     [Fact]
     public async Task GetShoppingListByIdQueryHandler_WhenListMissing_ReturnsNotFound() {
         var user = User.Create("shopping-by-id-missing@example.com", "hash");
-        var handler = new GetShoppingListByIdQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
+        GetShoppingListByIdQueryHandler handler = CreateShoppingListByIdHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
         var shoppingListId = Guid.NewGuid();
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, shoppingListId), CancellationToken.None);
@@ -91,7 +91,7 @@ public class ShoppingListsFeatureTests {
         var user = User.Create("shopping-by-id-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
         list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
-        var handler = new GetShoppingListByIdQueryHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
+        GetShoppingListByIdQueryHandler handler = CreateShoppingListByIdHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
 
         Result<ShoppingListModel> result = await handler.Handle(new GetShoppingListByIdQuery(user.Id.Value, list.Id.Value), CancellationToken.None);
 
@@ -102,7 +102,7 @@ public class ShoppingListsFeatureTests {
 
     [Fact]
     public async Task GetShoppingListsQueryHandler_WithMissingUserId_ReturnsInvalidToken() {
-        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
+        GetShoppingListsQueryHandler handler = CreateShoppingListsHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(User.Create("user@example.com", "hash")));
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(UserId: null), CancellationToken.None);
 
         ResultAssert.Failure(result);
@@ -114,7 +114,7 @@ public class ShoppingListsFeatureTests {
         var user = User.Create("shopping-lists-success@example.com", "hash");
         var list = ShoppingList.Create(user.Id, "Weekly");
         list.AddItem("Milk", productId: null, 1, MeasurementUnit.Ml, "Dairy", isChecked: false, 1);
-        var handler = new GetShoppingListsQueryHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
+        GetShoppingListsQueryHandler handler = CreateShoppingListsHandler(new SingleShoppingListRepository(list), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
@@ -802,7 +802,7 @@ public class ShoppingListsFeatureTests {
     public async Task GetShoppingListsQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("deleted-shopping@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new GetShoppingListsQueryHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
+        GetShoppingListsQueryHandler handler = CreateShoppingListsHandler(new NoopShoppingListRepository(), CreateCurrentUserAccessService(user));
 
         Result<IReadOnlyList<ShoppingListSummaryModel>> result = await handler.Handle(new GetShoppingListsQuery(user.Id.Value), CancellationToken.None);
 
@@ -826,4 +826,19 @@ public class ShoppingListsFeatureTests {
 
         return service;
     }
+
+    private static GetCurrentShoppingListQueryHandler CreateCurrentShoppingListHandler(
+        IShoppingListReadRepository shoppingListRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
+
+    private static GetShoppingListByIdQueryHandler CreateShoppingListByIdHandler(
+        IShoppingListReadRepository shoppingListRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
+
+    private static GetShoppingListsQueryHandler CreateShoppingListsHandler(
+        IShoppingListReadRepository shoppingListRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(new ShoppingListReadService(shoppingListRepository), currentUserAccessService);
 }

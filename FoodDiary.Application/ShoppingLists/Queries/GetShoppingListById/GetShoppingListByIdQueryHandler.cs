@@ -1,16 +1,14 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.ShoppingLists.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.ShoppingLists.Mappings;
+using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Shopping;
 
 namespace FoodDiary.Application.ShoppingLists.Queries.GetShoppingListById;
 
 public sealed class GetShoppingListByIdQueryHandler(
-    IShoppingListReadRepository shoppingListRepository,
+    IShoppingListReadService shoppingListReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<GetShoppingListByIdQuery, Result<ShoppingListModel>> {
     public async Task<Result<ShoppingListModel>> Handle(
@@ -33,14 +31,13 @@ public sealed class GetShoppingListByIdQueryHandler(
 
         var shoppingListId = new ShoppingListId(query.ShoppingListId);
 
-        ShoppingList? list = await shoppingListRepository.GetByIdAsync(
+        ShoppingListModel? list = await shoppingListReadService.GetByIdAsync(
             shoppingListId,
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return list is null
             ? Result.Failure<ShoppingListModel>(Errors.ShoppingList.NotFound(query.ShoppingListId))
-            : Result.Success(list.ToModel());
+            : Result.Success(list);
     }
 }

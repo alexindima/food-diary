@@ -1,7 +1,9 @@
 using FoodDiary.Application.RecipeLikes.Commands.ToggleRecipeLike;
 using FoodDiary.Application.Abstractions.RecipeLikes.Common;
 using FoodDiary.Application.Abstractions.Recipes.Common;
+using FoodDiary.Application.RecipeLikes.Common;
 using FoodDiary.Application.RecipeLikes.Queries.GetRecipeLikeStatus;
+using FoodDiary.Application.RecipeLikes.Services;
 using FoodDiary.Domain.Entities.Recipes;
 using FoodDiary.Domain.Entities.Social;
 
@@ -78,7 +80,7 @@ public class RecipeLikesFeatureTests {
         var repo = new InMemoryRecipeLikeRepository();
         repo.Seed(RecipeLike.Create(userId, recipeId));
 
-        var handler = new GetRecipeLikeStatusQueryHandler(repo);
+        GetRecipeLikeStatusQueryHandler handler = CreateRecipeLikeStatusHandler(repo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(userId.Value, recipeId.Value), CancellationToken.None);
 
@@ -91,7 +93,7 @@ public class RecipeLikesFeatureTests {
     public async Task GetRecipeLikeStatus_WhenNotLiked_ReturnsFalse() {
         var repo = new InMemoryRecipeLikeRepository();
 
-        var handler = new GetRecipeLikeStatusQueryHandler(repo);
+        GetRecipeLikeStatusQueryHandler handler = CreateRecipeLikeStatusHandler(repo);
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
 
@@ -102,7 +104,7 @@ public class RecipeLikesFeatureTests {
 
     [Fact]
     public async Task GetRecipeLikeStatus_WithNullUserId_ReturnsFailure() {
-        var handler = new GetRecipeLikeStatusQueryHandler(new InMemoryRecipeLikeRepository());
+        GetRecipeLikeStatusQueryHandler handler = CreateRecipeLikeStatusHandler(new InMemoryRecipeLikeRepository());
 
         Result<RecipeLikeStatusModel> result = await handler.Handle(
             new GetRecipeLikeStatusQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -145,4 +147,12 @@ public class RecipeLikesFeatureTests {
             .Returns(Task.FromResult(recipe));
         return service;
     }
+
+    private static GetRecipeLikeStatusQueryHandler CreateRecipeLikeStatusHandler(
+        IRecipeLikeReadRepository likeRepository) =>
+        new(CreateRecipeLikeReadService(likeRepository));
+
+    private static IRecipeLikeReadService CreateRecipeLikeReadService(
+        IRecipeLikeReadRepository likeRepository) =>
+        new RecipeLikeReadService(likeRepository);
 }

@@ -2,13 +2,13 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.RecipeComments.Common;
+using FoodDiary.Application.RecipeComments.Common;
 using FoodDiary.Application.RecipeComments.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.RecipeComments.Queries.GetRecipeComments;
 
-public sealed class GetRecipeCommentsQueryHandler(IRecipeCommentReadRepository commentRepository)
+public sealed class GetRecipeCommentsQueryHandler(IRecipeCommentReadService commentReadService)
     : IQueryHandler<GetRecipeCommentsQuery, Result<PagedResponse<RecipeCommentModel>>> {
     public async Task<Result<PagedResponse<RecipeCommentModel>>> Handle(
         GetRecipeCommentsQuery query,
@@ -22,21 +22,10 @@ public sealed class GetRecipeCommentsQueryHandler(IRecipeCommentReadRepository c
         int pageSize = Math.Max(query.Limit, 1);
         var recipeId = (RecipeId)query.RecipeId;
 
-        (IReadOnlyList<Domain.Entities.Recipes.RecipeComment> items, int total) = await commentRepository.GetPagedByRecipeAsync(
-            recipeId, pageNumber, pageSize, cancellationToken).ConfigureAwait(false);
+        PagedResponse<RecipeCommentModel> comments = await commentReadService
+            .GetPagedByRecipeAsync(recipeId, userIdResult.Value, pageNumber, pageSize, cancellationToken)
+            .ConfigureAwait(false);
 
-        var models = items.Select(c => new RecipeCommentModel(
-            c.Id.Value,
-            c.RecipeId.Value,
-            c.UserId.Value,
-            c.User?.Username,
-            c.User?.FirstName,
-            c.Text,
-            c.CreatedOnUtc,
-            c.ModifiedOnUtc,
-            c.UserId == userIdResult.Value)).ToList();
-
-        int totalPages = (int)Math.Ceiling(total / (double)pageSize);
-        return Result.Success(new PagedResponse<RecipeCommentModel>(models, pageNumber, pageSize, totalPages, total));
+        return Result.Success(comments);
     }
 }

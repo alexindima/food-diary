@@ -1,15 +1,13 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Validation;
-using FoodDiary.Application.Abstractions.MealPlans.Common;
-using FoodDiary.Application.MealPlans.Mappings;
+using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.MealPlans;
 
 namespace FoodDiary.Application.MealPlans.Queries.GetMealPlanById;
 
-public sealed class GetMealPlanByIdQueryHandler(IMealPlanReadRepository mealPlanRepository)
+public sealed class GetMealPlanByIdQueryHandler(IMealPlanReadService mealPlanReadService)
     : IQueryHandler<GetMealPlanByIdQuery, Result<MealPlanModel>> {
     public async Task<Result<MealPlanModel>> Handle(
         GetMealPlanByIdQuery query,
@@ -20,16 +18,13 @@ public sealed class GetMealPlanByIdQueryHandler(IMealPlanReadRepository mealPlan
         }
 
         var planId = new MealPlanId(query.PlanId);
-        MealPlan? plan = await mealPlanRepository.GetByIdAsync(planId, includeDays: true, cancellationToken).ConfigureAwait(false);
+        MealPlanModel? plan = await mealPlanReadService
+            .GetAccessibleByIdAsync(planId, userIdResult.Value, cancellationToken)
+            .ConfigureAwait(false);
         if (plan is null) {
             return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(query.PlanId));
         }
 
-        // Allow access to curated plans or user's own plans
-        if (!plan.IsCurated && plan.UserId != userIdResult.Value) {
-            return Result.Failure<MealPlanModel>(Errors.MealPlan.NotFound(query.PlanId));
-        }
-
-        return Result.Success(plan.ToModel());
+        return Result.Success(plan);
     }
 }
