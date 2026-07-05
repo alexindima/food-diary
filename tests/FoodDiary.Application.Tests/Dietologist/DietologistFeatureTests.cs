@@ -282,6 +282,52 @@ public class DietologistFeatureTests {
         ICurrentUserAccessService currentUserAccessService) =>
         new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService);
 
+    private static GetClientDashboardQueryHandler CreateGetClientDashboardHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDashboardSnapshotBuilder? snapshotBuilder = null,
+        InMemoryUserRepository? userRepository = null) =>
+        new(CreateDietologistClientReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            snapshotBuilder ?? new ThrowingDashboardSnapshotBuilder(),
+            userRepository ?? new InMemoryUserRepository()));
+
+    private static GetClientGoalsQueryHandler CreateGetClientGoalsHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        InMemoryUserRepository? userRepository = null) =>
+        new(CreateDietologistClientReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            new ThrowingDashboardSnapshotBuilder(),
+            userRepository ?? new InMemoryUserRepository()));
+
+    private static IDietologistClientReadService CreateDietologistClientReadService(
+        IDietologistInvitationReadRepository invitationRepository,
+        IDashboardSnapshotBuilder snapshotBuilder,
+        InMemoryUserRepository userRepository) =>
+        new DietologistClientReadService(invitationRepository, snapshotBuilder, userRepository, userRepository);
+
+    private static GetMyRecommendationsQueryHandler CreateGetMyRecommendationsHandler(
+        IRecommendationReadRepository? recommendationRepository = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(CreateDietologistRecommendationReadService(
+            new InMemoryInvitationRepository(),
+            recommendationRepository ?? new InMemoryRecommendationRepository(),
+            currentUserAccessService ?? new InMemoryUserRepository()));
+
+    private static GetRecommendationsForClientQueryHandler CreateGetRecommendationsForClientHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        IRecommendationReadRepository? recommendationRepository = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(CreateDietologistRecommendationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            recommendationRepository ?? new InMemoryRecommendationRepository(),
+            currentUserAccessService ?? new InMemoryUserRepository()));
+
+    private static IDietologistRecommendationReadService CreateDietologistRecommendationReadService(
+        IDietologistInvitationReadRepository invitationRepository,
+        IRecommendationReadRepository recommendationRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new DietologistRecommendationReadService(invitationRepository, recommendationRepository, currentUserAccessService);
+
     [Fact]
     public async Task InviteDietologist_WithNullUserId_ReturnsFailure() {
         InviteDietologistCommandHandler handler = CreateInviteHandler();
@@ -1799,8 +1845,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientDashboard_WithNullUserId_ReturnsFailure() {
-        var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), new InMemoryUserRepository());
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler();
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(UserId: null, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
@@ -1814,8 +1859,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetClientDashboardQueryHandler(
-            new InMemoryInvitationRepository(), new ThrowingDashboardSnapshotBuilder(), userRepo);
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, Guid.NewGuid(), DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
@@ -1844,7 +1888,7 @@ public class DietologistFeatureTests {
         var snapshotBuilder = new RecordingDashboardSnapshotBuilder(CreateDashboardSnapshot());
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetClientDashboardQueryHandler(invRepo, snapshotBuilder, userRepo);
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, snapshotBuilder, userRepo);
         DateTime dateFrom = DateTime.UtcNow.Date;
         DateTime dateTo = dateFrom.AddDays(6);
 
@@ -1884,7 +1928,7 @@ public class DietologistFeatureTests {
 
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetClientDashboardQueryHandler(invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
@@ -1903,8 +1947,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetClientDashboardQueryHandler(
-            invRepo, new ThrowingDashboardSnapshotBuilder(), userRepo);
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, userRepository: userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
@@ -1924,8 +1967,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetClientDashboardQueryHandler(
-            invRepo, new FailingDashboardSnapshotBuilder(), userRepo);
+        GetClientDashboardQueryHandler handler = CreateGetClientDashboardHandler(invRepo, new FailingDashboardSnapshotBuilder(), userRepo);
 
         Result<DashboardSnapshotModel> result = await handler.Handle(
             new GetClientDashboardQuery(dietologistId.Value, clientId.Value, DateTime.UtcNow, DateTo: null, 1, 10, "en", 7),
@@ -1939,8 +1981,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientGoals_WithNullUserId_ReturnsFailure() {
-        var handler = new GetClientGoalsQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -1950,8 +1991,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetClientGoals_WhenNoAccess_ReturnsFailure() {
-        var handler = new GetClientGoalsQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler();
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -1966,7 +2006,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet-no-relationship@example.com"));
         userRepo.Seed(CreateUser(clientId, "client-no-relationship@example.com"));
-        var handler = new GetClientGoalsQueryHandler(new InMemoryInvitationRepository(), userRepo);
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(userRepository: userRepo);
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -1986,7 +2026,7 @@ public class DietologistFeatureTests {
 
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -2007,7 +2047,7 @@ public class DietologistFeatureTests {
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
         userRepo.Seed(clientUser);
 
-        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -2026,7 +2066,7 @@ public class DietologistFeatureTests {
         userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
         userRepo.Seed(CreateUser(clientId, "client@example.com"));
 
-        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -2045,7 +2085,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetClientGoalsQueryHandler(invRepo, userRepo);
+        GetClientGoalsQueryHandler handler = CreateGetClientGoalsHandler(invRepo, userRepo);
 
         Result<UserModel> result = await handler.Handle(
             new GetClientGoalsQuery(dietologistId.Value, clientId.Value), CancellationToken.None);
@@ -2058,8 +2098,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetMyRecommendations_WithNullUserId_ReturnsFailure() {
-        var handler = new GetMyRecommendationsQueryHandler(
-            new InMemoryRecommendationRepository(), new InMemoryUserRepository());
+        GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler();
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(UserId: null), CancellationToken.None);
@@ -2080,7 +2119,7 @@ public class DietologistFeatureTests {
         recRepo.Seed(rec1);
         recRepo.Seed(rec2);
 
-        var handler = new GetMyRecommendationsQueryHandler(recRepo, userRepo);
+        GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler(recRepo, userRepo);
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(userId.Value), CancellationToken.None);
@@ -2095,8 +2134,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(userId));
 
-        var handler = new GetMyRecommendationsQueryHandler(
-            new InMemoryRecommendationRepository(), userRepo);
+        GetMyRecommendationsQueryHandler handler = CreateGetMyRecommendationsHandler(currentUserAccessService: userRepo);
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetMyRecommendationsQuery(userId.Value), CancellationToken.None);
@@ -2109,8 +2147,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetRecommendationsForClient_WithNullUserId_ReturnsFailure() {
-        var handler = new GetRecommendationsForClientQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository(), new InMemoryUserRepository());
+        GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler();
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(UserId: null, Guid.NewGuid()), CancellationToken.None);
@@ -2123,8 +2160,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetRecommendationsForClientQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryRecommendationRepository(), userRepo);
+        GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler(currentUserAccessService: userRepo);
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(dietologistId.Value, Guid.NewGuid()),
@@ -2147,7 +2183,7 @@ public class DietologistFeatureTests {
 
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetRecommendationsForClientQueryHandler(invRepo, recRepo, userRepo);
+        GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler(invRepo, recRepo, userRepo);
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),
@@ -2167,8 +2203,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetRecommendationsForClientQueryHandler(
-            invRepo, new InMemoryRecommendationRepository(), userRepo);
+        GetRecommendationsForClientQueryHandler handler = CreateGetRecommendationsForClientHandler(invRepo, currentUserAccessService: userRepo);
 
         Result<IReadOnlyList<RecommendationModel>> result = await handler.Handle(
             new GetRecommendationsForClientQuery(dietologistId.Value, clientId.Value),

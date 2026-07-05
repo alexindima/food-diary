@@ -995,20 +995,15 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
-    public void DietologistInvitationQueries_UseReadServiceInsteadOfInvitationRepository() {
+    public void DietologistQueries_UseReadServicesInsteadOfRepositories() {
         string root = GetRepositoryRoot();
         string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
-        string[] invitationQueryFiles = [
-            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetInvitationForCurrentUser")),
-            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetInvitationByToken")),
-            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyDietologist")),
-            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyClients")),
-            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyDietologistRelationship")),
-        ];
+        string[] dietologistQueryFiles = [.. SourceScanner.SourceFiles(dietologistQueriesRoot)];
 
         string[] violations = [
-            .. FindReferencesInFiles(root, invitationQueryFiles, "IDietologistInvitationReadRepository"),
-            .. FindReferencesInFiles(root, invitationQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "IDietologistInvitationReadRepository"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "IRecommendationReadRepository"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
         ];
 
         Assert.Empty(violations);

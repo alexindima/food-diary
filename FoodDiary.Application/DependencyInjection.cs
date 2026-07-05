@@ -166,7 +166,9 @@ public static class DependencyInjection {
         services.AddScoped<BillingRenewalService>();
         services.AddSingleton(TimeProvider.System);
         services.AddScoped<IAuthenticationTokenService, AuthenticationTokenService>();
+        services.AddScoped<IDietologistClientReadService, DietologistClientReadService>();
         services.AddScoped<IDietologistInvitationReadService, DietologistInvitationReadService>();
+        services.AddScoped<IDietologistRecommendationReadService, DietologistRecommendationReadService>();
         services.AddScoped<IDietologistUserLookupService, DietologistUserLookupService>();
         services.AddScoped<IDietologistUserContextService, DietologistUserContextService>();
         services.AddScoped<IOpenFoodFactsCachedProductSearch, OpenFoodFactsCachedProductSearch>();
