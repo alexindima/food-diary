@@ -1,10 +1,8 @@
-using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUsers;
 
@@ -16,10 +14,9 @@ public sealed class GetAdminUsersQueryHandler(IAdminUserReadService userReadServ
         int page = query.Page <= 0 ? 1 : query.Page;
         int limit = query.Limit is > 0 and <= 100 ? query.Limit : 20;
 
-        (IReadOnlyList<User> Items, int TotalItems) = await userReadService.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
-        var users = Items.Select(user => user.ToAdminModel()).ToList();
+        (IReadOnlyList<AdminUserModel> Items, int TotalItems) = await userReadService.GetPagedAsync(query.Search, page, limit, query.Status, cancellationToken).ConfigureAwait(false);
         int totalPages = (int)Math.Ceiling(TotalItems / (double)limit);
-        var response = new PagedResponse<AdminUserModel>(users, page, limit, totalPages, TotalItems);
+        var response = new PagedResponse<AdminUserModel>(Items, page, limit, totalPages, TotalItems);
         return Result.Success(response);
     }
 }

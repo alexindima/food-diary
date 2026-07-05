@@ -23,6 +23,7 @@ using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessageDetails;
 using FoodDiary.Application.Admin.Queries.GetAdminMailInboxMessages;
 using FoodDiary.Application.Admin.Queries.GetAdminUser;
 using FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
+using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Abstractions.Ai.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
@@ -1438,6 +1439,9 @@ public class AdminFeatureTests {
 
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => Task.FromResult<User?>(_user.Id == id ? _user : null);
 
+        async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();
+
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1453,11 +1457,28 @@ public class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
+        Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            UserAccountStatusFilter status,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetAdminDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
 
         public Task<(int TotalUsers, int ActiveUsers, int PremiumUsers, int DeletedUsers, IReadOnlyList<User> RecentUsers)> GetDashboardSummaryAsync(int recentLimit, CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
+
+        Task<AdminDashboardSummaryModel> IAdminUserReadService.GetDashboardSummaryAsync(
+            int recentLimit,
+            int pendingReportsCount,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+
+        async Task<bool> IAdminUserReadService.ExistsIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false) is not null;
 
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) {
             var found = names.Where(name => _roles.ContainsKey(name)).Select(name => _roles[name]).ToList();
@@ -1587,10 +1608,28 @@ public class AdminFeatureTests {
             CancellationToken cancellationToken = default) =>
             GetAdminDashboardSummaryAsync(recentLimit, cancellationToken);
 
+        public async Task<AdminDashboardSummaryModel> GetDashboardSummaryAsync(
+            int recentLimit,
+            int pendingReportsCount,
+            CancellationToken cancellationToken = default) {
+            (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
+                await GetAdminDashboardSummaryAsync(recentLimit, cancellationToken).ConfigureAwait(false);
+
+            return new AdminDashboardSummaryModel(
+                totalUsers,
+                activeUsers,
+                premiumUsers,
+                deletedUsers,
+                pendingReportsCount,
+                [.. recentUsers.Select(AdminUserMappings.ToAdminModel)]);
+        }
+
         public Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByEmailIncludingDeletedAsync(string email, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByIdIncludingDeletedAsync(UserId id, CancellationToken cancellationToken = default) => throw new NotSupportedException();
+        async Task<AdminUserModel?> IAdminUserReadService.GetByIdIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
+            (await GetByIdIncludingDeletedAsync(userId, cancellationToken).ConfigureAwait(false))?.ToAdminModel();
         public Task<User?> GetByTelegramUserIdAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User?> GetByTelegramUserIdIncludingDeletedAsync(long telegramUserId, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<(IReadOnlyList<User> Items, int TotalItems)> GetPagedAsync(string? search, int page, int limit, bool includeDeleted, CancellationToken cancellationToken = default) => throw new NotSupportedException();
@@ -1600,6 +1639,15 @@ public class AdminFeatureTests {
             int limit,
             UserAccountStatusFilter status,
             CancellationToken cancellationToken = default) =>
+            throw new NotSupportedException();
+        Task<(IReadOnlyList<AdminUserModel> Items, int TotalItems)> IAdminUserReadService.GetPagedAsync(
+            string? search,
+            int page,
+            int limit,
+            UserAccountStatusFilter status,
+            CancellationToken cancellationToken) =>
+            throw new NotSupportedException();
+        public Task<bool> ExistsIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken = default) =>
             throw new NotSupportedException();
         public Task<IReadOnlyList<Role>> GetRolesByNamesAsync(IReadOnlyList<string> names, CancellationToken cancellationToken = default) => throw new NotSupportedException();
         public Task<User> AddAsync(User user, CancellationToken cancellationToken = default) => throw new NotSupportedException();

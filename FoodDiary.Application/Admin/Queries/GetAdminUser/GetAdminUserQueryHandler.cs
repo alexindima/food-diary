@@ -1,10 +1,8 @@
-using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUser;
 
@@ -18,9 +16,9 @@ public sealed class GetAdminUserQueryHandler(IAdminUserReadService userReadServi
                 Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
         }
 
-        User? user = await userReadService.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
+        AdminUserModel? user = await userReadService.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
         return user is null
             ? Result.Failure<AdminUserModel>(Errors.User.NotFound(query.UserId))
-            : Result.Success(user.ToAdminModel());
+            : Result.Success(user);
     }
 }

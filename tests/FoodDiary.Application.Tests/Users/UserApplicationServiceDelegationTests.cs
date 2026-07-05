@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Users.Common;
+using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Services;
 using FoodDiary.Application.Authentication.Services;
 using FoodDiary.Application.Billing.Services;
@@ -100,20 +101,23 @@ public sealed class UserApplicationServiceDelegationTests {
             .GetAdminDashboardSummaryAsync(recentLimit: 3, cancellationTokenSource.Token)
             .Returns((TotalUsers: 10, ActiveUsers: 8, PremiumUsers: 2, DeletedUsers: 1, RecentUsers: users));
 
-        User? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
-        (IReadOnlyList<User> items, int totalItems) = await service.GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
-        (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<User> recentUsers) =
-            await service.GetDashboardSummaryAsync(3, cancellationTokenSource.Token);
+        AdminUserModel? byId = await service.GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
+        (IReadOnlyList<AdminUserModel> items, int totalItems) = await service.GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
+        AdminDashboardSummaryModel summary = await service.GetDashboardSummaryAsync(
+            recentLimit: 3,
+            pendingReportsCount: 4,
+            cancellationTokenSource.Token);
 
         Assert.Multiple(
-            () => Assert.Same(user, byId),
-            () => Assert.Same(users, items),
+            () => Assert.Equal(user.Id.Value, byId?.Id),
+            () => Assert.Equal(user.Id.Value, Assert.Single(items).Id),
             () => Assert.Equal(10, totalItems),
-            () => Assert.Equal(10, totalUsers),
-            () => Assert.Equal(8, activeUsers),
-            () => Assert.Equal(2, premiumUsers),
-            () => Assert.Equal(1, deletedUsers),
-            () => Assert.Same(users, recentUsers));
+            () => Assert.Equal(10, summary.TotalUsers),
+            () => Assert.Equal(8, summary.ActiveUsers),
+            () => Assert.Equal(2, summary.PremiumUsers),
+            () => Assert.Equal(1, summary.DeletedUsers),
+            () => Assert.Equal(4, summary.PendingReportsCount),
+            () => Assert.Equal(user.Id.Value, Assert.Single(summary.RecentUsers).Id));
         await lookupRepository.Received(1).GetByIdIncludingDeletedAsync(userId, cancellationTokenSource.Token);
         await adminReadRepository.Received(1).GetPagedAsync("adm", 2, 5, UserAccountStatusFilter.Deleted, cancellationTokenSource.Token);
         await adminReadRepository.Received(1).GetAdminDashboardSummaryAsync(3, cancellationTokenSource.Token);

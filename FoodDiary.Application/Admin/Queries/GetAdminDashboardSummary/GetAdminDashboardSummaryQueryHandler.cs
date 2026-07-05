@@ -1,4 +1,3 @@
-using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Admin.Models;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
@@ -15,19 +14,13 @@ public sealed class GetAdminDashboardSummaryQueryHandler(
     public async Task<Result<AdminDashboardSummaryModel>> Handle(
         GetAdminDashboardSummaryQuery query,
         CancellationToken cancellationToken) {
-        (int totalUsers, int activeUsers, int premiumUsers, int deletedUsers, IReadOnlyList<Domain.Entities.Users.User> recentUsers) =
-            await userReadService.GetDashboardSummaryAsync(query.RecentLimit, cancellationToken).ConfigureAwait(false);
-
         int pendingReportsCount = await contentReportRepository.CountByStatusAsync(
             ReportStatus.Pending, cancellationToken).ConfigureAwait(false);
 
-        var response = new AdminDashboardSummaryModel(
-            totalUsers,
-            activeUsers,
-            premiumUsers,
-            deletedUsers,
+        AdminDashboardSummaryModel response = await userReadService.GetDashboardSummaryAsync(
+            query.RecentLimit,
             pendingReportsCount,
-            recentUsers.Select(AdminUserMappings.ToAdminModel).ToArray());
+            cancellationToken).ConfigureAwait(false);
 
         return Result.Success(response);
     }

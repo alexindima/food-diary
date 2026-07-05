@@ -3,7 +3,6 @@ using FoodDiary.Application.Abstractions.Admin.Models;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Admin.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Admin.Queries.GetAdminUserRoleAudit;
@@ -20,8 +19,8 @@ public sealed class GetAdminUserRoleAuditQueryHandler(
                 Errors.Validation.Invalid(nameof(query.UserId), "User id must not be empty."));
         }
 
-        User? user = await userReadService.GetByIdIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
-        if (user is null) {
+        bool userExists = await userReadService.ExistsIncludingDeletedAsync(new UserId(query.UserId), cancellationToken).ConfigureAwait(false);
+        if (!userExists) {
             return Result.Failure<IReadOnlyList<AdminUserRoleAuditEventReadModel>>(Errors.User.NotFound(query.UserId));
         }
 
