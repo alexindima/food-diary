@@ -24,4 +24,11 @@ internal sealed class HydrationEntryReadService(IHydrationEntryReadRepository hy
         DateTime dateUtc,
         CancellationToken cancellationToken) =>
         hydrationEntryRepository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+
+    public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken) =>
+        hydrationEntryRepository.GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
 }

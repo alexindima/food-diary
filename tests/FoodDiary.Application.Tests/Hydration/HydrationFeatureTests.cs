@@ -521,6 +521,13 @@ public class HydrationFeatureTests {
             DateTime dateUtc,
             CancellationToken cancellationToken) =>
             GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+
+        Task<IReadOnlyList<(DateTime Date, int TotalMl)>> IHydrationEntryReadService.GetDailyTotalsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken) =>
+            GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
     }
 
     private static ICurrentUserAccessService CreateCurrentUserAccessService(User user) {
@@ -615,5 +622,12 @@ public class HydrationFeatureTests {
             DateTime dateUtc,
             CancellationToken cancellationToken) =>
             GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+
+        Task<IReadOnlyList<(DateTime Date, int TotalMl)>> IHydrationEntryReadService.GetDailyTotalsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken) =>
+            GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
     }
 }

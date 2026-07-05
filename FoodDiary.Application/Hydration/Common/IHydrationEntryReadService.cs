@@ -13,4 +13,10 @@ public interface IHydrationEntryReadService {
         UserId userId,
         DateTime dateUtc,
         CancellationToken cancellationToken);
+
+    Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken);
 }

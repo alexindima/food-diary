@@ -3,10 +3,14 @@ using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.WaistEntries.Common;
+using FoodDiary.Application.Hydration.Common;
+using FoodDiary.Application.Hydration.Models;
+using FoodDiary.Application.WaistEntries.Services;
 using FoodDiary.Application.WeeklyCheckIn.Common;
 using FoodDiary.Application.WeeklyCheckIn.Services;
 using FoodDiary.Application.WeeklyCheckIn.Queries.GetWeeklyCheckIn;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -149,11 +153,12 @@ public class WeeklyCheckInFeatureTests {
         IHydrationEntryRepository? hydrationRepo = null,
         IWeeklyCheckInUserProfileService? profileService = null) =>
         new(
-            mealRepo ?? CreateMealRepository(),
-            statisticsReadService ?? CreateStatisticsReadService(),
-            weightRepo ?? CreateWeightEntryRepository(),
-            waistRepo ?? CreateWaistEntryRepository(),
-            hydrationRepo ?? CreateHydrationEntryRepository(),
+            new WeeklyCheckInReadService(
+                mealRepo ?? CreateMealRepository(),
+                statisticsReadService ?? CreateStatisticsReadService(),
+                new WeightEntryReadService(weightRepo ?? CreateWeightEntryRepository()),
+                new WaistEntryReadService(waistRepo ?? CreateWaistEntryRepository()),
+                new HydrationReadServiceAdapter(hydrationRepo ?? CreateHydrationEntryRepository())),
             profileService ?? CreateProfileService(user: null),
             new StubDateTimeProvider());
 
@@ -233,5 +238,27 @@ public class WeeklyCheckInFeatureTests {
     [ExcludeFromCodeCoverage]
     private sealed class StubDateTimeProvider : TimeProvider {
         public override DateTimeOffset GetUtcNow() => new(Today);
+    }
+
+    [ExcludeFromCodeCoverage]
+    private sealed class HydrationReadServiceAdapter(IHydrationEntryReadRepository repository) : IHydrationEntryReadService {
+        public Task<IReadOnlyList<HydrationEntryModel>> GetEntriesByDateAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) =>
+            Task.FromResult<IReadOnlyList<HydrationEntryModel>>([]);
+
+        public Task<int> GetDailyTotalAsync(
+            UserId userId,
+            DateTime dateUtc,
+            CancellationToken cancellationToken) =>
+            repository.GetDailyTotalAsync(userId, dateUtc, cancellationToken);
+
+        public Task<IReadOnlyList<(DateTime Date, int TotalMl)>> GetDailyTotalsAsync(
+            UserId userId,
+            DateTime dateFrom,
+            DateTime dateTo,
+            CancellationToken cancellationToken) =>
+            repository.GetDailyTotalsAsync(userId, dateFrom, dateTo, cancellationToken);
     }
 }

@@ -1,4 +1,6 @@
 using FoodDiary.Application.Tdee.Models;
+using FoodDiary.Application.Exercises.Models;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -24,7 +26,31 @@ public static class TdeeCalculator {
         IReadOnlyDictionary<DateTime, double> dailyCalories,
         int periodDays,
         IReadOnlyList<ExerciseEntry>? exerciseEntries = null) {
-        var sortedWeights = weightEntries.OrderBy(w => w.Date).ToList();
+        return CalculateAdaptiveCore(
+            [.. weightEntries.Select(entry => new WeightSample(entry.Date, entry.Weight))],
+            dailyCalories,
+            periodDays,
+            exerciseEntries?.Select(entry => new ExerciseSample(entry.CaloriesBurned)).ToArray());
+    }
+
+    public static AdaptiveTdeeResult CalculateAdaptive(
+        IReadOnlyList<WeightEntryModel> weightEntries,
+        IReadOnlyDictionary<DateTime, double> dailyCalories,
+        int periodDays,
+        IReadOnlyList<ExerciseEntryModel>? exerciseEntries = null) {
+        return CalculateAdaptiveCore(
+            [.. weightEntries.Select(entry => new WeightSample(entry.Date, entry.Weight))],
+            dailyCalories,
+            periodDays,
+            exerciseEntries?.Select(entry => new ExerciseSample(entry.CaloriesBurned)).ToArray());
+    }
+
+    private static AdaptiveTdeeResult CalculateAdaptiveCore(
+        IReadOnlyList<WeightSample> weightEntries,
+        IReadOnlyDictionary<DateTime, double> dailyCalories,
+        int periodDays,
+        IReadOnlyList<ExerciseSample>? exerciseEntries) {
+        var sortedWeights = weightEntries.OrderBy(static w => w.Date).ToList();
         if (sortedWeights.Count < MinWeightEntries || periodDays < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;
         }
@@ -125,7 +151,7 @@ public static class TdeeCalculator {
     }
 
     private static double CalculateAvgDailyExercise(
-        IReadOnlyList<ExerciseEntry>? exerciseEntries,
+        IReadOnlyList<ExerciseSample>? exerciseEntries,
         int daysWithCalories) {
         if (exerciseEntries is null || exerciseEntries.Count == 0 || daysWithCalories <= 0) {
             return 0;
@@ -141,9 +167,9 @@ public static class TdeeCalculator {
     /// When fromStart=false, runs EMA backward (from end) and returns the value at the midpoint.
     /// This gives a smoothed estimate of weight at the beginning and end of the period.
     /// </summary>
-    private static double GetEmaWeight(IReadOnlyList<WeightEntry> sorted, bool fromStart) {
+    private static double GetEmaWeight(IReadOnlyList<WeightSample> sorted, bool fromStart) {
         if (sorted.Count <= 3) {
-            IEnumerable<WeightEntry> entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
+            IEnumerable<WeightSample> entries = fromStart ? sorted.Take(sorted.Count) : sorted.TakeLast(sorted.Count);
             return entries.Average(w => w.Weight);
         }
 
@@ -175,4 +201,8 @@ public static class TdeeCalculator {
             _ => TdeeConfidence.Low,
         };
     }
+
+    private sealed record WeightSample(DateTime Date, double Weight);
+
+    private sealed record ExerciseSample(double CaloriesBurned);
 }

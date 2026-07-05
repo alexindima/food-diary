@@ -767,6 +767,9 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, tdeeQueryFiles, "IMealReadRepository"),
             .. FindReferencesInFiles(root, tdeeQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, tdeeQueryFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, tdeeQueryFiles, "IWeightEntryReadRepository"),
+            .. FindReferencesInFiles(root, tdeeQueryFiles, "IExerciseEntryReadRepository"),
         ];
 
         Assert.Empty(violations);
@@ -810,6 +813,11 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "FoodDiary.Domain.Entities.Meals"),
             .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "mealRepository.GetByPeriodAsync"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "IWeightEntryReadRepository"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "IWaistEntryReadRepository"),
+            .. FindReferencesInFiles(root, weeklyCheckInQueryFiles, "IHydrationEntryReadRepository"),
         ];
 
         Assert.Empty(violations);

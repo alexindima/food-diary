@@ -149,6 +149,7 @@ public static class DependencyInjection {
         services.AddScoped<IWeightEntryReadService, WeightEntryReadService>();
         services.AddScoped<ITdeeUserProfileService, TdeeUserProfileService>();
         services.AddScoped<IWeeklyCheckInUserProfileService, WeeklyCheckInUserProfileService>();
+        services.AddScoped<IWeeklyCheckInReadService, WeeklyCheckInReadService>();
         services.AddScoped<IUsdaDailyMicronutrientReadService, UsdaDailyMicronutrientReadService>();
 
         return services;

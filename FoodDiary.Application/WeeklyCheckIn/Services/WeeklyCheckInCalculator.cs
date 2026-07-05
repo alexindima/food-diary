@@ -1,5 +1,7 @@
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.WaistEntries.Models;
 using FoodDiary.Application.WeeklyCheckIn.Models;
+using FoodDiary.Application.WeightEntries.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 
@@ -39,6 +41,36 @@ public static class WeeklyCheckInCalculator {
         IReadOnlyList<WeightEntry> weights,
         IReadOnlyList<WaistEntry> waists,
         IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
+        int daysInPeriod) =>
+        BuildSummaryCore(
+            nutritionBuckets,
+            mealsLogged,
+            [.. weights.Select(static entry => new WeightSample(entry.Date, entry.Weight))],
+            [.. waists.Select(static entry => new WaistSample(entry.Date, entry.Circumference))],
+            hydration,
+            daysInPeriod);
+
+    public static WeekSummaryModel BuildSummary(
+        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        int mealsLogged,
+        IReadOnlyList<WeightEntryModel> weights,
+        IReadOnlyList<WaistEntryModel> waists,
+        IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
+        int daysInPeriod) =>
+        BuildSummaryCore(
+            nutritionBuckets,
+            mealsLogged,
+            [.. weights.Select(static entry => new WeightSample(entry.Date, entry.Weight))],
+            [.. waists.Select(static entry => new WaistSample(entry.Date, entry.Circumference))],
+            hydration,
+            daysInPeriod);
+
+    private static WeekSummaryModel BuildSummaryCore(
+        IReadOnlyList<DashboardStatisticsBucketReadModel> nutritionBuckets,
+        int mealsLogged,
+        IReadOnlyList<WeightSample> weights,
+        IReadOnlyList<WaistSample> waists,
+        IReadOnlyList<(DateTime Date, int TotalMl)> hydration,
         int daysInPeriod) {
         double totalCalories = nutritionBuckets.Sum(bucket => bucket.TotalCalories);
         double avgDaily = daysInPeriod > 0 ? totalCalories / daysInPeriod : 0;
@@ -73,6 +105,10 @@ public static class WeeklyCheckInCalculator {
             totalHydration,
             avgHydration);
     }
+
+    private sealed record WeightSample(DateTime Date, double Weight);
+
+    private sealed record WaistSample(DateTime Date, double Circumference);
 
     public static WeekTrendModel BuildTrends(WeekSummaryModel thisWeek, WeekSummaryModel lastWeek) {
         return new WeekTrendModel(

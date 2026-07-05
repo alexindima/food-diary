@@ -1,9 +1,11 @@
 using FoodDiary.Application.Abstractions.Exercises.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
 using FoodDiary.Application.Abstractions.Dashboard.Models;
+using FoodDiary.Application.Exercises.Services;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
+using FoodDiary.Application.WeightEntries.Services;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -85,9 +87,9 @@ public class TdeeFeatureTests {
         ITdeeUserProfileService? profileService = null) =>
         new(
             profileService ?? CreateProfileService(user: null),
-            CreateWeightEntryRepository(),
+            new WeightEntryReadService(CreateWeightEntryRepository()),
             CreateStatisticsReadService(),
-            CreateExerciseEntryRepository(),
+            new ExerciseEntryReadService(CreateExerciseEntryRepository()),
             new StubDateTimeProvider());
 
     private static ITdeeUserProfileService CreateProfileService(User? user) {
