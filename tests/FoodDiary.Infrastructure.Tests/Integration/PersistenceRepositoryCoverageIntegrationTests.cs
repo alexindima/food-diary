@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Billing.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Abstractions.Meals.Common;
@@ -1120,6 +1121,23 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         Assert.True(await repository.HasActiveRelationshipAsync(clientUserId, dietologistUserId));
         Assert.Single(await repository.GetActiveByDietologistAsync(dietologistUserId));
         Assert.NotNull(await repository.GetByClientAndStatusAsync(clientUserId, DietologistInvitationStatus.Accepted));
+
+        var pendingClient = User.Create($"pending-client-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(pendingClient);
+        await context.SaveChangesAsync();
+        await repository.AddAsync(DietologistInvitation.Create(
+            pendingClient.Id,
+            "pending-dietologist@example.com",
+            "pending_token_hash",
+            DateTime.UtcNow.AddDays(7),
+            DietologistPermissions.AllEnabled));
+        await context.SaveChangesAsync();
+
+        DietologistInvitationReadModel? pendingReadModel = await repository.GetByClientAndStatusReadModelAsync(
+            pendingClient.Id,
+            DietologistInvitationStatus.Pending);
+        Assert.NotNull(pendingReadModel);
+        Assert.Null(pendingReadModel.DietologistUserId);
     }
 
     private static BillingPayment CreateBillingPayment(

@@ -18,7 +18,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             .Select(i => new DietologistInvitationReadModel(
                 i.Id.Value,
                 i.ClientUserId.Value,
-                i.DietologistUserId == null ? null : i.DietologistUserId.Value.Value,
+                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
                 i.DietologistEmail,
                 i.ClientUser.Email,
                 i.ClientUser.FirstName,
@@ -89,7 +89,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             .Select(i => new DietologistInvitationReadModel(
                 i.Id.Value,
                 i.ClientUserId.Value,
-                i.DietologistUserId == null ? null : i.DietologistUserId.Value.Value,
+                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
                 i.DietologistEmail,
                 i.ClientUser.Email,
                 i.ClientUser.FirstName,
@@ -147,7 +147,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             .Select(i => new DietologistInvitationReadModel(
                 i.Id.Value,
                 i.ClientUserId.Value,
-                i.DietologistUserId == null ? null : i.DietologistUserId.Value.Value,
+                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
                 i.DietologistEmail,
                 i.ClientUser.Email,
                 i.ClientUser.FirstName,
@@ -201,7 +201,7 @@ public sealed class DietologistInvitationRepository(FoodDiaryDbContext context) 
             .Select(i => new DietologistInvitationReadModel(
                 i.Id.Value,
                 i.ClientUserId.Value,
-                i.DietologistUserId == null ? null : i.DietologistUserId.Value.Value,
+                i.DietologistUserId.HasValue ? i.DietologistUserId.Value.Value : null,
                 i.DietologistEmail,
                 i.ClientUser.Email,
                 i.ClientUser.FirstName,
