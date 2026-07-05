@@ -1,18 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Abstractions.Users.Common;
-using FoodDiary.Application.Dietologist.Mappings;
+using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetMyDietologistRelationship;
 
-public sealed class GetMyDietologistRelationshipQueryHandler(
-    IDietologistInvitationReadRepository invitationRepository,
-    ICurrentUserAccessService currentUserAccessService)
+public sealed class GetMyDietologistRelationshipQueryHandler(IDietologistInvitationReadService readService)
     : IQueryHandler<GetMyDietologistRelationshipQuery, Result<DietologistRelationshipModel?>> {
     public async Task<Result<DietologistRelationshipModel?>> Handle(
         GetMyDietologistRelationshipQuery query,
@@ -22,21 +16,6 @@ public sealed class GetMyDietologistRelationshipQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Error? accessError = await currentUserAccessService.EnsureCanAccessAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (accessError is not null) {
-            return Result.Failure<DietologistRelationshipModel?>(accessError);
-        }
-
-        DietologistInvitation? accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (accepted is not null) {
-            return Result.Success<DietologistRelationshipModel?>(accepted.ToRelationshipModel());
-        }
-
-        DietologistInvitation? pending = await invitationRepository.GetByClientAndStatusAsync(
-            userId,
-            DietologistInvitationStatus.Pending,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-
-        return Result.Success(pending?.ToRelationshipModel());
+        return await readService.GetMyRelationshipAsync(userId, cancellationToken).ConfigureAwait(false);
     }
 }

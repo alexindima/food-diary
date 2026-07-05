@@ -995,6 +995,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DietologistInvitationQueries_UseReadServiceInsteadOfInvitationRepository() {
+        string root = GetRepositoryRoot();
+        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
+        string[] invitationQueryFiles = [
+            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetInvitationForCurrentUser")),
+            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetInvitationByToken")),
+            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyDietologist")),
+            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyClients")),
+            .. SourceScanner.SourceFiles(Path.Combine(dietologistQueriesRoot, "GetMyDietologistRelationship")),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, invitationQueryFiles, "IDietologistInvitationReadRepository"),
+            .. FindReferencesInFiles(root, invitationQueryFiles, "FoodDiary.Domain.Entities.Dietologist"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void BillingQueries_UseBillingProfileModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Billing", "Queries");

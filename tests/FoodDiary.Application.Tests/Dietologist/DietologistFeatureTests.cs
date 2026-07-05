@@ -236,6 +236,52 @@ public class DietologistFeatureTests {
 
     // â”€â”€ InviteDietologist â”€â”€
 
+    private static GetInvitationForCurrentUserQueryHandler CreateGetInvitationForCurrentUserHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistUserContextService? userContextService = null) =>
+        new(CreateDietologistInvitationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userContextService ?? new InMemoryUserRepository(),
+            Substitute.For<ICurrentUserAccessService>()));
+
+    private static GetInvitationByTokenQueryHandler CreateGetInvitationByTokenHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        IDietologistUserContextService? userContextService = null) =>
+        new(CreateDietologistInvitationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            userContextService ?? new InMemoryUserRepository(),
+            Substitute.For<ICurrentUserAccessService>()));
+
+    private static GetMyDietologistQueryHandler CreateGetMyDietologistHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(CreateDietologistInvitationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            Substitute.For<IDietologistUserContextService>(),
+            currentUserAccessService ?? new InMemoryUserRepository()));
+
+    private static GetMyClientsQueryHandler CreateGetMyClientsHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(CreateDietologistInvitationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            Substitute.For<IDietologistUserContextService>(),
+            currentUserAccessService ?? new InMemoryUserRepository()));
+
+    private static GetMyDietologistRelationshipQueryHandler CreateGetMyDietologistRelationshipHandler(
+        IDietologistInvitationReadRepository? invitationRepository = null,
+        ICurrentUserAccessService? currentUserAccessService = null) =>
+        new(CreateDietologistInvitationReadService(
+            invitationRepository ?? new InMemoryInvitationRepository(),
+            Substitute.For<IDietologistUserContextService>(),
+            currentUserAccessService ?? new InMemoryUserRepository()));
+
+    private static IDietologistInvitationReadService CreateDietologistInvitationReadService(
+        IDietologistInvitationReadRepository invitationRepository,
+        IDietologistUserContextService userContextService,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService);
+
     [Fact]
     public async Task InviteDietologist_WithNullUserId_ReturnsFailure() {
         InviteDietologistCommandHandler handler = CreateInviteHandler();
@@ -766,7 +812,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetInvitationForCurrentUserQueryHandler(invRepo, userRepo);
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(invRepo, userRepo);
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
             new GetInvitationForCurrentUserQuery(dietologistId.Value, invitation.Id.Value),
@@ -778,8 +824,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetInvitationForCurrentUser_WithNullUserId_ReturnsFailure() {
-        var handler = new GetInvitationForCurrentUserQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler();
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
             new GetInvitationForCurrentUserQuery(UserId: null, Guid.NewGuid()),
@@ -794,7 +839,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(dietologistId, "diet@example.com"));
-        var handler = new GetInvitationForCurrentUserQueryHandler(new InMemoryInvitationRepository(), userRepo);
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(userContextService: userRepo);
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
             new GetInvitationForCurrentUserQuery(dietologistId.Value, Guid.NewGuid()),
@@ -807,7 +852,7 @@ public class DietologistFeatureTests {
     [Fact]
     public async Task GetInvitationForCurrentUser_WhenInvitationMissingAfterUserAccess_ReturnsFailure() {
         var dietologistId = UserId.New();
-        var handler = new GetInvitationForCurrentUserQueryHandler(
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(
             new InMemoryInvitationRepository(),
             new SequenceUserRepository(CreateUser(dietologistId, "diet@example.com"), null));
 
@@ -824,7 +869,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
-        var handler = new GetInvitationForCurrentUserQueryHandler(new InMemoryInvitationRepository(), userRepo);
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(userContextService: userRepo);
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
             new GetInvitationForCurrentUserQuery(dietologistId.Value, Guid.NewGuid()),
@@ -843,7 +888,7 @@ public class DietologistFeatureTests {
         DietologistInvitation invitation = CreatePendingInvitation(UserId.New(), "diet@example.com");
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
-        var handler = new GetInvitationForCurrentUserQueryHandler(invRepo, userRepo);
+        GetInvitationForCurrentUserQueryHandler handler = CreateGetInvitationForCurrentUserHandler(invRepo, userRepo);
 
         Result<DietologistInvitationForCurrentUserModel> result = await handler.Handle(
             new GetInvitationForCurrentUserQuery(dietologistId.Value, invitation.Id.Value),
@@ -1513,8 +1558,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetMyDietologist_WithNullUserId_ReturnsFailure() {
-        var handler = new GetMyDietologistQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetMyDietologistQueryHandler handler = CreateGetMyDietologistHandler();
 
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(UserId: null), CancellationToken.None);
@@ -1529,8 +1573,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = new GetMyDietologistQueryHandler(
-            new InMemoryInvitationRepository(), userRepo);
+        GetMyDietologistQueryHandler handler = CreateGetMyDietologistHandler(currentUserAccessService: userRepo);
 
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(userId.Value), CancellationToken.None);
@@ -1545,8 +1588,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(userId));
 
-        var handler = new GetMyDietologistQueryHandler(
-            new InMemoryInvitationRepository(), userRepo);
+        GetMyDietologistQueryHandler handler = CreateGetMyDietologistHandler(currentUserAccessService: userRepo);
 
         Result<DietologistInfoModel?> result = await handler.Handle(
             new GetMyDietologistQuery(userId.Value), CancellationToken.None);
@@ -1559,8 +1601,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetMyClients_WithNullUserId_ReturnsFailure() {
-        var handler = new GetMyClientsQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetMyClientsQueryHandler handler = CreateGetMyClientsHandler();
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(UserId: null), CancellationToken.None);
@@ -1575,8 +1616,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(user);
 
-        var handler = new GetMyClientsQueryHandler(
-            new InMemoryInvitationRepository(), userRepo);
+        GetMyClientsQueryHandler handler = CreateGetMyClientsHandler(currentUserAccessService: userRepo);
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(userId.Value), CancellationToken.None);
@@ -1591,8 +1631,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(userId));
 
-        var handler = new GetMyClientsQueryHandler(
-            new InMemoryInvitationRepository(), userRepo);
+        GetMyClientsQueryHandler handler = CreateGetMyClientsHandler(currentUserAccessService: userRepo);
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(
             new GetMyClientsQuery(userId.Value), CancellationToken.None);
@@ -1636,7 +1675,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetMyClientsQueryHandler(invRepo, userRepo);
+        GetMyClientsQueryHandler handler = CreateGetMyClientsHandler(invRepo, userRepo);
 
         Result<IReadOnlyList<ClientSummaryModel>> result = await handler.Handle(new GetMyClientsQuery(dietologistId.Value), CancellationToken.None);
 
@@ -1657,9 +1696,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetInvitationByToken_WhenNotFound_ReturnsFailure() {
-        var handler = new GetInvitationByTokenQueryHandler(
-            new InMemoryInvitationRepository(),
-            new InMemoryUserRepository());
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler();
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(Guid.NewGuid(), Guid.NewGuid()), CancellationToken.None);
@@ -1669,9 +1706,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetInvitationByToken_WithEmptyUserId_ReturnsFailure() {
-        var handler = new GetInvitationByTokenQueryHandler(
-            new InMemoryInvitationRepository(),
-            new InMemoryUserRepository());
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler();
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(Guid.Empty, Guid.NewGuid()), CancellationToken.None);
@@ -1692,7 +1727,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetInvitationByTokenQueryHandler(invRepo, userRepo);
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler(invRepo, userRepo);
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value), CancellationToken.None);
@@ -1711,7 +1746,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         userRepo.Seed(CreateUser(dietologistId, "diet@example.com"));
 
-        var handler = new GetInvitationByTokenQueryHandler(invRepo, userRepo);
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler(invRepo, userRepo);
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value), CancellationToken.None);
@@ -1728,7 +1763,7 @@ public class DietologistFeatureTests {
         var dietologistId = UserId.New();
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateUser(dietologistId, "other@example.com"));
-        var handler = new GetInvitationByTokenQueryHandler(invRepo, userRepo);
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler(invRepo, userRepo);
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value),
@@ -1748,7 +1783,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetInvitationByTokenQueryHandler(invRepo, userRepo);
+        GetInvitationByTokenQueryHandler handler = CreateGetInvitationByTokenHandler(invRepo, userRepo);
 
         Result<InvitationModel> result = await handler.Handle(
             new GetInvitationByTokenQuery(dietologistId.Value, invitation.Id.Value),
@@ -2211,8 +2246,7 @@ public class DietologistFeatureTests {
 
     [Fact]
     public async Task GetMyDietologistRelationship_WithNullUserId_ReturnsFailure() {
-        var handler = new GetMyDietologistRelationshipQueryHandler(
-            new InMemoryInvitationRepository(), new InMemoryUserRepository());
+        GetMyDietologistRelationshipQueryHandler handler = CreateGetMyDietologistRelationshipHandler();
 
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(UserId: null), CancellationToken.None);
@@ -2227,8 +2261,7 @@ public class DietologistFeatureTests {
         var userRepo = new InMemoryUserRepository();
         userRepo.Seed(CreateDeletedUser(userId));
 
-        var handler = new GetMyDietologistRelationshipQueryHandler(
-            new InMemoryInvitationRepository(), userRepo);
+        GetMyDietologistRelationshipQueryHandler handler = CreateGetMyDietologistRelationshipHandler(currentUserAccessService: userRepo);
 
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(userId.Value), CancellationToken.None);
@@ -2247,7 +2280,7 @@ public class DietologistFeatureTests {
         var invRepo = new InMemoryInvitationRepository();
         invRepo.Seed(invitation);
 
-        var handler = new GetMyDietologistRelationshipQueryHandler(invRepo, userRepo);
+        GetMyDietologistRelationshipQueryHandler handler = CreateGetMyDietologistRelationshipHandler(invRepo, userRepo);
 
         Result<DietologistRelationshipModel?> result = await handler.Handle(
             new GetMyDietologistRelationshipQuery(userId.Value), CancellationToken.None);
