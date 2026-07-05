@@ -16,13 +16,19 @@ public static class TdeeCalculator {
         IReadOnlyList<WeightEntry> weightEntries,
         IReadOnlyList<Meal> meals,
         int periodDays,
+        IReadOnlyList<ExerciseEntry>? exerciseEntries = null) =>
+        CalculateAdaptive(weightEntries, CalculateDailyCalories(meals), periodDays, exerciseEntries);
+
+    public static AdaptiveTdeeResult CalculateAdaptive(
+        IReadOnlyList<WeightEntry> weightEntries,
+        IReadOnlyDictionary<DateTime, double> dailyCalories,
+        int periodDays,
         IReadOnlyList<ExerciseEntry>? exerciseEntries = null) {
         var sortedWeights = weightEntries.OrderBy(w => w.Date).ToList();
         if (sortedWeights.Count < MinWeightEntries || periodDays < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;
         }
 
-        Dictionary<DateTime, double> dailyCalories = CalculateDailyCalories(meals);
         int daysWithCalories = dailyCalories.Count;
         if (daysWithCalories < MinDaysForAdaptive) {
             return AdaptiveTdeeResult.Insufficient;

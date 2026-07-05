@@ -755,6 +755,20 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void TdeeQueries_UseStatisticsReadServiceInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string tdeeQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Tdee", "Queries");
+        string[] tdeeQueryFiles = [.. SourceScanner.SourceFiles(tdeeQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, tdeeQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, tdeeQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

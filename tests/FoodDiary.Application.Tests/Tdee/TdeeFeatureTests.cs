@@ -1,9 +1,9 @@
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
-using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -86,7 +86,7 @@ public class TdeeFeatureTests {
         new(
             profileService ?? CreateProfileService(user: null),
             CreateWeightEntryRepository(),
-            CreateMealRepository(),
+            CreateStatisticsReadService(),
             CreateExerciseEntryRepository(),
             new StubDateTimeProvider());
 
@@ -130,12 +130,12 @@ public class TdeeFeatureTests {
         return repository;
     }
 
-    private static IMealRepository CreateMealRepository() {
-        IMealRepository repository = Substitute.For<IMealRepository>();
-        repository
-            .GetByPeriodAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
-            .Returns(Task.FromResult<IReadOnlyList<Meal>>([]));
-        return repository;
+    private static IDashboardStatisticsReadService CreateStatisticsReadService() {
+        IDashboardStatisticsReadService service = Substitute.For<IDashboardStatisticsReadService>();
+        service
+            .GetStatisticsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<DateTime>(), Arg.Any<int>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult(Result.Success<IReadOnlyList<DashboardStatisticsBucketReadModel>>([])));
+        return service;
     }
 
     private static IExerciseEntryRepository CreateExerciseEntryRepository() {

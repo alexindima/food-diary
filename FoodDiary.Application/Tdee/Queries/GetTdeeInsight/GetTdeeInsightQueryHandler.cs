@@ -1,22 +1,22 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Models;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Exercises.Common;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Tdee.Common;
 using FoodDiary.Application.Tdee.Models;
 using FoodDiary.Application.Tdee.Services;
 using FoodDiary.Application.Abstractions.WeightEntries.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Tracking;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Tdee.Queries.GetTdeeInsight;
 
 public sealed class GetTdeeInsightQueryHandler(
     ITdeeUserProfileService tdeeUserProfileService,
     IWeightEntryReadRepository weightEntryRepository,
-    IMealReadRepository mealRepository,
+    IDashboardStatisticsReadService statisticsReadService,
     IExerciseEntryReadRepository exerciseEntryRepository,
     TimeProvider dateTimeProvider)
     : IQueryHandler<GetTdeeInsightQuery, Result<TdeeInsightModel>> {
@@ -42,13 +42,26 @@ public sealed class GetTdeeInsightQueryHandler(
         DateTime periodStart = today.AddDays(-AnalysisPeriodDays);
 
         IReadOnlyList<WeightEntry> weights = await weightEntryRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
-        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
+        Result<IReadOnlyList<DashboardStatisticsBucketReadModel>> dailyCaloriesResult = await statisticsReadService.GetStatisticsAsync(
+            userId,
+            periodStart,
+            today,
+            quantizationDays: 1,
+            cancellationToken).ConfigureAwait(false);
+        if (dailyCaloriesResult.IsFailure) {
+            return Result.Failure<TdeeInsightModel>(dailyCaloriesResult.Error);
+        }
+
         IReadOnlyList<ExerciseEntry> exercises = await exerciseEntryRepository.GetByDateRangeAsync(userId, periodStart, today, cancellationToken).ConfigureAwait(false);
 
         double? bmr = profile.Bmr;
         double? estimatedTdee = profile.EstimatedTdee;
 
-        AdaptiveTdeeResult adaptiveResult = TdeeCalculator.CalculateAdaptive(weights, meals, AnalysisPeriodDays, exercises);
+        AdaptiveTdeeResult adaptiveResult = TdeeCalculator.CalculateAdaptive(
+            weights,
+            ToDailyCalories(dailyCaloriesResult.Value),
+            AnalysisPeriodDays,
+            exercises);
 
         double? effectiveTdee = adaptiveResult.HasData ? adaptiveResult.AdaptiveTdee : estimatedTdee;
         double? suggestedTarget = effectiveTdee.HasValue
@@ -69,4 +82,9 @@ public sealed class GetTdeeInsightQueryHandler(
             DataDaysUsed: adaptiveResult.DataDaysUsed,
             GoalAdjustmentHint: hint));
     }
+
+    private static IReadOnlyDictionary<DateTime, double> ToDailyCalories(IReadOnlyList<DashboardStatisticsBucketReadModel> buckets) =>
+        buckets
+            .Where(static bucket => bucket.TotalCalories > 0)
+            .ToDictionary(static bucket => bucket.DateFrom.Date, static bucket => bucket.TotalCalories);
 }
