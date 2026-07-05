@@ -237,10 +237,10 @@ public class AiValidatorsTests {
 
     [Fact]
     public async Task GetUserAiUsageSummaryQueryHandler_WithEmptyUserId_ReturnsValidationFailure() {
-        var handler = new GetUserAiUsageSummaryQueryHandler(
+        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(
             CreateAiUserContextService(User.Create("ai-empty-user@example.com", "hash")),
             CreateAiUsageRepository(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc))));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(Guid.Empty), CancellationToken.None);
 
@@ -373,7 +373,7 @@ public class AiValidatorsTests {
         IAiUserContextService aiUserContextService = CreateAiUserContextService(user);
         IAiUsageRepository aiUsageRepository = CreateAiUsageRepository(out Func<(DateTime FromUtc, DateTime ToUtc)> getLastPeriod);
         var dateTimeProvider = new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc));
-        var handler = new GetUserAiUsageSummaryQueryHandler(aiUserContextService, aiUsageRepository, dateTimeProvider);
+        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(aiUserContextService, aiUsageRepository, dateTimeProvider));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
@@ -387,10 +387,10 @@ public class AiValidatorsTests {
     public async Task GetUserAiUsageSummaryQueryHandler_WithInactiveUser_ReturnsInvalidToken() {
         var user = User.Create("inactive-ai@example.com", "hash");
         user.Deactivate();
-        var handler = new GetUserAiUsageSummaryQueryHandler(
+        var handler = new GetUserAiUsageSummaryQueryHandler(CreateUserAiUsageSummaryReadService(
             CreateAiUserContextService(user),
             CreateAiUsageRepository(),
-            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc)));
+            new FixedDateTimeProvider(new DateTime(2026, 3, 26, 15, 30, 0, DateTimeKind.Utc))));
 
         Result<UserAiUsageModel> result = await handler.Handle(new GetUserAiUsageSummaryQuery(user.Id.Value), CancellationToken.None);
 
@@ -420,6 +420,12 @@ public class AiValidatorsTests {
             });
         return service;
     }
+
+    private static IUserAiUsageSummaryReadService CreateUserAiUsageSummaryReadService(
+        IAiUserContextService aiUserContextService,
+        IAiUsageReadRepository aiUsageRepository,
+        TimeProvider dateTimeProvider) =>
+        new UserAiUsageSummaryReadService(aiUserContextService, aiUsageRepository, dateTimeProvider);
 
     private static IImageAssetRepository CreateImageAssetRepository(ImageAsset? asset = null) {
         IImageAssetRepository repository = Substitute.For<IImageAssetRepository>();

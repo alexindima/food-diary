@@ -4,6 +4,7 @@ using FoodDiary.Application.Fasting.Commands.RecordFastingTelemetry;
 using FoodDiary.Application.Abstractions.Fasting.Common;
 using FoodDiary.Application.Fasting.Models;
 using FoodDiary.Application.Fasting.Queries.GetFastingTelemetrySummary;
+using FoodDiary.Application.Fasting.Services;
 using FoodDiary.Presentation.Api.Features.Logs.Requests;
 
 namespace FoodDiary.Presentation.Api.Tests;
@@ -188,7 +189,7 @@ public sealed class FastingTelemetrySummaryServiceTests {
     }
 
     private static GetFastingTelemetrySummaryQueryHandler CreateHandler(IFastingTelemetryEventRepository repository) =>
-        new(repository, TimeProvider.System);
+        new(new FastingTelemetrySummaryReadService(repository, TimeProvider.System));
 
     private static async Task RecordAsync(
         IFastingTelemetryEventRepository repository,

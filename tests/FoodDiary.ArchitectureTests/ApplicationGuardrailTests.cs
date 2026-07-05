@@ -1051,6 +1051,7 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, fastingQueryFiles, "FoodDiary.Domain.Entities.Tracking.Fasting"),
             .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingOccurrenceReadRepository"),
             .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingCheckInReadRepository"),
+            .. FindReferencesInFiles(root, fastingQueryFiles, "IFastingTelemetryEventReadRepository"),
         ];
 
         Assert.Empty(violations);
@@ -1098,6 +1099,20 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, socialQueryFiles, "Domain.Entities.Recipes.RecipeComment"),
             .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeLikeReadRepository"),
             .. FindReferencesInFiles(root, socialQueryFiles, "IRecipeCommentReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void AiQueries_UseReadServicesInsteadOfUsageRepositories() {
+        string root = GetRepositoryRoot();
+        string aiQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Ai", "Queries");
+        string[] aiQueryFiles = [.. SourceScanner.SourceFiles(aiQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageReadRepository"),
+            .. FindReferencesInFiles(root, aiQueryFiles, "IAiUsageRepository"),
         ];
 
         Assert.Empty(violations);

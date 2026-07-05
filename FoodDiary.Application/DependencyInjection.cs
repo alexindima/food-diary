@@ -106,6 +106,7 @@ public static class DependencyInjection {
         services.AddScoped<IAdminUserManagementService, AdminUserManagementService>();
         services.AddScoped<IAdminUserReadService, AdminUserReadService>();
         services.AddScoped<IAiUserContextService, AiUserContextService>();
+        services.AddScoped<IUserAiUsageSummaryReadService, UserAiUsageSummaryReadService>();
         services.AddScoped<IAuthenticationUserLookupService, AuthenticationUserLookupService>();
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
@@ -127,6 +128,7 @@ public static class DependencyInjection {
                 serviceProvider.GetRequiredService<Microsoft.Extensions.Logging.ILogger<DashboardSnapshotBuilder>>()));
         services.AddScoped<IFastingAnalyticsService, FastingAnalyticsService>();
         services.AddScoped<IFastingReadService, FastingReadService>();
+        services.AddScoped<IFastingTelemetrySummaryReadService, FastingTelemetrySummaryReadService>();
         services.AddScoped<IFastingNotificationScheduler, FastingNotificationScheduler>();
         services.AddScoped<IFavoriteMealReadService, FavoriteMealReadService>();
         services.AddScoped<IFavoriteProductReadService, FavoriteProductReadService>();
