@@ -1,13 +1,12 @@
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Notifications.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Notifications.Queries.GetUnreadCount;
 
 public sealed class GetUnreadCountQueryHandler(
-    INotificationReadRepository notificationRepository,
+    INotificationFeedReadService notificationFeedReadService,
     INotificationUserContextService notificationUserContextService)
     : IQueryHandler<GetUnreadCountQuery, Result<int>> {
     public async Task<Result<int>> Handle(GetUnreadCountQuery query, CancellationToken cancellationToken) {
@@ -21,11 +20,9 @@ public sealed class GetUnreadCountQueryHandler(
             return Result.Failure<int>(contextResult.Error);
         }
 
-        int count = await notificationRepository.GetUnreadCountAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (contextResult.Value.HasPassword) {
-            count -= await notificationRepository.GetUnreadCountAsync(userId, NotificationTypes.PasswordSetupSuggested, cancellationToken).ConfigureAwait(false);
-        }
-
+        int count = await notificationFeedReadService
+            .GetVisibleUnreadCountAsync(userId, contextResult.Value, cancellationToken)
+            .ConfigureAwait(false);
         return Result.Success(count);
     }
 }

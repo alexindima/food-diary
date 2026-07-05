@@ -935,6 +935,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void NotificationQueries_UseReadServicesInsteadOfNotificationAggregates() {
+        string root = GetRepositoryRoot();
+        string notificationQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Notifications", "Queries");
+        string[] notificationQueryFiles = [.. SourceScanner.SourceFiles(notificationQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, notificationQueryFiles, "FoodDiary.Domain.Entities.Notifications"),
+            .. FindReferencesInFiles(root, notificationQueryFiles, "INotificationReadRepository"),
+            .. FindReferencesInFiles(root, notificationQueryFiles, "IWebPushSubscriptionReadRepository"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

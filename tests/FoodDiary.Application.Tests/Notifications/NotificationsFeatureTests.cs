@@ -201,7 +201,9 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(userId, "info", "{}"));
         repo.Seed(Notification.Create(userId, "info", "{}"));
 
-        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(CreateUser(userId)));
+        var handler = new GetUnreadCountQueryHandler(
+            CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
+            CreateNotificationUserContextService(CreateUser(userId)));
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
             CancellationToken.None);
@@ -213,7 +215,7 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task GetUnreadCount_WithNullUserId_ReturnsInvalidToken() {
         var handler = new GetUnreadCountQueryHandler(
-            new InMemoryNotificationRepository(),
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()),
             CreateNotificationUserContextService(CreateUser()));
 
         Result<int> result = await handler.Handle(new GetUnreadCountQuery(UserId: null), CancellationToken.None);
@@ -229,7 +231,9 @@ public class NotificationsFeatureTests {
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, NotificationTypes.PasswordSetupSuggested, "{}"));
         repo.Seed(Notification.Create(userId, NotificationTypes.FastingCompleted, "{}"));
-        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(user));
+        var handler = new GetUnreadCountQueryHandler(
+            CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
+            CreateNotificationUserContextService(user));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -244,7 +248,9 @@ public class NotificationsFeatureTests {
         var userId = UserId.New();
         var repo = new InMemoryNotificationRepository();
         repo.Seed(Notification.Create(userId, "info", "{}"));
-        var handler = new GetUnreadCountQueryHandler(repo, CreateNotificationUserContextService(CreateDeletedUser(userId)));
+        var handler = new GetUnreadCountQueryHandler(
+            CreateNotificationFeedReadService(repo, new RecordingNotificationTextRenderer()),
+            CreateNotificationUserContextService(CreateDeletedUser(userId)));
 
         Result<int> result = await handler.Handle(
             new GetUnreadCountQuery(userId.Value),
@@ -402,9 +408,8 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task GetNotifications_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetNotificationsQueryHandler(
-            new InMemoryNotificationRepository(),
             CreateNotificationUserContextService(CreateUser()),
-            new RecordingNotificationTextRenderer());
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(Guid.Empty), CancellationToken.None);
 
@@ -416,9 +421,8 @@ public class NotificationsFeatureTests {
     public async Task GetNotifications_WhenUserDeleted_ReturnsAccessFailure() {
         var userId = UserId.New();
         var handler = new GetNotificationsQueryHandler(
-            new InMemoryNotificationRepository(),
             CreateNotificationUserContextService(CreateDeletedUser(userId)),
-            new RecordingNotificationTextRenderer());
+            CreateNotificationFeedReadService(new InMemoryNotificationRepository(), new RecordingNotificationTextRenderer()));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(userId.Value), CancellationToken.None);
 
@@ -433,7 +437,9 @@ public class NotificationsFeatureTests {
         repo.Seed(Notification.Create(user.Id, NotificationTypes.PasswordSetupSuggested, "{}"));
         repo.Seed(Notification.Create(user.Id, NotificationTypes.FastingCompleted, "{}"));
         var renderer = new RecordingNotificationTextRenderer();
-        var handler = new GetNotificationsQueryHandler(repo, CreateNotificationUserContextService(user), renderer);
+        var handler = new GetNotificationsQueryHandler(
+            CreateNotificationUserContextService(user),
+            CreateNotificationFeedReadService(repo, renderer));
 
         Result<IReadOnlyList<NotificationModel>> result = await handler.Handle(new GetNotificationsQuery(user.Id.Value), CancellationToken.None);
 
@@ -461,7 +467,7 @@ public class NotificationsFeatureTests {
             utcNow.AddMinutes(-1));
         var repository = new InMemoryWebPushSubscriptionRepository([active, expired]);
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            repository,
+            CreateWebPushSubscriptionReadService(repository),
             CreateCurrentUserAccessService(user),
             new FixedDateTimeProvider(utcNow));
 
@@ -477,7 +483,7 @@ public class NotificationsFeatureTests {
     [Fact]
     public async Task GetWebPushSubscriptions_WithEmptyUserId_ReturnsInvalidToken() {
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            new InMemoryWebPushSubscriptionRepository(),
+            CreateWebPushSubscriptionReadService(new InMemoryWebPushSubscriptionRepository()),
             CreateCurrentUserAccessService(CreateUser()),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
@@ -491,7 +497,7 @@ public class NotificationsFeatureTests {
     public async Task GetWebPushSubscriptions_WhenUserDeleted_ReturnsAccessFailure() {
         var userId = UserId.New();
         var handler = new GetWebPushSubscriptionsQueryHandler(
-            new InMemoryWebPushSubscriptionRepository(),
+            CreateWebPushSubscriptionReadService(new InMemoryWebPushSubscriptionRepository()),
             CreateCurrentUserAccessService(CreateDeletedUser(userId)),
             new FixedDateTimeProvider(DateTime.UtcNow));
 
@@ -1068,6 +1074,15 @@ public class NotificationsFeatureTests {
 
     private static INotificationUserContextService CreateNotificationUserContextService(User user) =>
         new NotificationUserContextService(new SingleUserRepository(user));
+
+    private static INotificationFeedReadService CreateNotificationFeedReadService(
+        INotificationReadRepository notificationRepository,
+        INotificationTextRenderer notificationTextRenderer) =>
+        new NotificationFeedReadService(notificationRepository, notificationTextRenderer);
+
+    private static IWebPushSubscriptionReadService CreateWebPushSubscriptionReadService(
+        IWebPushSubscriptionReadRepository webPushSubscriptionRepository) =>
+        new WebPushSubscriptionReadService(webPushSubscriptionRepository);
 
     [ExcludeFromCodeCoverage]
     private sealed class SingleUserRepository(User user) : IUserRepository, INotificationUserAccessService {

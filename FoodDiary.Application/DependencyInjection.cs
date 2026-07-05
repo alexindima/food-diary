@@ -94,6 +94,8 @@ public static class DependencyInjection {
         services.AddScoped<INotificationCleanupService, NotificationCleanupService>();
         services.AddScoped<INotificationUserAccessService, NotificationUserAccessService>();
         services.AddScoped<INotificationPreferencesService, NotificationPreferencesService>();
+        services.AddScoped<INotificationFeedReadService, NotificationFeedReadService>();
+        services.AddScoped<IWebPushSubscriptionReadService, WebPushSubscriptionReadService>();
         services.AddScoped<INotificationUserContextService, NotificationUserContextService>();
         services.AddScoped<INotificationWriter, NotificationWriter>();
         services.AddScoped<IGamificationUserProfileService, GamificationUserProfileService>();
