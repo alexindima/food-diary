@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.Shopping;
 
@@ -51,5 +52,57 @@ public static class ShoppingListMappings {
                 list.Name,
                 list.CreatedOnUtc,
                 list.Items.Count);
+    }
+
+    extension(ShoppingListReadModel list) {
+        public ShoppingListModel ToModel() {
+            var items = list.Items
+                .OrderBy(i => i.SortOrder)
+                .ThenBy(i => i.Id)
+                .Select(item => new ShoppingListItemModel(
+                    item.Id,
+                    item.ShoppingListId,
+                    item.ProductId,
+                    item.Name,
+                    item.Amount,
+                    item.Unit,
+                    item.Category,
+                    item.Aisle,
+                    item.Note,
+                    item.IsChecked,
+                    item.CheckedOnUtc,
+                    item.SortOrder,
+                    item.Sources
+                        .OrderBy(source => source.DayNumber ?? int.MaxValue)
+                        .ThenBy(source => source.Label, StringComparer.Ordinal)
+                        .Select(source => new ShoppingListItemSourceModel(
+                            source.Id,
+                            source.SourceType,
+                            source.MealPlanId,
+                            source.MealPlanMealId,
+                            source.RecipeId,
+                            source.Label,
+                            source.DayNumber,
+                            source.MealType,
+                            source.Amount,
+                            source.Unit))
+                        .ToList()))
+                .ToList();
+
+            return new ShoppingListModel(
+                list.Id,
+                list.Name,
+                list.CreatedAt,
+                items);
+        }
+    }
+
+    extension(ShoppingListSummaryReadModel list) {
+        public ShoppingListSummaryModel ToSummaryModel()
+            => new(
+                list.Id,
+                list.Name,
+                list.CreatedAt,
+                list.ItemsCount);
     }
 }

@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.MealPlans.Common;
+using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.MealPlans.Common;
 using FoodDiary.Application.MealPlans.Mappings;
 using FoodDiary.Application.MealPlans.Models;
-using FoodDiary.Domain.Entities.MealPlans;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -14,11 +14,11 @@ public sealed class MealPlanReadService(IMealPlanReadRepository mealPlanReposito
         UserId userId,
         DietType? dietTypeFilter,
         CancellationToken cancellationToken) {
-        IReadOnlyList<MealPlan> curatedPlans = await mealPlanRepository
-            .GetCuratedAsync(dietTypeFilter, cancellationToken)
+        IReadOnlyList<MealPlanSummaryReadModel> curatedPlans = await mealPlanRepository
+            .GetCuratedSummaryReadModelsAsync(dietTypeFilter, cancellationToken)
             .ConfigureAwait(false);
-        IReadOnlyList<MealPlan> userPlans = await mealPlanRepository
-            .GetByUserAsync(userId, cancellationToken)
+        IReadOnlyList<MealPlanSummaryReadModel> userPlans = await mealPlanRepository
+            .GetByUserSummaryReadModelsAsync(userId, cancellationToken)
             .ConfigureAwait(false);
 
         return curatedPlans
@@ -31,11 +31,11 @@ public sealed class MealPlanReadService(IMealPlanReadRepository mealPlanReposito
         MealPlanId mealPlanId,
         UserId userId,
         CancellationToken cancellationToken) {
-        MealPlan? plan = await mealPlanRepository
-            .GetByIdAsync(mealPlanId, includeDays: true, cancellationToken)
+        MealPlanReadModel? plan = await mealPlanRepository
+            .GetReadModelByIdAsync(mealPlanId, cancellationToken)
             .ConfigureAwait(false);
 
-        if (plan is null || (!plan.IsCurated && plan.UserId != userId)) {
+        if (plan is null || (!plan.IsCurated && plan.UserId != userId.Value)) {
             return null;
         }
 

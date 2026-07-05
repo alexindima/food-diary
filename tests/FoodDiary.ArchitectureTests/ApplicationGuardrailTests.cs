@@ -1396,6 +1396,48 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ShoppingListReadService_UsesReadModelsInsteadOfShoppingAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "ShoppingLists",
+            "Services",
+            "ShoppingListReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Shopping"),
+            .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetAllAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetByIdAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "shoppingListRepository.GetCurrentAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void MealPlanReadService_UsesReadModelsInsteadOfMealPlanAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "MealPlans",
+            "Services",
+            "MealPlanReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.MealPlans"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetCuratedAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetByUserAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "mealPlanRepository.GetByIdAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void SocialQueries_UseReadServicesInsteadOfSocialAggregates() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

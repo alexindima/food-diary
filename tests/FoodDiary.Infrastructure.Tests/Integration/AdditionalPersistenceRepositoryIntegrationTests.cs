@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Admin.Models;
+using FoodDiary.Application.Abstractions.MealPlans.Models;
 using FoodDiary.Application.Abstractions.OpenFoodFacts.Models;
 using FoodDiary.Domain.Entities.Admin;
 using FoodDiary.Domain.Entities.Billing;
@@ -226,12 +227,20 @@ public sealed class AdditionalPersistenceRepositoryIntegrationTests(PostgresData
         IReadOnlyList<MealPlan> balancedCurated = await repository.GetCuratedAsync(DietType.Balanced);
         IReadOnlyList<MealPlan> allCurated = await repository.GetCuratedAsync();
         IReadOnlyList<MealPlan> userPlans = await repository.GetByUserAsync(user.Id);
+        MealPlanReadModel? readModel = await repository.GetReadModelByIdAsync(curated.Id);
+        IReadOnlyList<MealPlanSummaryReadModel> balancedCuratedReadModels = await repository.GetCuratedSummaryReadModelsAsync(DietType.Balanced);
+        IReadOnlyList<MealPlanSummaryReadModel> userPlanReadModels = await repository.GetByUserSummaryReadModelsAsync(user.Id);
 
         Assert.NotNull(withDays);
         Assert.Single(withDays.Days);
         Assert.Single(balancedCurated);
         Assert.Equal(2, allCurated.Count);
         Assert.Single(userPlans);
+        Assert.NotNull(readModel);
+        Assert.Equal(curated.Id.Value, readModel.Id);
+        Assert.Equal("Breakfast", Assert.Single(Assert.Single(readModel.Days).Meals).MealType);
+        Assert.Equal(1, Assert.Single(balancedCuratedReadModels).TotalRecipes);
+        Assert.Single(userPlanReadModels);
     }
 
     [RequiresDockerFact]

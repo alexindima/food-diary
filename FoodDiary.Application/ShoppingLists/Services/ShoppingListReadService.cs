@@ -1,8 +1,8 @@
 using FoodDiary.Application.Abstractions.ShoppingLists.Common;
+using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Application.ShoppingLists.Common;
 using FoodDiary.Application.ShoppingLists.Mappings;
 using FoodDiary.Application.ShoppingLists.Models;
-using FoodDiary.Domain.Entities.Shopping;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.ShoppingLists.Services;
@@ -12,10 +12,9 @@ public sealed class ShoppingListReadService(IShoppingListReadRepository shopping
     public async Task<IReadOnlyList<ShoppingListSummaryModel>> GetAllAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        IReadOnlyList<ShoppingList> lists = await shoppingListRepository.GetAllAsync(
+        IReadOnlyList<ShoppingListSummaryReadModel> lists = await shoppingListRepository.GetAllSummaryReadModelsAsync(
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return lists
             .Select(list => list.ToSummaryModel())
@@ -26,11 +25,10 @@ public sealed class ShoppingListReadService(IShoppingListReadRepository shopping
         ShoppingListId shoppingListId,
         UserId userId,
         CancellationToken cancellationToken) {
-        ShoppingList? list = await shoppingListRepository.GetByIdAsync(
+        ShoppingListReadModel? list = await shoppingListRepository.GetReadModelByIdAsync(
             shoppingListId,
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return list?.ToModel();
     }
@@ -38,10 +36,9 @@ public sealed class ShoppingListReadService(IShoppingListReadRepository shopping
     public async Task<ShoppingListModel?> GetCurrentAsync(
         UserId userId,
         CancellationToken cancellationToken) {
-        ShoppingList? list = await shoppingListRepository.GetCurrentAsync(
+        ShoppingListReadModel? list = await shoppingListRepository.GetCurrentReadModelAsync(
             userId,
-            includeItems: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
         return list?.ToModel();
     }

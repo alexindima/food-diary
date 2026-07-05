@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Products.Models;
 using FoodDiary.Application.Abstractions.RecentItems.Common;
 using FoodDiary.Application.Abstractions.Recipes.Models;
+using FoodDiary.Application.Abstractions.ShoppingLists.Models;
 using FoodDiary.Domain.Entities.Assets;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Content;
@@ -48,6 +49,8 @@ using Microsoft.Extensions.Caching.Memory;
 using Npgsql;
 
 namespace FoodDiary.Infrastructure.Tests.Integration;
+
+#pragma warning disable MA0004
 
 [Collection(PostgresDatabaseCollection.Name)]
 [ExcludeFromCodeCoverage]
@@ -152,29 +155,24 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
     public async Task ShoppingListRepository_CoversIncludeTrackingUpdateAndDeletePaths() {
         await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
         var user = User.Create($"shopping-{Guid.NewGuid():N}@example.com", "hash");
+        var otherUser = User.Create($"shopping-other-{Guid.NewGuid():N}@example.com", "hash");
         Product product = CreateProduct(user.Id, "Oats");
-        context.Users.Add(user);
+        context.Users.AddRange(user, otherUser);
         context.Products.Add(product);
         await context.SaveChangesAsync();
 
         var repository = new ShoppingListRepository(context);
         var list = ShoppingList.Create(user.Id, "Weekly");
-        ShoppingListItem item = list.AddItem(
-            "Oats",
-            product.Id,
-            500,
-            MeasurementUnit.G,
-            "Pantry",
-            isChecked: false,
-            sortOrder: 1,
-            aisle: "A1",
-            note: "Organic");
+        ShoppingListItem item = AddShoppingListItemWithSource(
+            list,
+            product.Id);
         await repository.AddAsync(list);
         await context.SaveChangesAsync();
 
         ShoppingList? byId = await repository.GetByIdAsync(list.Id, user.Id, includeItems: true);
         ShoppingList? current = await repository.GetCurrentAsync(user.Id, includeItems: true, asTracking: true);
         IReadOnlyList<ShoppingList> allLists = await repository.GetAllAsync(user.Id, includeItems: true);
+        await AssertShoppingListReadModelsAsync(repository, list.Id, user.Id, otherUser.Id);
         Assert.NotNull(current);
         current.UpdateName("Weekly updated");
         current.FindItem(item.Id)?.UpdateDetails(
@@ -196,9 +194,64 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await repository.DeleteAsync(current);
         await context.SaveChangesAsync();
 
-        Assert.Equal(item.Id, Assert.Single(byId!.Items).Id);
+        Assert.Contains(byId!.Items, savedItem => savedItem.Id == item.Id);
+        Assert.Equal(2, byId.Items.Count);
         Assert.Single(allLists);
         Assert.Null(await repository.GetByIdAsync(list.Id, user.Id));
+    }
+
+    private static ShoppingListItem AddShoppingListItemWithSource(ShoppingList list, ProductId productId) {
+        ShoppingListItem item = list.AddItem(
+            "Oats",
+            productId,
+            500,
+            MeasurementUnit.G,
+            "Pantry",
+            isChecked: false,
+            sortOrder: 1,
+            aisle: "A1",
+            note: "Organic");
+        item.AddMealPlanSource(
+            MealPlanId.New(),
+            MealPlanMealId.New(),
+            RecipeId.New(),
+            "Day 1 breakfast",
+            dayNumber: 1,
+            mealType: "Breakfast",
+            amount: 500,
+            unit: MeasurementUnit.G);
+        list.AddItem(
+            "Loose note",
+            productId: null,
+            amount: null,
+            unit: null,
+            category: null,
+            isChecked: false,
+            sortOrder: 2);
+        return item;
+    }
+
+    private static async Task AssertShoppingListReadModelsAsync(
+        ShoppingListRepository repository,
+        ShoppingListId listId,
+        UserId userId,
+        UserId otherUserId) {
+        ShoppingListReadModel? byIdReadModel = await repository.GetReadModelByIdAsync(listId, userId);
+        ShoppingListReadModel? forbiddenReadModel = await repository.GetReadModelByIdAsync(listId, otherUserId);
+        ShoppingListReadModel? currentReadModel = await repository.GetCurrentReadModelAsync(userId);
+        IReadOnlyList<ShoppingListSummaryReadModel> summaries = await repository.GetAllSummaryReadModelsAsync(userId);
+
+        Assert.NotNull(byIdReadModel);
+        ShoppingListItemReadModel oats = Assert.Single(
+            byIdReadModel.Items,
+            item => string.Equals(item.Name, "Oats", StringComparison.Ordinal));
+        Assert.Null(Assert.Single(
+            byIdReadModel.Items,
+            item => string.Equals(item.Name, "Loose note", StringComparison.Ordinal)).ProductId);
+        Assert.Equal("Day 1 breakfast", Assert.Single(oats.Sources).Label);
+        Assert.Null(forbiddenReadModel);
+        Assert.Equal(listId.Value, currentReadModel?.Id);
+        Assert.Equal(2, Assert.Single(summaries).ItemsCount);
     }
 
     [RequiresDockerFact]
@@ -260,7 +313,6 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
         await context.SaveChangesAsync();
     }
 
-#pragma warning disable MA0004
     private static async Task<(WeightEntry Weight, WaistEntry Waist)> CoverBodyMetricRepositoriesAsync(
         FoodDiaryDbContext context,
         UserId userId,
@@ -1267,8 +1319,6 @@ public sealed class PersistenceRepositoryCoverageIntegrationTests(PostgresDataba
 
         Assert.Single(await repository.GetSinceAsync(now.AddMinutes(-1)));
     }
-#pragma warning restore MA0004
-
     private static Product CreateProduct(UserId userId, string name) =>
         Product.Create(
             userId,
