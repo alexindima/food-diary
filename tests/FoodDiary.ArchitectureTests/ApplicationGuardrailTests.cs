@@ -1289,6 +1289,25 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ExerciseEntryReadService_UsesReadModelsInsteadOfTrackingAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Exercises",
+            "Services",
+            "ExerciseEntryReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByDateRangeAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void DashboardBodyReadService_UsesReadModelsInsteadOfTrackingAggregates() {
         string root = GetRepositoryRoot();
         string servicePath = Path.Combine(

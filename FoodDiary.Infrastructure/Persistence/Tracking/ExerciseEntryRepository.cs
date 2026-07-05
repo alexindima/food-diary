@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Exercises.Common;
+using FoodDiary.Application.Abstractions.Exercises.Models;
 using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -41,6 +42,27 @@ internal sealed class ExerciseEntryRepository(FoodDiaryDbContext context) : IExe
             .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
             .OrderByDescending(e => e.Date)
             .ThenByDescending(e => e.CreatedOnUtc)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<ExerciseEntryReadModel>> GetByDateRangeReadModelsAsync(
+        UserId userId,
+        DateTime dateFrom,
+        DateTime dateTo,
+        CancellationToken cancellationToken = default) {
+        return await context.Set<ExerciseEntry>()
+            .AsNoTracking()
+            .Where(e => e.UserId == userId && e.Date >= dateFrom.Date && e.Date <= dateTo.Date)
+            .OrderByDescending(e => e.Date)
+            .ThenByDescending(e => e.CreatedOnUtc)
+            .Select(e => new ExerciseEntryReadModel(
+                e.Id.Value,
+                e.Date,
+                e.ExerciseType.ToString(),
+                e.Name,
+                e.DurationMinutes,
+                e.CaloriesBurned,
+                e.Notes))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
