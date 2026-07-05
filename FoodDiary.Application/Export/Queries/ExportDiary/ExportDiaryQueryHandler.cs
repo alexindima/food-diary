@@ -4,17 +4,16 @@ using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
 using FoodDiary.Application.Abstractions.Export.Common;
+using FoodDiary.Application.Abstractions.Export.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Application.Abstractions.Meals.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Meals;
 
 namespace FoodDiary.Application.Export.Queries.ExportDiary;
 
 public sealed class ExportDiaryQueryHandler(
-    IMealReadRepository mealRepository,
+    IExportDiaryReadService diaryReadService,
     ICurrentUserAccessService currentUserAccessService,
     IDiaryPdfGenerator pdfGenerator)
     : IQueryHandler<ExportDiaryQuery, Result<FileExportResult>> {
@@ -46,11 +45,11 @@ public sealed class ExportDiaryQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
-        IReadOnlyList<Meal> meals = await mealRepository.GetByPeriodAsync(
-            userId, normalizedFrom, normalizedTo, cancellationToken).ConfigureAwait(false);
-        var filteredMeals = meals
-            .Where(meal => meal.Date >= normalizedFrom && meal.Date <= normalizedTo)
-            .ToList();
+        ExportDiaryMealsReadModel diary = await diaryReadService.GetMealsAsync(
+            userId,
+            normalizedFrom,
+            normalizedTo,
+            cancellationToken).ConfigureAwait(false);
 
         TimeSpan displayOffset = ResolveDisplayOffset(normalizedFrom, query.TimeZoneOffsetMinutes);
         string fromStr = normalizedFrom.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
@@ -59,7 +58,7 @@ public sealed class ExportDiaryQueryHandler(
         return query.Format switch {
             ExportFormat.Pdf => Result.Success(new FileExportResult(
                 await pdfGenerator.GenerateAsync(
-                    filteredMeals,
+                    diary.Meals,
                     query.DateFrom,
                     query.DateTo,
                     query.Locale,
@@ -69,7 +68,7 @@ public sealed class ExportDiaryQueryHandler(
                 "application/pdf",
                 $"food-diary-{fromStr}-to-{toStr}.pdf")),
             _ => Result.Success(new FileExportResult(
-                DiaryCsvGenerator.Generate(filteredMeals, displayOffset),
+                DiaryCsvGenerator.Generate(diary.Meals, displayOffset),
                 "text/csv",
                 $"food-diary-{fromStr}-to-{toStr}.csv")),
         };

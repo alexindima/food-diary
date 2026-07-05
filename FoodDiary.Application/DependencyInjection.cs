@@ -33,7 +33,9 @@ using System.Reflection;
 using FoodDiary.Application.Abstractions.Authentication.Services;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Persistence;
 using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Dashboard.Common;
+using FoodDiary.Application.Export.Services;
 using FoodDiary.Application.OpenFoodFacts.Common;
 using FoodDiary.Application.OpenFoodFacts.Services;
 using FoodDiary.Application.Products.Common;
@@ -94,6 +96,7 @@ public static class DependencyInjection {
         services.AddScoped<IOpenAiFoodService, OpenAiFoodService>();
         services.AddScoped<IEmailSender, EmailSender>();
         services.AddScoped<IDietologistEmailSender, DietologistEmailSender>();
+        services.AddScoped<IExportDiaryReadService, ExportDiaryReadService>();
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();

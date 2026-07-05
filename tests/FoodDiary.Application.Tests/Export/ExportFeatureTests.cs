@@ -31,10 +31,10 @@ public class ExportFeatureTests {
     }
 
     private static ExportDiaryQueryHandler CreateHandler(IReadOnlyList<Meal> meals) =>
-        CreateHandler(CreateMealRepository(meals));
+        CreateHandler(CreateExportDiaryReadService(meals));
 
-    private static ExportDiaryQueryHandler CreateHandler(IMealRepository repository) =>
-        new(repository, CreateCurrentUserAccessService(), CreatePdfGenerator(out _));
+    private static ExportDiaryQueryHandler CreateHandler(IExportDiaryReadService diaryReadService) =>
+        new(diaryReadService, CreateCurrentUserAccessService(), CreatePdfGenerator(out _));
 
     [Fact]
     public async Task ExportDiary_WithMeals_ReturnsCsvFileResult() {
@@ -58,7 +58,7 @@ public class ExportFeatureTests {
         var userId = UserId.New();
         Meal[] meals = [CreateMeal(userId)];
         IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
-        var handler = new ExportDiaryQueryHandler(CreateMealRepository(meals), CreateCurrentUserAccessService(), pdfGenerator);
+        var handler = new ExportDiaryQueryHandler(CreateExportDiaryReadService(meals), CreateCurrentUserAccessService(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, "ru", 240, "https://Ð´Ð½ÐµÐ²Ð½Ð¸ÐºÐµÐ´Ñ‹.Ñ€Ñ„"),
@@ -77,7 +77,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithUnsafeReportOrigin_DropsOriginBeforePdfGeneration() {
         var userId = UserId.New();
         IDiaryPdfGenerator pdfGenerator = CreatePdfGenerator(out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getPdfCall);
-        var handler = new ExportDiaryQueryHandler(CreateMealRepository([]), CreateCurrentUserAccessService(), pdfGenerator);
+        var handler = new ExportDiaryQueryHandler(CreateExportDiaryReadService([]), CreateCurrentUserAccessService(), pdfGenerator);
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportDiaryQuery(userId.Value, TestDate, TestDate.AddDays(1), ExportFormat.Pdf, ReportOrigin: "javascript:alert(1)"),
@@ -91,7 +91,7 @@ public class ExportFeatureTests {
     public async Task ExportDiary_WithLocalDayUtcBoundaries_PreservesRequestedInstants() {
         var userId = UserId.New();
         IMealRepository repository = CreateMealRepository([], out Func<(DateTime? DateFrom, DateTime? DateTo)> getLastPeriod);
-        ExportDiaryQueryHandler handler = CreateHandler(repository);
+        ExportDiaryQueryHandler handler = CreateHandler(new ExportDiaryReadService(repository));
         DateTime localDayStartUtc = new DateTimeOffset(2026, 5, 4, 0, 0, 0, TimeSpan.FromHours(4)).UtcDateTime;
         DateTime localDayEndUtc = new DateTimeOffset(2026, 5, 4, 23, 59, 59, 999, TimeSpan.FromHours(4)).UtcDateTime;
 
@@ -219,7 +219,7 @@ public class ExportFeatureTests {
         var user = User.Create("export-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
         var handler = new ExportDiaryQueryHandler(
-            CreateMealRepository([]),
+            CreateExportDiaryReadService([]),
             CreateCurrentUserAccessService(user),
             CreatePdfGenerator(out _));
 
@@ -468,6 +468,9 @@ public class ExportFeatureTests {
 
     private static IMealRepository CreateMealRepository(IReadOnlyList<Meal> meals) =>
         CreateMealRepository(meals, out _);
+
+    private static IExportDiaryReadService CreateExportDiaryReadService(IReadOnlyList<Meal> meals) =>
+        new ExportDiaryReadService(CreateMealRepository(meals));
 
     private static IMealRepository CreateMealRepository(
         IReadOnlyList<Meal> meals,

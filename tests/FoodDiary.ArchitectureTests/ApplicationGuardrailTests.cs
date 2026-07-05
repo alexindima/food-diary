@@ -812,6 +812,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ExportDiaryQuery_UsesDedicatedExportReadServiceInsteadOfMealRepository() {
+        string root = GetRepositoryRoot();
+        string exportDiaryQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Export", "Queries", "ExportDiary");
+        string[] exportDiaryQueryFiles = [.. SourceScanner.SourceFiles(exportDiaryQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, exportDiaryQueryFiles, "IMealReadRepository"),
+            .. FindReferencesInFiles(root, exportDiaryQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, exportDiaryQueryFiles, "GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
