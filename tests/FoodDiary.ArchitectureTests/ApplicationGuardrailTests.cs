@@ -43,6 +43,21 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ApplicationQueryHandlers_DoNotUseReadRepositoriesOrDomainEntities() {
+        string root = GetRepositoryRoot();
+        string applicationRoot = Path.Combine(root, "FoodDiary.Application");
+        string[] queryHandlers = [.. SourceScanner.SourceFiles(applicationRoot)
+            .Where(path => path.EndsWith("QueryHandler.cs", StringComparison.Ordinal))];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, queryHandlers, "ReadRepository"),
+            .. FindReferencesInFiles(root, queryHandlers, "FoodDiary.Domain.Entities"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationFeatures_DoNotUseLegacyCommandsCommonFolders() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");
