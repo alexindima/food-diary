@@ -1,12 +1,12 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Notifications.Mappings;
 using FoodDiary.Application.Notifications.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Models;
-using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Entities.Notifications;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -30,12 +30,12 @@ public sealed class ProfileOverviewReadService(
         }
 
         IReadOnlyList<WebPushSubscription> webPushSubscriptions = await webPushSubscriptionRepository.GetByUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        DietologistInvitation? acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        DietologistInvitation? pendingRelationship = acceptedRelationship is null
-            ? await dietologistInvitationRepository.GetByClientAndStatusAsync(
+        DietologistInvitationReadModel? acceptedRelationship = await dietologistInvitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? pendingRelationship = acceptedRelationship is null
+            ? await dietologistInvitationRepository.GetByClientAndStatusReadModelAsync(
                 userId,
                 DietologistInvitationStatus.Pending,
-                cancellationToken: cancellationToken).ConfigureAwait(false)
+                cancellationToken).ConfigureAwait(false)
             : null;
 
         return Result.Success(new ProfileOverviewModel(

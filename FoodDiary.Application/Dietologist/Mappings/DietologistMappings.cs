@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects;
@@ -15,6 +16,19 @@ public static class DietologistMappings {
             invitation.DietologistUserId?.Value,
             invitation.GetPermissions().ToModel(),
             invitation.CreatedOnUtc,
+            invitation.ExpiresAtUtc,
+            invitation.AcceptedAtUtc);
+
+    public static DietologistRelationshipModel ToRelationshipModel(this DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.Status.ToString(),
+            invitation.DietologistUserEmail ?? invitation.DietologistEmail,
+            invitation.DietologistFirstName,
+            invitation.DietologistLastName,
+            invitation.DietologistUserId,
+            invitation.Permissions.ToModel(),
+            invitation.CreatedAtUtc,
             invitation.ExpiresAtUtc,
             invitation.AcceptedAtUtc);
 
@@ -75,6 +89,17 @@ public static class DietologistMappings {
             input.ShareFasting);
 
     public static DietologistPermissionsModel ToModel(this DietologistPermissions permissions) =>
+        new(
+            permissions.ShareMeals,
+            permissions.ShareStatistics,
+            permissions.ShareWeight,
+            permissions.ShareWaist,
+            permissions.ShareGoals,
+            permissions.ShareHydration,
+            permissions.ShareProfile,
+            permissions.ShareFasting);
+
+    public static DietologistPermissionsModel ToModel(this DietologistPermissionsReadModel permissions) =>
         new(
             permissions.ShareMeals,
             permissions.ShareStatistics,

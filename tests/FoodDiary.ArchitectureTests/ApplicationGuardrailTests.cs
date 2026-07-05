@@ -1010,6 +1010,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void ProfileOverviewReadService_UsesDietologistReadModelsInsteadOfInvitationAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Users",
+            "Services",
+            "ProfileOverviewReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetActiveByClientAsync"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetByClientAndStatusAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void DietologistQueries_UseReadServicesInsteadOfRepositories() {
         string root = GetRepositoryRoot();
         string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
