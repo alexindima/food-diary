@@ -886,6 +886,35 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void BillingQueries_UseBillingProfileModelsInsteadOfUserAggregates() {
+        string root = GetRepositoryRoot();
+        string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Billing", "Queries");
+        string[] billingQueryFiles = [.. SourceScanner.SourceFiles(billingQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Domain.Entities.Users"),
+            .. FindReferencesInFiles(root, billingQueryFiles, "GetAccessibleUserAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void DietologistQueries_UseUserReadModelsInsteadOfUserAggregates() {
+        string root = GetRepositoryRoot();
+        string dietologistQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Queries");
+        string[] dietologistQueryFiles = [.. SourceScanner.SourceFiles(dietologistQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "FoodDiary.Domain.Entities.Users"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "GetAccessibleUserAsync"),
+            .. FindReferencesInFiles(root, dietologistQueryFiles, "GetUserByIdAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void ApplicationSourceFiles_DoNotUseFullNutritionLessonRepository() {
         string root = GetRepositoryRoot();
         string applicationRoot = Path.Combine(root, "FoodDiary.Application");

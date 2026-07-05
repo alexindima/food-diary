@@ -5,7 +5,6 @@ using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Entities.Dietologist;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetInvitationForCurrentUser;
@@ -22,12 +21,13 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
         }
 
         var userId = new UserId(query.UserId!.Value);
-        Result<User> userResult = await dietologistUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<DietologistInvitationForCurrentUserModel>(userResult.Error);
+        Result<string> userEmailResult = await dietologistUserContextService
+            .GetAccessibleUserEmailAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (userEmailResult.IsFailure) {
+            return Result.Failure<DietologistInvitationForCurrentUserModel>(userEmailResult.Error);
         }
 
-        User user = userResult.Value;
         DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
             new DietologistInvitationId(query.InvitationId),
             cancellationToken: cancellationToken).ConfigureAwait(false);
@@ -35,7 +35,7 @@ public sealed class GetInvitationForCurrentUserQueryHandler(
             return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.InvitationNotFound);
         }
 
-        if (!string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
+        if (!string.Equals(invitation.DietologistEmail, userEmailResult.Value, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.AccessDenied);
         }
 

@@ -2,11 +2,9 @@ using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Dietologist.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
-using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetClientGoals;
 
@@ -21,7 +19,9 @@ public sealed class GetClientGoalsQueryHandler(
         }
 
         var dietologistUserId = new UserId(query.UserId!.Value);
-        Result<User> dietologistResult = await dietologistUserContextService.GetAccessibleUserAsync(dietologistUserId, cancellationToken).ConfigureAwait(false);
+        Result<string> dietologistResult = await dietologistUserContextService
+            .GetAccessibleUserEmailAsync(dietologistUserId, cancellationToken)
+            .ConfigureAwait(false);
         if (dietologistResult.IsFailure) {
             return Result.Failure<UserModel>(dietologistResult.Error);
         }
@@ -40,7 +40,6 @@ public sealed class GetClientGoalsQueryHandler(
             return Result.Failure<UserModel>(permissionError);
         }
 
-        User? user = await dietologistUserContextService.GetUserByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
-        return user is null ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied) : Result.Success(user.ToModel());
+        return await dietologistUserContextService.GetUserModelByIdAsync(clientUserId, cancellationToken).ConfigureAwait(false);
     }
 }

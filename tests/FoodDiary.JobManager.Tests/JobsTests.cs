@@ -5,6 +5,7 @@ using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Images.Common;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Billing.Services;
 using FoodDiary.Domain.Entities.Billing;
 using FoodDiary.Domain.Entities.Users;
@@ -1298,6 +1299,18 @@ public sealed class JobsTests {
             return Task.FromResult(user is null
                 ? Result.Failure<User>(Errors.Authentication.InvalidToken)
                 : Result.Success(user));
+        }
+
+        public Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<BillingUserProfileModel>(Errors.Authentication.InvalidToken)
+                : Result.Success(new BillingUserProfileModel(
+                    user.HasRole(RoleNames.Premium),
+                    user.PremiumTrialStartedAtUtc,
+                    user.PremiumTrialEndsAtUtc)));
         }
 
         public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>

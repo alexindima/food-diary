@@ -8,13 +8,12 @@ using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Domain.Entities.Dietologist;
-using FoodDiary.Domain.Entities.Users;
 
 namespace FoodDiary.Application.Dietologist.Queries.GetInvitationByToken;
 
 public sealed class GetInvitationByTokenQueryHandler(
     IDietologistInvitationReadRepository invitationRepository,
-    IDietologistUserLookupService userLookupService)
+    IDietologistUserContextService userContextService)
     : IQueryHandler<GetInvitationByTokenQuery, Result<InvitationModel>> {
     public async Task<Result<InvitationModel>> Handle(GetInvitationByTokenQuery query, CancellationToken cancellationToken) {
         Result<UserId> userIdResult = UserIdParser.Parse(query.UserId);
@@ -29,9 +28,9 @@ public sealed class GetInvitationByTokenQueryHandler(
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
         }
 
-        User? user = await userLookupService.GetUserByIdAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
-        if (user is null ||
-            !string.Equals(invitation.DietologistEmail, user.Email, StringComparison.OrdinalIgnoreCase)) {
+        string? userEmail = await userContextService.GetUserEmailByIdAsync(userIdResult.Value, cancellationToken).ConfigureAwait(false);
+        if (userEmail is null ||
+            !string.Equals(invitation.DietologistEmail, userEmail, StringComparison.OrdinalIgnoreCase)) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
         }
 

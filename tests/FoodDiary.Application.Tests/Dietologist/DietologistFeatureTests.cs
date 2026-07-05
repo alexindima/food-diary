@@ -39,6 +39,7 @@ using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Users.Common;
+using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
 
 namespace FoodDiary.Application.Tests.Dietologist;
@@ -2418,6 +2419,29 @@ public class DietologistFeatureTests {
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
         }
 
+        public async Task<Result<string>> GetAccessibleUserEmailAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return userResult.IsFailure
+                ? Result.Failure<string>(userResult.Error)
+                : Result.Success(userResult.Value.Email);
+        }
+
+        public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user?.Email;
+        }
+
+        public async Task<Result<UserModel>> GetUserModelByIdAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null
+                ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied)
+                : Result.Success(user.ToModel());
+        }
+
         public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>
             GetByEmailAsync(email, cancellationToken);
 
@@ -2469,6 +2493,29 @@ public class DietologistFeatureTests {
                 _ => null,
             };
             return Task.FromResult(error is not null ? Result.Failure<User>(error) : Result.Success(user!));
+        }
+
+        public async Task<Result<string>> GetAccessibleUserEmailAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            Result<User> userResult = await GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+            return userResult.IsFailure
+                ? Result.Failure<string>(userResult.Error)
+                : Result.Success(userResult.Value.Email);
+        }
+
+        public async Task<string?> GetUserEmailByIdAsync(UserId userId, CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user?.Email;
+        }
+
+        public async Task<Result<UserModel>> GetUserModelByIdAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = await GetByIdAsync(userId, cancellationToken).ConfigureAwait(false);
+            return user is null
+                ? Result.Failure<UserModel>(Errors.Dietologist.AccessDenied)
+                : Result.Success(user.ToModel());
         }
 
         public Task<User?> GetAccessibleUserByEmailAsync(string email, CancellationToken cancellationToken) =>

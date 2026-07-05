@@ -1913,6 +1913,18 @@ public sealed class BillingFeatureTests {
                 : Result.Success(user));
         }
 
+        public Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
+            UserId userId,
+            CancellationToken cancellationToken) {
+            User? user = _users.FirstOrDefault(candidate => IsAccessible(candidate) && candidate.Id == userId);
+            return Task.FromResult(user is null
+                ? Result.Failure<BillingUserProfileModel>(Errors.Authentication.InvalidToken)
+                : Result.Success(new BillingUserProfileModel(
+                    user.HasRole(RoleNames.Premium),
+                    user.PremiumTrialStartedAtUtc,
+                    user.PremiumTrialEndsAtUtc)));
+        }
+
         public Task<User?> GetUserIncludingDeletedAsync(UserId userId, CancellationToken cancellationToken) =>
             GetByIdIncludingDeletedAsync(userId, cancellationToken);
 

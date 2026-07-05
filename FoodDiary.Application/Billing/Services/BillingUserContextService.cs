@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Billing.Common;
+using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
@@ -12,6 +13,21 @@ internal sealed class BillingUserContextService(
     IBillingUserLookupService userLookupService,
     IUserContextService userContextService,
     IUserRoleMembershipService roleMembershipService) : IBillingUserContextService {
+    public async Task<Result<BillingUserProfileModel>> GetAccessibleUserProfileAsync(
+        UserId userId,
+        CancellationToken cancellationToken) {
+        Result<User> userResult = await userContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (userResult.IsFailure) {
+            return Result.Failure<BillingUserProfileModel>(userResult.Error);
+        }
+
+        User user = userResult.Value;
+        return Result.Success(new BillingUserProfileModel(
+            user.HasRole(RoleNames.Premium),
+            user.PremiumTrialStartedAtUtc,
+            user.PremiumTrialEndsAtUtc));
+    }
+
     public Task<Result<User>> GetAccessibleUserAsync(UserId userId, CancellationToken cancellationToken) =>
         userContextService.GetAccessibleUserAsync(userId, cancellationToken);
 

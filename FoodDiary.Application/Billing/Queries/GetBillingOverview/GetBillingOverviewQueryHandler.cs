@@ -4,9 +4,7 @@ using FoodDiary.Application.Billing.Models;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Domain.Entities.Billing;
-using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
-using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Application.Abstractions.Billing.Models;
 
 namespace FoodDiary.Application.Billing.Queries.GetBillingOverview;
@@ -25,26 +23,28 @@ public sealed class GetBillingOverviewQueryHandler(
         }
 
         var userId = new UserId(query.UserId.Value);
-        Result<User> userResult = await billingUserContextService.GetAccessibleUserAsync(userId, cancellationToken).ConfigureAwait(false);
-        if (userResult.IsFailure) {
-            return Result.Failure<BillingOverviewModel>(userResult.Error);
+        Result<BillingUserProfileModel> userProfileResult = await billingUserContextService
+            .GetAccessibleUserProfileAsync(userId, cancellationToken)
+            .ConfigureAwait(false);
+        if (userProfileResult.IsFailure) {
+            return Result.Failure<BillingOverviewModel>(userProfileResult.Error);
         }
 
-        User user = userResult.Value;
+        BillingUserProfileModel userProfile = userProfileResult.Value;
         BillingSubscription? subscription = await billingSubscriptionRepository.GetByUserIdAsync(userId, cancellationToken).ConfigureAwait(false);
         DateTime nowUtc = dateTimeProvider.GetUtcNow().UtcDateTime;
-        bool isTrialActive = user.HasActivePremiumTrial(nowUtc);
-        bool hasPaidPremium = user.HasRole(RoleNames.Premium);
+        bool isTrialActive = userProfile.HasActivePremiumTrial(nowUtc);
+        bool hasPaidPremium = userProfile.HasPaidPremium;
         bool paidSubscriptionActive = IsPaidPremiumActive(subscription, nowUtc);
         bool isPremium = hasPaidPremium || paidSubscriptionActive || isTrialActive;
         bool providerTrialExpired = IsExpiredProviderTrial(subscription, nowUtc);
         string? subscriptionStatus = ResolveSubscriptionStatus(subscription, isTrialActive, providerTrialExpired);
-        DateTime? currentPeriodStartUtc = ResolveCurrentPeriodStartUtc(subscription, user, isTrialActive, providerTrialExpired);
-        DateTime? currentPeriodEndUtc = ResolveCurrentPeriodEndUtc(subscription, user, isTrialActive, providerTrialExpired);
+        DateTime? currentPeriodStartUtc = ResolveCurrentPeriodStartUtc(subscription, userProfile, isTrialActive, providerTrialExpired);
+        DateTime? currentPeriodEndUtc = ResolveCurrentPeriodEndUtc(subscription, userProfile, isTrialActive, providerTrialExpired);
         BillingPublicConfigModel publicConfig = billingPublicConfigProvider.GetPublicConfig();
         bool renewalEnabled = subscription?.NextBillingAttemptUtc is not null &&
             !subscription.CancelAtPeriodEnd;
-        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !user.HasUsedPremiumTrial();
+        bool canStartTrial = !hasPaidPremium && !paidSubscriptionActive && !userProfile.HasUsedPremiumTrial();
 
         return Result.Success(new BillingOverviewModel(
             isPremium,
@@ -59,10 +59,10 @@ public sealed class GetBillingOverviewQueryHandler(
             subscription is not null &&
                 !string.Equals(subscription.Provider, BillingProviderNames.YooKassa, StringComparison.OrdinalIgnoreCase) &&
                 !string.IsNullOrWhiteSpace(subscription.ExternalCustomerId),
-            user.PremiumTrialStartedAtUtc,
-            user.PremiumTrialEndsAtUtc,
+            userProfile.PremiumTrialStartedAtUtc,
+            userProfile.PremiumTrialEndsAtUtc,
             isTrialActive,
-            user.HasUsedPremiumTrial(),
+            userProfile.HasUsedPremiumTrial(),
             canStartTrial,
             publicConfig.Provider,
             publicConfig.PaddleClientToken,
@@ -104,25 +104,25 @@ public sealed class GetBillingOverviewQueryHandler(
 
     private static DateTime? ResolveCurrentPeriodStartUtc(
         BillingSubscription? subscription,
-        User user,
+        BillingUserProfileModel userProfile,
         bool isTrialActive,
         bool providerTrialExpired) {
         if (providerTrialExpired) {
-            return isTrialActive ? user.PremiumTrialStartedAtUtc : null;
+            return isTrialActive ? userProfile.PremiumTrialStartedAtUtc : null;
         }
 
-        return subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? user.PremiumTrialStartedAtUtc : null);
+        return subscription?.CurrentPeriodStartUtc ?? (isTrialActive ? userProfile.PremiumTrialStartedAtUtc : null);
     }
 
     private static DateTime? ResolveCurrentPeriodEndUtc(
         BillingSubscription? subscription,
-        User user,
+        BillingUserProfileModel userProfile,
         bool isTrialActive,
         bool providerTrialExpired) {
         if (providerTrialExpired) {
-            return isTrialActive ? user.PremiumTrialEndsAtUtc : null;
+            return isTrialActive ? userProfile.PremiumTrialEndsAtUtc : null;
         }
 
-        return subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? user.PremiumTrialEndsAtUtc : null);
+        return subscription?.CurrentPeriodEndUtc ?? (isTrialActive ? userProfile.PremiumTrialEndsAtUtc : null);
     }
 }
