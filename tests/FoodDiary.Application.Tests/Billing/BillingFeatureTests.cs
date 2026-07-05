@@ -1342,7 +1342,7 @@ public sealed class BillingFeatureTests {
             "evt_789",
             Now,
             "{\"provider\":\"yookassa\"}");
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
             new FakeBillingPublicConfigProvider(),
@@ -1386,7 +1386,7 @@ public sealed class BillingFeatureTests {
             Now.AddDays(-1),
             "evt_trial_expired",
             Now.AddDays(-1));
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
             new FakeBillingPublicConfigProvider(),
@@ -1404,7 +1404,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task GetBillingOverview_WithInvalidUserId_ReturnsInvalidToken() {
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new FakeBillingPublicConfigProvider(),
@@ -1418,7 +1418,7 @@ public sealed class BillingFeatureTests {
 
     [Fact]
     public async Task GetBillingOverview_WhenUserIsMissing_ReturnsInvalidToken() {
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(),
             new InMemoryBillingSubscriptionRepository(),
             new FakeBillingPublicConfigProvider(),
@@ -1445,7 +1445,7 @@ public sealed class BillingFeatureTests {
             "evt_blank_status",
             Now);
         SetPrivateProperty(subscription, nameof(BillingSubscription.Status), " ");
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
             new FakeBillingPublicConfigProvider(),
@@ -1486,7 +1486,7 @@ public sealed class BillingFeatureTests {
             SetPrivateProperty(subscription, nameof(BillingSubscription.CurrentPeriodEndUtc), (DateTime?)null);
         }
 
-        var handler = new GetBillingOverviewQueryHandler(
+        GetBillingOverviewQueryHandler handler = CreateBillingOverviewHandler(
             new FakeUserRepository(user),
             new InMemoryBillingSubscriptionRepository(subscription),
             new FakeBillingPublicConfigProvider(),
@@ -1523,6 +1523,17 @@ public sealed class BillingFeatureTests {
         ResultAssert.Success(result);
         Assert.Equal("https://billing.example/portal", result.Value.Url);
     }
+
+    private static GetBillingOverviewQueryHandler CreateBillingOverviewHandler(
+        IBillingUserContextService billingUserContextService,
+        IBillingSubscriptionReadRepository billingSubscriptionRepository,
+        IBillingPublicConfigProvider billingPublicConfigProvider,
+        TimeProvider dateTimeProvider) =>
+        new(new BillingOverviewReadService(
+            billingUserContextService,
+            billingSubscriptionRepository,
+            billingPublicConfigProvider,
+            dateTimeProvider));
 
     [Fact]
     public async Task CreatePortalSession_WhenUserIdIsInvalid_ReturnsInvalidToken() {

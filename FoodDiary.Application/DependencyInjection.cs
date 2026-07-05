@@ -152,6 +152,7 @@ public static class DependencyInjection {
         services.AddScoped<IDietologistEmailSender, DietologistEmailSender>();
         services.AddScoped<IExerciseEntryReadService, ExerciseEntryReadService>();
         services.AddScoped<IExportDiaryReadService, ExportDiaryReadService>();
+        services.AddScoped<IBillingOverviewReadService, BillingOverviewReadService>();
         services.AddScoped<IBillingUserContextService, BillingUserContextService>();
         services.AddScoped<IBillingUserLookupService, BillingUserLookupService>();
         services.AddScoped<BillingAccessService>();

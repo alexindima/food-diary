@@ -926,6 +926,8 @@ public sealed class ApplicationGuardrailTests {
 
         string[] violations = [
             .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Domain.Entities.Users"),
+            .. FindReferencesInFiles(root, billingQueryFiles, "FoodDiary.Domain.Entities.Billing"),
+            .. FindReferencesInFiles(root, billingQueryFiles, "IBillingSubscriptionReadRepository"),
             .. FindReferencesInFiles(root, billingQueryFiles, "GetAccessibleUserAsync"),
         ];
 
