@@ -15,6 +15,8 @@ using FoodDiary.Application.Common.Behaviors;
 using FoodDiary.Application.Common.Services;
 using FoodDiary.Application.Consumptions.Common;
 using FoodDiary.Application.Consumptions.Services;
+using FoodDiary.Application.Cycles.Common;
+using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Dashboard.Services;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
 using FoodDiary.Application.Dietologist.Common;
@@ -93,6 +95,7 @@ public static class DependencyInjection {
         services.AddScoped<IAuthenticationUserMutationService, AuthenticationUserMutationService>();
         services.AddScoped<IAuthenticationUserRegistrationService, AuthenticationUserRegistrationService>();
         services.AddScoped<IConsumptionReadService, ConsumptionReadService>();
+        services.AddScoped<ICycleReadService, CycleReadService>();
         services.AddScoped<IMealNutritionService, MealNutritionService>();
         services.TryAddScoped<IDashboardStatisticsReadService, MediatorDashboardStatisticsReadService>();
         services.TryAddScoped<IDashboardBodyReadService, RepositoryDashboardBodyReadService>();

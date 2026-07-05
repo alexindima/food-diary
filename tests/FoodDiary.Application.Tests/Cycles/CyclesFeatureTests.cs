@@ -140,7 +140,9 @@ public class CyclesFeatureTests {
     public async Task GetCurrentCycleQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-current-deleted@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var handler = new GetCurrentCycleQueryHandler(new NoopCycleRepository(), CreateCurrentUserAccessService(user));
+        GetCurrentCycleQueryHandler handler = CreateCurrentCycleHandler(
+            new NoopCycleRepository(),
+            CreateCurrentUserAccessService(user));
 
         Result<CycleModel?> result = await handler.Handle(new GetCurrentCycleQuery(user.Id.Value), CancellationToken.None);
 
@@ -150,7 +152,7 @@ public class CyclesFeatureTests {
 
     [Fact]
     public async Task GetCurrentCycleQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetCurrentCycleQueryHandler(
+        GetCurrentCycleQueryHandler handler = CreateCurrentCycleHandler(
             new NoopCycleRepository(),
             CreateCurrentUserAccessService(User.Create("cycle-current-empty@example.com", "hash")));
 
@@ -498,7 +500,7 @@ public class CyclesFeatureTests {
         var profile = CycleProfile.Create(user.Id, startDate);
         profile.UpsertBleedingEntry(startDate, BleedingType.Bleeding, CycleFlowLevel.Heavy, painImpact: 8, notes: null);
         profile.UpsertSymptomEntry(startDate.AddDays(1), CycleSymptomCategory.Craving, 6, ["sweet"], note: null);
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([
                 CreateNutritionBucket(startDate, calories: 2100, fiber: 18),
@@ -532,7 +534,7 @@ public class CyclesFeatureTests {
         profile.UpsertBleedingEntry(startDate.AddDays(1), BleedingType.Bleeding, CycleFlowLevel.Medium, painImpact: 6, notes: null);
         profile.UpsertSymptomEntry(startDate.AddDays(2), CycleSymptomCategory.Craving, 4, [], note: null);
         profile.UpsertSymptomEntry(startDate.AddDays(3), CycleSymptomCategory.Energy, 5, [], note: null);
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([
                 CreateNutritionBucket(startDate, calories: 2100, fiber: 18),
@@ -554,7 +556,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithMissingCycle_ReturnsNull() {
         var user = User.Create("cycle-nutrition-missing@example.com", "hash");
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
             CreateCurrentUserAccessService(user));
@@ -569,7 +571,7 @@ public class CyclesFeatureTests {
 
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithEmptyUserId_ReturnsInvalidToken() {
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
             CreateCurrentUserAccessService(User.Create("cycle-nutrition-empty-user@example.com", "hash")));
@@ -585,7 +587,7 @@ public class CyclesFeatureTests {
     [Fact]
     public async Task GetCycleNutritionSummaryQueryHandler_WithInvertedDates_ReturnsValidationFailure() {
         var user = User.Create("cycle-nutrition-inverted@example.com", "hash");
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
             CreateCurrentUserAccessService(user));
@@ -603,7 +605,7 @@ public class CyclesFeatureTests {
     public async Task GetCycleNutritionSummaryQueryHandler_WithTooLargeRange_ReturnsValidationFailure() {
         var user = User.Create("cycle-nutrition-long-range@example.com", "hash");
         DateTime from = new(2025, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
             CreateCurrentUserAccessService(user));
@@ -621,7 +623,7 @@ public class CyclesFeatureTests {
     public async Task GetCycleNutritionSummaryQueryHandler_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-nutrition-deleted@example.com", "hash");
         user.MarkDeleted(DateTime.UtcNow);
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new NoopCycleRepository(),
             CreateStatisticsReadService([]),
             CreateCurrentUserAccessService(user));
@@ -640,7 +642,7 @@ public class CyclesFeatureTests {
         DateTime startDate = new(2026, 4, 1, 0, 0, 0, DateTimeKind.Utc);
         var profile = CycleProfile.Create(user.Id, startDate);
         profile.UpsertFertilitySignal(startDate.AddDays(1), 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: null);
-        var handler = new GetCycleNutritionSummaryQueryHandler(
+        GetCycleNutritionSummaryQueryHandler handler = CreateCycleNutritionSummaryHandler(
             new InMemoryCycleRepository(profile),
             CreateStatisticsReadService([CreateNutritionBucket(startDate.AddDays(1), calories: 1900, fiber: 22)]),
             CreateCurrentUserAccessService(user));
@@ -802,6 +804,17 @@ public class CyclesFeatureTests {
 
     private static DashboardStatisticsBucketReadModel CreateNutritionBucket(DateTime date, double calories, double fiber) =>
         new(date, date, calories, AverageProteins: 0, AverageFats: 0, AverageCarbs: 0, AverageFiber: fiber, TotalFiber: fiber);
+
+    private static GetCurrentCycleQueryHandler CreateCurrentCycleHandler(
+        ICycleReadRepository cycleRepository,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(new CycleReadService(cycleRepository, CreateStatisticsReadService([])), currentUserAccessService);
+
+    private static GetCycleNutritionSummaryQueryHandler CreateCycleNutritionSummaryHandler(
+        ICycleReadRepository cycleRepository,
+        IDashboardStatisticsReadService statisticsReadService,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(new CycleReadService(cycleRepository, statisticsReadService), currentUserAccessService);
 
     private static void SetPrivateProperty<TTarget, TValue>(TTarget target, string propertyName, TValue value) {
         PropertyInfo? property = typeof(TTarget).GetProperty(propertyName, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);

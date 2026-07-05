@@ -798,6 +798,8 @@ public sealed class ApplicationGuardrailTests {
         string[] violations = [
             .. FindReferencesInFiles(root, cycleQueryFiles, "IMealReadRepository"),
             .. FindReferencesInFiles(root, cycleQueryFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, cycleQueryFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, cycleQueryFiles, "ICycleReadRepository"),
             .. FindReferencesInFiles(root, cycleQueryFiles, "GetByPeriodAsync"),
         ];
 
@@ -833,6 +835,20 @@ public sealed class ApplicationGuardrailTests {
             .. FindReferencesInFiles(root, exportDiaryQueryFiles, "IMealReadRepository"),
             .. FindReferencesInFiles(root, exportDiaryQueryFiles, "FoodDiary.Domain.Entities.Meals"),
             .. FindReferencesInFiles(root, exportDiaryQueryFiles, "GetByPeriodAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
+    public void ExportCycleQuery_UsesDedicatedCycleReadServiceInsteadOfCycleRepository() {
+        string root = GetRepositoryRoot();
+        string exportCycleQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Export", "Queries", "ExportCycle");
+        string[] exportCycleQueryFiles = [.. SourceScanner.SourceFiles(exportCycleQueriesRoot)];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, exportCycleQueryFiles, "FoodDiary.Domain.Entities.Tracking"),
+            .. FindReferencesInFiles(root, exportCycleQueryFiles, "ICycleReadRepository"),
         ];
 
         Assert.Empty(violations);

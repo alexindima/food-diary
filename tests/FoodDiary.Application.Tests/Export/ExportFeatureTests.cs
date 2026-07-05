@@ -1,5 +1,7 @@
 using FoodDiary.Application.Abstractions.Export.Common;
 using FoodDiary.Application.Abstractions.Cycles.Common;
+using FoodDiary.Application.Abstractions.Dashboard.Common;
+using FoodDiary.Application.Cycles.Services;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Queries.ExportCycle;
 using FoodDiary.Application.Export.Queries.ExportDiary;
@@ -239,7 +241,7 @@ public class ExportFeatureTests {
         profile.UpsertSymptomEntry(TestDate, CycleSymptomCategory.Mood, 6, ["irritable"], "low mood");
         profile.UpsertFertilitySignal(TestDate, 36.62, OvulationTestResult.Positive, "egg white", hadSex: true, notes: "signal note");
         profile.UpsertFactor(CycleFactorType.HormonalContraception, TestDate.AddDays(-1), endDate: null, notes: "pill");
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -261,7 +263,7 @@ public class ExportFeatureTests {
     public async Task ExportCycle_WithValidTimeZoneOffset_UsesOffsetForFileName() {
         var userId = UserId.New();
         var profile = CycleProfile.Create(userId, TestDate);
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(
@@ -278,7 +280,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithNoCurrentProfile_ReturnsNotFound() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(1)),
@@ -290,7 +292,7 @@ public class ExportFeatureTests {
 
     [Fact]
     public async Task ExportCycle_WithNullUserId_ReturnsFailure() {
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(UserId: null, TestDate, TestDate.AddDays(1)),
@@ -304,8 +306,8 @@ public class ExportFeatureTests {
     public async Task ExportCycle_WithDeletedUser_ReturnsAccountDeleted() {
         var user = User.Create("cycle-export-deleted@example.com", "hash");
         user.DeleteAccount(DateTime.UtcNow);
-        var handler = new ExportCycleQueryHandler(
-            CreateCycleRepository(profile: null),
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(
+            profile: null,
             CreateCurrentUserAccessService(user));
 
         Result<FileExportResult> result = await handler.Handle(
@@ -319,7 +321,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithDateFromAfterDateTo_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate.AddDays(1), TestDate),
@@ -332,7 +334,7 @@ public class ExportFeatureTests {
     [Fact]
     public async Task ExportCycle_WithRangeOverOneYear_ReturnsValidationFailure() {
         var userId = UserId.New();
-        var handler = new ExportCycleQueryHandler(CreateCycleRepository(profile: null), CreateCurrentUserAccessService());
+        ExportCycleQueryHandler handler = CreateExportCycleHandler(profile: null, CreateCurrentUserAccessService());
 
         Result<FileExportResult> result = await handler.Handle(
             new ExportCycleQuery(userId.Value, TestDate, TestDate.AddDays(367)),
@@ -520,6 +522,13 @@ public class ExportFeatureTests {
 
         return repository;
     }
+
+    private static ExportCycleQueryHandler CreateExportCycleHandler(
+        CycleProfile? profile,
+        ICurrentUserAccessService currentUserAccessService) =>
+        new(
+            new CycleReadService(CreateCycleRepository(profile), Substitute.For<IDashboardStatisticsReadService>()),
+            currentUserAccessService);
 
     private static IDiaryPdfGenerator CreatePdfGenerator(
         out Func<(string? Locale, int? TimeZoneOffsetMinutes, string? ReportOrigin)> getLastCall) {

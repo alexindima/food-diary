@@ -1,19 +1,19 @@
 using System.Globalization;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
-using FoodDiary.Application.Abstractions.Cycles.Common;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Common.Abstractions.Messaging;
 using FoodDiary.Application.Common.Time;
 using FoodDiary.Application.Common.Validation;
+using FoodDiary.Application.Cycles.Common;
+using FoodDiary.Application.Cycles.Models;
 using FoodDiary.Application.Export.Models;
 using FoodDiary.Application.Export.Services;
-using FoodDiary.Domain.Entities.Tracking;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Export.Queries.ExportCycle;
 
 public sealed class ExportCycleQueryHandler(
-    ICycleReadRepository cycleRepository,
+    ICycleReadService cycleReadService,
     ICurrentUserAccessService currentUserAccessService)
     : IQueryHandler<ExportCycleQuery, Result<FileExportResult>> {
     private const int MaxExportRangeDays = 366;
@@ -44,11 +44,8 @@ public sealed class ExportCycleQueryHandler(
                 Errors.Validation.Invalid(nameof(query.DateTo), "Export range must not exceed one year."));
         }
 
-        CycleProfile? profile = await cycleRepository.GetCurrentAsync(
-            userId,
-            includeDetails: true,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
-        if (profile is null) {
+        CycleModel? cycle = await cycleReadService.GetCurrentAsync(userId, cancellationToken).ConfigureAwait(false);
+        if (cycle is null) {
             return Result.Failure<FileExportResult>(Errors.Cycle.NotFound(Guid.Empty));
         }
 
@@ -57,7 +54,7 @@ public sealed class ExportCycleQueryHandler(
         string toStr = normalizedTo.Add(displayOffset).ToString("yyyy-MM-dd", CultureInfo.InvariantCulture);
 
         return Result.Success(new FileExportResult(
-            CycleCsvGenerator.Generate(profile, normalizedFrom, normalizedTo),
+            CycleCsvGenerator.Generate(cycle, normalizedFrom, normalizedTo),
             "text/csv",
             $"cycle-tracking-{fromStr}-to-{toStr}.csv"));
     }

@@ -1,18 +1,18 @@
 using System.Globalization;
 using System.Text;
-using FoodDiary.Domain.Entities.Tracking;
+using FoodDiary.Application.Cycles.Models;
 
 namespace FoodDiary.Application.Export.Services;
 
 public static class CycleCsvGenerator {
-    public static byte[] Generate(CycleProfile profile, DateTime dateFrom, DateTime dateTo) {
+    public static byte[] Generate(CycleModel cycle, DateTime dateFrom, DateTime dateTo) {
         var sb = new StringBuilder();
         sb.AppendLine("RecordType,Date,EndDate,Category,Value,Flow,Intensity,TemperatureCelsius,OvulationTest,CervicalFluid,HadSex,Notes");
-        AppendProfile(sb, profile);
-        AppendBleedingEntries(sb, profile, dateFrom, dateTo);
-        AppendSymptoms(sb, profile, dateFrom, dateTo);
-        AppendFertilitySignals(sb, profile, dateFrom, dateTo);
-        AppendFactors(sb, profile, dateFrom, dateTo);
+        AppendProfile(sb, cycle);
+        AppendBleedingEntries(sb, cycle, dateFrom, dateTo);
+        AppendSymptoms(sb, cycle, dateFrom, dateTo);
+        AppendFertilitySignals(sb, cycle, dateFrom, dateTo);
+        AppendFactors(sb, cycle, dateFrom, dateTo);
 
         byte[] preamble = Encoding.UTF8.GetPreamble();
         byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
@@ -22,25 +22,25 @@ public static class CycleCsvGenerator {
         return result;
     }
 
-    private static void AppendProfile(StringBuilder sb, CycleProfile profile) {
+    private static void AppendProfile(StringBuilder sb, CycleModel cycle) {
         AppendRow(
             sb,
             "Profile",
-            profile.TrackingStartDate,
+            cycle.TrackingStartDate,
             endDate: null,
             category: "Mode",
-            value: profile.Mode.ToString(),
+            value: cycle.Mode.ToString(),
             flow: null,
             intensity: null,
             temperatureCelsius: null,
             ovulationTest: null,
             cervicalFluid: null,
             hadSex: null,
-            notes: profile.Notes);
+            notes: cycle.Notes);
     }
 
-    private static void AppendBleedingEntries(StringBuilder sb, CycleProfile profile, DateTime dateFrom, DateTime dateTo) {
-        foreach (BleedingEntry entry in profile.BleedingEntries.Where(entry => IsInRange(entry.Date, dateFrom, dateTo)).OrderBy(entry => entry.Date).ThenBy(entry => entry.Type)) {
+    private static void AppendBleedingEntries(StringBuilder sb, CycleModel cycle, DateTime dateFrom, DateTime dateTo) {
+        foreach (BleedingEntryModel entry in cycle.BleedingEntries.Where(entry => IsInRange(entry.Date, dateFrom, dateTo)).OrderBy(entry => entry.Date).ThenBy(entry => entry.Type)) {
             AppendRow(
                 sb,
                 "Bleeding",
@@ -58,8 +58,8 @@ public static class CycleCsvGenerator {
         }
     }
 
-    private static void AppendSymptoms(StringBuilder sb, CycleProfile profile, DateTime dateFrom, DateTime dateTo) {
-        foreach (CycleSymptomEntry entry in profile.SymptomEntries.Where(entry => IsInRange(entry.Date, dateFrom, dateTo)).OrderBy(entry => entry.Date).ThenBy(entry => entry.Category)) {
+    private static void AppendSymptoms(StringBuilder sb, CycleModel cycle, DateTime dateFrom, DateTime dateTo) {
+        foreach (CycleSymptomEntryModel entry in cycle.Symptoms.Where(entry => IsInRange(entry.Date, dateFrom, dateTo)).OrderBy(entry => entry.Date).ThenBy(entry => entry.Category)) {
             AppendRow(
                 sb,
                 "Symptom",
@@ -77,8 +77,8 @@ public static class CycleCsvGenerator {
         }
     }
 
-    private static void AppendFertilitySignals(StringBuilder sb, CycleProfile profile, DateTime dateFrom, DateTime dateTo) {
-        foreach (FertilitySignal signal in profile.FertilitySignals.Where(signal => IsInRange(signal.Date, dateFrom, dateTo)).OrderBy(signal => signal.Date)) {
+    private static void AppendFertilitySignals(StringBuilder sb, CycleModel cycle, DateTime dateFrom, DateTime dateTo) {
+        foreach (FertilitySignalModel signal in cycle.FertilitySignals.Where(signal => IsInRange(signal.Date, dateFrom, dateTo)).OrderBy(signal => signal.Date)) {
             AppendRow(
                 sb,
                 "FertilitySignal",
@@ -96,8 +96,8 @@ public static class CycleCsvGenerator {
         }
     }
 
-    private static void AppendFactors(StringBuilder sb, CycleProfile profile, DateTime dateFrom, DateTime dateTo) {
-        foreach (CycleFactor factor in profile.Factors.Where(factor => OverlapsRange(factor.StartDate, factor.EndDate, dateFrom, dateTo)).OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type)) {
+    private static void AppendFactors(StringBuilder sb, CycleModel cycle, DateTime dateFrom, DateTime dateTo) {
+        foreach (CycleFactorModel factor in cycle.Factors.Where(factor => OverlapsRange(factor.StartDate, factor.EndDate, dateFrom, dateTo)).OrderBy(factor => factor.StartDate).ThenBy(factor => factor.Type)) {
             AppendRow(
                 sb,
                 "Factor",
