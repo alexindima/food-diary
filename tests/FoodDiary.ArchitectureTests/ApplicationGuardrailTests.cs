@@ -887,6 +887,26 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DailyMicronutrientReadService_UsesMealProductReadModelsInsteadOfMealAggregates() {
+        string root = GetRepositoryRoot();
+        string servicePath = Path.Combine(
+            root,
+            "FoodDiary.Application",
+            "Usda",
+            "Services",
+            "UsdaDailyMicronutrientReadService.cs");
+        string[] serviceFiles = [servicePath];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Meals"),
+            .. FindReferencesInFiles(root, serviceFiles, "FoodDiary.Domain.Entities.Products"),
+            .. FindReferencesInFiles(root, serviceFiles, "GetWithItemsAndProductsAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void UsdaFoodQueries_UseDedicatedReadServiceInsteadOfFoodRepository() {
         string root = GetRepositoryRoot();
         string usdaQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Usda", "Queries");

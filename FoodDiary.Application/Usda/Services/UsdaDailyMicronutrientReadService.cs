@@ -1,9 +1,8 @@
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Usda.Mappings;
-using FoodDiary.Domain.Entities.Meals;
-using FoodDiary.Domain.Entities.Products;
 using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.ValueObjects;
 using FoodDiary.Domain.ValueObjects.Ids;
@@ -17,17 +16,13 @@ public sealed class UsdaDailyMicronutrientReadService(
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken) {
-        IReadOnlyList<Meal> meals = await mealRepository.GetWithItemsAndProductsAsync(
+        IReadOnlyList<MealProductNutritionReadModel> productItems = await mealRepository.GetProductNutritionReadModelsAsync(
             userId,
             date,
             cancellationToken).ConfigureAwait(false);
 
-        var productItems = meals
-            .SelectMany(static meal => meal.Items)
-            .Where(static item => item.IsProduct && item.Product is not null)
-            .ToList();
         var linkedItems = productItems
-            .Where(static item => item.Product!.UsdaFdcId.HasValue)
+            .Where(static item => item.UsdaFdcId.HasValue)
             .ToList();
 
         int totalProductCount = productItems.Count;
@@ -38,7 +33,7 @@ public sealed class UsdaDailyMicronutrientReadService(
         }
 
         var fdcIds = linkedItems
-            .Select(static item => item.Product!.UsdaFdcId!.Value)
+            .Select(static item => item.UsdaFdcId!.Value)
             .Distinct()
             .ToList();
 
@@ -60,18 +55,17 @@ public sealed class UsdaDailyMicronutrientReadService(
     }
 
     private static Dictionary<int, AggregatedNutrient> AggregateNutrients(
-        IReadOnlyList<MealItem> linkedItems,
+        IReadOnlyList<MealProductNutritionReadModel> linkedItems,
         IReadOnlyDictionary<int, IReadOnlyList<UsdaFoodNutrient>> nutrientsByFdcId) {
         var aggregated = new Dictionary<int, AggregatedNutrient>();
-        foreach (MealItem item in linkedItems) {
-            Product product = item.Product!;
-            int fdcId = product.UsdaFdcId!.Value;
+        foreach (MealProductNutritionReadModel item in linkedItems) {
+            int fdcId = item.UsdaFdcId!.Value;
 
             if (!nutrientsByFdcId.TryGetValue(fdcId, out IReadOnlyList<UsdaFoodNutrient>? nutrients)) {
                 continue;
             }
 
-            double scale = product.BaseAmount > 0 ? item.Amount / product.BaseAmount : 0;
+            double scale = item.ProductBaseAmount > 0 ? item.Amount / item.ProductBaseAmount : 0;
 
             foreach (UsdaFoodNutrient nutrient in nutrients) {
                 double scaledAmount = nutrient.Amount * scale;

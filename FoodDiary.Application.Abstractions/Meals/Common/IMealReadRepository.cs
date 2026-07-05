@@ -1,3 +1,4 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -46,4 +47,21 @@ public interface IMealReadRepository {
         UserId userId,
         DateTime date,
         CancellationToken cancellationToken = default);
+
+    async Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default) {
+        IReadOnlyList<Meal> meals = await GetWithItemsAndProductsAsync(userId, date, cancellationToken).ConfigureAwait(false);
+
+        return [
+            .. meals
+                .SelectMany(static meal => meal.Items)
+                .Where(static item => item.IsProduct && item.Product is not null)
+                .Select(static item => new MealProductNutritionReadModel(
+                    item.Amount,
+                    item.Product!.BaseAmount,
+                    item.Product.UsdaFdcId)),
+        ];
+    }
 }

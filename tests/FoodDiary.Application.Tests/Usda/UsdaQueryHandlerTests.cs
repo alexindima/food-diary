@@ -1,6 +1,7 @@
 using FoodDiary.Application.Abstractions.Usda.Common;
 using FoodDiary.Application.Abstractions.Usda.Models;
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Application.Usda.Queries.GetDailyMicronutrients;
 using FoodDiary.Application.Usda.Queries.GetMicronutrients;
 using FoodDiary.Application.Usda.Queries.SearchUsdaFoods;
@@ -398,6 +399,17 @@ public sealed class UsdaQueryHandlerTests {
         repository
             .GetWithItemsAndProductsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
             .Returns(Task.FromResult(meals));
+        repository
+            .GetProductNutritionReadModelsAsync(Arg.Any<UserId>(), Arg.Any<DateTime>(), Arg.Any<CancellationToken>())
+            .Returns(Task.FromResult<IReadOnlyList<MealProductNutritionReadModel>>([
+                .. meals
+                    .SelectMany(static meal => meal.Items)
+                    .Where(static item => item.IsProduct && item.Product is not null)
+                    .Select(static item => new MealProductNutritionReadModel(
+                        item.Amount,
+                        item.Product!.BaseAmount,
+                        item.Product.UsdaFdcId)),
+            ]));
 
         return repository;
     }

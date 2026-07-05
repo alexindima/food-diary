@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Meals.Common;
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -229,6 +230,28 @@ public sealed class MealRepository(FoodDiaryDbContext context) : IMealRepository
             .Include(m => m.Items)
             .ThenInclude(i => i.Product)
             .Where(m => m.UserId == userId && m.Date >= from && m.Date < toExclusive)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<MealProductNutritionReadModel>> GetProductNutritionReadModelsAsync(
+        UserId userId,
+        DateTime date,
+        CancellationToken cancellationToken = default) {
+        DateTime from = StartOfUtcDay(date);
+        DateTime toExclusive = StartOfNextUtcDay(date);
+
+        return await context.Set<MealItem>()
+            .AsNoTracking()
+            .Where(item =>
+                item.Meal.UserId == userId &&
+                item.Meal.Date >= from &&
+                item.Meal.Date < toExclusive &&
+                item.ProductId != null &&
+                item.Product != null)
+            .Select(item => new MealProductNutritionReadModel(
+                item.Amount,
+                item.Product!.BaseAmount,
+                item.Product.UsdaFdcId))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 }

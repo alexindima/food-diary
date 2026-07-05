@@ -1,4 +1,7 @@
+using FoodDiary.Application.Abstractions.Meals.Models;
 using FoodDiary.Domain.Entities.Meals;
+using FoodDiary.Domain.Entities.Products;
+using FoodDiary.Domain.Entities.Usda;
 using FoodDiary.Domain.Entities.Users;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects;
@@ -220,6 +223,54 @@ public sealed class MealRepositoryIntegrationTests(PostgresDatabaseFixture datab
 
         Meal actualMeal = Assert.Single(meals);
         Assert.Equal(meal.Id, actualMeal.Id);
+    }
+
+    [RequiresDockerFact]
+    public async Task GetProductNutritionReadModelsAsync_ProjectsProductItemsForDay() {
+        await using FoodDiaryDbContext context = await databaseFixture.CreateDbContextAsync();
+        var user = User.Create($"meals-product-nutrition-{Guid.NewGuid():N}@example.com", "hash");
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
+
+        context.UsdaFoods.Add(new UsdaFood {
+            FdcId = 10,
+            Description = "Spinach",
+            FoodCategory = "Vegetables",
+        });
+        await context.SaveChangesAsync();
+
+        var linkedProduct = Product.Create(user.Id, "Spinach", MeasurementUnit.G, 100, 50, 23, 2.9, 0.4, 3.6, 2.2, 0);
+        linkedProduct.LinkToUsdaFood(10);
+        var unlinkedProduct = Product.Create(user.Id, "Rice", MeasurementUnit.G, 100, 100, 130, 2.7, 0.3, 28, 0.4, 0);
+        context.Products.AddRange(linkedProduct, unlinkedProduct);
+        await context.SaveChangesAsync();
+
+        var meal = Meal.Create(user.Id, new DateTime(2026, 5, 2, 13, 45, 0, DateTimeKind.Utc));
+        meal.AddProduct(linkedProduct.Id, 50);
+        meal.AddProduct(unlinkedProduct.Id, 125);
+        var otherDayMeal = Meal.Create(user.Id, new DateTime(2026, 5, 3, 0, 0, 0, DateTimeKind.Utc));
+        otherDayMeal.AddProduct(linkedProduct.Id, 75);
+        context.Meals.AddRange(meal, otherDayMeal);
+        await context.SaveChangesAsync();
+
+        var repository = new MealRepository(context);
+
+        IReadOnlyList<MealProductNutritionReadModel> items = await repository.GetProductNutritionReadModelsAsync(
+            user.Id,
+            new DateTime(2026, 5, 2, 23, 30, 0, DateTimeKind.Utc));
+
+        Assert.Collection(
+            items.OrderBy(item => item.Amount),
+            linkedItem => {
+                Assert.Equal(50, linkedItem.Amount);
+                Assert.Equal(100, linkedItem.ProductBaseAmount);
+                Assert.Equal(10, linkedItem.UsdaFdcId);
+            },
+            unlinkedItem => {
+                Assert.Equal(125, unlinkedItem.Amount);
+                Assert.Equal(100, unlinkedItem.ProductBaseAmount);
+                Assert.Null(unlinkedItem.UsdaFdcId);
+            });
     }
 
     [RequiresDockerFact]
