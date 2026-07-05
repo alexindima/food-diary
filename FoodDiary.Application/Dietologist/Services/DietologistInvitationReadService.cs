@@ -1,10 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.Enums;
 using FoodDiary.Domain.ValueObjects.Ids;
 
@@ -13,7 +12,8 @@ namespace FoodDiary.Application.Dietologist.Services;
 public sealed class DietologistInvitationReadService(
     IDietologistInvitationReadRepository invitationRepository,
     IDietologistUserContextService dietologistUserContextService,
-    ICurrentUserAccessService currentUserAccessService)
+    ICurrentUserAccessService currentUserAccessService,
+    TimeProvider timeProvider)
     : IDietologistInvitationReadService {
     public async Task<Result<DietologistInvitationForCurrentUserModel>> GetForCurrentUserAsync(
         UserId userId,
@@ -26,9 +26,9 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<DietologistInvitationForCurrentUserModel>(userEmailResult.Error);
         }
 
-        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(
             new DietologistInvitationId(invitationId),
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
         if (invitation is null) {
             return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.InvitationNotFound);
         }
@@ -37,7 +37,7 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<DietologistInvitationForCurrentUserModel>(Errors.Dietologist.AccessDenied);
         }
 
-        return Result.Success(invitation.ToCurrentUserInvitationModel());
+        return Result.Success(ToCurrentUserInvitationModel(invitation, timeProvider));
     }
 
     public async Task<Result<InvitationModel>> GetByTokenAsync(
@@ -45,7 +45,7 @@ public sealed class DietologistInvitationReadService(
         Guid invitationId,
         CancellationToken cancellationToken) {
         var typedInvitationId = new DietologistInvitationId(invitationId);
-        DietologistInvitation? invitation = await invitationRepository.GetByIdAsync(typedInvitationId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetByIdReadModelAsync(typedInvitationId, cancellationToken).ConfigureAwait(false);
 
         if (invitation is null || invitation.Status != DietologistInvitationStatus.Pending) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
@@ -57,11 +57,11 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationNotFound);
         }
 
-        if (invitation.IsExpired()) {
+        if (IsExpired(invitation)) {
             return Result.Failure<InvitationModel>(Errors.Dietologist.InvitationExpired);
         }
 
-        return Result.Success(invitation.ToInvitationModel());
+        return Result.Success(ToInvitationModel(invitation));
     }
 
     public async Task<Result<DietologistInfoModel?>> GetMyDietologistAsync(
@@ -72,8 +72,8 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<DietologistInfoModel?>(accessError);
         }
 
-        DietologistInvitation? invitation = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return Result.Success(invitation?.ToDietologistInfoModel());
+        DietologistInvitationReadModel? invitation = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
+        return Result.Success(invitation is null ? null : ToDietologistInfoModel(invitation));
     }
 
     public async Task<Result<IReadOnlyList<ClientSummaryModel>>> GetMyClientsAsync(
@@ -84,8 +84,8 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<IReadOnlyList<ClientSummaryModel>>(accessError);
         }
 
-        IReadOnlyList<DietologistInvitation> invitations = await invitationRepository.GetActiveByDietologistAsync(userId, cancellationToken).ConfigureAwait(false);
-        var clients = invitations.Select(static invitation => invitation.ToClientSummaryModel()).ToList();
+        IReadOnlyList<DietologistInvitationReadModel> invitations = await invitationRepository.GetActiveByDietologistReadModelsAsync(userId, cancellationToken).ConfigureAwait(false);
+        var clients = invitations.Select(ToClientSummaryModel).ToList();
         return Result.Success<IReadOnlyList<ClientSummaryModel>>(clients);
     }
 
@@ -97,16 +97,83 @@ public sealed class DietologistInvitationReadService(
             return Result.Failure<DietologistRelationshipModel?>(accessError);
         }
 
-        DietologistInvitation? accepted = await invitationRepository.GetActiveByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        DietologistInvitationReadModel? accepted = await invitationRepository.GetActiveByClientReadModelAsync(userId, cancellationToken).ConfigureAwait(false);
         if (accepted is not null) {
-            return Result.Success<DietologistRelationshipModel?>(accepted.ToRelationshipModel());
+            return Result.Success<DietologistRelationshipModel?>(ToRelationshipModel(accepted));
         }
 
-        DietologistInvitation? pending = await invitationRepository.GetByClientAndStatusAsync(
+        DietologistInvitationReadModel? pending = await invitationRepository.GetByClientAndStatusReadModelAsync(
             userId,
             DietologistInvitationStatus.Pending,
-            cancellationToken: cancellationToken).ConfigureAwait(false);
+            cancellationToken).ConfigureAwait(false);
 
-        return Result.Success(pending?.ToRelationshipModel());
+        return Result.Success(pending is null ? null : ToRelationshipModel(pending));
     }
+
+    private static DietologistRelationshipModel ToRelationshipModel(DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.Status.ToString(),
+            invitation.DietologistUserEmail ?? invitation.DietologistEmail,
+            invitation.DietologistFirstName,
+            invitation.DietologistLastName,
+            invitation.DietologistUserId,
+            invitation.Permissions.ToApplicationModel(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc,
+            invitation.AcceptedAtUtc);
+
+    private static DietologistInfoModel ToDietologistInfoModel(DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.DietologistUserId!.Value,
+            invitation.DietologistUserEmail!,
+            invitation.DietologistFirstName,
+            invitation.DietologistLastName,
+            invitation.Permissions.ToApplicationModel(),
+            invitation.AcceptedAtUtc!.Value);
+
+    private static ClientSummaryModel ToClientSummaryModel(DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.ClientUserId,
+            invitation.ClientEmail,
+            invitation.Permissions.ShareProfile ? invitation.ClientFirstName : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientLastName : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientProfileImage : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientBirthDate : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientGender : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientHeight : null,
+            invitation.Permissions.ShareProfile ? invitation.ClientActivityLevel.ToString() : null,
+            invitation.Permissions.ToApplicationModel(),
+            invitation.AcceptedAtUtc!.Value);
+
+    private static InvitationModel ToInvitationModel(DietologistInvitationReadModel invitation) =>
+        new(
+            invitation.InvitationId,
+            invitation.ClientEmail,
+            invitation.ClientFirstName,
+            invitation.ClientLastName,
+            invitation.Status.ToString(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc);
+
+    private bool IsExpired(DietologistInvitationReadModel invitation) =>
+        invitation.Status == DietologistInvitationStatus.Pending &&
+        invitation.ExpiresAtUtc < timeProvider.GetUtcNow().UtcDateTime;
+
+    private static DietologistInvitationForCurrentUserModel ToCurrentUserInvitationModel(
+        DietologistInvitationReadModel invitation,
+        TimeProvider timeProvider) =>
+        new(
+            invitation.InvitationId,
+            invitation.ClientUserId,
+            invitation.ClientEmail,
+            invitation.ClientFirstName,
+            invitation.ClientLastName,
+            invitation.Status == DietologistInvitationStatus.Pending &&
+                invitation.ExpiresAtUtc < timeProvider.GetUtcNow().UtcDateTime
+                    ? "Expired"
+                    : invitation.Status.ToString(),
+            invitation.CreatedAtUtc,
+            invitation.ExpiresAtUtc);
 }

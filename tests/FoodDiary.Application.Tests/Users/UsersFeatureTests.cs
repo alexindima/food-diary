@@ -2,6 +2,7 @@ using System.Text.Json;
 using FoodDiary.Application.Abstractions.Common.Abstractions.Audit;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Notifications.Common;
 using FoodDiary.Application.Admin.Mappings;
 using FoodDiary.Application.Users.Commands.ChangePassword;
@@ -872,8 +873,22 @@ public class UsersFeatureTests {
 
     [ExcludeFromCodeCoverage]
     private sealed class FixedDietologistInvitationRepository(DietologistInvitation? invitation) : IDietologistInvitationRepository {
+        public Task<DietologistInvitationReadModel?> GetByIdReadModelAsync(
+            DietologistInvitationId id,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(invitation is not null && invitation.Id == id ? ToReadModel(invitation) : null);
+
         public Task<DietologistInvitation?> GetByIdAsync(DietologistInvitationId id, bool asTracking = false, CancellationToken cancellationToken = default) =>
             Task.FromResult(invitation?.Id == id ? invitation : null);
+
+        public Task<DietologistInvitationReadModel?> GetByClientAndStatusReadModelAsync(
+            UserId clientUserId,
+            DietologistInvitationStatus status,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(
+                invitation is not null && invitation.ClientUserId == clientUserId && invitation.Status == status
+                    ? ToReadModel(invitation)
+                    : null);
 
         public Task<DietologistInvitation?> GetByClientAndStatusAsync(
             UserId clientUserId,
@@ -885,6 +900,14 @@ public class UsersFeatureTests {
                     ? invitation
                     : null);
 
+        public Task<DietologistInvitationReadModel?> GetActiveByClientReadModelAsync(
+            UserId clientUserId,
+            CancellationToken cancellationToken = default) =>
+            Task.FromResult(
+                invitation is not null && invitation.ClientUserId == clientUserId && invitation.Status == DietologistInvitationStatus.Accepted
+                    ? ToReadModel(invitation)
+                    : null);
+
         public Task<DietologistInvitation?> GetActiveByClientAsync(
             UserId clientUserId,
             bool asTracking = false,
@@ -894,8 +917,17 @@ public class UsersFeatureTests {
                     ? invitation
                     : null);
 
+        public Task<DietologistInvitationReadModel?> GetActiveByClientAndDietologistReadModelAsync(
+            UserId clientUserId,
+            UserId dietologistUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
         public Task<DietologistInvitation?> GetActiveByClientAndDietologistAsync(
             UserId clientUserId,
+            UserId dietologistUserId,
+            CancellationToken cancellationToken = default) => throw new NotSupportedException();
+
+        public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
             UserId dietologistUserId,
             CancellationToken cancellationToken = default) => throw new NotSupportedException();
 
@@ -912,5 +944,36 @@ public class UsersFeatureTests {
             throw new NotSupportedException();
 
         public Task UpdateAsync(DietologistInvitation invitationToUpdate, CancellationToken cancellationToken = default) => Task.CompletedTask;
+
+        private static DietologistInvitationReadModel ToReadModel(DietologistInvitation invitation) =>
+            new(
+                invitation.Id.Value,
+                invitation.ClientUserId.Value,
+                invitation.DietologistUserId?.Value,
+                invitation.DietologistEmail,
+                invitation.ClientUser.Email,
+                invitation.ClientUser.FirstName,
+                invitation.ClientUser.LastName,
+                invitation.ClientUser.ProfileImage,
+                invitation.ClientUser.BirthDate,
+                invitation.ClientUser.Gender,
+                invitation.ClientUser.Height,
+                invitation.ClientUser.ActivityLevel,
+                invitation.DietologistUser?.Email,
+                invitation.DietologistUser?.FirstName,
+                invitation.DietologistUser?.LastName,
+                invitation.Status,
+                new DietologistPermissionsReadModel(
+                    invitation.ShareMeals,
+                    invitation.ShareStatistics,
+                    invitation.ShareWeight,
+                    invitation.ShareWaist,
+                    invitation.ShareGoals,
+                    invitation.ShareHydration,
+                    invitation.ShareProfile,
+                    invitation.ShareFasting),
+                invitation.CreatedOnUtc,
+                invitation.ExpiresAtUtc,
+                invitation.AcceptedAtUtc);
     }
 }

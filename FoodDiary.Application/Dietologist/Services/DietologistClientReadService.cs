@@ -32,7 +32,7 @@ public sealed class DietologistClientReadService(
         }
 
         var client = new UserId(clientUserId);
-        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
@@ -85,7 +85,7 @@ public sealed class DietologistClientReadService(
         }
 
         var client = new UserId(clientUserId);
-        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {

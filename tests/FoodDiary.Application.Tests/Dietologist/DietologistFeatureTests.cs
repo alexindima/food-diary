@@ -38,6 +38,7 @@ using FoodDiary.Domain.ValueObjects.Ids;
 using FoodDiary.Mediator;
 using FoodDiary.Application.Abstractions.Authentication.Common;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Users.Common;
 using FoodDiary.Application.Users.Mappings;
 using FoodDiary.Application.Users.Models;
@@ -280,7 +281,7 @@ public class DietologistFeatureTests {
         IDietologistInvitationReadRepository invitationRepository,
         IDietologistUserContextService userContextService,
         ICurrentUserAccessService currentUserAccessService) =>
-        new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService);
+        new DietologistInvitationReadService(invitationRepository, userContextService, currentUserAccessService, TimeProvider.System);
 
     private static GetClientDashboardQueryHandler CreateGetClientDashboardHandler(
         IDietologistInvitationReadRepository? invitationRepository = null,
@@ -2390,26 +2391,54 @@ public class DietologistFeatureTests {
 
         public void Seed(DietologistInvitation invitation) => _invitations.Add(invitation);
 
+        public Task<DietologistInvitationReadModel?> GetByIdReadModelAsync(
+            DietologistInvitationId id,
+            CancellationToken ct = default) =>
+            Task.FromResult(ToReadModel(_invitations.FirstOrDefault(i => i.Id == id)));
+
         public Task<DietologistInvitation?> GetByIdAsync(
             DietologistInvitationId id,
             bool asTracking = false,
             CancellationToken ct = default) =>
             Task.FromResult(_invitations.FirstOrDefault(i => i.Id == id));
 
+        public Task<DietologistInvitationReadModel?> GetByClientAndStatusReadModelAsync(
+            UserId clientUserId, DietologistInvitationStatus status, CancellationToken ct = default) =>
+            Task.FromResult(ToReadModel(_invitations.FirstOrDefault(i => i.ClientUserId == clientUserId && i.Status == status)));
+
         public Task<DietologistInvitation?> GetByClientAndStatusAsync(
             UserId clientUserId, DietologistInvitationStatus status, bool asTracking = false, CancellationToken ct = default) =>
             Task.FromResult(_invitations.FirstOrDefault(i => i.ClientUserId == clientUserId && i.Status == status));
+
+        public Task<DietologistInvitationReadModel?> GetActiveByClientReadModelAsync(
+            UserId clientUserId, CancellationToken ct = default) =>
+            Task.FromResult(ToReadModel(_invitations.FirstOrDefault(
+                i => i.ClientUserId == clientUserId && i.Status == DietologistInvitationStatus.Accepted)));
 
         public Task<DietologistInvitation?> GetActiveByClientAsync(
             UserId clientUserId, bool asTracking = false, CancellationToken ct = default) =>
             Task.FromResult(_invitations.FirstOrDefault(
                 i => i.ClientUserId == clientUserId && i.Status == DietologistInvitationStatus.Accepted));
 
+        public Task<DietologistInvitationReadModel?> GetActiveByClientAndDietologistReadModelAsync(
+            UserId clientUserId, UserId dietologistUserId, CancellationToken ct = default) =>
+            Task.FromResult(ToReadModel(_invitations.FirstOrDefault(
+                i => i.ClientUserId == clientUserId && i.DietologistUserId == dietologistUserId
+                     && i.Status == DietologistInvitationStatus.Accepted)));
+
         public Task<DietologistInvitation?> GetActiveByClientAndDietologistAsync(
             UserId clientUserId, UserId dietologistUserId, CancellationToken ct = default) =>
             Task.FromResult(_invitations.FirstOrDefault(
                 i => i.ClientUserId == clientUserId && i.DietologistUserId == dietologistUserId
                      && i.Status == DietologistInvitationStatus.Accepted));
+
+        public Task<IReadOnlyList<DietologistInvitationReadModel>> GetActiveByDietologistReadModelsAsync(
+            UserId dietologistUserId, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<DietologistInvitationReadModel>>(
+                _invitations.Where(i => i.DietologistUserId == dietologistUserId
+                                        && i.Status == DietologistInvitationStatus.Accepted)
+                    .Select(static invitation => ToReadModel(invitation)!)
+                    .ToList());
 
         public Task<IReadOnlyList<DietologistInvitation>> GetActiveByDietologistAsync(
             UserId dietologistUserId, CancellationToken ct = default) =>
@@ -2431,6 +2460,39 @@ public class DietologistFeatureTests {
 
         public Task UpdateAsync(DietologistInvitation invitation, CancellationToken ct = default) =>
             Task.CompletedTask;
+
+        private static DietologistInvitationReadModel? ToReadModel(DietologistInvitation? invitation) =>
+            invitation is null
+                ? null
+                : new(
+                invitation.Id.Value,
+                invitation.ClientUserId.Value,
+                invitation.DietologistUserId?.Value,
+                invitation.DietologistEmail,
+                invitation.ClientUser?.Email ?? "client@example.com",
+                invitation.ClientUser?.FirstName,
+                invitation.ClientUser?.LastName,
+                invitation.ClientUser?.ProfileImage,
+                invitation.ClientUser?.BirthDate,
+                invitation.ClientUser?.Gender,
+                invitation.ClientUser?.Height,
+                invitation.ClientUser?.ActivityLevel ?? ActivityLevel.Moderate,
+                invitation.DietologistUser?.Email,
+                invitation.DietologistUser?.FirstName,
+                invitation.DietologistUser?.LastName,
+                invitation.Status,
+                new DietologistPermissionsReadModel(
+                    invitation.ShareMeals,
+                    invitation.ShareStatistics,
+                    invitation.ShareWeight,
+                    invitation.ShareWaist,
+                    invitation.ShareGoals,
+                    invitation.ShareHydration,
+                    invitation.ShareProfile,
+                    invitation.ShareFasting),
+                invitation.CreatedOnUtc,
+                invitation.ExpiresAtUtc,
+                invitation.AcceptedAtUtc);
     }
 
     [ExcludeFromCodeCoverage]
@@ -2627,10 +2689,26 @@ public class DietologistFeatureTests {
 
         public void Seed(Recommendation recommendation) => _recommendations.Add(recommendation);
 
+        public Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
+            UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<RecommendationReadModel>>(
+                _recommendations.Where(r => r.ClientUserId == clientUserId)
+                    .Take(limit)
+                    .Select(ToReadModel)
+                    .ToList());
+
         public Task<IReadOnlyList<Recommendation>> GetByClientAsync(
             UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
             Task.FromResult<IReadOnlyList<Recommendation>>(
                 _recommendations.Where(r => r.ClientUserId == clientUserId).Take(limit).ToList());
+
+        public Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
+            UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
+            Task.FromResult<IReadOnlyList<RecommendationReadModel>>(
+                _recommendations.Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
+                    .Take(limit)
+                    .Select(ToReadModel)
+                    .ToList());
 
         public Task<IReadOnlyList<Recommendation>> GetByDietologistAndClientAsync(
             UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken ct = default) =>
@@ -2652,6 +2730,17 @@ public class DietologistFeatureTests {
 
         public Task<int> GetUnreadCountAsync(UserId clientUserId, CancellationToken ct = default) =>
             Task.FromResult(_recommendations.Count(r => r.ClientUserId == clientUserId && !r.IsRead));
+
+        private static RecommendationReadModel ToReadModel(Recommendation recommendation) =>
+            new(
+                recommendation.Id.Value,
+                recommendation.DietologistUserId.Value,
+                recommendation.DietologistUser?.FirstName,
+                recommendation.DietologistUser?.LastName,
+                recommendation.Text,
+                recommendation.IsRead,
+                recommendation.CreatedOnUtc,
+                recommendation.ReadAtUtc);
     }
 
     [ExcludeFromCodeCoverage]

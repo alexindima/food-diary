@@ -1,5 +1,6 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects;
@@ -32,6 +33,19 @@ public static class DietologistAccessPolicy {
             permissions.ShareFasting));
     }
 
+    public static async Task<Result<DietologistPermissionsModel>> EnsureCanAccessClientReadModelAsync(
+        IDietologistInvitationReadRepository repository,
+        UserId dietologistUserId,
+        UserId clientUserId,
+        CancellationToken cancellationToken) {
+        DietologistInvitationReadModel? invitation = await repository.GetActiveByClientAndDietologistReadModelAsync(
+            clientUserId, dietologistUserId, cancellationToken).ConfigureAwait(false);
+
+        return invitation is null
+            ? Result.Failure<DietologistPermissionsModel>(Errors.Dietologist.AccessDenied)
+            : Result.Success(invitation.Permissions.ToApplicationModel());
+    }
+
     public static Error? EnsurePermission(DietologistPermissionsModel permissions, string category) {
         return category switch {
             "Profile" when !permissions.ShareProfile => Errors.Dietologist.PermissionDenied,
@@ -61,4 +75,15 @@ public static class DietologistAccessPolicy {
             ? null
             : Errors.Dietologist.PermissionDenied;
     }
+
+    public static DietologistPermissionsModel ToApplicationModel(this DietologistPermissionsReadModel permissions) =>
+        new(
+            permissions.ShareMeals,
+            permissions.ShareStatistics,
+            permissions.ShareWeight,
+            permissions.ShareWaist,
+            permissions.ShareGoals,
+            permissions.ShareHydration,
+            permissions.ShareProfile,
+            permissions.ShareFasting);
 }

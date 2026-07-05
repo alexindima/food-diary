@@ -1,10 +1,9 @@
 using FoodDiary.Application.Abstractions.Common.Abstractions.Results;
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Application.Abstractions.Users.Common;
 using FoodDiary.Application.Dietologist.Common;
-using FoodDiary.Application.Dietologist.Mappings;
 using FoodDiary.Application.Dietologist.Models;
-using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 
 namespace FoodDiary.Application.Dietologist.Services;
@@ -22,8 +21,8 @@ public sealed class DietologistRecommendationReadService(
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessError);
         }
 
-        IReadOnlyList<Recommendation> recommendations = await recommendationRepository.GetByClientAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
-        var models = recommendations.Select(static recommendation => recommendation.ToModel()).ToList();
+        IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByClientReadModelsAsync(userId, cancellationToken: cancellationToken).ConfigureAwait(false);
+        var models = recommendations.Select(ToModel).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
     }
 
@@ -37,16 +36,27 @@ public sealed class DietologistRecommendationReadService(
         }
 
         var client = new UserId(clientUserId);
-        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientAsync(
+        Result<DietologistPermissionsModel> accessResult = await DietologistAccessPolicy.EnsureCanAccessClientReadModelAsync(
             invitationRepository, dietologistUserId, client, cancellationToken).ConfigureAwait(false);
 
         if (accessResult.IsFailure) {
             return Result.Failure<IReadOnlyList<RecommendationModel>>(accessResult.Error);
         }
 
-        IReadOnlyList<Recommendation> recommendations = await recommendationRepository.GetByDietologistAndClientAsync(
+        IReadOnlyList<RecommendationReadModel> recommendations = await recommendationRepository.GetByDietologistAndClientReadModelsAsync(
             dietologistUserId, client, cancellationToken: cancellationToken).ConfigureAwait(false);
-        var models = recommendations.Select(static recommendation => recommendation.ToModel()).ToList();
+        var models = recommendations.Select(ToModel).ToList();
         return Result.Success<IReadOnlyList<RecommendationModel>>(models);
     }
+
+    private static RecommendationModel ToModel(RecommendationReadModel recommendation) =>
+        new(
+            recommendation.RecommendationId,
+            recommendation.DietologistUserId,
+            recommendation.DietologistFirstName,
+            recommendation.DietologistLastName,
+            recommendation.Text,
+            recommendation.IsRead,
+            recommendation.CreatedAtUtc,
+            recommendation.ReadAtUtc);
 }

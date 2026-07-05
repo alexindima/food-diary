@@ -1,4 +1,5 @@
 using FoodDiary.Application.Abstractions.Dietologist.Common;
+using FoodDiary.Application.Abstractions.Dietologist.Models;
 using FoodDiary.Domain.Entities.Dietologist;
 using FoodDiary.Domain.ValueObjects.Ids;
 using Microsoft.EntityFrameworkCore;
@@ -6,6 +7,25 @@ using Microsoft.EntityFrameworkCore;
 namespace FoodDiary.Infrastructure.Persistence.Recommendations;
 
 public sealed class RecommendationRepository(FoodDiaryDbContext context) : IRecommendationRepository {
+    public async Task<IReadOnlyList<RecommendationReadModel>> GetByClientReadModelsAsync(
+        UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
+        return await context.Recommendations
+            .AsNoTracking()
+            .Where(r => r.ClientUserId == clientUserId)
+            .OrderByDescending(r => r.CreatedOnUtc)
+            .Take(limit)
+            .Select(r => new RecommendationReadModel(
+                r.Id.Value,
+                r.DietologistUserId.Value,
+                r.DietologistUser.FirstName,
+                r.DietologistUser.LastName,
+                r.Text,
+                r.IsRead,
+                r.CreatedOnUtc,
+                r.ReadAtUtc))
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     public async Task<IReadOnlyList<Recommendation>> GetByClientAsync(
         UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
         return await context.Recommendations
@@ -14,6 +34,25 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
             .Where(r => r.ClientUserId == clientUserId)
             .OrderByDescending(r => r.CreatedOnUtc)
             .Take(limit)
+            .ToListAsync(cancellationToken).ConfigureAwait(false);
+    }
+
+    public async Task<IReadOnlyList<RecommendationReadModel>> GetByDietologistAndClientReadModelsAsync(
+        UserId dietologistUserId, UserId clientUserId, int limit = 50, CancellationToken cancellationToken = default) {
+        return await context.Recommendations
+            .AsNoTracking()
+            .Where(r => r.DietologistUserId == dietologistUserId && r.ClientUserId == clientUserId)
+            .OrderByDescending(r => r.CreatedOnUtc)
+            .Take(limit)
+            .Select(r => new RecommendationReadModel(
+                r.Id.Value,
+                r.DietologistUserId.Value,
+                r.DietologistUser.FirstName,
+                r.DietologistUser.LastName,
+                r.Text,
+                r.IsRead,
+                r.CreatedOnUtc,
+                r.ReadAtUtc))
             .ToListAsync(cancellationToken).ConfigureAwait(false);
     }
 
@@ -55,4 +94,5 @@ public sealed class RecommendationRepository(FoodDiaryDbContext context) : IReco
         return await context.Recommendations
             .CountAsync(r => r.ClientUserId == clientUserId && !r.IsRead, cancellationToken).ConfigureAwait(false);
     }
+
 }

@@ -1025,6 +1025,30 @@ public sealed class ApplicationGuardrailTests {
     }
 
     [Fact]
+    public void DietologistReadServices_UseReadModelsInsteadOfDietologistAggregates() {
+        string root = GetRepositoryRoot();
+        string dietologistServicesRoot = Path.Combine(root, "FoodDiary.Application", "Dietologist", "Services");
+        string[] readServiceFiles = [
+            Path.Combine(dietologistServicesRoot, "DietologistInvitationReadService.cs"),
+            Path.Combine(dietologistServicesRoot, "DietologistClientReadService.cs"),
+            Path.Combine(dietologistServicesRoot, "DietologistRecommendationReadService.cs"),
+        ];
+
+        string[] violations = [
+            .. FindReferencesInFiles(root, readServiceFiles, "FoodDiary.Domain.Entities.Dietologist"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetByIdAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetByClientAndStatusAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetActiveByClientAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetActiveByClientAndDietologistAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetActiveByDietologistAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetByClientAsync"),
+            .. FindReferencesInFiles(root, readServiceFiles, "GetByDietologistAndClientAsync"),
+        ];
+
+        Assert.Empty(violations);
+    }
+
+    [Fact]
     public void BillingQueries_UseBillingProfileModelsInsteadOfUserAggregates() {
         string root = GetRepositoryRoot();
         string billingQueriesRoot = Path.Combine(root, "FoodDiary.Application", "Billing", "Queries");
